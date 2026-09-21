@@ -12,6 +12,10 @@
 import { ADAPTERS } from "../src/ingest/adapters/index.ts";
 import { sourceHealth } from "../src/ingest/health.ts";
 import { mergeEvents } from "../src/ingest/merge.ts";
+import {
+  loadReviewedBatches,
+  REVIEWED_SOURCE_URL,
+} from "../src/ingest/reviewed.ts";
 import { SnapshotStore, freshnessAt } from "../src/ingest/snapshots.ts";
 import { EventFeed, SCHEMA_VERSION, type SourceHealth } from "../src/shared/feed.ts";
 import type { GachaEvent, GameId } from "../src/shared/schema.ts";
@@ -131,6 +135,34 @@ for (const adapter of ADAPTERS) {
       : "";
   console.log(
     `  ${adapter.id.padEnd(24)} ${String(events.length).padStart(3)} events  ← ${file}${note}`,
+  );
+}
+
+// Reviewed records are the explicit fallback for sources that cannot be
+// reached from the runner. They do not bypass validation: each file is parsed
+// into the exact same GachaEvent schema before it can join an automatic group.
+const reviewed = await loadReviewedBatches("data/reviewed", {
+  includeLeaks: process.env["INCLUDE_LEAKS"] === "true",
+});
+for (const batch of reviewed) {
+  const groups = byGame.get(batch.game) ?? [];
+  groups.push({ priority: 100, events: batch.events });
+  byGame.set(batch.game, groups);
+
+  sources.push({
+    sourceId: `reviewed-${batch.game}`,
+    game: batch.game,
+    url: REVIEWED_SOURCE_URL,
+    lastSuccessAt: batch.reviewedAt,
+    lastConfirmedAt: batch.reviewedAt,
+    contentChangedAt: batch.reviewedAt,
+    eventCount: batch.events.length,
+    parsedCount: batch.parsedCount,
+    statesNoEvents: batch.statesNoEvents,
+  });
+  const hidden = batch.parsedCount - batch.events.length;
+  console.log(
+    `  ${`reviewed-${batch.game}`.padEnd(24)} ${String(batch.events.length).padStart(3)} events  ← ${batch.file}${hidden > 0 ? `  (${hidden} leak record${hidden === 1 ? "" : "s"} hidden)` : ""}`,
   );
 }
 

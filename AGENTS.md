@@ -40,9 +40,10 @@ automatic sources ─┐
 reviewed records ──┘
 ```
 
-Текущее состояние: automatic snapshot ingestion работает; reviewed channel ещё
-не реализован. Отсутствующий source отображается как unavailable, а не
-заменяется fixture из другого проекта.
+Текущее состояние: automatic snapshot ingestion и schema-validated reviewed
+channel работают. Reviewed files находятся в `data/reviewed/*.json`; leak rows
+по умолчанию исключаются. Отсутствующий source отображается как unavailable, а
+не заменяется fixture из другого проекта.
 
 ## Команды проверки
 

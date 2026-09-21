@@ -115,8 +115,10 @@ dist
 # IDE
 .idea/
 
-# runtime data
-data/
+# runtime data, except reviewed source records that are part of the feed input
+data/*
+!data/reviewed/
+!data/reviewed/**
 
 # build output
 public/

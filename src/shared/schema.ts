@@ -50,11 +50,22 @@ export type Region = z.infer<typeof Region>;
 export const Precision = z.enum(["exact", "day", "unknown"]);
 export type Precision = z.infer<typeof Precision>;
 
+/** How directly an event date is supported by its cited source. */
+export const ProvenanceStatus = z.enum([
+  "official",
+  "estimated",
+  "datamined",
+  "leak",
+]);
+export type ProvenanceStatus = z.infer<typeof ProvenanceStatus>;
+
 export const GachaEvent = z
   .object({
     id: z.string(),
     game: GameId,
     title: z.string().min(1).max(200),
+    /** Optional Russian display title; `title` remains the stable ID input. */
+    titleRu: z.string().min(1).max(200).optional(),
     type: EventType,
     summary: z.string().max(500).nullable(),
 
@@ -72,6 +83,8 @@ export const GachaEvent = z
     status: z.enum(["published", "delisted"]),
     confidence: z.number().min(0).max(1),
     extractionMethod: z.enum(["parser", "manual"]),
+    /** Present on reviewed records; legacy parser records remain compatible. */
+    provenanceStatus: ProvenanceStatus.optional(),
 
     version: z.number().int().positive(),
     firstSeenAt: z.string().datetime(),

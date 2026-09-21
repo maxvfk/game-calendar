@@ -21,9 +21,11 @@ Pages workflow. Event data импортируется только из snapshot
 репозиторием независимо. Если источник ещё не получен, lane помечается
 недоступным — дата не подставляется предположением.
 
-На первом этапе автоматически доступен источник Endfield wiki.gg. Источники,
-закрытые для GitHub Actions или текущего runner, будут подключаться через
-отдельный reviewed ingestion channel.
+На первом этапе автоматически доступен источник Endfield wiki.gg. Для
+источников, закрытых для GitHub Actions или текущего runner, реализован
+отдельный reviewed ingestion channel: записи в `data/reviewed/*.json` требуют
+source URL, времени проверки и явного provenance-статуса. `leak` по умолчанию
+не публикуется.
 
 ## Локальный запуск
 
@@ -50,6 +52,10 @@ Scheduled workflow запускается дважды в сутки. Он со�
 минимальный шестичасовой интервал для каждого источника и не повторяет
 неудачный запрос в рамках одного цикла.
 
+Проверенные вручную записи описаны в `data/reviewed/README.md`. Они проходят
+общую schema validation во время `build:feed` и объединяются с автоматическими
+источниками только после успешной проверки.
+
 ## Происхождение кода
 
 Проект основан на MIT-коде
@@ -66,6 +72,10 @@ GitHub Pages собирается workflow `.github/workflows/ci.yml`. Для п
 в настройках репозитория нужно выбрать:
 
 `Settings → Pages → Source → GitHub Actions`.
+
+Для scheduled refresh также включите:
+
+`Settings → Actions → General → Workflow permissions → Read and write permissions`.
 
 ## Обратная связь
 
