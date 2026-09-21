@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "game": "wuwa",
+  "reviewedAt": "2026-09-21T19:53:46.000Z",
+  "reviewedBy": "chatgpt",
+  "statesNoEvents": false,
+  "events": [
+    {
+      "title": "If Dreams Still Reverberate",
+      "type": "challenge",
+      "summary": "Featured co-op combat event with optional Support Echoes and co-op play.",
+      "startsAt": "2026-09-10T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-28T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-28T19:59:00.000Z",
+        "europe": "2026-09-29T02:59:00.000Z",
+        "america": "2026-09-29T08:59:00.000Z"
+      },
+      "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5428",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Wuthering Exploration: Fogveil Pagoda",
+      "type": "other",
+      "summary": "Featured exploration event with survey tasks and Survey Point rewards.",
+      "startsAt": "2026-09-17T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-28T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-28T19:59:00.000Z",
+        "europe": "2026-09-29T02:59:00.000Z",
+        "america": "2026-09-29T08:59:00.000Z"
+      },
+      "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5428",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Chord Cleansing",
+      "type": "other",
+      "summary": "Limited-time Echo double-drop event for Tacet Suppression challenges.",
+      "startsAt": "2026-09-22T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-28T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-28T19:59:00.000Z",
+        "europe": "2026-09-29T02:59:00.000Z",
+        "america": "2026-09-29T08:59:00.000Z"
+      },
+      "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5428",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Where Santu Beckons",
+      "type": "banner",
+      "summary": "Jingran featured Resonator convene; Mortefi, Aalto, and Yuanwu receive boosted drop rates.",
+      "startsAt": "2026-09-10T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-29T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-29T03:59:00.000Z",
+        "europe": "2026-09-29T10:59:00.000Z",
+        "america": "2026-09-29T16:59:00.000Z"
+      },
+      "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5428",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Thousand Futures Mirrored in Snow",
+      "type": "banner",
+      "summary": "Hiyuki featured Resonator convene; Mortefi, Aalto, and Yuanwu receive boosted drop rates.",
+      "startsAt": "2026-09-10T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-29T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-29T03:59:00.000Z",
+        "europe": "2026-09-29T10:59:00.000Z",
+        "america": "2026-09-29T16:59:00.000Z"
+      },
+      "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5428",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Distant May the Starlights Be",
+      "type": "banner",
+      "summary": "Mornye featured Resonator convene; Mortefi, Aalto, and Yuanwu receive boosted drop rates.",
+      "startsAt": "2026-09-10T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-29T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-29T03:59:00.000Z",
+        "europe": "2026-09-29T10:59:00.000Z",
+        "america": "2026-09-29T16:59:00.000Z"
+      },
+      "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5428",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Thousandfold Deliverance",
+      "type": "banner",
+      "summary": "Featured weapon convene for Thousandfold Deliverance; Waning Redshift, Discord, and Novaburst receive boosted drop rates.",
+      "startsAt": "2026-09-10T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-29T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-29T03:59:00.000Z",
+        "europe": "2026-09-29T10:59:00.000Z",
+        "america": "2026-09-29T16:59:00.000Z"
+      },
+      "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5428",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Frostburn",
+      "type": "banner",
+      "summary": "Featured weapon convene for Frostburn; Waning Redshift, Discord, and Novaburst receive boosted drop rates.",
+      "startsAt": "2026-09-10T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-29T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-29T03:59:00.000Z",
+        "europe": "2026-09-29T10:59:00.000Z",
+        "america": "2026-09-29T16:59:00.000Z"
+      },
+      "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5428",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Starfield Calibrator",
+      "type": "banner",
+      "summary": "Featured weapon convene for Starfield Calibrator; Waning Redshift, Discord, and Novaburst receive boosted drop rates.",
+      "startsAt": "2026-09-10T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-29T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-29T03:59:00.000Z",
+        "europe": "2026-09-29T10:59:00.000Z",
+        "america": "2026-09-29T16:59:00.000Z"
+      },
+      "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5428",
+      "provenanceStatus": "official",
+      "confidence": 1
+    }
+  ]
+}

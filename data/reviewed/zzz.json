@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "game": "zzz",
+  "reviewedAt": "2026-09-21T20:01:42.000Z",
+  "reviewedBy": "chatgpt",
+  "statesNoEvents": false,
+  "events": [
+    {
+      "title": "All-New Program",
+      "type": "login",
+      "summary": "Seven-day login event awarding Encrypted Master Tape ×10.",
+      "startsAt": "2026-09-09T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-19T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-19T19:59:00.000Z",
+        "europe": "2026-10-20T02:59:00.000Z",
+        "america": "2026-10-20T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166000",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Angels Support Operation",
+      "type": "other",
+      "summary": "Version event awarding a choice of limited outfits for the Angels of Delusion.",
+      "startsAt": "2026-09-09T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-29T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-29T19:59:00.000Z",
+        "europe": "2026-11-30T02:59:00.000Z",
+        "america": "2026-11-30T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166000",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Potential Hypothesis: Reforged in Fire",
+      "type": "other",
+      "summary": "Version 3.2 event featuring Belobog Industries; the official notice states it ends with the version.",
+      "startsAt": "2026-09-09T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": null,
+      "endPrecision": "unknown",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166000",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Clink, Clank, Pinball Knight!",
+      "type": "other",
+      "summary": "Limited-time pinball-themed event.",
+      "startsAt": "2026-09-10T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-18T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-18T19:59:00.000Z",
+        "europe": "2026-10-19T02:59:00.000Z",
+        "america": "2026-10-19T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166000",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Shadow Chase Showdown",
+      "type": "challenge",
+      "summary": "Limited-time virtual battle event focused on creating a miracle in combat.",
+      "startsAt": "2026-09-16T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-04T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-04T19:59:00.000Z",
+        "europe": "2026-10-05T02:59:00.000Z",
+        "america": "2026-10-05T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166000",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Surprise Screening Plan",
+      "type": "login",
+      "summary": "Check-in event awarding an Angels of Delusion outfit choice, an avatar, Polychromes, and more.",
+      "startsAt": "2026-09-23T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-19T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-19T19:59:00.000Z",
+        "europe": "2026-10-20T02:59:00.000Z",
+        "america": "2026-10-20T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166000",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Advanced Bounty: Area Patrol",
+      "type": "other",
+      "summary": "Limited-time double-reward event for Area Patrol.",
+      "startsAt": "2026-09-23T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-27T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-27T19:59:00.000Z",
+        "europe": "2026-09-28T02:59:00.000Z",
+        "america": "2026-09-28T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166000",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Diary of an Orbie Parent",
+      "type": "other",
+      "summary": "Limited-time event about feeding Orbie and raising its bond.",
+      "startsAt": "2026-09-30T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-18T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-18T19:59:00.000Z",
+        "europe": "2026-10-19T02:59:00.000Z",
+        "america": "2026-10-19T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166000",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "\"En-Nah\" Into Your Lap",
+      "type": "login",
+      "summary": "Seven-day login event awarding Boopon ×10.",
+      "startsAt": "2026-09-30T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-19T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-19T19:59:00.000Z",
+        "europe": "2026-10-20T02:59:00.000Z",
+        "america": "2026-10-20T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166000",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Chronicles of the Hobbling Crow",
+      "type": "story",
+      "summary": "Limited-time mystery event beginning October 3.",
+      "startsAt": "2026-10-03T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-18T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-18T19:59:00.000Z",
+        "europe": "2026-10-19T02:59:00.000Z",
+        "america": "2026-10-19T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166000",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Data Bounty: Combat Simulation",
+      "type": "other",
+      "summary": "Limited-time double-reward event for Combat Simulation.",
+      "startsAt": "2026-10-14T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-18T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-18T19:59:00.000Z",
+        "europe": "2026-10-19T02:59:00.000Z",
+        "america": "2026-10-19T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166000",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Bloodmoon Rising",
+      "type": "banner",
+      "summary": "Claret Exclusive Channel; Anton and Nicole are the default boosted A-Rank Agents.",
+      "startsAt": "2026-09-09T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-30T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-30T03:59:00.000Z",
+        "europe": "2026-09-30T10:59:00.000Z",
+        "america": "2026-09-30T16:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/165979",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Crimson Thirst",
+      "type": "banner",
+      "summary": "W-Engine Channel featuring Crimson Thirst; Drill Rig - Red Axis and The Vault are the default boosted A-Rank W-Engines.",
+      "startsAt": "2026-09-09T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-30T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-30T03:59:00.000Z",
+        "europe": "2026-09-30T10:59:00.000Z",
+        "america": "2026-09-30T16:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/165979",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Axiom of Captivation",
+      "type": "banner",
+      "summary": "Nangong Yu Exclusive Channel; Anton and Nicole are the default boosted A-Rank Agents.",
+      "startsAt": "2026-09-09T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-30T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-30T03:59:00.000Z",
+        "europe": "2026-09-30T10:59:00.000Z",
+        "america": "2026-09-30T16:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/165979",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Neon Fantasies",
+      "type": "banner",
+      "summary": "W-Engine Channel featuring Neon Fantasies; Drill Rig - Red Axis and The Vault are the default boosted A-Rank W-Engines.",
+      "startsAt": "2026-09-09T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-30T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-30T03:59:00.000Z",
+        "europe": "2026-09-30T10:59:00.000Z",
+        "america": "2026-09-30T16:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/165979",
+      "provenanceStatus": "official",
+      "confidence": 1
+    }
+  ]
+}
