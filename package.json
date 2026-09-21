@@ -1,0 +1,31 @@
+{
+  "name": "game-calendar",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "parse": "bun run scripts/parse-fixture.ts",
+    "build:feed": "bun run scripts/build-feed.ts",
+    "refresh": "bun run scripts/refresh-sources.ts",
+    "build:css": "bunx @tailwindcss/cli -i src/client/styles.css -o public/styles.css --minify",
+    "build:js": "bun build src/client/main.tsx --outfile public/main.js --minify --production",
+    "build": "bun run build:feed && bun run build:css && bun run build:js && bun run build:static",
+    "dev": "bun run build && bun run serve.ts",
+    "build:static": "bun run scripts/build-static.ts",
+    "serve": "bun run serve.ts"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "@types/bun": "^1.1.10",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.6.3"
+  }
+}

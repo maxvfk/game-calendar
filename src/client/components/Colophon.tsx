@@ -1,0 +1,505 @@
+import { useGameMeta } from "../state/gameMeta.tsx";
+import type { LaneId } from "../../shared/custom.ts";
+import { freshness, STALE_AFTER_MS, type SourceHealth, type StaleGame } from "../../shared/feed.ts";
+import { formatAbsolute, formatRemaining } from "../../shared/time.ts";
+
+export const REPO_URL = "https://github.com/maxvfk/game-calendar";
+
+/**
+ * Where a reader takes a problem or an idea.
+ *
+ * `template=` names the file in `.github/ISSUE_TEMPLATE/`, so renaming one of
+ * those files breaks these links — GitHub falls back to the template chooser
+ * rather than erroring, which is a soft landing but not the intended one.
+ */
+export const BUG_URL = `${REPO_URL}/issues/new?template=bug_report.yml`;
+export const FEATURE_URL = `${REPO_URL}/issues/new?template=feature_request.yml`;
+
+/**
+ * The bug form, with the footer's own freshness line already filled in.
+ *
+ * A wrong end date and a stale calendar look identical to a reader, and eight of
+ * the sources cannot be fetched from CI at all — so "how old is this page's data"
+ * is the first thing anyone triaging a date report has to establish, and the one
+ * thing they cannot recover after the fact. Asking the reader to copy it works;
+ * carrying it for them works more often.
+ *
+ * `refreshed` must stay the `id` of the matching field in `bug_report.yml`.
+ * GitHub silently drops a parameter that names no field, so a drift here costs
+ * the prefill with no error anywhere — `test/issue-templates.test.tsx` pins it.
+ */
+export function bugReportUrl(refreshed: string | null): string {
+  if (refreshed === null) return BUG_URL;
+  return `${BUG_URL}&refreshed=${encodeURIComponent(refreshed)}`;
+}
+
+/** Who built this, and where to find them. */
+export const AUTHOR = {
+  name: "Lucas Winther",
+  site: "https://lucaswinther.info",
+  github: "https://github.com/StereotypicalCat",
+  kofi: "https://ko-fi.com/stereotypicalcat",
+} as const;
+
+const LINK =
+  "text-muted underline decoration-hairline underline-offset-2 transition-colors duration-150 hover:text-ink hover:decoration-near";
+
+/**
+ * People whose ideas ended up here.
+ *
+ * Ideas and design, not code — nothing in this list carries a licence
+ * obligation, which is why it sits here as thanks rather than in NOTICE with
+ * the terms. Handles rather than names: a handle is verifiable and stable, and
+ * someone who suggests something under a handle has not offered a name to use.
+ *
+ * `handle` renders verbatim, so it carries its own platform — a bare handle is
+ * GitHub, `u/` is Reddit. That beats a `platform` field nobody would keep
+ * consistent for a list this short.
+ *
+ * Unlike the source and studio credits above, this one cannot be derived from
+ * the feed — nothing in the data knows these people exist. Hardcoded on
+ * purpose; adding another is one line.
+ */
+export const IDEA_CREDITS = [
+  {
+    handle: "phuduong85",
+    url: "https://github.com/phuduong85/gacha-event-tracker",
+  },
+  {
+    handle: "u/eriatilox",
+    url: "https://www.reddit.com/user/eriatilox/",
+  },
+  {
+    handle: "u/lotus_lunaris",
+    url: "https://www.reddit.com/user/lotus_lunaris/",
+  },
+  {
+    handle: "u/Neoragex13",
+    url: "https://www.reddit.com/user/Neoragex13/",
+  },
+  {
+    handle: "u/ShiroWaffles",
+    url: "https://www.reddit.com/user/ShiroWaffles/",
+  },
+] as const;
+
+/**
+ * How many lagging games to name before summarising the rest.
+ *
+ * Naming them is the point — a reader can act on a name — but past a handful the
+ * list stops being read, and every extra entry repeating the same age crowds out
+ * the sentence that matters.
+ */
+const STALE_NAMES = 4;
+
+function GitHubMark() {
+  return (
+    <svg viewBox="0 0 16 16" className="size-3.5" fill="currentColor" aria-hidden>
+      <path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38l-.01-1.49c-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.19c0 .21.15.46.55.38A8 8 0 0 0 8 0Z" />
+    </svg>
+  );
+}
+
+function KofiMark() {
+  return (
+    <svg viewBox="0 0 16 16" className="size-3.5" fill="currentColor" aria-hidden>
+      <path d="M2 3h9.2a3.3 3.3 0 0 1 0 6.6h-.6A4 4 0 0 1 6.7 13H5.3a4 4 0 0 1-4-4V3.7c0-.4.3-.7.7-.7Zm8.6 5.3h.6a2 2 0 0 0 0-4h-.6v4Z" />
+      <path d="M4.4 5.6c.5-.5 1.2-.4 1.6 0 .4-.4 1.1-.5 1.6 0 .5.5.4 1.2 0 1.7L6 8.9 4.4 7.3c-.4-.5-.5-1.2 0-1.7Z" />
+    </svg>
+  );
+}
+
+/** Display name and homepage for a source host. */
+const SITES: Record<string, { name: string; url: string }> = {
+  "game8.co": { name: "Game8", url: "https://game8.co" },
+  "endfield.wiki.gg": { name: "wiki.gg", url: "https://wiki.gg" },
+};
+
+function siteFor(url: string): { name: string; url: string } {
+  try {
+    const host = new URL(url).host;
+    return SITES[host] ?? { name: host, url: `https://${host}` };
+  } catch {
+    return { name: url, url };
+  }
+}
+
+function formatStaleAge(s: StaleGame, now: number): string {
+  if (s.lastSuccessAt === null && s.contentChangedAt === null) {
+    return " (never)";
+  }
+
+  const contentDate = s.contentChangedAt ?? s.lastSuccessAt;
+  const contentAgo = contentDate
+    ? `${formatRemaining(now - Date.parse(contentDate))} ago`
+    : null;
+
+  // Differentiate blame when crawler confirmed the source recently (<= STALE_AFTER_MS)
+  // but the site content has not changed in over 2 days.
+  if (s.lastConfirmedAt !== null) {
+    const confirmedAge = now - Date.parse(s.lastConfirmedAt);
+    if (confirmedAge <= STALE_AFTER_MS) {
+      const confirmedAgo = `${formatRemaining(confirmedAge)} ago`;
+      return ` (data pulled ${confirmedAgo}, site updated ${contentAgo ?? "unknown"})`;
+    }
+  }
+
+  return contentAgo ? ` (${contentAgo})` : " (never)";
+}
+
+/**
+ * Credit, disclaimer, and where the code lives.
+ *
+ * Everything here is derived from the feed rather than written down, so adding
+ * a source or a game credits the right people automatically. A hardcoded list
+ * silently goes stale the moment someone adds the seventh source, and the one
+ * thing a credit must not be is out of date.
+ */
+export function Colophon({
+  sources,
+  now,
+  hiddenGames = [],
+}: {
+  sources: SourceHealth[];
+  now: number;
+  /**
+   * Lanes the reader has switched off, so the staleness notice can leave them
+   * out. Optional and empty by default: a caller that does not know the
+   * reader's preferences gets the whole list rather than none of it.
+   */
+  hiddenGames?: readonly LaneId[];
+}) {
+  // The tree's resolver rather than the module lookup: it is the one that
+  // answers for a reader's own games, and the one that reads a hue for the
+  // theme the page is in.
+  const gameMeta = useGameMeta();
+  const games = [...new Set(sources.map((s) => s.game))].map((id) =>
+    gameMeta(id),
+  );
+  const studios = [...new Set(games.map((g) => g.studio))];
+  const { refreshedAt, stale } = freshness(sources, now);
+
+  /**
+   * The staleness notice covers the reader's own lanes and nothing else.
+   *
+   * Credit is owed to every source we read, so `games` above stays whole. This
+   * paragraph is the opposite kind of sentence: it is an *instruction*, and the
+   * only remedy it offers is "go and check that game's source page" — which is
+   * not something a reader can act on for a game they switched off and cannot
+   * see a single row of. Naming eleven lanes they do not play also buries the
+   * one they do, and a warning about games nobody reads is a warning nobody
+   * reads (§ Telling the reader to do something is not the same as showing it
+   * to them).
+   *
+   * `shownGames` is narrowed alongside it because the summarising branch below
+   * turns on "every game is behind" — measured against the same set the notice
+   * is allowed to name, or it would never fire for a reader with most of the
+   * calendar switched off.
+   */
+  const shownGames = games.filter((g) => !hiddenGames.includes(g.id));
+  const shownStale = stale.filter((s) => !hiddenGames.includes(s.game));
+
+  // Built once so the sentence a reader reads and the value the bug form is
+  // prefilled with cannot drift apart.
+  const ago =
+    refreshedAt === null ? null : formatRemaining(now - Date.parse(refreshedAt));
+  const refreshedLine =
+    refreshedAt === null ? null : `${formatAbsolute(refreshedAt, true)} — ${ago} ago`;
+
+  const sites = [...new Map(sources.map((s) => {
+    const site = siteFor(s.url);
+    return [site.name, site] as const;
+  })).values()];
+
+  const named = [...sites.map((s) => s.name), ...studios];
+
+  return (
+    <footer className="border-t border-hairline px-4 pb-12 pt-6 text-xs leading-relaxed text-faint">
+      {/* Three columns once there is room: the age of the data, who compiled
+          it, and what it is not. Stacked they are a long scroll of small grey
+          text that a reader gives up on before reaching the disclaimer, which
+          is the one part that has to be read. */}
+      <div className="lg:grid lg:grid-cols-3 lg:gap-x-10">
+        <div>
+          <p>
+            Dates are shown in your local time. Every event links to the page it came
+            from — check there before the last hours.
+          </p>
+
+          {/*
+            Stated on every load, not only when something is wrong. A page that says
+            nothing about its own age reads as current, and "how old is this?" is the
+            question a reader has to be able to answer before trusting a countdown
+            (PRD F7). The date is absolute *and* relative on purpose: the relative
+            half is what gets read, the absolute half is what can be checked.
+          */}
+          <p className="mt-2">
+            <span className="text-muted">Event data last refreshed</span>{" "}
+            {refreshedAt === null ? (
+              "— no source has been fetched yet."
+            ) : (
+              <>
+                <time dateTime={refreshedAt} className="text-muted">
+                  {formatAbsolute(refreshedAt, true)}
+                </time>
+                {` — ${ago} ago.`}
+              </>
+            )}
+          </p>
+
+          {shownStale.length > 0 && (
+            // Named per game rather than counted, because a count is not something a
+            // reader can act on: knowing *which* lane is behind tells them which
+            // source page to go and check, which is the whole remedy on offer.
+            //
+            // Except when the answer is "all of them", which is what a refresh that
+            // stopped running looks like. Ten names each repeating the same age is
+            // less readable than the count this replaced, and the headline above
+            // already gives the date — so that case gets a sentence, not a list.
+            //
+            // Both branches say whose games they are counting, in the words
+            // `NextUp` already uses for the same set. Scoping this silently would
+            // be the worse half of the change: "nothing has refreshed" is a claim
+            // about the whole calendar, and a reader who has fourteen of eighteen
+            // lanes off would read a sentence about four as one about all of them
+            // — a footer whose one job is being trusted about age must not narrow
+            // what it measured without saying so.
+            <p className="mt-2 text-soon">
+              {shownStale.length === shownGames.length ? (
+                `None of the games you have switched on have refreshed in over two days, so any end date here may have moved.`
+              ) : (
+                <>
+                  Of the games you have switched on,{" "}
+                  {shownStale.length === 1 ? "this one has" : "these have"} not
+                  refreshed in over two days, so some end dates may have moved:{" "}
+                  {shownStale.slice(0, STALE_NAMES).map((s, i, shown) => (
+                    <span key={s.game}>
+                      {i > 0 && (i === shown.length - 1 && shownStale.length <= STALE_NAMES ? " and " : ", ")}
+                      {gameMeta(s.game).name}
+                      {formatStaleAge(s, now)}
+                    </span>
+                  ))}
+                  {shownStale.length > STALE_NAMES &&
+                    ` and ${shownStale.length - STALE_NAMES} other game${
+                      shownStale.length - STALE_NAMES > 1 ? "s" : ""
+                    }`}
+                  {"."}
+                </>
+              )}
+            </p>
+          )}
+
+          {shownStale.some((s) => s.sources && s.sources.length > 0) && (
+            <details className="mt-2 text-faint">
+              <summary className="cursor-pointer hover:text-muted focus-visible:outline-none">
+                Source breakdown
+              </summary>
+              <ul className="mt-1.5 space-y-1 border-l border-hairline pl-3">
+                {shownStale.flatMap((g) =>
+                  g.sources.map((src) => {
+                    const site = siteFor(src.url);
+                    const pullDate =
+                      src.lastConfirmedAt !== null &&
+                      src.contentChangedAt !== null &&
+                      Date.parse(src.lastConfirmedAt) >= Date.parse(src.contentChangedAt)
+                        ? src.lastConfirmedAt
+                        : (src.lastConfirmedAt ??
+                          (src.contentChangedAt && now - Date.parse(src.contentChangedAt) <= STALE_AFTER_MS
+                            ? src.contentChangedAt
+                            : null));
+                    const confirmed = pullDate
+                      ? `${formatRemaining(now - Date.parse(pullDate))} ago`
+                      : "never";
+                    const updated = src.contentChangedAt
+                      ? `${formatRemaining(now - Date.parse(src.contentChangedAt))} ago`
+                      : src.lastSuccessAt
+                        ? `${formatRemaining(now - Date.parse(src.lastSuccessAt))} ago`
+                        : "never";
+                    const isPullRecent =
+                      pullDate !== null &&
+                      now - Date.parse(pullDate) <= STALE_AFTER_MS;
+                    const isContentStale =
+                      src.contentChangedAt === null ||
+                      now - Date.parse(src.contentChangedAt) > STALE_AFTER_MS;
+                    const diagnosis =
+                      isPullRecent && isContentStale
+                        ? "site has no new updates"
+                        : !isPullRecent
+                          ? "pull overdue"
+                          : "up to date";
+
+                    return (
+                      <li key={src.sourceId}>
+                        <span className="text-muted">{gameMeta(g.game).name}</span>
+                        {" — "}
+                        <a
+                          href={src.url}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className={LINK}
+                        >
+                          {site.name}
+                        </a>
+                        {`: pulled ${confirmed}, site updated ${updated} (${diagnosis})`}
+                      </li>
+                    );
+                  }),
+                )}
+              </ul>
+            </details>
+          )}
+        </div>
+
+        <div className="mt-5 lg:mt-0">
+          <p className="eyebrow">With thanks to</p>
+          <p className="mt-1.5">
+            {sites.map((site, i) => (
+              <span key={site.name}>
+                {i > 0 && (i === sites.length - 1 ? " and " : ", ")}
+                <a
+                  href={site.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-muted underline decoration-hairline underline-offset-2 transition-colors duration-150 hover:text-ink hover:decoration-near"
+                >
+                  {site.name}
+                </a>
+              </span>
+            ))}
+            {", whose editors compile and maintain the event calendars this reads from. The schedules are their work; this page only rearranges them."}
+          </p>
+          <p className="mt-2">
+            And to{" "}
+            {studios.map((studio, i) => (
+              <span key={studio}>
+                {i > 0 && (i === studios.length - 1 ? " and " : ", ")}
+                {studio}
+              </span>
+            ))}
+            , who make the games worth keeping track of —{" "}
+            {games.map((game, i) => (
+              <span key={game.id}>
+                {i > 0 && ", "}
+                <span style={{ color: game.hue }}>{game.name}</span>
+              </span>
+            ))}
+            {"."}
+          </p>
+        </div>
+
+        <div className="mt-5 border-t border-hairline pt-4 lg:mt-0 lg:border-t-0 lg:pt-0">
+          <p>
+            <strong className="font-semibold text-muted">Not affiliated</strong>{" "}
+            with {named.join(", ")}, or any other publisher or source named here.
+            This is an unofficial fan-made tool, not endorsed by or connected to
+            any of them. All game names, event names and trademarks belong to their
+            respective owners.
+          </p>
+          <p className="mt-2">
+            Event dates can be wrong or go out of date. Treat the source page as
+            the authority, not this one.
+          </p>
+        </div>
+      </div>
+
+      <p className="mt-6 border-t border-hairline pt-5">
+        Built by{" "}
+        <a
+          href={AUTHOR.site}
+          target="_blank"
+          rel="noreferrer noopener me"
+          className={LINK}
+        >
+          {AUTHOR.name}
+        </a>
+        {"."}
+      </p>
+
+      <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+        <a
+          href={AUTHOR.github}
+          target="_blank"
+          rel="noreferrer noopener me"
+          className="inline-flex items-center gap-1.5 text-muted transition-colors duration-150 hover:text-ink"
+        >
+          <GitHubMark />
+          @StereotypicalCat
+        </a>
+        <a
+          href={REPO_URL}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="inline-flex items-center gap-1.5 text-muted transition-colors duration-150 hover:text-ink"
+        >
+          <GitHubMark />
+          Source code
+        </a>
+        {/*
+          Last in the row of small links, in the row's own muted grey, with no
+          accent colour, no button and no sentence asking for anything. This
+          page's job is to be trusted about dates, and a tip jar that competes
+          with the disclaimer above it spends that trust to make an ask — so it
+          reads as one more link for a reader already looking at the footer, and
+          is invisible to everyone else.
+        */}
+        <a
+          href={AUTHOR.kofi}
+          target="_blank"
+          rel="noreferrer noopener me"
+          className="inline-flex items-center gap-1.5 text-muted transition-colors duration-150 hover:text-ink"
+        >
+          <KofiMark />
+          Ko-fi
+        </a>
+      </p>
+
+      {IDEA_CREDITS.length > 0 && (
+        <p className="mt-2">
+          Additional ideas and design from{" "}
+          {IDEA_CREDITS.map((c, i) => (
+            <span key={c.handle}>
+              {i > 0 && (i === IDEA_CREDITS.length - 1 ? " and " : ", ")}
+              <a
+                href={c.url}
+                target="_blank"
+                rel="noreferrer noopener"
+                className={LINK}
+              >
+                {c.handle}
+              </a>
+            </span>
+          ))}
+          {"."}
+        </p>
+      )}
+
+      {/*
+        Placed under the disclaimer that admits dates can be wrong, because that
+        paragraph is where a reader who has just found one is looking. The bug
+        link carries the freshness line above it, so a report arrives already
+        saying whether the calendar was current when it was wrong.
+      */}
+      <p className="mt-2">
+        Something wrong, missing, or worth adding?{" "}
+        <a
+          href={bugReportUrl(refreshedLine)}
+          target="_blank"
+          rel="noreferrer noopener"
+          className={LINK}
+        >
+          Report a problem
+        </a>{" "}
+        or{" "}
+        <a
+          href={FEATURE_URL}
+          target="_blank"
+          rel="noreferrer noopener"
+          className={LINK}
+        >
+          request a feature
+        </a>
+        {"."}
+      </p>
+    </footer>
+  );
+}

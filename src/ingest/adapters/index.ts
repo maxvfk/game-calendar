@@ -1,0 +1,356 @@
+import type { GachaEvent, GameId } from "../../shared/schema.ts";
+import { TRACKED_GAME_SET } from "../../shared/project.ts";
+import { mergeEvents, type MergeResult } from "../merge.ts";
+import { parserById } from "../parsers/index.ts";
+import { sanitizeEvents } from "../sanitize.ts";
+import { SIX_HOURS_MS, type Adapter, type ParseContext } from "./types.ts";
+
+/**
+ * The source registry.
+ *
+ * One entry per (game, page). Adding a source for a site we already parse is a
+ * single entry here. Adding a new site means a parser in `../parsers` first.
+ */
+
+interface SourceSpec {
+  id: string;
+  game: GameId;
+  url: string;
+  parserId: string;
+  priority?: number;
+  minIntervalMs?: number;
+}
+
+const SOURCES: SourceSpec[] = [
+  {
+    id: "genshin-game8-events",
+    game: "genshin",
+    url: "https://game8.co/games/Genshin-Impact/archives/301601",
+    parserId: "game8",
+    // **This priority protects event IDs, not data quality.** The Fandom source
+    // below is the fresher page by a wide margin — it is the only Genshin
+    // surface CI can fetch at all — but `priority` here decides which copy
+    // *survives* a near-match, and the survivor's title is its ID, which is a
+    // localStorage key (AGENTS.md § Event IDs are localStorage keys). The two
+    // pages title two live events differently: `To Temper Thyself and Journey
+    // Far` vs `… Cycle 5`, and `Stygian Onslaught` vs `…: Battle of the
+    // Starburst`. Letting Fandom win those re-mints both IDs and silently
+    // orphans every completion mark on them, with no server-side recovery — so
+    // the incumbent keeps identity and Fandom contributes the events Game8
+    // never listed. Measured: 0 IDs lost this way, 2 lost the other way.
+    //
+    // It costs nothing on dates today, because the two sources agree exactly
+    // wherever they overlap (0 conflicts). Should they ever diverge, `merge.ts`
+    // flags it rather than resolving it, which is the gate working.
+    priority: 10,
+  },
+  {
+    id: "hsr-game8-events",
+    game: "hsr",
+    url: "https://game8.co/games/Honkai-Star-Rail/archives/408749",
+    parserId: "game8",
+  },
+  {
+    id: "wuwa-game8-events",
+    game: "wuwa",
+    url: "https://game8.co/games/Wuthering-Waves/archives/453473",
+    parserId: "game8",
+  },
+  {
+    id: "zzz-game8-events",
+    game: "zzz",
+    url: "https://game8.co/games/Zenless-Zone-Zero/archives/457176",
+    parserId: "game8",
+  },
+  {
+    id: "endfield-game8-events",
+    game: "endfield",
+    url: "https://game8.co/games/Arknights-Endfield/archives/535443",
+    parserId: "game8",
+  },
+  {
+    id: "endfield-wikigg-events",
+    game: "endfield",
+    url: "https://endfield.wiki.gg/wiki/Event",
+    parserId: "wikigg",
+    // Exact timestamps and per-region ends beat Game8's day-precision prose,
+    // so this source wins when the two disagree.
+    priority: 10,
+  },
+  {
+    id: "arknights-akwiki-events",
+    game: "arknights",
+    url: "https://arknights.wiki.gg/wiki/Event",
+    parserId: "akwiki",
+  },
+  {
+    id: "nte-game8-events",
+    game: "nte",
+    url: "https://game8.co/games/Neverness-to-Everness/archives/592073",
+    parserId: "game8",
+  },
+  {
+    id: "p5x-game8-events",
+    game: "p5x",
+    url: "https://game8.co/games/Persona-5-Phantom-X/archives/532244",
+    parserId: "game8",
+  },
+  {
+    id: "genshin-fandom-events",
+    game: "genshin",
+    // The API, not `/wiki/Event` — the whole § Fandom argument in AGENTS.md.
+    // This wiki's robots.txt is the standard Fandom file, read with the
+    // runner's own client on 2026-09-12: `Allow: /api.php?action=` for
+    // `User-agent: *`, no `Disallow: /`, no `Content-Signal`, and the AI
+    // crawlers it names (GPTBot, CCBot, OAI-SearchBot, ImagesiftBot,
+    // ClaudeBot) are not us.
+    //
+    // Genshin's Game8 page has never been fetchable from CI (CloudFront answers
+    // every runner with a 202), so until this source existed the game's lane was
+    // built from a checked-in fixture and could only age. This page is a fifth
+    // template — `Event | Duration | Type(s)` under `h3` fences — and publishes
+    // at day precision, which is everything it states.
+    //
+    // Lower priority than the Game8 source above on purpose, and the comment
+    // there says why: it is an identity question, not a quality one.
+    url: "https://genshin-impact.fandom.com/api.php?action=parse&page=Event&prop=text&formatversion=2&format=json",
+    parserId: "fandom",
+  },
+  {
+    id: "r1999-fandom-events",
+    game: "r1999",
+    // The MediaWiki API, not `/wiki/Events`. The rendered page answers a
+    // non-browser client with a Cloudflare interstitial, while this wiki's
+    // robots.txt allows `/api.php?action=` for `User-agent: *` and the endpoint
+    // serves our real User-Agent a 200. See `parsers/fandom.ts` for the full
+    // reasoning; the short version is that this is the surface the site put in
+    // writing, reached without pretending to be anything we are not.
+    url: "https://reverse1999.fandom.com/api.php?action=parse&page=Events&prop=text&formatversion=2&format=json",
+    parserId: "fandom",
+  },
+  {
+    id: "ba-bawiki-events",
+    game: "ba",
+    // The rendered page, deliberately, and the opposite call to the Fandom
+    // source above: this wiki is Miraheze, whose robots.txt disallows `/w/` and
+    // `/*?action=`, so the API route is the one that is closed here and
+    // `/wiki/Events` is the surface the site permits.
+    url: "https://bluearchive.wiki/wiki/Events",
+    parserId: "bawiki",
+  },
+  {
+    id: "fgo-fandom-events",
+    game: "fgo",
+    // `Event_List` is the Japanese server and `Event_List_(US)` is ours; they
+    // run months apart. See parsers/fandom.ts § the English-server half.
+    url: "https://fategrandorder.fandom.com/api.php?action=parse&page=Event_List_(US)&prop=text&formatversion=2&format=json",
+    parserId: "fandom",
+  },
+  {
+    id: "holodori-holodoriwiki-events",
+    game: "holodori",
+    // The rendered page, the same call as `ba-bawiki-events` above and for the
+    // same reason: holodori.wiki is Miraheze, so `/w/` and `?action=` are the
+    // closed routes here and `/wiki/` is the one `*` is allowed.
+    url: "https://holodori.wiki/wiki/Events",
+    parserId: "holodoriwiki",
+  },
+  {
+    id: "gfl2-iopwiki-events",
+    game: "gfl2",
+    // IOP Wiki, the Girls' Frontline universe wiki. Its robots.txt is two lines
+    // — `User-agent: *` and `Crawl-Delay: 20` — with no Disallow anywhere, and
+    // the page answers our own User-Agent with a 200 and a real `Last-Modified`,
+    // so the conditional request below costs it a 304 on an unchanged day.
+    url: "https://iopwiki.com/wiki/GFL2_Events",
+    parserId: "iopwiki",
+  },
+  {
+    id: "stellasora-stellasorawiki-events",
+    game: "stellasora",
+    // The front page, and deliberately not `/wiki/Banner_List`: the list has
+    // full coverage and states no timezone anywhere, while this module emits
+    // the same instants as `<time datetime>` with the offset in the markup.
+    // See `parsers/stellasora.ts` for why coverage loses that argument.
+    url: "https://stellasora.miraheze.org/wiki/Main_Page",
+    parserId: "stellasorawiki",
+  },
+  {
+    id: "nikki-fandom-events",
+    game: "nikki",
+    // Infinity Nikki, replacing a Game8 page that stopped being updated in
+    // August 2025 and had been publishing year-old events as live ever since.
+    //
+    // `infinitynikki.fandom.com` 301s here; this is the canonical host. Its
+    // robots.txt was read in a browser on 2026-08-19 and is the standard Fandom
+    // file, the same one that cleared Nikke below.
+    //
+    // Day precision on both boundaries by choice: the page states a wall clock
+    // and names no zone for it. See `parsers/fandom.ts` and docs/SOURCES.md § 11.
+    url: "https://infinity-nikki.fandom.com/api.php?action=parse&page=Event&prop=text&formatversion=2&format=json",
+    parserId: "fandom",
+  },
+  {
+    id: "nikke-fandom-events",
+    game: "nikke",
+    // The MediaWiki API, like the two Fandom sources above. This wiki's
+    // robots.txt was read in a browser on 2026-08-19 and is the standard Fandom
+    // file: no `Disallow: /` for `*`, `/api.php?action=` explicitly allowed,
+    // and only `Special:`, `User:`, `User_talk:`, `Template:`, `Template_talk:`,
+    // `Help:` and `UserProfile:` refused. The named AI crawlers it blocks
+    // (GPTBot, CCBot, OAI-SearchBot, ImagesiftBot) are not us.
+    //
+    // As with r1999 and fgo, the robots gate still fails closed from a
+    // datacentre address, so the scheduled refresh reports skipped_robots and
+    // this lane is fixture-backed until refreshed from an address Fandom serves.
+    url: "https://nikke-goddess-of-victory-international.fandom.com/api.php?action=parse&page=Event&prop=text&formatversion=2&format=json",
+    parserId: "fandom",
+  },
+  {
+    id: "czn-game8-events",
+    game: "czn",
+    // The ninth game8 source, and the cost is worth stating plainly: game8's
+    // edge answers the Actions runner with a 202 and a bot-management body
+    // (AGENTS.md § Scraping conduct), so this lane is built from a checked-in
+    // fixture in CI from day one and only a manual `bun run refresh` moves it.
+    // `freshness()` discloses that in the footer, which is what it is for.
+    url: "https://game8.co/games/Chaos-Zero-Nightmare/archives/559899",
+    parserId: "game8",
+  },
+  {
+    id: "uma-game8-events",
+    game: "uma",
+    // `uma.moe` stays declined — its API sits behind a Cloudflare Turnstile
+    // proof header, and an adapter would mean defeating a deliberate access
+    // control. This is the surface that is simply open.
+    //
+    // The stable URL matters here: Game8 also publishes monthly
+    // `August 2026 Release Schedule` pages whose id changes every month, which
+    // a static registry cannot follow. "List of All Banners" does not move.
+    //
+    // The tenth game8 source, with the same CI blindness as the other nine.
+    url: "https://game8.co/games/Umamusume-Pretty-Derby/archives/536311",
+    parserId: "game8",
+  },
+  {
+    id: "hi3-arustats-events",
+    game: "hi3",
+    // **Version-less on purpose.** This path answers `307` to the current
+    // version — `/en-us/hi3/timeline/9.0` today — so the site names its own
+    // live version and the runner follows it. Pinning `/9.0` here would publish
+    // a finished schedule as current the day the game moves on.
+    //
+    // **These dates are estimates.** The page schedules by week bucket and heads
+    // the grid `ESTIMATED WEEK`; this source publishes bucket edges, not
+    // announced dates, which is the trade `docs/SOURCES.md` § 14 records and
+    // `ESTIMATE_CONFIDENCE` (0.4) carries into the data. A real Honkai Impact
+    // 3rd source outranks it on confidence alone if one is ever found.
+    url: "https://www.arustats.com/en-us/hi3/timeline",
+    parserId: "arustats",
+  },
+  {
+    id: "pgr-karendar-events",
+    game: "pgr",
+    // Karendar is a fan-made PGR event calendar for the Global server.
+    // The home page server-renders all active, ongoing, and upcoming
+    // events in clean semantic HTML with exact UTC timestamps. robots.txt
+    // permits / while disallowing /login, /this-week, and /api/.
+    url: "https://karendar.com/",
+    parserId: "karendar",
+  },
+];
+
+function toAdapter(spec: SourceSpec): Adapter {
+  const parser = parserById(spec.parserId);
+  if (parser === undefined) {
+    throw new Error(
+      `source '${spec.id}' references unknown parser '${spec.parserId}'`,
+    );
+  }
+
+  return {
+    id: spec.id,
+    game: spec.game,
+    url: spec.url,
+    parserId: spec.parserId,
+    minIntervalMs: spec.minIntervalMs ?? SIX_HOURS_MS,
+    priority: spec.priority ?? 0,
+    statesNoEvents(html: string): boolean {
+      return parser.statesNoEvents?.(html) ?? false;
+    },
+    parse(html: string, ctx: ParseContext): GachaEvent[] {
+      // A site redesign should fail the run loudly rather than publish an empty
+      // calendar, which would read as "no events" to a user.
+      if (!parser.canParse(html)) {
+        throw new Error(
+          `${spec.id}: document does not match the '${parser.label}' template; the source has likely been redesigned`,
+        );
+      }
+
+      // The trust boundary. Everything a parser produces came from a page we do
+      // not control, and this is the one place every source passes through:
+      // `ADAPTERS` is built from `SOURCES` via this function, so a source added
+      // tomorrow is sanitised without its author doing anything, and a parser
+      // cannot opt out. Sanitising here rather than inside the parsers also
+      // keeps parsers what they are — pure readers of one site's markup.
+      //
+      // `sanitizeEvents` logs to console.warn by default, so a repaired or
+      // dropped event is never silent (AGENTS.md § Silent drops).
+      return sanitizeEvents(parser.parse(html, ctx), {
+        sourceId: ctx.sourceId,
+        fallbackUrl: ctx.sourceUrl,
+      }).events;
+    },
+  };
+}
+
+export const ADAPTERS: Adapter[] = SOURCES.filter((source) =>
+  TRACKED_GAME_SET.has(source.game),
+).map(toAdapter);
+
+export function adaptersForGame(game: GameId): Adapter[] {
+  return ADAPTERS.filter((a) => a.game === game);
+}
+
+export function adapterById(id: string): Adapter | undefined {
+  return ADAPTERS.find((a) => a.id === id);
+}
+
+export function gamesWithSources(): GameId[] {
+  return [...new Set(ADAPTERS.map((a) => a.game))];
+}
+
+/**
+ * Parse every source for one game and combine them.
+ *
+ * Callers supply already-fetched documents so this stays pure and offline —
+ * fetching is stage 1's job, not the parser's.
+ */
+export function parseGame(
+  game: GameId,
+  documents: Map<string, string>,
+  now: string,
+): MergeResult {
+  const groups = adaptersForGame(game)
+    .sort((a, b) => b.priority - a.priority)
+    .flatMap((adapter) => {
+      const html = documents.get(adapter.id);
+      if (html === undefined) return [];
+      return [
+        adapter.parse(html, {
+          now,
+          sourceUrl: adapter.url,
+          sourceId: adapter.id,
+          game: adapter.game,
+        }),
+      ];
+    });
+
+  return mergeEvents(groups);
+}
+
+// Convenience handles for tests and scripts.
+export const genshinGame8 = ADAPTERS.find(
+  (a) => a.id === "genshin-game8-events",
+)!;
+export const nteGame8 = ADAPTERS.find((a) => a.id === "nte-game8-events")!;

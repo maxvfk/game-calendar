@@ -1,0 +1,165 @@
+name: CI
+# GitHub Actions CI/CD
+#
+# GitHub only needs to build and serve (deploying to GitHub Pages), not refresh
+# data sources. Scheduled fetching and snapshot refresh run exclusively on
+# Gitea Actions (.gitea/workflows/refresh.yml).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A new push supersedes the one before it on the same ref.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Least privilege by default; jobs opt into more where they need it.
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Typecheck, test, feed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3"
+
+      - run: bun install --frozen-lockfile
+
+      # `lastConfirmedAt` — the "we asked the wiki and it said this is still
+      # current" half of the freshness badge — lives in the gitignored
+      # snapshots/*.state.json, so without this the feed built here has only
+      # `contentChangedAt` to go on and every source reads as stale two days
+      # after its bytes last moved, which for a wiki page is most of the time.
+      # Restore-only: Gitea's refresh workflow owns writing this cache, and a
+      # miss just returns the pre-existing fallback behaviour.
+      - name: Restore refresh bookkeeping
+        uses: actions/cache/restore@v4
+        with:
+          path: snapshots/*.state.json
+          key: refresh-state-
+          restore-keys: refresh-state-
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test
+        # Offline by design: no fixture is re-fetched, so a red run always means
+        # the code changed, never that a source was unreachable.
+        run: bun test
+
+      - name: Build feed
+        run: bun run build:feed
+
+      - name: Feed sanity
+        # A source that quietly stops yielding events is the failure mode a
+        # parser-only pipeline is most prone to, and nothing else surfaces it.
+        run: |
+          bun -e '
+            const feed = await Bun.file("public/data/events.v1.json").json();
+            const games = new Set(feed.events.map((e) => e.game));
+            console.log(`${feed.events.length} events across ${games.size} games`);
+            for (const s of feed.sources) {
+              console.log(`  ${s.sourceId.padEnd(24)} ${String(s.eventCount).padStart(3)}`);
+            }
+            // The clean import intentionally started without upstream event
+            // fixtures. Keep the deploy honest but allow partial source
+            // coverage until reviewed ingestion is online.
+            if (feed.events.length < 1) {
+              throw new Error(`feed collapsed to ${feed.events.length} events`);
+            }
+            if (feed.events.some((e) => !e.startsAt)) {
+              throw new Error("events without a start date");
+            }
+            // Per source, not just in total: nine healthy sources hide a tenth
+            // that has gone to zero, and the total stays comfortably over the
+            // floor while one game shows an empty calendar.
+            //
+            // Which zero it is decides whether this build should fail, and
+            // the rule lives in shared/feed.ts rather than here. It was
+            // inline, and a test did pin it — by grepping this file for the
+            // string. That proved the check existed, never that it was right,
+            // and it was not: it read eventCount, which is counted after
+            // expiry, so a page whose events had all simply ended reddened the
+            // build. Behaviour belongs where behaviour can be exercised.
+            const { brokenSources, quietSources, staleSources } = await import("./src/shared/feed.ts");
+            for (const s of staleSources(feed.sources)) {
+              console.log(
+                `  note: ${s.sourceId} parsed ${s.parsedCount} events, all of them ended — stale page, not a fault`,
+              );
+            }
+            for (const s of quietSources(feed.sources)) {
+              console.log(
+                `  note: ${s.sourceId} parsed nothing and the page says so itself — between versions, not a fault`,
+              );
+            }
+            const broken = brokenSources(feed.sources);
+            if (broken.length > 0) {
+              throw new Error(
+                `sources parsing to nothing: ${broken.map((s) => s.sourceId).join(", ")}`,
+              );
+            }
+          '
+
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3"
+      - run: bun install --frozen-lockfile
+
+      # This is the job whose output is deployed, so this is the one that must
+      # see the refresh bookkeeping; see the same step in `check`.
+      - name: Restore refresh bookkeeping
+        uses: actions/cache/restore@v4
+        with:
+          path: snapshots/*.state.json
+          key: refresh-state-
+          restore-keys: refresh-state-
+
+      - name: Build
+        # Pages serves from /<repo>/ by default, so the app is built with a
+        # matching base href unless overridden by vars.BASE_PATH (e.g. for
+        # custom domains). Built at the domain root it would 404 on every asset.
+        env:
+          BASE_PATH: ${{ vars.BASE_PATH || format('/{0}/', github.event.repository.name) }}
+        run: bun run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: public/
+          retention-days: 7
+
+  pages:
+    name: Deploy to Pages
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: public
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - id: deploy
+        uses: actions/deploy-pages@v4
