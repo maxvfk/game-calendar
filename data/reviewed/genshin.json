@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "game": "genshin",
+  "reviewedAt": "2026-09-21T19:31:13.000Z",
+  "reviewedBy": "chatgpt",
+  "statesNoEvents": false,
+  "events": [
+    {
+      "title": "Tabletop Troupe: A Gathering on Adventurer's Eve",
+      "type": "other",
+      "summary": "Invite one of six event-exclusive 5-star characters after completing the Version 7.1 Archon Quest.",
+      "startsAt": "2026-09-23T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-03T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-03T06:59:00.000Z",
+        "europe": "2026-11-03T13:59:00.000Z",
+        "america": "2026-11-03T19:59:00.000Z"
+      },
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Across the Frozen Wilds, Honing One's Edge",
+      "type": "other",
+      "summary": "Invite one 5-star character from the Standard Wish and receive their Ascension Materials.",
+      "startsAt": "2026-09-23T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-03T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-03T06:59:00.000Z",
+        "europe": "2026-11-03T13:59:00.000Z",
+        "america": "2026-11-03T19:59:00.000Z"
+      },
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Missive of Grace: A Thank-You Gift",
+      "type": "login",
+      "summary": "Thank-you mails with Primogems ×1,600, gadgets, and other rewards; claim before the end of Version 7.1.",
+      "startsAt": "2026-09-28T00:00:00.000Z",
+      "startPrecision": "exact",
+      "endsAt": null,
+      "endPrecision": "unknown",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Resplendent Starlight",
+      "type": "login",
+      "summary": "Seven-day login event with Intertwined Fate ×10 and other rewards.",
+      "startsAt": "2026-10-01T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-18T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-18T19:59:00.000Z",
+        "europe": "2026-10-19T02:59:00.000Z",
+        "america": "2026-10-19T08:59:00.000Z"
+      },
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "When Warm Winds Cavort",
+      "type": "banner",
+      "summary": "Vesna character event wish; Diona, Faruzan, and Chongyun receive boosted drop rates.",
+      "startsAt": "2026-09-23T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-13T09:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-13T09:59:00.000Z",
+        "europe": "2026-10-13T16:59:00.000Z",
+        "america": "2026-10-13T22:59:00.000Z"
+      },
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Surging Ballad",
+      "type": "banner",
+      "summary": "Vodyanitsa character event wish; Diona, Faruzan, and Chongyun receive boosted drop rates.",
+      "startsAt": "2026-09-23T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-13T09:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-13T09:59:00.000Z",
+        "europe": "2026-10-13T16:59:00.000Z",
+        "america": "2026-10-13T22:59:00.000Z"
+      },
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Epitome Invocation — Version 7.1 Phase I",
+      "type": "banner",
+      "summary": "Weapon event wish featuring Beyond the Chrysalis and Hymn of the Maelstrom.",
+      "startsAt": "2026-09-23T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-13T09:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-13T09:59:00.000Z",
+        "europe": "2026-10-13T16:59:00.000Z",
+        "america": "2026-10-13T22:59:00.000Z"
+      },
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "A Rekviem for the Underworld — Limited-Time Archon Quest Rewards",
+      "type": "story",
+      "summary": "Complete the Version 7.1 Archon Quest during the specified period for Primogems ×620 and other rewards.",
+      "startsAt": "2026-09-23T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-03T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-03T06:59:00.000Z",
+        "europe": "2026-11-03T13:59:00.000Z",
+        "america": "2026-11-03T19:59:00.000Z"
+      },
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Silverwing in Pursuit of the Moon",
+      "type": "story",
+      "summary": "Version 7.1 flagship event; obtain the event-exclusive sword Silver Light and its refinement materials.",
+      "startsAt": "2026-09-24T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-11T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-11T19:59:00.000Z",
+        "europe": "2026-10-12T02:59:00.000Z",
+        "america": "2026-10-12T08:59:00.000Z"
+      },
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Predictive Victory Dynamics — Competition Period",
+      "type": "challenge",
+      "summary": "Predict battle outcomes for Primogems and other rewards; results remain available through October 22, 21:59 (UTC-4).",
+      "startsAt": "2026-10-12T02:00:00.000Z",
+      "startPrecision": "exact",
+      "endsAt": "2026-10-20T01:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Stygian Onslaught — Version 7.1",
+      "type": "challenge",
+      "summary": "Limited-time combat event; the Disturbance Outbreak period ends October 10 at 03:59 server time.",
+      "startsAt": "2026-09-30T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-02T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-02T19:59:00.000Z",
+        "europe": "2026-11-03T02:59:00.000Z",
+        "america": "2026-11-03T08:59:00.000Z"
+      },
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Imaginarium Theater — October 2026 Season",
+      "type": "challenge",
+      "summary": "New season featuring Hydro, Cryo, and Anemo as the event-exclusive elemental types.",
+      "startsAt": "2026-10-01T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": null,
+      "endPrecision": "unknown",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Moontrace — Version 7.1 Battle Pass",
+      "type": "other",
+      "summary": "Version 7.1 Battle Pass; the purchase period ends one hour before the Battle Pass itself.",
+      "startsAt": "2026-09-23T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-01T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-01T19:59:00.000Z",
+        "europe": "2026-11-02T02:59:00.000Z",
+        "america": "2026-11-02T08:59:00.000Z"
+      },
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    }
+  ]
+}

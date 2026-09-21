@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "game": "hsr",
+  "reviewedAt": "2026-09-21T19:39:44.000Z",
+  "reviewedBy": "chatgpt",
+  "statesNoEvents": false,
+  "events": [
+    {
+      "title": "Overdrive: Whirlwind Grand Prix",
+      "type": "challenge",
+      "summary": "Version 4.5 racing event with limited-time missions and rewards.",
+      "startsAt": "2026-08-26T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-27T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-27T19:59:00.000Z",
+        "europe": "2026-09-28T02:59:00.000Z",
+        "america": "2026-09-28T08:59:00.000Z"
+      },
+      "sourceUrl": "https://hsr.hoyoverse.com/en-us/news/165767",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Minuscule Great Adventure",
+      "type": "challenge",
+      "summary": "Limited-time Version 4.5 event beginning September 12 at 12:00 server time.",
+      "startsAt": "2026-09-12T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-27T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-27T19:59:00.000Z",
+        "europe": "2026-09-28T02:59:00.000Z",
+        "america": "2026-09-28T08:59:00.000Z"
+      },
+      "sourceUrl": "https://hsr.hoyoverse.com/en-us/news/165767",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Over the Gilded Tides",
+      "titleRu": "Золотые блики волн",
+      "type": "banner",
+      "summary": "Aventurine: Waveflair character event warp; Sampo, Hook, and Guinaifen receive boosted drop rates.",
+      "startsAt": "2026-09-12T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-27T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-27T19:59:00.000Z",
+        "europe": "2026-09-28T02:59:00.000Z",
+        "america": "2026-09-28T08:59:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/46634922",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "A Hunt Through Night",
+      "titleRu": "Охота долгой ночи",
+      "type": "banner",
+      "summary": "Ashveil character event warp; Sampo, Hook, and Guinaifen receive boosted drop rates.",
+      "startsAt": "2026-09-12T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-27T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-27T19:59:00.000Z",
+        "europe": "2026-09-28T02:59:00.000Z",
+        "america": "2026-09-28T08:59:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/46634922",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Brilliant Fixation: Summer Rides the Surf",
+      "titleRu": "Искрящаяся фиксация: Лето в волнах",
+      "type": "banner",
+      "summary": "Light Cone event warp featuring the 5-star Elation Light Cone Summer Rides the Surf.",
+      "startsAt": "2026-09-12T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-27T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-27T19:59:00.000Z",
+        "europe": "2026-09-28T02:59:00.000Z",
+        "america": "2026-09-28T08:59:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/46634922",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Bygone Reminiscence: Epilogue of Lies",
+      "titleRu": "Ушедшие воспоминания: Эпилог лжи",
+      "type": "banner",
+      "summary": "Light Cone event warp featuring the 5-star Hunt Light Cone Epilogue of Lies.",
+      "startsAt": "2026-09-12T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-27T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-27T19:59:00.000Z",
+        "europe": "2026-09-28T02:59:00.000Z",
+        "america": "2026-09-28T08:59:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/46634922",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Apocalyptic Shadow: Celestial Lupine",
+      "type": "challenge",
+      "summary": "Apocalyptic Shadow phase active from August 31 through October 5, server time.",
+      "startsAt": "2026-08-31T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-04T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-04T19:59:00.000Z",
+        "europe": "2026-10-05T02:59:00.000Z",
+        "america": "2026-10-05T08:59:00.000Z"
+      },
+      "sourceUrl": "https://hsr.hoyoverse.com/en-us/news/165767",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Pure Fiction: Domain Genesis",
+      "type": "challenge",
+      "summary": "Pure Fiction phase active from September 14 through October 19, server time.",
+      "startsAt": "2026-09-14T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-18T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-18T19:59:00.000Z",
+        "europe": "2026-10-19T02:59:00.000Z",
+        "america": "2026-10-19T08:59:00.000Z"
+      },
+      "sourceUrl": "https://hsr.hoyoverse.com/en-us/news/165767",
+      "provenanceStatus": "official",
+      "confidence": 1
+    }
+  ]
+}
