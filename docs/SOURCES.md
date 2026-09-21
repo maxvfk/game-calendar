@@ -209,44 +209,135 @@ source immediately — full coverage, no template dependency.
 > The `resetOffsets` / `resetHourLocal` win this section predicted was real and shipped with the
 > game: UTC+9 for every region, rolling at 05:00.
 
-## 4. Chaos Zero Nightmare — BUILT 2026-08-19; the cheapest adapter available, and a ninth blind source
+## 4. Chaos Zero Nightmare — BUILT 2026-08-19; source strategy revised 2026-09-22
 
-**Source:** `https://game8.co/games/Chaos-Zero-Nightmare/archives/559899` ("List of All Events")
+The original CZN lane was built from Game8 because its existing parser could read the page with no
+new parser work. That remains useful historical fallback, but it is no longer the right primary
+source for current data.
 
-Among the games still missing, **only Umamusume and CZN have a Game8 wiki hub at all** — probes of
-`game8.co/games/{Goddess-of-Victory-Nikke, Nikke, Girls-Frontline-2-Exilium, Punishing-Gray-Raven,
-Azur-Lane, Guardian-Tales, Stella-Sora, Aether-Gazer}` all returned 404. Those games exist on Game8
-only as news article hubs, which are not schedules.
+### Source hierarchy for the calendar
 
-**The existing parser already reads it.** Run offline against the fetched bytes:
+1. **Official STOVE notices — canonical provenance**
+   - Community hub: `https://page.onstove.com/chaoszeronightmare/en`
+   - Individual notices use stable-looking `/view/<id>` URLs.
+   - Use for update notices, maintenance, rate-up announcements, event periods, Great Rift,
+     Basin of Hyperspace, Supply Store windows, seasonal chapters and other official boundaries.
+   - Limitation: the public page is JavaScript-driven; a plain HTML fetch currently returns the
+     "homepage doesn't work properly without JavaScript enabled" shell. Keep the STOVE URL as the
+     canonical `sourceUrl` when another source mirrors the notice, but do not build a blind HTML
+     parser against the shell.
 
-```
-parser game8 canParse: true
-events: 4
- - Following the Fox's Footsteps      2026-05-27 → 2026-06-17  (day/day)
- - Beach Cafe Festival                2026-07-29 → 2026-09-30  (day/day)
- - Chasing the Remanants of Light     2026-07-29 → 2026-09-08  (day/day)
- - Virtual Tactical Simulation Hilde  2026-07-29 → 2026-08-19  (day/day)
-```
+2. **CZN.gg news mirror — best readable representation of many STOVE notices**
+   - All news: `https://czn.gg/news/`
+   - Update notices: `https://czn.gg/news/updates/`
+   - Developer notes: `https://czn.gg/news/developer-notes/`
+   - Current-event archive: `https://czn.gg/category/current-events/`
+   - Individual mirrored posts normally identify `Source: STOVE` and preserve the body text,
+     including tables such as Great Rift phase periods and explicit UTC timestamps.
+   - This is the preferred *extraction surface* for full patch/event coverage when reachable.
+     Preserve the linked STOVE notice as canonical provenance whenever the mirror exposes it.
+   - Limitation: direct automated requests are not guaranteed. Some ordinary fetches currently
+     receive HTTP 403 while indexed/search-rendered copies are readable. Do not make CZN.gg the
+     only scheduled source until its behaviour is measured on the actual GitHub Actions runner.
 
-The page lists six current events; the two the parser skips (`Full-Scale Offensive Season 3`,
-`Virtual Tactical Simulation - Yuki`) both print `Start Date: -`. No start means no event ID, so
-skipping them is the rule working, not a silent drop. Page last updated 2026-08-11.
+3. **Prydwen banner schedule — preferred automatic candidate for banners**
+   - `https://www.prydwen.gg/chaos-zero-nightmare/banners`
+   - The page explicitly carries current/next Combatant and Partner phases and start/end dates,
+     and says it waits for official confirmation rather than publishing leaks.
+   - As of 2026-09-22 its CZN page is current through Season 4 Phase 3
+     (2026-09-09 → 2026-09-30).
+   - Prydwen's `robots.txt` allows `User-Agent: *` on normal pages and specifies
+     `Crawl-delay: 10`; `/api/` is disallowed. If an adapter is added, fetch the rendered
+     banner page, never a private/undocumented API.
+   - This source should create only `type: "banner"` records. It is a cross-check / automatic
+     floor for banners, not a replacement for STOVE update notices.
 
-So this is a `SOURCES` entry, a `czn` `GameId`, a fixture and a test — no parser work at all.
+4. **Smilegate Newsroom — official cross-check for major seasonal updates**
+   - `https://newsroom.smilegate.com/`
+   - Useful for Galactic Disaster season/chapter launches and major content such as a new
+     Great Rift or Full-Scale Offensive season.
+   - Coverage is selective, so never use absence here as evidence that an event does not exist.
 
-**The cost is honest and should be stated in the commit:** it becomes the ninth game8 source, and
-game8 returns `202` with a bot-management body to the Actions runner, so this lane will be built from
-a checked-in fixture in CI from day one and will go stale within a patch cycle unless the user runs
-`bun run refresh` themselves. `freshness()` will say so in the footer, which is what that disclosure
-is for — but adding a game that can only ever be as fresh as someone's last manual run is a decision,
-not a detail. It also worsens the per-host arithmetic in § Scraping conduct: nine game8 pages per
-cycle to one host.
+5. **App Store version history — client build/version reference**
+   - `https://apps.apple.com/us/app/chaos-zero-nightmare/id6502326151`
+   - Carries a useful build history: for example 1.0.461 (2026-09-09), 1.0.450 (2026-08-19),
+     1.0.307 (2026-07-29), 1.0.303 (2026-07-08), 1.0.294 (2026-06-17).
+   - Treat a client build as metadata, not a calendar event, unless the data model gains a
+     dedicated version/release event type. A game update date itself can still be represented by
+     its official maintenance/update event.
 
-Alternatives checked and worse: `gamewith.net/chaoszeronightmare/71099` has the right table shape but
-is stale (its "latest events" are April–May 2026); `czn.gg` is a WordPress site whose
-`/category/current-events/` is a blog feed, not a schedule, and whose `robots.txt` disallows
-`anthropic-ai` and `Claude-Web` by name (not us, but a signal about the site's posture).
+6. **Game8 — legacy fallback only**
+   - `https://game8.co/games/Chaos-Zero-Nightmare/archives/559899`
+   - The existing `game8` parser reads it, but the page has fallen behind the live game and
+     Game8's edge answers the GitHub Actions runner with a bot-management `202`.
+   - Keep the adapter/fixture for historical fallback until a better automatic source is proven,
+     but do not treat it as current authority.
+
+### What to extract from official update notices
+
+CZN patch notes are unusually good calendar documents: one update notice can contain most of the
+next three-week cycle. Extraction should be section-aware rather than a single global date regex.
+
+| Notice material | Calendar mapping | Notes |
+|---|---|---|
+| Combatant / Partner Rate-Up Rescue | `banner` | Split a combined announcement into separate Combatant and Partner rows when the UI should track them independently. |
+| The Great Rift first/second half | `challenge` | Keep each phase if their boundaries differ; title should include the phase/half to keep IDs stable. |
+| Basin of Hyperspace | `challenge` | Use the season/subtitle when present. |
+| Full-Scale Offensive / other score modes | `challenge` | Prefer explicit season boundaries over inferred cadence. |
+| Limited story/event | `story` or `other` | `story` when narrative content itself is time-limited; otherwise `other`. |
+| Virtual Tactical Simulation | `challenge` | One row per featured Combatant when schedules differ. |
+| Login/check-in | `login` | Preserve explicit daily/event end. |
+| Supply Store phase | `shop` | Only if the exchange window has a real deadline useful to the reader. |
+| Maintenance | `maintenance` | Also usable to resolve "after maintenance" / "before maintenance" boundaries. |
+| Client build number | not currently ingested | Metadata only under the present schema. |
+
+### Boundary rules
+
+CZN commonly writes boundaries as "after maintenance" and "before maintenance".
+
+- If the linked maintenance notice states the exact maintenance boundary, resolve the event to that
+  timestamp and use `Precision = "exact"`.
+- If the update notice gives only a date plus "after/before maintenance" and no exact maintenance
+  boundary can be corroborated, preserve the stated date with `Precision = "day"`. Do not invent
+  the usual maintenance hour.
+- Explicit `HH:MM (UTC)` timestamps are exact and convert directly to ISO UTC.
+- A date announced only in a developer preview is not promoted to official live scheduling if the
+  note calls the plan provisional/subject to change. Record it as reviewed/estimated if it is useful,
+  then replace it with the live notice when published.
+- Never infer a missing end from the game's usual three-week cadence. `endsAt: null` is correct
+  until a source actually states the boundary.
+
+### Deduplication / corroboration
+
+The same period can appear in an update notice, a standalone event post, Prydwen and a press release.
+That is corroboration, not four events.
+
+- Primary identity remains the repository's stable `eventId(game, title, startsAt)`; do not rename
+  an already-published row just because another source uses shorter marketing copy.
+- Treat same semantic subject + same start/end as one event even when one notice says
+  "Amplified Distress Signal: Olga" and another says "Olga Rate-Up Rescue".
+- Prefer direct STOVE provenance. A CZN.gg mirror should enrich/corroborate it, not replace the
+  official URL when the original link is known.
+- Prydwen can corroborate banner boundaries. It should not override a contradictory official notice;
+  a disagreement is a review condition.
+- Smilegate Newsroom can corroborate large season/content launches but is not expected to enumerate
+  every in-game event.
+- Maintenance notices may enrich boundary precision without creating a duplicate of the event whose
+  start/end they resolve.
+
+### Present repository state (2026-09-22)
+
+The reviewed channel is already the useful CZN lane: `data/reviewed/czn.json` contains current
+Season 4 material including The Great Rift second half, Basin of Hyperspace: Dimensional Twilight,
+Olga/Emilie banners, the upcoming Narja/Gaya normal rate-up, limited events and login periods.
+Those records use official STOVE URLs and therefore outrank the stale Game8 fixture in practical
+currency.
+
+**Next implementation step:** add a small dedicated Prydwen banner parser/adapter after capturing one
+real page snapshot from the GitHub Actions environment and pinning its structural markers in a test.
+Do not write that parser against search-rendered text alone. In parallel, keep STOVE/CZN.gg update
+notices in the reviewed channel until a CI-safe readable endpoint is demonstrated.
+
 
 ---
 
