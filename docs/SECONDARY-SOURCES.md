@@ -46,3 +46,10 @@ The three reviewed official banners win, leaving two new estimated upcoming
 entries. Existing CZN reviewed data and the source strategy in `SOURCES.md`
 remain unchanged. The adapter uses the ordinary robots gate and six-hour
 interval. The first capture observed and waited the stated ten-second delay.
+
+The subsequent normal refresh on 2026-09-22 succeeded for Steam (42 records)
+and NTEBuild (3 records). Prydwen returned HTTP 403/Cloudflare from Work while
+the earlier GitHub Actions probe succeeded. No retry or alternate access path
+was used: the build retained the independently captured Actions fixture. The
+scheduled runner may therefore succeed where Work fails, but availability is
+not assumed; source health and the last good snapshot remain necessary.

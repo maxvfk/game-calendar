@@ -46,7 +46,10 @@ describe("NTE Steam real snapshot", () => {
   test("all 14 reviewed identities and Perfect World provenance survive merging", async () => {
     const reviewed = materializeReviewedBatch(await Bun.file("data/reviewed/nte.json").json()).events.filter((e) => !e.title.startsWith("Beyond the Rails"));
     expect(reviewed).toHaveLength(14);
-    const merged = mergeEvents([reviewed, events]).events;
+    const result = mergeEvents([reviewed, events]);
+    const merged = result.events;
+    expect(result.conflicts).toHaveLength(1);
+    expect(result.conflicts[0]).toMatchObject({ field: "endsAt", deltaHours: 24, kept: { title: "Circle Bounty", sourceId: "reviewed-nte" } });
     for (const e of reviewed) {
       expect(events.some((s) => s.id === e.id)).toBe(true);
       expect(merged.find((m) => m.id === e.id)).toEqual(e);

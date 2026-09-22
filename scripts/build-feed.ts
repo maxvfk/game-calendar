@@ -11,7 +11,7 @@
  */
 import { ADAPTERS } from "../src/ingest/adapters/index.ts";
 import { sourceHealth } from "../src/ingest/health.ts";
-import { mergeEvents } from "../src/ingest/merge.ts";
+import { mergeEvents, type MergeResult } from "../src/ingest/merge.ts";
 import {
   loadReviewedBatches,
   REVIEWED_SOURCE_URL,
@@ -168,6 +168,7 @@ for (const batch of reviewed) {
 }
 
 const events: GachaEvent[] = [];
+const reviewConflicts: MergeResult["conflicts"] = [];
 let conflictCount = 0;
 for (const [, groups] of byGame) {
   const sorted = groups
@@ -176,6 +177,7 @@ for (const [, groups] of byGame) {
   const merged = mergeEvents(sorted);
   events.push(...merged.events);
   conflictCount += merged.conflicts.length;
+  reviewConflicts.push(...merged.conflicts);
   for (const c of merged.conflicts) {
     console.warn(
       `  ! conflict: "${c.kept.title}" ${c.field} differs by ${c.deltaHours}h between sources`,
@@ -193,6 +195,11 @@ const feed = EventFeed.parse({
 });
 
 await Bun.write(OUT, `${JSON.stringify(feed, null, 2)}\n`);
+// Durable review evidence, alongside the feed. Preferred reviewed records
+// remain visible; conflicting incoming dates are never silently adopted.
+await Bun.write("public/data/review.v1.json", `${JSON.stringify({
+  schemaVersion: 1, generatedAt: now, conflicts: reviewConflicts,
+}, null, 2)}\n`);
 console.log(
   `\n${OUT}: ${events.length} events across ${byGame.size} games, ${conflictCount} conflicts`,
 );

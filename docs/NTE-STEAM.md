@@ -40,9 +40,11 @@ September 30, 23:59 UTC+8 (`2026-09-30T15:59:00.000Z`). The existing Perfect Wor
 reviewed record gives September 29, 23:59 UTC+8 (`2026-09-29T15:59:00.000Z`).
 The fixture and parser preserve the source's words. Reviewed remains preferred,
 with its original ID, end and Perfect World URL. This is an unresolved source
-disagreement, not evidence to silently rewrite reviewed data. The general merge
-tolerance is 24 hours and would not flag precisely 24h, so the discrepancy is
-explicitly pinned in the source test and recorded here for review.
+disagreement, not evidence to silently rewrite reviewed data. Official exact
+boundaries now bypass the general 24h merge tolerance: any disagreement is
+reported for review while keeping the preferred record. Build writes the
+details and both source URLs to `public/data/review.v1.json`; the real 24h
+discrepancy is explicitly pinned in the source test.
 
 ## Secondary sources
 

@@ -180,6 +180,16 @@ function findConflict(
   b: GachaEvent,
   toleranceHours: number,
 ): { field: "endsAt" | "startsAt"; deltaHours: number } | null {
+  // The day-level tolerance must not hide disagreement between two official
+  // exact timestamps (Circle Bounty's real 24h discrepancy exposed this).
+  if (a.provenanceStatus === "official" && b.provenanceStatus === "official") {
+    for (const [field, precision] of [["endsAt", "endPrecision"], ["startsAt", "startPrecision"]] as const) {
+      const av = a[field], bv = b[field];
+      if (a[precision] === "exact" && b[precision] === "exact" && av !== null && bv !== null && av !== bv) {
+        return { field, deltaHours: hoursBetween(av, bv) };
+      }
+    }
+  }
   if (a.endsAt !== null && b.endsAt !== null) {
     const delta = hoursBetween(a.endsAt, b.endsAt);
     if (delta > toleranceHours) return { field: "endsAt", deltaHours: delta };
