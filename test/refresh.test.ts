@@ -146,6 +146,38 @@ describe("a normal cycle", () => {
     await runRefresh(opts);
     expect(calls[0]?.headers["User-Agent"]).toBe(UA);
     expect(calls[0]?.headers["User-Agent"]).toContain("+https://");
+    expect(calls[0]?.headers["Accept"]).toBe("text/html,application/xhtml+xml");
+  });
+
+  test("JSON sources request JSON and cache the unchanged raw response as .json", async () => {
+    const body = '{"items":[1]}\n';
+    const { opts, calls } = options({
+      adapters: [adapter({
+        contentKind: "json",
+        parse(raw) {
+          const parsed = JSON.parse(raw) as { items: number[] };
+          return Array.from({ length: parsed.items.length }) as GachaEvent[];
+        },
+      })],
+      responder: () => new Response(body, { headers: { "Content-Type": "application/json" } }),
+    });
+    const summary = await runRefresh(opts);
+    expect(summary.outcomes[0]?.result).toBe("fetched");
+    expect(calls[0]?.headers["Accept"]).toBe("application/json");
+    const snapshot = await store.read("genshin-game8-events");
+    expect(snapshot?.html).toBe(body);
+    expect(snapshot?.meta.contentKind).toBe("json");
+    expect(await Bun.file(store.bodyPath("genshin-game8-events", "json")).text()).toBe(body);
+  });
+
+  test("JSON sources do not bypass robots denial", async () => {
+    const { opts, calls } = options({
+      adapters: [adapter({ contentKind: "json" })],
+      robots: { allows: async () => ({ allowed: false, reason: "Disallow: /" }) },
+    });
+    await runRefresh(opts);
+    expect(calls).toHaveLength(0);
+    expect(await store.read("genshin-game8-events")).toBeNull();
   });
 
   test("sends the validators it was given last time", async () => {

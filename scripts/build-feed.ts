@@ -32,7 +32,8 @@ const snapshots = new SnapshotStore(process.env["SNAPSHOT_DIR"] ?? "snapshots");
  */
 async function latestFixture(adapterId: string, game: GameId) {
   const site = adapterId.replace(`${game}-`, "").replace(/-events$/, "");
-  const pattern = `fixtures/${game}/${site}-*.html`;
+  const contentKind = ADAPTERS.find((adapter) => adapter.id === adapterId)?.contentKind ?? "html";
+  const pattern = `fixtures/${game}/${site}-*.${contentKind}`;
   const files = [...new Bun.Glob(pattern).scanSync(".")].sort();
   const file = files.at(-1);
   if (file === undefined) {
@@ -60,7 +61,7 @@ async function documentFor(adapterId: string, game: GameId) {
         ? rawConfirmed
         : (contentChangedAt ?? rawConfirmed);
     return {
-      file: snapshots.bodyPath(adapterId),
+      file: snapshots.bodyPath(adapterId, cached.meta.contentKind),
       html: cached.html,
       at: freshnessAt(cached),
       lastConfirmedAt,
@@ -198,6 +199,6 @@ console.log(
 
 /** "game8-events-2026-08-14.html" → ISO timestamp. */
 function fixtureDate(path: string): string | null {
-  const m = /(\d{4}-\d{2}-\d{2})\.html$/.exec(path);
+  const m = /(\d{4}-\d{2}-\d{2})\.(?:html|json)$/.exec(path);
   return m?.[1] ? `${m[1]}T00:00:00.000Z` : null;
 }

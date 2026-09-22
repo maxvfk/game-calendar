@@ -6,6 +6,7 @@ import { game8Parser } from "./game8.ts";
 import { holodoriWikiParser } from "./holodori.ts";
 import { iopWikiParser } from "./iopwiki.ts";
 import { karendarParser } from "./karendar.ts";
+import { nteSteamNewsParser } from "./nte-steamnews.ts";
 import { stellaSoraWikiParser } from "./stellasora.ts";
 import { wikiGgParser } from "./wikigg.ts";
 import type { SourceParser } from "./types.ts";
@@ -26,6 +27,7 @@ export const PARSERS: SourceParser[] = [
   stellaSoraWikiParser,
   aruStatsParser,
   karendarParser,
+  nteSteamNewsParser,
 ];
 
 export function parserById(id: string): SourceParser | undefined {

@@ -1,5 +1,7 @@
 import type { GachaEvent, GameId } from "../../shared/schema.ts";
 
+export type ContentKind = "html" | "json";
+
 export interface ParseContext {
   /**
    * Injected wall-clock, never read from Date.now() inside a parser. This is
@@ -25,6 +27,8 @@ export interface Adapter {
   url: string;
   /** Parser id from `../parsers`. */
   parserId: string;
+  /** Omitted by existing sources: HTML, for backwards compatibility. */
+  contentKind?: ContentKind;
   minIntervalMs: number;
   /**
    * Higher wins when two sources disagree and neither is clearly better.

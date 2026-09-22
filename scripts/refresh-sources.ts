@@ -45,6 +45,7 @@
  *     rebuild) exit non-zero so CI stops before committing anything.
  */
 import { appendFile } from "node:fs/promises";
+import { usesDocumentedSteamApi } from "../src/ingest/steam-api.ts";
 import {
   ADAPTERS,
   adapterById,
@@ -355,7 +356,11 @@ async function refreshOne(
     };
   }
 
-  const decision = await options.robots.allows(adapter.url);
+  // The narrowly allowlisted public API has its own documented access terms;
+  // JSON alone never exempts a source from robots. See docs/NTE-STEAM.md.
+  const decision = usesDocumentedSteamApi(adapter)
+    ? { allowed: true, reason: "documented Steam Web API access", crawlDelayMs: DEFAULT_HOST_GAP_MS }
+    : await options.robots.allows(adapter.url);
   if (!decision.allowed) {
     return {
       sourceId: adapter.id,
@@ -386,7 +391,9 @@ async function refreshOne(
     response = await options.fetchImpl(adapter.url, {
       headers: {
         "User-Agent": options.userAgent,
-        Accept: "text/html,application/xhtml+xml",
+        Accept: adapter.contentKind === "json"
+          ? "application/json"
+          : "text/html,application/xhtml+xml",
         ...headers,
       },
       signal: AbortSignal.timeout(options.timeoutMs),
@@ -535,6 +542,7 @@ async function refreshOne(
   }
 
   const saved = await store.save(adapter.id, {
+    contentKind: adapter.contentKind ?? "html",
     url: adapter.url,
     body: bytes,
     charset,
