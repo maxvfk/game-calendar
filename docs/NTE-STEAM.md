@@ -52,3 +52,21 @@ NTEBuild Beyond the Rails and Prydwen CZN banners now have independent real
 GitHub Actions captures and dedicated parsers. See `SECONDARY-SOURCES.md` for
 evidence, precision decisions and reviewed overrides. They use the ordinary
 robots gate and are not covered by the Steam API access policy.
+
+## Targeted follow-up review (2026-09-22)
+
+Reopened the [Perfect World Version 1.3 patch notes](https://nte.perfectworld.com/en/article/news/gamenews/20260817/263605.html):
+the Circle Bounty section still explicitly ends September 29 at 23:59 UTC+8.
+Compared this with the independently refreshed Steam snapshot, publication
+`1840944183787941`, which explicitly says September 30 at 23:59 UTC+8.
+The Steam externalpost page could not be reopened through web retrieval; the
+comparison uses the checked-in API response, not a claim of a new live page read.
+No authoritative correction was established by this targeted review.
+
+This is a genuine source disagreement, not a parser or timezone error. Retain
+the earlier canonical Perfect World deadline, original event ID and provenance.
+The reviewed summary now exposes both dates in the event card/detail, so the
+review condition is visible to users as well as in `data/review.v1.json`.
+Resolve only with an explicit publisher correction or an in-game timer tied
+to the relevant region and capture time; do not infer the end from maintenance
+or the normal season cadence. No other reviewed record or parser was changed.
