@@ -79,3 +79,26 @@ Source-grounded tests for a future parser:
 - **Coverage limitation:** KQM/HSRNews may omit social/HoYoLAB-only Warp notices from its active `readme.md`; banner completeness must be measured on the captured fixture, not assumed.
 
 This is source research, not code validation; `typecheck`, tests and build were not run.
+
+## Integration checkpoint — 2026-09-22T20:09:33Z
+
+Implemented only the two global-end corrections: Overdrive and Minuscule now
+use the existing `2026-09-27T19:59:00.000Z` for every region, with
+`regionScoped: false` and `regionEnds: null`. Previously Europe and America
+incorrectly gained 7 and 13 hours. Titles, IDs, starts, canonical URLs, and the
+other six records are unchanged. The original batch reviewedAt is retained:
+this was a targeted correction, not a fresh verification of every record.
+
+Evidence re-read by the integrator: KQM `archive/1389.md` labels both ends
+`global`, while the [Honkai.gg reproduction of the same update notice](https://honkai.gg/version-4-5-to-roll-the-stars-in-astropolis-update-details/)
+explicitly prints UTC+8 for both and server time for Minuscule's start.
+The direct HoYoverse and HoYoLAB pages still returned Loading shells in the
+web tool; this correction is based on corroborating notice reproductions,
+not a claim that the official page body was freshly retrieved. This comparison
+supports these two records only; it does not establish a generic rule for all
+KQM time markers. A regression test exercises the user-facing regional end
+selection and checks that Pure Fiction remains regional.
+
+Remaining integration work: missing events listed above, GitHub API Actions
+probe and automatic extraction. The research report's original partial status
+is retained; those tasks are not complete.

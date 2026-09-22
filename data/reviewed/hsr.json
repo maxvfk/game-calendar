@@ -13,12 +13,8 @@
       "startPrecision": "day",
       "endsAt": "2026-09-27T19:59:00.000Z",
       "endPrecision": "exact",
-      "regionScoped": true,
-      "regionEnds": {
-        "asia": "2026-09-27T19:59:00.000Z",
-        "europe": "2026-09-28T02:59:00.000Z",
-        "america": "2026-09-28T08:59:00.000Z"
-      },
+      "regionScoped": false,
+      "regionEnds": null,
       "sourceUrl": "https://hsr.hoyoverse.com/en-us/news/165767",
       "provenanceStatus": "official",
       "confidence": 1
@@ -31,12 +27,8 @@
       "startPrecision": "day",
       "endsAt": "2026-09-27T19:59:00.000Z",
       "endPrecision": "exact",
-      "regionScoped": true,
-      "regionEnds": {
-        "asia": "2026-09-27T19:59:00.000Z",
-        "europe": "2026-09-28T02:59:00.000Z",
-        "america": "2026-09-28T08:59:00.000Z"
-      },
+      "regionScoped": false,
+      "regionEnds": null,
       "sourceUrl": "https://hsr.hoyoverse.com/en-us/news/165767",
       "provenanceStatus": "official",
       "confidence": 1
