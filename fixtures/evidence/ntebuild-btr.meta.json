@@ -1,0 +1,15 @@
+{
+  "id": "ntebuild-btr",
+  "url": "https://www.ntebuild.com/events",
+  "capturedAt": "2026-09-22T07:16:42.570Z",
+  "userAgent": "game-calendar/1.0 (+https://github.com/maxvfk/game-calendar)",
+  "runId": "35698796964",
+  "commit": "6ebea7f41b0b5afc83d02b1f99ad295a08f867b1",
+  "robotsStatus": 200,
+  "allowed": true,
+  "delayMs": 2000,
+  "status": 200,
+  "contentType": "text/html; charset=utf-8",
+  "bytes": 301672,
+  "sha256": "908ffd02c439b18bb9967e66a1d3455dc909fe63d68b47e54ec99a9e0d68b42c"
+}
