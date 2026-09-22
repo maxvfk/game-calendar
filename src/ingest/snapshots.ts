@@ -9,7 +9,7 @@
  *
  * Three files per source, and the split matters:
  *
- *   <root>/<id>.html         the body, exactly as served
+ *   <root>/<id>.html|.json   the body, exactly as served
  *   <root>/<id>.meta.json    durable facts: hash, validators, when it changed
  *   <root>/<id>.state.json   volatile run bookkeeping: when we last checked
  *
@@ -20,8 +20,11 @@
  */
 import { mkdir, readdir, rename, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import type { ContentKind } from "./adapters/types.ts";
 
 export interface SnapshotMeta {
+  /** Missing in legacy metadata means HTML. */
+  contentKind?: ContentKind;
   sourceId: string;
   url: string;
   /** sha256 of the served bytes, hex. The parse stage skips work when it is unchanged. */
@@ -60,6 +63,7 @@ export interface Snapshot {
 }
 
 export interface SaveInput {
+  contentKind?: ContentKind;
   url: string;
   /**
    * The body as served. Bytes are the honest unit: a page in Shift_JIS or
@@ -192,8 +196,8 @@ function emptyState(sourceId: string): SnapshotState {
 export class SnapshotStore {
   constructor(readonly root: string = "snapshots") {}
 
-  bodyPath(sourceId: string): string {
-    return join(this.root, `${sourceId}.html`);
+  bodyPath(sourceId: string, contentKind: ContentKind = "html"): string {
+    return join(this.root, `${sourceId}.${contentKind}`);
   }
 
   metaPath(sourceId: string): string {
@@ -231,7 +235,7 @@ export class SnapshotStore {
     const meta = await this.readMeta(sourceId);
     if (meta === null) return null;
 
-    const body = Bun.file(this.bodyPath(sourceId));
+    const body = Bun.file(this.bodyPath(sourceId, meta.contentKind));
     if (!(await body.exists())) return null;
 
     // Decoded with the charset the bytes were stored in, so a Shift_JIS page
@@ -310,11 +314,14 @@ export class SnapshotStore {
     const charset = input.charset ?? DEFAULT_CHARSET;
     const contentHash = hashBody(bytes);
     const previous = await this.readMeta(sourceId);
-    const bodyExists = await Bun.file(this.bodyPath(sourceId)).exists();
+    const contentKind = input.contentKind ?? "html";
+    const bodyExists = await Bun.file(this.bodyPath(sourceId, contentKind)).exists();
     const changed =
-      previous === null || previous.contentHash !== contentHash || !bodyExists;
+      previous === null || previous.contentHash !== contentHash || !bodyExists ||
+      (previous.contentKind ?? "html") !== contentKind;
 
     const meta: SnapshotMeta = {
+      ...(contentKind === "json" ? { contentKind } : {}),
       sourceId,
       url: input.url,
       contentHash,
@@ -344,7 +351,7 @@ export class SnapshotStore {
     // next save rewrite both — the other order would leave metadata claiming a
     // hash for bytes that were never written, and the next save would believe
     // it and skip them.
-    await writeAtomic(this.bodyPath(sourceId), bytes);
+    await writeAtomic(this.bodyPath(sourceId, contentKind), bytes);
     await writeAtomic(this.metaPath(sourceId), `${JSON.stringify(meta, null, 2)}\n`);
 
     return { changed: true, meta };
@@ -382,6 +389,7 @@ export class SnapshotStore {
   async forget(sourceId: string): Promise<void> {
     for (const path of [
       this.bodyPath(sourceId),
+      this.bodyPath(sourceId, "json"),
       this.metaPath(sourceId),
       this.statePath(sourceId),
     ]) {

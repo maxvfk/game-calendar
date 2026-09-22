@@ -1,0 +1,59 @@
+User-Agent: *
+Allow: /
+
+User-Agent: GPTBot
+Allow: /
+
+User-Agent: ChatGPT-User
+Allow: /
+
+User-Agent: PerplexityBot
+Allow: /
+
+User-Agent: ClaudeBot
+Allow: /
+
+User-Agent: Google-Extended
+Allow: /
+
+User-Agent: Applebot-Extended
+Allow: /
+
+User-Agent: cohere-ai
+Allow: /
+
+User-Agent: anthropic-ai
+Allow: /
+
+User-Agent: AhrefsBot
+Disallow: /
+
+User-Agent: SemrushBot
+Disallow: /
+
+User-Agent: MJ12bot
+Disallow: /
+
+User-Agent: DotBot
+Disallow: /
+
+User-Agent: Bytespider
+Disallow: /
+
+User-Agent: PetalBot
+Disallow: /
+
+User-Agent: DataForSeoBot
+Disallow: /
+
+User-Agent: ImagesiftBot
+Disallow: /
+
+User-Agent: BLEXBot
+Disallow: /
+
+User-Agent: ZoominfoBot
+Disallow: /
+
+Sitemap: https://www.ntebuild.com/sitemap.xml
+Sitemap: https://www.ntebuild.com/sitemap-images.xml

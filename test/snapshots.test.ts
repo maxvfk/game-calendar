@@ -51,6 +51,41 @@ function save(
 }
 
 describe("SnapshotStore", () => {
+  test("JSON bodies round-trip verbatim with their own extension and metadata", async () => {
+    const body = '{"appnews":{"appid":4508340,"newsitems":[]}}\n';
+    await store.save("nte-steamnews-official", {
+      url: "https://example.test/news", contentKind: "json", body,
+      etag: '"json-v1"', lastModified: null, at: T0, eventCount: null,
+    });
+    expect(await Bun.file(join(root, "nte-steamnews-official.json")).text()).toBe(body);
+    expect(await Bun.file(join(root, "nte-steamnews-official.html")).exists()).toBe(false);
+    const snapshot = await store.read("nte-steamnews-official");
+    expect(snapshot?.html).toBe(body);
+    expect(snapshot?.meta.contentKind).toBe("json");
+    expect(snapshot?.meta.contentHash).toBe(hashBody(body));
+    expect(await store.list()).toEqual(["nte-steamnews-official"]);
+    const again = await store.save("nte-steamnews-official", {
+      url: "https://example.test/news", contentKind: "json", body,
+      etag: '"json-v1"', lastModified: null, at: T1, eventCount: null,
+    });
+    expect(again.changed).toBe(false);
+    expect(again.meta.contentChangedAt).toBe(T0);
+    await store.forget("nte-steamnews-official");
+    expect(await store.read("nte-steamnews-official")).toBeNull();
+    expect(await Bun.file(join(root, "nte-steamnews-official.json")).exists()).toBe(false);
+  });
+
+  test("changing the content kind cannot reuse the old body path", async () => {
+    const input = {
+      url: "https://example.test/news", body: "{}", etag: null,
+      lastModified: null, at: T0, eventCount: null,
+    };
+    await store.save("source", input);
+    expect((await store.read("source"))?.meta.contentKind).toBeUndefined();
+    expect((await store.save("source", { ...input, contentKind: "json" })).changed).toBe(true);
+    expect((await store.read("source"))?.meta.contentKind).toBe("json");
+  });
+
   test("an unfetched source reads as nothing, not as an error", async () => {
     expect(await store.read("genshin-game8-events")).toBeNull();
     expect(await store.readMeta("genshin-game8-events")).toBeNull();

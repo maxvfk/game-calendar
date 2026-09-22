@@ -32,6 +32,10 @@ Event fixtures и snapshots upstream не наследуются. Новые sna
 получены этим репозиторием самостоятельно с соблюдением `robots.txt`, условий
 источника, attribution и request interval.
 
+Для документированных публичных API действует отдельная проверка условий API,
+а не разрешение на обход HTML-сайта. Узко ограниченный NTE Steam transport и
+основание доступа описаны в `docs/NTE-STEAM.md`; это не общее исключение из robots.
+
 ## Pipeline
 
 ```text

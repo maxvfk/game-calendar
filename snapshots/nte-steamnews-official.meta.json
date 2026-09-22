@@ -1,0 +1,13 @@
+{
+  "contentKind": "json",
+  "sourceId": "nte-steamnews-official",
+  "url": "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=4508340&count=50&maxlength=0&feeds=steam_community_announcements",
+  "contentHash": "8ec3934928f9b6363699731a931b718ac02e53a71f72241b6519ea9d7c6ec085",
+  "bytes": 74199,
+  "etag": null,
+  "lastModified": null,
+  "contentChangedAt": "2026-09-22T14:10:50.409Z",
+  "lastConfirmedAt": "2026-09-22T14:10:50.409Z",
+  "eventCount": 42,
+  "charset": "utf-8"
+}

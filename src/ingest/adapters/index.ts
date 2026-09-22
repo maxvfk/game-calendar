@@ -3,7 +3,8 @@ import { TRACKED_GAME_SET } from "../../shared/project.ts";
 import { mergeEvents, type MergeResult } from "../merge.ts";
 import { parserById } from "../parsers/index.ts";
 import { sanitizeEvents } from "../sanitize.ts";
-import { SIX_HOURS_MS, type Adapter, type ParseContext } from "./types.ts";
+import { NTE_STEAM_NEWS_URL } from "../steam-api.ts";
+import { SIX_HOURS_MS, type Adapter, type ContentKind, type ParseContext } from "./types.ts";
 
 /**
  * The source registry.
@@ -17,11 +18,29 @@ interface SourceSpec {
   game: GameId;
   url: string;
   parserId: string;
+  contentKind?: ContentKind;
   priority?: number;
   minIntervalMs?: number;
 }
 
 const SOURCES: SourceSpec[] = [
+  {
+    id: "czn-prydwen-banners", game: "czn",
+    url: "https://www.prydwen.gg/chaos-zero-nightmare/banners",
+    parserId: "prydwen-czn", priority: 10,
+  },
+  {
+    id: "nte-ntebuild-btr", game: "nte",
+    url: "https://www.ntebuild.com/events", parserId: "ntebuild-btr", priority: 5,
+  },
+  {
+    id: "nte-steamnews-official",
+    game: "nte",
+    url: NTE_STEAM_NEWS_URL,
+    parserId: "nte-steamnews",
+    contentKind: "json",
+    priority: 20,
+  },
   {
     id: "genshin-game8-events",
     game: "genshin",
@@ -273,6 +292,7 @@ function toAdapter(spec: SourceSpec): Adapter {
     game: spec.game,
     url: spec.url,
     parserId: spec.parserId,
+    contentKind: spec.contentKind ?? "html",
     minIntervalMs: spec.minIntervalMs ?? SIX_HOURS_MS,
     priority: spec.priority ?? 0,
     statesNoEvents(html: string): boolean {

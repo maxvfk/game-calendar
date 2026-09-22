@@ -15,6 +15,7 @@ import {
   type RobotsGate,
 } from "../scripts/refresh-sources.ts";
 import type { Adapter, ParseContext } from "../src/ingest/adapters/types.ts";
+import { adapterById } from "../src/ingest/adapters/index.ts";
 import { SnapshotStore } from "../src/ingest/snapshots.ts";
 import type { GachaEvent } from "../src/shared/schema.ts";
 
@@ -146,6 +147,62 @@ describe("a normal cycle", () => {
     await runRefresh(opts);
     expect(calls[0]?.headers["User-Agent"]).toBe(UA);
     expect(calls[0]?.headers["User-Agent"]).toContain("+https://");
+    expect(calls[0]?.headers["Accept"]).toBe("text/html,application/xhtml+xml");
+  });
+
+  test("JSON sources request JSON and cache the unchanged raw response as .json", async () => {
+    const body = '{"items":[1]}\n';
+    const { opts, calls } = options({
+      adapters: [adapter({
+        contentKind: "json",
+        parse(raw) {
+          const parsed = JSON.parse(raw) as { items: number[] };
+          return Array.from({ length: parsed.items.length }) as GachaEvent[];
+        },
+      })],
+      responder: () => new Response(body, { headers: { "Content-Type": "application/json" } }),
+    });
+    const summary = await runRefresh(opts);
+    expect(summary.outcomes[0]?.result).toBe("fetched");
+    expect(calls[0]?.headers["Accept"]).toBe("application/json");
+    const snapshot = await store.read("genshin-game8-events");
+    expect(snapshot?.html).toBe(body);
+    expect(snapshot?.meta.contentKind).toBe("json");
+    expect(await Bun.file(store.bodyPath("genshin-game8-events", "json")).text()).toBe(body);
+  });
+
+  test("JSON sources do not bypass robots denial", async () => {
+    const { opts, calls } = options({
+      adapters: [adapter({ contentKind: "json" })],
+      robots: { allows: async () => ({ allowed: false, reason: "Disallow: /" }) },
+    });
+    await runRefresh(opts);
+    expect(calls).toHaveLength(0);
+    expect(await store.read("genshin-game8-events")).toBeNull();
+  });
+
+  test("documented Steam API still enforces six hours and stores verified JSON", async () => {
+    const raw = await Bun.file("fixtures/nte/steamnews-official-2026-09-22.json").text();
+    const { opts, calls } = options({
+      adapters: [adapterById("nte-steamnews-official")!],
+      robots: { allows: async () => { throw new Error("HTML crawl gate must not govern documented API"); } },
+      responder: () => new Response(raw, { headers: { "Content-Type": "application/json" } }),
+    });
+    expect((await runRefresh(opts)).outcomes[0]?.result).toBe("fetched");
+    expect((await store.read("nte-steamnews-official"))?.meta.eventCount).toBe(42);
+    expect((await runRefresh(opts)).outcomes[0]?.result).toBe("skipped_interval");
+    expect(calls).toHaveLength(1);
+  });
+
+  test("empty Steam news is rejected instead of overwriting the last good snapshot", async () => {
+    const raw = await Bun.file("fixtures/nte/steamnews-official-2026-09-22.json").text();
+    await store.save("nte-steamnews-official", { url: adapterById("nte-steamnews-official")!.url,
+      body: raw, contentKind: "json", etag: null, lastModified: null, at: "2026-08-01T00:00:00.000Z", eventCount: 42 });
+    const { opts } = options({ adapters: [adapterById("nte-steamnews-official")!],
+      responder: () => new Response('{"appnews":{"appid":4508340,"newsitems":[]}}'),
+    });
+    expect((await runRefresh(opts)).outcomes[0]?.result).toBe("rejected");
+    expect((await store.read("nte-steamnews-official"))?.html).toBe(raw);
   });
 
   test("sends the validators it was given last time", async () => {

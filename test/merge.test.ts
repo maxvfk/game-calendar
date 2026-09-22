@@ -34,6 +34,14 @@ function event(overrides: Partial<GachaEvent> = {}): GachaEvent {
 }
 
 describe("mergeEvents", () => {
+  test("even a one-minute official exact disagreement is a review condition", () => {
+    const a = event({ provenanceStatus: "official", endPrecision: "exact", confidence: 1 });
+    const b = event({ provenanceStatus: "official", endPrecision: "exact", confidence: 1, sourceId: "source-b", endsAt: "2026-08-24T00:01:00.000Z" });
+    const result = mergeEvents([[a], [b]]);
+    expect(result.events).toEqual([a]);
+    expect(result.conflicts[0]).toMatchObject({ field: "endsAt", deltaHours: 1 / 60 });
+    expect(mergeEvents([[{ ...a, endPrecision: "day" }], [b]]).conflicts).toEqual([]);
+  });
   test("keeps distinct events from different sources", () => {
     const a = event({ id: "genshin:a:2026-08-12", title: "Alpha" });
     const b = event({

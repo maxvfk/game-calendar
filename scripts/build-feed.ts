@@ -11,7 +11,7 @@
  */
 import { ADAPTERS } from "../src/ingest/adapters/index.ts";
 import { sourceHealth } from "../src/ingest/health.ts";
-import { mergeEvents } from "../src/ingest/merge.ts";
+import { mergeEvents, type MergeResult } from "../src/ingest/merge.ts";
 import {
   loadReviewedBatches,
   REVIEWED_SOURCE_URL,
@@ -32,7 +32,8 @@ const snapshots = new SnapshotStore(process.env["SNAPSHOT_DIR"] ?? "snapshots");
  */
 async function latestFixture(adapterId: string, game: GameId) {
   const site = adapterId.replace(`${game}-`, "").replace(/-events$/, "");
-  const pattern = `fixtures/${game}/${site}-*.html`;
+  const contentKind = ADAPTERS.find((adapter) => adapter.id === adapterId)?.contentKind ?? "html";
+  const pattern = `fixtures/${game}/${site}-*.${contentKind}`;
   const files = [...new Bun.Glob(pattern).scanSync(".")].sort();
   const file = files.at(-1);
   if (file === undefined) {
@@ -60,7 +61,7 @@ async function documentFor(adapterId: string, game: GameId) {
         ? rawConfirmed
         : (contentChangedAt ?? rawConfirmed);
     return {
-      file: snapshots.bodyPath(adapterId),
+      file: snapshots.bodyPath(adapterId, cached.meta.contentKind),
       html: cached.html,
       at: freshnessAt(cached),
       lastConfirmedAt,
@@ -167,6 +168,7 @@ for (const batch of reviewed) {
 }
 
 const events: GachaEvent[] = [];
+const reviewConflicts: MergeResult["conflicts"] = [];
 let conflictCount = 0;
 for (const [, groups] of byGame) {
   const sorted = groups
@@ -175,6 +177,7 @@ for (const [, groups] of byGame) {
   const merged = mergeEvents(sorted);
   events.push(...merged.events);
   conflictCount += merged.conflicts.length;
+  reviewConflicts.push(...merged.conflicts);
   for (const c of merged.conflicts) {
     console.warn(
       `  ! conflict: "${c.kept.title}" ${c.field} differs by ${c.deltaHours}h between sources`,
@@ -192,12 +195,17 @@ const feed = EventFeed.parse({
 });
 
 await Bun.write(OUT, `${JSON.stringify(feed, null, 2)}\n`);
+// Durable review evidence, alongside the feed. Preferred reviewed records
+// remain visible; conflicting incoming dates are never silently adopted.
+await Bun.write("public/data/review.v1.json", `${JSON.stringify({
+  schemaVersion: 1, generatedAt: now, conflicts: reviewConflicts,
+}, null, 2)}\n`);
 console.log(
   `\n${OUT}: ${events.length} events across ${byGame.size} games, ${conflictCount} conflicts`,
 );
 
 /** "game8-events-2026-08-14.html" → ISO timestamp. */
 function fixtureDate(path: string): string | null {
-  const m = /(\d{4}-\d{2}-\d{2})\.html$/.exec(path);
+  const m = /(\d{4}-\d{2}-\d{2})\.(?:html|json)$/.exec(path);
   return m?.[1] ? `${m[1]}T00:00:00.000Z` : null;
 }

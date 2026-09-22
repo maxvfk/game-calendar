@@ -1,0 +1,15 @@
+{
+  "id": "prydwen-czn-banners",
+  "url": "https://www.prydwen.gg/chaos-zero-nightmare/banners",
+  "capturedAt": "2026-09-22T07:16:44.718Z",
+  "userAgent": "game-calendar/1.0 (+https://github.com/maxvfk/game-calendar)",
+  "runId": "35698796964",
+  "commit": "6ebea7f41b0b5afc83d02b1f99ad295a08f867b1",
+  "robotsStatus": 200,
+  "allowed": true,
+  "delayMs": 10000,
+  "status": 200,
+  "contentType": "text/html; charset=utf-8",
+  "bytes": 152560,
+  "sha256": "fb8af3937b24a89e6211fdf8d9021bedf19ce9a3f759855713766dddc48d2f1e"
+}

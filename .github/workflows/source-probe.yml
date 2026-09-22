@@ -1,0 +1,29 @@
+name: Source availability probe
+on:
+  workflow_dispatch:
+  push:
+    branches: [work/source-ingestion]
+    paths:
+      - scripts/probe-sources.ts
+      - .github/workflows/source-probe.yml
+permissions:
+  contents: read
+concurrency:
+  group: source-probe
+  cancel-in-progress: false
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3"
+      - run: bun run scripts/probe-sources.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: source-probes
+          path: source-probes/
+          retention-days: 30

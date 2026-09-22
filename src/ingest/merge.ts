@@ -136,6 +136,16 @@ function isSameEvent(
   // which is the silent drop this codebase treats as the dangerous failure.
   if (a.sourceId === b.sourceId) return false;
 
+  // NTEBuild initially calls a BtR cycle "Rotation (Sep 10)" while the
+  // official reviewed notice names it "Whisper Circle". Reconcile this one
+  // mode by its start day, including the UTC+8 previous-day exact boundary.
+  // Keep separate rotations and all same-source records distinct.
+  if (a.game === "nte" && a.type === "challenge" && b.type === "challenge" &&
+    /^Beyond the Rails\b/.test(a.title) && /^Beyond the Rails\b/.test(b.title) &&
+    [a.sourceId, b.sourceId].includes("nte-ntebuild-btr") &&
+    [a.sourceId, b.sourceId].includes("reviewed-nte") &&
+    hoursBetween(a.startsAt, b.startsAt) <= 24) return true;
+
   // Overlap alone misses a source that appends a qualifier: "Bedazzling
   // Dawnstar" vs "Bedazzling Dawnstar Sign-In" scores 0.67, well under any
   // safe threshold, yet is plainly one event.
@@ -170,6 +180,16 @@ function findConflict(
   b: GachaEvent,
   toleranceHours: number,
 ): { field: "endsAt" | "startsAt"; deltaHours: number } | null {
+  // The day-level tolerance must not hide disagreement between two official
+  // exact timestamps (Circle Bounty's real 24h discrepancy exposed this).
+  if (a.provenanceStatus === "official" && b.provenanceStatus === "official") {
+    for (const [field, precision] of [["endsAt", "endPrecision"], ["startsAt", "startPrecision"]] as const) {
+      const av = a[field], bv = b[field];
+      if (a[precision] === "exact" && b[precision] === "exact" && av !== null && bv !== null && av !== bv) {
+        return { field, deltaHours: hoursBetween(av, bv) };
+      }
+    }
+  }
   if (a.endsAt !== null && b.endsAt !== null) {
     const delta = hoursBetween(a.endsAt, b.endsAt);
     if (delta > toleranceHours) return { field: "endsAt", deltaHours: delta };
