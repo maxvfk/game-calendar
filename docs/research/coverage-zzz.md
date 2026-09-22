@@ -78,3 +78,21 @@ Future tests grounded in observed sources:
 - Web-event inclusion remains a product-scope decision; `Vyrium Vacation Album` is the concrete current example.
 
 This is source research, not code validation; `typecheck`, tests and build were not run.
+
+## Integration checkpoint — 2026-09-22T20:11:21Z
+
+Potential Hypothesis now ends at `2026-10-20T22:00:00.000Z`, exact and global.
+The event explicitly lasts until the end of Version 3.2, and the same update
+notice explicitly states October 21, 06:00 UTC+8 as the version end. This is
+not calculated from 42-day cadence. Title, ID, day-precision start and canonical
+source URL are unchanged; the other 14 records are unchanged. Batch reviewedAt
+is retained because this review was limited to one event.
+
+Verification: the official search-indexed result for article 166000 explicitly
+states the version-end timestamp; direct open returned no readable body.
+The [Zenless.gg reproduction](https://zenless.gg/version-3-2-their-secret-histories-update-announcement/)
+links the original HoYoverse notice and exposes both the compensation section
+(version end) and the event section (ends with that version). Both clauses were
+re-read, rather than treating the research conclusion alone as evidence.
+No automatic parser or undocumented endpoint was added. Runner availability
+and the remaining coverage gaps above are still pending.
