@@ -25,6 +25,11 @@ interface SourceSpec {
 
 const SOURCES: SourceSpec[] = [
   {
+    id: "czn-prydwen-banners", game: "czn",
+    url: "https://www.prydwen.gg/chaos-zero-nightmare/banners",
+    parserId: "prydwen-czn", priority: 10,
+  },
+  {
     id: "nte-ntebuild-btr", game: "nte",
     url: "https://www.ntebuild.com/events", parserId: "ntebuild-btr", priority: 5,
   },

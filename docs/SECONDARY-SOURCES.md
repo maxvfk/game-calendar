@@ -26,3 +26,23 @@ For this dedicated source and reviewed NTE only, matching BtR start days
 identify the same rotation even when one title is still "Rotation (Sep 10)".
 This preserves the reviewed title, ID and official provenance. Other sources
 and other modes keep their existing merge behavior.
+
+## Prydwen CZN banners
+
+The dedicated parser reads only current/upcoming `data-banner-card` articles
+in the captured public HTML; it calls no API. Six cards yield five records:
+Olga, Emilie, Narja & Gaya (one official rate-up), Sereniel and Peko.
+The existing reviewed titles remain canonical, so Olga/Emilie and the paired
+Narja/Gaya record keep the same IDs after merging and retain STOVE provenance.
+
+The machine countdown fields are **not exact evidence**: for example, Olga
+starts at 07:00 in Prydwen's markup but 05:00 in the reviewed maintenance
+notice. Narja/Gaya have analogous clock differences. The parser instead uses
+the explicit visible `data-range-global` date range, always day precision,
+with secondary/estimated provenance and confidence 0.7. Sereniel/Peko show
+"From Sep 30, 2026" and keep `endsAt: null`; no normal-cadence end is inferred.
+
+The three reviewed official banners win, leaving two new estimated upcoming
+entries. Existing CZN reviewed data and the source strategy in `SOURCES.md`
+remain unchanged. The adapter uses the ordinary robots gate and six-hour
+interval. The first capture observed and waited the stated ten-second delay.

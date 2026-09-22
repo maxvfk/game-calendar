@@ -44,8 +44,9 @@ disagreement, not evidence to silently rewrite reviewed data. The general merge
 tolerance is 24 hours and would not flag precisely 24h, so the discrepancy is
 explicitly pinned in the source test and recorded here for review.
 
-## Remaining stages
+## Secondary sources
 
-NTEBuild Beyond the Rails and Prydwen CZN banners require their own real GitHub
-Actions HTML captures and robots decisions before implementing their parsers.
-They are not covered by the Steam API access policy.
+NTEBuild Beyond the Rails and Prydwen CZN banners now have independent real
+GitHub Actions captures and dedicated parsers. See `SECONDARY-SOURCES.md` for
+evidence, precision decisions and reviewed overrides. They use the ordinary
+robots gate and are not covered by the Steam API access policy.

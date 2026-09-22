@@ -8,6 +8,7 @@ import { iopWikiParser } from "./iopwiki.ts";
 import { karendarParser } from "./karendar.ts";
 import { nteSteamNewsParser } from "./nte-steamnews.ts";
 import { nteBuildBtrParser } from "./ntebuild-btr.ts";
+import { prydwenCznParser } from "./prydwen-czn.ts";
 import { stellaSoraWikiParser } from "./stellasora.ts";
 import { wikiGgParser } from "./wikigg.ts";
 import type { SourceParser } from "./types.ts";
@@ -30,6 +31,7 @@ export const PARSERS: SourceParser[] = [
   karendarParser,
   nteSteamNewsParser,
   nteBuildBtrParser,
+  prydwenCznParser,
 ];
 
 export function parserById(id: string): SourceParser | undefined {
