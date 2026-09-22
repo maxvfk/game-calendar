@@ -25,6 +25,10 @@ interface SourceSpec {
 
 const SOURCES: SourceSpec[] = [
   {
+    id: "nte-ntebuild-btr", game: "nte",
+    url: "https://www.ntebuild.com/events", parserId: "ntebuild-btr", priority: 5,
+  },
+  {
     id: "nte-steamnews-official",
     game: "nte",
     url: NTE_STEAM_NEWS_URL,

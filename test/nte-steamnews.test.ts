@@ -44,7 +44,8 @@ describe("NTE Steam real snapshot", () => {
     expect(parse(single("[p]Duration: September 9, 2026 – September 30, 2026[/p]", "Version 1.4 Preview Special Program"))).toEqual([]);
   });
   test("all 14 reviewed identities and Perfect World provenance survive merging", async () => {
-    const reviewed = materializeReviewedBatch(await Bun.file("data/reviewed/nte.json").json()).events;
+    const reviewed = materializeReviewedBatch(await Bun.file("data/reviewed/nte.json").json()).events.filter((e) => !e.title.startsWith("Beyond the Rails"));
+    expect(reviewed).toHaveLength(14);
     const merged = mergeEvents([reviewed, events]).events;
     for (const e of reviewed) {
       expect(events.some((s) => s.id === e.id)).toBe(true);
