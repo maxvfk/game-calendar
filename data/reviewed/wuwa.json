@@ -166,6 +166,42 @@
       "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5428",
       "provenanceStatus": "official",
       "confidence": 1
+    },
+    {
+      "title": "Resonance Sim Realm",
+      "type": "challenge",
+      "summary": "Combat event with simulated ability combinations and interference sources.",
+      "startsAt": "2026-08-22T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-29T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-29T03:59:00.000Z",
+        "europe": "2026-09-29T10:59:00.000Z",
+        "america": "2026-09-29T16:59:00.000Z"
+      },
+      "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5357",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Gifts of Drifting Mist",
+      "type": "login",
+      "summary": "Version 3.6 seven-day login rewards; opens after the version update.",
+      "startsAt": "2026-08-20T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-28T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-28T19:59:00.000Z",
+        "europe": "2026-09-29T02:59:00.000Z",
+        "america": "2026-09-29T08:59:00.000Z"
+      },
+      "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5357",
+      "provenanceStatus": "official",
+      "confidence": 1
     }
   ]
 }

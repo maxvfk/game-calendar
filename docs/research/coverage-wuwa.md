@@ -77,3 +77,23 @@ Future tests grounded in source data:
 - Runner availability of the recommended GitHub archive remains **UNVERIFIED** until the bounded Actions probe.
 
 This is source research, not code validation; `typecheck`, tests and build were not run.
+
+## Integration checkpoint — 2026-09-22
+
+Added Resonance Sim Realm and Gifts of Drifting Mist. The integrator re-read
+[article 5357 JSON](https://github.com/TheLovinator1/wutheringwaves/blob/master/articles/5357.json):
+articleId 5357, gameId G152-en, Version 3.6 patch-note title. The direct Kuro
+article returned no readable body in the web tool, so the archive is the
+extraction evidence, with the original Kuro URL retained as provenance.
+
+The combat event runs August 22, 10:00 through September 29, 11:59 server time.
+The login event starts after the Version 3.6 update and ends September 29,
+03:59 server time. The same document identifies the update date as August 20;
+its scheduled completion time is not used as the event start. Both starts are
+day precision. End conversions use the existing Asia +08, Europe +01,
+America -05 mapping. No cadence-derived boundaries are introduced.
+
+All nine previous event records are preserved verbatim. The batch reviewedAt
+is retained because those older records were not all freshly reverified;
+this checkpoint records the targeted additions. The GitHub mirror is not yet
+an automatic adapter, and Actions transport verification is still pending.
