@@ -7,6 +7,7 @@ import { KEYS, readJson, writeJson } from "./storage.ts";
 import type { TimelineGroup } from "./lanes.ts";
 import { DEFAULT_THEME_CHOICE, type ThemeChoice } from "./theme.ts";
 import { DEFAULT_DAY_WIDTH, snapDayWidth } from "./zoom.ts";
+import { allCategories, restoreCategories, type EventCategory } from "./eventCategories.ts";
 
 /**
  * Which of the two views the reader is looking at.
@@ -87,6 +88,8 @@ export interface Prefs {
    * them and the choice is remembered from then on.
    */
   view: View;
+  /** The selected event categories in both views; completion keys stay untouched. */
+  visibleCategories: EventCategory[];
   /**
    * How wide one day is on the timeline, in px.
    *
@@ -193,6 +196,7 @@ export function defaults(): Prefs {
     focusGame: null,
     sort: "ending",
     view: "soon",
+    visibleCategories: allCategories(),
     timelineDayWidth: DEFAULT_DAY_WIDTH,
     timelineGroup: "game",
     showUpcoming: false,
@@ -328,6 +332,8 @@ export function restorePrefsValue(incoming: unknown): Prefs {
     result.view = base.view;
   }
 
+  result.visibleCategories = restoreCategories(result.visibleCategories);
+
   // Zoom
   if (typeof result.timelineDayWidth === "number") {
     result.timelineDayWidth = snapDayWidth(result.timelineDayWidth);
@@ -359,10 +365,14 @@ export function restorePrefsValue(incoming: unknown): Prefs {
 }
 
 export function usePrefs() {
-  const [prefs, setPrefs] = useState<Prefs>(() => ({
-    ...defaults(),
-    ...adoptRenamed(readJson<Partial<Prefs>>(KEYS.prefs, {})),
-  }));
+  const [prefs, setPrefs] = useState<Prefs>(() => {
+    const stored = adoptRenamed(readJson<Partial<Prefs>>(KEYS.prefs, {}));
+    return {
+      ...defaults(),
+      ...stored,
+      visibleCategories: restoreCategories(stored.visibleCategories),
+    };
+  });
 
   useEffect(() => {
     writeJson(KEYS.prefs, prefs);
@@ -387,4 +397,3 @@ export function usePrefs() {
 
   return { prefs, update, toggleGame, restorePrefs };
 }
-

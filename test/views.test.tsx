@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { NextUp } from "../src/client/components/NextUp.tsx";
+import { EventRow } from "../src/client/components/EventRow.tsx";
 import {
   boardWindow,
   markerLabel,
@@ -423,6 +424,13 @@ describe("Timeline stacking", () => {
       expect(html).toContain("Closing Ceremony");
       expect(html).toContain("Second Wind");
     }
+  });
+
+  test("the list and timeline name an event's type without relying on game colour", () => {
+    const listed = render(<EventRow row={rows[0]!} now={NOW} completed={false} onOpen={() => {}} />);
+    expect(listed).toContain('aria-label="Type: Event"');
+    expect(listed).toContain(">Event</span>");
+    expect(board("game")).toContain('aria-label="Type: Event"');
   });
 
   test("the merged board names each bar's game, since no heading does", () => {

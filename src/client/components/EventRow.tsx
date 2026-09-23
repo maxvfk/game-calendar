@@ -11,6 +11,7 @@ import { EFFORT, pressure, type Effort } from "../../shared/effort.ts";
 import type { Status } from "../state/useProgress.ts";
 import { Meter, URGENCY_COLOR } from "./Meter.tsx";
 import type { DateConflict } from "../../shared/feed.ts";
+import { TypeBadge } from "./TypeBadge.tsx";
 
 export interface RowEvent {
   event: DisplayEvent;
@@ -109,6 +110,7 @@ export function EventRow({
             <div className="min-w-0">
               <span className="eyebrow flex items-center gap-1.5 truncate">
                 <span style={{ color: game.hue }}>{game.short}</span>
+                <TypeBadge type={event.type} />
                 {/* A date the reader typed is never allowed to look like one
                     a source published. */}
                 {isCustomEventId(event.id) && (

@@ -2,6 +2,7 @@ import { useGameMeta } from "../state/gameMeta.tsx";
 import { dayOnlyEnd, formatDayDate, formatRemaining } from "../../shared/time.ts";
 import type { RowEvent } from "./EventRow.tsx";
 import { Meter, URGENCY_COLOR } from "./Meter.tsx";
+import { TypeBadge } from "./TypeBadge.tsx";
 
 /**
  * The thesis of the page: this app is a clock, so the first thing you see is
@@ -76,8 +77,8 @@ export function NextUp({
           <h1 className="font-display text-[1.75rem] font-semibold leading-[1.15] tracking-tight transition-colors duration-150 group-hover:text-ink-strong">
             {event.title}
           </h1>
-          <p className="mt-1 text-sm" style={{ color: game.hue }}>
-            {game.name}
+          <p className="mt-1 flex items-center gap-2 text-sm" style={{ color: game.hue }}>
+            {game.name} <TypeBadge type={event.type} />
           </p>
           {lead.conflicts && lead.conflicts.length > 0 && (
             <p className="mt-1 text-xs font-medium text-soon">Date disputed · open details</p>
@@ -157,6 +158,7 @@ function QueuedRow({
           className="size-1.5 shrink-0 translate-y-[-1px] rounded-full"
           style={{ background: game.hue }}
         />
+        <TypeBadge type={event.type} compact />
         <span className="min-w-0 flex-1 truncate text-[0.8125rem] leading-snug text-muted transition-colors duration-150 group-hover:text-ink">
           <span className="sr-only">{game.name}: </span>
           {event.title}

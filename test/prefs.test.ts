@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { adoptNewLanes, adoptRenamed, defaults, restorePrefsValue } from "../src/client/state/usePrefs.ts";
 import type { LaneId } from "../src/shared/custom.ts";
+import type { EventCategory } from "../src/client/state/eventCategories.ts";
 
 /**
  * What happens to a reader's games when we add a source.
@@ -140,6 +141,7 @@ describe("restorePrefsValue", () => {
       focusGame: "zzz",
       sort: "doing" as const,
       view: "timeline" as const,
+      visibleCategories: ["banner", "challenge"] as EventCategory[],
       timelineDayWidth: 48,
       timelineGroup: "ending" as const,
       showUpcoming: true,

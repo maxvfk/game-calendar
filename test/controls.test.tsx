@@ -25,6 +25,7 @@ const PREFS: Prefs = {
   focusGame: null,
   sort: "ending",
   view: "soon",
+  visibleCategories: ["banner", "event", "challenge", "login", "shop", "maintenance"],
   timelineDayWidth: 32,
   timelineGroup: "game",
   showUpcoming: false,
@@ -300,4 +301,3 @@ describe("Controls: backup and export actions", () => {
     expect(markup).toContain("when moving hosts");
   });
 });
-

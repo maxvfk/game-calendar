@@ -247,6 +247,14 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   200 and 132 events with 14 source-health entries; all 132 event IDs matched
   the local build. The response reported `max-age=600`. The next scheduled
   refresh at 17:27 UTC had not yet run at this checkpoint.
+- M5 UI categories checkpoint: the existing feed `type` maps to six reader
+  filters: Banners, Events (`story`/`rerun`/`other`), Endgame / challenge,
+  Login / rewards, Shop / exchange and Maintenance. Multiple choices can stay
+  on together in both views; every category starts visible for old and new
+  readers. Text badges identify types in the list, Next Up, details and narrow
+  timeline bars independently of game colour. The choice is saved in prefs,
+  leaving event IDs and completion keys unchanged. The daily timeline grid is
+  the next separate UI milestone.
 
 ## Coverage at the live 2026-09-23 refresh
 
@@ -293,11 +301,12 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-After the 17:27 UTC scheduled refresh, inspect its source outcomes: seven
-live adapters should report no inherited Game8 failure state, while a genuine
-new failure must remain visible. Compare the refreshed published feed and
-source health against this 132-event checkpoint. Then finalize M6 with the
-tested scope and remaining manual coverage.
+Implement and verify the one-day Timeline grid, exact-time geometry and mobile
+positioning as a separate commit. After the 17:27 UTC scheduled refresh,
+inspect its source outcomes: seven live adapters should report no inherited
+Game8 failure state, while a genuine new failure must remain visible. Compare
+the refreshed published feed and source health against this 132-event checkpoint.
+Then finalize M6 with the tested scope and remaining manual coverage.
 Endfield 5208 remains manual-reviewed only while the official robots chain is
 unresolved; do not infer its missing calendar dates.
 

@@ -23,6 +23,7 @@ import { DailyChecklist } from "./DailyChecklist.tsx";
 import { dailyOverride } from "../../shared/daily.ts";
 import type { Region } from "../../shared/schema.ts";
 import { Meter, URGENCY_COLOR } from "./Meter.tsx";
+import { TypeBadge } from "./TypeBadge.tsx";
 
 export function EventDetail({
   row,
@@ -178,7 +179,7 @@ export function EventDetail({
                   : formatRemaining(clock.msRemaining)}
             </span>
           </Field>
-          <Field label="Type">{event.type}</Field>
+          <Field label="Type"><TypeBadge type={event.type} />{event.type === "story" || event.type === "rerun" ? ` · ${event.type}` : null}</Field>
         </dl>
 
         {cadence !== null && (

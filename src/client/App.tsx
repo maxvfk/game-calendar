@@ -7,6 +7,7 @@ import { EventDetail } from "./components/EventDetail.tsx";
 import { EventRow, type DailyBadge, type RowEvent } from "./components/EventRow.tsx";
 import { NextUp } from "./components/NextUp.tsx";
 import { Timeline } from "./components/Timeline.tsx";
+import { TypeFilters } from "./components/TypeFilters.tsx";
 import { Welcome } from "./components/Welcome.tsx";
 import { Colophon } from "./components/Colophon.tsx";
 import { Legend } from "./components/Legend.tsx";
@@ -20,6 +21,7 @@ import { useDailyLog, type DailyLogMap } from "./state/useDailyLog.ts";
 import { adoptNewLanes, usePrefs, type Prefs } from "./state/usePrefs.ts";
 import { buildExportData, parseImportData, triggerDownload } from "./state/export.ts";
 import { snapDayWidth } from "./state/zoom.ts";
+import { categoryFor } from "./state/eventCategories.ts";
 import { useCustom, type EventDraft } from "./state/useCustom.ts";
 import { compareRows, SORT_MODES, type Activity, type SortMode } from "./state/sort.ts";
 import {
@@ -284,12 +286,13 @@ export function App() {
     (rows: RowEvent[]) =>
       rows
         .filter((r) => !prefs.hiddenGames.includes(r.event.game))
+        .filter((r) => prefs.visibleCategories.includes(categoryFor(r.event.type)))
         .filter((r) => !r.clock.ended)
         // Ignored events are gone from both views unless deliberately revealed
         // — that is the whole point of ignoring one.
         .filter((r) => prefs.showIgnored || !isIgnored(r.event.id))
         .filter((r) => prefs.showCompleted || !isDone(r.event.id)),
-    [prefs.hiddenGames, prefs.showCompleted, prefs.showIgnored, prog.progress, ignored.marks],
+    [prefs.hiddenGames, prefs.visibleCategories, prefs.showCompleted, prefs.showIgnored, prog.progress, ignored.marks],
   );
 
   /**
@@ -506,6 +509,11 @@ export function App() {
         </div>
       </header>
 
+      <TypeFilters
+        selected={prefs.visibleCategories}
+        onChange={(visibleCategories) => update({ visibleCategories })}
+      />
+
       {view === "soon" ? (
         /*
          * Two columns once the screen has room for them, and the split is the
@@ -601,6 +609,8 @@ export function App() {
                       ? "One event has"
                       : `${upcoming.length} events have`
                   } not started yet — switch on “Show events that haven't started”, under “What you see” in settings below.`
+                : prefs.visibleCategories.length === 0
+                  ? "No event types selected. Choose one above, or select All types."
                 : focus !== null
                   ? `Nothing running in ${gameMeta(focus).name}. Try another game, or show all of them.`
                   : "Nothing to show. Every game is switched off, or you've finished everything and hidden completed events."}

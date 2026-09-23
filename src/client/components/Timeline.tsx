@@ -4,6 +4,7 @@ import type { LaneId } from "../../shared/custom.ts";
 import { DAY, endingSoonestFirst } from "../../shared/time.ts";
 import type { RowEvent } from "./EventRow.tsx";
 import { URGENCY_COLOR } from "./Meter.tsx";
+import { TypeBadge } from "./TypeBadge.tsx";
 import {
   timelineLanes,
   TIMELINE_GROUPS,
@@ -247,7 +248,7 @@ export function Timeline({
   if (rows.length === 0) {
     return (
       <p className="px-4 py-10 text-sm text-muted">
-        Nothing to plot. Switch a game back on to see its schedule.
+        Nothing to plot. Adjust the game or event type filters to see a schedule.
       </p>
     );
   }
@@ -511,6 +512,7 @@ export function Timeline({
                                 {game.short}
                               </span>
                             )}
+                            <TypeBadge type={event.type} compact />
                             <span className="min-w-0 truncate">{event.title}</span>
                             {conflicts && conflicts.length > 0 && (
                               <span className="shrink-0 text-soon" aria-label="Date disputed">!</span>
