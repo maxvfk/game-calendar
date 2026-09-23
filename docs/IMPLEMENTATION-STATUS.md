@@ -335,6 +335,24 @@ source's actual `lastConfirmedAt` and `parsedCount`.
   events, seven automatic and seven reviewed source-health entries, and the
   one known date conflict. Its automatic `lastConfirmedAt` values still belong
   to the 09:37 UTC manual refresh. The scheduled refresh remains unverified.
+- The delayed scheduled [refresh run 35916473856](https://github.com/maxvfk/game-calendar/actions/runs/35916473856)
+  started at 20:31 UTC on September 23 and succeeded: all seven active sources
+  confirmed, three changed, zero warnings and zero broken. It committed the
+  new snapshots as `5668c75`. A local feed build from those snapshots produces
+  134 events across seven games and still only the known NTE Circle Bounty
+  conflict. Endfield wiki.gg grew from eight to ten parsed events; its two new
+  IDs are `endfield:echoing-bell-of-an-old-city:2026-09-24` and
+  `endfield:season-of-illusion:2026-09-24`. The previous eight wiki IDs remain.
+  The corresponding [CI run 35916518191](https://github.com/maxvfk/game-calendar/actions/runs/35916518191)
+  **failed** in `test/endfield-reviewed-banners.test.ts:28`: the test asserts
+  exactly eight wiki events. Build and Pages deploy were skipped. The public
+  feed checked afterward was still the 19:23 UTC, 132-event version, so the
+  134-event publication is **not verified or live**. Update this snapshot-count
+  assertion in a separate, narrow implementation milestone after checking the
+  new rows and preserving ID/merge assertions; rerun all gates and verify Pages.
+  At this documentation checkpoint, frozen install, typecheck and build passed
+  locally (134 events); `bun test` reproduced the same one failure (889 pass,
+  one fail). No tests or runtime behavior were changed here.
 
 ## Maintenance path
 
@@ -360,19 +378,13 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Inspect the next actual scheduled refresh's source outcomes: seven live
-adapters should report no inherited Game8 failure state, while a genuine new
-failure must remain visible. Compare the refreshed published feed and source
-health against this 132-event checkpoint. Complete the remaining focused phone
-step 6 checks when convenient: combined filter selection after reload, today
-line, partial-day exact edge, date-only edge and completion persistence.
-After CI/Pages for this M6 status commit, hand the documented implementation
-to the separate Astra audit.
-Endfield 5208 remains manual-reviewed only while the official robots chain is
-unresolved; do not infer its missing calendar dates.
-
-The new Genshin, HSR and WuWa parsers have been confirmed by a manual Actions
-refresh. At 19:08 UTC on Sep 23 the 17:27 UTC scheduled run was still absent
-from the Actions run list; its outcome is pending. Game8 and Genshin Fandom are
-retired from active polling; their access limits remain in the source reports.
-The NTE Circle Bounty disagreement remains visible to readers.
+The scheduled refresh is confirmed, but the 134-event Pages publication is
+blocked by the Endfield count assertion above. Resolve that in a separate
+minimal test milestone, then verify CI/Pages and the public feed. Meanwhile the
+reader will use the existing deployed app normally and collect observations in
+`docs/IMPROVEMENT-BACKLOG.md`. Refine them in ChatGPT, implement approved small
+pre-Astra polish in separate commits, smoke-check and freeze the baseline, then
+hand it to Astra for a separate audit. Address confirmed audit findings before
+deferred improvements. Create the final `docs/MAINTENANCE.md` only after the
+audit and fixes. Endfield 5208 remains manual-reviewed while the official
+robots chain is unresolved; the Circle Bounty disagreement remains visible.
