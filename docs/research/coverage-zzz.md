@@ -96,3 +96,19 @@ links the original HoYoverse notice and exposes both the compensation section
 re-read, rather than treating the research conclusion alone as evidence.
 No automatic parser or undocumented endpoint was added. Runner availability
 and the remaining coverage gaps above are still pending.
+
+## Endgame follow-up — 2026-09-23
+
+The historical gap assessment above reflected the official Version 3.2 notice,
+which still gives no dated Shiyu/Deadly boundaries. The user's in-game screen
+showed both active with relative countdowns. Two independently dated community
+posts identify the current windows: [Shiyu Critical Node Sep 18–Oct 2](https://www.hoyolab.com/article/46768065)
+and [Deadly Assault Sep 11–25](https://www.hoyolab.com/article/46706496).
+The [Icy Veins Critical Node guide](https://www.icy-veins.com/zenless-zone-zero/shiyu-defense-critical-node)
+independently says the next Shiyu reset is October 2. HoYoLAB article bodies
+are JS gated here; the publication titles exposed by search contain the dated
+periods. These are player reports on the official community platform, **not**
+official HoYoverse notices. Two reviewed `challenge` records therefore use
+`estimated` provenance, 0.75 confidence, and day/day precision. No reset hour
+or future rotation is inferred. Replace with official/in-game absolute periods
+when available while preserving the now-published event IDs.

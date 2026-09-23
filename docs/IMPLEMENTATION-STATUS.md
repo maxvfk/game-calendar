@@ -359,7 +359,18 @@ source's actual `lastConfirmedAt` and `parsedCount`.
   regional end remains checked while the historical row is still listed.
   No parser or event data changed. Frozen install, typecheck, all 890 tests and
   build passed locally; the feed has 134 events and the one known conflict.
-  CI/Pages and the published feed still require verification after this commit.
+  [CI/Pages run 35929071084](https://github.com/maxvfk/game-calendar/actions/runs/35929071084)
+  passed all three jobs. The published feed generated at 22:34:49 UTC contains
+  134 events, including both new Endfield IDs, 14 source-health entries and
+  only the known NTE Circle Bounty conflict. M6's scheduled-refresh and
+  publication checkpoint is operationally complete.
+- ZZZ endgame correction: the September 18–October 2 Shiyu Critical Node and
+  September 11–25 Deadly Assault rotations were missing from reviewed data.
+  Dated player posts on HoYoLAB corroborate the periods shown by the user's
+  in-game countdown screenshot. Both rows are `challenge`, `estimated` and
+  `day`/`day`; the screenshot gives no absolute clock boundary, and the
+  official Version 3.2 notice names the modes without dates. Existing ZZZ
+  rows and IDs are unchanged. Publication verification follows this commit.
 
 ## Maintenance path
 
@@ -385,11 +396,11 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Verify CI/Pages for the narrow Endfield test correction and confirm the public
-feed has 134 events, including both newly listed Endfield rows. Then address
-the user's reported missing ZZZ Shiyu Defense and Deadly Assault cycles using
-dated evidence, without deriving calendar deadlines from screenshot countdowns
-or assumed rotation cadence. Meanwhile the reader will use the deployed app
+Verify CI/Pages and the public feed after the two ZZZ endgame rows publish;
+confirm both are visible under the challenge filter. Seek official or in-game
+absolute boundaries before promoting their provenance or precision, and review
+the next rotations individually rather than generating a cadence. The reader
+will use the deployed app
 normally and collect observations in
 `docs/IMPROVEMENT-BACKLOG.md`. Refine them in ChatGPT, implement approved small
 pre-Astra polish in separate commits, smoke-check and freeze the baseline, then

@@ -92,6 +92,38 @@
       "confidence": 1
     },
     {
+      "reviewedAt": "2026-09-23T22:39:42.000Z",
+      "title": "Shiyu Defense: Critical Node (Sep 18)",
+      "titleRu": "Оборона Шиюй: критический узел",
+      "type": "challenge",
+      "summary": "Current Critical Node rotation. Community cycle dates and the in-game countdown agree; the official version notice does not publish exact reset times.",
+      "startsAt": "2026-09-18T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-02T00:00:00.000Z",
+      "endPrecision": "day",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://www.hoyolab.com/article/46768065",
+      "provenanceStatus": "estimated",
+      "confidence": 0.75
+    },
+    {
+      "reviewedAt": "2026-09-23T22:39:42.000Z",
+      "title": "Deadly Assault (Sep 11)",
+      "titleRu": "Опасный штурм",
+      "type": "challenge",
+      "summary": "Current Deadly Assault rotation. Player-posted cycle dates agree with the in-game countdown; an official exact reset time was not found.",
+      "startsAt": "2026-09-11T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-25T00:00:00.000Z",
+      "endPrecision": "day",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://www.hoyolab.com/article/46706496",
+      "provenanceStatus": "estimated",
+      "confidence": 0.75
+    },
+    {
       "title": "Surprise Screening Plan",
       "type": "login",
       "summary": "Check-in event awarding an Angels of Delusion outfit choice, an avatar, Polychromes, and more.",
