@@ -15,17 +15,19 @@
 
 ## Текущий статус
 
-Первый воспроизводимый import готов: PWA-интерфейс, timeline, checklist,
-локальные отметки выполнения, offline cache, schema validation, тесты и GitHub
-Pages workflow. Event data импортируется только из snapshots, полученных этим
-репозиторием независимо. Если источник ещё не получен, lane помечается
-недоступным — дата не подставляется предположением.
+PWA включает timeline, checklist, локальные отметки, offline cache и проверку
+схемы событий. GitHub Pages собирает автоматические snapshots и проверенные
+вручную записи для семи игр. Работающие automatic sources: официальный Steam
+News для NTE, NTEBuild для Beyond the Rails, Prydwen для баннеров CZN и
+Endfield wiki.gg. Парсеры KQM Genshin/HSR и Kuro Atom для WuWa добавлены;
+первый штатный refresh этих трёх источников ещё проверяется. Охват остаётся
+частичным: если источник недоступен или дата не подтверждена, она не
+подставляется предположением.
 
-На первом этапе автоматически доступен источник Endfield wiki.gg. Для
-источников, закрытых для GitHub Actions или текущего runner, реализован
-отдельный reviewed ingestion channel: записи в `data/reviewed/*.json` требуют
-source URL, времени проверки и явного provenance-статуса. `leak` по умолчанию
-не публикуется.
+Записи в `data/reviewed/*.json` требуют source URL, времени проверки и явного
+provenance-статуса. `leak` по умолчанию не публикуется. Точные counts, дата
+проверки, пробелы и следующий шаг — в
+[`docs/IMPLEMENTATION-STATUS.md`](docs/IMPLEMENTATION-STATUS.md).
 
 ## Локальный запуск
 

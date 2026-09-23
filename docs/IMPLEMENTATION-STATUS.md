@@ -179,11 +179,63 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   passed (126 feed rows, the same Circle Bounty conflict). The first normal
   Actions refresh of Genshin KQM, HSR KQM and WuWa Atom is still pending; the
   latest scheduled run 35779097930 predates those adapters.
+- M5 deployed-update checkpoint: CI/Pages run
+  [35839190984](https://github.com/maxvfk/game-calendar/actions/runs/35839190984)
+  passed for `8aef0df`. On the published desktop site the service worker
+  displayed "A new version ... is ready"; pressing Reload loaded the new
+  freshness text while the chosen Genshin/NTE lanes and Europe region remained.
+  The available cloud browser exposed no viewport or network toggle, so this
+  is an upgrade check, not a phone or offline reload check.
+
+## Coverage at the reproducible 2026-09-23 build
+
+This is the **126-row local build** at `8aef0df`, including finished events,
+not a claim that all seven games are completely covered. A feed row is counted
+once after merge; parser counts before merge can be larger. New Genshin, HSR
+and WuWa API sources still use independently captured fixtures pending the
+first normal runner refresh. Automatic confirmations below are from the last
+saved snapshot; reviewed dates are the batch date except for individually
+rechecked rows described above. See `public/data/events.v1.json` for each
+source's actual `lastConfirmedAt` and `parsedCount`.
+
+| Game | Published rows and categories | Automatic / transport | Reviewed and latest targeted check | Known missing or blocked |
+|---|---|---|---|---|
+| Genshin | 16: banners 3, login 2, challenge 3, story 2, other 6 | KQM GINews notice Markdown, 10 parsed from Sep 23 fixture, runner refresh pending | 16 reviewed; four rows checked Sep 23 | Game8 unavailable; Fandom robots blocked on runner. Some future Wish/cycle deadlines still lack dated evidence. |
+| HSR | 12: banners 4, login 1, challenge 5, other 2 | KQM HSRNews notice Markdown, 6 parsed from Sep 23 fixture, runner refresh pending | 12 reviewed; four rows checked Sep 23 | Game8 unavailable; Version 4.6 Warp/event periods absent from retrieved notice. |
+| WuWa | 11: banners 6, login 1, challenge 2, other 2 | Kuro article Atom mirror, 8 parsed from compact Sep 23 fixture; full 20-entry capture parsed 14 in M3, runner refresh pending | 11 reviewed; latest batch Sep 21 | Game8 unavailable; image-only 3.7 preview does not establish exact periods. |
+| ZZZ | 15: banners 4, login 3, challenge 1, story 1, other 6 | No usable automatic source; official raw HTML probe yielded JS shell | 15 reviewed; latest batch Sep 21 | Game8 unavailable; Phase II banners and challenge cycles lack direct dated notices here. |
+| Endfield | 11: banners 3, login 1, challenge 1, other 6 | wiki.gg 8 parsed; last confirmed Sep 22 | 3 reviewed, checked Sep 23 | Game8 unavailable; official 5208 robots redirect unresolved, so October rows remain pending. |
+| NTE | 45: banners 12, login 2, challenge 6, maintenance 5, other 20 | Official Steam News 42 parsed and NTEBuild BtR 3, both confirmed Sep 22 | 15 reviewed; latest batch Sep 22 | Game8 unavailable. Official Perfect World and Steam disagree on Circle Bounty by 24 hours. |
+| CZN | 16: banners 5, login 2, challenge 4, story 1, other 4 | Prydwen banners 5 parsed, confirmed Sep 22 | 14 reviewed; latest batch Sep 21 with STOVE provenance | Game8 unavailable. Prydwen covers banners only; official STOVE notices remain reviewed. |
+
+## Maintenance path
+
+1. For a disputed date, open the event's `sourceUrl` and
+   `public/data/review.v1.json`, compare explicit period and region labels,
+   and record the exact publication URL. Preserve the existing title/ID, use
+   `day` for a date without a supported clock, and keep an unknown end null.
+2. Add or correct a row in `data/reviewed/<game>.json` following
+   `data/reviewed/README.md`. For a targeted edit, set the row's `reviewedAt`
+   to its actual check time and preserve `firstSeenAt` if previously published;
+   do not advance the whole batch's `reviewedAt` without checking every row.
+3. Run `bun install --frozen-lockfile`, `bun run typecheck`, `bun test`, and
+   `bun run build`. Inspect `public/data/events.v1.json` for the same old IDs,
+   `public/data/review.v1.json` for new conflicts, and the build's per-source
+   parsed counts before committing.
+4. For a broken automatic source, inspect the latest **Refresh sources** run's
+   per-source outcome, `snapshots/<source-id>.*` and source health in the feed.
+   A failed fetch must retain the old body and may report a stale lane. Fix
+   transport/schema only from a permitted real response; use
+   `bun run refresh --dry-run` to inspect the plan and
+   `bun run refresh --only <source-id>` for a bounded local check when access
+   permits. Re-run the full gates, then verify CI/Pages and the published feed.
 
 ## Next concrete step
 
-Verify all three new API sources in the normal Actions refresh. Then inspect
-remaining M4 freshness behavior and complete M5 browser/device smoke checks.
+Verify all three new API sources in the normal Actions refresh, including
+runner logs, stored snapshots, merged counts and reviewed ID stability. Then
+complete remaining M4 checks and M5 phone/offline smoke where a controllable
+device/network is available. Finalize M6 after live refresh evidence.
 Endfield 5208 remains manual-reviewed only while the official robots chain is
 unresolved; do not infer its missing calendar dates.
 
