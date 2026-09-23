@@ -144,6 +144,66 @@
       "sourceUrl": "https://hsr.hoyoverse.com/en-us/news/165767",
       "provenanceStatus": "official",
       "confidence": 1
+    },
+    {
+      "title": "Realm of the Strange",
+      "type": "other",
+      "summary": "Cavern of Corrosion double-reward period; opportunities are limited.",
+      "startsAt": "2026-09-19T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-27T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1392.md",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "reviewedAt": "2026-09-23T00:02:06.000Z"
+    },
+    {
+      "title": "Memory of Chaos: Stormcleanse",
+      "type": "challenge",
+      "summary": "Memory of Chaos phase; global end applies to all servers.",
+      "startsAt": "2026-08-17T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-27T22:00:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://www.hoyolab.com/article/45851903",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "reviewedAt": "2026-09-23T00:02:06.000Z"
+    },
+    {
+      "title": "Fate Contract: Renewal",
+      "type": "login",
+      "summary": "Login to claim a limited collaboration character; ends before the end of Version 4.6.",
+      "startsAt": "2026-07-24T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": null,
+      "endPrecision": "unknown",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://www.hoyolab.com/article/45851903",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "reviewedAt": "2026-09-23T00:02:06.000Z"
+    },
+    {
+      "title": "Version 4.5 Nameless Honor",
+      "type": "other",
+      "summary": "Version 4.5 Nameless Honor reward period; paid purchase closes one hour earlier.",
+      "startsAt": "2026-08-26T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-27T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://www.hoyolab.com/article/46328730",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "reviewedAt": "2026-09-23T00:02:06.000Z"
     }
   ]
 }
