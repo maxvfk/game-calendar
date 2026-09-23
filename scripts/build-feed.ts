@@ -17,6 +17,7 @@ import {
   REVIEWED_SOURCE_URL,
 } from "../src/ingest/reviewed.ts";
 import { SnapshotStore, freshnessAt } from "../src/ingest/snapshots.ts";
+import { fixtureCaptureAt } from "../src/ingest/fixtures.ts";
 import { EventFeed, SCHEMA_VERSION, type SourceHealth } from "../src/shared/feed.ts";
 import type { GachaEvent, GameId } from "../src/shared/schema.ts";
 
@@ -71,7 +72,7 @@ async function documentFor(adapterId: string, game: GameId) {
   const fixture = await latestFixture(adapterId, game);
   if (fixture === null) return null;
   const { file, html } = fixture;
-  const date = fixtureDate(file);
+  const date = fixtureCaptureAt(file);
   return {
     file,
     html,
@@ -203,9 +204,3 @@ await Bun.write("public/data/review.v1.json", `${JSON.stringify({
 console.log(
   `\n${OUT}: ${events.length} events across ${byGame.size} games, ${conflictCount} conflicts`,
 );
-
-/** "game8-events-2026-08-14.html" → ISO timestamp. */
-function fixtureDate(path: string): string | null {
-  const m = /(\d{4}-\d{2}-\d{2})\.(?:html|json)$/.exec(path);
-  return m?.[1] ? `${m[1]}T00:00:00.000Z` : null;
-}

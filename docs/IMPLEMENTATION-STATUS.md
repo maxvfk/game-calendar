@@ -143,6 +143,13 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   checks cover parser, reviewed, reader-entered and regional-exact cases.
   Bun 1.3.14 frozen install, typecheck, 867 tests and build passed (126 feed
   rows; known NTE Circle Bounty conflict).
+- M4 fixture freshness checkpoint: the offline builder now reads capture dates
+  from `.md` and `.xml` fixture names as well as `.html`/`.json`. The three
+  new source health entries have the 2026-09-23 capture day and parsed counts
+  (10, 6, 8); `lastConfirmedAt` stays null until a real network confirmation.
+  The previous build incorrectly recorded all three capture dates and counts
+  as null despite including their events. Bun 1.3.14 frozen install, typecheck,
+  868 tests and build passed (126 feed rows; known NTE Circle Bounty conflict).
 
 ## Next concrete step
 
