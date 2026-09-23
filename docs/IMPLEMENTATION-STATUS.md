@@ -293,6 +293,42 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 | NTE | 45: banners 12, login 2, challenge 6, maintenance 5, other 20 | Official Steam News 42 parsed and NTEBuild BtR 3, both confirmed Sep 22 | 15 reviewed; latest batch Sep 22 | Game8 unavailable. Official Perfect World and Steam disagree on Circle Bounty by 24 hours. |
 | CZN | 16: banners 5, login 2, challenge 4, story 1, other 4 | Prydwen banners 5 parsed, confirmed Sep 22 | 14 reviewed; latest batch Sep 21 with STOVE provenance | Game8 unavailable. Prydwen covers banners only; official STOVE notices remain reviewed. |
 
+## M6 release evidence and limits
+
+- Implementation tip before this release-status update: `fbf4619` on `main`.
+  The M5 UI commits are `34d584f` (type filters) and `f0c00c8` (daily
+  timeline); their CI/Pages runs are linked above. The final M6 commit SHA is
+  reported with the release handoff because a commit cannot record its own SHA.
+- Reproducible validation is the four commands in `AGENTS.md`. At this M6
+  checkpoint on Bun 1.3.14, frozen install, typecheck, 890 tests
+  (zero failures) and build passed. The build produced 132 merged events across
+  seven games, one visible Circle Bounty conflict and seven automatic plus
+  seven reviewed health entries. `bun run refresh --dry-run` listed exactly
+  the seven active automatic adapters without making requests.
+- The published feed at 19:08 UTC on September 23 matched the local 132 IDs
+  and the compared title, game, type, start/end, precision, regional end and
+  provenance URL fields. Its automatic confirmations were at 09:37 UTC; the
+  Actions schedule intended for 17:27 UTC was not yet present in the run list
+  at the later check. A successful build is not evidence of a newer source
+  confirmation. Inspect the next actual refresh before claiming it passed.
+- Seven-game coverage is the matrix above, not completeness of all current
+  game events. Genshin, HSR, WuWa, NTE, CZN and Endfield have bounded
+  automatic extraction; ZZZ is reviewed-only. Game8 and Genshin Fandom are
+  retired from polling. The Endfield official robots chain, ZZZ official JS
+  shell and image-only WuWa notices still limit automatic coverage. No dates
+  were filled in from cadence or previews.
+- Remaining reader checks: the phone confirmed working filters and visible
+  daily cells; combined filter persistence, proportional exact placement,
+  dashed day-only edges and completion persistence specifically after this UI
+  update have not been reported. The prior offline reload fix passed on one
+  realme GT 6 with Chrome, not on every mobile platform. There is no account
+  sync; preferences and completion are local to each browser, with manual
+  export/import available in Settings.
+- For routine corrections and source failures, use the maintenance path below.
+  Do not erase a conflicting lower-priority source or promote reviewed dates
+  merely to make the report quiet. The separate Astra audit starts after M6;
+  it should use this evidence and record only reproducible findings.
+
 ## Maintenance path
 
 1. For a disputed date, open the event's `sourceUrl` and
@@ -317,13 +353,14 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Complete the remaining focused phone step 6 checks when convenient: combined
-filter selection after reload, today line, partial-day exact edge, date-only
-edge and completion persistence. Inspect the next scheduled refresh's source
-outcomes: seven live adapters should report no inherited Game8 failure state,
-while a genuine new failure must remain visible. Compare the refreshed
-published feed and source health against this 132-event checkpoint. Then
-finalize M6 with the tested scope and remaining manual coverage.
+Inspect the next actual scheduled refresh's source outcomes: seven live
+adapters should report no inherited Game8 failure state, while a genuine new
+failure must remain visible. Compare the refreshed published feed and source
+health against this 132-event checkpoint. Complete the remaining focused phone
+step 6 checks when convenient: combined filter selection after reload, today
+line, partial-day exact edge, date-only edge and completion persistence.
+After CI/Pages for this M6 status commit, hand the documented implementation
+to the separate Astra audit.
 Endfield 5208 remains manual-reviewed only while the official robots chain is
 unresolved; do not infer its missing calendar dates.
 
