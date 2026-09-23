@@ -9,7 +9,9 @@ import {
 import type { EventDraft } from "../state/useCustom.ts";
 import { cadenceLabel, EventForm } from "./CustomForms.tsx";
 import {
+  dayOnlyEnd,
   formatAbsolute,
+  formatDayDate,
   formatRemaining,
   REGION_LABEL,
 } from "../../shared/time.ts";
@@ -89,6 +91,8 @@ export function EventDetail({
   // Read once rather than at both the guard and the render: calling it twice
   // was what forced the non-null assertion below it.
   const cadence = cadenceLabel(own?.record.repeat ?? null);
+  const readerEntered = event.sourceId === "you";
+  const dayEnd = dayOnlyEnd(event);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -140,24 +144,27 @@ export function EventDetail({
         </div>
 
         <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-          {/* Off the clock, not off the event: a day-precision boundary is
-              resolved to the game's reset there, and printing the stored
-              00:00Z instead would name a different day to the countdown. */}
           <Field label="Starts">
-            {formatAbsolute(clock.startsMs, event.startPrecision === "exact")}
+            {event.startPrecision === "day"
+              ? formatDayDate(event.startsAt, clock.startsMs, readerEntered)
+              : formatAbsolute(clock.startsMs, true)}
           </Field>
           <Field label="Ends">
             {clock.endsMs === null ? (
               <span className="text-faint">Not announced</span>
             ) : (
-              formatAbsolute(clock.endsMs, event.endPrecision === "exact")
+              dayEnd
+                ? formatDayDate(event.endsAt!, clock.endsMs, readerEntered)
+                : formatAbsolute(clock.endsMs, true)
             )}
           </Field>
           <Field label="Remaining">
             <span className="tnum font-display" style={{ color: heat }}>
               {clock.msRemaining === null
                 ? "unknown"
-                : formatRemaining(clock.msRemaining)}
+                : dayEnd
+                  ? "Time unconfirmed"
+                  : formatRemaining(clock.msRemaining)}
             </span>
           </Field>
           <Field label="Type">{event.type}</Field>
@@ -281,21 +288,11 @@ export function EventDetail({
           </div>
         )}
 
-        {/* Gated on the same condition `boundaryMs` uses to apply the reset
-            shift, so the copy never claims a countdown the clock is not
-            actually running. A reader's own event is day-precision exactly as
-            often as a parsed one, but `extractionMethod` is "manual" — there
-            is no source to have "given" a date, and `readerInstant` already
-            resolved it to the instant they meant rather than a placeholder
-            `boundaryMs` has to reinterpret. */}
-        {event.endPrecision === "day" &&
-          event.endsAt !== null &&
-          event.extractionMethod === "parser" && (
+        {dayEnd && event.endsAt !== null && !readerEntered && (
           <p className="mt-3 text-xs leading-relaxed text-faint">
-            The source gave a date but no time of day, so this counts down to
-            that day's {REGION_LABEL[region]} server reset — where these usually land, but a
-            reading rather than a stated time. Check in-game before the last
-            hours.
+            The source gave a date but no time of day. The timeline uses the
+            {` ${REGION_LABEL[region]} server reset `}to place it; the actual
+            deadline is unconfirmed. Check in-game before the last hours.
           </p>
         )}
 

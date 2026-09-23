@@ -151,6 +151,11 @@ export function effectiveEnd(
   return endBoundary(event, region)?.iso ?? null;
 }
 
+/** A region-specific published instant takes precedence over a day-only fallback. */
+export function dayOnlyEnd(event: EndBearing): boolean {
+  return event.endPrecision === "day" && !(event.regionScoped && event.regionEnds !== null);
+}
+
 /** Everything the clock reads off an event. */
 export type Clockable = EndBearing &
   Pick<
@@ -286,6 +291,21 @@ export function formatAbsolute(iso: string | number, withTime: boolean): string 
   return `${date}, ${d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}`;
 }
 
+/** Show the printed source date without a timezone changing its calendar day. */
+export function formatDayDate(
+  iso: string,
+  resolvedMs: number,
+  readerEntered: boolean,
+  compact = false,
+): string {
+  return new Intl.DateTimeFormat(undefined, {
+    ...(compact ? {} : { weekday: "short", year: "numeric" }),
+    month: "short",
+    day: "numeric",
+    timeZone: readerEntered ? undefined : "UTC",
+  }).format(new Date(readerEntered ? resolvedMs : iso));
+}
+
 export interface EventClock {
   startsMs: number;
   endsMs: number | null;
@@ -375,18 +395,29 @@ export function byDeadline(
  * it a reader has to infer that ticks mean remaining time, which is exactly the
  * kind of "obvious to the author" encoding that leaves everyone else guessing.
  */
-export function windowCaption(clock: EventClock, now: number): string {
-  const on = (ms: number) =>
+export function windowCaption(clock: EventClock, now: number, event: Clockable): string {
+  const exactDate = (ms: number) =>
     new Date(ms).toLocaleDateString(undefined, { day: "numeric", month: "short" });
+  const start = event.startPrecision === "day"
+    ? formatDayDate(event.startsAt, clock.startsMs, event.sourceId === "you", true)
+    : exactDate(clock.startsMs);
+  const end = clock.endsMs === null ? null : dayOnlyEnd(event)
+    ? formatDayDate(event.endsAt!, clock.endsMs, event.sourceId === "you", true)
+    : exactDate(clock.endsMs);
+  const startNote = event.startPrecision === "day" ? " · start date only" : "";
 
   if (clock.upcoming) {
-    return clock.endsMs === null
-      ? `starts ${on(clock.startsMs)}`
-      : `${on(clock.startsMs)} – ${on(clock.endsMs)} · not started yet`;
+    return end === null
+      ? `starts ${start}${startNote}`
+      : `${start} – ${end} · not started yet${startNote}${dayOnlyEnd(event) ? " · end date only" : ""}`;
   }
 
-  if (clock.endsMs === null) {
-    return `started ${on(clock.startsMs)} · no end date announced`;
+  if (end === null || clock.endsMs === null) {
+    return `started ${start} · no end date announced${startNote}`;
+  }
+
+  if (dayOnlyEnd(event)) {
+    return `${start} – ${end} · end time unconfirmed${startNote}`;
   }
 
   const totalDays = Math.max(
@@ -401,5 +432,5 @@ export function windowCaption(clock: EventClock, now: number): string {
       ? `${Math.max(1, Math.floor(leftMs / HOUR))} of ${totalDays * 24} hours left`
       : `${leftDays} of ${totalDays} days left`;
 
-  return `${on(clock.startsMs)} – ${on(clock.endsMs)} · ${left}`;
+  return `${start} – ${end} · ${left}${startNote}`;
 }

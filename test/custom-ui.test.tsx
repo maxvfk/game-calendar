@@ -208,6 +208,7 @@ describe("EventRow provenance", () => {
     const upcoming = {
       ...event,
       startsAt: new Date(at + 2 * 24 * 3_600_000).toISOString(),
+      startPrecision: "exact" as const,
     };
     const at2 = (ms: number) =>
       render(
@@ -225,6 +226,18 @@ describe("EventRow provenance", () => {
     // A day later the same row says one day, with nothing about the real clock
     // involved in either answer.
     expect(at2(at + 24 * 3_600_000)).toContain("starts in 1d");
+  });
+
+  test("a date-only start is labelled with its date, not hours to a guessed time", () => {
+    const event = asDisplayEvent(OWN);
+    const now = Date.parse("2026-08-17T12:00:00.000Z");
+    const html = render(
+      <ul>
+        <EventRow row={{ event, clock: clockFor(event, "europe", now) }} now={now} completed={false} onOpen={() => {}} />
+      </ul>,
+    );
+    expect(html).toContain("starts Aug 20 · date only");
+    expect(html).not.toContain("starts in 2d");
   });
 });
 
@@ -781,9 +794,8 @@ describe("the derived-boundary note", () => {
     onClose: noop,
   };
 
-  // A parser declining to guess a time of day — the case the note was written
-  // for. `dates.ts` stores the placeholder as 00:00Z, and `boundaryMs` reads
-  // it against the game's own server reset rather than literally.
+  // The source gives a date without a time. The clock uses the game's reset
+  // for ordering, but the UI must not present that assumption as a deadline.
   const PARSED: DisplayEvent = {
     id: "genshin:walpurgisnacht:2026-09-03",
     game: "genshin",
@@ -816,12 +828,30 @@ describe("the derived-boundary note", () => {
       </GameMetaProvider>,
     );
     expect(html).toContain("server reset");
+    expect(html).toContain("Time unconfirmed");
+    expect(html).toContain("actual deadline is unconfirmed");
+  });
+
+  test("reviewed dates get the same explanation and list label", () => {
+    const reviewed: DisplayEvent = {
+      ...PARSED,
+      sourceId: "reviewed-genshin",
+      extractionMethod: "manual",
+    };
+    const clock = clockFor(reviewed, detailProps.region, NOW);
+    const html = render(
+      <div>
+        <EventRow row={{ event: reviewed, clock }} now={NOW} completed={false} onOpen={() => {}} />
+        <EventDetail {...detailProps} row={{ event: reviewed, clock }} />
+      </div>,
+    );
+    expect(html).toContain("Sep 3 · date only");
+    expect(html).toContain("Time unconfirmed");
+    expect(html).toContain("server reset");
   });
 
   test("absent for a reader's own day-precision event", () => {
-    // False three times over: no source, nobody "gave" a date, and
-    // `boundaryMs` only applies the reset shift for `extractionMethod ===
-    // "parser"` — a reader's own event is "manual" even at day precision.
+    // Their date came from their form, so no source or server reset is claimed.
     const own = asDisplayEvent(OWN);
     const html = renderToStaticMarkup(
       <GameMetaProvider value={(id) => metaFor(id, GAMES)}>
@@ -832,6 +862,7 @@ describe("the derived-boundary note", () => {
       </GameMetaProvider>,
     );
     expect(html).not.toContain("server reset");
+    expect(html).toContain("Time unconfirmed");
   });
 });
 

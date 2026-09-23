@@ -135,11 +135,19 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   instant derived from their own input. Regression tests compare both
   boundaries across three regions. Bun 1.3.14 frozen install, typecheck,
   863 tests and build passed (126 feed rows; known NTE Circle Bounty conflict).
+- M5 date-precision UI checkpoint: Next Up, queued deadlines, event rows,
+  window captions and details now state the printed date and unknown time
+  instead of counting hours to a derived reset for day-only ends. Day-only
+  starts are labelled as dates; exact region-specific ends still count down.
+  The footer distinguishes exact local times from source dates. Focused render
+  checks cover parser, reviewed, reader-entered and regional-exact cases.
+  Bun 1.3.14 frozen install, typecheck, 867 tests and build passed (126 feed
+  rows; known NTE Circle Bounty conflict).
 
 ## Next concrete step
 
 Verify all three new API sources in the normal Actions refresh. Then inspect
-remaining M4 freshness behavior and M5 UI, especially day-only countdowns.
+remaining M4 freshness behavior and M5 interaction smoke checks.
 Endfield 5208 remains manual-reviewed only while the official robots chain is
 unresolved; do not infer its missing calendar dates.
 

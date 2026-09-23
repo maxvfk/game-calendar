@@ -1,6 +1,8 @@
 import { isCustomEventId, type DisplayEvent } from "../../shared/custom.ts";
 import { useGameMeta } from "../state/gameMeta.tsx";
 import {
+  dayOnlyEnd,
+  formatDayDate,
   formatRemaining,
   windowCaption,
   type EventClock,
@@ -61,16 +63,21 @@ export function EventRow({
   const game = gameMeta(event.game);
   const heat = URGENCY_COLOR[clock.urgency];
 
-  const caption = windowCaption(clock, now);
+  const caption = windowCaption(clock, now, event);
   // Only ever a warning when the reader gave an estimate — inferring one to
   // justify the warning would be inventing their input.
   const risk = status === "done" ? "fine" : pressure(effort, clock.msRemaining);
+  const readerEntered = event.sourceId === "you";
 
   const countdown = clock.upcoming
-    ? `starts in ${formatRemaining(clock.startsMs - now)}`
+    ? event.startPrecision === "day"
+      ? `starts ${formatDayDate(event.startsAt, clock.startsMs, readerEntered, true)} · date only`
+      : `starts in ${formatRemaining(clock.startsMs - now)}`
     : clock.msRemaining === null
       ? "end date unknown"
-      : formatRemaining(clock.msRemaining);
+      : dayOnlyEnd(event)
+        ? `${formatDayDate(event.endsAt!, clock.endsMs!, readerEntered, true)} · date only`
+        : formatRemaining(clock.msRemaining);
 
   return (
     <li

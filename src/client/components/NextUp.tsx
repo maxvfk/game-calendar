@@ -1,5 +1,5 @@
 import { useGameMeta } from "../state/gameMeta.tsx";
-import { formatRemaining } from "../../shared/time.ts";
+import { dayOnlyEnd, formatDayDate, formatRemaining } from "../../shared/time.ts";
 import type { RowEvent } from "./EventRow.tsx";
 import { Meter, URGENCY_COLOR } from "./Meter.tsx";
 
@@ -49,6 +49,7 @@ export function NextUp({
   const game = gameMeta(event.game);
   const heat = URGENCY_COLOR[clock.urgency];
   const known = clock.msRemaining !== null;
+  const dayOnly = dayOnlyEnd(event) && event.endsAt !== null;
 
   return (
     <section className="relative overflow-hidden border-b border-hairline px-4 pb-6 pt-5">
@@ -85,12 +86,16 @@ export function NextUp({
             className="tnum font-display text-[2.75rem] font-bold leading-none tracking-tight"
             style={{ color: known ? heat : "var(--color-faint)" }}
           >
-            {known ? formatRemaining(clock.msRemaining ?? 0) : "unknown"}
+            {known
+              ? dayOnly
+                ? formatDayDate(event.endsAt!, clock.endsMs!, event.sourceId === "you", true)
+                : formatRemaining(clock.msRemaining ?? 0)
+              : "unknown"}
           </p>
           <p className="pb-1 text-right text-xs leading-tight text-muted">
-            {known ? "left" : "no end date"}
+            {known ? (dayOnly ? "end date only" : "left") : "no end date"}
             <br />
-            {known ? "to finish it" : "announced"}
+            {known ? (dayOnly ? "time unconfirmed" : "to finish it") : "announced"}
           </p>
         </div>
 
@@ -135,6 +140,7 @@ function QueuedRow({
   const { event, clock } = row;
   const game = gameMeta(event.game);
   const known = clock.msRemaining !== null;
+  const dayOnly = dayOnlyEnd(event) && event.endsAt !== null;
 
   return (
     <li>
@@ -158,7 +164,11 @@ function QueuedRow({
             color: known ? URGENCY_COLOR[clock.urgency] : "var(--color-faint)",
           }}
         >
-          {known ? formatRemaining(clock.msRemaining ?? 0) : "no end date"}
+          {known
+            ? dayOnly
+              ? `${formatDayDate(event.endsAt!, clock.endsMs!, event.sourceId === "you", true)} · date only`
+              : formatRemaining(clock.msRemaining ?? 0)
+            : "no end date"}
         </span>
       </button>
     </li>

@@ -222,8 +222,9 @@ export function Colophon({
       <div className="lg:grid lg:grid-cols-3 lg:gap-x-10">
         <div>
           <p>
-            Dates are shown in your local time. Every event links to the page it came
-            from — check there before the last hours.
+            Exact times are shown in your local time. Date-only entries keep the
+            source's stated date. Every event links to the page it came from —
+            check there before the last hours.
           </p>
 
           {/*

@@ -143,6 +143,48 @@ describe("NextUp", () => {
     expect(html).toContain("unknown");
     expect(html).toContain("no end date");
   });
+
+  test("a date-only headline and queued row never claim an exact countdown", () => {
+    const dated = (title: string, end: string) => {
+      const base = row(title, "genshin", 48);
+      const event = { ...base.event, endsAt: end, endPrecision: "day" as const };
+      return { event, clock: clockFor(event, "europe", NOW) };
+    };
+    const html = render(
+      <NextUp
+        rows={[
+          dated("Date Headline", "2026-08-19T00:00:00.000Z"),
+          dated("Date Queue", "2026-08-20T00:00:00.000Z"),
+        ]}
+        focused={null}
+        onOpen={() => {}}
+      />,
+    );
+    expect(html).toContain("end date only");
+    expect(html).toContain("time unconfirmed");
+    expect(html).toContain("Aug 19");
+    expect(html).toContain("Aug 20 · date only");
+    expect(html).not.toContain("1d 15h");
+  });
+
+  test("a regional exact end keeps its countdown even with a day-only fallback", () => {
+    const base = row("Regional Deadline", "hsr", 6);
+    const event = {
+      ...base.event,
+      endPrecision: "day" as const,
+      regionScoped: true,
+      regionEnds: {
+        asia: new Date(NOW + 3 * HOUR).toISOString(),
+        europe: new Date(NOW + 6 * HOUR).toISOString(),
+        america: new Date(NOW + 9 * HOUR).toISOString(),
+      },
+    };
+    const html = render(
+      <NextUp rows={[{ event, clock: clockFor(event, "europe", NOW) }]} focused={null} onOpen={() => {}} />,
+    );
+    expect(html).toContain("6h 0m");
+    expect(html).not.toContain("time unconfirmed");
+  });
 });
 
 describe("Welcome (first run)", () => {
