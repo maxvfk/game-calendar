@@ -262,7 +262,15 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   their local day, including the 23/25-hour DST day. Date-only source and
   reader dates occupy their stated day cells with dashed edges and precision
   wording, without promoting reset-time interpretations to exact geometry.
-  The mobile follow-up in `docs/QA-PHONE-SMOKE.md` remains to be run after deploy.
+  [CI/Pages run 35892354872](https://github.com/maxvfk/game-calendar/actions/runs/35892354872)
+  passed on `f0c00c8` and deployed the change. The preceding category-filter
+  [run 35889998480](https://github.com/maxvfk/game-calendar/actions/runs/35889998480)
+  also passed. The reader reported that the filters work and daily grid is
+  visible on the phone. This report does not yet establish that the filter
+  selection persists after reload or verify the exact-time position and
+  day-only edge on that phone. The public feed checked at 19:08 UTC contains
+  the same 132 IDs and semantic boundaries as the local build, seven automatic
+  and seven reviewed health entries, and the same Circle Bounty conflict.
 
 ## Coverage at the live 2026-09-23 refresh
 
@@ -309,16 +317,18 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Deploy and verify the one-day Timeline grid and category filters, then request
-the focused phone step 6. After the 17:27 UTC scheduled refresh,
-inspect its source outcomes: seven live adapters should report no inherited
-Game8 failure state, while a genuine new failure must remain visible. Compare
-the refreshed published feed and source health against this 132-event checkpoint.
-Then finalize M6 with the tested scope and remaining manual coverage.
+Complete the remaining focused phone step 6 checks when convenient: combined
+filter selection after reload, today line, partial-day exact edge, date-only
+edge and completion persistence. Inspect the next scheduled refresh's source
+outcomes: seven live adapters should report no inherited Game8 failure state,
+while a genuine new failure must remain visible. Compare the refreshed
+published feed and source health against this 132-event checkpoint. Then
+finalize M6 with the tested scope and remaining manual coverage.
 Endfield 5208 remains manual-reviewed only while the official robots chain is
 unresolved; do not infer its missing calendar dates.
 
 The new Genshin, HSR and WuWa parsers have been confirmed by a manual Actions
-refresh. The 17:27 UTC scheduled refresh is pending. Game8 and Genshin Fandom are
+refresh. At 19:08 UTC on Sep 23 the 17:27 UTC scheduled run was still absent
+from the Actions run list; its outcome is pending. Game8 and Genshin Fandom are
 retired from active polling; their access limits remain in the source reports.
 The NTE Circle Bounty disagreement remains visible to readers.
