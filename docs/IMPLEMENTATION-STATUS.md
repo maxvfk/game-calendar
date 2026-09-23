@@ -80,11 +80,26 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   1.3.14: frozen install, typecheck, 846 tests, build (126 feed rows; one
   pre-existing NTE Circle Bounty conflict). The test command requires the Bun
   directory in `PATH` because the local-server test spawns `bun` by name.
+- M3 HSR KQM implementation (2026-09-23): a second exact Contents API
+  allowlist and a factual fixture. The section parser extracts six current
+  schedules (Overdrive, Minuscule, Realm of the Strange, two endgame cycles,
+  Nameless Honor). It treats `(global)` as UTC+8, `(server)` starts as day and
+  `(server)` ends with existing Asia/Europe/America server offsets. The
+  README's Gift of Odyssey lacks an event period, and 4.6 Warp/event dates
+  are absent; these are not invented. Full connector README captured as
+  45,115 UTF-8 bytes, SHA-256
+  `0a4b4e771489e2d331865c2a51405c42ebf2289d66978eb8c5d2ce26dfe7ef4b`.
+  Local parse of that complete document gave six events and merged to the
+  existing 12 HSR reviewed rows with zero conflicts and zero lost IDs.
+  Individual archive URLs document mirror extraction; reviewed publisher URLs
+  remain canonical. Validation on Bun 1.3.14: frozen install, typecheck,
+  851 tests, build (126 feed rows, the same pre-existing NTE conflict).
+  Normal Actions refresh/deploy awaits verification.
 
 ## Next concrete step
 
-Verify Genshin KQM in the normal Actions refresh, then implement the HSR KQM
-candidate as a separate M3 source. Endfield 5208 remains manual-reviewed only
+Verify both KQM sources in the normal Actions refresh, then assess the bounded
+WuWa XML discovery + article transport as a separate M3 source. Endfield 5208 remains manual-reviewed only
 while the official robots chain is unresolved; do not infer its missing
 calendar dates. Fix confirmed false freshness or day-boundary behavior before M5.
 

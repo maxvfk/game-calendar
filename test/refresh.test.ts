@@ -202,6 +202,19 @@ describe("a normal cycle", () => {
     expect(denied.calls).toHaveLength(0);
   });
 
+  test("HSRNews has its own exact Contents API allowlist and .md snapshot", async () => {
+    const raw = await Bun.file("fixtures/hsr/kqm-hsrnews-2026-09-23.md").text();
+    const source = adapterById("hsr-kqm-hsrnews")!;
+    const { opts, calls } = options({
+      adapters: [source], robots: { allows: async () => { throw new Error("API access"); } },
+      responder: () => new Response(raw, { headers: { "Content-Type": "text/plain" } }),
+    });
+    expect((await runRefresh(opts)).outcomes[0]?.result).toBe("fetched");
+    expect(calls[0]?.headers["Accept"]).toBe("application/vnd.github.raw+json");
+    expect((await store.read(source.id))?.meta.eventCount).toBe(6);
+    expect(await Bun.file(store.bodyPath(source.id, "markdown")).text()).toBe(raw);
+  });
+
   test("documented Steam API still enforces six hours and stores verified JSON", async () => {
     const raw = await Bun.file("fixtures/nte/steamnews-official-2026-09-22.json").text();
     const { opts, calls } = options({

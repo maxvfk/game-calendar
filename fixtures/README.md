@@ -12,3 +12,4 @@ from the independently fetched GINews README; it is not a verbatim snapshot.
 Its heading lists, date tags and update schedule retain the facts needed by
 the parser, while prose and images from the unlicensed mirror are omitted.
 The live runner stores the actual response as an untracked `.md` snapshot.
+`hsr/kqm-hsrnews-2026-09-23.md` follows the same factual extraction policy.

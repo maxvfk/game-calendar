@@ -7,6 +7,7 @@ import { holodoriWikiParser } from "./holodori.ts";
 import { iopWikiParser } from "./iopwiki.ts";
 import { karendarParser } from "./karendar.ts";
 import { kqmGinNewsParser } from "./kqm-ginews.ts";
+import { kqmHsrNewsParser } from "./kqm-hsrnews.ts";
 import { nteSteamNewsParser } from "./nte-steamnews.ts";
 import { nteBuildBtrParser } from "./ntebuild-btr.ts";
 import { prydwenCznParser } from "./prydwen-czn.ts";
@@ -31,6 +32,7 @@ export const PARSERS: SourceParser[] = [
   aruStatsParser,
   karendarParser,
   kqmGinNewsParser,
+  kqmHsrNewsParser,
   nteSteamNewsParser,
   nteBuildBtrParser,
   prydwenCznParser,
