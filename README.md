@@ -31,6 +31,8 @@ Endfield wiki.gg, KQM Genshin/HSR и Kuro Atom для WuWa. Первый Actions
 provenance-статуса. `leak` по умолчанию не публикуется. Точные counts, дата
 проверки, пробелы и следующий шаг — в
 [`docs/IMPLEMENTATION-STATUS.md`](docs/IMPLEMENTATION-STATUS.md).
+Проверка на телефоне описана в
+[`docs/QA-PHONE-SMOKE.md`](docs/QA-PHONE-SMOKE.md).
 
 ## Локальный запуск
 

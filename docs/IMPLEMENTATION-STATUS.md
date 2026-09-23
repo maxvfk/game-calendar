@@ -276,12 +276,12 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 Inspect the next scheduled refresh: the seven live adapters should report no
 inherited Game8 failure state, while a new genuine failure must remain visible.
 Check the normal feed URL after its ten-minute HTTP cache expiry. Then complete
-M5 phone/offline smoke where a controllable device/network is available and
+M5 phone/offline smoke using `docs/QA-PHONE-SMOKE.md` on a real device and
 finalize M6 with the tested scope and remaining manual coverage.
 Endfield 5208 remains manual-reviewed only while the official robots chain is
 unresolved; do not infer its missing calendar dates.
 
-The Genshin, HSR and WuWa parsers await their first normal Actions refresh. Game8 and
-Fandom availability remains constrained as recorded in the one-game reports.
-The reviewed source disagreement for NTE
-Circle Bounty is still open and displayed to users.
+The new Genshin, HSR and WuWa parsers have been confirmed by a manual Actions
+refresh. The next scheduled refresh is pending. Game8 and Genshin Fandom are
+retired from active polling; their access limits remain in the source reports.
+The NTE Circle Bounty disagreement remains visible to readers.
