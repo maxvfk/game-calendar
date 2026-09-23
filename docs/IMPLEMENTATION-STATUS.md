@@ -59,15 +59,18 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   identical JS shell for index and article; Endfield robots redirected, so no
   content was requested. Exact URLs, headers, SHA-256 hashes, and classifications
   are in `docs/research/source-probes-sol6.md`. A focused follow-up for the
-  Endfield robots redirect is pending. Run 35801291192 isolated a same-origin
-  307 to `/en-us/robots.txt`; a final bounded follow-up will check its rules.
+  Endfield robots redirect is blocked: run 35801291192 isolated a same-origin
+  307 to `/en-us/robots.txt`; run 35801382417 followed that one safe redirect,
+  which returned another 307. No Endfield page was fetched. M2 is complete:
+  three usable transport candidates, ZZZ HTML unsuitable, Endfield blocked.
 
 ## Next concrete step
 
-Collect and classify the five Actions probe results, including official
-Endfield notice 5208, under the robots/API policy. Integrate its missing events
-only from verified boundaries; then implement usable automatic sources one at a
-time. Fix any confirmed false freshness or day-boundary behavior before M5.
+Implement one of the three usable API transport candidates, starting with a
+narrow factual fixture and parser for Genshin KQM notices. Endfield 5208
+remains manual-reviewed only while the official robots chain is unresolved;
+do not infer its missing calendar dates. Fix confirmed false freshness or
+day-boundary behavior before M5.
 
 No additional automatic source beyond NTE/CZN/wiki.gg has passed the new
 Actions probe yet. Game8 and Fandom availability remains constrained as
