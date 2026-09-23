@@ -328,6 +328,13 @@ source's actual `lastConfirmedAt` and `parsedCount`.
   Do not erase a conflicting lower-priority source or promote reviewed dates
   merely to make the report quiet. The separate Astra audit starts after M6;
   it should use this evidence and record only reproducible findings.
+- M6 release-status commit `1426960` passed
+  [CI/Pages run 35907937236](https://github.com/maxvfk/game-calendar/actions/runs/35907937236):
+  typecheck/test/feed, build and Pages deployment all succeeded. The published
+  page and feed returned HTTP 200; the feed generated at 19:14:28 UTC has 132
+  events, seven automatic and seven reviewed source-health entries, and the
+  one known date conflict. Its automatic `lastConfirmedAt` values still belong
+  to the 09:37 UTC manual refresh. The scheduled refresh remains unverified.
 
 ## Maintenance path
 
