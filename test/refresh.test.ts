@@ -181,6 +181,27 @@ describe("a normal cycle", () => {
     expect(await store.read("genshin-game8-events")).toBeNull();
   });
 
+  test("only the allowlisted GINews Contents API uses raw Markdown without a robots HTML gate", async () => {
+    const raw = await Bun.file("fixtures/genshin/kqm-ginews-2026-09-23.md").text();
+    const source = adapterById("genshin-kqm-ginews")!;
+    const { opts, calls } = options({
+      adapters: [source], robots: { allows: async () => { throw new Error("not an HTML crawl"); } },
+      responder: () => new Response(raw, { headers: { "Content-Type": "text/plain; charset=utf-8", ETag: '"v1"' } }),
+    });
+    expect((await runRefresh(opts)).outcomes[0]?.result).toBe("fetched");
+    expect(calls[0]?.headers["Accept"]).toBe("application/vnd.github.raw+json");
+    expect(calls[0]?.headers["X-GitHub-Api-Version"]).toBe("2022-11-28");
+    expect((await store.read(source.id))?.meta.eventCount).toBe(10);
+    expect((await runRefresh(opts)).outcomes[0]?.result).toBe("skipped_interval");
+    expect(calls).toHaveLength(1);
+    const denied = options({
+      adapters: [adapter({ contentKind: "markdown" })],
+      robots: { allows: async () => ({ allowed: false, reason: "Disallow: /" }) },
+    });
+    expect((await runRefresh(denied.opts)).outcomes[0]?.result).toBe("skipped_robots");
+    expect(denied.calls).toHaveLength(0);
+  });
+
   test("documented Steam API still enforces six hours and stores verified JSON", async () => {
     const raw = await Bun.file("fixtures/nte/steamnews-official-2026-09-22.json").text();
     const { opts, calls } = options({

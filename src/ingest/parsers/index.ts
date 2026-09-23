@@ -6,6 +6,7 @@ import { game8Parser } from "./game8.ts";
 import { holodoriWikiParser } from "./holodori.ts";
 import { iopWikiParser } from "./iopwiki.ts";
 import { karendarParser } from "./karendar.ts";
+import { kqmGinNewsParser } from "./kqm-ginews.ts";
 import { nteSteamNewsParser } from "./nte-steamnews.ts";
 import { nteBuildBtrParser } from "./ntebuild-btr.ts";
 import { prydwenCznParser } from "./prydwen-czn.ts";
@@ -29,6 +30,7 @@ export const PARSERS: SourceParser[] = [
   stellaSoraWikiParser,
   aruStatsParser,
   karendarParser,
+  kqmGinNewsParser,
   nteSteamNewsParser,
   nteBuildBtrParser,
   prydwenCznParser,

@@ -51,6 +51,15 @@ function save(
 }
 
 describe("SnapshotStore", () => {
+  test("Markdown body and kind round-trip as .md", async () => {
+    const body = "# [Example](archive/1.md)\n";
+    await store.save("genshin-kqm-ginews", {
+      url: "https://api.github.com/repos/KQM-git/GINews/contents/readme.md",
+      contentKind: "markdown", body, etag: '"v1"', lastModified: null, at: T0, eventCount: 1,
+    });
+    expect(await Bun.file(join(root, "genshin-kqm-ginews.md")).text()).toBe(body);
+    expect((await store.read("genshin-kqm-ginews"))?.meta.contentKind).toBe("markdown");
+  });
   test("JSON bodies round-trip verbatim with their own extension and metadata", async () => {
     const body = '{"appnews":{"appid":4508340,"newsitems":[]}}\n';
     await store.save("nte-steamnews-official", {

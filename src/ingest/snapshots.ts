@@ -9,7 +9,7 @@
  *
  * Three files per source, and the split matters:
  *
- *   <root>/<id>.html|.json   the body, exactly as served
+ *   <root>/<id>.html|.json|.md   the body, exactly as served
  *   <root>/<id>.meta.json    durable facts: hash, validators, when it changed
  *   <root>/<id>.state.json   volatile run bookkeeping: when we last checked
  *
@@ -197,7 +197,7 @@ export class SnapshotStore {
   constructor(readonly root: string = "snapshots") {}
 
   bodyPath(sourceId: string, contentKind: ContentKind = "html"): string {
-    return join(this.root, `${sourceId}.${contentKind}`);
+    return join(this.root, `${sourceId}.${contentKind === "markdown" ? "md" : contentKind}`);
   }
 
   metaPath(sourceId: string): string {
@@ -321,7 +321,7 @@ export class SnapshotStore {
       (previous.contentKind ?? "html") !== contentKind;
 
     const meta: SnapshotMeta = {
-      ...(contentKind === "json" ? { contentKind } : {}),
+      ...(contentKind !== "html" ? { contentKind } : {}),
       sourceId,
       url: input.url,
       contentHash,

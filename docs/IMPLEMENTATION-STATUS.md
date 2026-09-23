@@ -63,16 +63,32 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   307 to `/en-us/robots.txt`; run 35801382417 followed that one safe redirect,
   which returned another 307. No Endfield page was fetched. M2 is complete:
   three usable transport candidates, ZZZ HTML unsuitable, Endfield blocked.
+- M3 Genshin KQM implementation (2026-09-23): a narrowly allowlisted public
+  GitHub Contents API Markdown adapter, a factual fixture, section parser and
+  transport/merge tests extract ten dated notice windows. `t_lc` and `t_gl`
+  remain day precision because their clock's UTC mapping is unproven. The
+  Version 7.1 maintenance start establishes only the date for "after update".
+  The older 7.0 relative start is skipped because this README has no matching
+  update schedule; reviewed records cover it. One notice's three Silverwing
+  phases yield one event. The mirror record cites its individual archive file
+  and has no `official` provenance tag; reviewed HoYoverse URLs win. The raw
+  Markdown was checked via GitHub connector (95,694 UTF-8 bytes, SHA-256
+  `7f8ce891e5d903e1b402e4741bcdee229b538dae743cf678752a61a4cb1a71a8`),
+  and a direct local parse produced ten events, 16 merged Genshin rows, zero
+  conflicts and zero lost reviewed IDs. Runner refresh/deploy still needs
+  verification after this implementation is published. Validation on Bun
+  1.3.14: frozen install, typecheck, 846 tests, build (126 feed rows; one
+  pre-existing NTE Circle Bounty conflict). The test command requires the Bun
+  directory in `PATH` because the local-server test spawns `bun` by name.
 
 ## Next concrete step
 
-Implement one of the three usable API transport candidates, starting with a
-narrow factual fixture and parser for Genshin KQM notices. Endfield 5208
-remains manual-reviewed only while the official robots chain is unresolved;
-do not infer its missing calendar dates. Fix confirmed false freshness or
-day-boundary behavior before M5.
+Verify Genshin KQM in the normal Actions refresh, then implement the HSR KQM
+candidate as a separate M3 source. Endfield 5208 remains manual-reviewed only
+while the official robots chain is unresolved; do not infer its missing
+calendar dates. Fix confirmed false freshness or day-boundary behavior before M5.
 
-No additional automatic source beyond NTE/CZN/wiki.gg has passed the new
-Actions probe yet. Game8 and Fandom availability remains constrained as
-recorded in the one-game reports. The reviewed source disagreement for NTE
+The new Genshin parser awaits its first normal Actions refresh. Game8 and
+Fandom availability remains constrained as recorded in the one-game reports.
+The reviewed source disagreement for NTE
 Circle Bounty is still open and displayed to users.

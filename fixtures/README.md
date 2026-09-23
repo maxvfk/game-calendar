@@ -6,3 +6,9 @@ Regression fixtures are added only after `maxvfk/game-calendar` captures a sourc
 independently, records its provenance, and verifies that the source permits the
 request. Until then, the build uses current snapshots when available and marks
 missing source lanes as unavailable instead of inventing calendar data.
+
+`genshin/kqm-ginews-2026-09-23.md` is a **curated factual schedule fixture**
+from the independently fetched GINews README; it is not a verbatim snapshot.
+Its heading lists, date tags and update schedule retain the facts needed by
+the parser, while prose and images from the unlicensed mirror are omitted.
+The live runner stores the actual response as an untracked `.md` snapshot.

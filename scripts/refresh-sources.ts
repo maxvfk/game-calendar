@@ -46,6 +46,7 @@
  */
 import { appendFile } from "node:fs/promises";
 import { usesDocumentedSteamApi } from "../src/ingest/steam-api.ts";
+import { usesDocumentedGinNewsApi } from "../src/ingest/github-contents-api.ts";
 import {
   ADAPTERS,
   adapterById,
@@ -360,6 +361,8 @@ async function refreshOne(
   // JSON alone never exempts a source from robots. See docs/NTE-STEAM.md.
   const decision = usesDocumentedSteamApi(adapter)
     ? { allowed: true, reason: "documented Steam Web API access", crawlDelayMs: DEFAULT_HOST_GAP_MS }
+    : usesDocumentedGinNewsApi(adapter)
+    ? { allowed: true, reason: "documented public GitHub Contents API access", crawlDelayMs: DEFAULT_HOST_GAP_MS }
     : await options.robots.allows(adapter.url);
   if (!decision.allowed) {
     return {
@@ -391,9 +394,11 @@ async function refreshOne(
     response = await options.fetchImpl(adapter.url, {
       headers: {
         "User-Agent": options.userAgent,
-        Accept: adapter.contentKind === "json"
-          ? "application/json"
+        Accept: usesDocumentedGinNewsApi(adapter) ? "application/vnd.github.raw+json"
+          : adapter.contentKind === "json" ? "application/json"
+          : adapter.contentKind === "markdown" ? "text/markdown"
           : "text/html,application/xhtml+xml",
+        ...(usesDocumentedGinNewsApi(adapter) ? { "X-GitHub-Api-Version": "2022-11-28" } : {}),
         ...headers,
       },
       signal: AbortSignal.timeout(options.timeoutMs),

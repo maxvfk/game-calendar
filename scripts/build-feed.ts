@@ -33,7 +33,7 @@ const snapshots = new SnapshotStore(process.env["SNAPSHOT_DIR"] ?? "snapshots");
 async function latestFixture(adapterId: string, game: GameId) {
   const site = adapterId.replace(`${game}-`, "").replace(/-events$/, "");
   const contentKind = ADAPTERS.find((adapter) => adapter.id === adapterId)?.contentKind ?? "html";
-  const pattern = `fixtures/${game}/${site}-*.${contentKind}`;
+  const pattern = `fixtures/${game}/${site}-*.${contentKind === "markdown" ? "md" : contentKind}`;
   const files = [...new Bun.Glob(pattern).scanSync(".")].sort();
   const file = files.at(-1);
   if (file === undefined) {
