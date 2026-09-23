@@ -43,13 +43,25 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   original `updatedAt`. Official calendar article 46673425 was verified for
   UTC+8 notation, while event dates were read from the existing reviewed
   source report; the linked article is a JS shell in this environment.
+- WuWa/ZZZ gap check 2026-09-23: WuWa 3.7 article 5453 is image-only in
+  the public JSON archive, so the proposed Singing Drizzle timestamps have
+  not been promoted to reviewed data. Other WuWa 3.7 notices and ZZZ Phase II
+  banners still lack direct dated text; no interval was inferred from prior
+  phases or the scheduled maintenance. The current 11 WuWa and 15 ZZZ rows
+  remain unchanged. Revisit when dated individual notices are published.
+- Actions probe prepared for Genshin KQM, HSR KQM, WuWa Kuro mirror, ZZZ
+  official and Endfield official. Push to `work/sol6-source-probes` triggers
+  `.github/workflows/source-probe.yml`, which records transport headers and
+  hashes; official HTML is retained temporarily as an Actions artifact,
+  while unlicensed community mirrors yield metadata only. Each website must
+  pass robots and crawl-delay checks before a page request. Results pending.
 
 ## Next concrete step
 
-Check outstanding WuWa/ZZZ dated notices and add only supported entries.
-Afterwards probe official Endfield update
-notice 5208 from Actions under robots policy; only then integrate its remaining
-events, without treating secondary timing as official.
+Collect and classify the five Actions probe results, including official
+Endfield notice 5208, under the robots/API policy. Integrate its missing events
+only from verified boundaries; then implement usable automatic sources one at a
+time. Fix any confirmed false freshness or day-boundary behavior before M5.
 
 No additional automatic source beyond NTE/CZN/wiki.gg has passed the new
 Actions probe yet. Game8 and Fandom availability remains constrained as
