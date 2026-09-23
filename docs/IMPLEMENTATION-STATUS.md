@@ -59,7 +59,8 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   identical JS shell for index and article; Endfield robots redirected, so no
   content was requested. Exact URLs, headers, SHA-256 hashes, and classifications
   are in `docs/research/source-probes-sol6.md`. A focused follow-up for the
-  Endfield robots redirect is pending.
+  Endfield robots redirect is pending. Run 35801291192 isolated a same-origin
+  307 to `/en-us/robots.txt`; a final bounded follow-up will check its rules.
 
 ## Next concrete step
 

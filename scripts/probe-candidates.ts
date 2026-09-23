@@ -27,9 +27,19 @@ for (const target of candidates.filter(target => only === undefined || target.id
     let delay = 2_000;
     if (target.kind === "website") {
       const robotsUrl = new URL("/robots.txt", target.url).href;
-      const robotsResponse = await fetch(robotsUrl, { headers: { "User-Agent": ua }, redirect: "manual", signal: AbortSignal.timeout(timeout) });
+      let robotsResponse = await fetch(robotsUrl, { headers: { "User-Agent": ua }, redirect: "manual", signal: AbortSignal.timeout(timeout) });
       const location = robotsResponse.headers.get("location");
-      if (location !== null) evidence["robotsRedirect"] = new URL(location, robotsUrl).href;
+      if (location !== null) {
+        const destination = new URL(location, robotsUrl);
+        evidence["robotsRedirect"] = destination.href;
+        // RFC 9309 permits redirects for robots; follow at most one, only to
+        // the same HTTPS origin and another robots.txt path. Fail closed beyond.
+        if ([301, 302, 307, 308].includes(robotsResponse.status) &&
+          destination.origin === new URL(robotsUrl).origin &&
+          destination.pathname.endsWith("/robots.txt")) {
+          robotsResponse = await fetch(destination, { headers: { "User-Agent": ua }, redirect: "manual", signal: AbortSignal.timeout(timeout) });
+        }
+      }
       const body = await robotsResponse.text();
       evidence["robotsStatus"] = robotsResponse.status;
       evidence["robotsSha256"] = new Bun.CryptoHasher("sha256").update(body).digest("hex");
