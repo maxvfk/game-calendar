@@ -239,6 +239,14 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   real phone offline reload after deployment is still required. Published as
   `b697b6a`; [CI/Pages run 35878478363](https://github.com/maxvfk/game-calendar/actions/runs/35878478363)
   passed typecheck/test/feed, build and deploy.
+- M5 phone retest reported successful by the reader on 2026-09-23 after the
+  offline repair. On the realme GT 6 / Chrome, the online update and offline
+  reload now show the saved events instead of remaining on **Loading events…**.
+  This confirms the tested device and flow, not every browser or a fresh
+  offline installation. At 16:02 UTC the normal public feed URL returned HTTP
+  200 and 132 events with 14 source-health entries; all 132 event IDs matched
+  the local build. The response reported `max-age=600`. The next scheduled
+  refresh at 17:27 UTC had not yet run at this checkpoint.
 
 ## Coverage at the live 2026-09-23 refresh
 
@@ -285,17 +293,15 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-On the realme Chrome, accept the app update while online, reload once online,
-then repeat step 5 of
-`docs/QA-PHONE-SMOKE.md` with airplane mode and Wi-Fi off. Inspect the next
-scheduled refresh: the seven live adapters should report no inherited Game8
-failure state, while a new genuine failure must remain visible. Check the
-normal feed URL after its ten-minute HTTP cache expiry; then finalize M6 with
-the tested scope and remaining manual coverage.
+After the 17:27 UTC scheduled refresh, inspect its source outcomes: seven
+live adapters should report no inherited Game8 failure state, while a genuine
+new failure must remain visible. Compare the refreshed published feed and
+source health against this 132-event checkpoint. Then finalize M6 with the
+tested scope and remaining manual coverage.
 Endfield 5208 remains manual-reviewed only while the official robots chain is
 unresolved; do not infer its missing calendar dates.
 
 The new Genshin, HSR and WuWa parsers have been confirmed by a manual Actions
-refresh. The next scheduled refresh is pending. Game8 and Genshin Fandom are
+refresh. The 17:27 UTC scheduled refresh is pending. Game8 and Genshin Fandom are
 retired from active polling; their access limits remain in the source reports.
 The NTE Circle Bounty disagreement remains visible to readers.
