@@ -34,12 +34,20 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   was not applied. Remaining October events from update notice 5208 require
   direct date verification: the notice URL is presently unreadable in the
   available web fetch. Regression checks compare the merged eleven events.
+- Genshin review 2026-09-23: added the missing fifth To Temper Thyself cycle,
+  The Godforsaken Frostlands reward window, and Carefree Snowball Fight using
+  published calendar/notice dates at day precision; the in-game notice mirror
+  `archive/21879.md` confirms Missive of Grace's 00:00 is `t_lc`, so its
+  uncorroborated exact UTC claim was reduced to day precision while retaining
+  its published ID and original `firstSeenAt`. Older 12 rows retain their
+  original `updatedAt`. Official calendar article 46673425 was verified for
+  UTC+8 notation, while event dates were read from the existing reviewed
+  source report; the linked article is a JS shell in this environment.
 
 ## Next concrete step
 
-Genshin: verify the report's three missing events and Missive of Grace
-precision against their actual notices, then commit the confirmed corrections.
-Afterwards check outstanding WuWa/ZZZ entries. Probe official Endfield update
+Check outstanding WuWa/ZZZ dated notices and add only supported entries.
+Afterwards probe official Endfield update
 notice 5208 from Actions under robots policy; only then integrate its remaining
 events, without treating secondary timing as official.
 
