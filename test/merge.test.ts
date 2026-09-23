@@ -42,6 +42,33 @@ describe("mergeEvents", () => {
     expect(result.conflicts[0]).toMatchObject({ field: "endsAt", deltaHours: 1 / 60 });
     expect(mergeEvents([[{ ...a, endPrecision: "day" }], [b]]).conflicts).toEqual([]);
   });
+  test("official reviewed versus secondary exact region difference is visible", () => {
+    const ends = {
+      asia: "2026-08-23T19:59:00.000Z", europe: "2026-08-24T02:59:00.000Z",
+      america: "2026-08-24T08:59:00.000Z",
+    };
+    const official = event({ game: "wuwa", provenanceStatus: "official", confidence: 1,
+      endsAt: ends.asia, endPrecision: "exact", regionScoped: true, regionEnds: ends });
+    const mirror = event({ ...official, sourceId: "wuwa-kuro-mirror", sourceUrl: "https://example.test/b",
+      provenanceStatus: undefined, confidence: 0.8,
+      regionEnds: { ...ends, europe: "2026-08-24T03:00:00.000Z" } });
+    const result = mergeEvents([[official], [mirror]]);
+    expect(result.events).toHaveLength(1);
+    expect(result.events[0]?.sourceId).toBe(official.sourceId);
+    expect(result.conflicts[0]).toMatchObject({ field: "endsAt", region: "europe", deltaHours: 1 / 60 });
+    expect(mergeEvents([[official], [{ ...mirror, regionEnds: ends }]]).conflicts).toEqual([]);
+  });
+
+  test("a global end versus a regional end is reviewed beyond Asia", () => {
+    const end = "2026-09-27T19:59:00.000Z";
+    const official = event({ game: "hsr", provenanceStatus: "official", confidence: 1,
+      endsAt: end, endPrecision: "exact" });
+    const regional = event({ ...official, sourceId: "hsr-kqm-hsrnews", provenanceStatus: undefined,
+      confidence: 0.8, regionScoped: true,
+      regionEnds: { asia: end, europe: "2026-09-28T02:59:00.000Z", america: "2026-09-28T08:59:00.000Z" } });
+    const result = mergeEvents([[official], [regional]]);
+    expect(result.conflicts[0]).toMatchObject({ field: "endsAt", region: "europe", deltaHours: 7 });
+  });
   test("keeps distinct events from different sources", () => {
     const a = event({ id: "genshin:a:2026-08-12", title: "Alpha" });
     const b = event({

@@ -1,4 +1,4 @@
-import type { GachaEvent } from "../shared/schema.ts";
+import type { GachaEvent, Region } from "../shared/schema.ts";
 
 /**
  * Combine events for one game from several sources.
@@ -31,6 +31,7 @@ export interface MergeResult {
     rejected: GachaEvent;
     field: "endsAt" | "startsAt";
     deltaHours: number;
+    region?: Region;
   }>;
 }
 
@@ -179,16 +180,24 @@ function findConflict(
   a: GachaEvent,
   b: GachaEvent,
   toleranceHours: number,
-): { field: "endsAt" | "startsAt"; deltaHours: number } | null {
-  // The day-level tolerance must not hide disagreement between two official
-  // exact timestamps (Circle Bounty's real 24h discrepancy exposed this).
-  if (a.provenanceStatus === "official" && b.provenanceStatus === "official") {
-    for (const [field, precision] of [["endsAt", "endPrecision"], ["startsAt", "startPrecision"]] as const) {
-      const av = a[field], bv = b[field];
-      if (a[precision] === "exact" && b[precision] === "exact" && av !== null && bv !== null && av !== bv) {
-        return { field, deltaHours: hoursBetween(av, bv) };
+): { field: "endsAt" | "startsAt"; deltaHours: number; region?: Region } | null {
+  // An official reviewed instant and an exact mirror/wiki instant deserve
+  // review even at a one-minute gap. Compare every server region rather than
+  // only the canonical Asia end; Europe/America can disagree while Asia agrees.
+  const official = a.provenanceStatus === "official" || b.provenanceStatus === "official";
+  if (a.endPrecision === "exact" && b.endPrecision === "exact" && a.endsAt && b.endsAt) {
+    for (const region of ["asia", "europe", "america"] as const) {
+      const av = a.regionEnds?.[region] ?? a.endsAt;
+      const bv = b.regionEnds?.[region] ?? b.endsAt;
+      const deltaHours = hoursBetween(av, bv);
+      if (deltaHours > (official ? 0 : toleranceHours)) {
+        return { field: "endsAt", deltaHours, region };
       }
     }
+  }
+  if (official && a.startPrecision === "exact" && b.startPrecision === "exact" &&
+    a.startsAt !== b.startsAt) {
+    return { field: "startsAt", deltaHours: hoursBetween(a.startsAt, b.startsAt) };
   }
   if (a.endsAt !== null && b.endsAt !== null) {
     const delta = hoursBetween(a.endsAt, b.endsAt);

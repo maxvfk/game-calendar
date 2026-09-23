@@ -180,7 +180,7 @@ for (const [, groups] of byGame) {
   reviewConflicts.push(...merged.conflicts);
   for (const c of merged.conflicts) {
     console.warn(
-      `  ! conflict: "${c.kept.title}" ${c.field} differs by ${c.deltaHours}h between sources`,
+      `  ! conflict: "${c.kept.title}" ${c.field}${c.region ? ` (${c.region})` : ""} differs by ${c.deltaHours}h between sources`,
     );
   }
 }

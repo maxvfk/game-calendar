@@ -123,11 +123,18 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   increments source failure health. Finished entries can leave normally and
   still produce a visible drop warning. Both paths have focused tests. Bun
   1.3.14 frozen install, typecheck, 860 tests and build passed.
+- M4 regional conflict checkpoint: exact ends from reviewed official versus
+  an automatic secondary mirror now compare Asia, Europe and America. A
+  one-minute regional discrepancy or a global-versus-server discrepancy is
+  written to the review report with its region, while the higher-confidence
+  reviewed record keeps its ID and source URL. Focused tests cover both
+  scenarios and verify current HSR/WuWa merges remain conflict-free. Bun
+  1.3.14 frozen install, typecheck, 862 tests and build passed.
 
 ## Next concrete step
 
 Verify all three new API sources in the normal Actions refresh. Then inspect
-remaining M4 freshness/conflict behavior and M5 UI. Endfield 5208 remains manual-reviewed only
+remaining M4 freshness behavior and M5 UI. Endfield 5208 remains manual-reviewed only
 while the official robots chain is unresolved; do not infer its missing
 calendar dates. Fix confirmed false freshness or day-boundary behavior before M5.
 
