@@ -236,7 +236,9 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   GitHub Pages subpath navigation fallback is also corrected. Frozen install,
   typecheck, 880 tests and build passed locally; the build retains 132 events,
   seven live automatic sources and the visible Circle Bounty conflict. A fresh
-  real phone offline reload after deployment is still required.
+  real phone offline reload after deployment is still required. Published as
+  `b697b6a`; [CI/Pages run 35878478363](https://github.com/maxvfk/game-calendar/actions/runs/35878478363)
+  passed typecheck/test/feed, build and deploy.
 
 ## Coverage at the live 2026-09-23 refresh
 
@@ -283,8 +285,8 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Deploy the offline-feed repair and verify CI/Pages. On the realme Chrome,
-accept the app update while online, reload once online, then repeat step 5 of
+On the realme Chrome, accept the app update while online, reload once online,
+then repeat step 5 of
 `docs/QA-PHONE-SMOKE.md` with airplane mode and Wi-Fi off. Inspect the next
 scheduled refresh: the seven live adapters should report no inherited Game8
 failure state, while a new genuine failure must remain visible. Check the
