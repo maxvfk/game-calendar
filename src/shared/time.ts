@@ -155,7 +155,7 @@ export function effectiveEnd(
 export type Clockable = EndBearing &
   Pick<
     DisplayEvent,
-    "startsAt" | "startPrecision" | "game" | "extractionMethod"
+    "startsAt" | "startPrecision" | "game" | "sourceId"
   >;
 
 /**
@@ -181,17 +181,17 @@ export type Clockable = EndBearing &
  * is still the source's, and an end whose day is genuinely unannounced is still
  * `null`.
  *
- * A reader's own event (PRD F13) is left alone even at day precision. Its
- * boundary is not a parser declining to guess — `readerInstant` resolved it to
- * the instant they meant, in their own timezone, when they typed it.
+ * Reviewed records also carry day-only source dates, despite having
+ * `extractionMethod: "manual"`. A reader's own event (PRD F13) is the exception:
+ * `readerInstant` resolved its date to the instant they meant in their timezone.
  */
 function boundaryMs(
   iso: string,
   precision: Precision,
-  event: Pick<Clockable, "game" | "extractionMethod">,
+  event: Pick<Clockable, "game" | "sourceId">,
   region: Region,
 ): number {
-  if (precision !== "day" || event.extractionMethod !== "parser") {
+  if (precision !== "day" || event.sourceId === "you") {
     return Date.parse(iso);
   }
   return dayStartMs(iso.slice(0, 10), region, event.game);

@@ -130,15 +130,20 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   reviewed record keeps its ID and source URL. Focused tests cover both
   scenarios and verify current HSR/WuWa merges remain conflict-free. Bun
   1.3.14 frozen install, typecheck, 862 tests and build passed.
+- M4 day-boundary checkpoint: reviewed day-only dates now use the same
+  region/game-day reset as parsed dates. Reader-created events retain the exact
+  instant derived from their own input. Regression tests compare both
+  boundaries across three regions. Bun 1.3.14 frozen install, typecheck,
+  863 tests and build passed (126 feed rows; known NTE Circle Bounty conflict).
 
 ## Next concrete step
 
 Verify all three new API sources in the normal Actions refresh. Then inspect
-remaining M4 freshness behavior and M5 UI. Endfield 5208 remains manual-reviewed only
-while the official robots chain is unresolved; do not infer its missing
-calendar dates. Fix confirmed false freshness or day-boundary behavior before M5.
+remaining M4 freshness behavior and M5 UI, especially day-only countdowns.
+Endfield 5208 remains manual-reviewed only while the official robots chain is
+unresolved; do not infer its missing calendar dates.
 
-The new Genshin parser awaits its first normal Actions refresh. Game8 and
+The Genshin, HSR and WuWa parsers await their first normal Actions refresh. Game8 and
 Fandom availability remains constrained as recorded in the one-game reports.
 The reviewed source disagreement for NTE
 Circle Bounty is still open and displayed to users.

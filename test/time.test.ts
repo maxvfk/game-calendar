@@ -200,6 +200,25 @@ describe("a day-precision boundary", () => {
     expect(c.endsMs).toBe(Date.parse(typed));
   });
 
+  test("reads reviewed day dates on the same game clock as parser dates", () => {
+    const sourceDate = "2026-08-19T00:00:00.000Z";
+    const reviewed = dated(sourceDate, {
+      startsAt: "2026-08-10T00:00:00.000Z",
+      sourceId: "reviewed-genshin",
+      extractionMethod: "manual",
+    });
+    const parsed = dated(sourceDate);
+    for (const region of ["asia", "europe", "america"] as const) {
+      const expected = clockFor(parsed, region, NOW);
+      const actual = clockFor(reviewed, region, NOW);
+      expect(actual.startsMs).toBe(expected.startsMs);
+      expect(actual.endsMs).toBe(expected.endsMs);
+    }
+    expect(clockFor(reviewed, "europe", NOW).endsMs).toBe(
+      Date.parse("2026-08-19T03:00:00.000Z"),
+    );
+  });
+
   test("an unannounced end is still unannounced", () => {
     const c = clockFor(event({ endsAt: null, endPrecision: "unknown" }), "asia", NOW);
     expect(c.endsMs).toBeNull();
