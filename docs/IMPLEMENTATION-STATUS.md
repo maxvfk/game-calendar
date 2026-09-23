@@ -54,7 +54,12 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   `.github/workflows/source-probe.yml`, which records transport headers and
   hashes; official HTML is retained temporarily as an Actions artifact,
   while unlicensed community mirrors yield metadata only. Each website must
-  pass robots and crawl-delay checks before a page request. Results pending.
+  pass robots and crawl-delay checks before a page request. Run 35801130385:
+  the three public GitHub Contents API surfaces returned 200; ZZZ returned an
+  identical JS shell for index and article; Endfield robots redirected, so no
+  content was requested. Exact URLs, headers, SHA-256 hashes, and classifications
+  are in `docs/research/source-probes-sol6.md`. A focused follow-up for the
+  Endfield robots redirect is pending.
 
 ## Next concrete step
 

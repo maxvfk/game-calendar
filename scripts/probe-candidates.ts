@@ -14,8 +14,10 @@ const candidates = [
   { id: "zzz-official", kind: "website", url: "https://zenless.hoyoverse.com/en-us/news", detail: "https://zenless.hoyoverse.com/en-us/news/166000" },
   { id: "endfield-official", kind: "website", url: "https://endfield.gryphline.com/en-us/news", detail: "https://endfield.gryphline.com/en-us/news/5208" },
 ] as const;
+const only = process.env["PROBE_ONLY"]?.trim() || undefined;
+if (only !== undefined && !candidates.some(target => target.id === only)) throw new Error("Unknown PROBE_ONLY id");
 
-for (const target of candidates) {
+for (const target of candidates.filter(target => only === undefined || target.id === only)) {
   const evidence: Record<string, unknown> = {
     id: target.id, url: target.url, kind: target.kind,
     capturedAt: new Date().toISOString(), userAgent: ua,
@@ -25,7 +27,9 @@ for (const target of candidates) {
     let delay = 2_000;
     if (target.kind === "website") {
       const robotsUrl = new URL("/robots.txt", target.url).href;
-      const robotsResponse = await fetch(robotsUrl, { headers: { "User-Agent": ua }, redirect: "error", signal: AbortSignal.timeout(timeout) });
+      const robotsResponse = await fetch(robotsUrl, { headers: { "User-Agent": ua }, redirect: "manual", signal: AbortSignal.timeout(timeout) });
+      const location = robotsResponse.headers.get("location");
+      if (location !== null) evidence["robotsRedirect"] = new URL(location, robotsUrl).href;
       const body = await robotsResponse.text();
       evidence["robotsStatus"] = robotsResponse.status;
       evidence["robotsSha256"] = new Bun.CryptoHasher("sha256").update(body).digest("hex");
