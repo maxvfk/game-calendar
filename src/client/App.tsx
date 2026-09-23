@@ -207,7 +207,11 @@ export function App() {
     return [
       ...state.feed.events.filter((e) => e.status === "published"),
       ...custom.rows,
-    ].map((event) => ({ event, clock: clockFor(event, prefs.region, now) }));
+    ].map((event) => ({
+      event,
+      clock: clockFor(event, prefs.region, now),
+      conflicts: state.feed.dateConflicts.filter((c) => c.eventId === event.id),
+    }));
     // `now` intentionally excluded: recomputing every clock each second is
     // wasteful, and the countdown text re-renders from `now` anyway.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -968,4 +972,3 @@ async function importProgress(
     alert("That file couldn't be read. Export a fresh copy and try again.");
   }
 }
-

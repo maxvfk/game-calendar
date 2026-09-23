@@ -185,6 +185,23 @@ describe("NextUp", () => {
     expect(html).toContain("6h 0m");
     expect(html).not.toContain("time unconfirmed");
   });
+
+  test("the headline and queue expose disputed dates before a reader opens them", () => {
+    const notice = {
+      eventId: "nte:circle-bounty:2026-08-19",
+      field: "endsAt" as const,
+      region: "asia" as const,
+      keptUrl: "https://example.test/official",
+      otherUrl: "https://example.test/other",
+    };
+    const html = render(
+      <NextUp rows={[
+        { ...row("Circle Bounty", "nte", 6), conflicts: [notice] },
+        { ...row("Next Dispute", "hsr", 12), conflicts: [notice] },
+      ]} focused={null} onOpen={() => {}} />,
+    );
+    expect(html.match(/date disputed/gi)).toHaveLength(2);
+  });
 });
 
 describe("Welcome (first run)", () => {

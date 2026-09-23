@@ -193,6 +193,13 @@ const feed = EventFeed.parse({
   generatedAt: now,
   events,
   sources,
+  dateConflicts: reviewConflicts.map((c) => ({
+    eventId: c.kept.id,
+    field: c.field,
+    ...(c.region === undefined ? {} : { region: c.region }),
+    keptUrl: c.kept.sourceUrl,
+    otherUrl: c.rejected.sourceUrl,
+  })),
 });
 
 await Bun.write(OUT, `${JSON.stringify(feed, null, 2)}\n`);

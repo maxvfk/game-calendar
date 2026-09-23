@@ -79,6 +79,9 @@ export function NextUp({
           <p className="mt-1 text-sm" style={{ color: game.hue }}>
             {game.name}
           </p>
+          {lead.conflicts && lead.conflicts.length > 0 && (
+            <p className="mt-1 text-xs font-medium text-soon">Date disputed · open details</p>
+          )}
         </button>
 
         <div className="mt-5 flex items-end justify-between gap-4">
@@ -157,6 +160,9 @@ function QueuedRow({
         <span className="min-w-0 flex-1 truncate text-[0.8125rem] leading-snug text-muted transition-colors duration-150 group-hover:text-ink">
           <span className="sr-only">{game.name}: </span>
           {event.title}
+          {row.conflicts && row.conflicts.length > 0 && (
+            <span className="ml-1 font-medium text-soon">· date disputed</span>
+          )}
         </span>
         <span
           className="tnum shrink-0 font-display text-xs font-semibold"

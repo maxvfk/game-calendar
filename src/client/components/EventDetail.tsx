@@ -133,6 +133,17 @@ export function EventDetail({
         {event.summary !== null && (
           <p className="mt-2 text-sm leading-relaxed text-muted">{event.summary}</p>
         )}
+        {row.conflicts?.map((conflict, i) => (
+          <p key={`${conflict.field}-${conflict.region ?? "global"}-${i}`}
+            className="mt-3 rounded-lg border border-soon/40 bg-soon/10 px-3 py-2 text-sm text-soon">
+            Sources disagree on this event's {conflict.field === "endsAt" ? "end" : "start"}
+            {conflict.region ? ` in ${REGION_LABEL[conflict.region]}` : ""}. The calendar uses the
+            selected record; verify the date in-game before planning around it.{" "}
+            <a href={conflict.keptUrl} target="_blank" rel="noreferrer noopener" className="underline">Calendar source</a>
+            {" · "}
+            <a href={conflict.otherUrl} target="_blank" rel="noreferrer noopener" className="underline">Other source</a>
+          </p>
+        ))}
 
         <div className="mt-4">
           <Meter

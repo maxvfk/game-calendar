@@ -850,6 +850,27 @@ describe("the derived-boundary note", () => {
     expect(html).toContain("server reset");
   });
 
+  test("a conflict warns in the row and links both source records in details", () => {
+    const notice = {
+      eventId: PARSED.id,
+      field: "endsAt" as const,
+      region: "europe" as const,
+      keptUrl: "https://example.test/selected",
+      otherUrl: "https://example.test/disagreeing",
+    };
+    const row = { event: PARSED, clock: clockFor(PARSED, detailProps.region, NOW), conflicts: [notice] };
+    const html = render(
+      <div>
+        <EventRow row={row} now={NOW} completed={false} onOpen={() => {}} />
+        <EventDetail {...detailProps} row={row} />
+      </div>,
+    );
+    expect(html).toContain("Date disputed · open details");
+    expect(html).toContain("Sources disagree on this event&#x27;s end in Europe");
+    expect(html).toContain('href="https://example.test/selected"');
+    expect(html).toContain('href="https://example.test/disagreeing"');
+  });
+
   test("absent for a reader's own day-precision event", () => {
     // Their date came from their form, so no source or server reset is claimed.
     const own = asDisplayEvent(OWN);

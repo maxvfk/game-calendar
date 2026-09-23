@@ -10,10 +10,12 @@ import {
 import { EFFORT, pressure, type Effort } from "../../shared/effort.ts";
 import type { Status } from "../state/useProgress.ts";
 import { Meter, URGENCY_COLOR } from "./Meter.tsx";
+import type { DateConflict } from "../../shared/feed.ts";
 
 export interface RowEvent {
   event: DisplayEvent;
   clock: EventClock;
+  conflicts?: DateConflict[];
 }
 
 /** What a repeating event needs to say in a list: today, and how many left. */
@@ -127,6 +129,9 @@ export function EventRow({
               >
                 {event.title}
               </span>
+              {row.conflicts && row.conflicts.length > 0 && (
+                <span className="text-xs font-medium text-soon">Date disputed · open details</span>
+              )}
             </div>
 
             <span

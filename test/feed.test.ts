@@ -6,6 +6,7 @@ import {
   quietSources,
   STALE_AFTER_MS,
   SourceHealth,
+  EventFeed,
 } from "../src/shared/feed.ts";
 import { sourceHealth } from "../src/ingest/health.ts";
 import type { GachaEvent, GameId } from "../src/shared/schema.ts";
@@ -22,6 +23,16 @@ import type { GachaEvent, GameId } from "../src/shared/schema.ts";
 
 const NOW = Date.parse("2026-08-17T12:00:00.000Z");
 const HOUR = 60 * 60 * 1000;
+
+test("an older offline feed without conflict notices remains readable", () => {
+  const old = EventFeed.parse({
+    schemaVersion: 1,
+    generatedAt: "2026-08-17T00:00:00.000Z",
+    events: [],
+    sources: [],
+  });
+  expect(old.dateConflicts).toEqual([]);
+});
 
 function source(
   game: GameId,

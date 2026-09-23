@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { GachaEvent, GameId } from "./schema.ts";
+import { GachaEvent, GameId, Region } from "./schema.ts";
 
 /**
  * The wire contract between server and client.
@@ -66,14 +66,26 @@ export const SourceHealth = z.object({
   statesNoEvents: z.boolean().default(false),
 });
 
+/** Compact user-facing pointer to a disagreement kept in the review report. */
+export const DateConflict = z.object({
+  eventId: z.string(),
+  field: z.enum(["startsAt", "endsAt"]),
+  region: Region.optional(),
+  keptUrl: z.string().url(),
+  otherUrl: z.string().url(),
+});
+
 export const EventFeed = z.object({
   schemaVersion: z.literal(SCHEMA_VERSION),
   generatedAt: z.string().datetime(),
   events: z.array(GachaEvent),
   sources: z.array(SourceHealth),
+  // An older feed cached by the service worker has no conflict field.
+  dateConflicts: z.array(DateConflict).default([]),
 });
 
 export type SourceHealth = z.infer<typeof SourceHealth>;
+export type DateConflict = z.infer<typeof DateConflict>;
 export type EventFeed = z.infer<typeof EventFeed>;
 
 /** A game's data is stale past this age (PRD F7). */

@@ -150,6 +150,13 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   The previous build incorrectly recorded all three capture dates and counts
   as null despite including their events. Bun 1.3.14 frozen install, typecheck,
   868 tests and build passed (126 feed rows; known NTE Circle Bounty conflict).
+- M5 conflict visibility checkpoint: the feed now carries compact date-conflict
+  notices linked to the retained event ID and both source URLs. The checklist,
+  Next Up, timeline and detail sheet warn on the affected event. An older
+  service-worker-cached feed without the additive field still validates. The
+  current build exposes one notice for NTE Circle Bounty (Asia end differs by
+  24 hours) while keeping its Perfect World date and event ID. Bun 1.3.14
+  frozen install, typecheck, 871 tests and build passed (126 feed rows).
 
 ## Next concrete step
 

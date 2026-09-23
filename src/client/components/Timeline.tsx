@@ -426,7 +426,7 @@ export function Timeline({
                   )}
 
                   <div className="relative space-y-2">
-                    {lane.rows.map(({ event, clock }, i) => {
+                    {lane.rows.map(({ event, clock, conflicts }, i) => {
                       const game = gameMeta(event.game);
                       const unknownEnd = clock.endsMs === null;
                       const notStarted = clock.upcoming;
@@ -467,7 +467,8 @@ export function Timeline({
                               : event.title) +
                             (notStarted
                               ? ` — not started yet, begins ${dayLabel(clock.startsMs)}`
-                              : "")
+                              : "") +
+                            (conflicts && conflicts.length > 0 ? " — date disputed" : "")
                           }
                           className={`relative flex h-9 items-center gap-2 rounded-[5px] px-3 text-left text-[0.75rem] font-medium transition-opacity hover:opacity-100 ${
                             done ? "opacity-35" : "opacity-90"
@@ -511,6 +512,9 @@ export function Timeline({
                               </span>
                             )}
                             <span className="min-w-0 truncate">{event.title}</span>
+                            {conflicts && conflicts.length > 0 && (
+                              <span className="shrink-0 text-soon" aria-label="Date disputed">!</span>
+                            )}
                             {notStarted && (
                               /* The dashed edge and the labelled rule above it
                                  say this to a reader looking at the board; a
