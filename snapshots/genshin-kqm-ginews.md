@@ -711,6 +711,10 @@ Dear Travelers:
 
 To ensure that all Travelers have the best-possible Genshin Impact experience, our developers continually make optimizations and bug fixes to the game based on Travelers' feedback.
 
+〓Known Issues〓
+
+Currently, an English voice-over line in the cutscene for the "One Move Left to Make" in the Archon Quest "White Night, Like a Dream Upon Waking" contains errors that do not match the text, including an incorrect pronoun. This issue will be fixed in a future update.
+
 〓Version Update Bug Fixes〓
 
 Fixes an issue whereby after the Ice Coffin of the opponents "Glaciomancer" and "Glacial Warden" was affected by Stellar Glimmer reactions, the efficiency of using Pyro and Geo attacks to break said Ice Coffin would be abnormal.
