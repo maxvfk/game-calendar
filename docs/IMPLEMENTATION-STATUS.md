@@ -157,11 +157,20 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   current build exposes one notice for NTE Circle Bounty (Asia end differs by
   24 hours) while keeping its Perfect World date and event ID. Bun 1.3.14
   frozen install, typecheck, 871 tests and build passed (126 feed rows).
+- M5 available smoke checkpoint: the built site served locally through `serve.ts`
+  returned 200 for `/`, JS, CSS, feed, review report, service worker, manifest
+  and `/api/health`; a nonexistent `/data/` file returned 404. Focused suites
+  for controls, preferences, progress, update handling, views and custom UI
+  passed (211 tests). This exercises rendered component claims and storage
+  logic, but is **not** a touch/browser interaction test. GitHub Actions
+  [run 35837870613](https://github.com/maxvfk/game-calendar/actions/runs/35837870613)
+  on `36e9374` succeeded in check, build and Pages deploy. A real phone/desktop
+  click-through, service worker upgrade and offline reload remain unverified.
 
 ## Next concrete step
 
 Verify all three new API sources in the normal Actions refresh. Then inspect
-remaining M4 freshness behavior and M5 interaction smoke checks.
+remaining M4 freshness behavior and complete M5 browser/device smoke checks.
 Endfield 5208 remains manual-reviewed only while the official robots chain is
 unresolved; do not infer its missing calendar dates.
 
