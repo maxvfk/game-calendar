@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "game": "endfield",
+  "reviewedAt": "2026-09-23T00:05:33.000Z",
+  "reviewedBy": "chatgpt",
+  "statesNoEvents": false,
+  "events": [
+    {
+      "title": "Winter Hunt",
+      "type": "banner",
+      "summary": "Typhoeus Chartered Headhunting; opens after the Dreamscape of Wind and Snow version release.",
+      "startsAt": "2026-09-02T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-30T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-30T03:59:00.000Z",
+        "america": "2026-09-30T16:59:00.000Z",
+        "europe": "2026-09-30T16:59:00.000Z"
+      },
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/6172",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Deep Cold Issue",
+      "type": "banner",
+      "summary": "Umbra of Frigid Eventide weapon rate-up; ends after three Chartered Headhunting banners, with no announced calendar deadline.",
+      "startsAt": "2026-09-02T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": null,
+      "endPrecision": "unknown",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/4480",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "title": "Resplendent Spectrum",
+      "type": "banner",
+      "summary": "Yvonne RE-Factor Headhunting #1; starts September 24 at 12:00 server time, so the cross-region start is shown at day precision.",
+      "startsAt": "2026-09-24T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": null,
+      "endPrecision": "unknown",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://x.com/AKEndfield/status/2101884123958952272",
+      "provenanceStatus": "official",
+      "confidence": 1
+    }
+  ]
+}

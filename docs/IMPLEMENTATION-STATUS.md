@@ -24,13 +24,24 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   official HoYoLAB URLs are on the reviewed records when known.
   Validation: frozen install, typecheck, 837 tests, build; feed 120 records
   including ended ones. CI/deploy and live feed verification: pending.
+- Endfield review 2026-09-23: official notices add Winter Hunt (Asia Sep 30
+  03:59Z; Americas/Europe 16:59Z), Deep Cold Issue (relative end unknown),
+  and the official account's Resplendent Spectrum start (Sep 24, day precision
+  across server regions). All eight wiki.gg IDs are retained; Snow Over Deep
+  Woods remains 11:59 server time. Its proposed 12:00 correction in
+  `coverage-endfield.md` contradicts the wiki snapshot and the official
+  [Snow notice](https://x.com/AKEndfield/status/2093911591896879277), so it
+  was not applied. Remaining October events from update notice 5208 require
+  direct date verification: the notice URL is presently unreadable in the
+  available web fetch. Regression checks compare the merged eleven events.
 
 ## Next concrete step
 
-Endfield: inspect the existing eight wiki.gg events and the official update
-notice 5208; resolve the Snow Over Deep Woods boundary and add only dated
-missing records. Then Genshin and the outstanding WuWa/ZZZ entries, followed
-by Actions probes for automatic sources. Mark each completed game separately.
+Genshin: verify the report's three missing events and Missive of Grace
+precision against their actual notices, then commit the confirmed corrections.
+Afterwards check outstanding WuWa/ZZZ entries. Probe official Endfield update
+notice 5208 from Actions under robots policy; only then integrate its remaining
+events, without treating secondary timing as official.
 
 No additional automatic source beyond NTE/CZN/wiki.gg has passed the new
 Actions probe yet. Game8 and Fandom availability remains constrained as
