@@ -5,7 +5,7 @@ import {
   DEFAULT_DAY_WIDTH,
   snapDayWidth,
   stepDayWidth,
-  weekLabelStep,
+  dayLabelStep,
 } from "../src/client/state/zoom.ts";
 
 /**
@@ -75,19 +75,19 @@ describe("stepDayWidth", () => {
   });
 });
 
-describe("weekLabelStep", () => {
-  test("every Monday is dated at the default scale and closer in", () => {
-    expect(weekLabelStep(DEFAULT_DAY_WIDTH)).toBe(1);
-    expect(weekLabelStep(48)).toBe(1);
+describe("dayLabelStep", () => {
+  test("every day is labelled at the default mobile scale and closer in", () => {
+    expect(DEFAULT_DAY_WIDTH).toBe(72);
+    expect(dayLabelStep(DEFAULT_DAY_WIDTH)).toBe(1);
+    expect(dayLabelStep(48)).toBe(1);
   });
 
   test("dates thin out rather than overlapping when zoomed out", () => {
-    // At six px a day a week is 42px and "18 Aug" is wider than that.
-    expect(weekLabelStep(6)).toBeGreaterThan(1);
-    expect(weekLabelStep(6) * 7 * 6).toBeGreaterThanOrEqual(64);
+    expect(dayLabelStep(6)).toBeGreaterThan(1);
+    expect(dayLabelStep(6) * 6).toBeGreaterThanOrEqual(30);
   });
 
-  test("never asks for a label every zero weeks", () => {
-    expect(weekLabelStep(1000)).toBe(1);
+  test("never asks for a label every zero days", () => {
+    expect(dayLabelStep(1000)).toBe(1);
   });
 });

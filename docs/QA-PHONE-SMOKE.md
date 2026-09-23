@@ -31,6 +31,13 @@ The same Google account on another device does not sync this site's marks;
    Disable airplane mode and reload to confirm the online state returns. If the
    phone removes the tab or cannot reload offline, record that behavior rather
    than changing settings to force a pass.
+6. After the new UI deploy, leave **Banners** and **Endgame / challenge** selected
+   together and confirm both types appear in Checklist and Timeline. Reload to
+   check the filter choice persists; **All types** restores every category.
+   Timeline should open near **today**, scroll sideways by equal-width daily
+   cells, and show its vertical **today** line. An exact timestamp may end partway
+   through a cell; a date-only event must still say **date only** and have a
+   dashed boundary. Confirm a previously completed event stays completed.
 
 Please report the phone model, OS and browser, approximate check time and
 which step failed, if any. A screenshot of a layout or date problem helps;

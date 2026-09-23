@@ -1,7 +1,7 @@
 import { Fragment, useLayoutEffect, useRef } from "react";
 import { useGameMeta } from "../state/gameMeta.tsx";
 import type { LaneId } from "../../shared/custom.ts";
-import { DAY, endingSoonestFirst } from "../../shared/time.ts";
+import { DAY, dayOnlyEnd, endingSoonestFirst } from "../../shared/time.ts";
 import type { RowEvent } from "./EventRow.tsx";
 import { URGENCY_COLOR } from "./Meter.tsx";
 import { TypeBadge } from "./TypeBadge.tsx";
@@ -10,7 +10,7 @@ import {
   TIMELINE_GROUPS,
   type TimelineGroup,
 } from "../state/lanes.ts";
-import { canStep, stepDayWidth, weekLabelStep } from "../state/zoom.ts";
+import { canStep, dayLabelStep, stepDayWidth } from "../state/zoom.ts";
 
 /**
  * How far in from the left edge of the board a pinned label sits.
@@ -20,12 +20,6 @@ import { canStep, stepDayWidth, weekLabelStep } from "../state/zoom.ts";
  * bar whose name scrolled away with its start date is a coloured rectangle.
  */
 const PIN = 8;
-
-/**
- * A sliver of time before now, so the "now" rule reads as a line in the view
- * rather than merging with the border.
- */
-const HALF_DAY_LEAD = 12 * 60 * 60 * 1000;
 
 /**
  * How far back the view can be scrolled beyond the oldest running event, so
@@ -47,9 +41,6 @@ const PAST_LEAD = 7 * DAY;
  * event is older than the board, not newly started at its edge.
  */
 const PAST_LIMIT = 60 * DAY;
-
-/** Where the now rule sits when the board opens: a little in from the edge. */
-const OPEN_INSET = 28;
 
 /** The narrowest a bar is drawn, so a two-day event is still a target. */
 const MIN_BAR = 34;
@@ -196,18 +187,17 @@ export function Timeline({
   // order `splitAt` relies on — live before upcoming — and appending unsorted
   // rows would break the split point it looks for.
   const drawn = extra.length === 0 ? plotted : [...plotted, ...extra].sort(endingSoonestFirst);
-  const totalDays = Math.ceil((max - min) / DAY);
-  const chartWidth = totalDays * dayWidth;
-  /** One coordinate space for everything: bars, gridlines and the now rule. */
-  const x = (ms: number) => ((ms - min) / DAY) * dayWidth;
+  /** One local-calendar coordinate space for bars, gridlines and today. */
+  const x = (ms: number) => timelineX(ms, min, dayWidth);
+  const chartWidth = Math.ceil(x(max));
 
-  // Open at today rather than at the far past, with a little of the past week
-  // still on screen — an event that began three days ago is context, not
-  // history. Keyed on the rounded offset so it runs when the range changes,
-  // not every second: re-scrolling on each tick would fight the reader.
-  const openAt = Math.round(Math.max(0, x(now - HALF_DAY_LEAD) - OPEN_INSET));
-  const jumpToNow = (behavior: ScrollBehavior) =>
-    scroller.current?.scrollTo({ left: openAt, behavior });
+  // Day width is fixed in pixels even on a narrow phone. Centre today when
+  // the window permits; do not re-scroll as the clock ticks within the day.
+  const todayX = Math.round(x(localDayStart(now)));
+  const jumpToNow = (behavior: ScrollBehavior) => {
+    const el = scroller.current;
+    el?.scrollTo({ left: scrollToToday(todayX, el.clientWidth), behavior });
+  };
 
   /**
    * A moment in time to hold still through the next re-render, and where in the
@@ -223,7 +213,7 @@ export function Timeline({
       // The middle of the view is what a reader is looking at, so that is what
       // stays put.
       const px = el.clientWidth / 2;
-      hold.current = { ms: min + ((el.scrollLeft + px) / dayWidth) * DAY, px };
+      hold.current = { ms: timelineMsAt(el.scrollLeft + px, min, dayWidth), px };
     }
     onZoom(stepDayWidth(dayWidth, by));
   };
@@ -238,12 +228,9 @@ export function Timeline({
       el.scrollLeft = Math.max(0, x(anchor.ms) - anchor.px);
       return;
     }
-    // Open at today rather than at the far past: it is what they came for.
-    // Keyed on the rounded offset so it runs when the range changes, not every
-    // second — re-scrolling on each tick would fight the reader's own scrolling.
-    el.scrollTo({ left: openAt, behavior: "instant" });
+    el.scrollTo({ left: scrollToToday(todayX, el.clientWidth), behavior: "instant" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openAt]);
+  }, [todayX]);
 
   if (rows.length === 0) {
     return (
@@ -257,13 +244,13 @@ export function Timeline({
   // From `drawn`, not `plotted`: the bars on the board include whatever
   // `expand` added, and a start-marker label counting only the base rows
   // under-counts what is actually drawn there.
-  const marks = startMarkers(drawn, x);
+  const marks = startMarkers(drawn.map((r) => ({
+    clock: { upcoming: r.clock.upcoming, startsMs: timelineStartMs(r) },
+  })), x);
 
   const months = monthBoundaries(min, max);
-  const weeks = weekBoundaries(min, max);
-  // Every Monday is right at the default scale and illegible at the widest zoom
-  // out, where the dates would sit on top of each other.
-  const labelEvery = weekLabelStep(dayWidth);
+  const days = dayBoundaries(min, max);
+  const labelEvery = dayLabelStep(dayWidth);
 
   return (
     <>
@@ -326,7 +313,7 @@ export function Timeline({
         <div className="relative" style={{ width: chartWidth, minWidth: "100%" }}>
           {/* Gridlines first, so everything else paints over them. */}
           <div aria-hidden className="pointer-events-none absolute inset-0">
-            {weeks.map((ms) => (
+            {days.map((ms) => (
               <span
                 key={ms}
                 className="absolute bottom-0 top-10 w-px bg-hairline/40"
@@ -342,14 +329,14 @@ export function Timeline({
             ))}
           </div>
 
-          {/* Now: the one rule that has to be findable from anywhere. */}
+          {/* Today, with the current moment proportional within its day. */}
           <div
             aria-hidden
             className="pointer-events-none absolute bottom-0 top-10 z-10 w-px bg-critical/80"
             style={{ left: x(now) }}
           >
             <span className="eyebrow absolute top-1 -translate-x-1/2 rounded-[3px] bg-critical px-1 py-px text-[0.5625rem] leading-none text-ground">
-              now
+              today
             </span>
           </div>
 
@@ -376,7 +363,7 @@ export function Timeline({
             </div>
           ))}
 
-          {/* The axis: months above, week dates below, pinned to the top. */}
+          {/* The axis: months above, daily dates below, pinned to the top. */}
           <div className="sticky top-0 z-30 h-10 border-b border-hairline bg-ground/95 backdrop-blur">
             {months.map((m) => (
               <span
@@ -387,14 +374,14 @@ export function Timeline({
                 {m.label}
               </span>
             ))}
-            {weeks.map((ms, i) =>
+            {days.map((ms, i) =>
               i % labelEvery === 0 ? (
                 <span
                   key={ms}
                   className="tnum absolute bottom-1 whitespace-nowrap pl-1.5 text-[0.625rem] leading-none text-faint"
                   style={{ left: x(ms) }}
                 >
-                  {dayLabel(ms)}
+                  {dayNumber(ms)}
                 </span>
               ) : null,
             )}
@@ -435,8 +422,10 @@ export function Timeline({
                       // which reaches a week past the oldest running event — so
                       // in practice bars show their real start and the fade is
                       // reserved for genuinely truncated ones.
-                      const clippedStart = clock.startsMs < min;
-                      const left = Math.max(x(clock.startsMs), 0);
+                      const plottedStart = timelineStartMs({ event, clock });
+                      const plottedEnd = timelineEndMs({ event, clock });
+                      const clippedStart = plottedStart < min;
+                      const left = Math.max(x(plottedStart), 0);
                       // `boardWindow`'s `max` is derived from `plotted` alone, so a
                       // base row can never run past it — but an expanded occurrence
                       // can: `occurrencesOf` admits anything *starting* at or before
@@ -447,10 +436,13 @@ export function Timeline({
                       // with no gridlines or axis is exactly what the board exists
                       // to avoid.
                       const right = Math.min(
-                        x(clock.endsMs ?? clock.startsMs + 14 * DAY),
+                        x(plottedEnd ?? plottedStart + 14 * DAY),
                         chartWidth,
                       );
-                      const width = Math.max(right - left, MIN_BAR);
+                      const width = Math.min(
+                        Math.max(right - left, MIN_BAR),
+                        Math.max(0, chartWidth - left),
+                      );
                       const done = isDone(event.id);
                       return (
                         <Fragment key={event.id}>
@@ -467,8 +459,10 @@ export function Timeline({
                               ? `${game.name} — ${event.title}`
                               : event.title) +
                             (notStarted
-                              ? ` — not started yet, begins ${dayLabel(clock.startsMs)}`
+                              ? ` — not started yet, begins ${dayLabel(plottedStart)}`
                               : "") +
+                            (event.startPrecision === "day" ? " — start date only" : "") +
+                            (dayOnlyEnd(event) ? " — end date only" : "") +
                             (conflicts && conflicts.length > 0 ? " — date disputed" : "")
                           }
                           className={`relative flex h-9 items-center gap-2 rounded-[5px] px-3 text-left text-[0.75rem] font-medium transition-opacity hover:opacity-100 ${
@@ -490,7 +484,8 @@ export function Timeline({
                             // thing that has happened.
                             borderLeft: clippedStart
                               ? undefined
-                              : `3px ${notStarted ? "dashed" : "solid"} ${game.hue}`,
+                              : `3px ${notStarted || event.startPrecision === "day" ? "dashed" : "solid"} ${game.hue}`,
+                            borderRight: dayOnlyEnd(event) ? "2px dashed var(--color-faint)" : undefined,
                             // Frayed right = end unannounced; faded left =
                             // started before the window. Both are honest about
                             // what is not shown.
@@ -517,6 +512,12 @@ export function Timeline({
                             {conflicts && conflicts.length > 0 && (
                               <span className="shrink-0 text-soon" aria-label="Date disputed">!</span>
                             )}
+                            {(event.startPrecision === "day" || dayOnlyEnd(event)) && (
+                              <span className="sr-only">
+                                {event.startPrecision === "day" ? " — start date only" : ""}
+                                {dayOnlyEnd(event) ? " — end date only" : ""}
+                              </span>
+                            )}
                             {notStarted && (
                               /* The dashed edge and the labelled rule above it
                                  say this to a reader looking at the board; a
@@ -525,7 +526,7 @@ export function Timeline({
                               <span className="sr-only">
                                 {" "}
                                 — not started yet, begins{" "}
-                                {dayLabel(clock.startsMs)}
+                                {dayLabel(plottedStart)}
                               </span>
                             )}
                           </span>
@@ -573,6 +574,64 @@ export function boardWindow(
     min: Math.max(earliest, now - PAST_LIMIT),
     max: Math.max(...ends, now) + 2 * DAY,
   };
+}
+
+/** Equal-width local calendar days, including the 23/25-hour DST transition. */
+function localDayStart(ms: number): number {
+  const d = new Date(ms);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+}
+
+function nextLocalDayStart(ms: number): number {
+  const d = new Date(ms);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1).getTime();
+}
+
+function localDayOrdinal(ms: number): number {
+  const d = new Date(ms);
+  return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAY;
+}
+
+function dayFraction(ms: number): number {
+  const start = localDayStart(ms);
+  return (ms - start) / (nextLocalDayStart(ms) - start);
+}
+
+/** Exact instants take a proportional position *within* the reader's day. */
+export function timelineX(ms: number, min: number, dayWidth: number): number {
+  return (localDayOrdinal(ms) - localDayOrdinal(min) + dayFraction(ms) - dayFraction(min)) * dayWidth;
+}
+
+/** Inverse used to keep the same moment centred during zoom. */
+export function timelineMsAt(px: number, min: number, dayWidth: number): number {
+  const offset = px / dayWidth + dayFraction(min);
+  const days = Math.floor(offset);
+  const first = new Date(min);
+  const start = new Date(first.getFullYear(), first.getMonth(), first.getDate() + days).getTime();
+  return start + (offset - days) * (nextLocalDayStart(start) - start);
+}
+
+export function scrollToToday(todayX: number, viewportWidth: number): number {
+  return Math.max(0, todayX - viewportWidth / 2);
+}
+
+/** A date-only source tells us a calendar cell, not an hour within that cell. */
+function printedDayStart(iso: string, readerEntered: boolean): number {
+  if (readerEntered) return localDayStart(Date.parse(iso));
+  const [year, month, day] = iso.slice(0, 10).split("-").map(Number);
+  return new Date(year!, month! - 1, day).getTime();
+}
+
+export function timelineStartMs({ event, clock }: RowEvent): number {
+  return event.startPrecision === "day"
+    ? printedDayStart(event.startsAt, event.sourceId === "you")
+    : clock.startsMs;
+}
+
+export function timelineEndMs({ event, clock }: RowEvent): number | null {
+  if (clock.endsMs === null) return null;
+  if (!dayOnlyEnd(event)) return clock.endsMs;
+  return nextLocalDayStart(printedDayStart(event.endsAt!, event.sourceId === "you"));
 }
 
 /**
@@ -703,7 +762,7 @@ function edgeMask(clippedStart: boolean, unknownEnd: boolean): string | undefine
   return undefined;
 }
 
-/** `18 Aug`, in the reader's own locale, for the week ticks. */
+/** `18 Aug`, in the reader's own locale, for start markers and tooltips. */
 function dayLabel(ms: number): string {
   return new Date(ms).toLocaleDateString(undefined, {
     day: "numeric",
@@ -711,22 +770,24 @@ function dayLabel(ms: number): string {
   });
 }
 
+function dayNumber(ms: number): string {
+  return new Date(ms).toLocaleDateString(undefined, { day: "numeric" });
+}
+
 /**
- * Every Monday in range.
+ * Every local midnight in range.
  *
- * Weeks are the unit these schedules are actually written in — a patch is six
- * of them — and a tick every seven days is the densest grid that still leaves
- * room for a date on it.
+ * Calendar arithmetic handles DST; adding 24h would skip or double a date at
+ * a clock change even though every day has the same width on this board.
  */
-function weekBoundaries(min: number, max: number): number[] {
+export function dayBoundaries(min: number, max: number): number[] {
   const d = new Date(min);
-  d.setUTCHours(0, 0, 0, 0);
-  // 0 is Sunday; step forward to the next Monday.
-  d.setUTCDate(d.getUTCDate() + ((8 - d.getUTCDay()) % 7));
+  d.setHours(0, 0, 0, 0);
+  if (d.getTime() < min) d.setDate(d.getDate() + 1);
   const out: number[] = [];
   while (d.getTime() <= max) {
     out.push(d.getTime());
-    d.setUTCDate(d.getUTCDate() + 7);
+    d.setDate(d.getDate() + 1);
   }
   return out;
 }
@@ -743,12 +804,12 @@ function monthBoundaries(min: number, max: number) {
   ];
 
   const d = new Date(min);
-  d.setUTCDate(1);
-  d.setUTCHours(0, 0, 0, 0);
-  d.setUTCMonth(d.getUTCMonth() + 1);
+  d.setDate(1);
+  d.setHours(0, 0, 0, 0);
+  d.setMonth(d.getMonth() + 1);
   while (d.getTime() <= max) {
     out.push({ ms: d.getTime(), label: short(d.getTime()) });
-    d.setUTCMonth(d.getUTCMonth() + 1);
+    d.setMonth(d.getMonth() + 1);
   }
   return out;
 }
@@ -776,7 +837,7 @@ export function startMarkers<
   const byDay = new Map<number, { ms: number; through: number; count: number }>();
   for (const row of rows) {
     if (!row.clock.upcoming) continue;
-    const day = Math.floor(row.clock.startsMs / DAY);
+    const day = localDayOrdinal(row.clock.startsMs);
     const at = byDay.get(day);
     if (at === undefined) {
       byDay.set(day, {

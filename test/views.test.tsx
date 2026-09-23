@@ -433,6 +433,15 @@ describe("Timeline stacking", () => {
     expect(board("game")).toContain('aria-label="Type: Event"');
   });
 
+  test("the rendered board has a daily grid, a labelled today line, and a scroll pane", () => {
+    const html = board("game");
+    expect(html).toContain("scroll-pane relative");
+    expect(html).toContain(">today</span>");
+    // The board covers well over a week; each day has a hairline now.
+    expect([...html.matchAll(/bg-hairline\/40/g)].length).toBeGreaterThan(10);
+    expect(html).toContain("start date only");
+  });
+
   test("the merged board names each bar's game, since no heading does", () => {
     // Colour cannot carry it once every game shares one stack, and a reader
     // who cannot tell whose event is ending tonight has not been told the
@@ -554,7 +563,7 @@ describe("Timeline: expand", () => {
     );
     // The bar's box is `margin-left` plus `width`; both are inline styles on
     // the same button this fixture's title makes unique to find.
-    const bar = /title="Open-Ended Rerun"[^>]*style="([^"]+)"/.exec(html)?.[1] ?? "";
+    const bar = /title="Open-Ended Rerun[^"]*"[^>]*style="([^"]+)"/.exec(html)?.[1] ?? "";
     const marginLeft = Number(/margin-left:([\d.]+)px/.exec(bar)?.[1]);
     const width = Number(/width:([\d.]+)px/.exec(bar)?.[1]);
 

@@ -24,18 +24,15 @@ export const DAY_WIDTHS = [6, 9, 13, 20, 32, 48, 72, 108] as const;
 /**
  * The scale the board opens at for a reader who has never touched the control.
  *
- * Two steps up from where it used to sit. Thirteen px/day opened on about a
- * quarter of calendar, and a quarter is more time than these schedules are
- * written in: a patch is six weeks, so most bars were short enough that the
- * length stopped reading as a duration and the title stopped fitting inside the
- * bar it belonged to. Thirty-two opens on roughly a patch cycle on a laptop —
- * bars long enough to compare by eye, and wide enough to carry their own name.
- * The longer view is one press of − away, and that answer is remembered.
+ * A daily grid needs room for a day number and a finger-sized short event.
+ * At 72px/day the mobile pane scrolls horizontally rather than compressing a
+ * patch into one screen. Readers can zoom out, and their stored widths stay
+ * intact on upgrade.
  *
  * This moves new readers only: `prefs` is written on every load, so anyone who
  * has opened the app has a `timelineDayWidth` of their own and keeps it.
  */
-export const DEFAULT_DAY_WIDTH = 32;
+export const DEFAULT_DAY_WIDTH = 72;
 
 /**
  * The nearest valid scale to a stored number.
@@ -67,14 +64,12 @@ export function canStep(px: number, by: 1 | -1): boolean {
 }
 
 /**
- * How many weeks apart the dated ticks on the axis are.
+ * How many days apart the dated labels on the axis are.
  *
- * Every Monday is right at the default scale and unreadable at the widest zoom
- * out, where a week is 42px and the labels would sit on top of each other. The
- * gridlines stay weekly either way — they are hairlines and they carry the
- * rhythm; it is only the dates that have to thin out.
+ * Gridlines remain daily at every scale. Only labels thin out when several
+ * dates would collide on a zoomed-out board.
  */
-export function weekLabelStep(dayWidth: number): number {
-  const MIN_LABEL_GAP = 64;
-  return Math.max(1, Math.ceil(MIN_LABEL_GAP / (7 * dayWidth)));
+export function dayLabelStep(dayWidth: number): number {
+  const MIN_LABEL_GAP = 30;
+  return Math.max(1, Math.ceil(MIN_LABEL_GAP / dayWidth));
 }

@@ -101,9 +101,12 @@ months line up?". A pair of controls steps through a ladder of day widths, and t
 remembered (`prefs.timelineDayWidth`) — the same argument as the view tabs: a reader who has said how
 they want to read this should not have to say it again on the next load. Two things it has to get
 right. Zooming holds the middle of the view still, because rescaling around the left edge of a
-three-month board throws away whatever the reader had scrolled to. And the dated ticks thin out as
-the scale shrinks, since a week is 42px at the widest setting and the dates would sit on top of one
-another; the gridlines stay weekly either way, because they carry the rhythm rather than the reading.
+three-month board throws away whatever the reader had scrolled to. The grid has one equal-width cell
+per local calendar day, including daylight-saving transitions. Day-number labels thin out at small
+scales, but the daily grid remains. On mobile the board scrolls horizontally and opens around today.
+Exact boundaries are placed proportionally within the local day. Date-only boundaries occupy the
+printed calendar date with dashed edges and a precision label; the drawing does not assign them a
+clock time.
 
 The close end of the ladder goes to a day being wider than a fingertip (108px). That is not a
 flourish: events routinely end within a day of each other, and at a scale where their bar ends are a

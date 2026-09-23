@@ -255,6 +255,14 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   timeline bars independently of game colour. The choice is saved in prefs,
   leaving event IDs and completion keys unchanged. The daily timeline grid is
   the next separate UI milestone.
+- M5 daily Timeline checkpoint: the grid draws every local calendar day at a
+  fixed pixel width, defaults new readers to 72px/day, and opens with today
+  near the centre of the horizontal pane. The today rule is labelled; zoom
+  keeps its central anchor. Exact boundaries take proportional positions in
+  their local day, including the 23/25-hour DST day. Date-only source and
+  reader dates occupy their stated day cells with dashed edges and precision
+  wording, without promoting reset-time interpretations to exact geometry.
+  The mobile follow-up in `docs/QA-PHONE-SMOKE.md` remains to be run after deploy.
 
 ## Coverage at the live 2026-09-23 refresh
 
@@ -301,8 +309,8 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Implement and verify the one-day Timeline grid, exact-time geometry and mobile
-positioning as a separate commit. After the 17:27 UTC scheduled refresh,
+Deploy and verify the one-day Timeline grid and category filters, then request
+the focused phone step 6. After the 17:27 UTC scheduled refresh,
 inspect its source outcomes: seven live adapters should report no inherited
 Game8 failure state, while a genuine new failure must remain visible. Compare
 the refreshed published feed and source health against this 132-event checkpoint.
