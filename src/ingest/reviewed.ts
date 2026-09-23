@@ -15,6 +15,10 @@ export const REVIEWED_SOURCE_URL =
 
 const ReviewedEvent = z.object({
   id: z.string().min(1).optional(),
+  /** Optional per-row check time; existing batches keep their historical timestamp. */
+  reviewedAt: z.string().datetime().optional(),
+  /** Preserve the original discovery time when re-reviewing an existing row. */
+  firstSeenAt: z.string().datetime().optional(),
   title: z.string().min(1).max(200),
   titleRu: z.string().min(1).max(200).optional(),
   type: EventType,
@@ -116,8 +120,8 @@ export function materializeReviewedBatch(
         extractionMethod: "manual",
         provenanceStatus: event.provenanceStatus,
         version: 1,
-        firstSeenAt: batch.reviewedAt,
-        updatedAt: batch.reviewedAt,
+        firstSeenAt: event.firstSeenAt ?? event.reviewedAt ?? batch.reviewedAt,
+        updatedAt: event.reviewedAt ?? batch.reviewedAt,
       }),
     );
 

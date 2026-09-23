@@ -30,6 +30,24 @@ const BASE = {
 };
 
 describe("reviewed event ingestion", () => {
+  test("newly checked rows do not make old rows appear freshly reviewed", () => {
+    const newer = "2026-09-23T00:00:43.000Z";
+    const batch = {
+      ...BASE,
+      events: [BASE.events[0], { ...BASE.events[0], title: "Another Dream", reviewedAt: newer }],
+    };
+    const { events } = materializeReviewedBatch(batch);
+    expect(events[0]?.updatedAt).toBe(BASE.reviewedAt);
+    expect(events[1]).toMatchObject({ firstSeenAt: newer, updatedAt: newer });
+  });
+  test("re-review preserves the original discovery time when supplied", () => {
+    const newer = "2026-09-23T00:00:43.000Z";
+    const { events } = materializeReviewedBatch({
+      ...BASE,
+      events: [{ ...BASE.events[0], firstSeenAt: BASE.reviewedAt, reviewedAt: newer }],
+    });
+    expect(events[0]).toMatchObject({ firstSeenAt: BASE.reviewedAt, updatedAt: newer });
+  });
   test("materializes a reviewed record into the public schema", () => {
     const result = materializeReviewedBatch(BASE);
     expect(result.events).toHaveLength(1);
