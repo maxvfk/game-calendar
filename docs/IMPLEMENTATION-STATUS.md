@@ -212,7 +212,21 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   only the eight inactive health entries disappeared. Automatic parser
   `firstSeenAt`/`updatedAt` values are generated at build time and therefore
   move on a local rebuild; this checkpoint did not change that behavior.
-  CI/Pages and the next scheduled refresh remain to be verified after push.
+  Bun 1.3.14 frozen install, typecheck, 874 tests and build passed; the offline
+  refresh dry run listed exactly seven sources. Commit `8ade91c` passed
+  [CI/Pages run 35864065837](https://github.com/maxvfk/game-calendar/actions/runs/35864065837):
+  check, build (132 events, one conflict), and deploy. After deployment the
+  public feed returned 132 events and 14 health entries (seven automatic,
+  seven reviewed), with no Game8/Fandom entries. The next scheduled refresh
+  remains unverified.
+- M5 post-deploy smoke 2026-09-23: the public desktop site opened, Genshin
+  and NTE onboarding worked, Checklist listed Beyond the Rails first, Fons
+  Rush as date-only and Circle Bounty as disputed; a reload preserved the game
+  choices. Immediately after deployment, the browser still held the earlier
+  feed for the ordinary URL, while a new URL and a direct HTTP request returned
+  the 13:00Z feed. GitHub Pages answered `cache-control: max-age=600`; a short
+  delay for an already cached reader is expected. Phone layout, a real offline
+  reload and automatic expiry of that browser's cached copy remain unverified.
 
 ## Coverage at the live 2026-09-23 refresh
 
@@ -259,9 +273,9 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Verify CI/Pages for the legacy-source retirement commit and inspect the next
-scheduled refresh: the seven live adapters should report no inherited Game8
-failure state, while a new genuine failure must remain visible. Then complete
+Inspect the next scheduled refresh: the seven live adapters should report no
+inherited Game8 failure state, while a new genuine failure must remain visible.
+Check the normal feed URL after its ten-minute HTTP cache expiry. Then complete
 M5 phone/offline smoke where a controllable device/network is available and
 finalize M6 with the tested scope and remaining manual coverage.
 Endfield 5208 remains manual-reviewed only while the official robots chain is
