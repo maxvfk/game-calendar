@@ -7,7 +7,7 @@
  *
  *   bun run parse <adapter-id> <fixture-path> [--now ISO] [--json]
  */
-import { adapterById, ADAPTERS } from "../src/ingest/adapters/index.ts";
+import { adapterById, ALL_ADAPTERS } from "../src/ingest/adapters/index.ts";
 import { GachaEvent } from "../src/shared/schema.ts";
 
 const [adapterId, fixturePath] = Bun.argv.slice(2);
@@ -18,14 +18,14 @@ const asJson = Bun.argv.includes("--json");
 
 if (!adapterId || !fixturePath) {
   console.error("usage: bun run parse <adapter-id> <fixture-path> [--now ISO] [--json]");
-  console.error(`adapters: ${ADAPTERS.map((a) => a.id).join(", ")}`);
+  console.error(`adapters: ${ALL_ADAPTERS.map((a) => a.id).join(", ")}`);
   process.exit(1);
 }
 
 const adapter = adapterById(adapterId);
 if (!adapter) {
   console.error(`unknown adapter '${adapterId}'`);
-  console.error(`adapters: ${ADAPTERS.map((a) => a.id).join(", ")}`);
+  console.error(`adapters: ${ALL_ADAPTERS.map((a) => a.id).join(", ")}`);
   process.exit(1);
 }
 

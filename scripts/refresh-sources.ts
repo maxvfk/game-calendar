@@ -3,7 +3,7 @@
  *
  *   bun run refresh                          # the real thing
  *   bun run refresh --dry-run                # plan only, no requests, no writes
- *   bun run refresh --only genshin-game8-events
+ *   bun run refresh --only genshin-kqm-ginews
  *   bun run refresh --assume-robots-on-403   # see § the flag, below
  *   bun run refresh --force --only nikki-fandom-events   # ignore the 6h floor
  *
@@ -24,10 +24,7 @@
  *     and refused under CI, and it sets aside the interval and nothing else —
  *     conditional headers, per-host spacing, robots and the no-retry rule all
  *     still apply, and every source asked early is named in the summary.
- *   - requests to one host are spaced, honouring its `Crawl-delay`. Eight of the
- *     twelve sources are game8.co pages, so without this one cycle is eight
- *     back-to-back requests to a single site — inside the per-source floor and
- *     still the behaviour an edge network throttles.
+ *   - requests to one host are spaced, honouring its `Crawl-delay`.
  *   - conditional requests always, so an unchanged page costs the wiki a 304.
  *   - a descriptive User-Agent carrying a contact URL.
  *
@@ -170,8 +167,8 @@ export const BROKEN_AFTER_FAILURES = 3;
 
 /**
  * Gap between two requests to the same host when its robots.txt names none.
- * The per-source floor is six hours, but eight sources share game8.co, so
- * without this they arrive as one burst.
+ * The per-source floor is six hours; multiple sources on one host still need
+ * spacing within a single cycle.
  */
 export const DEFAULT_HOST_GAP_MS = 2_000;
 
@@ -910,8 +907,12 @@ async function main(): Promise<number> {
     return 0;
   }
 
-  if (args.only !== null && adapterById(args.only) === undefined) {
-    console.error(`unknown source '${args.only}'`);
+  if (args.only !== null && !ADAPTERS.some((adapter) => adapter.id === args.only)) {
+    console.error(
+      adapterById(args.only) === undefined
+        ? `unknown source '${args.only}'`
+        : `source '${args.only}' is retired from scheduled refresh; use bun run parse for offline diagnostics`,
+    );
     console.error(USAGE);
     return 2;
   }

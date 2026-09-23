@@ -202,6 +202,17 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   Fandom remained robots-blocked. They supplied no events. The next M4
   checkpoint will retire unreachable legacy fallback polling from the active
   feed without hiding failures of the working sources.
+- M4 legacy-source retirement checkpoint: seven Game8 pages that repeatedly
+  return CloudFront 202 and Genshin Fandom whose robots gate fails closed were
+  removed from the **scheduled** refresh and published source health. Their
+  parsers remain addressable for local fixture diagnostics. Seven live adapters
+  remain. A targeted regression confirms that three failed cycles of an active
+  KQM source still produce a broken-source error. A fresh build retained all
+  132 IDs, semantic event fields and the existing Circle Bounty conflict;
+  only the eight inactive health entries disappeared. Automatic parser
+  `firstSeenAt`/`updatedAt` values are generated at build time and therefore
+  move on a local rebuild; this checkpoint did not change that behavior.
+  CI/Pages and the next scheduled refresh remain to be verified after push.
 
 ## Coverage at the live 2026-09-23 refresh
 
@@ -248,12 +259,11 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Retire the seven permanently inaccessible Game8 fallback pollers and the
-robots-blocked Genshin Fandom poller from the active refresh/feed health, while
-keeping their parsers available for manual diagnostics. Check that genuine
-active-source failures still turn the health report red and that event IDs are
-stable. Then complete remaining M4 checks and M5 phone/offline smoke where a
-controllable device/network is available. Finalize M6 after this checkpoint.
+Verify CI/Pages for the legacy-source retirement commit and inspect the next
+scheduled refresh: the seven live adapters should report no inherited Game8
+failure state, while a new genuine failure must remain visible. Then complete
+M5 phone/offline smoke where a controllable device/network is available and
+finalize M6 with the tested scope and remaining manual coverage.
 Endfield 5208 remains manual-reviewed only while the official robots chain is
 unresolved; do not infer its missing calendar dates.
 

@@ -15,7 +15,7 @@ import {
   type RobotsGate,
 } from "../scripts/refresh-sources.ts";
 import type { Adapter, ParseContext } from "../src/ingest/adapters/types.ts";
-import { adapterById } from "../src/ingest/adapters/index.ts";
+import { ADAPTERS, ALL_ADAPTERS, adapterById } from "../src/ingest/adapters/index.ts";
 import { SnapshotStore } from "../src/ingest/snapshots.ts";
 import type { GachaEvent } from "../src/shared/schema.ts";
 
@@ -126,6 +126,44 @@ async function seed(html: string, at: string, eventCount: number | null) {
 }
 
 describe("a normal cycle", () => {
+  test("the scheduled registry excludes unreachable legacy pollers without deleting their parsers", () => {
+    expect(ADAPTERS.map((a) => a.id).sort()).toEqual([
+      "czn-prydwen-banners", "endfield-wikigg-events", "genshin-kqm-ginews",
+      "hsr-kqm-hsrnews", "nte-ntebuild-btr", "nte-steamnews-official",
+      "wuwa-kuro-mirror",
+    ]);
+    const retired = [
+      "genshin-game8-events", "hsr-game8-events", "wuwa-game8-events",
+      "zzz-game8-events", "endfield-game8-events", "nte-game8-events",
+      "czn-game8-events", "genshin-fandom-events",
+    ];
+    for (const id of retired) {
+      expect(ADAPTERS.some((a) => a.id === id)).toBe(false);
+      expect(ALL_ADAPTERS.some((a) => a.id === id)).toBe(true);
+      expect(adapterById(id)).toBeDefined();
+    }
+  });
+
+  test("a currently scheduled source still becomes broken after three failed cycles", async () => {
+    const active = ADAPTERS.find((a) => a.id === "genshin-kqm-ginews")!;
+    let at = NOW.getTime();
+    const { opts } = options({
+      adapters: [active],
+      now: () => new Date(at),
+      responder: () => new Response("unavailable", { status: 503 }),
+    });
+    for (let cycle = 0; cycle < BROKEN_AFTER_FAILURES; cycle += 1) {
+      const summary = await runRefresh(opts);
+      expect(summary.outcomes[0]?.result).toBe("failed");
+      expect(summary.broken.length).toBe(cycle === BROKEN_AFTER_FAILURES - 1 ? 1 : 0);
+      if (cycle === BROKEN_AFTER_FAILURES - 1) {
+        expect(summary.broken[0]?.sourceId).toBe(active.id);
+        expect(annotations(summary).some((line) => line.startsWith(`::error title=${active.id}`))).toBe(true);
+      }
+      at += SIX_HOURS_MS + 1;
+    }
+  });
+
   test("fetches once, stores the body, rebuilds the feed", async () => {
     const { opts, calls, rebuilds } = options({});
     const summary = await runRefresh(opts);

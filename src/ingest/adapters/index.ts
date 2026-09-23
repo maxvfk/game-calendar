@@ -22,6 +22,8 @@ interface SourceSpec {
   contentKind?: ContentKind;
   priority?: number;
   minIntervalMs?: number;
+  /** Keep the parser for diagnostics, but omit this source from scheduled refresh/feed. */
+  scheduled?: boolean;
 }
 
 const SOURCES: SourceSpec[] = [
@@ -59,46 +61,38 @@ const SOURCES: SourceSpec[] = [
     game: "genshin",
     url: "https://game8.co/games/Genshin-Impact/archives/301601",
     parserId: "game8",
-    // **This priority protects event IDs, not data quality.** The Fandom source
-    // below is the fresher page by a wide margin — it is the only Genshin
-    // surface CI can fetch at all — but `priority` here decides which copy
-    // *survives* a near-match, and the survivor's title is its ID, which is a
-    // localStorage key (AGENTS.md § Event IDs are localStorage keys). The two
-    // pages title two live events differently: `To Temper Thyself and Journey
-    // Far` vs `… Cycle 5`, and `Stygian Onslaught` vs `…: Battle of the
-    // Starburst`. Letting Fandom win those re-mints both IDs and silently
-    // orphans every completion mark on them, with no server-side recovery — so
-    // the incumbent keeps identity and Fandom contributes the events Game8
-    // never listed. Measured: 0 IDs lost this way, 2 lost the other way.
-    //
-    // It costs nothing on dates today, because the two sources agree exactly
-    // wherever they overlap (0 conflicts). Should they ever diverge, `merge.ts`
-    // flags it rather than resolving it, which is the gate working.
-    priority: 10,
+    // The runner has received only CloudFront 202 responses for three cycles.
+    // Reviewed records and KQM now supply this game. Keep the adapter for
+    // offline fixture diagnostics; do not poll or report it as a live source.
+    scheduled: false,
   },
   {
     id: "hsr-game8-events",
     game: "hsr",
     url: "https://game8.co/games/Honkai-Star-Rail/archives/408749",
     parserId: "game8",
+    scheduled: false,
   },
   {
     id: "wuwa-game8-events",
     game: "wuwa",
     url: "https://game8.co/games/Wuthering-Waves/archives/453473",
     parserId: "game8",
+    scheduled: false,
   },
   {
     id: "zzz-game8-events",
     game: "zzz",
     url: "https://game8.co/games/Zenless-Zone-Zero/archives/457176",
     parserId: "game8",
+    scheduled: false,
   },
   {
     id: "endfield-game8-events",
     game: "endfield",
     url: "https://game8.co/games/Arknights-Endfield/archives/535443",
     parserId: "game8",
+    scheduled: false,
   },
   {
     id: "endfield-wikigg-events",
@@ -120,6 +114,7 @@ const SOURCES: SourceSpec[] = [
     game: "nte",
     url: "https://game8.co/games/Neverness-to-Everness/archives/592073",
     parserId: "game8",
+    scheduled: false,
   },
   {
     id: "p5x-game8-events",
@@ -130,23 +125,11 @@ const SOURCES: SourceSpec[] = [
   {
     id: "genshin-fandom-events",
     game: "genshin",
-    // The API, not `/wiki/Event` — the whole § Fandom argument in AGENTS.md.
-    // This wiki's robots.txt is the standard Fandom file, read with the
-    // runner's own client on 2026-09-12: `Allow: /api.php?action=` for
-    // `User-agent: *`, no `Disallow: /`, no `Content-Signal`, and the AI
-    // crawlers it names (GPTBot, CCBot, OAI-SearchBot, ImagesiftBot,
-    // ClaudeBot) are not us.
-    //
-    // Genshin's Game8 page has never been fetchable from CI (CloudFront answers
-    // every runner with a 202), so until this source existed the game's lane was
-    // built from a checked-in fixture and could only age. This page is a fifth
-    // template — `Event | Duration | Type(s)` under `h3` fences — and publishes
-    // at day precision, which is everything it states.
-    //
-    // Lower priority than the Game8 source above on purpose, and the comment
-    // there says why: it is an identity question, not a quality one.
+    // The Actions runner cannot read robots.txt and must fail closed. KQM
+    // supplies Genshin now; retain this parser for offline fixture diagnostics.
     url: "https://genshin-impact.fandom.com/api.php?action=parse&page=Event&prop=text&formatversion=2&format=json",
     parserId: "fandom",
+    scheduled: false,
   },
   {
     id: "r1999-fandom-events",
@@ -241,13 +224,9 @@ const SOURCES: SourceSpec[] = [
   {
     id: "czn-game8-events",
     game: "czn",
-    // The ninth game8 source, and the cost is worth stating plainly: game8's
-    // edge answers the Actions runner with a 202 and a bot-management body
-    // (AGENTS.md § Scraping conduct), so this lane is built from a checked-in
-    // fixture in CI from day one and only a manual `bun run refresh` moves it.
-    // `freshness()` discloses that in the footer, which is what it is for.
     url: "https://game8.co/games/Chaos-Zero-Nightmare/archives/559899",
     parserId: "game8",
+    scheduled: false,
   },
   {
     id: "uma-game8-events",
@@ -337,8 +316,14 @@ function toAdapter(spec: SourceSpec): Adapter {
   };
 }
 
-export const ADAPTERS: Adapter[] = SOURCES.filter((source) =>
+/** Tracked parsers, including retired sources available to offline diagnostics. */
+export const ALL_ADAPTERS: Adapter[] = SOURCES.filter((source) =>
   TRACKED_GAME_SET.has(source.game),
+).map(toAdapter);
+
+/** Only these sources participate in the published feed and scheduled refresh. */
+export const ADAPTERS: Adapter[] = SOURCES.filter((source) =>
+  TRACKED_GAME_SET.has(source.game) && source.scheduled !== false,
 ).map(toAdapter);
 
 export function adaptersForGame(game: GameId): Adapter[] {
@@ -346,7 +331,7 @@ export function adaptersForGame(game: GameId): Adapter[] {
 }
 
 export function adapterById(id: string): Adapter | undefined {
-  return ADAPTERS.find((a) => a.id === id);
+  return ALL_ADAPTERS.find((a) => a.id === id);
 }
 
 export function gamesWithSources(): GameId[] {
@@ -383,7 +368,7 @@ export function parseGame(
 }
 
 // Convenience handles for tests and scripts.
-export const genshinGame8 = ADAPTERS.find(
+export const genshinGame8 = ALL_ADAPTERS.find(
   (a) => a.id === "genshin-game8-events",
 )!;
-export const nteGame8 = ADAPTERS.find((a) => a.id === "nte-game8-events")!;
+export const nteGame8 = ALL_ADAPTERS.find((a) => a.id === "nte-game8-events")!;
