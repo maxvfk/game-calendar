@@ -498,14 +498,14 @@ async function refreshOne(
   // it used to yield events, is a source that changed shape — publishing it
   // would empty a game's calendar silently, which is the failure this pipeline
   // exists to avoid. Keep what we hold and warn.
-  let events: number;
+  let parsed: ReturnType<Adapter["parse"]>;
   try {
-    events = adapter.parse(html, {
+    parsed = adapter.parse(html, {
       now: nowIso,
       sourceUrl: adapter.url,
       sourceId: adapter.id,
       game: adapter.game,
-    }).length;
+    });
   } catch (error) {
     await store.recordCheck(adapter.id, {
       at: nowIso,
@@ -520,6 +520,7 @@ async function refreshOne(
       eventCount: meta?.eventCount ?? null,
     };
   }
+  const events = parsed.length;
 
   // Zero events is almost never a useful snapshot: a source in the registry
   // yields events by construction, so an empty parse normally means the page
@@ -559,6 +560,37 @@ async function refreshOne(
     };
   }
 
+  const dropped = !statesNoEvents && previousCount !== null &&
+    previousCount > 0 && events < previousCount * DROP_WARNING_RATIO;
+  if (dropped) {
+    const old = await store.read(adapter.id);
+    if (old !== null) {
+      // A page normally drops entries that have finished. Reject a steep drop
+      // only when most of its still-live identities have disappeared; otherwise
+      // a version transition would pin the old page forever.
+      let live: ReturnType<Adapter["parse"]> = [];
+      try {
+        live = adapter.parse(old.html, {
+          now: nowIso, sourceUrl: adapter.url, sourceId: adapter.id, game: adapter.game,
+        }).filter(e => e && (e.endsAt === null ||
+          Date.parse(e.endsAt) + (e.endPrecision === "day" ? 86_400_000 : 0) > now.getTime()));
+      } catch {
+        // The previous bytes cannot provide a trustworthy live baseline. The
+        // new document still passed the normal structural and zero gates.
+      }
+      const nextIds = new Set(parsed.map(e => e.id));
+      const missing = live.filter(e => !nextIds.has(e.id)).length;
+      if (live.length >= 3 && missing > live.length * DROP_WARNING_RATIO) {
+        await store.recordCheck(adapter.id, { at: nowIso, status: response.status, ok: false });
+        return {
+          sourceId: adapter.id, result: "rejected",
+          note: `kept previous snapshot; ${missing}/${live.length} still-live events disappeared (${previousCount} → ${events} rows), review source`,
+          status: response.status, eventCount: previousCount,
+        };
+      }
+    }
+  }
+
   const saved = await store.save(adapter.id, {
     contentKind: adapter.contentKind ?? "html",
     url: adapter.url,
@@ -584,12 +616,6 @@ async function refreshOne(
       eventCount: events,
     };
   }
-
-  const dropped =
-    !statesNoEvents &&
-    previousCount !== null &&
-    previousCount > 0 &&
-    events < previousCount * DROP_WARNING_RATIO;
 
   return {
     sourceId: adapter.id,

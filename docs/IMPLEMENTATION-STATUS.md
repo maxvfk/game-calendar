@@ -117,11 +117,17 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   removes Markdown and XML bodies as well. Focused tests reproduce both loss
   and recovery paths. Bun 1.3.14 frozen install, typecheck, 858 tests and build
   passed. Abrupt source disappearance remains the next M4 check.
+- M4 disappearance checkpoint: a new body that drops more than half the old
+  count is now compared to the old snapshot's still-live IDs. Losing the
+  majority of those IDs rejects the new body, retains last-known-good and
+  increments source failure health. Finished entries can leave normally and
+  still produce a visible drop warning. Both paths have focused tests. Bun
+  1.3.14 frozen install, typecheck, 860 tests and build passed.
 
 ## Next concrete step
 
-Verify all three new API sources in the normal Actions refresh. Then address
-the confirmed mass-disappearance publication path in M4. Endfield 5208 remains manual-reviewed only
+Verify all three new API sources in the normal Actions refresh. Then inspect
+remaining M4 freshness/conflict behavior and M5 UI. Endfield 5208 remains manual-reviewed only
 while the official robots chain is unresolved; do not infer its missing
 calendar dates. Fix confirmed false freshness or day-boundary behavior before M5.
 

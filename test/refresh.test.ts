@@ -684,15 +684,50 @@ describe("a source being down never blanks the feed", () => {
     expect((await store.read("genshin-game8-events"))?.meta.eventCount).toBe(1);
   });
 
-  test("a steep drop is stored but flagged", async () => {
+  test("a steep drop of expired rows is stored but flagged", async () => {
     await seed("<html>" + "<event></event>".repeat(10) + "</html>", "2026-08-01T00:00:00.000Z", 10);
     const { opts } = options({
+      adapters: [adapter({ parse: (html) => [...html.matchAll(/<event>/g)]
+        .map((_, i) => ({ id: String(i), endsAt: "2026-08-14T00:00:00.000Z", endPrecision: "exact" }) as GachaEvent) })],
       responder: () => new Response("<html><event></event></html>"),
     });
     const summary = await runRefresh(opts);
 
     expect(summary.outcomes[0]?.result).toBe("fetched");
     expect(summary.outcomes[0]?.note).toContain("down from 10");
+  });
+
+  test("a steep drop of still-live IDs is rejected and preserves the last good body", async () => {
+    const old = Array.from({ length: 8 }, (_, i) => `<event id="${i}" end="2026-08-24T00:00:00.000Z"/>`).join("");
+    const parse = (html: string) => [...html.matchAll(/<event id="([^"]+)" end="([^"]+)"\/>/g)]
+      .map(m => ({ id: m[1], endsAt: m[2], endPrecision: "exact" }) as GachaEvent);
+    await store.save("genshin-game8-events", {
+      url: adapter().url, body: old, etag: null, lastModified: null,
+      at: "2026-08-01T00:00:00.000Z", eventCount: 8,
+    });
+    const { opts } = options({ adapters: [adapter({ parse })],
+      responder: () => new Response('<event id="0" end="2026-08-24T00:00:00.000Z"/>') });
+    const summary = await runRefresh(opts);
+    expect(summary.outcomes[0]?.result).toBe("rejected");
+    expect(summary.outcomes[0]?.note).toContain("7/8 still-live events disappeared");
+    expect((await store.read("genshin-game8-events"))?.html).toBe(old);
+    expect((await store.readState("genshin-game8-events")).consecutiveFailures).toBe(1);
+  });
+
+  test("old completed entries may disappear at a normal version transition", async () => {
+    const old = Array.from({ length: 7 }, (_, i) => `<event id="${i}" end="2026-08-14T00:00:00.000Z"/>`).join("") +
+      '<event id="live" end="2026-08-24T00:00:00.000Z"/>';
+    const parse = (html: string) => [...html.matchAll(/<event id="([^"]+)" end="([^"]+)"\/>/g)]
+      .map(m => ({ id: m[1], endsAt: m[2], endPrecision: "exact" }) as GachaEvent);
+    await store.save("genshin-game8-events", {
+      url: adapter().url, body: old, etag: null, lastModified: null,
+      at: "2026-08-01T00:00:00.000Z", eventCount: 8,
+    });
+    const { opts } = options({ adapters: [adapter({ parse })],
+      responder: () => new Response('<event id="live" end="2026-08-24T00:00:00.000Z"/>') });
+    const summary = await runRefresh(opts);
+    expect(summary.outcomes[0]?.result).toBe("fetched");
+    expect((await store.read("genshin-game8-events"))?.meta.eventCount).toBe(1);
   });
 
   test("a body that dies mid-read is one source's failure, not the cycle's", async () => {
