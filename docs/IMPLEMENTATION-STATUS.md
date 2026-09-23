@@ -353,6 +353,13 @@ source's actual `lastConfirmedAt` and `parsedCount`.
   At this documentation checkpoint, frozen install, typecheck and build passed
   locally (134 events); `bun test` reproduced the same one failure (889 pass,
   one fail). No tests or runtime behavior were changed here.
+- Refresh publication repair: the Endfield merge test now checks every current
+  wiki ID survives the merge and that the merged count follows the snapshot,
+  rather than assuming wiki.gg will always list exactly eight events. Snow's
+  regional end remains checked while the historical row is still listed.
+  No parser or event data changed. Frozen install, typecheck, all 890 tests and
+  build passed locally; the feed has 134 events and the one known conflict.
+  CI/Pages and the published feed still require verification after this commit.
 
 ## Maintenance path
 
@@ -378,10 +385,12 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-The scheduled refresh is confirmed, but the 134-event Pages publication is
-blocked by the Endfield count assertion above. Resolve that in a separate
-minimal test milestone, then verify CI/Pages and the public feed. Meanwhile the
-reader will use the existing deployed app normally and collect observations in
+Verify CI/Pages for the narrow Endfield test correction and confirm the public
+feed has 134 events, including both newly listed Endfield rows. Then address
+the user's reported missing ZZZ Shiyu Defense and Deadly Assault cycles using
+dated evidence, without deriving calendar deadlines from screenshot countdowns
+or assumed rotation cadence. Meanwhile the reader will use the deployed app
+normally and collect observations in
 `docs/IMPROVEMENT-BACKLOG.md`. Refine them in ChatGPT, implement approved small
 pre-Astra polish in separate commits, smoke-check and freeze the baseline, then
 hand it to Astra for a separate audit. Address confirmed audit findings before
