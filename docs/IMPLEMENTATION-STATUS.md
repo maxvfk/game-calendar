@@ -227,6 +227,16 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   the 13:00Z feed. GitHub Pages answered `cache-control: max-age=600`; a short
   delay for an already cached reader is expected. Phone layout, a real offline
   reload and automatic expiry of that browser's cached copy remain unverified.
+- M5 real phone check 2026-09-23: on a realme GT 6 with realme UI 7.0 and
+  Chrome, steps 1–4 passed. An offline reload stayed on **Loading events…**;
+  a later screenshot showed the page and an offline badge, but this did not
+  count as a successful reload. The repair precaches the feed during worker
+  installation, bounds stalled installation and feed requests to eight seconds,
+  and lets the page read the cached feed even before worker control. The
+  GitHub Pages subpath navigation fallback is also corrected. Frozen install,
+  typecheck, 880 tests and build passed locally; the build retains 132 events,
+  seven live automatic sources and the visible Circle Bounty conflict. A fresh
+  real phone offline reload after deployment is still required.
 
 ## Coverage at the live 2026-09-23 refresh
 
@@ -273,11 +283,13 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Inspect the next scheduled refresh: the seven live adapters should report no
-inherited Game8 failure state, while a new genuine failure must remain visible.
-Check the normal feed URL after its ten-minute HTTP cache expiry. Then complete
-M5 phone/offline smoke using `docs/QA-PHONE-SMOKE.md` on a real device and
-finalize M6 with the tested scope and remaining manual coverage.
+Deploy the offline-feed repair and verify CI/Pages. On the realme Chrome,
+accept the app update while online, reload once online, then repeat step 5 of
+`docs/QA-PHONE-SMOKE.md` with airplane mode and Wi-Fi off. Inspect the next
+scheduled refresh: the seven live adapters should report no inherited Game8
+failure state, while a new genuine failure must remain visible. Check the
+normal feed URL after its ten-minute HTTP cache expiry; then finalize M6 with
+the tested scope and remaining manual coverage.
 Endfield 5208 remains manual-reviewed only while the official robots chain is
 unresolved; do not infer its missing calendar dates.
 

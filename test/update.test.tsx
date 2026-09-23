@@ -30,7 +30,13 @@ import {
 
 type Listener = (event: Record<string, unknown>) => void;
 
-async function loadWorker(build = "abcdef123456") {
+async function loadWorker(
+  build = "abcdef123456",
+  options: {
+    fetchImpl?: (request: Request) => Promise<Response>;
+    immediateTimeout?: boolean;
+  } = {},
+) {
   const source = injectBuild(
     await Bun.file(new URL("../src/client/sw.js", import.meta.url)).text(),
     build,
@@ -51,7 +57,8 @@ async function loadWorker(build = "abcdef123456") {
         put: async (request: Request | string, response: Response) => {
           store.set(typeof request === "string" ? request : request.url, response);
         },
-        match: async () => undefined,
+        match: async (request: Request | string) =>
+          store.get(typeof request === "string" ? request : request.url),
       };
     },
     keys: async () => [...stores.keys()],
@@ -76,22 +83,30 @@ async function loadWorker(build = "abcdef123456") {
 
   const fetchStub = async (request: Request) => {
     fetched.push(request);
-    return new Response("ok", { status: 200 });
+    return options.fetchImpl?.(request) ?? new Response("ok", { status: 200 });
   };
 
   // sw.js is a classic script with no imports, so it evaluates against injected
   // globals — which is the only way to exercise it offline.
-  new Function("self", "caches", "fetch", source)(self, caches, fetchStub);
+  const timer = options.immediateTimeout
+    ? (fn: () => void) => { queueMicrotask(fn); return 1; }
+    : setTimeout;
+  new Function("self", "caches", "fetch", "setTimeout", "clearTimeout", source)(
+    self, caches, fetchStub, timer, clearTimeout,
+  );
 
   /** Fire a worker lifecycle event and settle whatever it kept alive. */
   const dispatch = async (type: string, event: Record<string, unknown> = {}) => {
     const kept: Array<Promise<unknown>> = [];
+    let response: Promise<Response> | undefined;
     const full = {
       ...event,
       waitUntil: (p: Promise<unknown>) => kept.push(p),
+      respondWith: (p: Promise<Response>) => { response = p; },
     };
     for (const fn of listeners.get(type) ?? []) fn(full);
     await Promise.all(kept);
+    return response === undefined ? undefined : await response;
   };
 
   return { dispatch, self, calls, opened, fetched, stores };
@@ -132,6 +147,40 @@ describe("the service worker's side of an update", () => {
     expect(w.fetched.map((r) => r.url)).toContain(
       "https://example.test/app/main.js",
     );
+    expect(w.fetched.map((r) => r.url)).toContain(
+      "https://example.test/app/data/events.v1.json",
+    );
+  });
+
+  test("serves the cached feed if a mobile offline request never settles", async () => {
+    const url = "https://example.test/app/data/events.v1.json";
+    const w = await loadWorker("abcdef123456", {
+      fetchImpl: () => new Promise<Response>(() => {}),
+      immediateTimeout: true,
+    });
+    w.stores.set("event-clock-v2", new Map([[url, new Response('{"schemaVersion":1}')]]));
+    const response = await w.dispatch("fetch", { request: new Request(url) });
+    expect(response?.status).toBe(200);
+    expect(await response?.text()).toBe('{"schemaVersion":1}');
+  });
+
+  test("a stalled precache request cannot keep the new worker installing forever", async () => {
+    const w = await loadWorker("abcdef123456", {
+      fetchImpl: () => new Promise<Response>(() => {}),
+      immediateTimeout: true,
+    });
+    await w.dispatch("install");
+    expect(w.fetched).toHaveLength(5);
+  });
+
+  test("uses the last feed when the server responds with an error", async () => {
+    const url = "https://example.test/app/data/events.v1.json";
+    const w = await loadWorker("abcdef123456", {
+      fetchImpl: async () => new Response("unavailable", { status: 503 }),
+    });
+    w.stores.set("event-clock-v2", new Map([[url, new Response("last good feed")]]));
+    const response = await w.dispatch("fetch", { request: new Request(url) });
+    expect(await response?.text()).toBe("last good feed");
   });
 
   test("caches under a name that does not move with the build", async () => {

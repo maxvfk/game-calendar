@@ -4,6 +4,8 @@ Open the [published calendar](https://maxvfk.github.io/game-calendar/) in the
 phone's usual browser. Use a normal tab first; installation to the home screen
 is optional. This check does not require an account. Choices and completion
 marks stay in that browser, so use a disposable mark and clear it afterward.
+The same Google account on another device does not sync this site's marks;
+**Settings → Your progress → Export all / Import all** moves a backup manually.
 
 1. With a network connection, select at least Genshin Impact, Neverness to
    Everness (NTE), and Arknights: Endfield on first launch, or enable them in
@@ -21,9 +23,11 @@ marks stay in that browser, so use a disposable mark and clear it afterward.
    current date-only entry for the precision check then.
 4. Mark one event done, reload, and confirm it is still done. Clear the test
    mark. Confirm the chosen games and region persist after the reload.
-5. With the page open online, reload once more to populate the offline cache.
+5. With the page open online, accept **Reload** if an app update is offered,
+   then reload once more to populate the offline cache.
    Enable airplane mode (and make sure Wi-Fi is off), then reload the same tab.
-   The last downloaded events should remain visible with an offline warning.
+   Wait up to about 10 seconds. The last downloaded events should remain
+   visible with an offline warning; an endless **Loading events…** is a failure.
    Disable airplane mode and reload to confirm the online state returns. If the
    phone removes the tab or cannot reload offline, record that behavior rather
    than changing settings to force a pass.

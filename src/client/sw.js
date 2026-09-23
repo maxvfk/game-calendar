@@ -48,7 +48,9 @@ const CACHE_NAME = "event-clock-v2";
 const BASE = new URL("./", self.registration.scope);
 const at = (path) => new URL(path, BASE).toString();
 const SHELL = ["", "index.html", "styles.css", "main.js"].map(at);
-const FEED = new URL("data/events.v1.json", BASE).pathname;
+const FEED_URL = at("data/events.v1.json");
+const FEED = new URL(FEED_URL).pathname;
+const FEED_NETWORK_TIMEOUT_MS = 8_000;
 const FONT_HOSTS = new Set(["fonts.googleapis.com", "fonts.gstatic.com"]);
 /** What a page sends to ask a waiting worker to take over now. */
 const SKIP_WAITING = "skip-waiting";
@@ -88,9 +90,21 @@ self.addEventListener("activate", (event) => {
 async function precache() {
   const cache = await caches.open(CACHE_NAME);
   await Promise.allSettled(
-    SHELL.map(async (url) => {
-      const response = await fetch(new Request(url, { cache: "reload" }));
-      if (response.ok) await cache.put(url, response);
+    [...SHELL, FEED_URL].map(async (url) => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), FEED_NETWORK_TIMEOUT_MS);
+      try {
+        await Promise.race([
+          (async () => {
+            const response = await fetch(new Request(url, { signal: controller.signal, cache: "reload" }));
+            if (response.ok) await cache.put(url, response);
+          })(),
+          new Promise((_, reject) => controller.signal.addEventListener("abort", () =>
+            reject(new Error("precache timeout")), { once: true })),
+        ]);
+      } finally {
+        clearTimeout(timeoutId);
+      }
     }),
   );
 }
@@ -140,12 +154,26 @@ self.addEventListener("fetch", (event) => {
  */
 async function feedFirst(request) {
   const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(request);
+  const controller = new AbortController();
+  let timeoutId;
   try {
-    const response = await fetch(request);
-    if (response.ok) await cache.put(request, response.clone());
+    // Some mobile networks leave an offline request pending instead of
+    // rejecting it. Never leave the calendar on "Loading events…" forever.
+    const deadline = new Promise((_, reject) => {
+      timeoutId = setTimeout(() => {
+        controller.abort();
+        reject(new Error("feed network timeout"));
+      }, FEED_NETWORK_TIMEOUT_MS);
+    });
+    const response = await Promise.race([
+      fetch(new Request(request, { signal: controller.signal, cache: "reload" })),
+      deadline,
+    ]);
+    if (!response.ok) return cached ?? response;
+    await cache.put(request, response.clone());
     return response;
   } catch {
-    const cached = await cache.match(request);
     if (cached !== undefined) return cached;
     // No network and nothing cached: say so in the feed's own shape, so the
     // client renders its error state rather than failing to parse.
@@ -153,6 +181,8 @@ async function feedFirst(request) {
       JSON.stringify({ error: "offline", message: "No events stored yet." }),
       { status: 503, headers: { "content-type": "application/json" } },
     );
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
@@ -183,7 +213,7 @@ async function shellFirst(request) {
   // A navigation with no cache and no network still gets the app shell if we
   // have it — the client then shows its own offline message.
   if (request.mode === "navigate") {
-    const shell = await cache.match("/index.html");
+    const shell = await cache.match(at("index.html"));
     if (shell !== undefined) return shell;
   }
   return new Response("Offline", { status: 503 });
