@@ -370,7 +370,11 @@ source's actual `lastConfirmedAt` and `parsedCount`.
   in-game countdown screenshot. Both rows are `challenge`, `estimated` and
   `day`/`day`; the screenshot gives no absolute clock boundary, and the
   official Version 3.2 notice names the modes without dates. Existing ZZZ
-  rows and IDs are unchanged. Publication verification follows this commit.
+  rows and IDs are unchanged. Commit `d55d413` passed frozen install,
+  typecheck, 891 tests and build (136 events; only the known NTE conflict).
+  [CI/Pages run 35929750486](https://github.com/maxvfk/game-calendar/actions/runs/35929750486)
+  passed Typecheck/test/feed, Build and Deploy. The public feed generated at
+  22:42:07 UTC has 136 events and both ZZZ challenge IDs at day precision.
 
 ## Maintenance path
 
@@ -396,10 +400,11 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Verify CI/Pages and the public feed after the two ZZZ endgame rows publish;
-confirm both are visible under the challenge filter. Seek official or in-game
-absolute boundaries before promoting their provenance or precision, and review
-the next rotations individually rather than generating a cadence. The reader
+Continue normal phone and desktop use and collect observations in the backlog;
+confirm the two ZZZ endgame rows under the challenge filter during that use.
+Seek official or in-game absolute boundaries before promoting their provenance
+or precision, and review the next rotations individually rather than generating
+a cadence. The reader
 will use the deployed app
 normally and collect observations in
 `docs/IMPROVEMENT-BACKLOG.md`. Refine them in ChatGPT, implement approved small
