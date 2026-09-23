@@ -161,11 +161,16 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   returned 200 for `/`, JS, CSS, feed, review report, service worker, manifest
   and `/api/health`; a nonexistent `/data/` file returned 404. Focused suites
   for controls, preferences, progress, update handling, views and custom UI
-  passed (211 tests). This exercises rendered component claims and storage
-  logic, but is **not** a touch/browser interaction test. GitHub Actions
+  passed (211 tests). GitHub Actions
   [run 35837870613](https://github.com/maxvfk/game-calendar/actions/runs/35837870613)
-  on `36e9374` succeeded in check, build and Pages deploy. A real phone/desktop
-  click-through, service worker upgrade and offline reload remain unverified.
+  on `36e9374` succeeded in check, build and Pages deploy. The published Pages
+  site was also opened in desktop Chrome: onboarding selected Genshin and NTE;
+  focus narrowed to Genshin; Checklist and Timeline switched; Europe→Asia
+  changed the daily reset countdown and persisted after reload. Circle Bounty
+  showed the disputed date and both source links. Marking it done removed it
+  from Next Up and persisted after reload; the test mark was then cleared.
+  The day-only Fons Rush label and stale-source warning were visible. A phone
+  viewport, service worker upgrade and offline reload remain unverified.
 
 ## Next concrete step
 
