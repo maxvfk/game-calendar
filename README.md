@@ -18,10 +18,11 @@
 PWA включает timeline, checklist, локальные отметки, offline cache и проверку
 схемы событий. GitHub Pages собирает автоматические snapshots и проверенные
 вручную записи для семи игр. Работающие automatic sources: официальный Steam
-News для NTE, NTEBuild для Beyond the Rails, Prydwen для баннеров CZN и
-Endfield wiki.gg. Парсеры KQM Genshin/HSR и Kuro Atom для WuWa добавлены;
-первый штатный refresh этих трёх источников ещё проверяется. Охват остаётся
-частичным: если источник недоступен или дата не подтверждена, она не
+News для NTE, NTEBuild для Beyond the Rails, Prydwen для баннеров CZN,
+Endfield wiki.gg, KQM Genshin/HSR и Kuro Atom для WuWa. Первый Actions refresh
+последних трёх сохранил реальные snapshots и опубликовал 132 события; финальная
+проверка refresh осталась красной из-за семи недоступных Game8 fallback. Охват
+остаётся частичным: если источник недоступен или дата не подтверждена, она не
 подставляется предположением.
 
 Записи в `data/reviewed/*.json` требуют source URL, времени проверки и явного

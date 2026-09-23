@@ -186,23 +186,39 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   freshness text while the chosen Genshin/NTE lanes and Europe region remained.
   The available cloud browser exposed no viewport or network toggle, so this
   is an upgrade check, not a phone or offline reload check.
+- M3 live-refresh checkpoint: manually dispatched Actions
+  [run 35844027426](https://github.com/maxvfk/game-calendar/actions/runs/35844027426)
+  fetched the three new sources on the runner: Genshin KQM 10, HSR KQM 6,
+  WuWa Atom 14 parsed events. Their full snapshots were committed as
+  `88b72b2`, with the same SHA-256 bodies checked during implementation.
+  [CI/Pages run 35844077127](https://github.com/maxvfk/game-calendar/actions/runs/35844077127)
+  passed and the live feed was checked at 132 rows. Compared with the saved
+  pre-refresh feed, all 126 IDs and their titles, boundaries, precision,
+  source URLs and regional ends remain unchanged. The six additions are
+  already-ended WuWa events present in the full Atom feed but absent from the
+  compact fixture. The one NTE Circle Bounty conflict is unchanged. The
+  refresh workflow itself failed only at its final source-health report: seven
+  legacy Game8 sources returned CloudFront HTTP 202 for the third cycle;
+  Fandom remained robots-blocked. They supplied no events. The next M4
+  checkpoint will retire unreachable legacy fallback polling from the active
+  feed without hiding failures of the working sources.
 
-## Coverage at the reproducible 2026-09-23 build
+## Coverage at the live 2026-09-23 refresh
 
-This is the **126-row local build** at `8aef0df`, including finished events,
-not a claim that all seven games are completely covered. A feed row is counted
-once after merge; parser counts before merge can be larger. New Genshin, HSR
-and WuWa API sources still use independently captured fixtures pending the
-first normal runner refresh. Automatic confirmations below are from the last
-saved snapshot; reviewed dates are the batch date except for individually
+This is the **132-row published build** following snapshot commit `88b72b2`,
+including finished events, not a claim that all seven games are completely
+covered. A feed row is counted once after merge; parser counts before merge
+can be larger. New Genshin, HSR and WuWa API sources were confirmed by the
+Actions runner. Automatic confirmations below are from the last saved snapshot;
+reviewed dates are the batch date except for individually
 rechecked rows described above. See `public/data/events.v1.json` for each
 source's actual `lastConfirmedAt` and `parsedCount`.
 
 | Game | Published rows and categories | Automatic / transport | Reviewed and latest targeted check | Known missing or blocked |
 |---|---|---|---|---|
-| Genshin | 16: banners 3, login 2, challenge 3, story 2, other 6 | KQM GINews notice Markdown, 10 parsed from Sep 23 fixture, runner refresh pending | 16 reviewed; four rows checked Sep 23 | Game8 unavailable; Fandom robots blocked on runner. Some future Wish/cycle deadlines still lack dated evidence. |
-| HSR | 12: banners 4, login 1, challenge 5, other 2 | KQM HSRNews notice Markdown, 6 parsed from Sep 23 fixture, runner refresh pending | 12 reviewed; four rows checked Sep 23 | Game8 unavailable; Version 4.6 Warp/event periods absent from retrieved notice. |
-| WuWa | 11: banners 6, login 1, challenge 2, other 2 | Kuro article Atom mirror, 8 parsed from compact Sep 23 fixture; full 20-entry capture parsed 14 in M3, runner refresh pending | 11 reviewed; latest batch Sep 21 | Game8 unavailable; image-only 3.7 preview does not establish exact periods. |
+| Genshin | 16: banners 3, login 2, challenge 3, story 2, other 6 | KQM GINews notice Markdown, 10 parsed and runner-confirmed Sep 23 | 16 reviewed; four rows checked Sep 23 | Game8 unavailable; Fandom robots blocked on runner. Some future Wish/cycle deadlines still lack dated evidence. |
+| HSR | 12: banners 4, login 1, challenge 5, other 2 | KQM HSRNews notice Markdown, 6 parsed and runner-confirmed Sep 23 | 12 reviewed; four rows checked Sep 23 | Game8 unavailable; Version 4.6 Warp/event periods absent from retrieved notice. |
+| WuWa | 17: banners 10, login 1, challenge 2, other 4 | Kuro article Atom mirror, 14 parsed and runner-confirmed Sep 23 from the full 20-entry feed | 11 reviewed; latest batch Sep 21 | Game8 unavailable; image-only 3.7 preview does not establish exact periods. |
 | ZZZ | 15: banners 4, login 3, challenge 1, story 1, other 6 | No usable automatic source; official raw HTML probe yielded JS shell | 15 reviewed; latest batch Sep 21 | Game8 unavailable; Phase II banners and challenge cycles lack direct dated notices here. |
 | Endfield | 11: banners 3, login 1, challenge 1, other 6 | wiki.gg 8 parsed; last confirmed Sep 22 | 3 reviewed, checked Sep 23 | Game8 unavailable; official 5208 robots redirect unresolved, so October rows remain pending. |
 | NTE | 45: banners 12, login 2, challenge 6, maintenance 5, other 20 | Official Steam News 42 parsed and NTEBuild BtR 3, both confirmed Sep 22 | 15 reviewed; latest batch Sep 22 | Game8 unavailable. Official Perfect World and Steam disagree on Circle Bounty by 24 hours. |
@@ -232,10 +248,12 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Verify all three new API sources in the normal Actions refresh, including
-runner logs, stored snapshots, merged counts and reviewed ID stability. Then
-complete remaining M4 checks and M5 phone/offline smoke where a controllable
-device/network is available. Finalize M6 after live refresh evidence.
+Retire the seven permanently inaccessible Game8 fallback pollers and the
+robots-blocked Genshin Fandom poller from the active refresh/feed health, while
+keeping their parsers available for manual diagnostics. Check that genuine
+active-source failures still turn the health report red and that event IDs are
+stable. Then complete remaining M4 checks and M5 phone/offline smoke where a
+controllable device/network is available. Finalize M6 after this checkpoint.
 Endfield 5208 remains manual-reviewed only while the official robots chain is
 unresolved; do not infer its missing calendar dates.
 
