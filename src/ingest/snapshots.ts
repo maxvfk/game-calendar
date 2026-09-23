@@ -9,7 +9,7 @@
  *
  * Three files per source, and the split matters:
  *
- *   <root>/<id>.html|.json|.md   the body, exactly as served
+ *   <root>/<id>.html|.json|.md|.xml   the body, exactly as served
  *   <root>/<id>.meta.json    durable facts: hash, validators, when it changed
  *   <root>/<id>.state.json   volatile run bookkeeping: when we last checked
  *

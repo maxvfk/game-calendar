@@ -1,6 +1,6 @@
 import type { GachaEvent, GameId } from "../../shared/schema.ts";
 
-export type ContentKind = "html" | "json" | "markdown";
+export type ContentKind = "html" | "json" | "markdown" | "xml";
 
 export interface ParseContext {
   /**

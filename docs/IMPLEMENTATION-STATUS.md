@@ -95,11 +95,27 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   remain canonical. Validation on Bun 1.3.14: frozen install, typecheck,
   851 tests, build (126 feed rows, the same pre-existing NTE conflict).
   Normal Actions refresh/deploy awaits verification.
+- M3 WuWa Atom implementation (2026-09-23): the runner's previously probed
+  `articles_latest.xml` already embeds official article HTML in Atom CDATA;
+  no per-article fetch is needed. The full GitHub connector body exactly
+  matched Actions run 35801130385 (95,955 bytes, SHA-256
+  `5e3a718fe86b2610580d38a256dccbe15dc0d9c5d23fc7222947b712576d00b4`).
+  A factual XML fixture and bounded entry/section parser use only dated
+  event/convene periods, preserve the original Kuro article URL, and derive
+  relative update *day* only from that version's maintenance date. Start
+  clocks remain day precision; per-server exact ends preserve the established
+  offsets. The complete 20-entry feed yielded 14 events; six are historical
+  rows absent from reviewed. Merge: 17 WuWa records, zero conflicts, all 11
+  reviewed IDs retained. Image-only 3.7 previews yielded no guessed dates.
+  Validation on Bun 1.3.14: frozen install, typecheck, 855 tests, build
+  (126 feed rows from compact fixtures, one pre-existing NTE conflict).
+  Normal Actions refresh/deploy awaits verification; full XML snapshot would
+  also add the six verified historical rows.
 
 ## Next concrete step
 
-Verify both KQM sources in the normal Actions refresh, then assess the bounded
-WuWa XML discovery + article transport as a separate M3 source. Endfield 5208 remains manual-reviewed only
+Verify all three new API sources in the normal Actions refresh. Then audit
+M4 unattended failure and freshness behavior. Endfield 5208 remains manual-reviewed only
 while the official robots chain is unresolved; do not infer its missing
 calendar dates. Fix confirmed false freshness or day-boundary behavior before M5.
 

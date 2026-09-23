@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Factual schedule excerpts from articles_latest.xml (GitHub blob c10c9e7f4c9a6688f4e69e08bdb984126f627d70). -->
+<!-- Actions transport evidence: docs/research/source-probes-sol6.md. Publisher prose/images omitted. -->
+<feed xmlns="http://www.w3.org/2005/Atom">
+<entry><id>urn:article:5476</id><title>Wuthering Waves Version 3.7 Update Maintenance Notice</title>
+<link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5476" rel="alternate" type="text/html"/>
+<content type="html"><![CDATA[<p>Maintenance Time: 2026-09-30 04:00 - 2026-09-30 11:00 (UTC+8)</p>]]></content></entry>
+<entry><id>urn:article:5357</id><title>Patch Notes for Version 3.6: Lamplight in Mirage, Sword&#39;s Resolve in Heart</title>
+<link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5357" rel="alternate" type="text/html"/>
+<content type="html"><![CDATA[
+<p>Maintenance Time: 2026-08-20 04:00 - 2026-08-20 11:00 (UTC+8)</p>
+<p>[Resonance Sim Realm] Combat Event</p><li>Duration: 2026-08-22 10:00 - 2026-09-29 11:59 (server time)</li>
+<p>[If Dreams Still Reverberate] Featured Co-op Combat Event</p><li>Duration: 2026-09-10 10:00 - 2026-09-29 03:59 (server time)</li>
+<p>[Wuthering Exploration] Featured Exploration Event: Fogveil Pagoda</p><li>Duration: 2026-09-17 04:00 - 2026-09-29 03:59 (server time)</li>
+<p>[Gifts of Drifting Mist] 7-Day Login Event</p><li>Duration: Version 3.6 Update - 2026-09-29 03:59 (server time)</li>
+]]></content></entry>
+<entry><id>urn:article:5431</id><title>[Version 3.6 Featured Resonator/Weapon Convene: Phase Ⅱ]</title>
+<link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5431" rel="alternate" type="text/html"/>
+<content type="html"><![CDATA[
+<p>[Thousand Futures Mirrored in Snow] Featured Resonator Convene</p><h1>Duration</h1><p>2026-09-10 10:00 - 2026-09-29 11:59 (server time)</p>
+<p>[Frostburn] Featured Weapon Convene</p><h1>Duration</h1><p>2026-09-10 10:00 - 2026-09-29 11:59 (server time)</p>
+<p>[Distant May the Starlights Be] Featured Resonator Convene</p><h1>Duration</h1><p>2026-09-10 10:00 - 2026-09-29 11:59 (server time)</p>
+<p>[Starfield Calibrator] Featured Weapon Convene</p><h1>Duration</h1><p>2026-09-10 10:00 - 2026-09-29 11:59 (server time)</p>
+]]></content></entry>
+<entry><id>urn:article:5365</id><title>Event Preview | [Resonance Sim Realm] Combat Event, Coming Soon!</title>
+<link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5365" rel="alternate" type="text/html"/>
+<content type="html"><![CDATA[<h1>Duration</h1><p>2026-08-22 10:00 - 2026-09-29 11:59 (server time)</p>]]></content></entry>
+</feed>

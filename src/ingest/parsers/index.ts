@@ -8,6 +8,7 @@ import { iopWikiParser } from "./iopwiki.ts";
 import { karendarParser } from "./karendar.ts";
 import { kqmGinNewsParser } from "./kqm-ginews.ts";
 import { kqmHsrNewsParser } from "./kqm-hsrnews.ts";
+import { wuwaKuroAtomParser } from "./wuwa-kuro-atom.ts";
 import { nteSteamNewsParser } from "./nte-steamnews.ts";
 import { nteBuildBtrParser } from "./ntebuild-btr.ts";
 import { prydwenCznParser } from "./prydwen-czn.ts";
@@ -33,6 +34,7 @@ export const PARSERS: SourceParser[] = [
   karendarParser,
   kqmGinNewsParser,
   kqmHsrNewsParser,
+  wuwaKuroAtomParser,
   nteSteamNewsParser,
   nteBuildBtrParser,
   prydwenCznParser,

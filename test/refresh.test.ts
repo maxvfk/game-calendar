@@ -215,6 +215,23 @@ describe("a normal cycle", () => {
     expect(await Bun.file(store.bodyPath(source.id, "markdown")).text()).toBe(raw);
   });
 
+  test("only allowlisted WuWa Contents XML receives raw media API access", async () => {
+    const raw = await Bun.file("fixtures/wuwa/kuro-mirror-2026-09-23.xml").text();
+    const source = adapterById("wuwa-kuro-mirror")!;
+    const { opts, calls } = options({
+      adapters: [source], robots: { allows: async () => { throw new Error("API access"); } },
+      responder: () => new Response(raw, { headers: { "Content-Type": "application/atom+xml" } }),
+    });
+    expect((await runRefresh(opts)).outcomes[0]?.result).toBe("fetched");
+    expect(calls[0]?.headers["Accept"]).toBe("application/vnd.github.raw+json");
+    expect((await store.read(source.id))?.meta.eventCount).toBe(8);
+    expect(await Bun.file(store.bodyPath(source.id, "xml")).text()).toBe(raw);
+    const denied = options({ adapters: [adapter({ contentKind: "xml" })],
+      robots: { allows: async () => ({ allowed: false, reason: "Disallow: /" }) } });
+    expect((await runRefresh(denied.opts)).outcomes[0]?.result).toBe("skipped_robots");
+    expect(denied.calls).toHaveLength(0);
+  });
+
   test("documented Steam API still enforces six hours and stores verified JSON", async () => {
     const raw = await Bun.file("fixtures/nte/steamnews-official-2026-09-22.json").text();
     const { opts, calls } = options({

@@ -4,7 +4,7 @@ import { mergeEvents, type MergeResult } from "../merge.ts";
 import { parserById } from "../parsers/index.ts";
 import { sanitizeEvents } from "../sanitize.ts";
 import { NTE_STEAM_NEWS_URL } from "../steam-api.ts";
-import { GINews_URL, HSRNews_URL } from "../github-contents-api.ts";
+import { GINews_URL, HSRNews_URL, WUWA_XML_URL } from "../github-contents-api.ts";
 import { SIX_HOURS_MS, type Adapter, type ContentKind, type ParseContext } from "./types.ts";
 
 /**
@@ -32,6 +32,10 @@ const SOURCES: SourceSpec[] = [
   {
     id: "hsr-kqm-hsrnews", game: "hsr", url: HSRNews_URL,
     parserId: "kqm-hsrnews", contentKind: "markdown", priority: 20,
+  },
+  {
+    id: "wuwa-kuro-mirror", game: "wuwa", url: WUWA_XML_URL,
+    parserId: "wuwa-kuro-atom", contentKind: "xml", priority: 20,
   },
   {
     id: "czn-prydwen-banners", game: "czn",
