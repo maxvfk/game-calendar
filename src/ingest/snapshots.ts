@@ -390,6 +390,8 @@ export class SnapshotStore {
     for (const path of [
       this.bodyPath(sourceId),
       this.bodyPath(sourceId, "json"),
+      this.bodyPath(sourceId, "markdown"),
+      this.bodyPath(sourceId, "xml"),
       this.metaPath(sourceId),
       this.statePath(sourceId),
     ]) {

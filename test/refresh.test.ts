@@ -285,6 +285,27 @@ describe("a normal cycle", () => {
     expect(snapshot?.state.lastConfirmedAt).toBe(NOW.toISOString());
   });
 
+  test("orphaned metadata never sends validators or treats 304 as confirmation", async () => {
+    await seed("<html><event></event></html>", "2026-08-01T00:00:00.000Z", 1);
+    await rm(store.bodyPath("genshin-game8-events"));
+    const { opts, calls } = options({ responder: () => new Response(null, { status: 304 }) });
+    const summary = await runRefresh(opts);
+    expect(calls[0]?.headers["If-None-Match"]).toBeUndefined();
+    expect(calls[0]?.headers["If-Modified-Since"]).toBeUndefined();
+    expect(summary.outcomes[0]?.result).toBe("failed");
+    expect(summary.outcomes[0]?.note).toContain("without a cached body");
+    expect((await store.readState("genshin-game8-events")).lastConfirmedAt).toBeNull();
+    expect((await store.readMeta("genshin-game8-events"))?.lastConfirmedAt).toBe("2026-08-01T00:00:00.000Z");
+  });
+
+  test("orphaned metadata accepts a full 200 body and repairs the snapshot", async () => {
+    await seed("<html><event></event></html>", "2026-08-01T00:00:00.000Z", 1);
+    await rm(store.bodyPath("genshin-game8-events"));
+    const { opts } = options({});
+    expect((await runRefresh(opts)).outcomes[0]?.result).toBe("fetched");
+    expect((await store.read("genshin-game8-events"))?.html).toBe("<html><event></event></html>");
+  });
+
   test("a 200 with identical bytes is not a change either", async () => {
     await seed("<html><event></event></html>", "2026-08-01T00:00:00.000Z", 1);
     const { opts, rebuilds } = options({});

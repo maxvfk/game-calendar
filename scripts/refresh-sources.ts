@@ -326,7 +326,12 @@ async function refreshOne(
   const nowIso = now.toISOString();
   const meta = await store.readMeta(adapter.id);
   const state = await store.readState(adapter.id);
-  const headers = store.conditionalHeaders(meta);
+  // Metadata alone is not a usable last-known-good document. A crash or a
+  // partial restore may leave it without the body; sending its ETag can yield
+  // a 304 that falsely confirms a snapshot we cannot build from.
+  const hasBody = meta !== null &&
+    await Bun.file(store.bodyPath(adapter.id, meta.contentKind)).exists();
+  const headers = store.conditionalHeaders(hasBody ? meta : null);
 
   const due = store.isDue(state, now.getTime(), adapter.minIntervalMs);
   if (!due && !options.force) {
@@ -416,6 +421,14 @@ async function refreshOne(
   }
 
   if (response.status === 304) {
+    if (!hasBody) {
+      await store.recordCheck(adapter.id, { at: nowIso, status: 304, ok: false });
+      return {
+        sourceId: adapter.id, result: "failed",
+        note: "HTTP 304 without a cached body", status: 304,
+        eventCount: null,
+      };
+    }
     await store.recordCheck(adapter.id, { at: nowIso, status: 304, ok: true });
     return {
       sourceId: adapter.id,

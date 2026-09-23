@@ -59,6 +59,17 @@ describe("SnapshotStore", () => {
     });
     expect(await Bun.file(join(root, "genshin-kqm-ginews.md")).text()).toBe(body);
     expect((await store.read("genshin-kqm-ginews"))?.meta.contentKind).toBe("markdown");
+    await store.forget("genshin-kqm-ginews");
+    expect(await Bun.file(join(root, "genshin-kqm-ginews.md")).exists()).toBe(false);
+  });
+
+  test("forget removes Atom XML body", async () => {
+    await store.save("wuwa-kuro-mirror", {
+      url: "https://example.test/feed.xml", contentKind: "xml", body: "<feed></feed>",
+      etag: null, lastModified: null, at: T0, eventCount: 1,
+    });
+    await store.forget("wuwa-kuro-mirror");
+    expect(await Bun.file(join(root, "wuwa-kuro-mirror.xml")).exists()).toBe(false);
   });
   test("JSON bodies round-trip verbatim with their own extension and metadata", async () => {
     const body = '{"appnews":{"appid":4508340,"newsitems":[]}}\n';

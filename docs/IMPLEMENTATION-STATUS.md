@@ -111,11 +111,17 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   (126 feed rows from compact fixtures, one pre-existing NTE conflict).
   Normal Actions refresh/deploy awaits verification; full XML snapshot would
   also add the six verified historical rows.
+- M4 cache integrity checkpoint: refresh now sends validators only when a
+  matching body exists. A 304 without that body fails visibly and does not
+  advance `lastConfirmedAt`; a 200 repairs the cache. `SnapshotStore.forget`
+  removes Markdown and XML bodies as well. Focused tests reproduce both loss
+  and recovery paths. Bun 1.3.14 frozen install, typecheck, 858 tests and build
+  passed. Abrupt source disappearance remains the next M4 check.
 
 ## Next concrete step
 
-Verify all three new API sources in the normal Actions refresh. Then audit
-M4 unattended failure and freshness behavior. Endfield 5208 remains manual-reviewed only
+Verify all three new API sources in the normal Actions refresh. Then address
+the confirmed mass-disappearance publication path in M4. Endfield 5208 remains manual-reviewed only
 while the official robots chain is unresolved; do not infer its missing
 calendar dates. Fix confirmed false freshness or day-boundary behavior before M5.
 
