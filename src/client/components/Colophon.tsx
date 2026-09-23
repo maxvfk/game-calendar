@@ -192,7 +192,7 @@ export function Colophon({
    * to them).
    *
    * `shownGames` is narrowed alongside it because the summarising branch below
-   * turns on "every game is behind" — measured against the same set the notice
+   * turns on "every game has a lagging source" — measured against the same set the notice
    * is allowed to name, or it would never fire for a reader with most of the
    * calendar switched off.
    */
@@ -253,26 +253,23 @@ export function Colophon({
             // reader can act on: knowing *which* lane is behind tells them which
             // source page to go and check, which is the whole remedy on offer.
             //
-            // Except when the answer is "all of them", which is what a refresh that
-            // stopped running looks like. Ten names each repeating the same age is
+            // Except when the answer is "all of them". Ten names repeating the same age is
             // less readable than the count this replaced, and the headline above
             // already gives the date — so that case gets a sentence, not a list.
             //
             // Both branches say whose games they are counting, in the words
-            // `NextUp` already uses for the same set. Scoping this silently would
-            // be the worse half of the change: "nothing has refreshed" is a claim
-            // about the whole calendar, and a reader who has fourteen of eighteen
+            // `NextUp` already uses for the same set. A reader who has fourteen of eighteen
             // lanes off would read a sentence about four as one about all of them
             // — a footer whose one job is being trusted about age must not narrow
             // what it measured without saying so.
             <p className="mt-2 text-soon">
               {shownStale.length === shownGames.length ? (
-                `None of the games you have switched on have refreshed in over two days, so any end date here may have moved.`
+                `Every game you have switched on has at least one source without new event data in over two days, so some end dates may have moved.`
               ) : (
                 <>
                   Of the games you have switched on,{" "}
-                  {shownStale.length === 1 ? "this one has" : "these have"} not
-                  refreshed in over two days, so some end dates may have moved:{" "}
+                  {shownStale.length === 1 ? "this one has" : "these have"} at least one
+                  source without new event data in over two days, so some end dates may have moved:{" "}
                   {shownStale.slice(0, STALE_NAMES).map((s, i, shown) => (
                     <span key={s.game}>
                       {i > 0 && (i === shown.length - 1 && shownStale.length <= STALE_NAMES ? " and " : ", ")}

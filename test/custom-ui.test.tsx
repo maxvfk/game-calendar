@@ -270,7 +270,7 @@ describe("Colophon freshness notice (PRD F7)", () => {
     expect(html).toMatch(
       new RegExp(`<time [^>]*datetime="${fresh.lastSuccessAt}"`, "i"),
     );
-    expect(html).not.toContain("not refreshed in over two days");
+    expect(html).not.toContain("without new event data in over two days");
   });
 
   test("names the games that are behind, with how far", () => {
@@ -286,7 +286,7 @@ describe("Colophon freshness notice (PRD F7)", () => {
     // A count cannot be acted on; a name tells the reader which source page to
     // go and check.
     expect(html).toContain("Infinity Nikki");
-    expect(html).toContain("not refreshed in over two days");
+    expect(html).toContain("at least one source without new event data in over two days");
     expect(html).toContain("3d 8h ago");
     // The headline still reports the freshest confirmation.
     expect(html).toContain("3h 0m ago");
@@ -355,9 +355,8 @@ describe("Colophon freshness notice (PRD F7)", () => {
     expect(html).not.toContain("pull overdue");
   });
 
-  test("summarises instead of listing when every game is behind", () => {
-    // What a refresh that stopped running looks like. Ten names each repeating
-    // the same age is less readable than the count this replaced.
+  test("summarises instead of listing when every game has an old source", () => {
+    // Ten names each repeating the same age is less readable than the summary.
     const behind = (["genshin", "hsr", "zzz"] as const).map((game, i) => ({
       ...fresh,
       sourceId: `${game}-src`,
@@ -365,8 +364,26 @@ describe("Colophon freshness notice (PRD F7)", () => {
       lastSuccessAt: new Date(NOW - (80 + i) * HOUR).toISOString(),
     }));
     const html = renderToStaticMarkup(<Colophon sources={behind} now={NOW} />);
-    expect(html).toContain("None of the games you have switched on have refreshed in over two days");
+    expect(html).toContain("Every game you have switched on has at least one source without new event data in over two days");
     expect(html).not.toContain("Genshin Impact (");
+  });
+
+  test("does not say nothing refreshed when each game also has a fresh source", () => {
+    const html = renderToStaticMarkup(
+      <Colophon
+        sources={[
+          fresh,
+          { ...fresh, sourceId: "genshin-older", lastSuccessAt: new Date(NOW - 80 * HOUR).toISOString() },
+          { ...fresh, sourceId: "hsr-current", game: "hsr" },
+          { ...fresh, sourceId: "hsr-older", game: "hsr", lastSuccessAt: new Date(NOW - 90 * HOUR).toISOString() },
+        ]}
+        now={NOW}
+      />,
+    );
+    expect(html).toContain("Every game you have switched on has at least one source");
+    expect(html).toContain("Event data last refreshed");
+    expect(html).toContain("3h 0m ago");
+    expect(html).not.toContain("None of the games you have switched on have refreshed");
   });
 
   test("caps the list and counts the remainder", () => {
@@ -398,7 +415,7 @@ describe("Colophon freshness notice (PRD F7)", () => {
       <Colophon sources={[{ ...fresh, lastSuccessAt: null }]} now={NOW} />,
     );
     expect(html).toContain("no source has been fetched yet");
-    expect(html).toContain("None of the games you have switched on have refreshed in over two days");
+    expect(html).toContain("Every game you have switched on has at least one source without new event data in over two days");
   });
 
   test("marks a never-fetched source as never, beside games that have", () => {
@@ -426,7 +443,7 @@ describe("Colophon freshness notice (PRD F7)", () => {
         hiddenGames={["nikki"]}
       />,
     );
-    expect(html).not.toContain("not refreshed in over two days");
+    expect(html).not.toContain("without new event data in over two days");
     expect(html).not.toContain("Infinity Nikki (");
     // Credit is owed to every source we read regardless of what is on screen,
     // so the game keeps its line in the thanks.
@@ -447,7 +464,7 @@ describe("Colophon freshness notice (PRD F7)", () => {
         hiddenGames={["hsr"]}
       />,
     );
-    expect(html).toContain("this one has");
+    expect(html).toContain("this one has at least one source");
     expect(html).toContain("Infinity Nikki (");
     expect(html).not.toContain("Honkai: Star Rail (");
     // And it says whose games it counted. Narrowing what the footer measures
@@ -457,8 +474,8 @@ describe("Colophon freshness notice (PRD F7)", () => {
   });
 
   test("summarises against the games the reader can see, not the feed", () => {
-    // Both of this reader's two lanes are behind, so "nothing has refreshed" is
-    // the true sentence for them — even though a third, hidden game is current.
+    // Both of this reader's two lanes have an old source, even though a third,
+    // hidden game is current.
     // Measuring against the whole feed instead would list them one by one and
     // never reach this branch for anyone with most of the calendar switched off.
     const html = renderToStaticMarkup(
@@ -472,7 +489,7 @@ describe("Colophon freshness notice (PRD F7)", () => {
         hiddenGames={["genshin"]}
       />,
     );
-    expect(html).toContain("None of the games you have switched on have refreshed in over two days");
+    expect(html).toContain("Every game you have switched on has at least one source without new event data in over two days");
     expect(html).not.toContain("Infinity Nikki (");
   });
 
@@ -486,10 +503,9 @@ describe("Colophon freshness notice (PRD F7)", () => {
         hiddenGames={["nikki"]}
       />,
     );
-    // Not the summarising branch either: zero of zero shown games is not
-    // "nothing has refreshed", it is nothing to say.
-    expect(html).not.toContain("not refreshed in over two days");
-    expect(html).not.toContain("None of the games you have switched on have refreshed in over two days");
+    // Not the summarising branch either: zero shown games means nothing to say.
+    expect(html).not.toContain("without new event data in over two days");
+    expect(html).not.toContain("Every game you have switched on has at least one source");
   });
 
   test("the author's links sit together, above the ideas credit", () => {

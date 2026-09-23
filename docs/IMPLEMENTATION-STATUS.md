@@ -171,6 +171,14 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   from Next Up and persisted after reload; the test mark was then cleared.
   The day-only Fons Rush label and stale-source warning were visible. A phone
   viewport, service worker upgrade and offline reload remain unverified.
+- M4 freshness wording checkpoint: a game becomes stale if *any* of its
+  sources has no recent event data, even when another source refreshed recently.
+  The footer now says that accurately for both all-games and named-game
+  warnings. A focused render regression covers fresh and old siblings for
+  every selected game. Bun 1.3.14 frozen install, typecheck, 872 tests and build
+  passed (126 feed rows, the same Circle Bounty conflict). The first normal
+  Actions refresh of Genshin KQM, HSR KQM and WuWa Atom is still pending; the
+  latest scheduled run 35779097930 predates those adapters.
 
 ## Next concrete step
 
