@@ -105,7 +105,8 @@ export function parseWikiGgEventsPage(
       id: eventId(ctx.game, title, startsAt),
       game: ctx.game,
       title,
-      type: inferType(`${title} ${typeLabel}`),
+      type: ctx.game === "endfield" && typeLabel === "Echoes of War Event"
+        ? "challenge" : inferType(`${title} ${typeLabel}`),
       summary: typeLabel.length > 0 ? typeLabel : null,
       startsAt,
       startPrecision: precision,

@@ -3,6 +3,7 @@ import { mergeEvents } from "../src/ingest/merge.ts";
 import { parseWikiGgEventsPage } from "../src/ingest/parsers/wikigg.ts";
 import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 import { effectiveEnd } from "../src/shared/time.ts";
+import { categoryFor } from "../src/client/state/eventCategories.ts";
 
 test("official Endfield banners preserve regional ends and unknown boundaries", async () => {
   const { events } = materializeReviewedBatch(await Bun.file("data/reviewed/endfield.json").json());
@@ -35,4 +36,11 @@ test("reviewed Endfield banners preserve current wiki IDs and Snow's end when li
     expect(effectiveEnd(snow, "asia")).toBe("2026-09-30T03:59:00.000Z");
     expect(effectiveEnd(snow, "america")).toBe("2026-09-30T16:59:00.000Z");
   }
+  const illusion = wiki.find(e => e.title === "Season of Illusion")!;
+  expect(illusion.id).toBe("endfield:season-of-illusion:2026-09-24");
+  expect(illusion.type).toBe("challenge");
+  expect(categoryFor(illusion.type)).toBe("challenge");
+  expect(effectiveEnd(illusion, "asia")).toBe("2026-10-15T03:59:00.000Z");
+  expect(effectiveEnd(illusion, "europe")).toBe("2026-10-14T16:59:00.000Z");
+  expect(effectiveEnd(illusion, "america")).toBe("2026-10-14T16:59:00.000Z");
 });
