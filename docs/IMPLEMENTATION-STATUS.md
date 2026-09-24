@@ -408,14 +408,21 @@ source's actual `lastConfirmedAt` and `parsedCount`.
   handoff's asserted arithmetic is false, so a future generator from those
   anchors would publish wrong rotations. Future ZZZ cycles and Periodic
   Conquest stay source-gated until a current re-anchor/rule change is verified.
-- Implementation commits: `1b8fd02`, `1e5e697`, `da26d66` (local SHAs;
-  remote publication is checked separately). Bun 1.3.14 frozen install,
+- Published implementation commits: `b05a3ce`, `9a2b3d9`, `bf4935e`;
+  status `746b729` and Timeline regression `e5041d4`. The original local
+  commits have the same file trees and are preserved on
+  `work/recurring-endgame-local`. Bun 1.3.14 frozen install,
   typecheck, 902 tests and production build pass. A focused Timeline regression
   verifies four current exact deadline positions within daily cells. Local feed has 158 events
   across seven games, one unchanged NTE Circle Bounty date conflict, no new
   conflicts. Exact current ZZZ, CZN and Endfield deadlines were inspected in
-  the generated feed. CI/Pages and phone behavior on this change are pending
-  publication and smoke verification.
+  the generated feed. [CI/Pages run 36018033513](https://github.com/maxvfk/game-calendar/actions/runs/36018033513)
+  passed all three jobs on September 24. The published feed generated at
+  15:09:32 UTC has 158 events, 14 source-health entries and the same one
+  Circle Bounty conflict. Its ID set and the compared game, title, type,
+  start/end, precision, regional ends, source URL and provenance fields exactly
+  match the local build; five current ZZZ/CZN/Endfield deadline rows were
+  checked individually. Phone smoke verification remains pending.
 
 ## Maintenance path
 
@@ -441,8 +448,7 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Publish the recurring-endgame commits, verify CI/Pages and compare the live
-endgame deadlines with the locally inspected feed. Then perform a focused phone
+Perform a focused phone
 smoke check of the challenge filter and partial-day deadlines. Seek a current
 official or in-game ZZZ reset anchor before projecting later Shiyu/Deadly
 cycles; source the HSR 4.6 Memory of Chaos end before publishing it. Collect
