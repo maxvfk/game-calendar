@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
-import { RESET_RULES, cznMaintenanceBoundary, fixedResetCycles, greatRiftWeeklyRewards, missingLightwardPhase, recurringEndgame } from "../src/ingest/recurring-endgame.ts";
+import { RESET_RULES, cznMaintenanceBoundary, fixedResetCycles, greatRiftWeeklyRewards, recurringEndgame } from "../src/ingest/recurring-endgame.ts";
+import { missingLightwardPhase } from "../src/ingest/lightward-monitor.ts";
 import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 import { effectiveEnd } from "../src/shared/time.ts";
 import { parseWikiGgEchoesSeason } from "../src/ingest/parsers/wikigg-echoes.ts";

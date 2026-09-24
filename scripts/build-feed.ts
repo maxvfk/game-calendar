@@ -18,7 +18,8 @@ import {
 } from "../src/ingest/reviewed.ts";
 import { SnapshotStore, freshnessAt } from "../src/ingest/snapshots.ts";
 import { fixtureCaptureAt } from "../src/ingest/fixtures.ts";
-import { greatRiftWeeklyRewards, missingLightwardPhase, recurringEndgame } from "../src/ingest/recurring-endgame.ts";
+import { greatRiftWeeklyRewards, recurringEndgame } from "../src/ingest/recurring-endgame.ts";
+import { missingLightwardPhase } from "../src/ingest/lightward-monitor.ts";
 import { ECHOES_EVENT_SOURCE_ID, ECHOES_SOURCE_ID, echoesSeasonUrl, selectEchoesSeason } from "../src/ingest/echoes-season.ts";
 import { EventFeed, SCHEMA_VERSION, type SourceHealth } from "../src/shared/feed.ts";
 import { Region, type GachaEvent, type GameId } from "../src/shared/schema.ts";

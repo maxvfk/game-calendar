@@ -119,13 +119,3 @@ export function greatRiftWeeklyRewards(phase: GachaEvent, now: string): GachaEve
   }
   return out;
 }
-
-/** A review reminder only. Treasures Lightward periods are always sourced separately. */
-export function missingLightwardPhase(now: string, sourced: readonly GachaEvent[]): string | null {
-  const next = Date.parse("2026-09-28T00:00:00.000Z");
-  const at = Date.parse(now);
-  if (at < next - 7 * DAY || at > next + 7 * DAY) return null;
-  return sourced.some(e => e.game === "hsr" && e.title.startsWith("Memory of Chaos:") &&
-    e.startsAt.slice(0, 10) >= "2026-09-28") ? null :
-    "HSR Memory of Chaos expected near Sep 28; await sourced Version 4.6 phase dates";
-}
