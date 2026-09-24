@@ -410,7 +410,8 @@ source's actual `lastConfirmedAt` and `parsedCount`.
   Conquest stay source-gated until a current re-anchor/rule change is verified.
 - Implementation commits: `1b8fd02`, `1e5e697`, `da26d66` (local SHAs;
   remote publication is checked separately). Bun 1.3.14 frozen install,
-  typecheck, 901 tests and production build pass. Local feed has 158 events
+  typecheck, 902 tests and production build pass. A focused Timeline regression
+  verifies four current exact deadline positions within daily cells. Local feed has 158 events
   across seven games, one unchanged NTE Circle Bounty date conflict, no new
   conflicts. Exact current ZZZ, CZN and Endfield deadlines were inspected in
   the generated feed. CI/Pages and phone behavior on this change are pending

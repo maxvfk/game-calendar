@@ -9,6 +9,8 @@ import {
 } from "../src/client/components/Timeline.tsx";
 import { clockFor } from "../src/shared/time.ts";
 import { GachaEvent } from "../src/shared/schema.ts";
+import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
+import { greatRiftWeeklyRewards } from "../src/ingest/recurring-endgame.ts";
 
 const DAY_WIDTH = 72;
 
@@ -65,4 +67,29 @@ test("a date-only source occupies the printed dates without claiming a clock tim
 test("today opens near the centre and does not scroll before the board", () => {
   expect(scrollToToday(900, 360)).toBe(720);
   expect(scrollToToday(60, 360)).toBe(0);
+});
+
+test("current endgame exact deadlines land inside their daily cells", async () => {
+  const rows = (await Promise.all(["zzz", "czn", "endfield"].map(async game =>
+    materializeReviewedBatch(await Bun.file(`data/reviewed/${game}.json`).json()).events))).flat();
+  const rift = rows.find(e => e.id === "czn:the-great-rift-season-4-second-half:2026-09-09")!;
+  rows.push(...greatRiftWeeklyRewards(rift, "2026-09-24T12:00:00.000Z"));
+  for (const [id, region, boundary] of [
+    ["zzz:deadly-assault-sep-11:2026-09-11", "europe", "2026-09-25T02:59:00.000Z"],
+    ["czn:great-rift-weekly-cumulative-rewards-2026-09-27:2026-09-27", "europe", "2026-09-27T18:00:00.000Z"],
+    ["czn:the-great-rift-season-4-second-half:2026-09-09", "europe", "2026-09-30T00:00:00.000Z"],
+    ["endfield:echoes-of-war-season-of-illusion-cycle-i:2026-09-24", "europe", "2026-10-01T08:59:00.000Z"],
+  ] as const) {
+    const event = rows.find(e => e.id === id)!;
+    expect(event).toBeDefined();
+    expect(event.endPrecision).toBe("exact");
+    const clock = clockFor(event, region, Date.parse("2026-09-24T12:00:00.000Z"));
+    expect(timelineEndMs({ event, clock })).toBe(Date.parse(boundary));
+    const day = new Date(Date.parse(boundary));
+    day.setHours(0, 0, 0, 0);
+    const left = timelineX(day.getTime(), day.getTime(), DAY_WIDTH);
+    const positioned = timelineX(timelineEndMs({ event, clock })!, day.getTime(), DAY_WIDTH);
+    expect(positioned).toBeGreaterThanOrEqual(left);
+    expect(positioned).toBeLessThanOrEqual(DAY_WIDTH);
+  }
 });
