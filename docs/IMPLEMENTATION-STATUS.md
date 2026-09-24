@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-09-23. Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-09-24. Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Completed checkpoints
@@ -376,6 +376,46 @@ source's actual `lastConfirmedAt` and `parsedCount`.
   passed Typecheck/test/feed, Build and Deploy. The public feed generated at
   22:42:07 UTC has 136 events and both ZZZ challenge IDs at day precision.
 
+## Pre-Astra recurring endgame correction (2026-09-24)
+
+- Endfield's existing wiki.gg Echoes of War seasons now enter the Endgame
+  filter. Reviewed rows add Season of Illusion Cycle I and II deadlines and
+  Monumental Etching's limited reward window. Cycle III's final deadline is
+  already carried by the existing season row; the permanent stage is not a
+  limited event. Existing season IDs and completion keys remain unchanged.
+- NTEBuild BtR rows now resolve the documented July 16 / 14-day, 05:00 UTC+8
+  cycle to exact boundaries while retaining their day-based published IDs;
+  reviewed Perfect World timing wins when available. The cycle is gated by
+  its documented anchor rather than a generic duration fallback.
+- Genshin's monthly Abyss/Theater and WuWa's 28-day Tower/Respawning Waters
+  use bounded, effective-dated reset rules with regional 03:59 ends.
+  Reviewed October Theater retains its published ID. Sourced exact conflicts
+  freeze future projections for the affected mode pending rule review.
+  Genshin Stygian Disturbance Outbreak and WuWa Endstate Matrix remain
+  explicitly sourced seasonal deadlines, outside the recurrence generator.
+- CZN Great Rift Second Half and Basin Twilight preserve their IDs and now
+  close at the standing Sep 30 00:00 UTC maintenance boundary. Great Rift's
+  weekly reward deadlines occur only inside its sourced phase (next Sep 27
+  18:00 UTC). Full-Scale Offensive Season 4 has its verified Aug 19 start and
+  an unknown end. No next half/season is projected.
+- HSR Anomaly Arbitration is visible with an unknown end. The expected Sep 28
+  Memory of Chaos rotation raises a build review reminder, not a published
+  +42-day deadline; Currency Wars also awaits an explicit version end.
+- ZZZ current Shiyu and Deadly Assault rows retain their published IDs and
+  estimated provenance, with exact regional 03:59 ends from the 04:00 server
+  reset. **Research correction:** the cited January 2025 +14-day anchors land
+  seven days away from the independently reported September 2026 cycles. The
+  handoff's asserted arithmetic is false, so a future generator from those
+  anchors would publish wrong rotations. Future ZZZ cycles and Periodic
+  Conquest stay source-gated until a current re-anchor/rule change is verified.
+- Implementation commits: `1b8fd02`, `1e5e697`, `da26d66` (local SHAs;
+  remote publication is checked separately). Bun 1.3.14 frozen install,
+  typecheck, 901 tests and production build pass. Local feed has 158 events
+  across seven games, one unchanged NTE Circle Bounty date conflict, no new
+  conflicts. Exact current ZZZ, CZN and Endfield deadlines were inspected in
+  the generated feed. CI/Pages and phone behavior on this change are pending
+  publication and smoke verification.
+
 ## Maintenance path
 
 1. For a disputed date, open the event's `sourceUrl` and
@@ -400,16 +440,13 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Continue normal phone and desktop use and collect observations in the backlog;
-confirm the two ZZZ endgame rows under the challenge filter during that use.
-Seek official or in-game absolute boundaries before promoting their provenance
-or precision, and review the next rotations individually rather than generating
-a cadence. The reader
-will use the deployed app
-normally and collect observations in
-`docs/IMPROVEMENT-BACKLOG.md`. Refine them in ChatGPT, implement approved small
-pre-Astra polish in separate commits, smoke-check and freeze the baseline, then
-hand it to Astra for a separate audit. Address confirmed audit findings before
-deferred improvements. Create the final `docs/MAINTENANCE.md` only after the
-audit and fixes. Endfield 5208 remains manual-reviewed while the official
-robots chain is unresolved; the Circle Bounty disagreement remains visible.
+Publish the recurring-endgame commits, verify CI/Pages and compare the live
+endgame deadlines with the locally inspected feed. Then perform a focused phone
+smoke check of the challenge filter and partial-day deadlines. Seek a current
+official or in-game ZZZ reset anchor before projecting later Shiyu/Deadly
+cycles; source the HSR 4.6 Memory of Chaos end before publishing it. Collect
+normal-use observations in `docs/IMPROVEMENT-BACKLOG.md`, implement approved
+pre-Astra polish in separate commits, smoke-check and freeze the baseline for
+the independent Astra audit. Create final `docs/MAINTENANCE.md` after audit
+fixes. The official Endfield robots chain and NTE Circle Bounty dispute remain
+separate maintenance gaps.
