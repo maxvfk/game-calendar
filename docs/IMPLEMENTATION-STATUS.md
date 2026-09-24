@@ -424,6 +424,46 @@ source's actual `lastConfirmedAt` and `parsedCount`.
   match the local build; five current ZZZ/CZN/Endfield deadline rows were
   checked individually. Phone smoke verification remains pending.
 
+## Focused pre-Astra endgame cleanup (2026-09-24)
+
+- Endfield: the existing wiki.gg Event source still discovers the active Echoes
+  season. A second adapter reads that season's own Cycle table and publishes
+  Cycle I/II deadlines only when the table and the sourced season window agree.
+  The first real Season of Illusion response is stored as
+  `snapshots/endfield-wikigg-echoes.html`; local refresh confirmed 2/2 events,
+  zero warnings. The parser rejects missing, malformed, duplicated and
+  out-of-window cycle data. A stale or unreadable season page causes a build
+  review warning and no fabricated cycle rows. Cycle III remains covered by
+  the season row. The two reviewed Cycle I/II workaround rows **were removed**
+  after automatic output matched both published IDs and all regional ends.
+  Starts use day precision because the page gives different regional start
+  instants and the schema has no regional-start field. The season page's Cycle
+  III end for the west differs from the Event page's west season end; the
+  authoritative Event season row supplies that final boundary.
+- HSR: the hardcoded Sep 28 check became a non-publishing monitor over sourced
+  AS → PF → MoC phase starts. It warns from seven days before the normal
+  14-day expected next start until the next matching sourced phase appears.
+  Optional effective phase-specific exceptions can change the expectation or
+  suppress it without altering published events. The current warning is for
+  MoC around Sep 28; no new HSR row or +42-day deadline was produced.
+- ZZZ: `docs/research/zzz-recurring-endgame.md` now states the arithmetic
+  contradiction: January 2025 anchors are seven days out of phase with the
+  sourced September 2026 Shiyu/Deadly rows. Both remain source-gated; no ZZZ
+  generator was added.
+- Published commits: Endfield `2af2508`, HSR `811e5cc`, ZZZ documentation
+  `5eef752`. Local Bun 1.3.14 frozen install, typecheck, 910 tests and build
+  passed. The feed retained all 158 prior IDs, 13 HSR rows and the one known
+  NTE Circle Bounty conflict; it has 15 source-health entries including the
+  new Endfield season page. [CI/Pages run 36023764496](https://github.com/maxvfk/game-calendar/actions/runs/36023764496)
+  passed all three jobs. The live feed generated at 15:56:20 UTC matched the
+  local ID set and compared semantic fields exactly, including the two
+  automatically sourced Echoes rows.
+- Remaining operational check: CI built from the checked-in real season
+  snapshot; the first GitHub Actions **Refresh sources** request for this new
+  adapter has not yet been observed. Confirm its robots/fetch result in the
+  next scheduled or targeted run. A new season whose page is absent or changed
+  will raise a review warning rather than receive extrapolated cycles.
+
 ## Maintenance path
 
 1. For a disputed date, open the event's `sourceUrl` and
@@ -448,8 +488,9 @@ source's actual `lastConfirmedAt` and `parsedCount`.
 
 ## Next concrete step
 
-Perform a focused phone
-smoke check of the challenge filter and partial-day deadlines. Seek a current
+Confirm `endfield-wikigg-echoes` from a GitHub Actions refresh run, then perform
+a focused phone smoke check of the challenge filter and partial-day deadlines.
+Seek a current
 official or in-game ZZZ reset anchor before projecting later Shiyu/Deadly
 cycles; source the HSR 4.6 Memory of Chaos end before publishing it. Collect
 normal-use observations in `docs/IMPROVEMENT-BACKLOG.md`, implement approved
