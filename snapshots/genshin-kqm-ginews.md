@@ -715,6 +715,28 @@ To ensure that all Travelers have the best-possible Genshin Impact experience, o
 
 Currently, an English voice-over line in the cutscene for the "One Move Left to Make" in the Archon Quest "White Night, Like a Dream Upon Waking" contains errors that do not match the text, including an incorrect pronoun. This issue will be fixed in a future update.
 
+〓<t class="t_gl" contenteditable="false">2026/09/24 17:45</t> Update Details〓
+
+Optimizes the sorting of certain events in the "Events Overview" interface.
+
+〓<t class="t_gl" contenteditable="false">2026/09/24 11:45</t> Update Details〓
+
+- Fixes an issue whereby, under certain circumstances, Travelers were unable to indwell the Koholasaurus within the Domain in "Black Feathers Scattered at Parting" of the Archon Quest "A Rekviem for the Underworld," preventing quest progression.
+
+- Optimizes the hint text for the "walkie-talkie" gameplay during the objective "Sneak into the vault" in "One Move Left to Make" of the Archon Quest "White Night, Like a Dream Upon Waking," making the related guidance clearer.
+
+The hint has been adjusted to: "Aim at an enemy within the blue boundary, then use the walkie-talkie."
+
+- Fixes an issue whereby, under certain circumstances, some red notification dots on the "Events Overview" screen could not be cleared.
+
+- Fixes an issue whereby there is a localization error in English, Turkish, Italian, and German for the description of Vodyanitsa's Elemental Skill "Rechitativ: Sonorous Dawn." 
+
+Before: "... the party's currently active character gains increased resistance to interruption ..."
+
+After: "... your active character gains increased resistance to interruption ..."
+
+Travelers affected by the above issues can log out via the Paimon Menu by selecting "Exit to Login Interface" and close the game, then log in again to resolve the issues.
+
 〓Version Update Bug Fixes〓
 
 Fixes an issue whereby after the Ice Coffin of the opponents "Glaciomancer" and "Glacial Warden" was affected by Stellar Glimmer reactions, the efficiency of using Pyro and Geo attacks to break said Ice Coffin would be abnormal.
