@@ -198,18 +198,43 @@
       "confidence": 1
     },
     {
+      "reviewedAt": "2026-09-24T14:47:06.000Z",
+      "title": "Stygian Onslaught — Disturbance Outbreak (Version 7.1)",
+      "type": "challenge",
+      "summary": "The first ten days of the sourced Version 7.1 Stygian phase. Limited reward farming closes at the Oct 10 server reset while the main challenge continues.",
+      "startsAt": "2026-09-30T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-09T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-09T19:59:00.000Z",
+        "europe": "2026-10-10T02:59:00.000Z",
+        "america": "2026-10-10T08:59:00.000Z"
+      },
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
       "title": "Imaginarium Theater — October 2026 Season",
+      "reviewedAt": "2026-09-24T14:47:06.000Z",
+      "firstSeenAt": "2026-09-21T19:31:13.000Z",
       "type": "challenge",
       "summary": "New season featuring Hydro, Cryo, and Anemo as the event-exclusive elemental types.",
       "startsAt": "2026-10-01T00:00:00.000Z",
       "startPrecision": "day",
-      "endsAt": null,
-      "endPrecision": "unknown",
-      "regionScoped": false,
-      "regionEnds": null,
+      "endsAt": "2026-10-31T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-31T19:59:00.000Z",
+        "europe": "2026-11-01T02:59:00.000Z",
+        "america": "2026-11-01T08:59:00.000Z"
+      },
       "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166200",
-      "provenanceStatus": "official",
-      "confidence": 1
+      "provenanceStatus": "estimated",
+      "confidence": 0.9
     },
     {
       "title": "Moontrace — Version 7.1 Battle Pass",

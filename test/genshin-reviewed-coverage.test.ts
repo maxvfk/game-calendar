@@ -3,7 +3,9 @@ import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 
 test("Genshin 7.1 coverage uses calendar dates without inventing server instants", async () => {
   const { events } = materializeReviewedBatch(await Bun.file("data/reviewed/genshin.json").json());
-  expect(events).toHaveLength(16);
+  expect(events).toHaveLength(17);
+  expect(events.find(e => e.title === "Stygian Onslaught — Disturbance Outbreak (Version 7.1)"))
+    .toMatchObject({ type: "challenge", endPrecision: "exact", regionScoped: true });
   for (const [title, start, end] of [
     ["To Temper Thyself and Journey Far — Cycle 5", "2026-08-10", "2026-11-02"],
     ["The Godforsaken Frostlands", "2026-08-12", "2026-11-03"],

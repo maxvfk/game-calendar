@@ -8,16 +8,18 @@
     {
       "title": "The Great Rift: Season 4 Second Half",
       "type": "challenge",
-      "summary": "Second-half ranking period for The Great Rift in Galactic Disaster Season 4.",
+      "summary": "Second-half ranking period for The Great Rift in Galactic Disaster Season 4. Ends at the regular maintenance boundary under the July 29 schedule policy.",
       "startsAt": "2026-09-09T05:00:00.000Z",
       "startPrecision": "exact",
       "endsAt": "2026-09-30T00:00:00.000Z",
-      "endPrecision": "day",
+      "endPrecision": "exact",
       "regionScoped": false,
       "regionEnds": null,
       "sourceUrl": "https://page.onstove.com/chaoszeronightmare/en/view/14502236",
       "provenanceStatus": "official",
-      "confidence": 1
+      "confidence": 1,
+      "firstSeenAt": "2026-09-21T20:23:46.000Z",
+      "reviewedAt": "2026-09-24T14:47:06.000Z"
     },
     {
       "title": "Galactic Disaster Season 4: Third Supply",
@@ -78,16 +80,18 @@
     {
       "title": "Basin of Hyperspace: Dimensional Twilight",
       "type": "challenge",
-      "summary": "Eight-basin challenge period with rotating support effects.",
+      "summary": "Eight-basin challenge period with rotating support effects. Ends at the regular maintenance boundary under the July 29 schedule policy.",
       "startsAt": "2026-09-09T05:00:00.000Z",
       "startPrecision": "exact",
       "endsAt": "2026-09-30T00:00:00.000Z",
-      "endPrecision": "day",
+      "endPrecision": "exact",
       "regionScoped": false,
       "regionEnds": null,
       "sourceUrl": "https://page.onstove.com/chaoszeronightmare/en/view/14502236",
       "provenanceStatus": "official",
-      "confidence": 1
+      "confidence": 1,
+      "firstSeenAt": "2026-09-21T20:23:46.000Z",
+      "reviewedAt": "2026-09-24T14:47:06.000Z"
     },
     {
       "title": "SE-4 BR33ZE",
@@ -200,6 +204,21 @@
       "sourceUrl": "https://page.onstove.com/chaoszeronightmare/en/view/14526418",
       "provenanceStatus": "official",
       "confidence": 1
+    },
+    {
+      "title": "Full-Scale Offensive — Season 4",
+      "type": "challenge",
+      "summary": "New Full-Scale Offensive season confirmed with the August 19 Season 4 Chapter 2 update; end date has not been published.",
+      "startsAt": "2026-08-19T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": null,
+      "endPrecision": "unknown",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://newsroom.smilegate.com/en/bbs/board.php?bo_table=eng&wr_id=506",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "reviewedAt": "2026-09-24T14:47:06.000Z"
     }
   ]
 }

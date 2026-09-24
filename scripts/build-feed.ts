@@ -18,6 +18,7 @@ import {
 } from "../src/ingest/reviewed.ts";
 import { SnapshotStore, freshnessAt } from "../src/ingest/snapshots.ts";
 import { fixtureCaptureAt } from "../src/ingest/fixtures.ts";
+import { greatRiftWeeklyRewards, missingLightwardPhase, recurringEndgame } from "../src/ingest/recurring-endgame.ts";
 import { EventFeed, SCHEMA_VERSION, type SourceHealth } from "../src/shared/feed.ts";
 import type { GachaEvent, GameId } from "../src/shared/schema.ts";
 
@@ -166,6 +167,19 @@ for (const batch of reviewed) {
   console.log(
     `  ${`reviewed-${batch.game}`.padEnd(24)} ${String(batch.events.length).padStart(3)} events  ← ${batch.file}${hidden > 0 ? `  (${hidden} leak record${hidden === 1 ? "" : "s"} hidden)` : ""}`,
   );
+}
+
+// Checked-in, bounded reset rules add deadlines without claiming a network
+// source was refreshed. Official/reviewed records for a matching ID win on
+// confidence, while a changed rule requires an explicit effective date.
+const sourcedEvents = [...byGame.values()].flatMap(groups => groups.flatMap(group => group.events));
+const expectedHsr = missingLightwardPhase(now, sourcedEvents);
+if (expectedHsr !== null) console.warn(`  ! review reminder: ${expectedHsr}`);
+const greatRiftPhases = sourcedEvents.filter(event => event.sourceId === "reviewed-czn" && event.title.startsWith("The Great Rift:"));
+for (const event of [...recurringEndgame(now, undefined, sourcedEvents), ...greatRiftPhases.flatMap(phase => greatRiftWeeklyRewards(phase, now))]) {
+  const groups = byGame.get(event.game) ?? [];
+  groups.push({ priority: 10, events: [event] });
+  byGame.set(event.game, groups);
 }
 
 const events: GachaEvent[] = [];
