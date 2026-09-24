@@ -1,23 +1,23 @@
 # Zenless Zone Zero — recurring endgame calendar research
 
-**Status:** implementation-ready for the two fixed biweekly modes; partial for newer/seasonal modes  
+**Status:** historical biweekly rule documented; current anchor unresolved, so recurrence generation is gated
 **checkedAt:** 2026-09-24  
 **baseline main SHA:** `6884bc79de54ea5b71d4e9b11e331756ac181d27`
 
 ## Why this exists
 
-The current calendar treated the active ZZZ endgame rotations as ordinary reviewed events with day precision:
+The calendar initially treated the September 2026 ZZZ endgame rotations as reviewed events with day precision:
 
 - `Shiyu Defense: Critical Node (Sep 18)` → end date 2026-10-02, time unknown.
 - `Deadly Assault (Sep 11)` → end date 2026-09-25, time unknown.
 
-That is safe as raw data, but misleading in the daily Timeline. A row ending on September 25 at an early server reset can visually look available through all of September 25, while in practice the player needs to finish it before that reset.
+The reviewed rows now have exact regional ends from the 04:00 server reset, while their current cycle dates remain estimated and source-gated.
 
-ZZZ has an important class of deadlines that should not be maintained as one-off events: some endgame rotations have an official deterministic recurrence rule. Those can be generated from an anchor + cadence + server reset time without guessing future dates.
+The historical official notice states a deterministic two-week rule. Its January 2025 anchors do **not** reproduce the independently sourced September 2026 cycles. A later schedule change or current anchor must be verified before future rows can be generated safely.
 
 This document separates:
 
-1. **fixed recurrence** — safe to generate from a documented rule;
+1. **historical fixed recurrence** — documented, but current projection unsafe until re-anchored;
 2. **version/season controlled** — recurring content, but future periods must come from explicit notices/current game data;
 3. **permanent/no deadline** — should not appear as a limited Timeline row.
 
@@ -39,7 +39,7 @@ Secondary evidence is used only where marked:
 
 Do not promote secondary cadence observations to `official` provenance.
 
-## 1. Fixed recurrence — safe to generate
+## 1. Historical fixed recurrence — current projection gated
 
 ### Shiyu Defense: Critical Node
 
@@ -48,9 +48,9 @@ Do not promote secondary cadence observations to `official` provenance.
 Source:
 https://www.hoyolab.com/article/35654082
 
-Implementation classification: **fixed recurrence / official**.
+Implementation classification: **official historical rule; current effective anchor unverified**.
 
-Recommended recurrence definition:
+Historical recurrence definition (not active in the generator):
 
 ```text
 game: zzz
@@ -63,7 +63,7 @@ timeBasis: server
 provenance: official
 ```
 
-The currently published Sep 18 → Oct 2 rotation is consistent with this rule.
+Arithmetic check: 2025-01-03 + 14-day increments reaches **2026-09-11** and **2026-09-25**, not the sourced September 18 Critical Node start. The historical anchor is seven days out of phase.
 
 ### Deadly Assault
 
@@ -72,9 +72,9 @@ The currently published Sep 18 → Oct 2 rotation is consistent with this rule.
 Source:
 https://www.hoyolab.com/article/35654082
 
-Implementation classification: **fixed recurrence / official**.
+Implementation classification: **official historical rule; current effective anchor unverified**.
 
-Recommended recurrence definition:
+Historical recurrence definition (not active in the generator):
 
 ```text
 game: zzz
@@ -87,17 +87,17 @@ timeBasis: server
 provenance: official
 ```
 
-This makes Deadly Assault and Critical Node alternate on successive Fridays.
+The two historical rules alternate on successive Fridays, but their assignment to the current modes is seven days out of phase: 2025-01-10 + 14-day increments reaches **2026-09-04** and **2026-09-18**, not the sourced September 11 Deadly Assault start.
 
-The reader's live Europe-server countdown on 2026-09-24 independently matched the expected **2026-09-25 04:00 server reset** for the active Deadly Assault rotation. This is corroboration, not the basis for the recurrence rule.
+The reader's Europe-server countdown on 2026-09-24 supported the **2026-09-25 04:00 server reset** for the current Deadly Assault rotation. It corroborates this reviewed cycle, not continuity of the January 2025 anchor.
 
-## 2. Exact deadline semantics for fixed recurrence
+## 2. Exact deadline semantics for sourced current cycles
 
-For these two modes, the current reviewed rows should no longer use `endPrecision: day`.
+The two current reviewed rows use `endPrecision: exact` and `provenanceStatus: estimated`.
 
-The reset rule itself supplies an exact server-time boundary. Reuse the project's existing ZZZ server-region conversion logic; do not convert through the viewer's local timezone and do not invent one global UTC instant.
+The 04:00 server reset supplies the clock for the currently corroborated cycle dates. Reuse the project's existing ZZZ server-region conversion logic; do not convert through the viewer's local timezone and do not invent one global UTC instant.
 
-A generated rotation should behave as:
+A future generated rotation, after re-anchoring, should behave as:
 
 ```text
 rotation starts: reset N at 04:00 server time
@@ -131,7 +131,7 @@ The currently published rows are:
 - `Shiyu Defense: Critical Node (Sep 18)`
 - `Deadly Assault (Sep 11)`
 
-When converting them from manual reviewed records to generated recurrence, preserve the existing title/ID semantics for already-published cycles. The project's `eventId` uses the start date, so adding an exact time on the same server-date should not require an ID migration, but tests must prove this before removing/replacing reviewed rows.
+Keep these manual reviewed records until a verified current anchor or documented schedule change supports automation. Preserve their existing title/ID semantics if a future generator replaces them; the IDs are completion keys.
 
 Generate only a bounded horizon needed by the app, not an infinite series. A reasonable implementation is current + upcoming cycles covering the product's normal forward window.
 
@@ -193,9 +193,9 @@ Calendar behavior:
 
 ## 6. Implementation model
 
-Do not solve ZZZ endgame by adding every future Critical Node / Deadly Assault rotation manually to reviewed JSON.
+Review new Critical Node / Deadly Assault rotations against current evidence until the schedule is re-anchored. Do not turn the contradictory January 2025 anchors into an automatic publisher.
 
-Prefer a small recurrence layer with versioned rules, conceptually:
+Once the current anchor is verified, a small effective-dated recurrence layer could use:
 
 ```ts
 interface RecurringSchedule {
@@ -215,7 +215,7 @@ interface RecurringSchedule {
 
 The exact schema can differ; the important behavior is:
 
-1. one documented anchor;
+1. one documented **current** anchor and its effective date;
 2. one cadence rule;
 3. server-local reset semantics;
 4. bounded generation horizon;
@@ -225,7 +225,8 @@ The exact schema can differ; the important behavior is:
 
 ## 7. Override / safety rules
 
-- An explicit newer official notice that changes cadence or reset time overrides the recurrence rule from its effective date.
+- A verified current anchor or explicit newer official notice is required before enabling recurrence; the January 2025 rule alone is insufficient.
+- An explicit newer official notice that changes cadence or reset time overrides the historical rule from its effective date.
 - A source conflict must remain visible; do not move the recurrence merely to make the report quiet.
 - Do not infer a fixed schedule for season-controlled modes.
 - Do not generate a deadline if the rule becomes ambiguous.
@@ -236,26 +237,23 @@ The exact schema can differ; the important behavior is:
 
 At minimum:
 
-1. **Critical Node cadence:** official anchor 2025-01-03 04:00 server + 14 days produces the known 2026-09-18 → 2026-10-02 cycle.
-2. **Deadly Assault cadence:** official anchor 2025-01-10 04:00 server + 14 days produces the known 2026-09-11 → 2026-09-25 cycle.
-3. **Alternation:** Critical Node and Deadly Assault reset on alternating Fridays, seven days apart.
-4. **Exact regional ends:** generated rows use exact per-region ends and do not render the reset date as an all-day available period.
-5. **ID stability:** replacing the current reviewed Sep 11 / Sep 18 rows with generated equivalents retains their published event IDs/completion state.
-6. **Bounded generation:** no unbounded/infinite event series enters `events.v1.json`.
-7. **Rule override:** a later effective rule can change reset time/cadence without changing historical rows.
-8. **No unsafe extrapolation:** Threshold Simulation Hard / seasonal Trial / Annihilation Simulacrum are not generated from prior duration.
-9. **Periodic Conquest gate:** it is not promoted to official fixed recurrence until the missing primary/in-game rule is captured.
+1. **Anchor contradiction:** January 2025 +14-day rules are seven days out of phase with both September 2026 reviewed rows.
+2. **Exact regional ends:** current reviewed rows end at the corroborated 04:00 server reset, represented as inclusive 03:59 per region.
+3. **ID stability:** Sep 11 / Sep 18 reviewed IDs remain unchanged.
+4. **No unsafe projection:** no future ZZZ cycle is generated from the historical anchors.
+5. **Future rule override:** only a verified effective-dated rule may start new generation without changing historical rows.
+6. **Seasonal gate:** Threshold Simulation Hard / seasonal Trial / Annihilation Simulacrum are not generated from prior duration.
+7. **Periodic Conquest gate:** it is not promoted to official fixed recurrence until the missing primary/in-game rule is captured.
 
 ## 9. Immediate handoff to Work
 
 Priority order:
 
-1. Implement fixed recurrence support for **Shiyu Defense: Critical Node** and **Deadly Assault** from the official Version 1.4 rules.
-2. Replace the current day-precision deadline behavior for those active rotations with exact regional reset-derived boundaries while preserving published IDs.
-3. Verify the daily Timeline now visually tells the player to finish Deadly Assault before the Sep 25 reset rather than implying the whole Sep 25 day is available.
-4. Keep **Periodic Conquest** as a separately tracked verification item; do not block the two official recurrences on it.
-5. Keep Threshold Simulation Hard and other seasonal/version-controlled modes out of the fixed recurrence generator.
-6. After implementation, run the standard four validation commands from `AGENTS.md` and do one phone smoke check around a partial-day reset edge.
+1. Current Sep 11 / Sep 18 rows already have exact regional ends and stable IDs.
+2. Verify a current official or in-game Shiyu/Deadly reset anchor or find the documented change after January 2025 before generating future cycles.
+3. Keep **Periodic Conquest** as a separate verification item.
+4. Keep Threshold Simulation Hard and other seasonal/version-controlled modes out of the fixed recurrence generator.
+5. Smoke-check the partial-day reset edge on the phone and revalidate source dates when the next cycles appear.
 
 ## Sources
 
