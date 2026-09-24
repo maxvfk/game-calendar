@@ -19,8 +19,9 @@ import {
 import { SnapshotStore, freshnessAt } from "../src/ingest/snapshots.ts";
 import { fixtureCaptureAt } from "../src/ingest/fixtures.ts";
 import { greatRiftWeeklyRewards, missingLightwardPhase, recurringEndgame } from "../src/ingest/recurring-endgame.ts";
+import { ECHOES_EVENT_SOURCE_ID, ECHOES_SOURCE_ID, echoesSeasonUrl, selectEchoesSeason } from "../src/ingest/echoes-season.ts";
 import { EventFeed, SCHEMA_VERSION, type SourceHealth } from "../src/shared/feed.ts";
-import type { GachaEvent, GameId } from "../src/shared/schema.ts";
+import { Region, type GachaEvent, type GameId } from "../src/shared/schema.ts";
 
 const OUT = "public/data/events.v1.json";
 const snapshots = new SnapshotStore(process.env["SNAPSHOT_DIR"] ?? "snapshots");
@@ -65,6 +66,7 @@ async function documentFor(adapterId: string, game: GameId) {
     return {
       file: snapshots.bodyPath(adapterId, cached.meta.contentKind),
       html: cached.html,
+      url: cached.meta.url,
       at: freshnessAt(cached),
       lastConfirmedAt,
       contentChangedAt,
@@ -77,6 +79,7 @@ async function documentFor(adapterId: string, game: GameId) {
   return {
     file,
     html,
+    url: ADAPTERS.find(adapter => adapter.id === adapterId)?.url,
     at: date,
     lastConfirmedAt: null,
     contentChangedAt: date,
@@ -87,7 +90,19 @@ const now = new Date().toISOString();
 const byGame = new Map<GameId, Array<{ priority: number; events: GachaEvent[] }>>();
 const sources: SourceHealth[] = [];
 
-for (const adapter of ADAPTERS) {
+for (const configured of ADAPTERS) {
+  let adapter = configured;
+  let expectedSeason: GachaEvent | null = null;
+  if (adapter.id === ECHOES_SOURCE_ID) {
+    const eventPage = byGame.get("endfield")?.flatMap(g => g.events)
+      .filter(e => e.sourceId === ECHOES_EVENT_SOURCE_ID) ?? [];
+    expectedSeason = selectEchoesSeason(eventPage, now);
+    if (expectedSeason === null) {
+      console.warn("  ! review reminder: no active/upcoming Echoes season on the Event page; cycle source skipped");
+      continue;
+    }
+    adapter = { ...adapter, url: echoesSeasonUrl(expectedSeason) };
+  }
   const document = await documentFor(
     adapter.id,
     adapter.game,
@@ -107,13 +122,39 @@ for (const adapter of ADAPTERS) {
     console.warn(`  ${adapter.id.padEnd(24)} unavailable  (no independently captured snapshot yet)`);
     continue;
   }
+  if (adapter.id === ECHOES_SOURCE_ID && document.url !== adapter.url) {
+    console.warn(`  ! review reminder: Echoes season page snapshot is stale for ${expectedSeason?.title}; no cycle rows published`);
+    sources.push({ sourceId: adapter.id, game: adapter.game, url: adapter.url,
+      lastSuccessAt: null, lastConfirmedAt: null, contentChangedAt: null,
+      eventCount: 0, parsedCount: null, statesNoEvents: false });
+    continue;
+  }
   const { file, html, at, lastConfirmedAt, contentChangedAt } = document;
-  const events = adapter.parse(html, {
-    now,
-    sourceUrl: adapter.url,
-    sourceId: adapter.id,
-    game: adapter.game,
-  });
+  let events: GachaEvent[];
+  try {
+    events = adapter.parse(html, {
+      now,
+      sourceUrl: document.url ?? adapter.url,
+      sourceId: adapter.id,
+      game: adapter.game,
+    });
+  } catch (error) {
+    if (adapter.id !== ECHOES_SOURCE_ID) throw error;
+    console.warn(`  ! review reminder: Echoes cycle page did not parse; no cycle rows published: ${String(error)}`);
+    sources.push({ sourceId: adapter.id, game: adapter.game, url: adapter.url,
+      lastSuccessAt: null, lastConfirmedAt: null, contentChangedAt: null,
+      eventCount: 0, parsedCount: null, statesNoEvents: false });
+    continue;
+  }
+  if (expectedSeason !== null && events.some(event => event.startsAt.slice(0, 10) < expectedSeason.startsAt.slice(0, 10) ||
+    Region.options.some(region => !event.regionEnds?.[region] || !expectedSeason.regionEnds?.[region] ||
+      event.regionEnds[region] > expectedSeason.regionEnds[region]))) {
+    console.warn(`  ! review reminder: Echoes cycles exceed sourced ${expectedSeason.title} window; no cycle rows published`);
+    sources.push({ sourceId: adapter.id, game: adapter.game, url: adapter.url,
+      lastSuccessAt: null, lastConfirmedAt: null, contentChangedAt: null,
+      eventCount: 0, parsedCount: null, statesNoEvents: false });
+    continue;
+  }
 
   // Which of the three empties this is, decided in a module a test can reach
   // rather than here — see `src/ingest/health.ts` for why that matters.

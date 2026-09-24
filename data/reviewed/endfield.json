@@ -39,44 +39,6 @@
     },
     {
       "reviewedAt": "2026-09-24T14:47:06.000Z",
-      "title": "Echoes of War: Season of Illusion — Cycle I",
-      "type": "challenge",
-      "summary": "First cycle's rating and stages reset when Cycle II opens October 1 at 04:00 server time. The season continues.",
-      "startsAt": "2026-09-24T04:00:00.000Z",
-      "startPrecision": "exact",
-      "endsAt": "2026-09-30T19:59:00.000Z",
-      "endPrecision": "exact",
-      "regionScoped": true,
-      "regionEnds": {
-        "asia": "2026-09-30T19:59:00.000Z",
-        "europe": "2026-10-01T08:59:00.000Z",
-        "america": "2026-10-01T08:59:00.000Z"
-      },
-      "sourceUrl": "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Illusion",
-      "provenanceStatus": "estimated",
-      "confidence": 0.85
-    },
-    {
-      "reviewedAt": "2026-09-24T14:47:06.000Z",
-      "title": "Echoes of War: Season of Illusion — Cycle II",
-      "type": "challenge",
-      "summary": "Second cycle's rating and stages reset when Cycle III opens October 8 at 04:00 server time. The season row carries the final Cycle III deadline.",
-      "startsAt": "2026-10-01T00:00:00.000Z",
-      "startPrecision": "day",
-      "endsAt": "2026-10-07T19:59:00.000Z",
-      "endPrecision": "exact",
-      "regionScoped": true,
-      "regionEnds": {
-        "asia": "2026-10-07T19:59:00.000Z",
-        "europe": "2026-10-08T08:59:00.000Z",
-        "america": "2026-10-08T08:59:00.000Z"
-      },
-      "sourceUrl": "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Illusion",
-      "provenanceStatus": "estimated",
-      "confidence": 0.85
-    },
-    {
-      "reviewedAt": "2026-09-24T14:47:06.000Z",
       "title": "Monumental Etching: Shadow Marked",
       "type": "challenge",
       "summary": "Limited reward window for the permanent Umbral Monument stage series Marked by Dark Shadows; closes at the October 19 server reset.",

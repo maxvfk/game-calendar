@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { RESET_RULES, cznMaintenanceBoundary, fixedResetCycles, greatRiftWeeklyRewards, missingLightwardPhase, recurringEndgame } from "../src/ingest/recurring-endgame.ts";
 import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 import { effectiveEnd } from "../src/shared/time.ts";
+import { parseWikiGgEchoesSeason } from "../src/ingest/parsers/wikigg-echoes.ts";
 
 const now = "2026-09-24T14:00:00.000Z";
 const cycles = recurringEndgame(now);
@@ -111,7 +112,13 @@ test("HSR expectation flags the due MoC without minting any unsourced boundary",
 
 test("source-controlled challenge deadlines are regional or unknown as published", async () => {
   const load = async (game: string) => materializeReviewedBatch(await Bun.file(`data/reviewed/${game}.json`).json()).events;
-  const endfield = await load("endfield");
+  const endfield = [
+    ...await load("endfield"),
+    ...parseWikiGgEchoesSeason(await Bun.file("snapshots/endfield-wikigg-echoes.html").text(), {
+      game: "endfield", sourceId: "endfield-wikigg-echoes", now,
+      sourceUrl: "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Illusion",
+    }),
+  ];
   const c1 = endfield.find(e => e.title.endsWith("Cycle I"))!;
   const c2 = endfield.find(e => e.title.endsWith("Cycle II"))!;
   expect(c1.regionEnds?.asia).toBe("2026-09-30T19:59:00.000Z");

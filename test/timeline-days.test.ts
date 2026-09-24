@@ -11,6 +11,7 @@ import { clockFor } from "../src/shared/time.ts";
 import { GachaEvent } from "../src/shared/schema.ts";
 import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 import { greatRiftWeeklyRewards } from "../src/ingest/recurring-endgame.ts";
+import { parseWikiGgEchoesSeason } from "../src/ingest/parsers/wikigg-echoes.ts";
 
 const DAY_WIDTH = 72;
 
@@ -72,6 +73,10 @@ test("today opens near the centre and does not scroll before the board", () => {
 test("current endgame exact deadlines land inside their daily cells", async () => {
   const rows = (await Promise.all(["zzz", "czn", "endfield"].map(async game =>
     materializeReviewedBatch(await Bun.file(`data/reviewed/${game}.json`).json()).events))).flat();
+  rows.push(...parseWikiGgEchoesSeason(await Bun.file("snapshots/endfield-wikigg-echoes.html").text(), {
+    game: "endfield", sourceId: "endfield-wikigg-echoes", now: "2026-09-24T12:00:00.000Z",
+    sourceUrl: "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Illusion",
+  }));
   const rift = rows.find(e => e.id === "czn:the-great-rift-season-4-second-half:2026-09-09")!;
   rows.push(...greatRiftWeeklyRewards(rift, "2026-09-24T12:00:00.000Z"));
   for (const [id, region, boundary] of [

@@ -104,6 +104,13 @@ const SOURCES: SourceSpec[] = [
     priority: 10,
   },
   {
+    id: "endfield-wikigg-echoes", game: "endfield",
+    // The refresh runner resolves the active season from the Event snapshot.
+    // This initial URL also identifies the independently captured fixture.
+    url: "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Illusion",
+    parserId: "wikigg-echoes", priority: 10,
+  },
+  {
     id: "arknights-akwiki-events",
     game: "arknights",
     url: "https://arknights.wiki.gg/wiki/Event",

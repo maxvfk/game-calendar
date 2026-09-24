@@ -14,6 +14,7 @@ import { nteBuildBtrParser } from "./ntebuild-btr.ts";
 import { prydwenCznParser } from "./prydwen-czn.ts";
 import { stellaSoraWikiParser } from "./stellasora.ts";
 import { wikiGgParser } from "./wikigg.ts";
+import { wikiGgEchoesParser } from "./wikigg-echoes.ts";
 import type { SourceParser } from "./types.ts";
 
 /**
@@ -24,6 +25,7 @@ import type { SourceParser } from "./types.ts";
 export const PARSERS: SourceParser[] = [
   game8Parser,
   wikiGgParser,
+  wikiGgEchoesParser,
   arknightsWikiParser,
   fandomParser,
   blueArchiveWikiParser,

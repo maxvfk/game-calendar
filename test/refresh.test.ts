@@ -128,7 +128,7 @@ async function seed(html: string, at: string, eventCount: number | null) {
 describe("a normal cycle", () => {
   test("the scheduled registry excludes unreachable legacy pollers without deleting their parsers", () => {
     expect(ADAPTERS.map((a) => a.id).sort()).toEqual([
-      "czn-prydwen-banners", "endfield-wikigg-events", "genshin-kqm-ginews",
+      "czn-prydwen-banners", "endfield-wikigg-echoes", "endfield-wikigg-events", "genshin-kqm-ginews",
       "hsr-kqm-hsrnews", "nte-ntebuild-btr", "nte-steamnews-official",
       "wuwa-kuro-mirror",
     ]);

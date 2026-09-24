@@ -52,6 +52,8 @@ import { SIX_HOURS_MS } from "../src/ingest/adapters/types.ts";
 import type { Adapter } from "../src/ingest/adapters/types.ts";
 import { RobotsCache, type FetchLike } from "../src/ingest/robots.ts";
 import { decodeBody, SnapshotStore } from "../src/ingest/snapshots.ts";
+import { ECHOES_EVENT_SOURCE_ID, ECHOES_SOURCE_ID, echoesSeasonUrl, selectEchoesSeason } from "../src/ingest/echoes-season.ts";
+import { parseWikiGgEventsPage } from "../src/ingest/parsers/wikigg.ts";
 
 const DEFAULT_CONTACT =
   "https://github.com/maxvfk/game-calendar";
@@ -212,7 +214,22 @@ export async function runRefresh(
     return summary;
   }
 
-  for (const adapter of selected) {
+  for (const candidate of selected) {
+    let adapter = candidate;
+    if (candidate.id === ECHOES_SOURCE_ID) {
+      const eventPage = await options.store.read(ECHOES_EVENT_SOURCE_ID);
+      const season = eventPage === null ? null : selectEchoesSeason(parseWikiGgEventsPage(eventPage.html, {
+        now: options.now().toISOString(), game: "endfield", sourceId: ECHOES_EVENT_SOURCE_ID,
+        sourceUrl: eventPage.meta.url,
+      }), options.now().toISOString());
+      if (season === null) {
+        const note = "no active/upcoming sourced Echoes season on the Event snapshot";
+        summary.outcomes.push({ sourceId: candidate.id, result: "skipped_interval", note, status: null, eventCount: null });
+        options.log(`  ${candidate.id.padEnd(24)} skipped_interval  ${note}`);
+        continue;
+      }
+      adapter = { ...candidate, url: echoesSeasonUrl(season) };
+    }
     // One source can never take the cycle down with it. Everything inside
     // refreshOne that can fail is handled there; this is the backstop that
     // keeps an unforeseen throw from costing every source after this one its
@@ -326,11 +343,12 @@ async function refreshOne(
   // Metadata alone is not a usable last-known-good document. A crash or a
   // partial restore may leave it without the body; sending its ETag can yield
   // a 304 that falsely confirms a snapshot we cannot build from.
-  const hasBody = meta !== null &&
+  const sameUrl = meta?.url === adapter.url;
+  const hasBody = sameUrl && meta !== null &&
     await Bun.file(store.bodyPath(adapter.id, meta.contentKind)).exists();
   const headers = store.conditionalHeaders(hasBody ? meta : null);
 
-  const due = store.isDue(state, now.getTime(), adapter.minIntervalMs);
+  const due = (meta !== null && !sameUrl) || store.isDue(state, now.getTime(), adapter.minIntervalMs);
   if (!due && !options.force) {
     const dueAt = new Date(store.dueAt(state, adapter.minIntervalMs));
     return {
@@ -537,7 +555,7 @@ async function refreshOne(
   // The distinction has to come from the page's own words rather than a row
   // count, because a redesign that broke every selector also yields zero rows —
   // and storing *that* is the silently emptied calendar this gate exists for.
-  const previousCount = meta?.eventCount ?? null;
+  const previousCount = sameUrl ? meta?.eventCount ?? null : null;
   const statesNoEvents = events === 0 && adapter.statesNoEvents?.(html) === true;
   if (events === 0 && !statesNoEvents) {
     await store.recordCheck(adapter.id, {
