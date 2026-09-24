@@ -8,6 +8,8 @@ type BtREvent = { name: string; startDate: string; endDate?: string; description
 const SCRIPT = /<script\b[^>]*\btype=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
 const DAY = /^(\d{4})-(\d{2})-(\d{2})$/;
 const TITLE_PREFIX = "Beyond the Rails";
+const BTR_ANCHOR = Date.parse("2026-07-15T21:00:00.000Z"); // Jul 16, 05:00 UTC+8
+const BTR_CYCLE_MS = 14 * 24 * 60 * 60 * 1000;
 
 function object(value: unknown, label: string): JsonObject {
   if (value === null || typeof value !== "object" || Array.isArray(value)) {
@@ -79,12 +81,22 @@ function day(raw: string, field: string, title: string): string {
 function parseBtr(html: string, ctx: ParseContext): GachaEvent[] {
   const seen = new Map<string, GachaEvent>();
   for (const source of items(html)) {
-    const startsAt = day(source.startDate, "startDate", source.name);
-    const endsAt = source.endDate === undefined ? null : day(source.endDate, "endDate", source.name);
+    const startDay = day(source.startDate, "startDate", source.name);
+    const cycle = (Date.parse(startDay) - Date.parse("2026-07-16T00:00:00.000Z")) / BTR_CYCLE_MS;
+    if (!Number.isInteger(cycle) || cycle < 0) {
+      throw new Error(`NTEBuild BTR disagrees with documented 14-day anchor: ${source.name}`);
+    }
+    const startsAt = new Date(BTR_ANCHOR + cycle * BTR_CYCLE_MS).toISOString();
+    const endDay = source.endDate === undefined ? null : day(source.endDate, "endDate", source.name);
+    if (endDay !== null && Date.parse(endDay) - Date.parse(startDay) !== BTR_CYCLE_MS) {
+      throw new Error(`NTEBuild BTR cycle duration conflicts with recurrence: ${source.name}`);
+    }
+    const endsAt = endDay === null ? null : new Date(Date.parse(startsAt) + BTR_CYCLE_MS - 60_000).toISOString();
     const event = GachaEvent.parse({
-      id: eventId("nte", source.name, startsAt), game: "nte", title: source.name, type: "challenge",
-      summary: source.description ?? null, startsAt, startPrecision: "day", endsAt,
-      endPrecision: endsAt === null ? "unknown" : "day", regionScoped: false, regionEnds: null,
+      // Identity is the source's Sep 24 date, not its UTC Sep 23 instant.
+      id: eventId("nte", source.name, startDay), game: "nte", title: source.name, type: "challenge",
+      summary: source.description ?? null, startsAt, startPrecision: "exact", endsAt,
+      endPrecision: endsAt === null ? "unknown" : "exact", regionScoped: false, regionEnds: null,
       sourceUrl: ctx.sourceUrl, sourceId: ctx.sourceId, status: "published", confidence: 0.7,
       extractionMethod: "parser", provenanceStatus: "estimated", version: 1,
       firstSeenAt: ctx.now, updatedAt: ctx.now,
