@@ -539,3 +539,24 @@ separate maintenance gaps.
   in the approved design.
 
 Next concrete step: S2 — profile-scoped local storage
+
+## Account Sync — S1.1
+
+- Branch `feature/account-sync-s1-1-pref-validation` from current `main` `2f6d835`;
+  implementation commit `b3532af`. S1's broad preference value union allowed
+  incompatible key/value pairs such as `theme = 123` or `region = "banana"`.
+- `src/shared/sync.ts` now checks each non-unset preference against a keyed
+  Zod schema. Its keys must cover every top-level `Prefs` field at typecheck;
+  sort, timeline grouping and visible categories reuse the current client
+  value lists. Arrays of lane IDs remain strings, including custom and retired
+  lanes. `timelineDayWidth` accepts finite numbers; `focusGame: null` remains
+  meaningful. Only `knownGames` and `gameOrder` may use `unset: true` with null.
+- Focused acceptance/rejection cases in `test/sync.test.ts` cover invalid
+  scalar types, enum values, arrays, non-finite widths and reset rules, plus
+  valid current settings and custom lane IDs. Existing S1 convergence tests
+  remain green. Bun 1.3.14 frozen install, typecheck, 963 tests and build passed;
+  feed remains at 156 events with the pre-existing Circle Bounty conflict.
+- No S2 work was started. UI, current localStorage, export/import, ingestion,
+  feed, mutation ordering and other sync semantics were not changed.
+
+Next concrete step: S2 — profile-scoped local storage
