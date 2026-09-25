@@ -531,7 +531,8 @@ separate maintenance gaps.
   NTE Circle Bounty conflict. Diff contains only the pure module, tests and
   this status document. Current production UI, v1 localStorage keys and
   behavior, export/import format, ingestion, public feed and event IDs were
-  not changed. CI: pending branch publication.
+  not changed. PR #7 CI [run 36120821679](https://github.com/maxvfk/game-calendar/actions/runs/36120821679)
+  passed on the complete implementation tree (including the opaque-ID fix).
 - No product decision blocked S1. The optional-preference reset case above
   was resolved directly from existing v1 behavior. Clock skew detection and
   server receipt diagnostics remain for the future cloud milestones described
