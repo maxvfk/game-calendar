@@ -25,6 +25,14 @@ For each item, use this compact format:
   - **Status:** observed
   - **Notes / constraints:** keep the weekly separator visually subordinate to the current-day marker and avoid adding clutter to the dense mobile view.
 
+- **Title:** Per-game daily pass countdowns
+  - **Observation:** the app has daily chores but no personal tracking for 30-day login/subscription passes such as Genshin's Blessing of the Welkin Moon.
+  - **Desired behavior:** let the reader track remaining days for a daily pass in each enabled game, set or correct the remaining count, and extend an active pass by one standard period with a single action.
+  - **Area:** new feature
+  - **Priority:** undecided
+  - **Status:** observed
+  - **Notes / constraints:** prefer a compact `Daily passes` surface adjacent to, but semantically separate from, today's tickable dailies. Show active/expired passes on the main surface; manage all enabled games in a detail panel. A one-tap `+30` should extend from the current expiry (or start a fresh 30-day period when expired) and offer Undo rather than a confirmation dialog. Track against each game's server-day/reset semantics rather than a naive 24-hour timer. Keep pass state profile-scoped and compatible with export/import and future sync. Consider, but do not assume, an optional local-only expiry marker on the main Timeline.
+
 ## Candidates before Astra audit
 
 No items yet. Reserve for approved small UX/UI fixes and corrections to
