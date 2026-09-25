@@ -593,8 +593,14 @@ Next concrete step: S2 — profile-scoped local storage
   passed; merge commit 1b233c7 reached main. Main CI and Pages deploy
   [run 36146620702](https://github.com/maxvfk/game-calendar/actions/runs/36146620702)
   passed, and the published Pages HTML returned 200 with the v2 pre-paint
-  script. An interactive migration on a browser with existing v1 data remains
-  to be verified.
+  script.
+- Manual browser smoke on 2026-09-25 confirmed that upgrading/reloading through
+  S2 did not reset the existing local state at any observed stage. Backup
+  semantics were also exercised: event A was marked done and exported, then A
+  was cleared and event B marked done locally; importing the backup resulted in
+  both A and B done. This matches the intentionally additive standard-import
+  semantics: the backup restores marks it contains without deleting newer
+  local marks that are absent from the file.
 
 Next concrete step: S3 — Supabase foundation (separate milestone; do not start
 within S2).
