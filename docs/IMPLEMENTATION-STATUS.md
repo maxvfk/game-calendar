@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-09-24. Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-09-25. Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Completed checkpoints
@@ -498,3 +498,43 @@ pre-Astra polish in separate commits, smoke-check and freeze the baseline for
 the independent Astra audit. Create final `docs/MAINTENANCE.md` after audit
 fixes. The official Endfield robots chain and NTE Circle Bounty dispute remain
 separate maintenance gaps.
+
+## Account Sync — S1
+
+- Branch: `feature/account-sync-s1`, based on `main` `074cad5` (verified on
+  2026-09-25). Implementation commit: `e810fb3`. This milestone is pure/local;
+  no S2 storage migration or cloud integration is included.
+- `src/shared/sync.ts` introduces Zod-backed logical versions and mutations for
+  progress, daily marks, ignored state, each top-level preference key, custom
+  games and custom events. Event/occurrence IDs remain opaque. Daily rows use
+  an injective `(subjectId, dayKey)` tuple key. A newer `changedAt` instant
+  wins; equal instants are ordered by the stable `mutationId`. Conflicting
+  content reusing the same logical version fails closed.
+- Clearing progress and deleting custom objects retain tombstone rows;
+  `completed: false` and `ignored: false` are explicit versioned reversals.
+  Optional `gameOrder`/`knownGames` resets use `unset: true` with null, distinct
+  from the meaningful null for `focusGame`. This is the safe representation of
+  the existing v1 reset-to-absence behavior, not a new UI policy. An older
+  offline active value cannot revive any of these states.
+- The serializable outbox model keeps mutations until an `accepted` or
+  `superseded` acknowledgement. Exact replay is accepted idempotently;
+  duplicate queued IDs with different content fail. S1 does not persist or
+  wire this outbox into current hooks/localStorage.
+- `test/sync.test.ts` simulates two independent devices from one snapshot,
+  offline edits, reversed and duplicated delivery, and eventual remote pulls.
+  It covers progress status/note conflicts and clear, daily untick, unignore,
+  per-key preferences with equal-timestamp tie-breaking and optional reset,
+  custom event edit/delete, custom game delete, stale snapshots, and outbox
+  acknowledgements. All devices converge to the same logical state.
+- Bun 1.3.14: `bun install --frozen-lockfile`, typecheck, **925 tests** (15 new),
+  and build passed. Local feed: 156 events across seven games, one pre-existing
+  NTE Circle Bounty conflict. Diff contains only the pure module, tests and
+  this status document. Current production UI, v1 localStorage keys and
+  behavior, export/import format, ingestion, public feed and event IDs were
+  not changed. CI: pending branch publication.
+- No product decision blocked S1. The optional-preference reset case above
+  was resolved directly from existing v1 behavior. Clock skew detection and
+  server receipt diagnostics remain for the future cloud milestones described
+  in the approved design.
+
+Next concrete step: S2 — profile-scoped local storage
