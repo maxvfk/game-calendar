@@ -1,0 +1,4 @@
+project_id = "game-calendar"
+
+# Match this to the hosted project's SHOW server_version before linking S4.
+# S3 migrations use portable PostgreSQL features and do not need a hosted project.

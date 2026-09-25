@@ -604,3 +604,35 @@ Next concrete step: S2 — profile-scoped local storage
 
 Next concrete step: S3 — Supabase foundation (separate milestone; do not start
 within S2).
+
+## Account Sync — S3
+
+- Branch `feature/account-sync-s3-supabase-foundation` from current `main`
+  `9bbf623` (2026-09-25). `supabase/config.toml` and two versioned migrations
+  define `profiles`, progress, daily marks, ignored, per-key preferences,
+  custom games/events, profile indexes and cascading ownership. `received_at`
+  records server receipt time separately from conflict versions.
+- All seven personal tables have RLS. `anon` has no table or RPC grants;
+  `authenticated` can read only owned rows. Direct table writes/deletes are
+  withheld so a blind upsert cannot bypass conditional ordering. The two
+  explicitly granted `SECURITY DEFINER` RPCs use an empty search path and
+  check `auth.uid()` ownership: `ensure_default_profile()` is idempotent with
+  a unique partial index; `apply_profile_mutations()` validates a bounded
+  batch and applies newer `(changed_at, mutation_id)` versions atomically.
+  Equal-version exact replay is accepted; stale versions are superseded;
+  conflicting replay fails. Tombstones and explicit reversals persist.
+- `test/supabase-db.test.ts` executes the migrations in PGlite PostgreSQL 18
+  with local Supabase Auth role/UID stubs. It covers owner/other-user/anon
+  access, direct-write denial, all six mutation kinds, replay, stale writes,
+  validation, cascade cleanup, and default-profile uniqueness. This verifies
+  PostgreSQL behavior locally; the hosted Supabase/PostgREST integration is
+  not exercised. No hosted project, credentials, browser Auth, UI or cloud
+  calls were added. `supabase/README.md` documents the wire contract and the
+  later hosted verification boundary.
+- Bun 1.3.14: frozen install, typecheck, **989 tests**, and build passed.
+  Local feed remains 156 events across seven games with the pre-existing NTE
+  Circle Bounty conflict. PR CI/merge: pending.
+
+Next concrete step: S4 — Google Auth, default-profile resolution and explicit
+first-login local migration. Provisioning a hosted Supabase project and Google
+OAuth configuration is deferred until that milestone; S3 needs neither.
