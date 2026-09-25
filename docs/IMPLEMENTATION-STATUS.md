@@ -602,8 +602,7 @@ Next concrete step: S2 — profile-scoped local storage
   semantics: the backup restores marks it contains without deleting newer
   local marks that are absent from the file.
 
-Next concrete step: S3 — Supabase foundation (separate milestone; do not start
-within S2).
+S2 concluded; S3 is recorded below.
 
 ## Account Sync — S3
 
@@ -631,7 +630,11 @@ within S2).
   later hosted verification boundary.
 - Bun 1.3.14: frozen install, typecheck, **989 tests**, and build passed.
   Local feed remains 156 events across seven games with the pre-existing NTE
-  Circle Bounty conflict. PR CI/merge: pending.
+  Circle Bounty conflict. PR #11 merged as `3db8c24`; PR CI run
+  [36151862179](https://github.com/maxvfk/game-calendar/actions/runs/36151862179)
+  passed. Main run
+  [36151973509](https://github.com/maxvfk/game-calendar/actions/runs/36151973509)
+  passed typecheck, tests, feed, site build, and Pages deployment.
 
 Next concrete step: S4 — Google Auth, default-profile resolution and explicit
 first-login local migration. Provisioning a hosted Supabase project and Google
