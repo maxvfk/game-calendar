@@ -13,7 +13,7 @@ import { Colophon } from "./components/Colophon.tsx";
 import { Legend } from "./components/Legend.tsx";
 import { Toast } from "./components/Toast.tsx";
 import { UpdateNotice } from "./components/UpdateNotice.tsx";
-import { KEYS } from "./state/storage.ts";
+import type { ProfileStorageKeys } from "./state/storage.ts";
 import { useAppUpdate } from "./state/useAppUpdate.ts";
 import { useMarkSet } from "./state/useMarkSet.ts";
 import { useProgress } from "./state/useProgress.ts";
@@ -98,7 +98,7 @@ function useNow(intervalMs = 1000): number {
   return now;
 }
 
-export function App() {
+export function App({ storageKeys }: { storageKeys: ProfileStorageKeys }) {
   const [state, setState] = useState<FeedState>({ status: "loading" });
   const [openId, setOpenId] = useState<string | null>(null);
   // The event most recently ignored, so it can be put back without hunting for
@@ -106,15 +106,15 @@ export function App() {
   const [lastIgnored, setLastIgnored] = useState<{ id: string; title: string } | null>(null);
   const now = useNow();
   const online = useOnline();
-  const { prefs, update, toggleGame, restorePrefs } = usePrefs();
+  const { prefs, update, toggleGame, restorePrefs } = usePrefs(storageKeys.prefs);
   // Their answer from the first run, or their last tap on the tabs. Reading it
   // from `prefs` is what stops a reload putting a timeline reader back on the
   // list they did not choose.
   const view = prefs.view;
-  const ignored = useMarkSet(KEYS.ignored);
-  const prog = useProgress();
-  const daily = useDailyLog();
-  const custom = useCustom(now);
+  const ignored = useMarkSet(storageKeys.ignored);
+  const prog = useProgress(storageKeys.progress);
+  const daily = useDailyLog(storageKeys.daily);
+  const custom = useCustom(now, storageKeys);
   // Colour only: which ground the page is drawn on, written to the document by
   // the hook. Nothing else in the app asks what it is — the tokens in
   // styles.css answer for every component — except the hues below.

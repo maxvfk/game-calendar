@@ -14,7 +14,7 @@ import {
 } from "../../shared/custom.ts";
 import { nextOccurrences, occurrencesOf, type Repeat } from "../../shared/recurrence.ts";
 import type { EventType } from "../../shared/schema.ts";
-import { KEYS, readJson, writeJson } from "./storage.ts";
+import { readJson, writeJson, type ProfileStorageKeys } from "./storage.ts";
 
 /**
  * The reader's own games and events (PRD F13).
@@ -176,20 +176,20 @@ export function occurrencesInFor(
  * change as time passes: the occurrence a rule is showing rolls to the next one
  * when the current one finishes.
  */
-export function useCustom(nowMs: number) {
+export function useCustom(nowMs: number, keys: ProfileStorageKeys) {
   const [games, setGames] = useState<CustomGames>(() =>
-    readValid(KEYS.customGames, CustomGame, "custom game"),
+    readValid(keys.customGames, CustomGame, "custom game"),
   );
   const [events, setEvents] = useState<CustomEvents>(() =>
-    readValid(KEYS.customEvents, CustomEvent, "custom event"),
+    readValid(keys.customEvents, CustomEvent, "custom event"),
   );
 
   useEffect(() => {
-    writeJson(KEYS.customGames, games);
-  }, [games]);
+    writeJson(keys.customGames, games);
+  }, [keys.customGames, games]);
   useEffect(() => {
-    writeJson(KEYS.customEvents, events);
-  }, [events]);
+    writeJson(keys.customEvents, events);
+  }, [keys.customEvents, events]);
 
   const addGame = useCallback((name: string, hue: string): string => {
     const id = mintCustomGameId(name, Object.keys(games));

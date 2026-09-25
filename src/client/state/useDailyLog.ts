@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { KEYS, readJson, writeJson } from "./storage.ts";
+import { readJson, writeJson } from "./storage.ts";
 
 export interface DailyLog {
   /** Game-day keys (`YYYY-MM-DD`) the reader has ticked off, oldest first. */
@@ -20,14 +20,14 @@ export type DailyLogMap = Record<string, DailyLog>;
  * preference — a fortnight's login streak exists nowhere else — so nothing in
  * this module ever removes a day the reader did not remove themselves.
  */
-export function useDailyLog() {
+export function useDailyLog(storageKey: string) {
   const [logs, setLogs] = useState<DailyLogMap>(() =>
-    readJson<DailyLogMap>(KEYS.daily, {}),
+    readJson<DailyLogMap>(storageKey, {}),
   );
 
   useEffect(() => {
-    writeJson(KEYS.daily, logs);
-  }, [logs]);
+    writeJson(storageKey, logs);
+  }, [storageKey, logs]);
 
   const toggleDay = useCallback((id: string, day: string) => {
     setLogs((prev) => {

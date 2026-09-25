@@ -563,3 +563,33 @@ Next concrete step: S2 — profile-scoped local storage
   passed on the implementation and initial status tree.
 
 Next concrete step: S2 — profile-scoped local storage
+
+## Account Sync — S2
+
+- Branch `feature/account-sync-s2-profile-storage` from `main` `946ed3a`
+  (2026-09-25). The synchronous bootstrap creates a stable `local:<id>` guest,
+  stores its registry and active ID, and selects it before user-owned hooks
+  mount. Signed-out startup reselects the guest if an account cache was left
+  active; profile keys are isolated. There is no auth or cloud call.
+- All current user stores now use `gacha-tracker:v2:profile:<id>:*` keys.
+  Existing v1 progress, daily, ignored, prefs and custom stores are copied
+  once into the guest without deleting or writing v1 keys. Legacy completions
+  seed progress only when v1 progress has no rows. The migration marker is
+  written after copying, retries incomplete copies, and never replaces an
+  existing v2 store. An empty v2 progress store stays empty on later loads.
+  A failed storage write leaves v1 intact and keeps available data in memory
+  for that visit, so the UI does not mount over a partial copy with defaults.
+- The pre-paint script reads active scoped preferences; before first bootstrap
+  it falls back to v1 prefs to preserve the theme. Existing export/import
+  actions operate on the mounted active profile, retaining the version 1 JSON
+  backup format and standard-versus-all preference behavior. `syncMeta` and
+  `outbox` have reserved scoped key names but no S1 mutation wiring in S2.
+- Focused tests cover migration/retry, legacy preservation, profile isolation,
+  signed-out activation, hook/export reads and pre-paint theme. Bun 1.3.14:
+  frozen install, typecheck, **978 tests**, and build passed. Local feed remains
+  156 events across seven games with the existing NTE Circle Bounty conflict.
+  Production browser migration on an existing v1 installation and Pages deploy
+  still require verification after merge.
+
+Next concrete step: S3 — Supabase foundation (separate milestone; do not start
+within S2).
