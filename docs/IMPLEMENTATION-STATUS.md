@@ -543,7 +543,8 @@ Next concrete step: S2 — profile-scoped local storage
 ## Account Sync — S1.1
 
 - Branch `feature/account-sync-s1-1-pref-validation` from current `main` `2f6d835`;
-  implementation commit `b3532af`. S1's broad preference value union allowed
+  published implementation commit `9a29b7b` (local equivalent `b3532af`),
+  [PR #8](https://github.com/maxvfk/game-calendar/pull/8). S1's broad preference value union allowed
   incompatible key/value pairs such as `theme = 123` or `region = "banana"`.
 - `src/shared/sync.ts` now checks each non-unset preference against a keyed
   Zod schema. Its keys must cover every top-level `Prefs` field at typecheck;
@@ -558,5 +559,7 @@ Next concrete step: S2 — profile-scoped local storage
   feed remains at 156 events with the pre-existing Circle Bounty conflict.
 - No S2 work was started. UI, current localStorage, export/import, ingestion,
   feed, mutation ordering and other sync semantics were not changed.
+- PR CI [run 36124500135](https://github.com/maxvfk/game-calendar/actions/runs/36124500135)
+  passed on the implementation and initial status tree.
 
 Next concrete step: S2 — profile-scoped local storage
