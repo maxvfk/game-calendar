@@ -1,5 +1,10 @@
 import { z } from "zod";
+import { EVENT_CATEGORIES, type EventCategory } from "../client/state/eventCategories.ts";
+import { TIMELINE_GROUPS, type TimelineGroup } from "../client/state/lanes.ts";
+import { SORT_MODES, type SortMode } from "../client/state/sort.ts";
+import type { Prefs } from "../client/state/usePrefs.ts";
 import { CustomEvent, CustomGame } from "./custom.ts";
+import { Region } from "./schema.ts";
 
 /** S1's wire-independent model. Nothing in the current v1 stores imports it. */
 export const LogicalVersion = z.object({
@@ -8,15 +13,36 @@ export const LogicalVersion = z.object({
 });
 export type LogicalVersion = z.infer<typeof LogicalVersion>;
 
-export const PreferenceKey = z.enum([
-  "region", "hiddenGames", "knownGames", "gameOrder", "focusGame", "sort",
-  "view", "visibleCategories", "timelineDayWidth", "timelineGroup",
-  "showUpcoming", "timelineSplitUpcoming", "detectDaily", "showChores",
-  "showCompleted", "showIgnored", "theme", "regionConfirmed", "onboarded",
-]);
+// Each top-level Prefs field must have a matching validator. The client lists
+// for sort, grouping and categories are pure data, shared without importing UI.
+const preferenceSchemas = {
+  region: Region,
+  hiddenGames: z.array(z.string()),
+  knownGames: z.array(z.string()),
+  gameOrder: z.array(z.string()),
+  focusGame: z.string().nullable(),
+  sort: z.enum(SORT_MODES.map(({ id }) => id) as [SortMode, ...SortMode[]]),
+  view: z.enum(["soon", "timeline"]),
+  visibleCategories: z.array(z.enum(
+    EVENT_CATEGORIES.map(({ id }) => id) as [EventCategory, ...EventCategory[]],
+  )),
+  timelineDayWidth: z.number().finite(),
+  timelineGroup: z.enum(TIMELINE_GROUPS.map(({ id }) => id) as [TimelineGroup, ...TimelineGroup[]]),
+  showUpcoming: z.boolean(),
+  timelineSplitUpcoming: z.boolean(),
+  detectDaily: z.boolean(),
+  showChores: z.boolean(),
+  showCompleted: z.boolean(),
+  showIgnored: z.boolean(),
+  theme: z.enum(["dark", "light", "system"]),
+  regionConfirmed: z.boolean(),
+  onboarded: z.boolean(),
+} satisfies { [K in keyof Prefs]-?: z.ZodType<Exclude<Prefs[K], undefined>> };
+
+export const PreferenceKey = z.enum(Object.keys(preferenceSchemas) as [keyof Prefs, ...Array<keyof Prefs>]);
 export type PreferenceKey = z.infer<typeof PreferenceKey>;
 
-// Top-level values in the current Prefs shape. Arrays are one register each.
+// Envelope type; the key-specific schema below decides whether a value is valid.
 export const PreferenceValue = z.union([
   z.string(), z.number().finite(), z.boolean(), z.null(), z.array(z.string()),
 ]);
@@ -60,6 +86,10 @@ export const SyncMutation = z.discriminatedUnion("kind", [
   if (row.kind === "preference" && !row.unset && row.value === null &&
       (row.key === "knownGames" || row.key === "gameOrder")) {
     ctx.addIssue({ code: "custom", message: "optional array reset requires explicit unset" });
+  }
+  if (row.kind === "preference" && !row.unset &&
+      !preferenceSchemas[row.key].safeParse(row.value).success) {
+    ctx.addIssue({ code: "custom", message: `invalid value for preference ${row.key}` });
   }
 });
 export type SyncMutation = z.infer<typeof SyncMutation>;
