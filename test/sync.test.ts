@@ -4,6 +4,8 @@ import {
   logicalKey, mergeSyncState, queueMutation, SyncMutation, SyncOutbox,
 } from "../src/shared/sync.ts";
 import type { SyncMutation as Mutation, SyncState } from "../src/shared/sync.ts";
+import { allCategories } from "../src/client/state/eventCategories.ts";
+import { DAY_WIDTHS, DEFAULT_DAY_WIDTH } from "../src/client/state/zoom.ts";
 
 const stamp = (day: number) => `2026-09-${String(day).padStart(2, "0")}T12:00:00.000Z`;
 const make = (row: Record<string, unknown>): Mutation => SyncMutation.parse(row);
@@ -20,6 +22,9 @@ const ignored = (id: string, day: number, value: boolean) =>
 const pref = (id: string, day: number, key: string, value: unknown) =>
   make({ kind: "preference", key, value, unset: false,
     changedAt: stamp(day), mutationId: id });
+const preferenceInput = (key: string, value: unknown, unset = false) => ({
+  kind: "preference", key, value, unset, changedAt: stamp(20), mutationId: `pref:${key}`,
+});
 const game = (id: string, day: number, deleted: boolean) =>
   make({ kind: "customGame", key: "mygame:a", deleted,
     payload: deleted ? null : { id: "mygame:a", name: "A", hue: "#112233", at: stamp(18) },
@@ -97,6 +102,45 @@ describe("logical versions and idempotent delivery", () => {
     expect(() => SyncMutation.parse({ ...pref("bad-pref", 20, "theme", "dark"),
       unset: true, value: null })).toThrow();
   });
+});
+
+describe("preference mutation validation", () => {
+  const invalid: Array<[string, unknown, boolean?]> = [
+    ["theme", 123], ["theme", "blue"], ["region", "banana"],
+    ["showCompleted", "yes"], ["timelineGroup", "rows"],
+    ["timelineDayWidth", NaN], ["timelineDayWidth", Infinity],
+    ["focusGame", 42], ["hiddenGames", ["genshin", 123]],
+    ["visibleCategories", ["banner", "unknown"]],
+    ["theme", null, true], ["showCompleted", null, true],
+    ["knownGames", ["genshin"], true], ["gameOrder", [], true],
+    ["knownGames", null], ["gameOrder", null],
+  ];
+  for (const [key, value, unset] of invalid) {
+    test(`rejects ${key}=${String(value)}${unset ? " (unset)" : ""}`, () => {
+      expect(SyncMutation.safeParse(preferenceInput(key, value, unset)).success).toBe(false);
+    });
+  }
+
+  const valid: Array<[string, unknown, boolean?]> = [
+    ["region", "asia"], ["region", "europe"], ["theme", "system"],
+    ["theme", "light"], ["sort", "doing"], ["view", "timeline"],
+    ["timelineGroup", "ending"], ["showCompleted", false],
+    ["showUpcoming", true], ["onboarded", false],
+    ["focusGame", null], ["focusGame", "mygame:custom-lane"],
+    ["focusGame", "retired-lane"],
+    ["hiddenGames", ["genshin", "mygame:custom-lane", "retired-lane"]],
+    ["knownGames", ["mygame:custom-lane"]],
+    ["gameOrder", ["retired-lane", "mygame:custom-lane"]],
+    ["visibleCategories", allCategories()],
+    ["timelineDayWidth", DEFAULT_DAY_WIDTH], ["timelineDayWidth", 37.5],
+    ...DAY_WIDTHS.map((width): [string, unknown] => ["timelineDayWidth", width]),
+    ["knownGames", null, true], ["gameOrder", null, true],
+  ];
+  for (const [key, value, unset] of valid) {
+    test(`accepts ${key}=${String(value)}${unset ? " (unset)" : ""}`, () => {
+      expect(SyncMutation.safeParse(preferenceInput(key, value, unset)).success).toBe(true);
+    });
+  }
 });
 
 describe("two offline devices converge", () => {
