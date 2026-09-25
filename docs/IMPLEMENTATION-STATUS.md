@@ -588,8 +588,13 @@ Next concrete step: S2 — profile-scoped local storage
   signed-out activation, hook/export reads and pre-paint theme. Bun 1.3.14:
   frozen install, typecheck, **978 tests**, and build passed. Local feed remains
   156 events across seven games with the existing NTE Circle Bounty conflict.
-  Production browser migration on an existing v1 installation and Pages deploy
-  still require verification after merge.
+  [PR #9](https://github.com/maxvfk/game-calendar/pull/9) CI
+  [run 36146509029](https://github.com/maxvfk/game-calendar/actions/runs/36146509029)
+  passed; merge commit 1b233c7 reached main. Main CI and Pages deploy
+  [run 36146620702](https://github.com/maxvfk/game-calendar/actions/runs/36146620702)
+  passed, and the published Pages HTML returned 200 with the v2 pre-paint
+  script. An interactive migration on a browser with existing v1 data remains
+  to be verified.
 
 Next concrete step: S3 — Supabase foundation (separate milestone; do not start
 within S2).
