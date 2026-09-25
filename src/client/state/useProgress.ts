@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Effort } from "../../shared/effort.ts";
-import { KEYS, readJson, writeJson } from "./storage.ts";
-import type { Marks } from "./useMarkSet.ts";
+import { readJson, writeJson } from "./storage.ts";
 
 /** Where the reader is with an event. Absent means untouched. */
 export type Status = "doing" | "done";
@@ -30,23 +29,9 @@ export type ProgressMap = Record<string, Progress>;
  * with membership meaning "done"; this carries a status instead, so "started"
  * is expressible.
  *
- * MIGRATION: the old completions store is read once to seed `status: "done"`,
- * and is **never written to or deleted**. Someone who last opened the app six
- * months ago still has their marks under that key, and these live only in the
- * browser — nothing else holds a copy to restore from. See
- * docs/DATA-MODEL.md § Client-side storage.
+ * S2 migrates legacy completions once in storage bootstrap, before this hook
+ * mounts. Reading them here would revive a cleared progress store on reload.
  */
-function load(): ProgressMap {
-  const stored = readJson<ProgressMap>(KEYS.progress, {});
-  if (Object.keys(stored).length > 0) return stored;
-
-  const legacy = readJson<Marks>(KEYS.completions, {});
-  const seeded: ProgressMap = {};
-  for (const [id, mark] of Object.entries(legacy)) {
-    seeded[id] = { status: "done", at: mark.at };
-  }
-  return seeded;
-}
 
 /**
  * Nothing recorded, so not worth a row. Every field the reader can set has to
@@ -106,12 +91,12 @@ export function mergeProgress(
   return next;
 }
 
-export function useProgress() {
-  const [progress, setProgress] = useState<ProgressMap>(load);
+export function useProgress(storageKey: string) {
+  const [progress, setProgress] = useState<ProgressMap>(() => readJson(storageKey, {}));
 
   useEffect(() => {
-    writeJson(KEYS.progress, progress);
-  }, [progress]);
+    writeJson(storageKey, progress);
+  }, [storageKey, progress]);
 
   const patch = useCallback((id: string, next: Partial<Progress>) => {
     setProgress((prev) => {

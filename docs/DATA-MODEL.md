@@ -211,7 +211,31 @@ malformed row surfaces at the boundary rather than deep in the UI.
 
 ## Client-side storage
 
-Namespaced, versioned, and small. Nothing here ever goes to the server.
+Namespaced, versioned, and small. S2 stores user state under the active local
+guest profile. It has no auth or cloud calls yet. The v1 keys below are kept
+as an untouched backup after a one-time, idempotent migration; they are no
+longer written by the app. See `state/storage.ts` for synchronous bootstrap.
+
+```ts
+"gacha-tracker:v2:profiles"          // guestProfileId, legacyMigrated
+"gacha-tracker:v2:activeProfile"     // selected profile ID
+"gacha-tracker:v2:profile:<id>:progress"
+"gacha-tracker:v2:profile:<id>:daily"
+"gacha-tracker:v2:profile:<id>:ignored"
+"gacha-tracker:v2:profile:<id>:prefs"
+"gacha-tracker:v2:profile:<id>:customGames"
+"gacha-tracker:v2:profile:<id>:customEvents"
+"gacha-tracker:v2:profile:<id>:syncMeta"   // reserved for later sync milestones
+"gacha-tracker:v2:profile:<id>:outbox"     // reserved for later sync milestones
+```
+
+The app chooses the local guest before mounting state hooks. Its ID is stable
+across reloads; account profiles use distinct keys and cannot be read by the
+signed-out guest. Export/import retain the version 1 JSON file format and
+operate on the selected profile's hooks. The pre-paint script reads scoped
+preferences, with a v1 fallback only before the first migration.
+
+Legacy storage format:
 
 ```ts
 "gacha-tracker:v1:progress"     // { [eventId]: { status?, effort?, note?, at } }
@@ -269,7 +293,7 @@ Namespaced, versioned, and small. Nothing here ever goes to the server.
                                 // PRD F15. It is read by the app *and* by a pre-paint script in
                                 // index.html, which is the only thing outside the client bundle
                                 // that touches a key in this space.
-"gacha-tracker:v1:completions"  // SUPERSEDED — read once to migrate, never written
+"gacha-tracker:v1:completions"  // SUPERSEDED — seeded into v2 progress once, never written
 ```
 
 `progress` is everything the reader says about an event themselves:
@@ -537,7 +561,9 @@ cascading.
 ### Migration from `completions`
 
 `completions` used membership to mean "done", which cannot express "started". `progress` replaces it
-and is seeded from it once, on first load, mapping each entry to `status: "done"`.
+and is seeded from it once during v2 profile bootstrap when v1 progress has no
+records, mapping each entry to `status: "done"`. Subsequent loads read only
+scoped progress; clearing its last entry cannot resurrect a legacy completion.
 
 **The old key is never written to and never deleted.** Someone who last opened the app six months
 ago still has their marks under it, these live only in the browser, and nothing else holds a copy to

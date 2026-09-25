@@ -3,7 +3,7 @@ import { isCustomGameId, type LaneId } from "../../shared/custom.ts";
 import type { Region } from "../../shared/schema.ts";
 import { guessRegion } from "../../shared/time.ts";
 import type { SortMode } from "./sort.ts";
-import { KEYS, readJson, writeJson } from "./storage.ts";
+import { readJson, writeJson } from "./storage.ts";
 import type { TimelineGroup } from "./lanes.ts";
 import { DEFAULT_THEME_CHOICE, type ThemeChoice } from "./theme.ts";
 import { DEFAULT_DAY_WIDTH, snapDayWidth } from "./zoom.ts";
@@ -364,9 +364,9 @@ export function restorePrefsValue(incoming: unknown): Prefs {
   return result;
 }
 
-export function usePrefs() {
+export function usePrefs(storageKey: string) {
   const [prefs, setPrefs] = useState<Prefs>(() => {
-    const stored = adoptRenamed(readJson<Partial<Prefs>>(KEYS.prefs, {}));
+    const stored = adoptRenamed(readJson<Partial<Prefs>>(storageKey, {}));
     return {
       ...defaults(),
       ...stored,
@@ -375,8 +375,8 @@ export function usePrefs() {
   });
 
   useEffect(() => {
-    writeJson(KEYS.prefs, prefs);
-  }, [prefs]);
+    writeJson(storageKey, prefs);
+  }, [storageKey, prefs]);
 
   const update = useCallback((patch: Partial<Prefs>) => {
     setPrefs((prev) => ({ ...prev, ...patch }));

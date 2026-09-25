@@ -37,18 +37,23 @@
       and mount, on every single load, which is a flash of the thing they
       switched off.
 
-      It reads the same stored key as the app (`state/storage.ts`) and applies
-      the same attribute (`state/theme.ts`), and it cannot import either, so a
-      test pins the three copies together. Wrapped in try/catch and doing
+      It reads the active profile's scoped prefs before React starts. On the
+      first v1 visit, before the bundle can migrate them, it reads legacy prefs
+      to preserve the reader's theme without a flash. It cannot import the
+      storage module, so a test pins the key shape together. Wrapped in
+      try/catch and doing
       nothing on failure: a reader with storage disabled gets the default theme,
       never a blank page.
     -->
     <script>
       (function () {
         try {
-          var prefs = JSON.parse(
-            localStorage.getItem("gacha-tracker:v1:prefs") || "{}",
-          );
+          var active = localStorage.getItem("gacha-tracker:v2:activeProfile");
+          var scoped = active && /^(local:[a-zA-Z0-9-]+|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/i.test(active)
+            ? localStorage.getItem("gacha-tracker:v2:profile:" + active + ":prefs")
+            : null;
+          var prefs = JSON.parse(scoped ||
+            (active ? "{}" : localStorage.getItem("gacha-tracker:v1:prefs") || "{}"));
           var light =
             prefs.theme === "light" ||
             (prefs.theme === "system" &&
