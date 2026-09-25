@@ -176,4 +176,13 @@ describe("two offline devices converge", () => {
     expect(logicalKey(a)).not.toBe(logicalKey(b));
     expect(Object.keys(deliver(emptySyncState(), [a, b]).state.daily)).toHaveLength(2);
   });
+
+  test("opaque IDs matching Object prototype names remain ordinary rows", () => {
+    const proto = progress("proto", 20, "doing", "__proto__");
+    const newer = progress("newer", 21, "done", "__proto__");
+    const state = deliver(emptySyncState(), [proto, newer, proto]).state;
+    expect(Object.hasOwn(state.progress, "__proto__")).toBe(true);
+    expect(state.progress["__proto__"]?.mutationId).toBe("newer");
+    expect(Object.getPrototypeOf(state.progress)).toBe(Object.prototype);
+  });
 });

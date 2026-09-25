@@ -526,7 +526,7 @@ separate maintenance gaps.
   per-key preferences with equal-timestamp tie-breaking and optional reset,
   custom event edit/delete, custom game delete, stale snapshots, and outbox
   acknowledgements. All devices converge to the same logical state.
-- Bun 1.3.14: `bun install --frozen-lockfile`, typecheck, **925 tests** (15 new),
+- Bun 1.3.14: `bun install --frozen-lockfile`, typecheck, **926 tests** (16 new),
   and build passed. Local feed: 156 events across seven games, one pre-existing
   NTE Circle Bounty conflict. Diff contains only the pure module, tests and
   this status document. Current production UI, v1 localStorage keys and

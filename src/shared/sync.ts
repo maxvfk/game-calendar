@@ -110,7 +110,11 @@ export function applyMutation(state: SyncState, input: SyncMutation): {
   }
   const kind = mutation.kind;
   const key = logicalKey(mutation);
-  const current = state[kind][key] as SyncMutation | undefined;
+  // Keys are opaque user/source IDs; inherited Object keys must not masquerade
+  // as rows (e.g. an ID literally equal to "__proto__").
+  const current = Object.hasOwn(state[kind], key)
+    ? state[kind][key] as SyncMutation
+    : undefined;
   if (current) {
     const order = compareVersions(mutation, current);
     if (order === 0 && canonical(mutation) !== canonical(current)) {
