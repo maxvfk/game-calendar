@@ -502,7 +502,7 @@ separate maintenance gaps.
 ## Account Sync — S1
 
 - Branch: `feature/account-sync-s1`, based on `main` `074cad5` (verified on
-  2026-09-25). Implementation commit: `e810fb3`. This milestone is pure/local;
+  2026-09-25). Published implementation commit: `c986986`. This milestone is pure/local;
   no S2 storage migration or cloud integration is included.
 - `src/shared/sync.ts` introduces Zod-backed logical versions and mutations for
   progress, daily marks, ignored state, each top-level preference key, custom
