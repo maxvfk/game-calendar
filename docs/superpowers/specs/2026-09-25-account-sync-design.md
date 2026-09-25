@@ -646,22 +646,55 @@ leave v1 untouched
 
 ### C. Cloud и local guest оба содержат данные
 
-Не делать blind replacement.
+Не делать blind replacement и не выбирать стратегию молча.
 
-Предлагаемый default:
+После Google login показать явный выбор:
 
-> Merge local progress into account.
+```text
+На этом устройстве найден локальный прогресс.
+В аккаунте уже есть облачные данные.
 
-При таком merge:
+Что сделать?
 
-- progress: newer record wins;
-- daily: каждый существующий tick становится `completed=true` mutation;
-- ignored: local ignored becomes explicit `true`;
-- custom games/events merge by stable local id/version;
-- **cloud prefs выигрывают по умолчанию**, потому что старый v1 prefs не имеет надёжного per-field changed_at;
-- отдельная кнопка «Import local settings too» может быть добавлена позже либо использовать существующий Export all workflow.
+○ Объединить локальные данные с аккаунтом
+○ Использовать данные аккаунта и не переносить локальные
+○ Отмена
+```
 
-До подтверждения local guest ничего в cloud не пишет.
+#### Merge
+
+При выборе merge:
+
+- progress объединяется по version semantics;
+- daily ticks импортируются как explicit `completed=true` mutations;
+- ignored marks импортируются как explicit `ignored=true`;
+- custom games/events merge по stable id/version;
+- затем отдельно решить конфликт settings:
+
+```text
+Настройки этого браузера отличаются от настроек аккаунта.
+
+○ Оставить настройки аккаунта
+○ Использовать настройки этого устройства
+```
+
+По умолчанию выбран первый вариант, потому что legacy v1 prefs не содержит достоверного per-field `changed_at`.
+
+#### Use cloud only
+
+Cloud profile становится active, а legacy local data **не импортируются**.
+
+Это не означает немедленное физическое удаление старой локальной копии:
+
+- guest/legacy copy остаётся inert backup;
+- она не отображается внутри authenticated profile;
+- позже можно добавить explicit control для её удаления с устройства.
+
+#### Cancel
+
+Не выполнять миграцию и не менять cloud data.
+
+До явного выбора пользователя local guest ничего в cloud не пишет.
 
 ---
 
@@ -1153,22 +1186,22 @@ Cloud sync нельзя считать готовым, пока не выпол�
 Большая часть архитектуры уже выбрана. Перед кодом нужно окончательно подтвердить только несколько product details:
 
 1. **Signed-out mode остаётся полноценным?**  
-   Предлагается: да. Account нужен только для sync.
+   Решено: да. Account нужен только для sync.
 
 2. **Первый login переносит local data только после подтверждения?**  
-   Предлагается: да.
+   Решено: да.
 
-3. **Если cloud и local guest оба непустые, импортировать local prefs автоматически?**  
-   Предлагается: нет; cloud prefs сохранить, progress/content merge.
+3. **Если cloud и local guest оба непустые, что делать с legacy local data?**  
+   Решено: спросить пользователя. Варианты — merge либо использовать cloud only. При merge отдельно спросить, оставить cloud settings или заменить их local settings; cloud settings — default.
 
 4. **Оставлять account cache после sign-out?**  
-   Предлагается: да, но inert и недоступным другому profile; позже дать отдельную кнопку очистки устройства.
+   Решено: да, но inert и недоступным другому profile; позже дать отдельную кнопку очистки устройства.
 
 5. **Google — единственный provider первой версии?**  
-   Предлагается: да.
+   Решено: да. Архитектура не должна мешать позже добавить GitHub, Apple, email/magic link или другой provider; identity-linking между providers будет отдельной будущей задачей.
 
 6. **Multiple profiles показывать сейчас?**  
-   Нет. Схема поддерживает, UI откладывается до реального сценария.
+   Решено: нет. Схема поддерживает, UI откладывается до реального сценария.
 
 ---
 
