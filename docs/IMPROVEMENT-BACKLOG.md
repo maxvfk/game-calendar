@@ -17,7 +17,13 @@ For each item, use this compact format:
 
 ## Observed issues / feedback
 
-No items yet. Capture raw observations here before deciding scope or priority.
+- **Title:** Stronger weekly separators on the daily Timeline
+  - **Observation:** adjacent weeks are not visually distinct enough when scanning the daily Timeline.
+  - **Desired behavior:** make the boundary between Sunday and Monday more visible than ordinary day separators, for example with a slightly thicker and/or more contrasting divider.
+  - **Area:** UI
+  - **Priority:** undecided
+  - **Status:** observed
+  - **Notes / constraints:** keep the weekly separator visually subordinate to the current-day marker and avoid adding clutter to the dense mobile view.
 
 ## Candidates before Astra audit
 
