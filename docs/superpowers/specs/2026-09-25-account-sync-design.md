@@ -579,6 +579,13 @@ Boot:
 
 Это отдельный regression test, потому что иначе миграция profiles может вернуть flash неправильной темы или потерять stored choice.
 
+**S4 auth edge:** после появления remote account profiles нельзя слепо доверять сохранённому
+`activeProfile` до проверки Supabase session. Если в localStorage остался UUID account-profile,
+а session истекла, принадлежит другому account или ещё не восстановлена, pre-paint не должен даже
+на один кадр применять cached theme этого account к signed-out/другому пользователю. S4 bootstrap
+должен связать pre-paint selection с подтверждённой session либо безопасно падать обратно на guest/default
+theme до auth resolution. Добавить отдельный regression test для stale remote `activeProfile` + invalid/missing session.
+
 ---
 
 ## 12. Миграция существующего v1 localStorage
@@ -1064,6 +1071,7 @@ private GitHub backup repository
 - Google login;
 - first-login local migration;
 - reload сохраняет session/profile;
+- stale remote `activeProfile` при missing/expired session не вызывает pre-paint чужой cached theme;
 - device/browser B получает cloud progress;
 - offline edits видны сразу;
 - reconnect sends pending;
