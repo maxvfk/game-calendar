@@ -154,7 +154,7 @@ test("all user hooks and export/import read only the selected profile", () => {
   }
 });
 
-test("pre-paint uses active scoped prefs and v1 only on first upgrade", () => {
+test("pre-paint uses guest scoped prefs and v1 only on first upgrade", () => {
   const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
   const script = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
   expect(script).toBeDefined();
@@ -172,4 +172,14 @@ test("pre-paint uses active scoped prefs and v1 only on first upgrade", () => {
   expect(paint(store)).toBeUndefined();
   store.setItem(guest.keys.prefs, JSON.stringify({ theme: "light" }));
   expect(paint(store)).toBe("light");
+  // A remote profile might have been active before an expired/missing or
+  // different-account session. No remote theme may be painted before Auth.
+  const remote = "01234567-89ab-cdef-0123-456789abcdef";
+  store.setItem(PROFILE_KEYS.activeProfile, remote);
+  store.setItem(profileKeys(remote).prefs, JSON.stringify({ theme: "dark" }));
+  store.setItem("sb-vzzudezdigjwbwfejlsg-auth-token", "expired-or-other-user-session");
+  expect(paint(store)).toBe("light");
+  store.setItem(guest.keys.prefs, JSON.stringify({ theme: "dark" }));
+  store.setItem(profileKeys(remote).prefs, JSON.stringify({ theme: "light" }));
+  expect(paint(store)).toBeUndefined();
 });

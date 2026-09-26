@@ -50,3 +50,30 @@ major version and test the migration on a fresh local stack first.
 No secrets or hosted configuration are needed for S3. Creating the hosted
 project, configuring Google OAuth, and supplying the public project URL/key
 belong to the later Auth milestone and require explicit operator setup.
+
+## S4 browser Auth and first import
+
+The hosted project `vzzudezdigjwbwfejlsg` was provisioned by the operator,
+and both S3 migrations were applied in the SQL Editor on 2026-09-26. The
+browser uses its **publishable** key and a Pages-base PKCE callback; Google
+Client Secret remains in the provider configuration. The client verifies the
+session with `getUser()` and the default profile's ownership before selecting
+an account cache. The pre-paint script uses only guest/default theme until
+that asynchronous check completes.
+
+The first-login prompt never uploads guest data without a choice. A confirmed
+import persists its mutation plan before bounded RPC batches, so retry sends
+the same UUID/version pairs; it then pulls the server's winning rows and
+materializes a distinct account cache. Cloud-only leaves the guest untouched.
+The account cache records its initial cloud baseline for S5. **Ordinary edits
+after setup are local-only in S4**; the durable outbox, background pull/push,
+status/retry UI and two-device convergence are S5 work. Export/import continues
+to use the selected local profile and the version 1 backup format.
+
+The hosted anon PostgREST check on 2026-09-26 returned `401 / 42501` for all
+seven personal tables and both RPCs with a publishable key and no session.
+The hosted OAuth authorize endpoint returned a Google redirect with the
+configured Supabase callback and only identity scopes (`email profile`).
+Authenticated OAuth/owner/cross-user verification requires signing in as test
+users through the deployed Pages app. No service-role/secret credentials are
+present in the repository or browser bundle.

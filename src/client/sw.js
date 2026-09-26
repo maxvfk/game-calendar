@@ -193,12 +193,18 @@ async function feedFirst(request) {
 async function shellFirst(request) {
   const cache = await caches.open(CACHE_NAME);
   const cached = await cache.match(request, { ignoreSearch: true });
+  // The Pages OAuth callback is the normal app URL with a one-use PKCE code
+  // in its query. It can use the cached shell, but must never persist that URL
+  // as a Cache API key (or keep a provider error message there).
+  const url = new URL(request.url);
+  const privateCallback = request.mode === "navigate" &&
+    (url.searchParams.has("code") || url.searchParams.has("error"));
 
-  const network = fetch(request)
+  const network = fetch(privateCallback ? at("index.html") : request)
     .then((response) => {
       // Opaque cross-origin font responses report ok === false but are still
       // worth storing — they render fine from cache.
-      if (response.ok || response.type === "opaque") {
+      if (!privateCallback && (response.ok || response.type === "opaque")) {
         void cache.put(request, response.clone());
       }
       return response;
