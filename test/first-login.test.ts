@@ -11,6 +11,7 @@ import {
 } from "../src/client/account/remote.ts";
 import { defaults } from "../src/client/state/usePrefs.ts";
 import { callbackUrl } from "../src/client/account/AuthRoot.tsx";
+import { editCustomGame } from "../src/shared/custom.ts";
 
 class MemoryStorage {
   private values = new Map<string, string>();
@@ -36,6 +37,21 @@ function withRows(...rows: Parameters<typeof applyMutation>[1][]): SyncState {
 }
 
 describe("S4 explicit first login", () => {
+  test("a renamed legacy game beats an older cloud copy by edit time, without changing ID", () => {
+    const old = { id: "mygame:mine", name: "Original", hue: "#123456", at: earlier };
+    const edited = editCustomGame(old, "Renamed", "#abcdef", Date.parse(later));
+    const local = { ...guest(), customGames: { [old.id]: edited } };
+    const cloud = withRows({ kind: "customGame", key: old.id, deleted: false,
+      payload: old, changedAt: "2026-09-20T18:00:00.000Z", mutationId: uid(10) });
+    const mutation = guestMutations(local, "cloud", cloud, later)
+      .find((row) => row.kind === "customGame");
+    expect(mutation).toMatchObject({ key: old.id, changedAt: later });
+    expect(materializeCloud(applyMutation(cloud, mutation!).state).customGames[old.id])
+      .toMatchObject({ name: "Renamed", hue: "#abcdef", at: earlier, updatedAt: later });
+    const legacy = guestMutations({ ...guest(), customGames: { [old.id]: old } },
+      "cloud", emptySyncState(), later).find((row) => row.kind === "customGame");
+    expect(legacy?.changedAt).toBe(earlier);
+  });
   test("OAuth returns to the existing Pages base path, never a missing callback route", () => {
     expect(callbackUrl("https://maxvfk.github.io/game-calendar/")).toBe(
       "https://maxvfk.github.io/game-calendar/");

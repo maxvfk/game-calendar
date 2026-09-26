@@ -10,6 +10,7 @@ import {
   completeFirstLogin, guestMigrationDurable, pendingPlan, readAccountBinding,
   type SettingsChoice,
 } from "./firstLogin.ts";
+import { startAuthBootstrap } from "./bootstrap.ts";
 
 type Guest = ReturnType<typeof bootstrapLocalProfile>;
 type Choice = { ownerId: string; email: string; profileId: string; guest: Guest;
@@ -169,44 +170,19 @@ export function AuthRoot({ guest }: { guest: Guest }) {
   const [actionError, setActionError] = useState<string | null>(null);
   const authEpoch = useRef(0);
   useEffect(() => {
-    let alive = true;
-    let generation = 0;
-    let initialized = false;
-    const update = (next: ViewState, ticket: number) => {
-      if (alive && ticket === generation) setView(next);
-    };
-    async function resolve(ticket: number) {
-      try {
-        update(await withTimeout(resolveAccount(guest,
-          () => alive && ticket === generation), 10_000), ticket);
-      } catch (error) {
-        if (alive && ticket === generation) {
-          update({ kind: "guest", guest, message: errorText(error) }, ++generation);
-        }
-      }
-    }
-    void withTimeout(processCallback(), 10_000).then((callbackError) => {
-      if (!alive) return;
-      if (callbackError) setActionError(callbackError);
-      const ticket = ++generation;
-      void resolve(ticket).finally(() => { initialized = true; });
-    }).catch((error) => {
-      update({ kind: "guest", guest, message: errorText(error) }, ++generation);
-      initialized = true;
+    const bootstrap = startAuthBootstrap<ViewState>({
+      prepare: () => withTimeout(processCallback(), 10_000),
+      resolve: (canActivate) => withTimeout(resolveAccount(guest, canActivate), 10_000),
+      loading: () => setView({ kind: "loading", guest }),
+      publish: setView,
+      fallback: (error) => setView({ kind: "guest", guest: bootstrapLocalProfile(),
+        ...(error === undefined ? {} : { message: errorText(error) }) }),
+      sessionChanged: () => { authEpoch.current++; },
+      callbackError: setActionError,
     });
     // Cross-tab sign-out/account switch must hide the old profile immediately.
-    const { data: listener } = supabase.auth.onAuthStateChange((event) => {
-      if (!alive || event === "INITIAL_SESSION") return;
-      if (event === "SIGNED_OUT") {
-        authEpoch.current++;
-        update({ kind: "guest", guest: bootstrapLocalProfile() }, ++generation);
-      } else if (event === "SIGNED_IN" && initialized) {
-        authEpoch.current++;
-        update({ kind: "loading", guest }, ++generation);
-        queueMicrotask(() => void resolve(generation));
-      }
-    });
-    return () => { alive = false; generation++; listener.subscription.unsubscribe(); };
+    const { data: listener } = supabase.auth.onAuthStateChange(bootstrap.onAuth);
+    return () => { bootstrap.stop(); listener.subscription.unsubscribe(); };
   }, [guest]);
 
   async function signIn() {

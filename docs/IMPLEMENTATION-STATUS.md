@@ -681,3 +681,28 @@ OAuth configuration is deferred until that milestone; S3 needs neither.
 Next concrete step: S5 — production sync engine, including durable outbox,
 pull/merge/push, retry/status and two-device convergence. Do not treat S4's
 one-time import as continuous sync.
+
+## Account Sync — S4.1
+
+- Branch `fix/account-sync-s4-1-bootstrap` from current `main` `75f5e76`
+  (2026-09-26). Auth bootstrap now invalidates an in-flight resolution when
+  the auth session/identity changes, including before the initial resolver has
+  finished. Its ticket guards both account-cache activation and rendering;
+  callback exchange remains one-use across StrictMode remounts and sign-out
+  falls back to the guest.
+- Custom games retain `at` as creation time and add optional `updatedAt` for
+  edits. Each new edit advances it even within one millisecond; first-login
+  `changedAt` uses `updatedAt ?? at`. Old stored/exported games remain valid,
+  the export format and `mygame:` IDs are unchanged. Historical edits made
+  before this field existed cannot be dated retroactively and retain `at` as
+  their version until the next edit.
+- Focused tests cover the A→B change while the initial resolver is in flight,
+  callback/StrictMode and signed-out fallback, legacy game export/import,
+  monotonic edits, and a renamed local game's conflict with an older cloud
+  copy. Bun 1.3.14 frozen install, typecheck, **1001 tests**, and build passed;
+  feed remains 156 events across seven games with the existing NTE Circle
+  Bounty conflict. Authenticated production smoke remains manual with a
+  disposable Google test account.
+
+Next concrete step: S5, after the separate authenticated S4/S4.1 smoke.
+S4.1 did not add ongoing sync, an ordinary-edit outbox, or status UI.

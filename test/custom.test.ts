@@ -4,6 +4,7 @@ import {
   asOccurrenceEvent,
   CustomEvent,
   CustomGame,
+  editCustomGame,
   isCustomEventId,
   isCustomGameId,
   knownLane,
@@ -20,6 +21,7 @@ import { dailiesId } from "../src/shared/daily.ts";
 import { nextOccurrences, Repeat } from "../src/shared/recurrence.ts";
 import { eventId, GameId } from "../src/shared/schema.ts";
 import { clockFor } from "../src/shared/time.ts";
+import { buildExportData, parseImportData } from "../src/client/state/export.ts";
 import {
   occurrencesInFor,
   readerInstant,
@@ -138,6 +140,26 @@ describe("CustomEvent", () => {
 });
 
 describe("CustomGame", () => {
+  test("old records remain readable and their first edit adds a monotonic version", () => {
+    const old = CustomGame.parse({ id: "mygame:limbus-company", name: "Old",
+      hue: "#123456", at: AT });
+    expect(old.updatedAt).toBeUndefined();
+    const renamed = editCustomGame(old, "New", "#654321", Date.parse(AT));
+    expect(renamed.id).toBe(old.id);
+    expect(renamed.at).toBe(AT);
+    expect(renamed.updatedAt).toBe("2026-08-17T12:00:00.001Z");
+    const recolored = editCustomGame(renamed, "New", "#abcdef", Date.parse(AT));
+    expect(Date.parse(recolored.updatedAt!)).toBeGreaterThan(Date.parse(renamed.updatedAt!));
+    // The same schema gates stored and exported/imported copies.
+    expect(CustomGame.parse(JSON.parse(JSON.stringify(old)))).toEqual(old);
+    expect(CustomGame.parse(JSON.parse(JSON.stringify(recolored)))).toEqual(recolored);
+    for (const game of [old, recolored]) {
+      const exported = buildExportData({}, {}, {}, { games: { [game.id]: game }, events: {} });
+      const imported = parseImportData(JSON.parse(JSON.stringify(exported)));
+      expect(imported).not.toBeNull();
+      expect(validRecords(imported?.customGames, CustomGame)[game.id]).toEqual(game);
+    }
+  });
   test("a hue must be a hex colour, because it reaches a style attribute", () => {
     // An imported file is not necessarily one this reader wrote.
     const ok = CustomGame.parse({

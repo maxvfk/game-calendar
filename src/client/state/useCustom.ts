@@ -4,6 +4,7 @@ import {
   asOccurrenceEvent,
   CustomEvent,
   CustomGame,
+  editCustomGame,
   mintCustomEventId,
   mintCustomGameId,
   precisionOf,
@@ -193,11 +194,13 @@ export function useCustom(nowMs: number, keys: ProfileStorageKeys) {
 
   const addGame = useCallback((name: string, hue: string): string => {
     const id = mintCustomGameId(name, Object.keys(games));
+    const at = new Date().toISOString();
     const game = CustomGame.parse({
       id,
       name: name.trim(),
       hue,
-      at: new Date().toISOString(),
+      at,
+      updatedAt: at,
     });
     setGames((prev) => ({ ...prev, [id]: game }));
     return id;
@@ -209,7 +212,7 @@ export function useCustom(nowMs: number, keys: ProfileStorageKeys) {
       if (existing === undefined) return prev;
       // The id never follows the name — see docs/DATA-MODEL.md. Renaming a game
       // must not move the lane its events point at.
-      return { ...prev, [id]: { ...existing, name: name.trim(), hue } };
+      return { ...prev, [id]: editCustomGame(existing, name, hue) };
     });
   }, []);
 
