@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import {
   asDisplayEvent,
   asOccurrenceEvent,
@@ -15,7 +15,7 @@ import {
 } from "../../shared/custom.ts";
 import { nextOccurrences, occurrencesOf, type Repeat } from "../../shared/recurrence.ts";
 import type { EventType } from "../../shared/schema.ts";
-import { readJson, writeJson, type ProfileStorageKeys } from "./storage.ts";
+import { readJson, subscribeRemote, writeJson, type ProfileStorageKeys } from "./storage.ts";
 
 /**
  * The reader's own games and events (PRD F13).
@@ -185,12 +185,20 @@ export function useCustom(nowMs: number, keys: ProfileStorageKeys) {
     readValid(keys.customEvents, CustomEvent, "custom event"),
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     writeJson(keys.customGames, games);
   }, [keys.customGames, games]);
-  useEffect(() => {
+  useEffect(() => subscribeRemote(keys.customGames, () => setGames((current) => {
+    const next = readValid(keys.customGames, CustomGame, "custom game");
+    return JSON.stringify(current) === JSON.stringify(next) ? current : next;
+  })), [keys.customGames]);
+  useLayoutEffect(() => {
     writeJson(keys.customEvents, events);
   }, [keys.customEvents, events]);
+  useEffect(() => subscribeRemote(keys.customEvents, () => setEvents((current) => {
+    const next = readValid(keys.customEvents, CustomEvent, "custom event");
+    return JSON.stringify(current) === JSON.stringify(next) ? current : next;
+  })), [keys.customEvents]);
 
   const addGame = useCallback((name: string, hue: string): string => {
     const id = mintCustomGameId(name, Object.keys(games));

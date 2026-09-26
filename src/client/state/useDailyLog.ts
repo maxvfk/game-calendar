@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { readJson, writeJson } from "./storage.ts";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { readJson, subscribeRemote, writeJson } from "./storage.ts";
 
 export interface DailyLog {
   /** Game-day keys (`YYYY-MM-DD`) the reader has ticked off, oldest first. */
@@ -25,9 +25,13 @@ export function useDailyLog(storageKey: string) {
     readJson<DailyLogMap>(storageKey, {}),
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     writeJson(storageKey, logs);
   }, [storageKey, logs]);
+  useEffect(() => subscribeRemote(storageKey, () => setLogs((current) => {
+    const next = readJson<DailyLogMap>(storageKey, {});
+    return JSON.stringify(current) === JSON.stringify(next) ? current : next;
+  })), [storageKey]);
 
   const toggleDay = useCallback((id: string, day: string) => {
     setLogs((prev) => {

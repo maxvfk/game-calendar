@@ -714,3 +714,38 @@ one-time import as continuous sync.
 
 Next concrete step: S5 — production sync engine. S4/S4.1 are now closed.
 S4.1 did not add ongoing sync, an ordinary-edit outbox, or status UI.
+
+## Account Sync — S5
+
+- Branch `feature/account-sync-s5-engine` from current `main` `3657cfb`
+  (2026-09-26). S4's materialized account baseline upgrades once: edits made
+  after S4 first login are compared with that snapshot and placed in a durable,
+  profile-scoped outbox before the first cloud pull. Later progress, daily,
+  ignored, per-key preference, custom-game and custom-event edits (including
+  uncheck, unignore, reset and deletion) journal first, then update the local
+  cache. Existing export/import merges go through the same hook write path.
+  Signed-out guest state remains local and isolated.
+- An authenticated cycle verifies the owner, pulls six versioned cloud tables,
+  merges pending mutations, conditionally sends them through the existing S3
+  RPC, pulls again and removes only cloud-confirmed or superseded mutations.
+  It re-reads the outbox after network requests so concurrent edits remain
+  pending, and startup replays interrupted local writes. The controller runs
+  on startup, foreground, online, debounced edits and a five-minute foreground
+  interval. It retries transient failures with bounded backoff and shows
+  pending, offline, retry, auth, schema, last-success and clock-warning status.
+  No realtime channel or S6 backup work was added.
+- Tests cover migration and interrupted writes, opaque IDs, all mutation
+  families and reversals, offline conflicts and two-device convergence,
+  acknowledgement retry with the original mutation ID, in-flight edits,
+  profile isolation, triggers and auth failure. The production two-browser
+  authenticated smoke remains an operator release gate after Pages deployment;
+  this local test run does not substitute for that hosted check. A cold offline
+  reload waits for authenticated identity verification before showing the
+  account cache; reconnecting restores its durable outbox.
+- Bun 1.3.14 frozen install, typecheck, **1012 tests** across 49 files and
+  build passed locally. The feed remains 156 events across seven games with
+  the pre-existing NTE Circle Bounty conflict.
+
+Next concrete step: deploy S5 and complete the two-browser authenticated
+convergence/offline/import smoke with a disposable Google test user. Do not
+start S6 until this gate is checked.

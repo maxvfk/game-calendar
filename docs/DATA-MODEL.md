@@ -213,8 +213,9 @@ malformed row surfaces at the boundary rather than deep in the UI.
 
 Namespaced, versioned, and small. S2 created the stable local guest profile;
 S4 can select a separate authenticated account profile after verifying its
-session and explicit first-login choice. S4 uploads only that chosen import;
-ongoing edits remain local until S5. The v1 keys below are kept
+session and explicit first-login choice. S5 journals later account edits and
+imports in a per-profile outbox before writing the scoped cache, then
+conditionally synchronizes them. The v1 keys below are kept
 as an untouched backup after a one-time, idempotent migration; they are no
 longer written by the app. See `state/storage.ts` for synchronous bootstrap.
 
@@ -227,8 +228,8 @@ longer written by the app. See `state/storage.ts` for synchronous bootstrap.
 "gacha-tracker:v2:profile:<id>:prefs"
 "gacha-tracker:v2:profile:<id>:customGames"
 "gacha-tracker:v2:profile:<id>:customEvents"
-"gacha-tracker:v2:profile:<id>:syncMeta"   // S4 baseline for later S5 diff
-"gacha-tracker:v2:profile:<id>:outbox"     // reserved for later sync milestones
+"gacha-tracker:v2:profile:<id>:syncMeta"   // S5 cloud baseline, attempt/success/error
+"gacha-tracker:v2:profile:<id>:outbox"     // durable pending SyncMutation[]
 ```
 
 The app chooses the local guest before mounting state hooks. Its ID is stable
@@ -237,6 +238,11 @@ signed-out guest. Export/import retain the version 1 JSON file format and
 operate on the selected profile's hooks. The pre-paint script reads scoped
 guest preferences, with a v1 fallback only before the first migration. A stale
 remote activeProfile cannot paint its cached theme before session validation.
+S4's materialized baseline upgrades once to S5 metadata: any account edits
+made before that upgrade are journaled first. A missing or incompatible
+baseline fails closed rather than treating the cloud as empty. Cloud pulls
+retain tombstones and false rows in the versioned baseline; the UI stores a
+materialized view. An outbox-first interrupted write is replayed on startup.
 
 Legacy storage format:
 

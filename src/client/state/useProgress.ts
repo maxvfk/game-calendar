@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import type { Effort } from "../../shared/effort.ts";
-import { readJson, writeJson } from "./storage.ts";
+import { readJson, subscribeRemote, writeJson } from "./storage.ts";
 
 /** Where the reader is with an event. Absent means untouched. */
 export type Status = "doing" | "done";
@@ -82,11 +82,14 @@ export function mergeProgress(
 
   const next = { ...current };
   for (const [id, value] of Object.entries(incoming)) {
-    const existing = next[id];
-    next[id] =
+    const existing = Object.hasOwn(next, id) ? next[id] : undefined;
+    const winner =
       existing === undefined || touchedAt(value) > touchedAt(existing)
         ? value
         : existing;
+    // Imported event IDs are opaque, including `__proto__`.
+    Object.defineProperty(next, id, { value: winner, enumerable: true,
+      configurable: true, writable: true });
   }
   return next;
 }
@@ -94,9 +97,13 @@ export function mergeProgress(
 export function useProgress(storageKey: string) {
   const [progress, setProgress] = useState<ProgressMap>(() => readJson(storageKey, {}));
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     writeJson(storageKey, progress);
   }, [storageKey, progress]);
+  useEffect(() => subscribeRemote(storageKey, () => setProgress((current) => {
+    const next = readJson<ProgressMap>(storageKey, {});
+    return JSON.stringify(current) === JSON.stringify(next) ? current : next;
+  })), [storageKey]);
 
   const patch = useCallback((id: string, next: Partial<Progress>) => {
     setProgress((prev) => {
