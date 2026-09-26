@@ -211,8 +211,10 @@ malformed row surfaces at the boundary rather than deep in the UI.
 
 ## Client-side storage
 
-Namespaced, versioned, and small. S2 stores user state under the active local
-guest profile. It has no auth or cloud calls yet. The v1 keys below are kept
+Namespaced, versioned, and small. S2 created the stable local guest profile;
+S4 can select a separate authenticated account profile after verifying its
+session and explicit first-login choice. S4 uploads only that chosen import;
+ongoing edits remain local until S5. The v1 keys below are kept
 as an untouched backup after a one-time, idempotent migration; they are no
 longer written by the app. See `state/storage.ts` for synchronous bootstrap.
 
@@ -225,7 +227,7 @@ longer written by the app. See `state/storage.ts` for synchronous bootstrap.
 "gacha-tracker:v2:profile:<id>:prefs"
 "gacha-tracker:v2:profile:<id>:customGames"
 "gacha-tracker:v2:profile:<id>:customEvents"
-"gacha-tracker:v2:profile:<id>:syncMeta"   // reserved for later sync milestones
+"gacha-tracker:v2:profile:<id>:syncMeta"   // S4 baseline for later S5 diff
 "gacha-tracker:v2:profile:<id>:outbox"     // reserved for later sync milestones
 ```
 
@@ -233,7 +235,8 @@ The app chooses the local guest before mounting state hooks. Its ID is stable
 across reloads; account profiles use distinct keys and cannot be read by the
 signed-out guest. Export/import retain the version 1 JSON file format and
 operate on the selected profile's hooks. The pre-paint script reads scoped
-preferences, with a v1 fallback only before the first migration.
+guest preferences, with a v1 fallback only before the first migration. A stale
+remote activeProfile cannot paint its cached theme before session validation.
 
 Legacy storage format:
 

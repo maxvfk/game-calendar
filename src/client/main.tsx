@@ -1,16 +1,16 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { App } from "./App.tsx";
+import { AuthRoot } from "./account/AuthRoot.tsx";
 import { bootstrapLocalProfile } from "./state/storage.ts";
 
 const root = document.getElementById("root");
 if (root === null) throw new Error("#root is missing from index.html");
 
-const activeProfile = bootstrapLocalProfile();
+const guest = bootstrapLocalProfile();
 
 createRoot(root).render(
   <StrictMode>
-    <App key={activeProfile.profileId} storageKeys={activeProfile.keys} />
+    <AuthRoot guest={guest} />
   </StrictMode>,
 );
 

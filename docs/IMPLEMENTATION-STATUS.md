@@ -639,3 +639,37 @@ S2 concluded; S3 is recorded below.
 Next concrete step: S4 — Google Auth, default-profile resolution and explicit
 first-login local migration. Provisioning a hosted Supabase project and Google
 OAuth configuration is deferred until that milestone; S3 needs neither.
+
+## Account Sync — S4
+
+- Branch `feature/account-sync-s4-auth` from current `main` `563862c`
+  (2026-09-26). The operator created hosted Supabase project
+  `vzzudezdigjwbwfejlsg`, applied both S3 migrations in order, and configured
+  Google OAuth Testing for the Pages and localhost origins. The browser uses
+  only the project URL and publishable key; no secret credentials are shipped.
+- PKCE returns to the real GitHub Pages base URL. `getUser()` verifies a session
+  and the default profile ownership is checked before cached account state is
+  selected. Signed-out use retains the stable guest. The pre-paint script reads
+  only guest prefs (or v1 before migration), never a stale remote active ID.
+  OAuth callback query codes are removed from history and not cached by the
+  service worker.
+- First login fetches validated cloud rows and explicitly offers guest import,
+  cloud-only, or cancel when appropriate. Merge uses the S3 conditional RPC;
+  settings conflict defaults to the account copy. A persisted plan preserves
+  mutation IDs across interrupted batches; a failed S2 durable guest copy
+  blocks account setup rather than being mistaken for an empty guest. The guest and v1 copies remain
+  intact, while the selected account cache records a baseline for S5.
+- S4 does **not** wire ordinary local edits/imports to cloud, create an outbox,
+  or run foreground/background sync. The Account UI says changes remain on
+  this device until S5. Hosted anon PostgREST verified `401 / 42501` on all
+  seven personal tables and both RPCs. Hosted OAuth authorize returned a
+  Google redirect with the configured Supabase callback. Authenticated
+  owner/cross-user and production OAuth smoke are pending the deployed S4
+  build/test-user session.
+- Bun 1.3.14 frozen install, typecheck, **997 tests**, and build passed locally; the
+  feed remains 156 events across seven games with the pre-existing NTE Circle
+  Bounty conflict. PR CI/deployment pending.
+
+Next concrete step: S5 — production sync engine, including durable outbox,
+pull/merge/push, retry/status and two-device convergence. Do not treat S4's
+one-time import as continuous sync.

@@ -183,6 +183,16 @@ describe("the service worker's side of an update", () => {
     expect(await response?.text()).toBe("last good feed");
   });
 
+  test("OAuth callback serves the shell without caching its one-use code", async () => {
+    const w = await loadWorker();
+    const callback = "https://example.test/app/?code=one-use-auth-code";
+    const request = { url: callback, method: "GET", mode: "navigate" } as Request;
+    const response = await w.dispatch("fetch", { request });
+    expect(response?.status).toBe(200);
+    expect(w.fetched).toContain("https://example.test/app/index.html" as unknown as Request);
+    expect([...w.stores.values()].some((cache) => cache.has(callback))).toBe(false);
+  });
+
   test("caches under a name that does not move with the build", async () => {
     const w = await loadWorker("deadbeef0000");
     await w.dispatch("install");

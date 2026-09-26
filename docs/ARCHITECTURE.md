@@ -1,5 +1,18 @@
 # Architecture
 
+## Current deployment (Account Sync S4)
+
+GitHub Actions builds the public feed and static React PWA for GitHub Pages.
+The feed remains independent of personal data. Browser state is stored in
+profile-scoped `localStorage`; optional Supabase Auth provides Google login.
+The S3 PostgreSQL tables/RLS/RPC accept an **explicit first-login import** in
+S4. Subsequent edits to the selected account cache remain local until S5 wires
+the production outbox and sync cycle. Signed-out use stays on a separate local
+guest profile. See the approved account-sync design and `supabase/README.md`.
+
+The Bun/SQLite architecture below is older reference design, not the current
+GitHub Pages deployment or the S4 account implementation.
+
 ## Shape
 
 One Bun process serves the static React build, exposes a read-only JSON API, and runs the
