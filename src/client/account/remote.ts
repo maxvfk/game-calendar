@@ -88,11 +88,13 @@ export function decodeCloudRow(table: Table, row: Record<string, unknown>): Sync
   return SyncMutation.parse(candidate);
 }
 
-export async function pullCloud(profileId: string): Promise<SyncState> {
+export async function pullCloud(profileId: string,
+  inspect?: (row: Record<string, unknown>) => void): Promise<SyncState> {
   profileKeys(profileId);
   let state = emptySyncState();
   for (const table of tables) {
     for (const row of await fetchTable(table, profileId)) {
+      inspect?.(row);
       state = applyMutation(state, decodeCloudRow(table, row)).state;
     }
   }

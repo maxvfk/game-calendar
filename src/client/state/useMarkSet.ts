@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { readJson, writeJson } from "./storage.ts";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { readJson, subscribeRemote, writeJson } from "./storage.ts";
 
 export interface Mark {
   /** When the reader made this mark. */
@@ -20,9 +20,13 @@ export function useMarkSet(storageKey: string) {
     readJson<Marks>(storageKey, {}),
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     writeJson(storageKey, marks);
   }, [storageKey, marks]);
+  useEffect(() => subscribeRemote(storageKey, () => setMarks((current) => {
+    const next = readJson<Marks>(storageKey, {});
+    return JSON.stringify(current) === JSON.stringify(next) ? current : next;
+  })), [storageKey]);
 
   const toggle = useCallback((id: string) => {
     setMarks((prev) => {
@@ -44,9 +48,11 @@ export function useMarkSet(storageKey: string) {
     setMarks((prev) => {
       const next = { ...prev };
       for (const [id, value] of Object.entries(incoming)) {
-        const existing = next[id];
-        next[id] =
+        const existing = Object.hasOwn(next, id) ? next[id] : undefined;
+        const winner =
           existing === undefined || value.at < existing.at ? value : existing;
+        Object.defineProperty(next, id, { value: winner, enumerable: true,
+          configurable: true, writable: true });
       }
       return next;
     });

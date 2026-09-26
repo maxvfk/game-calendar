@@ -65,9 +65,9 @@ The first-login prompt never uploads guest data without a choice. A confirmed
 import persists its mutation plan before bounded RPC batches, so retry sends
 the same UUID/version pairs; it then pulls the server's winning rows and
 materializes a distinct account cache. Cloud-only leaves the guest untouched.
-The account cache records its initial cloud baseline for S5. **Ordinary edits
-after setup are local-only in S4**; the durable outbox, background pull/push,
-status/retry UI and two-device convergence are S5 work. Export/import continues
+The account cache records its initial cloud baseline for S5. In the original
+S4 release, ordinary edits after setup stayed local; S5 adds the durable
+outbox, pull/push, and status/retry UI described below. Export/import continues
 to use the selected local profile and the version 1 backup format.
 
 The hosted anon PostgREST check on 2026-09-26 returned `401 / 42501` for all
@@ -77,3 +77,22 @@ configured Supabase callback and only identity scopes (`email profile`).
 Authenticated OAuth/owner/cross-user verification requires signing in as test
 users through the deployed Pages app. No service-role/secret credentials are
 present in the repository or browser bundle.
+
+## S5 production sync
+
+The authenticated browser keeps a per-profile v2 sync baseline and serializable
+outbox. The old S4 materialized baseline is compared with the current account
+cache once on upgrade so edits made during S4 are queued before the first S5
+pull. Ordinary hook writes and existing export/import merges take the same
+local journal path. For each logical key, a newer pending mutation replaces an
+older pending one; every mutation has a stable UUID and millisecond ISO version.
+
+An online cycle verifies the owner with Auth, pulls and validates all six
+personal row tables, merges the cloud rows with the durable outbox, sends
+bounded batches through `apply_profile_mutations`, then pulls again. Pending
+rows are removed only when the returned cloud version confirms or supersedes
+them. A failed/partial request retains the remaining UUIDs for idempotent
+retry. Signed-out guest storage and another account's cache/outbox are not
+used by the active profile. The UI shows pending/offline/error/auth state and
+last successful sync. A remote version in the future relative to the device
+or its server receipt time raises a clock warning. No realtime channel is used.

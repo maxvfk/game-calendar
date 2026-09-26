@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { isCustomGameId, type LaneId } from "../../shared/custom.ts";
 import type { Region } from "../../shared/schema.ts";
 import { guessRegion } from "../../shared/time.ts";
 import type { SortMode } from "./sort.ts";
-import { readJson, writeJson } from "./storage.ts";
+import { readJson, subscribeRemote, writeJson } from "./storage.ts";
 import type { TimelineGroup } from "./lanes.ts";
 import { DEFAULT_THEME_CHOICE, type ThemeChoice } from "./theme.ts";
 import { DEFAULT_DAY_WIDTH, snapDayWidth } from "./zoom.ts";
@@ -374,9 +374,13 @@ export function usePrefs(storageKey: string) {
     };
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     writeJson(storageKey, prefs);
   }, [storageKey, prefs]);
+  useEffect(() => subscribeRemote(storageKey, () => setPrefs((current) => {
+    const next = restorePrefsValue(readJson(storageKey, {}));
+    return JSON.stringify(current) === JSON.stringify(next) ? current : next;
+  })), [storageKey]);
 
   const update = useCallback((patch: Partial<Prefs>) => {
     setPrefs((prev) => ({ ...prev, ...patch }));

@@ -197,8 +197,26 @@ export function readJson<T>(key: string, fallback: T): T {
   }
 }
 
+let accountWriter: ((key: string, value: unknown) => boolean) | undefined;
+/** Installed by the account module; guest and legacy writes keep their path. */
+export function registerAccountWriter(writer: (key: string, value: unknown) => boolean): void {
+  accountWriter = writer;
+}
+
+/** Cloud convergence updates the scoped stores without feeding them back into
+ * the ordinary local mutation path. Existing hooks refresh from those stores. */
+export function subscribeRemote(key: string, refresh: () => void): () => void {
+  const listener = (event: Event) => {
+    const profileId = (event as CustomEvent<string>).detail;
+    if (key.startsWith(`gacha-tracker:v2:profile:${profileId}:`)) refresh();
+  };
+  window.addEventListener("account-sync-remote-change", listener);
+  return () => window.removeEventListener("account-sync-remote-change", listener);
+}
+
 export function writeJson(key: string, value: unknown): void {
   try {
+    if (accountWriter?.(key, value)) return;
     if (volatileValues.has(key)) {
       volatileValues.set(key, JSON.stringify(value));
       return;
