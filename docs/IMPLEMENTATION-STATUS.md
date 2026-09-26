@@ -664,11 +664,19 @@ OAuth configuration is deferred until that milestone; S3 needs neither.
   this device until S5. Hosted anon PostgREST verified `401 / 42501` on all
   seven personal tables and both RPCs. Hosted OAuth authorize returned a
   Google redirect with the configured Supabase callback. Authenticated
-  owner/cross-user and production OAuth smoke are pending the deployed S4
-  build/test-user session.
+  owner/cross-user and completed Google sign-in/first-login smoke still require
+  an authenticated test-user session. The published Pages build was opened in
+  a fresh browser session: signed-out guest calendar and Account controls work,
+  and Continue with Google reaches the Google sign-in page through the
+  configured Supabase callback.
 - Bun 1.3.14 frozen install, typecheck, **997 tests**, and build passed locally; the
   feed remains 156 events across seven games with the pre-existing NTE Circle
-  Bounty conflict. PR CI/deployment pending.
+  Bounty conflict. [PR #13](https://github.com/maxvfk/game-calendar/pull/13)
+  merged as `de21351`. PR CI
+  [run 36248747931](https://github.com/maxvfk/game-calendar/actions/runs/36248747931)
+  passed; main CI
+  [run 36248791489](https://github.com/maxvfk/game-calendar/actions/runs/36248791489)
+  passed typecheck, tests, feed, build and Pages deployment.
 
 Next concrete step: S5 — production sync engine, including durable outbox,
 pull/merge/push, retry/status and two-device convergence. Do not treat S4's
