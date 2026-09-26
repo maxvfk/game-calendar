@@ -104,6 +104,7 @@ function SetupPrompt({ choice, onComplete, onCancel }: {
   const [settings, setSettings] = useState<SettingsChoice>("cloud");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resumable, setResumable] = useState(choice.resumable);
   const counts = personalCounts(choice.local);
   const cloudExists = hasCloudData(choice.cloud);
   const settingsDiffer = Object.keys(choice.cloud.preference).length > 0 &&
@@ -113,14 +114,21 @@ function SetupPrompt({ choice, onComplete, onCancel }: {
     setBusy(true);
     setError(null);
     try { await onComplete(mode, preference); }
-    catch (cause) { setError(errorText(cause)); setBusy(false); }
+    catch (cause) {
+      setError(errorText(cause));
+      try {
+        setResumable(pendingPlan(localStorage, choice.profileId, choice.ownerId,
+          choice.guest.profileId) !== null);
+      } catch { /* The original error remains visible. */ }
+      setBusy(false);
+    }
   }
 
   return <main className="mx-auto max-w-xl px-5 py-10 text-near">
     <h1 className="font-display text-xl font-bold">Account setup</h1>
     <p className="mt-2 text-sm text-faint">Signed in as {choice.email}.</p>
     <section role="dialog" aria-label="Local data migration" className="mt-6 rounded-xl border border-hairline p-5">
-      {choice.resumable ? <>
+      {resumable ? <>
         <h2 className="font-semibold">Finish importing local data</h2>
         <p className="mt-2 text-sm">An earlier import was interrupted. Retry sends the same mutation IDs; it will not start a second import.</p>
         <button disabled={busy} className="mt-4 rounded-md border border-hairline px-3 py-2" onClick={() => void submit("merge")}>Retry import</button>
