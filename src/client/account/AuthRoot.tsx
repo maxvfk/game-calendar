@@ -7,7 +7,8 @@ import {
 } from "./remote.ts";
 import type { SyncState } from "../../shared/sync.ts";
 import {
-  completeFirstLogin, pendingPlan, readAccountBinding, type SettingsChoice,
+  completeFirstLogin, guestMigrationDurable, pendingPlan, readAccountBinding,
+  type SettingsChoice,
 } from "./firstLogin.ts";
 
 type Guest = ReturnType<typeof bootstrapLocalProfile>;
@@ -81,6 +82,9 @@ async function resolveAccount(guest: Guest, canActivate: () => boolean): Promise
   if (readAccountBinding(localStorage, profileId, ownerId)) {
     localStorage.setItem("gacha-tracker:v2:activeProfile", profileId);
     return { kind: "account", profileId, email, guest };
+  }
+  if (!guestMigrationDurable(localStorage, guest.profileId)) {
+    throw new Error("Local migration is incomplete; keep using the guest and export a backup before account setup");
   }
   const local = readPersonalState(guest.keys, localStorage);
   const cloud = await pullCloud(profileId);

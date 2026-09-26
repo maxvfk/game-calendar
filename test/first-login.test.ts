@@ -2,7 +2,8 @@ import { describe, expect, test } from "bun:test";
 import { applyMutation, emptySyncState, type SyncState } from "../src/shared/sync.ts";
 import { bootstrapLocalProfile, profileKeys } from "../src/client/state/storage.ts";
 import {
-  guestMutations, pendingPlan, readAccountBinding, savePlan, writeAccountCache,
+  guestMigrationDurable, guestMutations, pendingPlan, readAccountBinding,
+  savePlan, writeAccountCache,
 } from "../src/client/account/firstLogin.ts";
 import {
   decodeCloudRow, hasCloudData, hasGuestData, materializeCloud, personalCounts, readPersonalState,
@@ -72,6 +73,7 @@ describe("S4 explicit first login", () => {
   test("persisted plan retries exact IDs and owner/profile binding gates cache", () => {
     const store = new MemoryStorage();
     const local = bootstrapLocalProfile(store);
+    expect(guestMigrationDurable(store, local.profileId)).toBe(true);
     const rows = guestMutations(guest(), "local", emptySyncState(), later);
     savePlan(store, profileId, ownerId, local.profileId, rows);
     expect(pendingPlan(store, profileId, ownerId, local.profileId)).toEqual(rows);
@@ -83,6 +85,14 @@ describe("S4 explicit first login", () => {
     expect(readPersonalState(profileKeys(profileId), store).progress["opaque:event#1"]?.note)
       .toBe("Keep");
     expect(store.getItem(profileKeys(profileId).syncMeta)).toContain("baseline");
+  });
+
+  test("an incomplete S2 copy never masquerades as an empty guest", () => {
+    const store = new MemoryStorage();
+    const guest = bootstrapLocalProfile(store);
+    store.setItem("gacha-tracker:v2:profiles", JSON.stringify({ schemaVersion: 2,
+      guestProfileId: guest.profileId, legacyMigrated: false }));
+    expect(guestMigrationDurable(store, guest.profileId)).toBe(false);
   });
 
   test("cloud-only materialization retains preference resets and custom tombstones", () => {

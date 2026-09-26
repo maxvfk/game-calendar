@@ -656,15 +656,17 @@ OAuth configuration is deferred until that milestone; S3 needs neither.
 - First login fetches validated cloud rows and explicitly offers guest import,
   cloud-only, or cancel when appropriate. Merge uses the S3 conditional RPC;
   settings conflict defaults to the account copy. A persisted plan preserves
-  mutation IDs across interrupted batches. The guest and v1 copies remain
+  mutation IDs across interrupted batches; a failed S2 durable guest copy
+  blocks account setup rather than being mistaken for an empty guest. The guest and v1 copies remain
   intact, while the selected account cache records a baseline for S5.
 - S4 does **not** wire ordinary local edits/imports to cloud, create an outbox,
   or run foreground/background sync. The Account UI says changes remain on
   this device until S5. Hosted anon PostgREST verified `401 / 42501` on all
   seven personal tables and both RPCs. Hosted OAuth authorize returned a
-  Google redirect with the configured Supabase callback. Authenticated owner/cross-user and
-  production OAuth smoke are pending the deployed S4 build/test-user session.
-- Bun 1.3.14 frozen install, typecheck, **996 tests**, and build passed locally; the
+  Google redirect with the configured Supabase callback. Authenticated
+  owner/cross-user and production OAuth smoke are pending the deployed S4
+  build/test-user session.
+- Bun 1.3.14 frozen install, typecheck, **997 tests**, and build passed locally; the
   feed remains 156 events across seven games with the pre-existing NTE Circle
   Bounty conflict. PR CI/deployment pending.
 

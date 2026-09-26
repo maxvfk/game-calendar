@@ -1,6 +1,6 @@
 import { CustomEvent, CustomGame } from "../../shared/custom.ts";
 import { PreferenceKey, SyncMutation, type SyncState } from "../../shared/sync.ts";
-import { profileKeys } from "../state/storage.ts";
+import { PROFILE_KEYS, profileKeys } from "../state/storage.ts";
 import type { PersonalState } from "./remote.ts";
 import { materializeCloud, pullCloud, applyCloudMutations } from "./remote.ts";
 
@@ -11,6 +11,18 @@ type MigrationPlan = AccountBinding & { guestId: string; mutations: SyncMutation
 
 const accountKey = (profileId: string) => `${profileKeys(profileId).syncMeta}:account`;
 const planKey = (profileId: string) => `${profileKeys(profileId).syncMeta}:firstLoginPlan`;
+
+/** S2 may keep v1 data only in memory after a failed storage copy. Never
+ * interpret the partially persisted guest as an empty first-login source. */
+export function guestMigrationDurable(store: Store, guestId: string): boolean {
+  try {
+    const registry = JSON.parse(store.getItem(PROFILE_KEYS.profiles) ?? "null") as {
+      schemaVersion?: unknown; guestProfileId?: unknown; legacyMigrated?: unknown;
+    } | null;
+    return registry?.schemaVersion === 2 && registry.guestProfileId === guestId &&
+      registry.legacyMigrated === true;
+  } catch { return false; }
+}
 
 export function readAccountBinding(store: Store, profileId: string, ownerId: string): boolean {
   try {
