@@ -72,8 +72,18 @@ export const CustomGame = z.object({
    */
   hue: z.string().regex(/^#[0-9a-fA-F]{6}$/),
   at: z.string().datetime(),
+  /** Older stored games have only `at`; edits from S4.1 onward advance this. */
+  updatedAt: z.string().datetime().optional(),
 });
 export type CustomGame = z.infer<typeof CustomGame>;
+
+/** Keep the creation time and stable ID; even edits in one millisecond advance. */
+export function editCustomGame(game: CustomGame, name: string, hue: string,
+  now = Date.now()): CustomGame {
+  const previous = Date.parse(game.updatedAt ?? game.at);
+  return CustomGame.parse({ ...game, name: name.trim(), hue,
+    updatedAt: new Date(Math.max(now, previous + 1)).toISOString() });
+}
 
 export const CustomEvent = z
   .object({

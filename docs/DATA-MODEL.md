@@ -504,11 +504,16 @@ Three first segments are now reserved and **none of them may ever become a `Game
 true is the day two key spaces merge silently.
 
 ```ts
-"gacha-tracker:v1:customGames"   // { [id]: { id, name, hue, at } }
+"gacha-tracker:v1:customGames"   // { [id]: { id, name, hue, at, updatedAt? } }
 "gacha-tracker:v1:customEvents"  // { [id]: { id, game, title, type, summary,
                                  //           startsAt, startPrecision,
                                  //           endsAt, endPrecision, at, updatedAt } }
 ```
+
+For custom games, `at` remains the creation time and `updatedAt` records the
+latest edit. Legacy stored/exported games without `updatedAt` remain valid;
+first-login sync uses `updatedAt ?? at`. New edits add and advance `updatedAt`
+without changing the stable `mygame:` ID or the export format version.
 
 Reader-authored events reuse `progress`, `daily` and `ignored` unchanged, keyed by their `myevent:`
 id — everything the reader can say about a scraped event they can say about their own, with no

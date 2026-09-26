@@ -88,7 +88,7 @@ export function guestMutations(guest: PersonalState, settings: SettingsChoice,
   for (const [key, value] of Object.entries(guest.customGames)) {
     const game = CustomGame.parse(value);
     rows.push(SyncMutation.parse({ kind: "customGame", key, deleted: false, payload: game,
-      changedAt: timestamp(game.at, key), mutationId: uuid() }));
+      changedAt: timestamp(game.updatedAt ?? game.at, key), mutationId: uuid() }));
   }
   for (const [key, value] of Object.entries(guest.customEvents)) {
     const event = CustomEvent.parse(value);
