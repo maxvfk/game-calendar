@@ -41,6 +41,14 @@ For each item, use this compact format:
   - **Status:** observed
   - **Notes / constraints:** avoid adding a full per-game timer row to the collapsed dailies strip; the goal is to remove ambiguity without making the section taller. Per-game server/reset semantics already exist and should remain the source of truth.
 
+- **Title:** Make event details explicitly dismissible
+  - **Observation:** event details currently have no visible close control. On touch devices the reader must tap the backdrop, which can be awkward on a large bottom sheet; the browser/system Back button navigates away instead of dismissing the open details.
+  - **Desired behavior:** add a clear close button inside the detail sheet and make browser/system Back dismiss the currently open event detail before normal page navigation resumes.
+  - **Area:** interaction / UI
+  - **Priority:** undecided
+  - **Status:** observed
+  - **Notes / constraints:** preserve backdrop tap and Escape as secondary dismissal paths. The close control needs a comfortable mobile touch target and must remain visible/reachable when the sheet content scrolls. Opening/closing details should integrate with history without creating duplicate or sticky history entries.
+
 ## Candidates before Astra audit
 
 No items yet. Reserve for approved small UX/UI fixes and corrections to
