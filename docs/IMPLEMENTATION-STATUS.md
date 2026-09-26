@@ -701,8 +701,16 @@ one-time import as continuous sync.
   monotonic edits, and a renamed local game's conflict with an older cloud
   copy. Bun 1.3.14 frozen install, typecheck, **1001 tests**, and build passed;
   feed remains 156 events across seven games with the existing NTE Circle
-  Bounty conflict. Authenticated production smoke remains manual with a
-  disposable Google test account.
+  Bounty conflict.
+- Manual authenticated production smoke completed successfully on 2026-09-26
+  with a Google test user. It covered first login from an existing guest,
+  explicit local-to-account import, callback cleanup, reload persistence,
+  sign-out back to the browser's guest state, sign-in restoring account state,
+  a second browser profile with different local data merged into the same
+  account while keeping account settings, verification that a newer custom-game
+  rename/color won correctly, a clean profile reading the cloud account copy,
+  and cloud-only selection followed by sign-out/refresh returning to that
+  profile's guest state. All requested S4/S4.1 smoke cases passed.
 
-Next concrete step: S5, after the separate authenticated S4/S4.1 smoke.
+Next concrete step: S5 — production sync engine. S4/S4.1 are now closed.
 S4.1 did not add ongoing sync, an ordinary-edit outbox, or status UI.
