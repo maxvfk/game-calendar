@@ -743,6 +743,148 @@ Fixes an issue whereby after the Ice Coffin of the opponents "Glaciomancer" and 
 
 -----
 
+# [The anniversary web event "Anniversary Memories Album" has begun! Participate in the event and obtain Primogems!](archive/21874.md)
+## The anniversary web event "Anniversary Memories Album" has begun! Participate in the event and obtain Primogems!
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/24/8c95bb9e017837208588eaca4318ec62_6006694332952315255_transformed.jpg)
+
+[>> Click to Take Part in Event <<](https://act.hoyoverse.com/ys/event/e20260928-review-kkmxf9/index.html?game_biz=hk4e_global&sign_type=2&auth_appid=e20260928anniversaryh5&authkey_ver=1&utm_source=ingame&utm_medium=notice)
+
+〓Event Duration〓
+
+<t class="t_gl" contenteditable="false">2026/09/28 11:00</t> – <t class="t_gl" contenteditable="false">2026/10/18 23:59</t>
+
+〓Eligibility〓
+
+Reach Adventure Rank 10 or above
+
+〓Event Description〓
+
+Look back on your journey through Teyvat with Paimon!
+
+This event features three main activities:
+
+1. Join Paimon in "Anniversary Memories Album" and revisit some of the most memorable moments from your journey.
+
+2. Head to the "Theater of Memories" to watch a highlight reel of your adventures from the past year.
+
+3. Don't forget to visit the "Starfarer's Almanac" and find out your Adventure Style!
+
+〓Event Notes〓
+
+Please log in to the event using your HoYoverse Account and select your corresponding character in Genshin Impact to take part. This will ensure that your rewards can be sent and claimed correctly.
+
+After the event ends, you will no longer be able to take part and claim the rewards, so remember to take part in time.
+
+The in-game rewards will be distributed via in-game mail. The mail will expire after 30 days, so don't forget to claim the rewards in time.
+
+This web event is provided purely for entertainment. The content of the event does not represent any actual story or settings in the game. It is not indicative of any related gameplay features in Genshin Impact.
+
+〓Event Rewards〓
+
+1. Browse the Anniversary Memories Album: Obtain Primogem ×60 and Hero's Wit ×5
+
+2. Watch the Theater of Memories performance: Obtain Primogems ×60 and Mystic Enhancement Ore ×5
+
+3. Successfully generate your Adventure Style: Obtain Primogems ×40 and Sanctifying Unction ×5
+
+4. Share any content from the event page: Obtain Mora ×20,000
+
+There are also hidden Easter eggs to discover, with rewards including Primogems ×20 and more~
+
+-----
+
+# [Stygian Onslaught Event: Disturbance-affected Ley Line challenges](archive/21168.md)
+## Stygian Onslaught
+![Banner](https://sdk.hoyoverse.com/upload/ann/2025/10/23/40da7ab1ce17afd008e7a10c6ee6e67b_3372052251159312794_transformed.jpg)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2025/06/05/2b8eaa5bc75b36d842c22a91c3bb4fb4_2475835335613495492.png)
+
+〓Event Duration〓
+
+Event Duration: <t class="t_lc" contenteditable="false">2026/09/30 10:00</t>  - <t class="t_lc" contenteditable="false">2026/11/03 03:59</t>
+
+Disturbance Outbreak: <t class="t_lc" contenteditable="false">2026/09/30 10:00</t>  - <t class="t_lc" contenteditable="false">2026/10/10 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 20 or above
+
+And complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
+
+※Complete Archon Quest "Perilous Trail" first to get the best experience from this event.
+
+〓Event Details〓
+
+● Challenge gameplay: You must select a difficulty first. After you enter a challenge, you must complete 3 phases, for a total of 3 time-limited battles. The challenge is considered complete once all opponents in all 3 battles are beaten.
+
+● Difficulty: difficulty levels in ascending order are "Normal," "Advancing," "Hard," "Menacing," "Fearless," and "Dire."
+
+The higher the initial difficulty selected, the more restrictive the rules applied during the challenge, and the tougher enemies will be.
+
+From the "Hard" difficulty onward, you can only unlock the next difficulty by clearing the current one.
+
+● "Exalted Ones": There can be a maximum of 16 "Exalted Ones" at any one time during the challenge.
+
+"Exalted Ones" will obtain buff effects; adding them to your party will help you complete the challenge.
+
+There can be a maximum of 16 "Exalted Ones" at any one time during the challenge, and their number is subject to change.
+
+Under the "Dire" difficulty, "Exalted Ones" no longer obtain buff effects.
+
+● Disturbance Outbreak: In the first 10 days from when the challenge is available, the Ley Line disturbance will be in an "Outbreak" state.
+
+During the Disturbance Outbreak, players with Adventure Rank 45 and above can challenge stages at "Hard" difficulty onwards, and upon completing them, can consume Resin to earn the rewards from their chosen Domains of Blessing, while also accumulating Dire Prestige.
+
+Accumulate a certain amount of Dire Prestige to receive extra Artifact rewards and Dust of Enlightenment.
+
+After the Disturbance Outbreak ends, players will not be able to consume Resins to claim rewards from their selected Domain of Blessing.
+
+● Completing a more difficult challenge will also let you obtain the rewards from the difficulties below that one.
+
+Rewards for "Fearless" and "Dire" difficulties can only be claimed upon completing the single-player challenge.
+
+● Co-Op Mode: All difficulty levels support Co-Op Mode of up to 4 players.
+
+"Normal," "Advancing," and "Hard" difficulties support matchmaking or Co-Op Mode within the same world.
+
+"Menacing," "Fearless," and "Dire" difficulties only support Co-Op challenges within the same world.
+
+-----
+
+# [Genshin Impact 6th Anniversary Forum Commenting Event! Primogems, Mora, and Blessing of the Welkin Moon Await~](archive/21893.md)
+## Genshin Impact's 6th Anniversary Forum Commenting Event Featuring Blessing of the Welkin Moon Begins!
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/04/0ef6f588983f7f08f182cf64c8c94b5d_7754111835044043015_transformed.png)
+
+Dear Traveler,
+
+The Genshin Impact 6th Anniversary Forum Commenting Event has begun! Leave a comment for a chance to win a Blessing of the Welkin Moon!
+
+This time, there'll be no limit on the number of rewards that will be given out! The more of you that participate, the more rewards there'll be!
+
+[Go to Event >>](https://www.hoyolab.com/article_pre/18014398241022174?utm_id=2&utm_medium=notice&utm_source=ingame)
+
+Event Duration
+
+September 28 – October 11, 2026 (UTC+8)
+
+How to Participate
+
+Head to the comments section of the event post and share a beautiful photo you've taken of a Genshin Impact character
+
+Event Rewards
+
+1. 10% of participating Travelers will be randomly selected to receive Blessing of the Welkin Moon ×1.
+
+2. The remaining 90% of participating Travelers who do not receive a Blessing of the Welkin Moon will each receive Mora ×100,000.
+
+3. 6,000 Travelers who commented will each receive Primogems ×100. This will be done by a random draw.
+
+4. All Travelers who commented will receive a Genshin Impact 6th Anniversary Comment Decoration.
+
+-----
+
 # ["Silverwing in Pursuit of the Moon" Event: Take Part to Obtain the Event-Exclusive Weapon "Silver Light (Sword)"](archive/21886.md)
 ## Silverwing in Pursuit of the Moon
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/22f2f523e19349f439b81b1c8e7a18f4_8177819633981078287_transformed.jpg)
