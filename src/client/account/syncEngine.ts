@@ -7,9 +7,10 @@ import {
   stateFromOutbox, writeSnapshot, type SyncMeta,
 } from "./localSync.ts";
 import { applyCloudMutations, materializeCloud, pullCloud, supabase } from "./remote.ts";
+import { isRetryableTransportError } from "./transport.ts";
 
 type Store = Pick<Storage, "getItem" | "setItem">;
-export type SyncStatus = { kind: "syncing" | "synced" | "pending" | "offline" |
+export type SyncStatus = { kind: "syncing" | "synced" | "pending" | "offline" | "network" |
   "error" | "auth" | "schema"; pending: number; lastSuccessfulSyncAt?: string;
   message?: string; clockWarning?: boolean };
 
@@ -160,14 +161,20 @@ export function startProfileSync(profileId: string, ownerId: string,
       if (stopped || !active()) return;
       const message = error instanceof Error ? error.message : String(error);
       const kind = /sign in again|session changed/i.test(message) ? "auth" :
-        /metadata|baseline|schema|invalid sync/i.test(message) ? "schema" : "error";
-      emit({ ...status, kind, message, pending: count() });
+        /metadata|baseline|schema|invalid sync/i.test(message) ? "schema" :
+          isRetryableTransportError(error) ? "network" : "error";
+      const next: SyncStatus = { ...status, kind, pending: count() };
+      if (kind === "network") delete next.message;
+      else next.message = message;
+      emit(next);
       try {
         const meta = readSyncMeta(store, keys);
         store.setItem(keys.syncMeta, JSON.stringify({ ...meta,
           lastAttemptAt: new Date().toISOString(), lastError: message } satisfies SyncMeta));
       } catch { /* Incompatible metadata stays untouched. */ }
-      if (kind === "error") schedule(Math.min(60_000, 2000 * 2 ** Math.min(failures++, 5)));
+      if (kind === "error" || kind === "network") {
+        schedule(Math.min(60_000, 2000 * 2 ** Math.min(failures++, 5)));
+      }
     } finally {
       if (timeout !== undefined) clearTimeout(timeout);
       running = false;

@@ -6,7 +6,7 @@ import {
   readSyncMeta,
 } from "../src/client/account/localSync.ts";
 import { readPersonalState, type PersonalState } from "../src/client/account/remote.ts";
-import { reconcile, startProfileSync, syncProfile } from "../src/client/account/syncEngine.ts";
+import { reconcile, startProfileSync, syncProfile, type SyncStatus } from "../src/client/account/syncEngine.ts";
 import { profileKeys, writeJson } from "../src/client/state/storage.ts";
 import { defaults } from "../src/client/state/usePrefs.ts";
 import { mergeProgress } from "../src/client/state/useProgress.ts";
@@ -273,11 +273,53 @@ describe("S5 durable local-first sync", () => {
       failNetwork = true;
       controller.retry();
       await settle();
-      expect(statuses.at(-1)).toBe("error");
+      expect(statuses.at(-1)).toBe("network");
       failNetwork = false;
       controller.retry();
       await settle();
       expect(statuses.at(-1)).toBe("synced");
+    } finally {
+      controller.stop();
+      for (const [key, descriptor] of prior) {
+        if (descriptor) Object.defineProperty(globalThis, key, descriptor);
+        else Reflect.deleteProperty(globalThis, key);
+      }
+    }
+  });
+
+  test("fetch failures keep pending edits local and display retryable network status", async () => {
+    const store = device();
+    captureAccountWrite(store, profile, "progress", { "opaque:event": { status: "done", at } });
+    const before = readOutbox(store, keys);
+    const prior = ["window", "document", "navigator"].map((key) =>
+      [key, Object.getOwnPropertyDescriptor(globalThis, key)] as const);
+    Object.defineProperty(globalThis, "window", { configurable: true, value: new EventTarget() });
+    Object.defineProperty(globalThis, "document", { configurable: true,
+      value: Object.assign(new EventTarget(), { visibilityState: "visible" }) });
+    Object.defineProperty(globalThis, "navigator", { configurable: true, value: { onLine: true } });
+    const statuses: SyncStatus[] = [];
+    let cause: Error = new TypeError("Failed to fetch");
+    const controller = startProfileSync(profile, owner, () => true,
+      (status) => statuses.push(status), store,
+      async () => { throw cause; });
+    try {
+      const settle = () => new Promise((resolve) => setTimeout(resolve, 30));
+      await settle();
+      expect(statuses.at(-1)).toMatchObject({ kind: "network", pending: 1 });
+      expect(statuses.at(-1)?.message).toBeUndefined();
+      expect(readOutbox(store, keys)).toEqual(before);
+      cause = new Error("Unexpected RPC payload");
+      controller.retry();
+      await settle();
+      expect(statuses.at(-1)).toMatchObject({ kind: "error", pending: 1 });
+      cause = new Error("Sync metadata is incompatible");
+      controller.retry();
+      await settle();
+      expect(statuses.at(-1)?.kind).toBe("schema");
+      cause = new Error("Sign in again to sync");
+      controller.retry();
+      await settle();
+      expect(statuses.at(-1)?.kind).toBe("auth");
     } finally {
       controller.stop();
       for (const [key, descriptor] of prior) {
