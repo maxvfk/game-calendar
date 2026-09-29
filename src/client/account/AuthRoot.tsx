@@ -10,19 +10,22 @@ import {
   completeFirstLogin, guestMigrationDurable, pendingPlan, readAccountBinding,
   type SettingsChoice,
 } from "./firstLogin.ts";
-import { startAuthBootstrap } from "./bootstrap.ts";
+import { startAuthBootstrap, watchAuthReconnect } from "./bootstrap.ts";
 import { initializeAccountProfile } from "./localSync.ts";
 import { startProfileSync, type SyncStatus } from "./syncEngine.ts";
+import { localBoundProfile, localSessionOwner, storedSessionOwner } from "./offline.ts";
+import { isRetryableTransportError } from "./transport.ts";
 
 type Guest = ReturnType<typeof bootstrapLocalProfile>;
 type Choice = { ownerId: string; email: string; profileId: string; guest: Guest;
   local: PersonalState; cloud: SyncState; resumable: boolean };
 type ViewState =
   | { kind: "loading"; guest: Guest }
-  | { kind: "guest"; guest: Guest; message?: string }
+  | { kind: "guest"; guest: Guest; message?: string; retryOnline?: boolean }
   | { kind: "deferred"; guest: Guest; email: string; message?: string }
   | { kind: "choice"; choice: Choice }
-  | { kind: "account"; profileId: string; ownerId: string; email: string; guest: Guest };
+  | { kind: "account"; profileId: string; ownerId: string; email: string; guest: Guest;
+      offline?: boolean };
 
 const errorText = (error: unknown) => error instanceof Error ? error.message : String(error);
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
@@ -61,24 +64,54 @@ function processCallback(): Promise<string | null> {
   return callbackPromise ??= handleCallback();
 }
 
-async function resolveAccount(guest: Guest, canActivate: () => boolean): Promise<ViewState> {
+export async function resolveAccount(guest: Guest, canActivate: () => boolean): Promise<ViewState> {
   const { data: current, error: sessionError } = await supabase.auth.getSession();
   if (sessionError) throw sessionError;
-  if (current.session === null) return { kind: "guest", guest };
-  // getSession reads cached tokens; getUser verifies them with Auth before any
-  // account cache can be shown or selected. This includes stale sessions.
+  if (current.session === null) return { kind: "guest", guest,
+    ...(navigator.onLine === false ? { retryOnline: true } : {}) };
+  const cachedOwner = localSessionOwner(current.session);
+  const offlineAccount = (verifiedOwner?: string): ViewState | null => {
+    if (cachedOwner === null || storedSessionOwner(localStorage) !== cachedOwner ||
+        (verifiedOwner !== undefined && verifiedOwner !== cachedOwner)) return null;
+    const profileId = localBoundProfile(localStorage, cachedOwner);
+    if (profileId === null) return null;
+    if (!canActivate()) throw new Error("Account session changed during setup");
+    try { initializeAccountProfile(localStorage, profileId, cachedOwner); }
+    catch { /* The account status UI reports incompatible local metadata. */ }
+    localStorage.setItem("gacha-tracker:v2:activeProfile", profileId);
+    return { kind: "account", profileId, ownerId: cachedOwner,
+      email: current.session!.user.email ?? "Google account", guest, offline: true };
+  };
+  if (navigator.onLine === false) return offlineAccount() ??
+    { kind: "guest", guest, retryOnline: true };
+  // Online getUser verifies the account for cloud access. Offline cache access
+  // above requires the matching stored token and binding but cannot push.
   const { data: identity, error: authError } = await supabase.auth.getUser();
-  if (authError || identity.user === null) throw authError ?? new Error("Session expired");
+  if (authError || identity.user === null) {
+    if (isRetryableTransportError(authError)) {
+      const offline = offlineAccount();
+      if (offline !== null) return offline;
+    }
+    throw authError ?? new Error("Session expired");
+  }
   const ownerId = identity.user.id;
   const email = identity.user.email ?? "Google account";
   const { data: profileId, error: profileError } = await supabase.rpc("ensure_default_profile");
   if (profileError || typeof profileId !== "string") {
+    if (isRetryableTransportError(profileError)) {
+      const offline = offlineAccount(ownerId);
+      if (offline !== null) return offline;
+    }
     throw profileError ?? new Error("Default profile unavailable");
   }
   profileKeys(profileId);
   const { data: profile, error: ownershipError } = await supabase.from("profiles")
     .select("owner_id").eq("id", profileId).single();
   if (ownershipError || profile?.owner_id !== ownerId) {
+    if (isRetryableTransportError(ownershipError)) {
+      const offline = offlineAccount(ownerId);
+      if (offline !== null) return offline;
+    }
     throw ownershipError ?? new Error("Profile does not belong to this session");
   }
   if (!canActivate()) throw new Error("Account session changed during setup");
@@ -175,34 +208,51 @@ export function AuthRoot({ guest }: { guest: Guest }) {
   const authEpoch = useRef(0);
   const syncController = useRef<ReturnType<typeof startProfileSync> | null>(null);
   const [syncStatus, setSyncStatus] = useState<SyncStatus | null>(null);
+  const recoverOnReconnect = useRef(false);
   useEffect(() => {
     const bootstrap = startAuthBootstrap<ViewState>({
       prepare: () => withTimeout(processCallback(), 10_000),
       resolve: (canActivate) => withTimeout(resolveAccount(guest, canActivate), 10_000),
-      loading: () => setView({ kind: "loading", guest }),
-      publish: setView,
-      fallback: (error) => setView({ kind: "guest", guest: bootstrapLocalProfile(),
-        ...(error === undefined ? {} : { message: errorText(error) }) }),
+      loading: (retry) => { if (!retry) setView({ kind: "loading", guest }); },
+      publish: (next) => {
+        recoverOnReconnect.current = next.kind === "account" ? next.offline === true :
+          next.kind === "guest" && next.retryOnline === true;
+        setView(next);
+      },
+      fallback: (error) => {
+        const retryable = isRetryableTransportError(error);
+        recoverOnReconnect.current = retryable;
+        setView((current) => retryable && current.kind === "account" && current.offline &&
+          storedSessionOwner(localStorage) === current.ownerId &&
+          localBoundProfile(localStorage, current.ownerId) === current.profileId
+          ? current : { kind: "guest", guest: bootstrapLocalProfile(),
+            ...(error === undefined ? {} : { message: errorText(error) }),
+            ...(retryable ? { retryOnline: true } : {}) });
+      },
       sessionChanged: () => { authEpoch.current++; syncController.current?.stop();
-        syncController.current = null; setSyncStatus(null); },
+        syncController.current = null; setSyncStatus(null); recoverOnReconnect.current = false; },
       callbackError: setActionError,
     });
     // Cross-tab sign-out/account switch must hide the old profile immediately.
     const { data: listener } = supabase.auth.onAuthStateChange(bootstrap.onAuth);
-    return () => { bootstrap.stop(); listener.subscription.unsubscribe(); };
+    const stopReconnect = watchAuthReconnect(bootstrap.retry,
+      () => recoverOnReconnect.current);
+    return () => { bootstrap.stop(); listener.subscription.unsubscribe();
+      stopReconnect(); };
   }, [guest]);
 
   const accountProfile = view.kind === "account" ? view.profileId : null;
+  const offlineAccount = view.kind === "account" && view.offline === true;
   useEffect(() => {
     if (view.kind !== "account") return;
     const epoch = authEpoch.current;
     const controller = startProfileSync(view.profileId, view.ownerId,
-      () => authEpoch.current === epoch, setSyncStatus);
+      () => authEpoch.current === epoch && !view.offline, setSyncStatus);
     syncController.current = controller;
     return () => { controller.stop(); if (syncController.current === controller) syncController.current = null; };
     // Profile switches, not status updates, own the controller lifetime.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountProfile]);
+  }, [accountProfile, offlineAccount]);
 
   async function signIn() {
     setActionError(null);
@@ -242,25 +292,30 @@ export function AuthRoot({ guest }: { guest: Guest }) {
       email: view.choice.email })} />;
   const account = view.kind === "account";
   const active = account ? profileKeys(view.profileId) : view.guest.keys;
+  const displayedStatus = offlineAccount && syncStatus !== null &&
+    ["pending", "syncing", "synced", "offline", "network"].includes(syncStatus.kind)
+    ? { ...syncStatus, kind: navigator.onLine === false ? "offline" : "network" } as SyncStatus
+    : syncStatus;
   return <>
     <nav aria-label="Account" className="mx-auto flex max-w-7xl flex-wrap items-center justify-end gap-3 px-4 py-2 text-xs text-faint">
       {account ? <>
         <span>{view.email}</span>
-        <span role="status">{syncStatus === null ? "Sync starting…" :
-          syncStatus.kind === "synced" ? "☁ Synced" :
-          syncStatus.kind === "syncing" ? "Syncing…" :
-          syncStatus.kind === "offline" ? "Offline — changes saved on this device" :
-          syncStatus.kind === "auth" ? "Sign in again to sync" :
-          syncStatus.kind === "schema" ? "Sync data incompatible — export a backup" :
-          syncStatus.kind === "error" ? "Sync failed — will retry" : "Changes pending"}
-          {syncStatus && syncStatus.pending > 0 ? ` · ${syncStatus.pending} pending` : ""}
-          {syncStatus?.clockWarning ? " · Check device clock" : ""}
-          {syncStatus?.lastSuccessfulSyncAt ? ` · Last sync ${new Date(syncStatus.lastSuccessfulSyncAt).toLocaleString()}` : ""}</span>
-        {syncStatus?.message && syncStatus.kind !== "auth" &&
-          <span role="alert">{syncStatus.message}</span>}
-        {(syncStatus?.kind === "error" || syncStatus?.kind === "schema") &&
+        <span role="status">{displayedStatus === null ? "Sync starting…" :
+          displayedStatus.kind === "synced" ? "☁ Synced" :
+          displayedStatus.kind === "syncing" ? "Syncing…" :
+          displayedStatus.kind === "offline" ? "Offline — changes saved on this device" :
+          displayedStatus.kind === "network" ? "Network unavailable — changes saved on this device; will retry" :
+          displayedStatus.kind === "auth" ? "Sign in again to sync" :
+          displayedStatus.kind === "schema" ? "Sync data incompatible — export a backup" :
+          displayedStatus.kind === "error" ? "Sync failed — will retry" : "Changes pending"}
+          {displayedStatus && displayedStatus.pending > 0 ? ` · ${displayedStatus.pending} pending` : ""}
+          {displayedStatus?.clockWarning ? " · Check device clock" : ""}
+          {displayedStatus?.lastSuccessfulSyncAt ? ` · Last sync ${new Date(displayedStatus.lastSuccessfulSyncAt).toLocaleString()}` : ""}</span>
+        {displayedStatus?.message && displayedStatus.kind !== "auth" &&
+          <span role="alert">{displayedStatus.message}</span>}
+        {(displayedStatus?.kind === "error" || displayedStatus?.kind === "schema") &&
           <button className="underline" onClick={() => syncController.current?.retry()}>Retry sync</button>}
-        {syncStatus?.kind === "auth" &&
+        {displayedStatus?.kind === "auth" &&
           <button className="underline" onClick={() => void signIn()}>Continue with Google</button>}
         <button className="underline" onClick={() => void signOut()}>Sign out</button>
       </> : view.kind === "deferred" ? <>

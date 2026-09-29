@@ -14,9 +14,13 @@ import type { CustomEvents, CustomGames } from "../../shared/custom.ts";
 // secrets are configured only in Supabase, never in the Pages build.
 export const SUPABASE_URL = "https://vzzudezdigjwbwfejlsg.supabase.co";
 export const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_zPl-zVjUOAoUUVQz4qwSdA_3hrcJOOc";
+// This is the SDK's existing default key for this project, made explicit so
+// an offline cache check can observe a cross-tab sign-out/session switch.
+export const SUPABASE_SESSION_KEY = "sb-vzzudezdigjwbwfejlsg-auth-token";
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: { flowType: "pkce", detectSessionInUrl: false, persistSession: true },
+  auth: { flowType: "pkce", detectSessionInUrl: false, persistSession: true,
+    storageKey: SUPABASE_SESSION_KEY },
 });
 
 export type PersonalState = {

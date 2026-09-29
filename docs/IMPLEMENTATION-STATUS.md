@@ -738,14 +738,56 @@ S4.1 did not add ongoing sync, an ordinary-edit outbox, or status UI.
   families and reversals, offline conflicts and two-device convergence,
   acknowledgement retry with the original mutation ID, in-flight edits,
   profile isolation, triggers and auth failure. The production two-browser
-  authenticated smoke remains an operator release gate after Pages deployment;
-  this local test run does not substitute for that hosted check. A cold offline
-  reload waits for authenticated identity verification before showing the
-  account cache; reconnecting restores its durable outbox.
+  authenticated smoke was an operator release gate after Pages deployment;
+  this local test run did not substitute for that hosted check. S5 still
+  required online Auth verification on cold start, and treated a fetch failure
+  while `navigator.onLine` was true as a generic sync error.
 - Bun 1.3.14 frozen install, typecheck, **1012 tests** across 49 files and
   build passed locally. The feed remains 156 events across seven games with
   the pre-existing NTE Circle Bounty conflict.
 
-Next concrete step: deploy S5 and complete the two-browser authenticated
-convergence/offline/import smoke with a disposable Google test user. Do not
-start S6 until this gate is checked.
+Production smoke on 2026-09-29 with independent profiles A/B using one
+disposable Google test user passed account loading, A→B for progress, daily,
+ignored, theme, custom game/event, B→A foreground pull without reload, reload
+persistence, a later online B same-row edit winning after A went offline,
+guest export → account Import all → outbox/cloud → B, sign-out/guest isolation,
+sign-in restoration and absence of repeated first-login prompts. B's edits
+appeared on A almost immediately. Two offline lifecycle defects remained:
+`Failed to fetch` displayed a generic sync error despite a durable pending
+mutation, and cold-offline reload fell back to guest without automatically
+restoring the account on reconnect. Flushing the specific mutation across
+that cold-reload sequence was not observed in the production smoke.
+
+## Account Sync — S5.1
+
+- Branch `fix/account-sync-s5-1-offline` from current `main` `ff10333`
+  (2026-09-29). Cold-offline bootstrap may show an already established local
+  account only when an unexpired cached Supabase token's project issuer and
+  `sub` match its local session user ID and exactly one stored account binding.
+  A missing, mismatched or ambiguous identity stays on the guest. Pre-paint
+  still uses the guest/default theme. Offline account edits remain in its
+  durable outbox; the sync controller cannot send until online account
+  verification and profile ownership complete. Explicit sign-out and account
+  switch continue to invalidate an in-flight resolver.
+- A browser online event, foreground return or 15-second recovery probe
+  retries a transport-blocked bootstrap without a page reload or Google login.
+  A network failure during that retry keeps a safely matched offline account
+  visible; a true auth/ownership failure falls closed. S5 `Failed to fetch`,
+  Auth retryable fetch and timeout failures show network-unavailable/local-save
+  status with bounded retry even when `navigator.onLine` remains true. Auth,
+  schema and other application errors retain separate statuses.
+- Deterministic tests cover offline reload with exact outbox replay, reconnect
+  verification and cloud propagation to a second device, guest fallback
+  recovery, A/B session mismatch, explicit sign-out, ambiguous binding,
+  in-flight account switch and transport/error classification. The remaining
+  **manual** gate is a targeted production smoke: offline mutation → cold
+  reload → same account cache and pending count → reconnect without reload →
+  `Synced` → change visible on B, plus `Failed to fetch` status when the
+  browser still reports online. No realtime or S6 work was added.
+- Bun 1.3.14 frozen install, typecheck, **1019 tests** across 50 files and
+  production build passed locally. The refreshed feed on current `main`
+  contains 164 events across seven games with the existing NTE Circle Bounty
+  conflict.
+
+Next concrete step: deploy S5.1 and complete that targeted offline smoke.
+Do not start S6 until its result is recorded.
