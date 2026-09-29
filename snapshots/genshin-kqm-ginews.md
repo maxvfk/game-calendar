@@ -793,6 +793,38 @@ There are also hidden Easter eggs to discover, with rewards including Primogems 
 
 -----
 
+# [Genshin Impact 6th Anniversary Forum Commenting Event! Primogems, Mora, and Blessing of the Welkin Moon Await~](archive/21893.md)
+## Genshin Impact's 6th Anniversary Forum Commenting Event Featuring Blessing of the Welkin Moon Begins!
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/04/0ef6f588983f7f08f182cf64c8c94b5d_7754111835044043015_transformed.png)
+
+Dear Traveler,
+
+The Genshin Impact 6th Anniversary Forum Commenting Event has begun! Leave a comment for a chance to win a Blessing of the Welkin Moon!
+
+This time, there'll be no limit on the number of rewards that will be given out! The more of you that participate, the more rewards there'll be!
+
+[Go to Event >>](https://www.hoyolab.com/article_pre/18014398241022174?utm_id=2&utm_medium=notice&utm_source=ingame)
+
+Event Duration
+
+September 28 – October 11, 2026 (UTC+8)
+
+How to Participate
+
+Head to the comments section of the event post and share a beautiful photo you've taken of a Genshin Impact character
+
+Event Rewards
+
+1. 10% of participating Travelers will be randomly selected to receive Blessing of the Welkin Moon ×1.
+
+2. The remaining 90% of participating Travelers who do not receive a Blessing of the Welkin Moon will each receive Mora ×100,000.
+
+3. 6,000 Travelers who commented will each receive Primogems ×100. This will be done by a random draw.
+
+4. All Travelers who commented will receive a Genshin Impact 6th Anniversary Comment Decoration.
+
+-----
+
 # [Stygian Onslaught Event: Disturbance-affected Ley Line challenges](archive/21168.md)
 ## Stygian Onslaught
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2025/10/23/40da7ab1ce17afd008e7a10c6ee6e67b_3372052251159312794_transformed.jpg)
@@ -850,38 +882,6 @@ Rewards for "Fearless" and "Dire" difficulties can only be claimed upon completi
 "Normal," "Advancing," and "Hard" difficulties support matchmaking or Co-Op Mode within the same world.
 
 "Menacing," "Fearless," and "Dire" difficulties only support Co-Op challenges within the same world.
-
------
-
-# [Genshin Impact 6th Anniversary Forum Commenting Event! Primogems, Mora, and Blessing of the Welkin Moon Await~](archive/21893.md)
-## Genshin Impact's 6th Anniversary Forum Commenting Event Featuring Blessing of the Welkin Moon Begins!
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/04/0ef6f588983f7f08f182cf64c8c94b5d_7754111835044043015_transformed.png)
-
-Dear Traveler,
-
-The Genshin Impact 6th Anniversary Forum Commenting Event has begun! Leave a comment for a chance to win a Blessing of the Welkin Moon!
-
-This time, there'll be no limit on the number of rewards that will be given out! The more of you that participate, the more rewards there'll be!
-
-[Go to Event >>](https://www.hoyolab.com/article_pre/18014398241022174?utm_id=2&utm_medium=notice&utm_source=ingame)
-
-Event Duration
-
-September 28 – October 11, 2026 (UTC+8)
-
-How to Participate
-
-Head to the comments section of the event post and share a beautiful photo you've taken of a Genshin Impact character
-
-Event Rewards
-
-1. 10% of participating Travelers will be randomly selected to receive Blessing of the Welkin Moon ×1.
-
-2. The remaining 90% of participating Travelers who do not receive a Blessing of the Welkin Moon will each receive Mora ×100,000.
-
-3. 6,000 Travelers who commented will each receive Primogems ×100. This will be done by a random draw.
-
-4. All Travelers who commented will receive a Genshin Impact 6th Anniversary Comment Decoration.
 
 -----
 
@@ -946,34 +946,6 @@ After the Version 7.1 update  –  <t class="t_lc" contenteditable="false">2026/
 ※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
 
 ※ This is for "Character Event Wish." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
-
-※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
-
-※ For more information, go to the Wish screen and select Details in the bottom-left corner.
-
------
-
-# [Event Wish "Surging Ballad" - Boosted Drop Rate for "Lingering Siren-Song" Vodyanitsa (Hydro)!](archive/21877.md)
-## Event Wish "Surging Ballad"
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/194df26048090eade34d12649e298ec7_559849886015315427_transformed.jpg)
-
-Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
-
-〓Event Wish Details〓
-
-Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
---- | --- | ---
-After the Version 7.1 update  –  <t class="t_lc" contenteditable="false">2026/10/13 17:59</t> | "Lingering Siren-Song" Vodyanitsa (Hydro) | "Kätzlein Cocktail" Diona (Cryo)
-^ | ^ | "Enigmatic Machinist" Faruzan (Anemo)
-^ | ^ | "Frozen Ardor" Chongyun (Cryo)
-
-● During this event wish, the event-exclusive 5-star character "Lingering Siren-Song" Vodyanitsa (Hydro) will receive a huge drop-rate boost!
-
-● During this event wish, the 4-star characters "Kätzlein Cocktail" Diona (Cryo), "Enigmatic Machinist" Faruzan (Anemo), and "Frozen Ardor" Chongyun (Cryo) will receive a huge drop-rate boost!
-
-※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
-
-※ This is for "Character Event Wish-2." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
 
 ※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
 
@@ -1215,6 +1187,34 @@ Manekina Cosmetic "Rose's Lament" | ^
 
 -----
 
+# [Event Wish "Surging Ballad" - Boosted Drop Rate for "Lingering Siren-Song" Vodyanitsa (Hydro)!](archive/21877.md)
+## Event Wish "Surging Ballad"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/194df26048090eade34d12649e298ec7_559849886015315427_transformed.jpg)
+
+Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
+
+〓Event Wish Details〓
+
+Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
+--- | --- | ---
+After the Version 7.1 update  –  <t class="t_lc" contenteditable="false">2026/10/13 17:59</t> | "Lingering Siren-Song" Vodyanitsa (Hydro) | "Kätzlein Cocktail" Diona (Cryo)
+^ | ^ | "Enigmatic Machinist" Faruzan (Anemo)
+^ | ^ | "Frozen Ardor" Chongyun (Cryo)
+
+● During this event wish, the event-exclusive 5-star character "Lingering Siren-Song" Vodyanitsa (Hydro) will receive a huge drop-rate boost!
+
+● During this event wish, the 4-star characters "Kätzlein Cocktail" Diona (Cryo), "Enigmatic Machinist" Faruzan (Anemo), and "Frozen Ardor" Chongyun (Cryo) will receive a huge drop-rate boost!
+
+※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
+
+※ This is for "Character Event Wish-2." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
+
+※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
+
+※ For more information, go to the Wish screen and select Details in the bottom-left corner.
+
+-----
+
 # [Event Wish "Epitome Invocation" - Boosted Drop Rate for Beyond the Chrysalis (Sword) and Hymn of the Maelstrom (Catalyst)!](archive/21878.md)
 ## Event Wish "Epitome Invocation"
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/41a1d242fc5fd77e49c4912082735dc3_3571449661991950272_transformed.jpg)
@@ -1412,6 +1412,52 @@ Unlock "Meeting Point: Tidesong Cavern" and upgrade the Meeting Point to Level 2
 
 -----
 
+# [Genshin Impact 6th Anniversary Theme Song Video Now Available](archive/21940.md)
+## Genshin Impact 6th Anniversary Theme Song Video Now Available
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/24/616e6ca8d7271a327d9a82553fcee4ea_1787375295688457441_transformed.jpg)
+
+Dear Traveler,
+
+The Genshin Impact 6th Anniversary Theme Song PV "A Letter From the Wind" is now available.
+
+You're what makes this journey so meaningful.
+
+Music Production: HOYO-MiX
+
+Composed by: Xin Zhao (HOYO-MiX)
+
+Singer (Chinese Version): Gary Sun
+
+Singer (English Version): Griffin Burns
+
+Singer (Japanese Version): Nishikawa Takanori
+
+Singer (Korean Version): Nam Do-hyeong
+
+Travelers can go to the following platform to listen to and watch the Genshin Impact 6th Anniversary Theme Song and Theme Song Video.
+
+YouTube:
+
+[Click here to watch the Genshin Impact 6th Anniversary Theme Song Video](https://youtu.be/ntcyVm9ebYI)
+
+Spotify:
+
+[Click here to listen to "A Letter From the Wind"](https://open.spotify.com/album/3eqyXAhEw570a1GIpEwGxj)
+
+Apple Music:
+
+[Click here to listen to "A Letter From the Wind"](https://music.apple.com/us/album/6815194575)
+
+-----
+
+# [Version 7.1 Benefits Overview](archive/21923.md)
+## Version 7.1 Benefits Overview
+
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/09/12/503dbdabd59d6ff5aebd151d5011b7f7_3634289702927936987_transformed.jpg)
+
+-----
+
 # ["Adventurer's Booster Bundles" - Round 52 Available for a Limited Time](archive/21883.md)
 ## Adventurer's Booster Bundles
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/112dc770760c748f77fcbcbb929882d8_2577404397453496509_transformed.jpg)
@@ -1442,11 +1488,17 @@ Bundle Price: Now 10% off for a limited time! The price after discount is 680 Ge
 
 -----
 
-# [Version 7.1 Benefits Overview](archive/21923.md)
-## Version 7.1 Benefits Overview
+# [HoYoFair 2026 "Project: Nord Express" Genshin Impact Fan Art Special Program](archive/21905.md)
+## Genshin Impact Fan Art Special Program Now Online
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/18/277abb110c4bf916caae9752eaeaf0f8_3092798544697511985.jpg)
 
+Hello, Traveler! HoYoFair 2026 "Project: Nord Express," a fan art special program jointly produced by our creators, is now online!
 
-![img](https://sdk.hoyoverse.com/upload/ann/2026/09/12/503dbdabd59d6ff5aebd151d5011b7f7_3634289702927936987_transformed.jpg)
+[>> Click to watch the program <<](https://youtu.be/GVIuXjGY8bs)
+
+A big thank you to all the creators for being so passionate about Genshin Impact and sharing such amazing works! Please go show your support by heading over to any major content platforms to like their works and leave your comments~
+
+*Fan works are derivative creations, and do not represent the actual plot and settings in the game.
 
 -----
 
@@ -1475,52 +1527,6 @@ Adventure Rank 20 or above
 ● After unlocking Gnostic Hymn or Gnostic Chorus, you will unlock the Chronicle Boon effect, granting a discount when purchasing the corresponding Miliastra Pass in Miliastra Wonderland. Likewise, unlocking Chronicles of the Realms or Epic of the Realms will grant the Battle Pass Boon effect, offering a discount when purchasing the corresponding Battle Pass in Teyvat. You can check the Boon button on the Miliastra Pass or Battle Pass purchase screen for more details. The Boon effect can only be activated once during the current event period.
 
 ● The Battle Pass and Miliastra Pass share the same start and end dates each period. Please be sure to check the time and claim your rewards promptly.
-
------
-
-# [HoYoFair 2026 "Project: Nord Express" Genshin Impact Fan Art Special Program](archive/21905.md)
-## Genshin Impact Fan Art Special Program Now Online
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/18/277abb110c4bf916caae9752eaeaf0f8_3092798544697511985.jpg)
-
-Hello, Traveler! HoYoFair 2026 "Project: Nord Express," a fan art special program jointly produced by our creators, is now online!
-
-[>> Click to watch the program <<](https://youtu.be/GVIuXjGY8bs)
-
-A big thank you to all the creators for being so passionate about Genshin Impact and sharing such amazing works! Please go show your support by heading over to any major content platforms to like their works and leave your comments~
-
-*Fan works are derivative creations, and do not represent the actual plot and settings in the game.
-
------
-
-# ["Genius Invokation TCG" The Forge Realm's Temper: Clever Stratagems](archive/20508.md)
-## Genius Invokation TCG - The Forge Realm's Temper
-![Banner](https://sdk.hoyoverse.com/upload/ann/2024/05/22/2aced11db7ef3877d6f0a882c1f5f408_3497207719847849432.png)
-
-〓Event Rewards〓
-
-![img](https://sdk.hoyoverse.com/upload/ann/2024/05/09/77bc8ce33030bc36a950e3ef25faf437_7306061833689363980.png)
-
-〓Event Duration〓
-
-Available throughout the entirety of Version 7.1
-
-〓Eligibility〓
-
-Adventure Rank 32 or above
-
-Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
-
-And complete the World Quest "Battlefield of Dice, Cats, and Cards"
-
-〓Event Details〓
-
-● After the event starts, Travelers can go to Prince at The Cat's Tail to select stages to challenge.
-
-● This event includes 4 stages and each stage has its distinctive challenge rules.
-
-● In each stage, Travelers can configure different parameters, including stage difficulty, the health of opponents, and the number of rounds to complete the challenge within.
-
-● After completing the challenge, points will be obtained based on the parameters selected. Achieving the required scores will allow Travelers to claim the corresponding rewards.
 
 -----
 
@@ -1563,6 +1569,38 @@ Travelers can also open the link via Paimon Menu > Mail > Game Survey > Survey L
 Survey answers cannot be changed after submission, so please fill it out carefully.
 
 We thank all Travelers for your invaluable feedback!
+
+-----
+
+# ["Genius Invokation TCG" The Forge Realm's Temper: Clever Stratagems](archive/20508.md)
+## Genius Invokation TCG - The Forge Realm's Temper
+![Banner](https://sdk.hoyoverse.com/upload/ann/2024/05/22/2aced11db7ef3877d6f0a882c1f5f408_3497207719847849432.png)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2024/05/09/77bc8ce33030bc36a950e3ef25faf437_7306061833689363980.png)
+
+〓Event Duration〓
+
+Available throughout the entirety of Version 7.1
+
+〓Eligibility〓
+
+Adventure Rank 32 or above
+
+Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
+
+And complete the World Quest "Battlefield of Dice, Cats, and Cards"
+
+〓Event Details〓
+
+● After the event starts, Travelers can go to Prince at The Cat's Tail to select stages to challenge.
+
+● This event includes 4 stages and each stage has its distinctive challenge rules.
+
+● In each stage, Travelers can configure different parameters, including stage difficulty, the health of opponents, and the number of rounds to complete the challenge within.
+
+● After completing the challenge, points will be obtained based on the parameters selected. Achieving the required scores will allow Travelers to claim the corresponding rewards.
 
 -----
 
