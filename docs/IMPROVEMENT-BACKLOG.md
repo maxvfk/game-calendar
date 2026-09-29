@@ -49,6 +49,14 @@ For each item, use this compact format:
   - **Status:** observed
   - **Notes / constraints:** preserve backdrop tap and Escape as secondary dismissal paths. The close control needs a comfortable mobile touch target and must remain visible/reachable when the sheet content scrolls. Opening/closing details should integrate with history without creating duplicate or sticky history entries.
 
+- **Title:** Toggle all event types off from `All types`
+  - **Observation:** `All types` selects every event category, but tapping it again while all categories are already selected does not provide a quick way to clear the selection.
+  - **Desired behavior:** make `All types` a two-state aggregate toggle: when not all categories are selected, tapping it selects all; when all categories are selected, tapping it clears all categories.
+  - **Area:** interaction / UI
+  - **Priority:** undecided
+  - **Status:** observed
+  - **Notes / constraints:** do not add a separate `None` button. `All types` should appear active only when every category is selected; with a partial or empty selection it should appear inactive.
+
 ## Candidates before Astra audit
 
 No items yet. Reserve for approved small UX/UI fixes and corrections to
