@@ -1488,20 +1488,6 @@ Bundle Price: Now 10% off for a limited time! The price after discount is 680 Ge
 
 -----
 
-# [HoYoFair 2026 "Project: Nord Express" Genshin Impact Fan Art Special Program](archive/21905.md)
-## Genshin Impact Fan Art Special Program Now Online
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/18/277abb110c4bf916caae9752eaeaf0f8_3092798544697511985.jpg)
-
-Hello, Traveler! HoYoFair 2026 "Project: Nord Express," a fan art special program jointly produced by our creators, is now online!
-
-[>> Click to watch the program <<](https://youtu.be/GVIuXjGY8bs)
-
-A big thank you to all the creators for being so passionate about Genshin Impact and sharing such amazing works! Please go show your support by heading over to any major content platforms to like their works and leave your comments~
-
-*Fan works are derivative creations, and do not represent the actual plot and settings in the game.
-
------
-
 # ["Moontrace" Event Details](archive/21884.md)
 ## Moontrace
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/7907d83c5432d75d68d61e8ace6ef758_7423804670023482212_transformed.jpg)
