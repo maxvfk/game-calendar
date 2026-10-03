@@ -717,6 +717,9 @@ S4.1 did not add ongoing sync, an ordinary-edit outbox, or status UI.
 
 ## Account Sync — S5
 
+Status: **complete**, including the production two-browser smoke and the
+S5.1 offline lifecycle follow-up verified below.
+
 - Branch `feature/account-sync-s5-engine` from current `main` `3657cfb`
   (2026-09-26). S4's materialized account baseline upgrades once: edits made
   after S4 first login are compared with that snapshot and placed in a durable,
@@ -760,6 +763,9 @@ that cold-reload sequence was not observed in the production smoke.
 
 ## Account Sync — S5.1
 
+Status: **complete**. Merged in PR #17 (`f100ff4`); targeted authenticated
+production smoke passed on the deployed Pages build on 2026-10-03.
+
 - Branch `fix/account-sync-s5-1-offline` from current `main` `ff10333`
   (2026-09-29). Cold-offline bootstrap may show an already established local
   account only when an unexpired cached Supabase token's project issuer and
@@ -779,15 +785,44 @@ that cold-reload sequence was not observed in the production smoke.
 - Deterministic tests cover offline reload with exact outbox replay, reconnect
   verification and cloud propagation to a second device, guest fallback
   recovery, A/B session mismatch, explicit sign-out, ambiguous binding,
-  in-flight account switch and transport/error classification. The remaining
-  **manual** gate is a targeted production smoke: offline mutation → cold
-  reload → same account cache and pending count → reconnect without reload →
-  `Synced` → change visible on B, plus `Failed to fetch` status when the
-  browser still reports online. No realtime or S6 work was added.
+  in-flight account switch and transport/error classification. The targeted
+  production smoke below closes the remaining manual gate. No realtime or S6
+  work was added.
 - Bun 1.3.14 frozen install, typecheck, **1019 tests** across 50 files and
   production build passed locally. The refreshed feed on current `main`
   contains 164 events across seven games with the existing NTE Circle Bounty
   conflict.
 
-Next concrete step: deploy S5.1 and complete that targeted offline smoke.
-Do not start S6 until its result is recorded.
+Targeted production smoke on 2026-10-03 passed with two independent browser
+profiles using the same disposable Google test account:
+
+- An offline mutation applied immediately and remained durable in the outbox.
+- Cold reload while offline opened the same established account cache; account
+  data and the pending mutation stayed visible without guest/start fallback.
+- Reconnect automatically re-verified the account and resumed sync without
+  reload or Google login. The pending mutation flushed and propagated to B,
+  confirming survival across the previously unobserved cold-reload sequence.
+- Blocking Supabase requests through DevTools Request conditions while the
+  browser still reported online showed the intended network/local-save status
+  instead of a generic sync failure. Pending data remained local; removing the
+  block automatically recovered sync and convergence.
+- Explicit sign-out returned to the browser's guest profile. Cold offline
+  reload remained on guest, and reconnect did not reactivate the account.
+  Account data returned only after explicit sign-in.
+
+All requested S5.1 production checks passed; no S5/S5.1 manual gate remains.
+Changes on A need not appear spontaneously on an untouched B: foreground
+return, tab switch or another existing sync trigger pulls them. This is the
+expected S5 behavior without realtime, not an outstanding defect.
+
+Documentation closure was prepared from current `main` `e1b70f9` on
+2026-10-03. Frozen install, typecheck, **1019 tests** across 50 files and build
+passed again. The current feed contains 171 events across seven games with
+the existing NTE Circle Bounty conflict; this closure changes documentation
+only.
+
+Next planned milestone: S6 — backup and hardening, after several days of real
+use and in a separately authorized Work. Its approved scope is a private
+GitHub backup strategy, a recovery drill, optional local cache removal,
+monitoring/logging sufficient for 2–3 users, and maintenance documentation.
+S6 has not started; realtime and multi-profile UI remain outside this closure.
