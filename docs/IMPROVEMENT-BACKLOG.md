@@ -68,6 +68,31 @@ For each item, use this compact format:
 
 
 
+- **Title:** Bias the Timeline viewport toward future events
+  - **Observation:** the daily Timeline currently places today near the center of the visible range. That spends roughly half of the immediately visible space on past days even though the main calendar task is understanding upcoming events and deadlines.
+  - **Desired behavior:** position today closer to the left side of the default Timeline viewport so that most of the visible range shows future days. Keep a small amount of recent-past context rather than removing past days entirely.
+  - **Area:** UI / data clarity
+  - **Priority:** undecided
+  - **Status:** refined
+  - **Notes / constraints:** preserve the current-day marker and horizontal navigation. The exact offset should be tuned on both phone and desktop rather than hard-coding a desktop-centric ratio; a rough target is for today to occupy the first 15–25% of the visible range. Events that began before the visible range must remain understandable when their bars are clipped at the left edge.
+
+- **Title:** Show event deadlines directly on Timeline bars
+  - **Observation:** identifying an event is not enough; the calendar's primary question is what ends first, but users currently have to infer or open details to read the relevant deadline.
+  - **Desired behavior:** show the event's end date directly on its Timeline representation when space permits. Prefer an end-focused compact form such as `→ Oct 21`; when there is enough room, a start-to-end range such as `Sep 30 → Oct 21` may be shown.
+  - **Area:** UI / data clarity
+  - **Priority:** undecided
+  - **Status:** refined
+  - **Notes / constraints:** respect the existing exact/day precision model and never imply a clock time that the source does not establish. The label should degrade gracefully on short/narrow bars and must not make the dense mobile Timeline unreadable.
+
+- **Title:** Group event types inside game-sorted Timeline views
+  - **Observation:** when the Timeline is organized by game, a game's banners, normal events, endgame, login events and other rows can still be difficult to scan as one undifferentiated set.
+  - **Desired behavior:** when using the game-oriented ordering, add lightweight grouping or separators by event type within each game. When using date-oriented ordering, keep the Timeline as a pure chronological view without type grouping.
+  - **Area:** UI / data clarity
+  - **Priority:** undecided
+  - **Status:** refined
+  - **Notes / constraints:** do not add a separate grouping toggle unless later testing shows it is necessary. The game/date ordering itself should determine whether type grouping is active. Keep grouping visually lightweight so seven games multiplied by several categories does not turn the Timeline into a tall set of large section blocks. NTEBuild's category lanes are a useful recognition reference, but should not be copied literally.
+
+
 ## Separate feature tasks
 
 These are larger product/data features and should not be bundled with the small
@@ -75,11 +100,20 @@ pre-Astra interaction and visual polish items above.
 
 - **Title:** Improve event recognition with event artwork
   - **Observation:** event names are often poor recognition cues in actual play. Readers may not remember an event's title, and matching a calendar entry to the in-game event becomes substantially harder when the game and calendar use different languages. Event artwork/banner imagery provides a much stronger visual cue.
-  - **Desired behavior:** allow calendar events to carry optional artwork that helps the reader identify the corresponding in-game event. Start with a low-risk surface such as the event detail sheet rather than making dense Timeline rows image-heavy by default; evaluate thumbnails in other surfaces only after the first implementation is usable on mobile.
+  - **Desired behavior:** use optional event artwork primarily as an identity/recognition aid rather than decoration. The first implementation should make the artwork available in event details, where it can help the reader confirm "this is the event I see in the game" without increasing Timeline density. After that is usable on mobile, separately evaluate whether small thumbnails add enough recognition value in Timeline/Next Up surfaces to justify their layout and caching cost.
   - **Area:** new feature / UI / data clarity / ingestion
   - **Priority:** undecided
+  - **Status:** refined
+  - **Notes / constraints:** treat this as a separate feature milestone, not part of the small UI-polish batch. The governing UX principle is recognition-first presentation: show the visual/subject players actually recognize rather than privileging a source/database title. Artwork must remain optional because some event classes (maintenance, shop resets, recurring endgame phases, etc.) may not have a natural banner image. Before implementation, define an image-source/asset policy: stable source URL versus locally hosted asset, reuse/hotlink permission, provenance/attribution where required, broken-image fallback, and PWA/offline/cache behavior. Do not make an event's date/provenance confidence depend on artwork availability. Preserve existing event IDs and completion state. NTEBuild's event timeline is a useful UX reference for recognition and information hierarchy, not an automatic image/data source for this project.
+
+
+- **Title:** Rework event details around recognition-first information hierarchy
+  - **Observation:** event details currently expose technically correct calendar/source information, but the presentation is not optimized for the user's first questions: what activity this is, how to recognize it in the game, when it ends, and why it matters. Improving only individual fields would leave the overall information hierarchy unchanged.
+  - **Desired behavior:** redesign the event detail experience as a dedicated milestone around a recognition-first hierarchy: event identity/featured subject and optional artwork first; current timing/status and deadline next; useful human-facing description and rewards/participation context after that; source, provenance, precision/conflict and other technical metadata remain available but visually secondary.
+  - **Area:** new feature / UI / data clarity
+  - **Priority:** undecided
   - **Status:** observed
-  - **Notes / constraints:** treat this as a separate feature milestone, not part of the small UI-polish batch. Artwork must remain optional because some event classes (maintenance, shop resets, recurring endgame phases, etc.) may not have a natural banner image. Before implementation, define an image-source/asset policy: stable source URL versus locally hosted asset, reuse/hotlink permission, provenance/attribution where required, broken-image fallback, and PWA/offline/cache behavior. Do not make an event's date/provenance confidence depend on artwork availability. Preserve existing event IDs and completion state. NTEBuild's event timeline is a useful UX reference for visual recognition, not an automatic image/data source for this project.
+  - **Notes / constraints:** this is a larger product/UX milestone and must not be bundled into the small pre-Astra polish batch or treated as a side effect of adding artwork. Preserve source transparency and precision/conflict information; the goal is hierarchy, not hiding evidence. Define the final field order and mobile behavior from the actual current detail-sheet implementation before coding. It may consume the separate artwork and richer event-metadata work when those are available, but should not block smaller recognition/readability fixes elsewhere.
 
 ## Candidates before Astra audit
 
