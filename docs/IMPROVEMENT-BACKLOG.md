@@ -58,6 +58,16 @@ For each item, use this compact format:
   - **Notes / constraints:** do not add a separate `None` button. `All types` should appear active only when every category is selected; with a partial or empty selection it should appear inactive.
 
 
+- **Title:** Use featured character names as character-banner labels
+  - **Observation:** official banner/campaign names are poor recognition cues in the calendar. Readers usually identify a character banner by the featured character, not by the marketing title, and the official title becomes even less useful when the game UI and calendar use different languages.
+  - **Desired behavior:** for character banners, use the featured character name (or featured character names when one banner genuinely contains several headline characters) as the primary compact label in Timeline/Next Up/checklist surfaces. Keep the official banner title available as secondary information in event details rather than discarding it.
+  - **Area:** UI / data clarity
+  - **Priority:** undecided
+  - **Status:** observed
+  - **Notes / constraints:** apply this specifically to character banners; weapon/arc/light-cone/W-Engine and other banner classes should keep an appropriate featured-item label rather than being forced into character semantics. Prefer a reliable structured featured-subject value from source/reviewed data when available; do not heuristically extract character names from arbitrary marketing titles if the source does not establish them. Preserve existing event IDs, dates, provenance and completion state.
+
+
+
 ## Separate feature tasks
 
 These are larger product/data features and should not be bundled with the small
