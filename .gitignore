@@ -80,6 +80,13 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+.env.*
+
+# S6a: local operator credentials, identities and decrypted cloud snapshots.
+age-identity*.txt
+*.key
+*.snapshot.json
+*.decrypted.json
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

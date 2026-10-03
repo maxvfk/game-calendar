@@ -825,4 +825,73 @@ Next planned milestone: S6 — backup and hardening, after several days of real
 use and in a separately authorized Work. Its approved scope is a private
 GitHub backup strategy, a recovery drill, optional local cache removal,
 monitoring/logging sufficient for 2–3 users, and maintenance documentation.
-S6 has not started; realtime and multi-profile UI remain outside this closure.
+S6 had not started at that closure; realtime and multi-profile UI remain outside it.
+
+## Account Sync — S6a: private backup + recovery
+
+Status: **implemented, awaiting operator production setup and recovery drill**.
+Do not mark S6a complete merely because the scripts/local synthetic drill pass.
+S5/S5.1 remain closed; S6b monitoring/cache-removal work has not started.
+
+- New short-lived branch `account-sync-s6a-backup` from verified public main
+  `c60cba50ba7cd66a7150c33f0a0133f4b8fc72a5` on 2026-10-03. The separate private
+  `maxvfk/game-calendar-backups` was verified private with main
+  `15f81501a223ef289b15d1bdd954c92107f955aa` (initial README only), and its own
+  fresh S6a branch holds the scheduled workflow and operations README.
+- Public migration adds a passwordless NOLOGIN `calendar_backup` SQL role,
+  SELECT-only access/RLS for all seven personal tables, no memberships,
+  BYPASSRLS, Auth reads or sync RPC execute privilege, and a SQL-only project
+  identity marker. Operator enables its login/password locally. Backup uses
+  verified-TLS Supavisor Session pooler (5432) or direct SQL, one REPEATABLE
+  READ/READ ONLY transaction; no service-role API key is needed.
+- Canonical version 1 logical snapshots preserve profiles/owners, progress,
+  daily_marks, ignored, preferences, custom_games, custom_events, tombstones,
+  false/unset, JSON null and original LWW metadata. Format/project/live generated
+  schema contract, counts, per-table/total digests and row validity are checked.
+  Age X25519 encrypts in memory with a public recipient before writing; GitHub
+  never receives the private decryption key. Plain manifests contain safe
+  metadata/ciphertext digests only, with no account IDs or row counts.
+- Private workflow runs daily at 01:23 UTC, captures first successful monthly
+  snapshot, retains latest 30 daily / 12 monthly pairs deterministically in the
+  current tree and commits only encrypted pairs. Old ciphertext stays in Git
+  history; no history rewrite is implied. Errors/nonempty-payload/integrity
+  checks fail Actions visibly. Code/actions are pinned; the read credential is
+  scoped to configuration checks and production export and never logged/staged.
+- Local administrative restore defaults to a read-only dry run and requires
+  explicit selected profile(s) or all snapshot profiles plus `--write` for DML.
+  It checks existing Auth UUIDs, unchanged ownership/default uniqueness and
+  target project/schema, locks the seven tables, atomically replaces selected
+  profile state, verifies every restored row and commits or rolls back. It is
+  idempotent and leaves unrelated profiles intact. It never creates/remaps Auth
+  identities or uses the browser sync RPC. Quiescent account devices and a
+  fresh-browser/cloud-only verification are required for the production drill.
+- Local tests execute actual migrations in PostgreSQL 18/PGlite and test
+  read-only cross-owner export, owner/anon isolation, corruption/drift, all
+  logical state types, ownership/Auth/default refusal, dry-run, rollback,
+  exact/idempotent isolated restore, existing app decode/materialization and
+  retention. Native Bun.SQL wire tests caught and corrected explicit Postgres
+  array parameter encoding. Real age encryption/decrypt/validate/restore passed
+  with synthetic rows and the publicly known upstream test identity kept outside
+  both repos; no production private key was created.
+- Bun 1.3.14 frozen install, typecheck, full tests and build passed locally in
+  UTC (CI's timezone); standard suite **1031 pass / 1 optional age test skipped**,
+  focused suite with external age test fixture **13 pass**, and the full suite
+  with that fixture **1032 pass / 0 skipped / 0 fail**. The initial
+  America/Chicago environment exposed an existing date-only custom EventRow
+  expectation; UTC passes without any UI/test changes. Feed remains 171 events
+  across seven games with the pre-existing NTE Circle Bounty conflict.
+- Architecture, exact manual setup, key custody, retention/history tradeoff,
+  local commands, exclusions and safe disposable-account production drill are
+  in [ACCOUNT-BACKUP.md](ACCOUNT-BACKUP.md); the private README records its
+  pending production evidence. Neither repo contains a secret or plaintext
+  personal snapshot. No realtime, multi-profile UI, new providers, source work,
+  cache-removal UI or full new-project/Auth disaster recovery was added.
+
+Next concrete step: apply only the new S6a migration to the existing hosted
+project, bind the verified safe project ref, locally create/store the real age
+identity and read-role password, configure the private repo's one Secret/two
+Variables, then run its first backup. **Hosted schema preflight, real encrypted
+hosted snapshot, real-key decryption/validation, production dry-run/controlled
+restore and fresh deployed app read are still unverified gates.** Use only the
+disposable Google test account for the drill, and record actual results before
+closing S6a. No credentials should be pasted into chat.

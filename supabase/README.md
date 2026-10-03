@@ -96,3 +96,20 @@ retry. Signed-out guest storage and another account's cache/outbox are not
 used by the active profile. The UI shows pending/offline/error/auth state and
 last successful sync. A remote version in the future relative to the device
 or its server receipt time raises a clock warning. No realtime channel is used.
+
+## S6a private backup and recovery
+
+The canonical [backup/recovery runbook](../docs/ACCOUNT-BACKUP.md) documents
+the private encrypted backup repository, SQL-only read role, versioned logical
+snapshot, age key custody, 30 daily / 12 monthly retention, local administrative
+dry-run/restore and disposable-account production drill. Public migrations and
+the generated `backup-contract.v1.json` remain the schema authority.
+
+`20261003140000_account_backup.sql` adds a passwordless NOLOGIN
+`calendar_backup` role with SELECT-only policies for seven personal tables and
+a non-exposed project marker. It does not configure credentials or enable a
+hosted job. Apply it once to the existing project, then follow the runbook's
+local password setup and private repository configuration. Never replay S3
+migrations, reset production, place a private age identity/admin credential in
+GitHub, or use the browser mutation RPC for recovery. S6a remains pending until
+the first real encrypted hosted backup and controlled production drill pass.
