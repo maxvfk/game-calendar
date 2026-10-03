@@ -57,6 +57,20 @@ For each item, use this compact format:
   - **Status:** observed
   - **Notes / constraints:** do not add a separate `None` button. `All types` should appear active only when every category is selected; with a partial or empty selection it should appear inactive.
 
+
+## Separate feature tasks
+
+These are larger product/data features and should not be bundled with the small
+pre-Astra interaction and visual polish items above.
+
+- **Title:** Improve event recognition with event artwork
+  - **Observation:** event names are often poor recognition cues in actual play. Readers may not remember an event's title, and matching a calendar entry to the in-game event becomes substantially harder when the game and calendar use different languages. Event artwork/banner imagery provides a much stronger visual cue.
+  - **Desired behavior:** allow calendar events to carry optional artwork that helps the reader identify the corresponding in-game event. Start with a low-risk surface such as the event detail sheet rather than making dense Timeline rows image-heavy by default; evaluate thumbnails in other surfaces only after the first implementation is usable on mobile.
+  - **Area:** new feature / UI / data clarity / ingestion
+  - **Priority:** undecided
+  - **Status:** observed
+  - **Notes / constraints:** treat this as a separate feature milestone, not part of the small UI-polish batch. Artwork must remain optional because some event classes (maintenance, shop resets, recurring endgame phases, etc.) may not have a natural banner image. Before implementation, define an image-source/asset policy: stable source URL versus locally hosted asset, reuse/hotlink permission, provenance/attribution where required, broken-image fallback, and PWA/offline/cache behavior. Do not make an event's date/provenance confidence depend on artwork availability. Preserve existing event IDs and completion state. NTEBuild's event timeline is a useful UX reference for visual recognition, not an automatic image/data source for this project.
+
 ## Candidates before Astra audit
 
 No items yet. Reserve for approved small UX/UI fixes and corrections to
