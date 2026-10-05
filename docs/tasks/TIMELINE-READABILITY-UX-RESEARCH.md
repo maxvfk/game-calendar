@@ -1,6 +1,6 @@
 # Timeline Readability / Recognition UX Research
 
-Status: planned  
+Status: in progress — Step 1 accepted  
 Scope: UX research / product design only  
 Implementation: out of scope until this task is completed and reviewed
 
@@ -747,7 +747,33 @@ Implication for next step:
 
 ## Accepted decisions
 
-None yet.
+### 2026-10-06 — Step 1
+
+**Decision:** Accept the current-state diagnosis as the baseline for focused UX reference research.
+
+**Confirmed baseline:**
+
+- the initial Timeline viewport currently centers today rather than biasing the visible range toward future deadlines;
+- Timeline bars do not directly show their deadline;
+- compact event identity is title-driven and the current event data contract has no structured featured-subject/featured-item field for recognition-first labels;
+- game-oriented lanes keep each game's events together but do not add a second visual hierarchy by event type;
+- proposal A (future-biased viewport) is mostly orthogonal to the label/grouping problem;
+- proposals B (deadline on bars) and D (recognition-oriented labels) compete for the same limited bar width, especially at the current narrow/mobile sizes;
+- proposal C (type grouping) overlaps with D by improving scanability, but addresses relationships between rows rather than identity inside a row;
+- recognition-first labels cannot be populated safely by heuristic parsing of arbitrary marketing titles; if adopted, they require structured/reviewed semantic metadata or a reliable fallback to the current title.
+
+**Existing strengths to preserve:**
+
+- sticky date axis, lane labels and bar content behavior;
+- the exact/day/unknown precision model;
+- the distinct meanings of `By game` and `Ending soonest`;
+- handling of long events, upcoming events, DST/local-calendar day geometry and zoom context;
+- minimum practical bar/touch sizing;
+- centralized event-type filtering rather than view-specific filter semantics.
+
+**Rejected alternative(s):** None yet. Step 1 was diagnostic and intentionally made no final UX choice.
+
+**Implication for next step:** Step 2 should research compact identity/deadline hierarchy, narrow-bar degradation, lightweight grouping and future-biased viewport patterns. It must not assume that all four backlog proposals survive to implementation.
 
 ---
 
