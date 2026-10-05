@@ -1,6 +1,6 @@
 # Timeline Readability / Recognition UX Research
 
-Status: in progress — Steps 1–3 accepted; Candidate A selected for stress-test  
+Status: in progress — Steps 1–4 accepted; Candidate A′ selected for specification  
 Scope: UX research / product design only  
 Implementation: out of scope until this task is completed and reviewed
 
@@ -837,6 +837,59 @@ Implication for next step:
 **Rejected alternative(s) for Step 4:** Candidate B and Candidate C are not the primary directions to stress-test. They remain fallback/reference alternatives if Candidate A fails under dense or narrow scenarios.
 
 **Implication for next step:** Step 4 must actively try to break Candidate A. In particular, test whether identity and deadline can coexist at real phone widths, whether deadline disappearance undermines the product's core question, whether `Ending soonest` remains readable, whether future bias preserves enough active-event context, whether recognition metadata coverage is sufficient, and whether dense same-game lanes reveal a real need for lightweight type grouping.
+
+
+### 2026-10-06 — Step 4
+
+**Decision:** Accept the stress-test findings and replace Candidate A with the refined **Candidate A′ — Sticky semantic bars** as the final direction to specify in Step 5.
+
+**Major failure found:**
+
+- at the current default scale of roughly `72px/day`, a 360–390 CSS px phone viewport shows only about five days;
+- with the earlier 15% past-bias proposal, only about 4.3–4.6 future days remain visible;
+- many normal game events run for 2–6 weeks, so their physical right edge and therefore a deadline label attached only to that edge would usually remain off-screen;
+- therefore the product cannot claim improved deadline visibility if deadline information is only rendered at the event's physical end.
+
+**Required changes to Candidate A:**
+
+- deadline information must belong to the bar's **sticky readable content**, not only to the physical end edge;
+- the initial view should anchor around the **current moment**, roughly 20% from the left, rather than using a fixed day-start/15% rule;
+- initialization should happen when opening/jumping to today, but ordinary filter changes or refreshes must not repeatedly re-bias the reader's viewport;
+- bar degradation must be **mode-specific**, not one universal identity/deadline rule for every Timeline mode;
+- unknown end must be explicit in the readable content; an edge treatment alone is insufficient;
+- exact/day/unknown precision must remain visible in the chosen deadline wording;
+- exact clock time should not be always-on bar content; it must earn its width cost under a narrower rule in Step 5.
+
+**Mode-specific conclusion:**
+
+- in `Ending soonest`, the ordering already carries deadline meaning, so at very narrow widths preserve textual **game + event identity** ahead of repeating a known deadline;
+- keep the existing type badge semantics;
+- do not add category bands or reorder the deadline queue by type.
+
+**Recognition metadata conclusion:**
+
+Recognition metadata should be optional and semantic rather than presentation-derived. It must be able to represent:
+
+- one featured subject;
+- genuine co-headliners;
+- item/weapon/Light Cone/W-Engine equivalents;
+- title fallback when no reliable recognition metadata exists.
+
+The UI must never heuristically invent a featured subject from arbitrary marketing text.
+
+**Rejected aspects:**
+
+- deadline text fixed only to the event's physical right edge;
+- the earlier fixed 15% / day-start initial anchor;
+- unknown-end communication that relies only on a frayed/open-ended bar edge;
+- always-on exact clock time inside bars;
+- one universal degradation hierarchy for all Timeline modes;
+- Candidate B or Candidate C as default architecture;
+- category bands in `Ending soonest`.
+
+**Grouping conclusion:** Candidate C does not return as the default. Its vertical cost remains high, and in deadline-oriented mode it conflicts with the meaning of the queue. Dense `By game` cases may still be observed during implementation smoke, but Step 4 found no evidence strong enough to justify adding explicit type grouping to the selected design.
+
+**Implication for next step:** Step 5 should specify Candidate A′ precisely: sticky identity/deadline composition, mode-specific degradation, current-moment viewport initialization, exact/day/unknown deadline wording, optional recognition metadata contract, responsive rules and acceptance/smoke criteria.
 
 ---
 
