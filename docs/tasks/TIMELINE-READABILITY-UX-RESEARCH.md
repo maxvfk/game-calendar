@@ -1,6 +1,6 @@
 # Timeline Readability / Recognition UX Research
 
-Status: in progress — Step 1 accepted  
+Status: in progress — Steps 1–2 accepted  
 Scope: UX research / product design only  
 Implementation: out of scope until this task is completed and reviewed
 
@@ -774,6 +774,34 @@ Implication for next step:
 **Rejected alternative(s):** None yet. Step 1 was diagnostic and intentionally made no final UX choice.
 
 **Implication for next step:** Step 2 should research compact identity/deadline hierarchy, narrow-bar degradation, lightweight grouping and future-biased viewport patterns. It must not assume that all four backlog proposals survive to implementation.
+
+
+### 2026-10-06 — Step 2
+
+**Decision:** Accept the focused UX reference research and carry its reusable principles into candidate design work.
+
+**References examined:** NTEBuild, vis-timeline, Bryntum Scheduler, FullCalendar and Frappe Gantt. These are references for specific interaction/information patterns, not templates to copy wholesale.
+
+**Patterns worth testing in Step 3:**
+
+- bias the initial viewport toward future time while keeping some recent-past context visible;
+- prefer structured recognition identity over marketing-title-first presentation when trustworthy semantic metadata exists;
+- make bar content width-aware rather than forcing the same text payload into every event width;
+- keep deadline communication compact and end-oriented when shown directly on a bar;
+- treat event-type grouping as a lightweight candidate only in `By game`, not as a mandatory second hierarchy across every Timeline mode.
+
+**Patterns explicitly rejected:**
+
+- deep/nested group hierarchies that substantially increase Timeline height;
+- `+more`-style hiding of rows as the primary solution to density;
+- deadline labels positioned above/below bars in ways that create a second visual track or extra row height;
+- hover/popup/detail-only deadline communication as the primary answer to the product's core deadline question.
+
+**Reason:** The useful references converge on progressive disclosure inside the available bar width and on preserving the timeline itself as the main reading surface. None provides evidence that adding a heavy category hierarchy would outperform better identity/deadline presentation for this product.
+
+**Rejected alternative(s):** No complete candidate design has been rejected yet. Step 2 rejects only reference patterns that conflict with mobile density, direct deadline visibility or the existing Timeline model.
+
+**Implication for next step:** Step 3 should construct 2–3 coherent variants that combine future-biased initialization, recognition identity and width-aware deadline presentation in different ways, with type grouping treated as a hypothesis to justify rather than a required feature.
 
 ---
 
