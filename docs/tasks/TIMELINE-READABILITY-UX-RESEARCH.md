@@ -1,6 +1,6 @@
 # Timeline Readability / Recognition UX Research
 
-Status: in progress — Steps 1–4 accepted; Candidate A′ selected for specification  
+Status: complete — Steps 1–5 accepted; Candidate A′ ready for implementation  
 Scope: UX research / product design only  
 Implementation: out of scope until this task is completed and reviewed
 
@@ -729,6 +729,532 @@ Do not implement them.
 
 ---
 
+# Final implementation-ready UX specification — Candidate A′
+
+This section is the accepted output of Step 5.
+
+Implementation must start from the then-current `main` and must not repeat the broad UX research unless current code materially contradicts this specification.
+
+## 1. Product goal
+
+Make the Timeline answer two questions faster, without increasing row height or adding a second heavy hierarchy:
+
+1. **What activity is this?**
+2. **When does it end / is its end known?**
+
+The selected design is **Candidate A′ — Sticky semantic bars**.
+
+Its core rule is:
+
+> recognition identity and truthful end state belong to the bar's readable sticky content, not only to the bar's physical start/end edges.
+
+## 2. Information hierarchy
+
+### `By game`
+
+The lane heading already provides game identity.
+
+Preferred bar content, when space permits:
+
+1. event type cue;
+2. recognition identity;
+3. end state/deadline;
+4. existing conflict/urgency/lifecycle cues.
+
+Game text should not be repeated inside every normal `By game` bar.
+
+### `Ending soonest`
+
+There is no per-game lane heading, so each bar must preserve:
+
+1. game identity;
+2. recognition identity;
+3. end state/deadline when width permits;
+4. type cue when width permits;
+5. existing conflict/urgency/lifecycle cues.
+
+For known deadlines, ordering already carries deadline meaning. On narrow bars, preserve **game + event identity** before repeating a known end date.
+
+For unknown deadlines, the fact that the end is unknown remains semantically important and must survive longer than a known-deadline token.
+
+## 3. Recognition label rules
+
+Add one optional semantic event field:
+
+```ts
+recognitionSubjects?: string[]
+```
+
+Meaning:
+
+- ordered list of the genuine featured subject(s) that players use to recognize the event;
+- character banner → featured character name(s);
+- weapon / Light Cone / W-Engine / equivalent banner → featured item name(s);
+- genuine co-headliners may contain more than one ordered subject;
+- the field is optional for every event class.
+
+Presentation:
+
+- when `recognitionSubjects` is present and non-empty, join subjects with ` + ` for the compact recognition label;
+- otherwise fall back to the existing official `title`;
+- the official title remains canonical source/detail information and must not be discarded;
+- never heuristically extract recognition subjects from arbitrary marketing titles in presentation code.
+
+The field is additive. Existing feeds, cached feeds and custom events without it remain valid.
+
+Adding it must not change:
+
+- event IDs;
+- completion keys;
+- dates;
+- provenance;
+- conflict state.
+
+## 4. Deadline rules
+
+Deadline content is part of the same sticky readable region as identity.
+
+### Known exact end
+
+Compact bar form:
+
+```text
+→ Oct 21
+```
+
+Do not show exact clock time by default inside Timeline bars.
+
+The full exact timestamp remains available through existing detail/source surfaces and accessible semantics where appropriate.
+
+### Day-precision end
+
+Use the same compact date text, but add a **visible non-colour precision cue** to the deadline token, such as a dashed underline/border treatment.
+
+Accessible semantics must explicitly say:
+
+```text
+end date only
+```
+
+Do not fabricate a time.
+
+### Unknown end
+
+Preferred text when space permits:
+
+```text
+end unknown
+```
+
+Compact fallback:
+
+```text
+?
+```
+
+The compact form must have accessible text:
+
+```text
+End unknown
+```
+
+Never display a synthetic estimated date merely to fill the bar.
+
+### Cross-year dates
+
+Include the year when omitting it could make the deadline ambiguous across a year boundary.
+
+### Start date
+
+Do not add a start→end range to normal bar content in this milestone. The date axis and physical bar start already carry start-position information; bar text should prioritize identity and end state.
+
+## 5. Grouping rules
+
+Do **not** add event-type grouping/category bands in this milestone.
+
+Preserve:
+
+- one lane per game in `By game`;
+- the existing deadline queue semantics in `Ending soonest`;
+- existing event-type filtering.
+
+Do not:
+
+- reorder rows by event type;
+- add category sub-headings;
+- add a grouping toggle;
+- add category bands to `Ending soonest`.
+
+Dense `By game` cases should be observed during implementation smoke. Type grouping may be reconsidered later only if real post-implementation evidence shows that Candidate A′ remains insufficient.
+
+## 6. Viewport initialization
+
+Use the **actual current moment** `x(now)`, not local-day start, as the navigation anchor.
+
+Target initial position:
+
+- phone / below `lg`: current moment at about **20%** of the visible width from the left;
+- desktop / `lg` and above: current moment at about **25%** from the left.
+
+These are responsive behavior targets, not persisted preferences.
+
+Apply future-biased positioning only when:
+
+- the Timeline is initially opened/mounted;
+- the user explicitly activates **Jump to today**.
+
+Do **not** automatically re-bias because of:
+
+- game filters;
+- event-type filters;
+- `By game` / `Ending soonest` changes;
+- upcoming visibility changes;
+- source/feed refresh;
+- ordinary re-render;
+- clock ticks.
+
+If the board range changes so that the existing scroll offset is no longer valid, normal browser/scroller clamping is acceptable; do not reinterpret that as a request to jump to today.
+
+Zoom must continue to preserve the moment currently being inspected rather than returning to the future-biased anchor.
+
+## 7. Bar clipping and progressive disclosure
+
+Keep bars one line high and preserve the current practical `MIN_BAR`.
+
+Use measured available space rather than one global hard-coded content payload.
+
+### `By game` — known end
+
+Preferred degradation:
+
+```text
+[type] identity · deadline
+→ identity · deadline
+→ identity
+→ truncated identity
+→ bare bar
+```
+
+The type badge is the first semantic element allowed to disappear visually.
+
+A known deadline may disappear before identity on a narrow bar because the date axis and event position still provide temporal context.
+
+### `By game` — unknown end
+
+Preferred degradation:
+
+```text
+[type] identity · end unknown
+→ identity · end unknown
+→ truncated identity · ?
+→ ?
+```
+
+Unknown-end state survives longer than a normal known-deadline token because the timeline cannot infer it from position.
+
+### `Ending soonest` — known end
+
+Preferred degradation:
+
+```text
+game · [type] identity · deadline
+→ game · identity · deadline
+→ game · identity
+→ game · truncated identity
+→ compact/truncated game
+```
+
+Known deadline disappears before game + event identity.
+
+### `Ending soonest` — unknown end
+
+Preserve game + identity + unknown-end semantics for as long as space permits.
+
+Compact `?` may replace `end unknown`, but its accessible meaning must remain explicit.
+
+### Absolute minimum width
+
+Visual identity is prioritized but not guaranteed at the physical minimum bar width.
+
+When text cannot fit, accessible semantics must still expose the complete event meaning.
+
+Do not reduce `MIN_BAR` merely to fit more information.
+
+## 8. Running / upcoming / completion / conflict behavior
+
+Preserve existing behavior unless a change is explicitly required by the sticky semantic content implementation:
+
+- running versus upcoming visual distinction;
+- dashed/future start treatment;
+- current start markers;
+- clipped-start honesty;
+- completion dimming;
+- urgency indicator;
+- conflict indicator;
+- exact/day start precision;
+- exact/day/unknown end precision.
+
+Candidate A′ must not collapse these states into the recognition/deadline label.
+
+## 9. Responsive rules
+
+The same semantic model applies on phone and desktop.
+
+Differences should come from:
+
+- viewport anchor target;
+- measured available bar width;
+- progressive disclosure.
+
+Do not introduce a phone-only alternative architecture.
+
+Specifically do not add:
+
+- persistent identity rail;
+- extra category rows;
+- second text row inside bars;
+- always-on clock text;
+- image thumbnails as a dependency.
+
+## 10. Accessibility
+
+Do not rely on:
+
+- hue alone;
+- hover alone;
+- the physical bar edge alone;
+- a visual `?` without an accessible label.
+
+Every Timeline event must retain a complete accessible name/description containing, as applicable:
+
+- game;
+- event type;
+- recognition identity, or title fallback;
+- end date or **End unknown**;
+- **end date only** when end precision is day-only;
+- upcoming/not-started state;
+- disputed/conflict state.
+
+If the visual `TypeBadge` is removed at a narrow width, **event type must remain in accessible semantics**. This intentionally supersedes the current `TypeBadge` assumption that the visual badge is present on every narrow Timeline bar; implementation comments/tests must be updated accordingly.
+
+Visual truncation must not truncate the accessible name.
+
+Touch target behavior must not regress.
+
+## 11. Data requirements
+
+The selected design requires one optional additive semantic field:
+
+```ts
+recognitionSubjects?: string[]
+```
+
+Schema expectations:
+
+- optional;
+- when present, contains at least one non-empty subject string;
+- order is meaningful;
+- no inferred values in presentation code;
+- title remains required and is always the fallback.
+
+This is the only new event semantic required by this UX design.
+
+Population of recognition metadata is a separate reviewed data task and must follow existing source/provenance rules.
+
+Do not block deadline/viewport implementation on complete metadata coverage.
+
+## 12. Compatibility constraints
+
+Implementation must preserve:
+
+- current stable event IDs and `eventId()` semantics;
+- progress/completion keys;
+- local profile data;
+- export/import compatibility;
+- sync compatibility;
+- old cached feeds;
+- custom events;
+- events without `recognitionSubjects`;
+- source/provenance/conflict semantics;
+- existing date-precision invariants;
+- existing Timeline zoom preference.
+
+No preference migration is required for the future-biased viewport position because the position is navigation behavior, not a stored user preference.
+
+## 13. Acceptance criteria
+
+Implementation is acceptable only if all of the following hold.
+
+### Viewport / navigation
+
+- initial Timeline opening anchors the actual current moment near 20% from the left on phone;
+- initial desktop opening anchors it near 25%;
+- **Jump to today** applies the same responsive anchor;
+- filter changes do not unexpectedly jump back to today;
+- switching Timeline group mode does not unexpectedly jump back to today;
+- showing/hiding upcoming events does not unexpectedly jump back to today;
+- feed refresh/re-render does not unexpectedly jump back to today;
+- zoom preserves the inspected moment as it does today.
+
+### Sticky semantics
+
+- a multi-week running event whose physical end is off-screen can still expose its readable deadline/end state in the sticky content when width permits;
+- sticky content never escapes its own bar;
+- bars remain one line high;
+- `MIN_BAR` is not reduced.
+
+### Recognition
+
+- an event with `recognitionSubjects` uses those subjects as its compact identity;
+- genuine multiple subjects retain their declared order;
+- an event without recognition metadata falls back to `title`;
+- no UI heuristic guesses recognition subjects;
+- recognition metadata changes do not change event IDs or completion state.
+
+### Deadline / precision
+
+- exact known ends can show a compact end date;
+- day-only ends have a visible non-colour precision cue and accessible **end date only** semantics;
+- unknown ends expose **end unknown** or compact `?`;
+- `?` is accessible as **End unknown**;
+- no unknown end receives a fabricated date;
+- cross-year deadlines are unambiguous;
+- exact clock time is not always-on bar content.
+
+### Degradation
+
+- `By game` prioritizes recognition identity over a known deadline at narrow widths;
+- unknown-end state survives longer than a known deadline token;
+- `Ending soonest` prioritizes game + identity over repeating a known deadline;
+- visual `TypeBadge` may disappear first when necessary;
+- hidden visual type information remains available to assistive technology;
+- absolute-minimum bars remain usable/tappable even when visible text cannot fit.
+
+### Structure / grouping
+
+- no event-type category bands are added;
+- `By game` remains one lane per game;
+- `Ending soonest` remains a deadline-oriented queue;
+- event-type filters keep their existing meaning;
+- no new grouping preference/toggle is introduced.
+
+### Existing states
+
+- upcoming styling/semantics remain understandable;
+- completion dimming remains intact;
+- conflict indication remains intact;
+- start-precision cues remain intact;
+- urgency indication remains intact;
+- clipped long-running events remain honest about their hidden start.
+
+### Compatibility
+
+- old feed objects without `recognitionSubjects` validate and render;
+- custom events continue to render;
+- existing stored preferences load without migration;
+- export/import remains compatible;
+- account sync data is unaffected;
+- current event IDs remain byte-for-byte stable.
+
+## 14. Manual smoke-test matrix
+
+At minimum test:
+
+### Phone portrait
+
+- open Timeline at default zoom;
+- verify ~20% current-moment anchor;
+- long running event with end far off-screen;
+- short event near `MIN_BAR`;
+- exact end;
+- day-only end;
+- unknown end;
+- one recognition subject;
+- two recognition subjects;
+- title fallback;
+- non-character/item recognition subject;
+- `By game`;
+- `Ending soonest`;
+- game filter change without re-jump;
+- event-type filter change without re-jump;
+- group-mode change without re-jump;
+- show/hide upcoming without re-jump;
+- zoom in/out preserving inspected moment;
+- explicit **Jump to today** restoring the responsive anchor.
+
+### Desktop
+
+- initial ~25% current-moment anchor;
+- wide bars showing identity + deadline;
+- long off-screen-end bar with sticky semantic content;
+- progressive disclosure while changing zoom;
+- both Timeline modes;
+- filter/refresh stability.
+
+### Dense data
+
+- all seven operational games enabled;
+- multiple banners in one game;
+- several event categories in one game;
+- overlapping dates;
+- no category-band vertical explosion.
+
+### Data / provenance states
+
+- region-resolved deadline;
+- exact end;
+- day-only end;
+- unknown end;
+- disputed/conflicting date;
+- upcoming event;
+- completed event.
+
+### Backward compatibility
+
+- cached/legacy feed object without recognition metadata;
+- custom event;
+- existing preference state;
+- existing completion state.
+
+## 15. Suggested implementation decomposition
+
+Use a fresh short-lived branch from the then-current `main`.
+
+Recommended logical sequence:
+
+1. **Semantic data contract**
+   - add optional `recognitionSubjects`;
+   - schema/validation/tests;
+   - prove old feeds/custom events remain compatible;
+   - do not populate broad recognition metadata heuristically.
+
+2. **Sticky semantic bar rendering**
+   - recognition/title fallback;
+   - deadline exact/day/unknown presentation;
+   - mode-specific measured-fit degradation;
+   - accessible full semantics;
+   - update `TypeBadge` assumptions/tests where the badge may disappear visually.
+
+3. **Viewport/navigation behavior**
+   - anchor `x(now)` at responsive 20%/25%;
+   - initial mount + explicit Jump only;
+   - preserve current position across filters/group/upcoming/refresh;
+   - preserve zoom anchor behavior.
+
+4. **Integrated verification**
+   - `bun install --frozen-lockfile`;
+   - `bun run typecheck`;
+   - `bun test`;
+   - `bun run build`;
+   - targeted automated tests for schema, degradation helpers and scroll behavior where practical;
+   - manual phone + desktop smoke using the matrix above.
+
+5. **Separate reviewed metadata-population task**
+   - populate recognition subjects only from reliable structured/reviewed evidence;
+   - preserve source/provenance rules;
+   - do not combine broad source research with the UI implementation unless a concrete missing field requires it.
+
+
 # Decision log
 
 This section is updated only after coordinating review.
@@ -891,15 +1417,36 @@ The UI must never heuristically invent a featured subject from arbitrary marketi
 
 **Implication for next step:** Step 5 should specify Candidate A′ precisely: sticky identity/deadline composition, mode-specific degradation, current-moment viewport initialization, exact/day/unknown deadline wording, optional recognition metadata contract, responsive rules and acceptance/smoke criteria.
 
+
+### 2026-10-06 — Step 5
+
+**Decision:** Accept the implementation-ready specification for **Candidate A′ — Sticky semantic bars**, with one review correction: because the visual `TypeBadge` may disappear first on narrow bars, event type must remain in the accessible name/sr-only semantics and the old “badge on every narrow bar” implementation assumption must be updated.
+
+**Final direction:**
+
+- recognition identity + truthful end state live in sticky readable bar content;
+- optional `recognitionSubjects?: string[]` provides semantic recognition labels with title fallback;
+- no heuristic subject extraction;
+- deadline semantics distinguish exact, day-only and unknown without fabricated certainty;
+- no always-on clock text;
+- no event-type grouping/category bands;
+- `By game` and `Ending soonest` use different narrow-width priorities;
+- initial current-moment anchor is ~20% on phone and ~25% on desktop;
+- only initial opening and explicit **Jump to today** re-anchor;
+- filters, group changes, upcoming changes, refreshes and ordinary rerenders preserve the reader's position;
+- accessibility retains full game/type/identity/end/lifecycle/conflict meaning despite visual truncation.
+
+**Rejected alternative(s):** Candidate B, Candidate C, physical-end-only deadline labels, mandatory category grouping, persistent identity rail, always-on exact clock time and heuristic recognition parsing remain rejected for this milestone.
+
+**Implication for next step:** UX research is complete. The next project decision is implementation planning from the then-current `main`, using the specification above as the source of truth. Do not begin implementation automatically from this research task.
+
 ---
 
 # Working findings
 
-This section may contain provisional findings from the current research step.
+Research complete. No provisional findings remain.
 
-They are not project decisions until copied into **Accepted decisions** after review.
-
-None yet.
+Any new UX concern discovered during implementation smoke should be recorded as a concrete implementation finding rather than silently reopening Steps 1–5.
 
 ---
 
