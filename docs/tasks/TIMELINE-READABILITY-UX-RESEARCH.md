@@ -1,6 +1,6 @@
 # Timeline Readability / Recognition UX Research
 
-Status: in progress — Steps 1–2 accepted  
+Status: in progress — Steps 1–3 accepted; Candidate A selected for stress-test  
 Scope: UX research / product design only  
 Implementation: out of scope until this task is completed and reviewed
 
@@ -802,6 +802,41 @@ Implication for next step:
 **Rejected alternative(s):** No complete candidate design has been rejected yet. Step 2 rejects only reference patterns that conflict with mobile density, direct deadline visibility or the existing Timeline model.
 
 **Implication for next step:** Step 3 should construct 2–3 coherent variants that combine future-biased initialization, recognition identity and width-aware deadline presentation in different ways, with type grouping treated as a hypothesis to justify rather than a required feature.
+
+
+### 2026-10-06 — Step 3
+
+**Decision:** Select Candidate A — **Compact semantic bars** — as the direction to stress-test in Step 4.
+
+**Candidate summary:**
+
+- keep the existing Timeline structure rather than adding a persistent identity rail or mandatory category sub-hierarchy;
+- bias the initial viewport toward future time while retaining recent-past context;
+- use recognition-first identity when reliable structured/reviewed metadata exists, with the current official title as fallback;
+- add compact end-oriented deadline information directly inside bars when width permits;
+- make bar contents degrade progressively with available width;
+- keep `By game` and `Ending soonest` semantically distinct;
+- do **not** add explicit event-type grouping in the first candidate direction.
+
+**Why Candidate A is preferred:**
+
+- it offers the best balance of recognition, deadline visibility and phone density;
+- it preserves the current Timeline model and therefore has lower implementation and regression risk;
+- Candidate B — **Persistent identity rail** — protects identity/deadline information on very narrow bars, but spends persistent horizontal space and adds substantial layout complexity, especially on phone;
+- Candidate C — **Lightweight category bands** — provides the strongest explicit classification in `By game`, but multiplies vertical height/scroll distance across games and risks solving a problem that improved bar identity may already solve.
+
+**Important non-decisions:** Selecting Candidate A does **not** yet lock the following details:
+
+- the exact phone/desktop viewport percentages (the Step 3 proposal of roughly 15% past on phone and 20% on desktop remains a test target);
+- the precise width thresholds or degradation order between identity and deadline;
+- whether exact clock time should ever appear directly on the bar;
+- the final visual treatment for `endsAt: null` (including the proposed `end ?` / open-ended edge treatment);
+- whether type grouping can be rejected permanently rather than merely omitted initially;
+- the exact minimal recognition metadata contract and its real coverage across current events.
+
+**Rejected alternative(s) for Step 4:** Candidate B and Candidate C are not the primary directions to stress-test. They remain fallback/reference alternatives if Candidate A fails under dense or narrow scenarios.
+
+**Implication for next step:** Step 4 must actively try to break Candidate A. In particular, test whether identity and deadline can coexist at real phone widths, whether deadline disappearance undermines the product's core question, whether `Ending soonest` remains readable, whether future bias preserves enough active-event context, whether recognition metadata coverage is sufficient, and whether dense same-game lanes reveal a real need for lightweight type grouping.
 
 ---
 
