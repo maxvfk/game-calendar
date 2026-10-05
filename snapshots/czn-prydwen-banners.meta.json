@@ -1,12 +1,12 @@
 {
   "sourceId": "czn-prydwen-banners",
   "url": "https://www.prydwen.gg/chaos-zero-nightmare/banners",
-  "contentHash": "f2210a38b96962cd5d28dea6a51962178b3096a9ccb7dde6d4e69cfa65a3cd66",
+  "contentHash": "461202af3867a69387079389fcf82a0c71e55c47daf776ebce1162cb25c7818d",
   "bytes": 156399,
   "etag": null,
   "lastModified": null,
-  "contentChangedAt": "2026-10-04T20:15:09.158Z",
-  "lastConfirmedAt": "2026-10-04T20:15:09.158Z",
+  "contentChangedAt": "2026-10-05T12:23:41.762Z",
+  "lastConfirmedAt": "2026-10-05T12:23:41.762Z",
   "eventCount": 5,
   "charset": "utf-8"
 }
