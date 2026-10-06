@@ -1496,3 +1496,24 @@ This research task is complete only when:
 - no unresolved product decision remains that would force an implementation agent to redesign the feature while coding.
 
 The next action after completion is a **separate bounded implementation Work created from the then-current `main`**.
+
+
+---
+
+# Deferred implementation follow-up
+
+Implementation is intentionally postponed until the active Account/User S6 work is complete or explicitly cleared by the coordinating project chat.
+
+The accepted UX direction is split into two bounded milestones:
+
+1. `docs/tasks/TIMELINE-READABILITY-M1-RECOGNITION-METADATA.md`
+   - optional semantic `recognitionSubjects` contract;
+   - validation/backward compatibility;
+   - no Timeline UI changes.
+
+2. `docs/tasks/TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md`
+   - Candidate A′ sticky semantic Timeline;
+   - requires merged M1;
+   - no Account/User database changes.
+
+Do not start either milestone automatically when reading this research task. Re-check CURRENT `main`, S6 status and coordinating-chat authorization first.
