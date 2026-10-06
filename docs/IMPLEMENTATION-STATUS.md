@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-09-25. Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-06. Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Completed checkpoints
@@ -895,3 +895,27 @@ hosted snapshot, real-key decryption/validation, production dry-run/controlled
 restore and fresh deployed app read are still unverified gates.** Use only the
 disposable Google test account for the drill, and record actual results before
 closing S6a. No credentials should be pasted into chat.
+
+
+## Timeline Readability / Recognition UX
+
+Status: **research complete; implementation deferred until Account/User S6 is complete or explicitly cleared**.
+
+- A five-step UX research task was completed and reviewed in `docs/tasks/TIMELINE-READABILITY-UX-RESEARCH.md`.
+- The selected direction is **Candidate A′ — Sticky semantic bars**:
+  - optional semantic `recognitionSubjects?: string[]` with title fallback and no heuristic marketing-title parsing;
+  - sticky readable identity + truthful end state rather than deadline text only at the physical event end;
+  - exact/day/unknown deadline semantics without invented time;
+  - mode-specific degradation for `By game` versus `Ending soonest`;
+  - future-biased actual-current-moment anchoring at roughly 20% from the left on phone and 25% on desktop;
+  - re-anchor only on initial Timeline open and explicit `Jump to today`, not on filters/group/upcoming/refresh;
+  - no event-type category bands in the selected implementation direction.
+- One review correction was added to the final spec: the visual `TypeBadge` may disappear first on a narrow bar, but event type must remain in accessible semantics.
+- Implementation is split into two bounded tasks and intentionally parked:
+  1. `docs/tasks/TIMELINE-READABILITY-M1-RECOGNITION-METADATA.md` — additive semantic data contract only;
+  2. `docs/tasks/TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md` — Timeline rendering/navigation/accessibility, after merged M1.
+- M1/M2 must not start automatically while S6 remains active. Both require a fresh CURRENT-main check before implementation.
+- The feedback backlog was reconciled on 2026-10-06. Three small UI fixes remain open and unsequenced: mixed reset attribution, explicit Event Detail close/Back dismissal, and `All types` clear-all. Weekly separators remain observed. Event artwork, recognition-first Event Detail redesign, per-game daily passes and any return to type grouping remain larger/deferred work.
+- The original featured-subject feedback also mentioned `Next Up`/checklist surfaces. M1/M2 cover the semantic contract + Timeline only, so those additional compact surfaces remain an explicit follow-up and must not be silently considered resolved when M2 lands.
+
+Next concrete step for this track: **none until S6 is complete/cleared**. Then start Timeline Readability M1 from CURRENT `main`.
