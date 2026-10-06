@@ -8,6 +8,9 @@ from OP). Read 2026-08-17, two days after the first Pages deploy.
 Every quote below is from that thread. Every "what the code does today" note was checked against the
 tree at `6fc3c0b`.
 
+
+> **Historical status note (2026-10-06):** this document preserves the first-public-release Reddit review and its contemporary follow-up. It is **not** the current project backlog. Later source/reliability, UI, recurring-endgame and Account Sync milestones substantially superseded the moving status table below. Use `docs/IMPROVEMENT-BACKLOG.md`, `docs/IMPLEMENTATION-STATUS.md` and current task files for live work. Do not resurrect an item from this file without checking current `main` first.
+
 ---
 
 ## The one-paragraph read
@@ -311,7 +314,4 @@ diagnosis in each item still holds — what changed is whether it has been acted
 | P2 colour and screenshot | **Layout done** (2026-08-18), colour untouched. The palette was left alone deliberately — the two-axis system was not what made the screenshot read as unfinished, a dense single column on a wide screen was. Past `lg` the page is now a pinned deadline rail beside the lists, the timeline is a board with its axis and names pinned, and the footer and settings are columns. The screenshot still wants reshooting |
 | P2 custom events | **Done.** PRD F13 first, then the code; `mygame:` / `myevent:` key spaces, in the export |
 
-So the outstanding work is the colophon roadmap, P0's build assertion, and a reshoot of the promo
-screenshot. P1b is closed. The colour pass is open in name only: the palette was examined and left
-alone with the reasoning above, so what is left of P2 is the screenshot, which is now worth taking
-from a wide window.
+That was the outstanding-work summary **as of the 2026-08-17 follow-up**. It is retained as historical evidence, not as a current task list. Subsequent milestones changed the source-health model, supported-game scope and UI substantially. Current work must be taken from `docs/IMPROVEMENT-BACKLOG.md`, `docs/IMPLEMENTATION-STATUS.md` and active task files. The old promo-screenshot/colophon notes are not current implementation milestones unless explicitly reprioritized.
