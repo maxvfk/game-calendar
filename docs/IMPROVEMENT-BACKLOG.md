@@ -1,5 +1,7 @@
 # Improvement backlog
 
+Last full coordination review: **2026-10-06**. The completed Timeline readability research and its deferred implementation tasks are linked below; Account/User S6 remains ahead of those implementation milestones.
+
 Intake for observations from normal use on phone and desktop. Discuss and
 refine feedback in ChatGPT before moving an item into an implementation group.
 The older `docs/FEEDBACK.md` records a separate first-release review.
@@ -38,7 +40,7 @@ For each item, use this compact format:
   - **Desired behavior:** keep the compact nearest-reset countdown but identify which game or reset group it belongs to, for example `next: Genshin · 4h 25m` or `next: Genshin +2 · 4h 25m` when several games reset together.
   - **Area:** UI / data clarity
   - **Priority:** undecided
-  - **Status:** observed
+  - **Status:** refined
   - **Notes / constraints:** avoid adding a full per-game timer row to the collapsed dailies strip; the goal is to remove ambiguity without making the section taller. Per-game server/reset semantics already exist and should remain the source of truth.
 
 - **Title:** Make event details explicitly dismissible
@@ -46,7 +48,7 @@ For each item, use this compact format:
   - **Desired behavior:** add a clear close button inside the detail sheet and make browser/system Back dismiss the currently open event detail before normal page navigation resumes.
   - **Area:** interaction / UI
   - **Priority:** undecided
-  - **Status:** observed
+  - **Status:** refined
   - **Notes / constraints:** preserve backdrop tap and Escape as secondary dismissal paths. The close control needs a comfortable mobile touch target and must remain visible/reachable when the sheet content scrolls. Opening/closing details should integrate with history without creating duplicate or sticky history entries.
 
 - **Title:** Toggle all event types off from `All types`
@@ -54,17 +56,17 @@ For each item, use this compact format:
   - **Desired behavior:** make `All types` a two-state aggregate toggle: when not all categories are selected, tapping it selects all; when all categories are selected, tapping it clears all categories.
   - **Area:** interaction / UI
   - **Priority:** undecided
-  - **Status:** observed
+  - **Status:** refined
   - **Notes / constraints:** do not add a separate `None` button. `All types` should appear active only when every category is selected; with a partial or empty selection it should appear inactive.
 
 
-- **Title:** Use featured character names as character-banner labels
-  - **Observation:** official banner/campaign names are poor recognition cues in the calendar. Readers usually identify a character banner by the featured character, not by the marketing title, and the official title becomes even less useful when the game UI and calendar use different languages.
-  - **Desired behavior:** for character banners, use the featured character name (or featured character names when one banner genuinely contains several headline characters) as the primary compact label in Timeline/Next Up/checklist surfaces. Keep the official banner title available as secondary information in event details rather than discarding it.
+- **Title:** Use featured subjects as compact event labels
+  - **Observation:** official banner/campaign names are poor recognition cues in the calendar. Readers usually identify a banner by the featured character/item, not by the marketing title, and the official title becomes even less useful when the game UI and calendar use different languages.
+  - **Desired behavior:** use reliable featured subject names as the primary compact recognition label where appropriate, with the official title as fallback/secondary information.
   - **Area:** UI / data clarity
-  - **Priority:** undecided
-  - **Status:** observed
-  - **Notes / constraints:** apply this specifically to character banners; weapon/arc/light-cone/W-Engine and other banner classes should keep an appropriate featured-item label rather than being forced into character semantics. Prefer a reliable structured featured-subject value from source/reviewed data when available; do not heuristically extract character names from arbitrary marketing titles if the source does not establish them. Preserve existing event IDs, dates, provenance and completion state.
+  - **Priority:** approved direction; implementation deferred until Account/User S6 is complete/cleared
+  - **Status:** approved
+  - **Notes / constraints:** the accepted semantic contract is `recognitionSubjects?: string[]`, with ordered co-headliners and item/weapon/Light Cone/W-Engine equivalents supported; never infer subjects heuristically from arbitrary marketing titles. `docs/tasks/TIMELINE-READABILITY-M1-RECOGNITION-METADATA.md` implements the data contract, and M2 consumes it on Timeline. **Next Up/checklist are not covered by M2 and remain an explicit follow-up after M1; do not mark this backlog item fully resolved when Timeline M2 lands.** Preserve existing event IDs, dates, provenance and completion state.
 
 
 
@@ -73,24 +75,24 @@ For each item, use this compact format:
   - **Desired behavior:** position today closer to the left side of the default Timeline viewport so that most of the visible range shows future days. Keep a small amount of recent-past context rather than removing past days entirely.
   - **Area:** UI / data clarity
   - **Priority:** undecided
-  - **Status:** refined
-  - **Notes / constraints:** preserve the current-day marker and horizontal navigation. The exact offset should be tuned on both phone and desktop rather than hard-coding a desktop-centric ratio; a rough target is for today to occupy the first 15–25% of the visible range. Events that began before the visible range must remain understandable when their bars are clipped at the left edge.
+  - **Status:** approved
+  - **Notes / constraints:** resolved by the accepted Candidate A′ spec: anchor the actual current moment at about 20% from the left on phone and 25% on desktop, only on initial Timeline opening and explicit `Jump to today`; filters/group/upcoming/refresh must not re-anchor. Implementation is deferred in `docs/tasks/TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md` until Account/User S6 is complete/cleared.
 
 - **Title:** Show event deadlines directly on Timeline bars
   - **Observation:** identifying an event is not enough; the calendar's primary question is what ends first, but users currently have to infer or open details to read the relevant deadline.
   - **Desired behavior:** show the event's end date directly on its Timeline representation when space permits. Prefer an end-focused compact form such as `→ Oct 21`; when there is enough room, a start-to-end range such as `Sep 30 → Oct 21` may be shown.
   - **Area:** UI / data clarity
   - **Priority:** undecided
-  - **Status:** refined
-  - **Notes / constraints:** respect the existing exact/day precision model and never imply a clock time that the source does not establish. The label should degrade gracefully on short/narrow bars and must not make the dense mobile Timeline unreadable.
+  - **Status:** approved
+  - **Notes / constraints:** accepted Candidate A′ makes deadline/end state part of sticky readable bar content, with exact/day/unknown semantics and mode-specific degradation. Implementation is deferred in `docs/tasks/TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md` until Account/User S6 is complete/cleared.
 
 - **Title:** Group event types inside game-sorted Timeline views
   - **Observation:** when the Timeline is organized by game, a game's banners, normal events, endgame, login events and other rows can still be difficult to scan as one undifferentiated set.
-  - **Desired behavior:** when using the game-oriented ordering, add lightweight grouping or separators by event type within each game. When using date-oriented ordering, keep the Timeline as a pure chronological view without type grouping.
+  - **Desired behavior:** **deferred rather than implemented by default.** First ship/test the accepted recognition-first sticky bars. Revisit lightweight type grouping only if real dense `By game` smoke still shows a scanning failure.
   - **Area:** UI / data clarity
-  - **Priority:** undecided
-  - **Status:** refined
-  - **Notes / constraints:** do not add a separate grouping toggle unless later testing shows it is necessary. The game/date ordering itself should determine whether type grouping is active. Keep grouping visually lightweight so seven games multiplied by several categories does not turn the Timeline into a tall set of large section blocks. NTEBuild's category lanes are a useful recognition reference, but should not be copied literally.
+  - **Priority:** no current implementation priority
+  - **Status:** deferred
+  - **Notes / constraints:** Steps 3–5 of `TIMELINE-READABILITY-UX-RESEARCH.md` rejected category bands for Candidate A′ because of vertical cost and because grouping conflicts with the semantics of `Ending soonest`. Do not add a grouping toggle or category sub-hierarchy in M2. Candidate C remains a fallback only if post-implementation evidence justifies it.
 
 
 ## Separate feature tasks
@@ -103,8 +105,8 @@ pre-Astra interaction and visual polish items above.
   - **Desired behavior:** use optional event artwork primarily as an identity/recognition aid rather than decoration. The first implementation should make the artwork available in event details, where it can help the reader confirm "this is the event I see in the game" without increasing Timeline density. After that is usable on mobile, separately evaluate whether small thumbnails add enough recognition value in Timeline/Next Up surfaces to justify their layout and caching cost.
   - **Area:** new feature / UI / data clarity / ingestion
   - **Priority:** undecided
-  - **Status:** refined
-  - **Notes / constraints:** treat this as a separate feature milestone, not part of the small UI-polish batch. The governing UX principle is recognition-first presentation: show the visual/subject players actually recognize rather than privileging a source/database title. Artwork must remain optional because some event classes (maintenance, shop resets, recurring endgame phases, etc.) may not have a natural banner image. Before implementation, define an image-source/asset policy: stable source URL versus locally hosted asset, reuse/hotlink permission, provenance/attribution where required, broken-image fallback, and PWA/offline/cache behavior. Do not make an event's date/provenance confidence depend on artwork availability. Preserve existing event IDs and completion state. NTEBuild's event timeline is a useful UX reference for recognition and information hierarchy, not an automatic image/data source for this project.
+  - **Status:** deferred
+  - **Notes / constraints:** treat this as a separate feature milestone, not part of the current S6 → Timeline M1/M2 sequence. Revisit after the pre-Astra baseline/audit unless explicitly reprioritized. The governing UX principle is recognition-first presentation: show the visual/subject players actually recognize rather than privileging a source/database title. Artwork must remain optional because some event classes (maintenance, shop resets, recurring endgame phases, etc.) may not have a natural banner image. Before implementation, define an image-source/asset policy: stable source URL versus locally hosted asset, reuse/hotlink permission, provenance/attribution where required, broken-image fallback, and PWA/offline/cache behavior. Do not make an event's date/provenance confidence depend on artwork availability. Preserve existing event IDs and completion state. NTEBuild's event timeline is a useful UX reference for recognition and information hierarchy, not an automatic image/data source for this project.
 
 
 - **Title:** Rework event details around recognition-first information hierarchy
@@ -112,18 +114,50 @@ pre-Astra interaction and visual polish items above.
   - **Desired behavior:** redesign the event detail experience as a dedicated milestone around a recognition-first hierarchy: event identity/featured subject and optional artwork first; current timing/status and deadline next; useful human-facing description and rewards/participation context after that; source, provenance, precision/conflict and other technical metadata remain available but visually secondary.
   - **Area:** new feature / UI / data clarity
   - **Priority:** undecided
-  - **Status:** observed
-  - **Notes / constraints:** this is a larger product/UX milestone and must not be bundled into the small pre-Astra polish batch or treated as a side effect of adding artwork. Preserve source transparency and precision/conflict information; the goal is hierarchy, not hiding evidence. Define the final field order and mobile behavior from the actual current detail-sheet implementation before coding. It may consume the separate artwork and richer event-metadata work when those are available, but should not block smaller recognition/readability fixes elsewhere.
+  - **Status:** deferred
+  - **Notes / constraints:** this is a larger product/UX milestone and must not be bundled into the current S6 → Timeline M1/M2 sequence or treated as a side effect of adding artwork. The earlier feedback point that **rewards can help identify an event** is intentionally folded into this milestone's `description/rewards/participation context` layer rather than tracked as a separate Timeline feature. Preserve source transparency and precision/conflict information; the goal is hierarchy, not hiding evidence. Define the final field order and mobile behavior from the actual current detail-sheet implementation before coding. It may consume the separate artwork and richer event-metadata work when those are available, but should not block smaller recognition/readability fixes elsewhere.
+
+
+## Feedback-chat reconciliation — 2026-10-06
+
+The separate feedback chat's original eight recognition/readability observations are all accounted for:
+
+1. **Featured subject over marketing title** → accepted semantic direction; M1 adds `recognitionSubjects`, M2 uses it on Timeline; Next Up/checklist remain a follow-up.
+2. **Artwork as recognition aid** → preserved as the separate deferred artwork milestone; first scope remains Event Detail, not Timeline density.
+3. **Semantic/type grouping** → researched and deliberately deferred; Candidate A′ ships without category bands.
+4. **Deadline visible on the event** → accepted in Timeline M2 as sticky end-state/deadline content.
+5. **Current/future context** → accepted in Timeline M2 as future-biased actual-now anchoring (~20% phone / ~25% desktop).
+6. **Running vs upcoming state** → already present in current Timeline behavior and explicitly preserved by Candidate A′; no separate implementation task is needed.
+7. **Rewards as another recognition cue** → retained inside the deferred recognition-first Event Detail redesign, not added to dense Timeline bars.
+8. **Clear Event Detail hierarchy** → preserved as the separate deferred Event Detail redesign milestone.
+
+The later small feedback items are also still live and confirmed against current code:
+
+- mixed reset countdown is still ambiguous about **which** game/reset group is next;
+- Event Detail still lacks a visible in-sheet Close control and Back-first dismissal;
+- `All types` still does not clear all when tapped while fully selected;
+- weekly Timeline separators are still not stronger than ordinary daily separators;
+- per-game daily passes remain an unimplemented new feature.
 
 ## Candidates before Astra audit
 
-No items yet. Reserve for approved small UX/UI fixes and corrections to
-existing behavior that should be included in the audit baseline.
+Approved but intentionally blocked behind Account/User S6:
+
+- **Timeline Readability M1 — Recognition Metadata Contract**  
+  `docs/tasks/TIMELINE-READABILITY-M1-RECOGNITION-METADATA.md`
+- **Timeline Readability M2 — Sticky Semantic Timeline**  
+  `docs/tasks/TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md`
+
+Small refined fixes that remain unsequenced: mixed daily-reset attribution, explicit Event Detail dismissal/Back behavior, and `All types` clear-all. Stronger weekly separators remain observed rather than approved.
 
 ## Deferred until after Astra audit
 
-No items yet. Reserve for larger features, redesigns, new modes and scope
-expansion after the audit and its confirmed fixes.
+Larger feature/redesign work unless explicitly reprioritized:
+
+- event artwork / image-source and cache policy;
+- recognition-first Event Detail redesign;
+- per-game daily pass tracking;
+- any return to explicit Timeline type grouping unless M2 smoke produces concrete evidence that it is still needed.
 
 ## Implemented / resolved
 
