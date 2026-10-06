@@ -118,6 +118,28 @@ pre-Astra interaction and visual polish items above.
   - **Notes / constraints:** this is a larger product/UX milestone and must not be bundled into the current S6 → Timeline M1/M2 sequence or treated as a side effect of adding artwork. The earlier feedback point that **rewards can help identify an event** is intentionally folded into this milestone's `description/rewards/participation context` layer rather than tracked as a separate Timeline feature. Preserve source transparency and precision/conflict information; the goal is hierarchy, not hiding evidence. Define the final field order and mobile behavior from the actual current detail-sheet implementation before coding. It may consume the separate artwork and richer event-metadata work when those are available, but should not block smaller recognition/readability fixes elsewhere.
 
 
+
+## Coordinating decision — 2026-10-06
+
+The coordinating project chat accepted the eight-point recognition/readability set as the product direction.
+
+Agreed sequencing before the independent Astra audit:
+
+1. complete Account/User **S6**;
+2. implement Timeline Readability **M1 — Recognition Metadata Contract**;
+3. implement Timeline Readability **M2 — Sticky Semantic Timeline** and perform the required phone/desktop smoke;
+4. address the small UI feedback batch (mixed reset attribution, explicit Event Detail Close/Back dismissal, `All types` clear-all, and evaluate stronger weekly separators);
+5. make an explicit product decision on **event artwork**;
+6. if artwork is accepted, use that decision as an input to the separate **recognition-first Event Detail redesign**;
+7. treat **per-game daily passes** as an independent personal-data feature that may be sequenced separately but is intended before the Astra baseline freeze;
+8. freeze the resulting baseline, then run the independent **Astra audit**.
+
+Important scope clarification:
+
+- M1/M2 **do include** the accepted compact-label rule that character banners should prefer featured character names, and equivalent banners should prefer the corresponding featured item names, via trusted `recognitionSubjects` metadata with title fallback.
+- The Event Detail redesign is **not** part of M1/M2.
+- No implementation should begin automatically from this decision; CURRENT `main` and S6 status must be re-checked first.
+
 ## Feedback-chat reconciliation — 2026-10-06
 
 The separate feedback chat's original eight recognition/readability observations are all accounted for:
