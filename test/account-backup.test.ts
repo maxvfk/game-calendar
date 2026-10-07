@@ -245,6 +245,81 @@ test('function diagnostic detects function configuration and security metadata d
   expect(report.functions[0]!.differentMetadata.map(a=>a.name)).toEqual(['configuration','securityDefiner']);
   expect(JSON.stringify(report)).not.toContain('unsafe_test_schema');
 });
+test('backup role still rejects executable ordinary SECURITY DEFINER functions, including the platform-helper name',async()=>{
+  // A same-named type in public is not the built-in event_trigger type either.
+  await db.exec(`create domain public.event_trigger as name;
+    create function public.rls_auto_enable() returns public.event_trigger language sql security definer
+    set search_path=pg_catalog as $$ select current_user $$;`);
+  try {
+    await db.exec('set role calendar_backup');
+    expect((await query("select has_function_privilege(current_user,'public.rls_auto_enable()','EXECUTE') as allowed"))[0]!.allowed).toBe(true);
+    expect((await query("select prorettype='pg_catalog.event_trigger'::pg_catalog.regtype as is_event from pg_catalog.pg_proc where oid='public.rls_auto_enable()'::regprocedure"))[0]!.is_event).toBe(false);
+    expect((await query('select public.rls_auto_enable() as actor'))[0]!.actor).not.toBe('calendar_backup');
+    await expect(assertBackupRole(query)).rejects.toThrow('SECURITY DEFINER');
+  } finally {await db.exec('reset role; drop function public.rls_auto_enable(); drop domain public.event_trigger');}
+});
+test('real SECURITY DEFINER event-trigger PUBLIC EXECUTE is not an ordinary RPC and does not reject the backup role',async()=>{
+  await db.exec(`create table public.backup_event_calls(n int); insert into public.backup_event_calls values (0);
+    create function public.backup_event_helper() returns event_trigger language plpgsql security definer
+    set search_path=pg_catalog as $$ begin update public.backup_event_calls set n=n+1; end; $$;
+    create event trigger backup_test_event on ddl_command_end when tag in ('CREATE TABLE')
+      execute function public.backup_event_helper();`);
+  try {
+    await db.exec('set role calendar_backup');
+    const catalog=(await query(`select p.prorettype='pg_catalog.event_trigger'::pg_catalog.regtype as is_event,
+      has_function_privilege(current_user,p.oid,'EXECUTE') as allowed,
+      exists(select 1 from aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a
+        where a.grantee=0 and a.privilege_type='EXECUTE') as public_execute
+      from pg_catalog.pg_proc p where p.oid='public.backup_event_helper()'::regprocedure`))[0]!;
+    expect(catalog).toEqual({is_event:true,allowed:true,public_execute:true});
+    await assertBackupRole(query);
+    await expect(query('select public.backup_event_helper()')).rejects.toThrow('trigger functions can only be called as triggers');
+    await expect(query(`create event trigger backup_forbidden_event on ddl_command_end
+      execute function public.backup_event_helper()`)).rejects.toThrow('permission denied to create event trigger');
+    await db.exec('reset role; create table public.backup_event_target(n int)');
+    expect((await query('select n from public.backup_event_calls'))[0]!.n).toBe(1);
+    await db.exec('set role calendar_backup');
+    await assertBackupRole(query);
+  } finally {
+    await db.exec(`reset role; drop event trigger backup_test_event;
+      drop function public.backup_event_helper(); drop table if exists public.backup_event_target;
+      drop table public.backup_event_calls`);
+  }
+});
+test('ordinary SECURITY DEFINER trigger functions remain rejected and can be invoked indirectly on an owned temporary table',async()=>{
+  await db.exec(`create function public.backup_ordinary_trigger() returns trigger language plpgsql security definer
+    set search_path=pg_catalog as $$ begin new.actor:=current_user; return new; end; $$;`);
+  try {
+    await db.exec('set role calendar_backup');
+    expect((await query("select has_function_privilege(current_user,'public.backup_ordinary_trigger()','EXECUTE') as allowed"))[0]!.allowed).toBe(true);
+    await expect(assertBackupRole(query)).rejects.toThrow('SECURITY DEFINER');
+    await db.exec(`create temporary table backup_trigger_target(actor name);
+      create trigger indirect_definer before insert on backup_trigger_target
+        for each row execute function public.backup_ordinary_trigger()`);
+    expect((await query('insert into backup_trigger_target values (null) returning actor'))[0]!.actor).not.toBe('calendar_backup');
+  } finally {await db.exec('reset role; drop table if exists backup_trigger_target; drop function public.backup_ordinary_trigger()');}
+});
+test('event-trigger exemption does not bypass superuser, BYPASSRLS, membership, public CREATE or table privilege drift',async()=>{
+  await db.exec(`create function public.backup_event_guard_fixture() returns event_trigger language plpgsql security definer
+    set search_path=pg_catalog as $$ begin return; end; $$; create role backup_membership_fixture;`);
+  const cases=[
+    ...['superuser','bypassrls','createrole','createdb','replication'].map(flag=>({
+      enable:`alter role calendar_backup ${flag}`,disable:`alter role calendar_backup no${flag}`,error:'restricted calendar_backup'})),
+    {enable:'grant backup_membership_fixture to calendar_backup',disable:'revoke backup_membership_fixture from calendar_backup',error:'memberships'},
+    {enable:'grant create on schema public to calendar_backup',disable:'revoke create on schema public from calendar_backup',error:'CREATE'},
+    ...['insert','update','delete','truncate','references','trigger'].map(privilege=>({
+      enable:`grant ${privilege} on public.progress to calendar_backup`,
+      disable:`revoke ${privilege} on public.progress from calendar_backup`,error:'table privileges'})),
+  ];
+  try {
+    for(const c of cases) {
+      await db.exec(c.enable);
+      try {await db.exec('set role calendar_backup');await expect(assertBackupRole(query)).rejects.toThrow(c.error);}
+      finally {await db.exec(`reset role; ${c.disable}`);}
+    }
+    await db.exec('set role calendar_backup');await assertBackupRole(query);
+  } finally {await db.exec('reset role; drop function public.backup_event_guard_fixture(); drop role backup_membership_fixture');}
+});
 test('backup role reads complete cross-owner data and cannot write, read Auth or call RPC',async()=>{
   await db.exec('set role calendar_backup');
   try {

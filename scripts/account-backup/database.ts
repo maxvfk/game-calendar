@@ -60,8 +60,13 @@ export async function assertBackupRole(query: Query) {
     has_table_privilege(current_user,c.oid,'INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER') as can_write
     from pg_catalog.pg_class c where c.relnamespace='public'::regnamespace and c.relname=any($1::text[])`,[[...TABLES]]);
   if (privileges.length !== 7 || privileges.some(p=>!p.can_read || p.can_write)) throw new Error('Unexpected backup table privileges');
+  // Event-trigger EXECUTE ACLs do not make an ordinary callable RPC; installing
+  // an event trigger requires privileges this restricted role cannot have.
+  // Keep ordinary trigger functions checked: they can be invoked indirectly.
   const elevated = await query(`select p.proname from pg_catalog.pg_proc p
-    where p.pronamespace='public'::regnamespace and p.prosecdef and has_function_privilege(current_user,p.oid,'EXECUTE')`);
+    where p.pronamespace='public'::regnamespace and p.prosecdef
+      and p.prorettype<>'pg_catalog.event_trigger'::pg_catalog.regtype
+      and has_function_privilege(current_user,p.oid,'EXECUTE')`);
   if (elevated.length) throw new Error('Backup role can execute a public SECURITY DEFINER function');
   const policies = await query(`select tablename from pg_catalog.pg_policies where schemaname='public'
     and tablename=any($1::text[]) and policyname='calendar_backup_read' and cmd='SELECT'
