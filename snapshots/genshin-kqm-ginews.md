@@ -1430,44 +1430,6 @@ Unlock "Meeting Point: Tidesong Cavern" and upgrade the Meeting Point to Level 2
 
 -----
 
-# [Genshin Impact 6th Anniversary Theme Song Video Now Available](archive/21940.md)
-## Genshin Impact 6th Anniversary Theme Song Video Now Available
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/24/616e6ca8d7271a327d9a82553fcee4ea_1787375295688457441_transformed.jpg)
-
-Dear Traveler,
-
-The Genshin Impact 6th Anniversary Theme Song PV "A Letter From the Wind" is now available.
-
-You're what makes this journey so meaningful.
-
-Music Production: HOYO-MiX
-
-Composed by: Xin Zhao (HOYO-MiX)
-
-Singer (Chinese Version): Gary Sun
-
-Singer (English Version): Griffin Burns
-
-Singer (Japanese Version): Nishikawa Takanori
-
-Singer (Korean Version): Nam Do-hyeong
-
-Travelers can go to the following platform to listen to and watch the Genshin Impact 6th Anniversary Theme Song and Theme Song Video.
-
-YouTube:
-
-[Click here to watch the Genshin Impact 6th Anniversary Theme Song Video](https://youtu.be/ntcyVm9ebYI)
-
-Spotify:
-
-[Click here to listen to "A Letter From the Wind"](https://open.spotify.com/album/3eqyXAhEw570a1GIpEwGxj)
-
-Apple Music:
-
-[Click here to listen to "A Letter From the Wind"](https://music.apple.com/us/album/6815194575)
-
------
-
 # [Version 7.1 Benefits Overview](archive/21923.md)
 ## Version 7.1 Benefits Overview
 
