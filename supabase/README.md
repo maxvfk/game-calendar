@@ -113,3 +113,10 @@ local password setup and private repository configuration. Never replay S3
 migrations, reset production, place a private age identity/admin credential in
 GitHub, or use the browser mutation RPC for recovery. S6a remains pending until
 the first real encrypted hosted backup and controlled production drill pass.
+
+The backup/restore SQL client pins the public Supabase Root 2021 CA in
+`certs/prod-ca-2021.crt`, verifies its fingerprint and validity before SQL, and
+requires full chain/hostname verification. No CA Secret or runner trust-store
+configuration is needed. Certificate provenance, fingerprint and reviewed
+rotation before 2031-04-26 are documented in the runbook; this public trust
+anchor is not a database credential.

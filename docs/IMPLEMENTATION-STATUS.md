@@ -829,7 +829,7 @@ S6 had not started at that closure; realtime and multi-profile UI remain outside
 
 ## Account Sync — S6a: private backup + recovery
 
-Status: **implemented, awaiting operator production setup and recovery drill**.
+Status: **implemented and merged; hosted backup acceptance and recovery drill pending**.
 Do not mark S6a complete merely because the scripts/local synthetic drill pass.
 S5/S5.1 remain closed; S6b monitoring/cache-removal work has not started.
 
@@ -887,10 +887,32 @@ S5/S5.1 remain closed; S6b monitoring/cache-removal work has not started.
   personal snapshot. No realtime, multi-profile UI, new providers, source work,
   cache-removal UI or full new-project/Auth disaster recovery was added.
 
-Next concrete step: apply only the new S6a migration to the existing hosted
-project, bind the verified safe project ref, locally create/store the real age
-identity and read-role password, configure the private repo's one Secret/two
-Variables, then run its first backup. **Hosted schema preflight, real encrypted
+- Production TLS follow-up on 2026-10-07 starts from current public main
+  `38e93819be1a1c268839ab3bc5230b146aee25af` and private main
+  `9457798a2d59c3de52411d8da893bb08ec4147ef`, on fresh `s6a-production-tls`
+  branches. Hosted run `37609430936` passed guard/config/setup/tests, then
+  failed SQL TLS with `self signed certificate in certificate chain`; no
+  snapshot was committed. The exact operator Dashboard CA attachment was
+  independently verified and committed at `supabase/certs/prod-ca-2021.crt`.
+  Its fingerprint/validity are pinned before connection, with native Bun.SQL
+  chain/hostname verification retained. This public CA needs no Secret or
+  runner trust-store setup; rotate through reviewed PRs before 2031-04-26.
+  Native handshake regression tests prove trusted CA acceptance and rejection
+  of untrusted chains, hostname mismatch and refused TLS without fallback.
+  Existing backup/restore restrictions and behavior remain intact. Focused
+  tests: **15 pass / 1 optional age skipped / 0 fail**; frozen install,
+  typecheck and build passed (170 events/seven games, two existing conflicts).
+  Full suite: **1033 pass / 1 optional age skipped / 1 fail**. The sole failure
+  is the unrelated Endfield reviewed-banner conflict assertion, reproduced on
+  untouched current main (**1030 pass / 1 skipped / 1 fail**) and already red
+  in its [CI run](https://github.com/maxvfk/game-calendar/actions/runs/37536018586).
+  No source-ingestion/data/test bypass was added to this TLS-only follow-up.
+
+Next concrete step: after the public TLS fix and private immutable pin PRs
+merge, rerun **Encrypted personal-data backup** on private `main` manually.
+Keep existing `BACKUP_DATABASE_URL`, `AGE_RECIPIENT` and `SUPABASE_PROJECT_REF`
+unchanged. This follow-up does not run/claim production acceptance.
+**Hosted schema preflight, real encrypted
 hosted snapshot, real-key decryption/validation, production dry-run/controlled
 restore and fresh deployed app read are still unverified gates.** Use only the
 disposable Google test account for the drill, and record actual results before

@@ -1,7 +1,7 @@
 import { SQL } from 'bun';
 import { readFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
-import { checkServerIdentity } from 'node:tls';
+import { loadPinnedCA } from './tls.ts';
 import { TABLES, canonical, makeSnapshot, validateSnapshot, type Snapshot } from './model.ts';
 import { assertTarget, assertBackupRole, readRows, restorePlan, selectProfiles, writeRestore, type Query } from './database.ts';
 import { ageDecrypt, ageEncrypt, storeEncrypted, verifyPair } from './storage.ts';
@@ -21,6 +21,7 @@ export function safeQuery(sql: SQL): Query {
   };
 }
 export function connectionConfig(url: string,project: string,backup: boolean) {
+  if (!/^[a-z]{20}$/.test(project)) throw new Error('Invalid project ref');
   const u=new URL(url);
   const role=backup?'calendar_backup':'postgres';
   if (!['postgres:','postgresql:'].includes(u.protocol) || u.pathname!=='/postgres' ||
@@ -28,11 +29,13 @@ export function connectionConfig(url: string,project: string,backup: boolean) {
   const direct=u.hostname===`db.${project}.supabase.co` && decodeURIComponent(u.username)===role;
   const pooled=/^aws-[a-z0-9-]+\.pooler\.supabase\.com$/.test(u.hostname) && decodeURIComponent(u.username)===`${role}.${project}`;
   if (!direct && !pooled) throw new Error('Connection project/role/host mismatch');
-  // Set the driver's documented sslmode, independently of supplied credentials.
+  // Bun 1.3.14 parses sslmode separately from tls. Both are necessary:
+  // verify-full + rejectUnauthorized verify the chain and native SNI hostname;
+  // serverName must be the allowed DB host, and ca is the reviewed local PEM.
+  // Bun.SQL does not use Node's checkServerIdentity callback.
   u.searchParams.set('sslmode','verify-full');
   return {adapter:'postgres' as const,url:u.toString(),
-    tls:{rejectUnauthorized:true,serverName:u.hostname,
-      checkServerIdentity:(_hostname:string,cert:Parameters<typeof checkServerIdentity>[1])=>checkServerIdentity(u.hostname,cert)},
+    tls:{rejectUnauthorized:true,serverName:u.hostname,ca:loadPinnedCA()},
     max:1,prepare:false,connectionTimeout:20};
 }
 async function main() {
