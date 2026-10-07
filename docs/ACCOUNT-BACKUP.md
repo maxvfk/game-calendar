@@ -1,9 +1,10 @@
 # Account Sync S6a — encrypted personal-data backup and recovery
 
-Status on 2026-10-07: implementation merged; the first hosted run reached SQL
-but failed TLS trust-chain verification. The pinned-CA follow-up fixes that
-client configuration; **successful hosted snapshot and recovery drill remain
-manual acceptance gates**. S6a is not
+Status on 2026-10-07: implementation and pinned-CA follow-up merged. The second
+hosted run connected successfully, then failed schema preflight with
+`Live database schema mismatch`. Hosted catalog investigation is pending;
+**successful hosted snapshot and recovery drill remain manual acceptance
+gates**. S6a is not
 complete until the evidence below is recorded. S5/S5.1 remain closed.
 
 ## Architecture and access
@@ -108,6 +109,51 @@ passed repository/config/setup/tests and failed with `self signed certificate
 in certificate chain` during SQL export; no snapshot commit occurred. After
 both follow-up PRs merge, the operator must rerun **Encrypted personal-data
 backup** on `main`. This follow-up does not execute or claim that acceptance run.
+
+## Hosted schema compatibility investigation (2026-10-07)
+
+[Run 37616434328](https://github.com/maxvfk/game-calendar-backups/actions/runs/37616434328)
+passed repository/config/setup and focused tests (15 pass / 1 optional age
+skip / 0 fail), connected through verified TLS, then failed the catalog hash
+comparison. It committed no snapshot. The hosted PostgreSQL major and exact
+object differences are **not yet known**; the error alone does not establish
+semantic equivalence.
+
+The migration-derived PGlite/PG18 contract contains 44 table NOT NULL constraint
+entries as well as column `notNull` metadata. [PostgreSQL 18 release notes](https://www.postgresql.org/docs/18/release-18.html)
+document that table NOT NULL specifications now also appear in `pg_constraint`;
+[PG17's catalog](https://www.postgresql.org/docs/17/catalog-pg-constraint.html)
+does not represent table NOT NULL this way. This is a plausible compatibility
+cause, **not a confirmed diagnosis for this project**.
+
+Before modifying the contract, use
+[`supabase/diagnostics/account-backup-schema.sql`](../supabase/diagnostics/account-backup-schema.sql)
+in the existing project's SQL Editor. Execute the whole file as one SELECT.
+It reads only catalog metadata and the non-secret project marker, never personal
+or Auth rows, and performs no DDL/DML. It compares all five current contract
+sections and returns `schema_diagnostics`: server major, project ref, exact
+section matches, expected/live diagnostic SHA-256 hashes, and every differing
+object's name/type/change. Function bodies, defaults, check expressions,
+credentials and personal data are not printed. Export/copy this result for
+inspection; **do not share connection credentials**.
+
+The `onlyNotNullCatalogRowsDiffer` field tests the NOT NULL hypothesis without
+changing production validation: it is true only if every other section and
+every remaining constraint compares exactly. It is diagnostic evidence, never
+permission to bypass checks. Diagnostic hashes use PostgreSQL `jsonb::text`,
+not the production canonical serializer; they must never replace the expected
+production hash. The checked-in SQL is reproducibly generated from the current
+public contract with `bun scripts/account-backup/schema-diagnostics.ts`, not a
+second schema authority. Reproducibility/catalog-only execution are tested.
+
+If hosted evidence confirms the sole difference is PG18 NOT NULL catalog rows,
+the fix must represent nullability exactly once through columns' `notNull`
+and exclude only `contype='n'` table constraints. CHECK/PK/UNIQUE/FK/index/trigger
+and sync-function definitions must remain protected. Any other differing object
+must be investigated explicitly; normalize only proven non-semantic formatting.
+Regenerate the expected contract from migrations, never substitute a live hash.
+Until this investigation finishes, the production contract and private workflow
+pin remain unchanged and schema mismatches continue to fail closed.
 
 ## Snapshot v1, validation and confidentiality
 
@@ -395,9 +441,9 @@ AGE_TEST_IDENTITY=<LOCAL-PUBLIC-TEST-FIXTURE-PATH> AGE_TEST_RECIPIENT=<ITS-PUBLI
 ```
 
 Actual frozen install/typecheck/full test/build results are recorded in
-IMPLEMENTATION-STATUS after execution. The 2026-10-07 hosted attempt confirmed
-operator variables/secret presence and runner setup but stopped at TLS, before
-live schema/role preflight. Still pending: hosted schema/role verification,
+IMPLEMENTATION-STATUS after execution. The second 2026-10-07 hosted attempt
+confirmed verified TLS and reached (but failed) schema preflight. The later
+read-role preflight has not passed. Still pending: hosted schema/role verification,
 first successful real encrypted hosted snapshot, real-key decrypt/validation/dry-run and
 controlled production restore → fresh deployed app read. **Do not mark S6a
 complete until all of these pass.**

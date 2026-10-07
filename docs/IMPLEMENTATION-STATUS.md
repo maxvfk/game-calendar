@@ -908,8 +908,29 @@ S5/S5.1 remain closed; S6b monitoring/cache-removal work has not started.
   in its [CI run](https://github.com/maxvfk/game-calendar/actions/runs/37536018586).
   No source-ingestion/data/test bypass was added to this TLS-only follow-up.
 
-Next concrete step: after the public TLS fix and private immutable pin PRs
-merge, rerun **Encrypted personal-data backup** on private `main` manually.
+- Hosted-schema compatibility follow-up starts from verified public main
+  `2b30cece52e1a0ce7d60783cb636f7d5c71ac7fb` and private main
+  `0865d9e84d6415349b9e862619951d093be30108`, using fresh
+  `s6a-hosted-schema-contract` work. Actual run `37616434328` passes TLS and
+  focused tests (15 pass / 1 optional age skip / 0 fail), then fails with
+  `Live database schema mismatch`; no snapshot commit occurred. Expected PG18
+  catalog has 44 NOT NULL constraint rows, a documented PG18/pre-18 difference.
+  Hosted major and exact differences are still unverified. A generated,
+  read-only SQL Editor diagnostic compares all five sections and reports only
+  safe object names/types and section hashes, including a strict NOT NULL-only
+  hypothesis comparison. Production contract/hash and private pin are untouched
+  pending hosted evidence; no guessed normalization/live hash is accepted.
+  Diagnostic preparation: Bun 1.3.14 frozen install/typecheck/build passed;
+  focused tests **18 pass / 1 optional age skip / 0 fail**. Full tests:
+  **1036 pass / 1 skip / 1 fail**, solely the existing Endfield banner assertion,
+  reproduced on untouched current main (**1033 pass / 1 skip / 1 fail**).
+  This is preparation for hosted investigation, not a completed compatibility
+  fix or successful production backup.
+
+Next concrete step: run the runbook's catalog diagnostic in the existing
+Supabase SQL Editor and inspect its metadata-only result. Only then implement
+the proven semantic normalization, validate, merge public/private pin PRs and
+manually rerun **Encrypted personal-data backup** on private `main`.
 Keep existing `BACKUP_DATABASE_URL`, `AGE_RECIPIENT` and `SUPABASE_PROJECT_REF`
 unchanged. This follow-up does not run/claim production acceptance.
 **Hosted schema preflight, real encrypted

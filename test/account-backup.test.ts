@@ -15,6 +15,7 @@ import { emptySyncState, applyMutation } from '../src/shared/sync.ts';
 import { X509Certificate } from 'node:crypto';
 import { loadPinnedCA, SUPABASE_CA_FILE, SUPABASE_CA_FINGERPRINT } from '../scripts/account-backup/tls.ts';
 import { testCertificate, tlsPostgresServer } from './helpers/account-backup-tls.ts';
+import { schemaDiagnosticSql } from '../scripts/account-backup/schema-diagnostics.ts';
 
 const db=new PGlite();
 const project='vzzudezdigjwbwfejlsg';
@@ -66,6 +67,57 @@ test('backup contract is generated from all current migrations',async()=>{
   expect(await generatedContract()).toEqual(contract);
   expect(sha256(canonical(await schemaContract(query)))).toBe(contract.schemaSha256);
 },20000);
+test('safe schema diagnostic is generated, catalog-only, exact, and usable by the read role',async()=>{
+  const sql=schemaDiagnosticSql(contract.contract);
+  expect(sql).toBe(await Bun.file(new URL('../supabase/diagnostics/account-backup-schema.sql',import.meta.url)).text());
+  const before=await readRows(query);
+  await db.exec('set role calendar_backup');
+  try {
+    const report=(await query(sql))[0]!.schema_diagnostics as Record<string,unknown>;
+    expect(report.serverMajor).toBe(18);expect(report.projectRefs).toEqual([project]);
+    expect(report.rawContractMatches).toBe(true);
+    expect(report.onlyNotNullCatalogRowsDiffer).toBe(false);
+    expect(report.notNullCatalogEntries).toEqual({expected:44,live:44});
+    expect(report.sections).toHaveLength(5);
+    const text=JSON.stringify(report);
+    for(const value of [alice,bob,a,b,'synthetic recovery note','@example.invalid','CREATE OR REPLACE FUNCTION','SECURITY DEFINER'])
+      expect(text).not.toContain(value);
+  } finally {await db.exec('reset role');}
+  expect(await readRows(query)).toEqual(before);
+});
+test('diagnostic distinguishes the NOT NULL catalog hypothesis from semantic drift',async()=>{
+  const expected=structuredClone(contract.contract);
+  // Synthetic equivalent pre-18 catalog shape, NOT hosted evidence.
+  expected.constraints=expected.constraints.filter((c:{definition:string})=>!c.definition.startsWith('NOT NULL '));
+  const report=(await query(schemaDiagnosticSql(expected)))[0]!.schema_diagnostics as Record<string,unknown>;
+  expect(report.rawContractMatches).toBe(false);expect(report.onlyNotNullCatalogRowsDiffer).toBe(true);
+  expect(report.notNullCatalogEntries).toEqual({expected:0,live:44});
+  const sections=report.sections as {section:string;matches:boolean;differentObjects:{type:string}[]}[];
+  expect(sections.filter(s=>!s.matches).map(s=>s.section)).toEqual(['constraints']);
+  expect(sections.find(s=>s.section==='constraints')!.differentObjects.every(o=>o.type==='NOT NULL')).toBe(true);
+  expected.columns.find((c:{table:string;column:string})=>c.table==='progress'&&c.column==='note').notNull=true;
+  const drift=(await query(schemaDiagnosticSql(expected)))[0]!.schema_diagnostics as Record<string,unknown>;
+  expect(drift.rawContractMatches).toBe(false);expect(drift.onlyNotNullCatalogRowsDiffer).toBe(false);
+});
+test('diagnostic reports CHECK, PK, FK, index and function drift without printing definitions',async()=>{
+  for (const kind of ['CHECK','PRIMARY','FOREIGN','index','function']) {
+    const expected=structuredClone(contract.contract);
+    const section=kind==='index'?'indexes':kind==='function'?'functions':'constraints';
+    if(section==='constraints') {
+      const item=expected.constraints.find((c:{definition:string})=>c.definition.startsWith(kind));
+      item.definition=kind==='CHECK'?'CHECK (false)':kind==='PRIMARY'?'PRIMARY KEY (other_column)':
+        'FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE RESTRICT';
+    } else if(section==='indexes') expected.indexes[0].definition+=' WHERE false';
+    else expected.functions[0]='CREATE OR REPLACE FUNCTION public.apply_profile_mutations(p_profile_id uuid, p_mutations jsonb)\n RETURNS jsonb\n LANGUAGE sql\nAS $function$SELECT null::jsonb$function$\n';
+    const report=(await query(schemaDiagnosticSql(expected)))[0]!.schema_diagnostics as Record<string,unknown>;
+    expect(report.rawContractMatches).toBe(false);expect(report.onlyNotNullCatalogRowsDiffer).toBe(false);
+    const sections=report.sections as {section:string;matches:boolean;differentObjects:unknown[]}[];
+    expect(sections.filter(s=>!s.matches).map(s=>s.section)).toEqual([section]);
+    expect(sections.find(s=>s.section===section)!.differentObjects.length).toBeGreaterThan(0);
+    expect(JSON.stringify(report)).not.toContain('SELECT null::jsonb');
+    expect(JSON.stringify(report)).not.toContain('CHECK (false)');
+  }
+});
 test('backup role reads complete cross-owner data and cannot write, read Auth or call RPC',async()=>{
   await db.exec('set role calendar_backup');
   try {
