@@ -130,6 +130,8 @@ test('function newline normalization preserves quoted literal values, all declar
   }
   const comments=wrap('\r\n-- comment \'\r\n/* outer /* nested */ \' */\r\n select \'it\'\'s\';\r\n');
   expect(normalizeFunctionDefinition(comments)).toBe(comments.replaceAll('\r\n','\n'));
+  const bareCRComment=wrap("-- comment\r select 'literal\r\nvalue';\r\n");
+  expect(normalizeFunctionDefinition(bareCRComment)).toBe(wrap("-- comment\r select 'literal\r\nvalue';\n"));
   const normal=wrap('\n select 1;\n');
   for(const changed of [normal.replace('select 1','select 2'),normal.replace('select 1','select  1'),
     normal.replace('LANGUAGE sql','LANGUAGE plpgsql'),normal.replace(' RETURNS text',' RETURNS boolean')])

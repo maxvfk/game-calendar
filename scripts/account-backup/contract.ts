@@ -6,9 +6,8 @@ function bodyLineEndings(body: string): string {
   const take=(end:number)=>{result+=body.slice(i,end);i=end;};
   while(i<body.length) {
     if(body.startsWith('--',i)) {
-      const end=body.indexOf('\n',i);
-      const line=end<0?body.slice(i):body.slice(i,end+1);
-      result+=line.replaceAll('\r\n','\n');i=end<0?body.length:end+1;continue;
+      const newline=body.slice(i).search(/[\r\n]/);
+      take(newline<0?body.length:i+newline);continue;
     }
     if(body.startsWith('/*',i)) {
       let end=i+2,depth=1;
