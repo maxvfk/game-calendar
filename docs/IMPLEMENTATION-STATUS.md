@@ -934,14 +934,43 @@ S5/S5.1 remain closed; S6b monitoring/cache-removal work has not started.
   assertion, reproduced on untouched current main (**1033 pass / 1 skip / 1 fail**).
   No source changes, test bypass or production execution were added.
 
+- Production-preflight follow-up starts from verified public main
+  `9cba9061f08978b19134d842d48672946ad66f09` and private main
+  `d8e8ade2b41785ec28bc7339526c7e2b14b72388`, on fresh
+  `s6a-event-trigger-preflight` branches. Actual hosted run `37643339951` passes
+  operator config, pinned checkout, focused tests (**26 pass / 1 optional skip /
+  0 fail**), verified TLS and semantic schema-contract preflight. It then fails
+  `assertBackupRole` with `Backup role can execute a public SECURITY DEFINER
+  function`; encrypted snapshot commit is skipped.
+- Operator catalog diagnostic identifies **only** `public.rls_auto_enable()`,
+  owner `postgres`, `calendar_backup_can_execute=true`, grants
+  `PUBLIC:EXECUTE, postgres:EXECUTE`. This is the documented Supabase automatic-RLS
+  `EVENT_TRIGGER` helper. PUBLIC EXECUTE is a default-privilege/ACL artifact,
+  not a directly callable backup RPC. The fix excludes only return type
+  `pg_catalog.event_trigger` by catalog identity, without a name allow-list;
+  ordinary SECURITY DEFINER and regular `trigger` functions remain guarded.
+  No production ACL/platform change is required. All earlier elevated-role,
+  membership, public-CREATE and table-privilege guards remain unchanged, as do
+  TLS, schema contract, format, encryption, retention and restore behavior.
+  Real PGlite event-trigger tests verify ACL/type, non-callability, denied
+  non-superuser installation and actual DDL firing. A regular trigger fixture
+  demonstrates indirect invocation through a temporary table and guard rejection;
+  role/privilege drift and inaccessible application RPCs remain covered.
+  Validation (Bun 1.3.14): frozen install/typecheck/build pass; focused backup
+  tests **30 pass / 1 optional age skip / 0 fail**. Full suite:
+  **1048 pass / 1 skip / 1 fail**, only the existing Endfield banner assertion,
+  reproduced on untouched current main (**1044 pass / 1 skip / 1 fail**).
+  No source/test bypass or production execution was added.
+
 Next concrete step after public/private reviewed PRs merge: manually rerun
 **Encrypted personal-data backup** on private `main`, using the new immutable
 public implementation pin. Keep existing `BACKUP_DATABASE_URL`, `AGE_RECIPIENT`
 and `SUPABASE_PROJECT_REF` unchanged. This follow-up does not run or claim
 production acceptance.
-**Hosted schema preflight, real encrypted
-hosted snapshot, real-key decryption/validation, production dry-run/controlled
-restore and fresh deployed app read are still unverified gates.** Use only the
+**Verified hosted gates: TLS and semantic schema/project preflight on run
+37643339951. Remaining unverified gates: complete backup-role/policy preflight,
+real encrypted hosted snapshot, real-key decryption/validation, production
+dry-run/controlled restore and fresh deployed app read.** Use only the
 disposable Google test account for the drill, and record actual results before
 closing S6a. No credentials should be pasted into chat.
 

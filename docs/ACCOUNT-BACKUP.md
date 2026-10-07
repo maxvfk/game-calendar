@@ -1,13 +1,11 @@
 # Account Sync S6a — encrypted personal-data backup and recovery
 
-Status on 2026-10-07: implementation and pinned-CA follow-up merged. The second
-hosted run connected successfully, then failed schema preflight with
-`Live database schema mismatch`. Catalog diagnostics confirmed PG17 NOT NULL
-representation and function-body CRLF/LF differences; this follow-up corrects
-those comparisons while retaining schema drift protection;
-**successful hosted snapshot and recovery drill remain manual acceptance
-gates**. S6a is not
-complete until the evidence below is recorded. S5/S5.1 remain closed.
+Status on 2026-10-07: implementation, pinned-CA TLS and semantic schema-contract
+fixes are merged. Latest hosted run `37643339951` passes verified TLS and schema
+preflight, then encounters the automatic-RLS event-trigger ACL false positive
+in the backup-role guard. This narrowly scoped follow-up corrects that guard;
+**successful hosted snapshot and recovery drill remain manual acceptance gates**.
+S6a is not complete until the evidence below is recorded. S5/S5.1 remain closed.
 
 ## Architecture and access
 
@@ -194,6 +192,63 @@ operator must manually rerun **Encrypted personal-data backup** on private
 unchanged. No credential, key, TLS, backup-format, retention or restore-write
 behavior changes are needed. **This fix does not run or claim hosted acceptance**;
 a real encrypted snapshot and the recovery drill remain unverified gates.
+
+## Hosted backup-role preflight follow-up (2026-10-07)
+
+[Run 37643339951](https://github.com/maxvfk/game-calendar-backups/actions/runs/37643339951)
+passes operator config, pinned public checkout and focused tests (**26 pass /
+1 optional skip / 0 fail**). Verified TLS and the PG17/PG18 semantic schema
+contract now pass. The CLI calls `assertTarget` before `assertBackupRole`; the
+failure is later, `Backup role can execute a public SECURITY DEFINER function`.
+The encrypted snapshot commit step was skipped; no snapshot was committed.
+
+The operator's read-only catalog diagnostic reports exactly one matching
+function: `public.rls_auto_enable()`, owned by `postgres`, with
+`calendar_backup_can_execute=true` and `PUBLIC:EXECUTE, postgres:EXECUTE` grants.
+It is the [Supabase automatic-RLS event-trigger helper](https://supabase.com/docs/guides/database/postgres/event-triggers#example-trigger-function---auto-enable-row-level-security):
+`RETURNS EVENT_TRIGGER`, `SECURITY DEFINER`, `SET search_path=pg_catalog`, invoked
+by an event trigger such as `ensure_rls` to enable RLS on new public tables.
+This is a platform helper, not an application RPC.
+
+[PostgreSQL default privileges](https://www.postgresql.org/docs/17/ddl-priv.html)
+grant function EXECUTE to PUBLIC. That ACL does **not** make an `event_trigger`
+function callable in ordinary SQL: direct invocation fails with
+`trigger functions can only be called as triggers`. PostgreSQL requires
+superuser privileges to [create event triggers](https://www.postgresql.org/docs/17/sql-createeventtrigger.html);
+Supabase's documented Supautils exception enables the administrative `postgres`
+user to manage them. The restricted `calendar_backup` is neither superuser nor
+a member of that administrative role and cannot install/rebind an event trigger.
+Installed platform event triggers can still fire on their matching DDL; this
+exception changes neither their behavior nor their ACL. Backup export uses
+read-only SQL and performs no DDL.
+
+The guard now excludes **only the actual built-in return type**:
+`p.prorettype <> 'pg_catalog.event_trigger'::pg_catalog.regtype`.
+There is no function-name allow-list: an ordinary executable SECURITY DEFINER
+function even named `rls_auto_enable()` still fails. Regular `trigger`-returning
+SECURITY DEFINER functions also still fail: a role can invoke one indirectly
+through a trigger on its owned temporary table even without public CREATE.
+The existing role-identity/elevated-attribute, no-membership, public-CREATE,
+seven-table privilege, and backup-RLS-policy checks remain intact. Application
+`ensure_default_profile` and `apply_profile_mutations` remain inaccessible.
+
+Local PGlite/PG18 integration creates real event-trigger functions and objects,
+checks PUBLIC EXECUTE/type identity, verifies rejected direct invocation and
+non-superuser event-trigger creation, and proves actual event-trigger firing on
+DDL. It also proves ordinary trigger invocation through a temporary table and
+retains rejection of ordinary SECURITY DEFINER RPCs. Real role/privilege drift
+regressions cover SUPERUSER, BYPASSRLS, CREATEROLE, CREATEDB, REPLICATION,
+memberships, public CREATE, and INSERT/UPDATE/DELETE/TRUNCATE/REFERENCES/TRIGGER.
+No mock catalog exemption or production query concession is needed.
+
+**No production ACL or platform change is required.** Do not revoke PUBLIC
+EXECUTE from the helper, disable/drop its event trigger or change credentials,
+TLS, schema contract, backup format, encryption, retention or restore behavior.
+After the reviewed public fix and private immutable pin PR merge, manually run
+**Encrypted personal-data backup** on private `main` using **Run workflow**.
+Keep `BACKUP_DATABASE_URL`, `AGE_RECIPIENT` and `SUPABASE_PROJECT_REF` unchanged.
+The remaining backup-role/policy preflight and real encrypted snapshot must pass
+on that hosted rerun; this follow-up does not execute or claim production success.
 
 ## Snapshot v1, validation and confidentiality
 
@@ -481,12 +536,12 @@ AGE_TEST_IDENTITY=<LOCAL-PUBLIC-TEST-FIXTURE-PATH> AGE_TEST_RECIPIENT=<ITS-PUBLI
 ```
 
 Actual frozen install/typecheck/full test/build results are recorded in
-IMPLEMENTATION-STATUS after execution. The second 2026-10-07 hosted attempt
-confirmed verified TLS and reached (but failed) schema preflight. The later
-read-role preflight has not passed. Still pending: hosted schema/role verification,
-first successful real encrypted hosted snapshot, real-key decrypt/validation/dry-run and
-controlled production restore → fresh deployed app read. **Do not mark S6a
-complete until all of these pass.**
+IMPLEMENTATION-STATUS after execution. Latest hosted run `37643339951` confirms
+verified TLS and semantic schema/project preflight, then stops at the
+EVENT_TRIGGER ACL role-guard false positive described above. Still pending:
+complete hosted backup-role/policy validation, first successful real encrypted
+hosted snapshot, real-key decrypt/validation/dry-run, and controlled production
+restore → fresh deployed app read. **Do not mark S6a complete until all pass.**
 
 ## Exclusions
 
