@@ -115,18 +115,34 @@ backup** on `main`. This follow-up does not execute or claim that acceptance run
 [Run 37616434328](https://github.com/maxvfk/game-calendar-backups/actions/runs/37616434328)
 passed repository/config/setup and focused tests (15 pass / 1 optional age
 skip / 0 fail), connected through verified TLS, then failed the catalog hash
-comparison. It committed no snapshot. The hosted PostgreSQL major and exact
-object differences are **not yet known**; the error alone does not establish
-semantic equivalence.
+comparison. It committed no snapshot. The operator subsequently ran the checked-in
+read-only catalog diagnostic on the existing project. It reports **PostgreSQL 17**
+and the expected project marker `vzzudezdigjwbwfejlsg`.
+
+| Contract section | Expected / hosted objects | Hosted comparison |
+| --- | --- | --- |
+| columns | 50 / 50 | Exact match, including every `notNull` value |
+| constraints | 78 / 34 | Exactly 44 expected-only NOT NULL catalog entries; no other differing constraints |
+| indexes | 9 / 9 | Exact match |
+| triggers | 6 / 6 | Exact match |
+| functions | 4 / 4 | All four definitions differ; cause still unverified |
+
+The changed functions are `public.apply_profile_mutations`,
+`public.ensure_default_profile`, `public.sync_text_array`, and
+`public.sync_valid_preference`. `onlyNotNullCatalogRowsDiffer` is **false**.
+NOT NULL representation is therefore a confirmed compatibility difference,
+**not the sole mismatch**. Function differences must be investigated before
+normalization, merge, or a private workflow pin update.
 
 The migration-derived PGlite/PG18 contract contains 44 table NOT NULL constraint
 entries as well as column `notNull` metadata. [PostgreSQL 18 release notes](https://www.postgresql.org/docs/18/release-18.html)
 document that table NOT NULL specifications now also appear in `pg_constraint`;
 [PG17's catalog](https://www.postgresql.org/docs/17/catalog-pg-constraint.html)
-does not represent table NOT NULL this way. This is a plausible compatibility
-cause, **not a confirmed diagnosis for this project**.
+does not represent table NOT NULL this way. Matching hosted column nullability
+and the exact 44 expected-only NOT NULL entries confirm this catalog difference
+for this project. They do not explain the four function definition differences.
 
-Before modifying the contract, use
+The initial investigation used
 [`supabase/diagnostics/account-backup-schema.sql`](../supabase/diagnostics/account-backup-schema.sql)
 in the existing project's SQL Editor. Execute the whole file as one SELECT.
 It reads only catalog metadata and the non-secret project marker, never personal
@@ -146,11 +162,26 @@ production hash. The checked-in SQL is reproducibly generated from the current
 public contract with `bun scripts/account-backup/schema-diagnostics.ts`, not a
 second schema authority. Reproducibility/catalog-only execution are tested.
 
-If hosted evidence confirms the sole difference is PG18 NOT NULL catalog rows,
-the fix must represent nullability exactly once through columns' `notNull`
-and exclude only `contype='n'` table constraints. CHECK/PK/UNIQUE/FK/index/trigger
+The proven PG18 NOT NULL catalog difference must eventually be represented
+exactly once through columns' `notNull`
+by excluding only `contype='n'` table constraints. CHECK/PK/UNIQUE/FK/index/trigger
 and sync-function definitions must remain protected. Any other differing object
 must be investigated explicitly; normalize only proven non-semantic formatting.
+
+The next safe operator step is to execute the whole
+[`supabase/diagnostics/account-backup-functions.sql`](../supabase/diagnostics/account-backup-functions.sql)
+in the existing project's SQL Editor and return its one `function_diagnostics`
+JSON result. This single SELECT compares the four functions' exact bodies,
+complete declarations, and catalog signature/security/configuration metadata
+against the public migrations. It reports only names/types, component matches
+and SHA-256 hashes, changed metadata key names, and specific CRLF/outer-newline
+candidate comparisons. No function code, configuration values, credentials or
+personal/Auth rows are returned; no functions are executed or schema modified.
+Candidate comparisons are investigation aids, **not acceptance or production
+normalization rules**; especially, newline changes inside literals cannot be
+assumed harmless. Generate this reproducibly with
+`bun scripts/account-backup/function-diagnostics.ts`.
+
 Regenerate the expected contract from migrations, never substitute a live hash.
 Until this investigation finishes, the production contract and private workflow
 pin remain unchanged and schema mismatches continue to fail closed.

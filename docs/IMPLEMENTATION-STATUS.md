@@ -915,19 +915,33 @@ S5/S5.1 remain closed; S6b monitoring/cache-removal work has not started.
   focused tests (15 pass / 1 optional age skip / 0 fail), then fails with
   `Live database schema mismatch`; no snapshot commit occurred. Expected PG18
   catalog has 44 NOT NULL constraint rows, a documented PG18/pre-18 difference.
-  Hosted major and exact differences are still unverified. A generated,
+  Hosted operator diagnostic confirms **PostgreSQL 17**, the expected project
+  marker, identical columns (50), indexes (9), and triggers (6). Exactly 44
+  expected-only NOT NULL entries explain the constraint count difference
+  (78 expected / 34 hosted); all remaining constraints match. However, all four
+  sync function definitions also differ, so the NOT NULL-only hypothesis is
+  **false** and function equivalence is not established. A generated,
   read-only SQL Editor diagnostic compares all five sections and reports only
   safe object names/types and section hashes, including a strict NOT NULL-only
   hypothesis comparison. Production contract/hash and private pin are untouched
-  pending hosted evidence; no guessed normalization/live hash is accepted.
+  pending function evidence; no guessed normalization/live hash is accepted.
+  A second catalog-only query, `account-backup-functions.sql`, compares exact
+  declarations, bodies and signature/security/configuration metadata, with
+  safe component hashes and narrowly identified newline candidates. It prints
+  no definitions, credentials or personal rows and does not alter validation.
   Diagnostic preparation: Bun 1.3.14 frozen install/typecheck/build passed;
   focused tests **18 pass / 1 optional age skip / 0 fail**. Full tests:
   **1036 pass / 1 skip / 1 fail**, solely the existing Endfield banner assertion,
   reproduced on untouched current main (**1033 pass / 1 skip / 1 fail**).
+  Function follow-up preparation: frozen install/typecheck/build passed;
+  focused tests **21 pass / 1 optional age skip / 0 fail**. Full suite:
+  **1039 pass / 1 skip / 1 fail**, the same untouched-main Endfield assertion.
+  Regressions demonstrate catalog-only output, exact body/declaration matches,
+  separate CRLF candidates, actual body drift, and security/configuration drift.
   This is preparation for hosted investigation, not a completed compatibility
   fix or successful production backup.
 
-Next concrete step: run the runbook's catalog diagnostic in the existing
+Next concrete step: run the runbook's **function** diagnostic in the existing
 Supabase SQL Editor and inspect its metadata-only result. Only then implement
 the proven semantic normalization, validate, merge public/private pin PRs and
 manually rerun **Encrypted personal-data backup** on private `main`.

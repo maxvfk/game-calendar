@@ -16,6 +16,7 @@ import { X509Certificate } from 'node:crypto';
 import { loadPinnedCA, SUPABASE_CA_FILE, SUPABASE_CA_FINGERPRINT } from '../scripts/account-backup/tls.ts';
 import { testCertificate, tlsPostgresServer } from './helpers/account-backup-tls.ts';
 import { schemaDiagnosticSql } from '../scripts/account-backup/schema-diagnostics.ts';
+import { functionDiagnosticRows, functionDiagnosticSql, generatedFunctionDiagnostics } from '../scripts/account-backup/function-diagnostics.ts';
 
 const db=new PGlite();
 const project='vzzudezdigjwbwfejlsg';
@@ -117,6 +118,60 @@ test('diagnostic reports CHECK, PK, FK, index and function drift without printin
     expect(JSON.stringify(report)).not.toContain('SELECT null::jsonb');
     expect(JSON.stringify(report)).not.toContain('CHECK (false)');
   }
+});
+test('function diagnostic is migration-derived, reproducible, read-only and safe for the backup role',async()=>{
+  const expected=await generatedFunctionDiagnostics();
+  expect(expected.map(r=>r.definition)).toEqual(contract.contract.functions);
+  const sql=functionDiagnosticSql(expected);
+  expect(sql).toBe(await Bun.file(new URL('../supabase/diagnostics/account-backup-functions.sql',import.meta.url)).text());
+  const before=await readRows(query);
+  await db.exec('set role calendar_backup');
+  try {
+    const report=(await query(sql))[0]!.function_diagnostics as {
+      serverMajor:number;expectedObjects:number;liveObjects:number;
+      functions:{sections:{matches:boolean}[];differentMetadata:unknown[]}[];
+    };
+    expect(report.serverMajor).toBe(18);expect(report.expectedObjects).toBe(4);expect(report.liveObjects).toBe(4);
+    expect(report.functions.every(f=>f.sections.every(s=>s.matches)&&f.differentMetadata.length===0)).toBe(true);
+    for(const value of [alice,bob,a,b,'@example.invalid','CREATE OR REPLACE','SECURITY DEFINER','return replies;', 'auth.uid()'])
+      expect(JSON.stringify(report)).not.toContain(value);
+  } finally {await db.exec('reset role');}
+  expect(await readRows(query)).toEqual(before);
+},20000);
+test('function diagnostic separates exact declaration/body matches from line-ending candidates and body drift',async()=>{
+  const expected=await functionDiagnosticRows(query);
+  const first=expected[0]!;
+  const body=String(first.body);
+  first.body=body.replaceAll('\n','\r\n');
+  const definition=String(first.definition);
+  first.definition=definition.replace(body,()=>String(first.body));
+  const report=(await query(functionDiagnosticSql(expected)))[0]!.function_diagnostics as {
+    functions:{name:string;bodyMatchesAfterCRLF:boolean;sections:{section:string;matches:boolean}[]}[];
+  };
+  const f=report.functions.find(f=>f.name===first.name)!;
+  expect(f.sections.filter(s=>!s.matches).map(s=>s.section)).toEqual(['body','definition']);
+  expect(f.bodyMatchesAfterCRLF).toBe(true);
+  // A real body change must not be classified as either newline candidate.
+  first.body=body.replace('return replies;','return null;');
+  first.definition=definition.replace(body,()=>String(first.body));
+  const drift=(await query(functionDiagnosticSql(expected)))[0]!.function_diagnostics as {
+    functions:{bodyMatchesAfterCRLF:boolean;bodyMatchesAfterOuterNewlines:boolean;bodyMatchesAfterCRLFAndOuterNewlines:boolean}[];
+  };
+  expect(drift.functions[0]!.bodyMatchesAfterCRLF).toBe(false);
+  expect(drift.functions[0]!.bodyMatchesAfterOuterNewlines).toBe(false);
+  expect(drift.functions[0]!.bodyMatchesAfterCRLFAndOuterNewlines).toBe(false);
+  expect(JSON.stringify(drift)).not.toContain('return null;');
+});
+test('function diagnostic detects function configuration and security metadata differences without printing values',async()=>{
+  const expected=await functionDiagnosticRows(query);
+  const metadata=expected[0]!.metadata as Record<string,unknown>;
+  metadata.securityDefiner=false;metadata.configuration=['search_path=unsafe_test_schema'];
+  const report=(await query(functionDiagnosticSql(expected)))[0]!.function_diagnostics as {
+    functions:{sections:{section:string;matches:boolean}[];differentMetadata:{name:string}[]}[];
+  };
+  expect(report.functions[0]!.sections.filter(s=>!s.matches).map(s=>s.section)).toEqual(['metadata']);
+  expect(report.functions[0]!.differentMetadata.map(a=>a.name)).toEqual(['configuration','securityDefiner']);
+  expect(JSON.stringify(report)).not.toContain('unsafe_test_schema');
 });
 test('backup role reads complete cross-owner data and cannot write, read Auth or call RPC',async()=>{
   await db.exec('set role calendar_backup');
