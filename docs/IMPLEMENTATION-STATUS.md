@@ -908,10 +908,37 @@ S5/S5.1 remain closed; S6b monitoring/cache-removal work has not started.
   in its [CI run](https://github.com/maxvfk/game-calendar/actions/runs/37536018586).
   No source-ingestion/data/test bypass was added to this TLS-only follow-up.
 
-Next concrete step: after the public TLS fix and private immutable pin PRs
-merge, rerun **Encrypted personal-data backup** on private `main` manually.
-Keep existing `BACKUP_DATABASE_URL`, `AGE_RECIPIENT` and `SUPABASE_PROJECT_REF`
-unchanged. This follow-up does not run/claim production acceptance.
+- Hosted-schema compatibility follow-up starts from verified public main
+  `2b30cece52e1a0ce7d60783cb636f7d5c71ac7fb` and private main
+  `0865d9e84d6415349b9e862619951d093be30108`, using fresh
+  `s6a-hosted-schema-contract` work. Actual run `37616434328` passes verified
+  TLS and focused tests, then fails `Live database schema mismatch`; no snapshot.
+  Operator catalog diagnostics confirm **PG17**, the expected project marker,
+  exact columns (50), indexes (9) and triggers (6), and exactly 44 expected-only
+  PG18 NOT NULL constraints (78 expected / 34 hosted, no other differences).
+  NOT NULL is not the sole mismatch: all four function bodies differ, but their
+  complete declarations and metadata match and every body matches after CRLF
+  conversion. This is stored-body line-ending drift, not a proven deparser change.
+- The semantic contract excludes only `contype='n'`, protecting nullability with
+  column `notNull`. It normalizes only function-body CRLF outside quoted values;
+  declarations, literals and all other schema definitions remain protected.
+  Regressions cover PG18/pre-18 shapes, nullability, CHECK/PK/FK/index/function
+  drift, literal newlines, malformed definitions and unchanged project/RLS/role
+  guards. The canonical file is regenerated from migrations, never a live hash;
+  new schema SHA-256 is `312a36fa274c90eba0f72000b81b8de72d25a2d5d54bebb31b955479889f4a3e`.
+  Migration hashes and schema/backup format versions stay unchanged.
+  Credentials, TLS, encryption, retention, restore writes and app sync are untouched.
+  Validation on Bun 1.3.14: frozen install, typecheck and build passed; focused
+  backup/TLS tests **26 pass / 1 optional age skip / 0 fail**. Full suite:
+  **1044 pass / 1 skip / 1 fail**, solely the existing Endfield reviewed-banner
+  assertion, reproduced on untouched current main (**1033 pass / 1 skip / 1 fail**).
+  No source changes, test bypass or production execution were added.
+
+Next concrete step after public/private reviewed PRs merge: manually rerun
+**Encrypted personal-data backup** on private `main`, using the new immutable
+public implementation pin. Keep existing `BACKUP_DATABASE_URL`, `AGE_RECIPIENT`
+and `SUPABASE_PROJECT_REF` unchanged. This follow-up does not run or claim
+production acceptance.
 **Hosted schema preflight, real encrypted
 hosted snapshot, real-key decryption/validation, production dry-run/controlled
 restore and fresh deployed app read are still unverified gates.** Use only the

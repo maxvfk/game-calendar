@@ -120,3 +120,17 @@ requires full chain/hostname verification. No CA Secret or runner trust-store
 configuration is needed. Certificate provenance, fingerprint and reviewed
 rotation before 2031-04-26 are documented in the runbook; this public trust
 anchor is not a database credential.
+
+### Backup catalog compatibility (PG17 / PG18)
+
+The hosted PG17 catalog diagnostics from the failed backup run `37616434328`
+confirmed exactly two representation differences: 44 PG18 NOT NULL constraint
+entries and CRLF/LF in all four stored sync-function bodies. Function declarations
+and security/signature/configuration metadata match; all other sections and
+remaining constraints match. Backup/restore preflight represents nullability
+once via `attnotnull`, excludes only `contype='n'`, and normalizes body CRLF
+outside quoted values. It preserves full schema definitions and still rejects
+semantic drift. Generate the canonical contract from migrations; never accept
+a hosted hash as a substitute. Details and actual diagnostics are recorded in
+[the backup runbook](../docs/ACCOUNT-BACKUP.md#hosted-schema-compatibility-follow-up-2026-10-07).
+The hosted backup rerun and recovery drill remain manual acceptance gates.
