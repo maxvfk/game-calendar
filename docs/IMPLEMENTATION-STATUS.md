@@ -911,42 +911,34 @@ S5/S5.1 remain closed; S6b monitoring/cache-removal work has not started.
 - Hosted-schema compatibility follow-up starts from verified public main
   `2b30cece52e1a0ce7d60783cb636f7d5c71ac7fb` and private main
   `0865d9e84d6415349b9e862619951d093be30108`, using fresh
-  `s6a-hosted-schema-contract` work. Actual run `37616434328` passes TLS and
-  focused tests (15 pass / 1 optional age skip / 0 fail), then fails with
-  `Live database schema mismatch`; no snapshot commit occurred. Expected PG18
-  catalog has 44 NOT NULL constraint rows, a documented PG18/pre-18 difference.
-  Hosted operator diagnostic confirms **PostgreSQL 17**, the expected project
-  marker, identical columns (50), indexes (9), and triggers (6). Exactly 44
-  expected-only NOT NULL entries explain the constraint count difference
-  (78 expected / 34 hosted); all remaining constraints match. However, all four
-  sync function definitions also differ, so the NOT NULL-only hypothesis is
-  **false** and function equivalence is not established. A generated,
-  read-only SQL Editor diagnostic compares all five sections and reports only
-  safe object names/types and section hashes, including a strict NOT NULL-only
-  hypothesis comparison. Production contract/hash and private pin are untouched
-  pending function evidence; no guessed normalization/live hash is accepted.
-  A second catalog-only query, `account-backup-functions.sql`, compares exact
-  declarations, bodies and signature/security/configuration metadata, with
-  safe component hashes and narrowly identified newline candidates. It prints
-  no definitions, credentials or personal rows and does not alter validation.
-  Diagnostic preparation: Bun 1.3.14 frozen install/typecheck/build passed;
-  focused tests **18 pass / 1 optional age skip / 0 fail**. Full tests:
-  **1036 pass / 1 skip / 1 fail**, solely the existing Endfield banner assertion,
-  reproduced on untouched current main (**1033 pass / 1 skip / 1 fail**).
-  Function follow-up preparation: frozen install/typecheck/build passed;
-  focused tests **21 pass / 1 optional age skip / 0 fail**. Full suite:
-  **1039 pass / 1 skip / 1 fail**, the same untouched-main Endfield assertion.
-  Regressions demonstrate catalog-only output, exact body/declaration matches,
-  separate CRLF candidates, actual body drift, and security/configuration drift.
-  This is preparation for hosted investigation, not a completed compatibility
-  fix or successful production backup.
+  `s6a-hosted-schema-contract` work. Actual run `37616434328` passes verified
+  TLS and focused tests, then fails `Live database schema mismatch`; no snapshot.
+  Operator catalog diagnostics confirm **PG17**, the expected project marker,
+  exact columns (50), indexes (9) and triggers (6), and exactly 44 expected-only
+  PG18 NOT NULL constraints (78 expected / 34 hosted, no other differences).
+  NOT NULL is not the sole mismatch: all four function bodies differ, but their
+  complete declarations and metadata match and every body matches after CRLF
+  conversion. This is stored-body line-ending drift, not a proven deparser change.
+- The semantic contract excludes only `contype='n'`, protecting nullability with
+  column `notNull`. It normalizes only function-body CRLF outside quoted values;
+  declarations, literals and all other schema definitions remain protected.
+  Regressions cover PG18/pre-18 shapes, nullability, CHECK/PK/FK/index/function
+  drift, literal newlines, malformed definitions and unchanged project/RLS/role
+  guards. The canonical file is regenerated from migrations, never a live hash;
+  new schema SHA-256 is `312a36fa274c90eba0f72000b81b8de72d25a2d5d54bebb31b955479889f4a3e`.
+  Migration hashes and schema/backup format versions stay unchanged.
+  Credentials, TLS, encryption, retention, restore writes and app sync are untouched.
+  Validation on Bun 1.3.14: frozen install, typecheck and build passed; focused
+  backup/TLS tests **26 pass / 1 optional age skip / 0 fail**. Full suite:
+  **1044 pass / 1 skip / 1 fail**, solely the existing Endfield reviewed-banner
+  assertion, reproduced on untouched current main (**1033 pass / 1 skip / 1 fail**).
+  No source changes, test bypass or production execution were added.
 
-Next concrete step: run the runbook's **function** diagnostic in the existing
-Supabase SQL Editor and inspect its metadata-only result. Only then implement
-the proven semantic normalization, validate, merge public/private pin PRs and
-manually rerun **Encrypted personal-data backup** on private `main`.
-Keep existing `BACKUP_DATABASE_URL`, `AGE_RECIPIENT` and `SUPABASE_PROJECT_REF`
-unchanged. This follow-up does not run/claim production acceptance.
+Next concrete step after public/private reviewed PRs merge: manually rerun
+**Encrypted personal-data backup** on private `main`, using the new immutable
+public implementation pin. Keep existing `BACKUP_DATABASE_URL`, `AGE_RECIPIENT`
+and `SUPABASE_PROJECT_REF` unchanged. This follow-up does not run or claim
+production acceptance.
 **Hosted schema preflight, real encrypted
 hosted snapshot, real-key decryption/validation, production dry-run/controlled
 restore and fresh deployed app read are still unverified gates.** Use only the

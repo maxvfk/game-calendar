@@ -1,8 +1,10 @@
 import { TABLES, KEYS, canonical, sha256, sortRows, validateRows, type Rows, type Row, type Snapshot } from './model.ts';
+import { normalizeContract } from './contract.ts';
 
 export type Query = (sql: string, params?: unknown[]) => Promise<Row[]>;
 // Generated contract comes from the public migrations. The private repository
 // never maintains a second database schema. pg_catalog is visible to the SQL role.
+// PG18 adds contype='n' rows; column attnotnull already protects nullability.
 export const contractSql = `select jsonb_build_object(
   'columns', (select jsonb_agg(jsonb_build_object('table',c.relname,'column',a.attname,
     'type',pg_catalog.format_type(a.atttypid,a.atttypmod),'notNull',a.attnotnull,
@@ -14,7 +16,7 @@ export const contractSql = `select jsonb_build_object(
   'constraints', (select jsonb_agg(jsonb_build_object('table',c.relname,'name',n.conname,
     'definition',pg_catalog.pg_get_constraintdef(n.oid)) order by c.relname,n.conname)
     from pg_catalog.pg_constraint n join pg_catalog.pg_class c on c.oid=n.conrelid
-    where c.relnamespace='public'::regnamespace and c.relname=any($1::text[])),
+    where c.relnamespace='public'::regnamespace and c.relname=any($1::text[]) and n.contype<>'n'),
   'indexes', (select jsonb_agg(jsonb_build_object('table',tablename,'name',indexname,
     'definition',indexdef) order by tablename,indexname) from pg_catalog.pg_indexes
     where schemaname='public' and tablename=any($1::text[])),
@@ -26,7 +28,7 @@ export const contractSql = `select jsonb_build_object(
     and p.proname in ('sync_text_array','sync_valid_preference','ensure_default_profile','apply_profile_mutations'))
 ) as contract`;
 export async function schemaContract(query: Query): Promise<unknown> {
-  return (await query(contractSql,[[...TABLES]]))[0]!.contract;
+  return normalizeContract((await query(contractSql,[[...TABLES]]))[0]!.contract);
 }
 export async function assertTarget(query: Query, project: string, schemaHash: string) {
   const identity = await query('select project_ref from calendar_backup_control.project_identity');

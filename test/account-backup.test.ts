@@ -6,7 +6,8 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { TABLES, canonical, sha256, makeSnapshot, validateSnapshot, logicalMutation, type Rows, type Snapshot } from '../scripts/account-backup/model.ts';
-import { assertBackupRole, assertTarget, readRows, restorePlan, schemaContract, selectProfiles, writeRestore, type Query } from '../scripts/account-backup/database.ts';
+import { assertBackupRole, assertTarget, contractSql, readRows, restorePlan, schemaContract, selectProfiles, writeRestore, type Query } from '../scripts/account-backup/database.ts';
+import { normalizeContract, normalizeFunctionDefinition } from '../scripts/account-backup/contract.ts';
 import { generatedContract, migrationHashes } from '../scripts/account-backup/generate-contract.ts';
 import { connectionConfig, safeQuery } from '../scripts/account-backup/cli.ts';
 import { ageEncrypt, ageDecrypt, retain, storeEncrypted, verifyPair } from '../scripts/account-backup/storage.ts';
@@ -68,6 +69,74 @@ test('backup contract is generated from all current migrations',async()=>{
   expect(await generatedContract()).toEqual(contract);
   expect(sha256(canonical(await schemaContract(query)))).toBe(contract.schemaSha256);
 },20000);
+test('PG18 NOT NULL catalog rows and equivalent PG17 CRLF function bodies produce the same semantic contract',async()=>{
+  const raw=(await query(contractSql.replace(" and n.contype<>'n'",''),[[...TABLES]]))[0]!.contract as typeof contract.contract;
+  expect(raw.constraints.filter((c:{definition:string})=>c.definition.startsWith('NOT NULL '))).toHaveLength(44);
+  expect(contract.contract.constraints).toHaveLength(34);
+  const pre18=structuredClone(raw);
+  pre18.constraints=pre18.constraints.filter((c:{definition:string})=>!c.definition.startsWith('NOT NULL '));
+  for(const row of await functionDiagnosticRows(query)) {
+    const index=pre18.functions.indexOf(row.definition);
+    // The hosted diagnostic proves matching declaration/metadata and equality
+    // after CRLF conversion for every body. Current migration literals have no
+    // embedded newlines, so converting formatting cannot change their values.
+    pre18.functions[index]=String(row.definition).replace(String(row.body),()=>String(row.body).replaceAll('\n','\r\n'));
+  }
+  expect(normalizeContract(pre18)).toEqual(contract.contract);
+  const hostedShape:Query=async(s,p)=>s===contractSql?[{contract:pre18}]:query(s,p);
+  await assertTarget(hostedShape,project,contract.schemaSha256);
+  await assertTarget(query,project,contract.schemaSha256);
+  expect(normalizeContract(normalizeContract(pre18))).toEqual(contract.contract);
+});
+test('actual nullability drift remains protected despite excluding PG18 NOT NULL constraint entries',async()=>{
+  await db.exec('alter table public.progress alter column deleted drop not null');
+  try {
+    expect(sha256(canonical(await schemaContract(query)))).not.toBe(contract.schemaSha256);
+    await expect(assertTarget(query,project,contract.schemaSha256)).rejects.toThrow('schema mismatch');
+  } finally {await db.exec('alter table public.progress alter column deleted set not null');}
+  await assertTarget(query,project,contract.schemaSha256);
+});
+test('semantic normalization leaves project, RLS and restricted backup-role guards fail closed',async()=>{
+  await expect(assertTarget(query,'x'.repeat(20),contract.schemaSha256)).rejects.toThrow('identity');
+  for(const change of ['disable row level security','force row level security']) {
+    await db.exec(`alter table public.progress ${change}`);
+    try {await expect(assertTarget(query,project,contract.schemaSha256)).rejects.toThrow('RLS');}
+    finally {await db.exec('alter table public.progress enable row level security; alter table public.progress no force row level security');}
+  }
+  await db.exec('grant insert on public.progress to calendar_backup; set role calendar_backup');
+  try {await expect(assertBackupRole(query)).rejects.toThrow('privileges');}
+  finally {await db.exec('reset role; revoke insert on public.progress from calendar_backup');}
+});
+test('semantic contract keeps CHECK, PK, FK, indexes and complete sync function definitions protected',async()=>{
+  for(const kind of ['CHECK','PRIMARY','FOREIGN','index','function']) {
+    const changed=structuredClone(contract.contract);
+    if(kind==='index')changed.indexes[0].definition+=' WHERE false';
+    else if(kind==='function')changed.functions[0]=changed.functions[0].replace('return replies;','return null;');
+    else changed.constraints.find((c:{definition:string})=>c.definition.startsWith(kind)).definition+=
+      kind==='CHECK'?' NOT VALID':kind==='PRIMARY'?' DEFERRABLE':' NOT VALID';
+    expect(sha256(canonical(normalizeContract(changed)))).not.toBe(contract.schemaSha256);
+    const drift:Query=async(s,p)=>s===contractSql?[{contract:changed}]:query(s,p);
+    await expect(assertTarget(drift,project,contract.schemaSha256)).rejects.toThrow('schema mismatch');
+  }
+});
+test('function newline normalization preserves quoted literal values, all declarations and other whitespace',()=>{
+  const wrap=(body:string)=>`CREATE OR REPLACE FUNCTION public.example()\n RETURNS text\n LANGUAGE sql\nAS $function$${body}$function$\n`;
+  const body="\r\n select 'one\r\ntwo', E'escaped\\\'\r\nvalue', \"column\r\nname\", $inner$one\r\ntwo$inner$, $тег$one\r\ntwo$тег$;\r\n";
+  expect(normalizeFunctionDefinition(wrap(body))).toBe(wrap(body.replace(/^\r\n/,'\n').replace(/;\r\n$/,';\n')));
+  for(const literal of ["'one\ntwo'",'$$one\ntwo$$',"E'one\ntwo'"]) {
+    const lf=wrap(`\n select ${literal};\n`);
+    const crlf=wrap(`\n select ${literal.replaceAll('\n','\r\n')};\n`);
+    expect(normalizeFunctionDefinition(crlf)).not.toBe(normalizeFunctionDefinition(lf));
+  }
+  const comments=wrap('\r\n-- comment \'\r\n/* outer /* nested */ \' */\r\n select \'it\'\'s\';\r\n');
+  expect(normalizeFunctionDefinition(comments)).toBe(comments.replaceAll('\r\n','\n'));
+  const normal=wrap('\n select 1;\n');
+  for(const changed of [normal.replace('select 1','select 2'),normal.replace('select 1','select  1'),
+    normal.replace('LANGUAGE sql','LANGUAGE plpgsql'),normal.replace(' RETURNS text',' RETURNS boolean')])
+    expect(normalizeFunctionDefinition(changed)).not.toBe(normal);
+  for(const bad of [wrap("select 'unterminated"),wrap('select $$unterminated'),wrap('/* unterminated'),normal.replace('AS $function$','AS unknown')])
+    expect(()=>normalizeFunctionDefinition(bad)).toThrow();
+});
 test('safe schema diagnostic is generated, catalog-only, exact, and usable by the read role',async()=>{
   const sql=schemaDiagnosticSql(contract.contract);
   expect(sql).toBe(await Bun.file(new URL('../supabase/diagnostics/account-backup-schema.sql',import.meta.url)).text());
@@ -78,7 +147,7 @@ test('safe schema diagnostic is generated, catalog-only, exact, and usable by th
     expect(report.serverMajor).toBe(18);expect(report.projectRefs).toEqual([project]);
     expect(report.rawContractMatches).toBe(true);
     expect(report.onlyNotNullCatalogRowsDiffer).toBe(false);
-    expect(report.notNullCatalogEntries).toEqual({expected:44,live:44});
+    expect(report.notNullCatalogEntries).toEqual({expected:0,live:0});
     expect(report.sections).toHaveLength(5);
     const text=JSON.stringify(report);
     for(const value of [alice,bob,a,b,'synthetic recovery note','@example.invalid','CREATE OR REPLACE FUNCTION','SECURITY DEFINER'])
@@ -88,11 +157,12 @@ test('safe schema diagnostic is generated, catalog-only, exact, and usable by th
 });
 test('diagnostic distinguishes the NOT NULL catalog hypothesis from semantic drift',async()=>{
   const expected=structuredClone(contract.contract);
-  // Synthetic equivalent pre-18 catalog shape, NOT hosted evidence.
-  expected.constraints=expected.constraints.filter((c:{definition:string})=>!c.definition.startsWith('NOT NULL '));
+  // Diagnostic-only PG18 raw shape vs the current semantic extraction.
+  const raw=(await query(contractSql.replace(" and n.contype<>'n'",''),[[...TABLES]]))[0]!.contract as typeof expected;
+  expected.constraints=raw.constraints;
   const report=(await query(schemaDiagnosticSql(expected)))[0]!.schema_diagnostics as Record<string,unknown>;
   expect(report.rawContractMatches).toBe(false);expect(report.onlyNotNullCatalogRowsDiffer).toBe(true);
-  expect(report.notNullCatalogEntries).toEqual({expected:0,live:44});
+  expect(report.notNullCatalogEntries).toEqual({expected:44,live:0});
   const sections=report.sections as {section:string;matches:boolean;differentObjects:{type:string}[]}[];
   expect(sections.filter(s=>!s.matches).map(s=>s.section)).toEqual(['constraints']);
   expect(sections.find(s=>s.section==='constraints')!.differentObjects.every(o=>o.type==='NOT NULL')).toBe(true);

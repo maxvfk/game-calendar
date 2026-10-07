@@ -2,7 +2,9 @@
 
 Status on 2026-10-07: implementation and pinned-CA follow-up merged. The second
 hosted run connected successfully, then failed schema preflight with
-`Live database schema mismatch`. Hosted catalog investigation is pending;
+`Live database schema mismatch`. Catalog diagnostics confirmed PG17 NOT NULL
+representation and function-body CRLF/LF differences; this follow-up corrects
+those comparisons while retaining schema drift protection;
 **successful hosted snapshot and recovery drill remain manual acceptance
 gates**. S6a is not
 complete until the evidence below is recorded. S5/S5.1 remain closed.
@@ -110,81 +112,88 @@ in certificate chain` during SQL export; no snapshot commit occurred. After
 both follow-up PRs merge, the operator must rerun **Encrypted personal-data
 backup** on `main`. This follow-up does not execute or claim that acceptance run.
 
-## Hosted schema compatibility investigation (2026-10-07)
+## Hosted schema compatibility follow-up (2026-10-07)
 
 [Run 37616434328](https://github.com/maxvfk/game-calendar-backups/actions/runs/37616434328)
 passed repository/config/setup and focused tests (15 pass / 1 optional age
-skip / 0 fail), connected through verified TLS, then failed the catalog hash
-comparison. It committed no snapshot. The operator subsequently ran the checked-in
-read-only catalog diagnostic on the existing project. It reports **PostgreSQL 17**
-and the expected project marker `vzzudezdigjwbwfejlsg`.
+skip / 0 fail), connected through verified TLS, then failed with
+`Live database schema mismatch`. It committed no snapshot. The operator ran
+two catalog-only SQL Editor diagnostics against the existing project; neither
+query executes sync functions or reads personal/Auth rows.
 
-| Contract section | Expected / hosted objects | Hosted comparison |
+The actual hosted server is **PostgreSQL 17**, with the expected project marker
+`vzzudezdigjwbwfejlsg`. The initial, unnormalized contract comparison reported:
+
+| Section | Expected / hosted objects | Actual differences |
 | --- | --- | --- |
-| columns | 50 / 50 | Exact match, including every `notNull` value |
-| constraints | 78 / 34 | Exactly 44 expected-only NOT NULL catalog entries; no other differing constraints |
-| indexes | 9 / 9 | Exact match |
-| triggers | 6 / 6 | Exact match |
-| functions | 4 / 4 | All four definitions differ; cause still unverified |
+| columns | 50 / 50 | None, including every `notNull` value |
+| constraints | 78 / 34 | Exactly 44 expected-only NOT NULL entries; every other constraint matches |
+| indexes | 9 / 9 | None |
+| triggers | 6 / 6 | None |
+| functions | 4 / 4 | All four stored bodies have CRLF/LF differences; declarations and metadata match |
 
-The changed functions are `public.apply_profile_mutations`,
+The second diagnostic separately examined `public.apply_profile_mutations`,
 `public.ensure_default_profile`, `public.sync_text_array`, and
-`public.sync_valid_preference`. `onlyNotNullCatalogRowsDiffer` is **false**.
-NOT NULL representation is therefore a confirmed compatibility difference,
-**not the sole mismatch**. Function differences must be investigated before
-normalization, merge, or a private workflow pin update.
+`public.sync_valid_preference`. For **each** function, `declaration` and
+`metadata` match exactly, `differentMetadata` is empty, exact `body`/`definition`
+hashes differ, and `bodyMatchesAfterCRLF` is true. Outer-newline trimming alone
+is false. Thus NOT NULL was **not** the sole mismatch: stored function-body
+line endings are an additional, independently confirmed formatting difference.
+There is no evidence of a PostgreSQL-major function-declaration formatting
+change. No CHECK, PK, FK, index, trigger, signature or security/configuration
+metadata difference was reported.
 
-The migration-derived PGlite/PG18 contract contains 44 table NOT NULL constraint
-entries as well as column `notNull` metadata. [PostgreSQL 18 release notes](https://www.postgresql.org/docs/18/release-18.html)
-document that table NOT NULL specifications now also appear in `pg_constraint`;
+[PostgreSQL 18 release notes](https://www.postgresql.org/docs/18/release-18.html)
+document the new table NOT NULL `pg_constraint` entries;
 [PG17's catalog](https://www.postgresql.org/docs/17/catalog-pg-constraint.html)
-does not represent table NOT NULL this way. Matching hosted column nullability
-and the exact 44 expected-only NOT NULL entries confirm this catalog difference
-for this project. They do not explain the four function definition differences.
+does not store table NOT NULL that way. The production extraction now excludes
+**only** `contype='n'` from table constraints and keeps nullability through
+columns' `attnotnull`/`notNull`. CHECK/PK/UNIQUE/FK and other constraint definitions,
+all column metadata/defaults, indexes and triggers remain exact.
 
-The initial investigation used
-[`supabase/diagnostics/account-backup-schema.sql`](../supabase/diagnostics/account-backup-schema.sql)
-in the existing project's SQL Editor. Execute the whole file as one SELECT.
-It reads only catalog metadata and the non-secret project marker, never personal
-or Auth rows, and performs no DDL/DML. It compares all five current contract
-sections and returns `schema_diagnostics`: server major, project ref, exact
-section matches, expected/live diagnostic SHA-256 hashes, and every differing
-object's name/type/change. Function bodies, defaults, check expressions,
-credentials and personal data are not printed. Export/copy this result for
-inspection; **do not share connection credentials**.
+Function normalization converts **only CRLF to LF in function-body SQL outside
+quoted literals/identifiers** (also in comments). Ordinary, escape and nested
+dollar-quoted literals retain exact bytes, including meaningful embedded
+newlines. The complete declaration, delimiters and other body text remain
+unchanged: no trimming, indentation/case rewriting or definition removal.
+Unfamiliar/malformed function representations fail closed. The current four
+migration bodies contain no embedded literal newlines, verified by the PG17
+CRLF/PG18 LF regression; their hosted newline-only differences can therefore
+be normalized without changing string values. Actual function logic or quoted
+value changes still change the contract and reject preflight. See
+[PostgreSQL lexical rules](https://www.postgresql.org/docs/18/sql-syntax-lexical.html)
+for why globally replacing newlines inside literals would be unsafe.
 
-The `onlyNotNullCatalogRowsDiffer` field tests the NOT NULL hypothesis without
-changing production validation: it is true only if every other section and
-every remaining constraint compares exactly. It is diagnostic evidence, never
-permission to bypass checks. Diagnostic hashes use PostgreSQL `jsonb::text`,
-not the production canonical serializer; they must never replace the expected
-production hash. The checked-in SQL is reproducibly generated from the current
-public contract with `bun scripts/account-backup/schema-diagnostics.ts`, not a
-second schema authority. Reproducibility/catalog-only execution are tested.
+The canonical contract is **regenerated from all public migrations** using the
+same extraction/normalization as live preflight. It now has 34 constraints and
+schema SHA-256 `312a36fa274c90eba0f72000b81b8de72d25a2d5d54bebb31b955479889f4a3e`.
+Migration file hashes, schema/backup format version and function definitions in
+the canonical file are unchanged. This hash is computed from migrations, not
+accepted from the hosted database. Project identity, RLS, restricted-role,
+ownership and uncovered-child-table guards are unchanged. Future real schema
+changes require a reviewed migration/contract PR and private immutable pin PR.
 
-The proven PG18 NOT NULL catalog difference must eventually be represented
-exactly once through columns' `notNull`
-by excluding only `contype='n'` table constraints. CHECK/PK/UNIQUE/FK/index/trigger
-and sync-function definitions must remain protected. Any other differing object
-must be investigated explicitly; normalize only proven non-semantic formatting.
+For safe future investigation,
+[`account-backup-schema.sql`](../supabase/diagnostics/account-backup-schema.sql)
+compares extracted sections and reports safe names/types/counts and diagnostic
+hashes; its raw function-text comparison can still expose the known CRLF
+formatting difference. The regenerated query excludes NOT NULL catalog rows
+like production extraction. The initial 78/34 report used the earlier diagnostic
+in [investigation commit eaf10d9](https://github.com/maxvfk/game-calendar/commit/eaf10d9c52312e4abd32b430d04890675db1ae63).
+[`account-backup-functions.sql`](../supabase/diagnostics/account-backup-functions.sql)
+compares exact declarations/bodies/catalog metadata and specific newline
+candidates, returning no code, values, credentials or personal data. Regenerate
+with `bun scripts/account-backup/schema-diagnostics.ts` and
+`bun scripts/account-backup/function-diagnostics.ts`. Diagnostic hashes/candidate
+comparisons are investigation aids, **never replacements for the canonical hash
+or permission to normalize quoted values**.
 
-The next safe operator step is to execute the whole
-[`supabase/diagnostics/account-backup-functions.sql`](../supabase/diagnostics/account-backup-functions.sql)
-in the existing project's SQL Editor and return its one `function_diagnostics`
-JSON result. This single SELECT compares the four functions' exact bodies,
-complete declarations, and catalog signature/security/configuration metadata
-against the public migrations. It reports only names/types, component matches
-and SHA-256 hashes, changed metadata key names, and specific CRLF/outer-newline
-candidate comparisons. No function code, configuration values, credentials or
-personal/Auth rows are returned; no functions are executed or schema modified.
-Candidate comparisons are investigation aids, **not acceptance or production
-normalization rules**; especially, newline changes inside literals cannot be
-assumed harmless. Generate this reproducibly with
-`bun scripts/account-backup/function-diagnostics.ts`.
-
-Regenerate the expected contract from migrations, never substitute a live hash.
-Until this investigation finishes, the production contract and private workflow
-pin remain unchanged and schema mismatches continue to fail closed.
+After the reviewed public fix and private immutable pin update merge, the
+operator must manually rerun **Encrypted personal-data backup** on private
+`main`. Keep `BACKUP_DATABASE_URL`, `AGE_RECIPIENT` and `SUPABASE_PROJECT_REF`
+unchanged. No credential, key, TLS, backup-format, retention or restore-write
+behavior changes are needed. **This fix does not run or claim hosted acceptance**;
+a real encrypted snapshot and the recovery drill remain unverified gates.
 
 ## Snapshot v1, validation and confidentiality
 
