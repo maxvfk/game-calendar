@@ -1,7 +1,9 @@
 # Account Sync S6a — encrypted personal-data backup and recovery
 
-Status on 2026-10-03: implementation and local validation; **production setup,
-first hosted snapshot and operator recovery drill are pending**. S6a is not
+Status on 2026-10-07: implementation merged; the first hosted run reached SQL
+but failed TLS trust-chain verification. The pinned-CA follow-up fixes that
+client configuration; **successful hosted snapshot and recovery drill remain
+manual acceptance gates**. S6a is not
 complete until the evidence below is recorded. S5/S5.1 remain closed.
 
 ## Architecture and access
@@ -54,6 +56,58 @@ Official references verified on 2026-10-03:
 - [API key privilege boundaries](https://supabase.com/docs/guides/getting-started/api-keys)
 - [age upstream and key custody](https://github.com/FiloSottile/age)
 - [Bun SQL/TLS](https://bun.sh/docs/runtime/sql)
+
+## Pinned public TLS trust anchor (2026-10-07 follow-up)
+
+`supabase/certs/prod-ca-2021.crt` is the **public** Server Root Certificate
+downloaded by the operator from Supabase Dashboard → Database Settings → SSL
+Configuration → Download certificate. It is a trust anchor, not a credential
+or private key. The exact attached bytes were independently inspected with
+OpenSSL: self-signed CA subject/issuer `Supabase Root 2021 CA`, valid from
+2021-04-28 10:56:53 UTC until **2031-04-26 10:56:53 UTC**, SHA-256 fingerprint:
+
+```text
+80:70:25:AD:50:D4:ED:21:9D:2C:9C:7D:29:9C:00:4F:82:4E:B0:0C:F7:F6:5A:FE:F6:07:D0:7B:72:E6:CA:FA
+```
+
+Backup and local restore connections load this PEM relative to the public
+implementation module, independent of the working directory. Before opening
+SQL they require exactly one well-formed, matching, currently valid root CA.
+Missing/unreadable/malformed/changed CA fails closed. No runner trust-store
+setup, network CA fetch, CA Secret or database URL option is required. Keep
+`BACKUP_DATABASE_URL`, `AGE_RECIPIENT` and `SUPABASE_PROJECT_REF` unchanged.
+
+The private workflow pins the reviewed public commit, including this CA.
+`tls.ca` supplies the PEM, `tls.rejectUnauthorized=true` enforces verification,
+`tls.serverName` is the validated direct/session host, and the client internally
+sets `sslmode=verify-full`. Supplied URLs still forbid all query parameters.
+There is no retry with reduced verification or a different trust anchor.
+
+Semantics were checked against the **workflow's Bun 1.3.14** implementation,
+not assumed from Node/Postgres libraries: [option parsing](https://github.com/oven-sh/bun/blob/bun-v1.3.14/src/js/internal/sql/shared.ts)
+parses URL `sslmode` separately from the TLS object; [native handshake](https://github.com/oven-sh/bun/blob/bun-v1.3.14/src/sql_jsc/postgres/PostgresSQLConnection.zig)
+checks the chain and SNI hostname with verification enabled. Bun.SQL does not
+invoke Node's `checkServerIdentity` callback. Offline native handshake tests
+exercise supplied trust, untrusted chains, hostname mismatch and refused TLS.
+These tests require Node for the mock Postgres peer and OpenSSL to generate
+ephemeral test-only TLS identities outside the repositories; no TLS test
+private key is committed.
+
+Rotate **before 2031-04-26**, or earlier if Supabase changes its CA: obtain the
+new official Dashboard certificate, independently inspect its fingerprint,
+identity and validity, then review a public PR updating certificate, pin, tests
+and documentation together. After public CI/merge, review a private PR updating
+the immutable implementation pin. Never silently fetch or accept a replacement,
+disable TLS verification, add CA material to credentials or change a Secret
+to bypass validation. For local administrative `psql`, continue using the
+operator's downloaded certificate explicitly with `sslmode=verify-full` and
+`sslrootcert=<LOCAL-CERTIFICATE-PATH>` (or the trusted local root.crt).
+
+The [first hosted run](https://github.com/maxvfk/game-calendar-backups/actions/runs/37609430936)
+passed repository/config/setup/tests and failed with `self signed certificate
+in certificate chain` during SQL export; no snapshot commit occurred. After
+both follow-up PRs merge, the operator must rerun **Encrypted personal-data
+backup** on `main`. This follow-up does not execute or claim that acceptance run.
 
 ## Snapshot v1, validation and confidentiality
 
@@ -341,9 +395,10 @@ AGE_TEST_IDENTITY=<LOCAL-PUBLIC-TEST-FIXTURE-PATH> AGE_TEST_RECIPIENT=<ITS-PUBLI
 ```
 
 Actual frozen install/typecheck/full test/build results are recorded in
-IMPLEMENTATION-STATUS after execution. Still pending: hosted migration/role and
-live schema verification, production key custody and GitHub configuration,
-first real encrypted hosted snapshot, real-key decrypt/validation/dry-run and
+IMPLEMENTATION-STATUS after execution. The 2026-10-07 hosted attempt confirmed
+operator variables/secret presence and runner setup but stopped at TLS, before
+live schema/role preflight. Still pending: hosted schema/role verification,
+first successful real encrypted hosted snapshot, real-key decrypt/validation/dry-run and
 controlled production restore → fresh deployed app read. **Do not mark S6a
 complete until all of these pass.**
 

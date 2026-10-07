@@ -12,6 +12,9 @@ import { connectionConfig, safeQuery } from '../scripts/account-backup/cli.ts';
 import { ageEncrypt, ageDecrypt, retain, storeEncrypted, verifyPair } from '../scripts/account-backup/storage.ts';
 import { decodeCloudRow, materializeCloud } from '../src/client/account/remote.ts';
 import { emptySyncState, applyMutation } from '../src/shared/sync.ts';
+import { X509Certificate } from 'node:crypto';
+import { loadPinnedCA, SUPABASE_CA_FILE, SUPABASE_CA_FINGERPRINT } from '../scripts/account-backup/tls.ts';
+import { testCertificate, tlsPostgresServer } from './helpers/account-backup-tls.ts';
 
 const db=new PGlite();
 const project='vzzudezdigjwbwfejlsg';
@@ -179,13 +182,69 @@ test('connections enforce project, read/write roles, session/direct port and ver
   const host='aws-0-eu-central-1.pooler.supabase.com';
   const config=connectionConfig(`postgresql://calendar_backup.${project}:test@${host}:5432/postgres`,project,true);
   expect(config.tls.rejectUnauthorized).toBe(true);expect(config.max).toBe(1);
+  expect(config.tls.serverName).toBe(host);
+  expect(new URL(config.url).search).toBe('?sslmode=verify-full');
+  expect(config.tls.ca).toBe(loadPinnedCA());
+  expect(connectionConfig(`postgresql://calendar_backup:test@db.${project}.supabase.co/postgres`,project,true).tls.serverName).toBe(`db.${project}.supabase.co`);
+  expect(connectionConfig(`postgresql://postgres.${project}:test@${host}/postgres`,project,false).tls.rejectUnauthorized).toBe(true);
   for (const url of [
     `postgresql://postgres.${project}:test@${host}:5432/postgres`,
     `postgresql://calendar_backup.${project}:test@${host}:6543/postgres`,
     `postgresql://calendar_backup.${project}:test@${host}:5432/postgres?sslmode=disable`,
     `postgresql://calendar_backup.${project}:test@evil.invalid:5432/postgres`,
+    `postgresql://calendar_backup.wrongproject:test@${host}:5432/postgres`,
+    `postgresql://calendar_backup.${project}:test@db.wrongproject.supabase.co:5432/postgres`,
+    `postgresql://calendar_backup.${project}:test@${host}:5432/postgres?sslrootcert=other.crt`,
   ]) expect(()=>connectionConfig(url,project,true)).toThrow();
+  expect(()=>connectionConfig(config.url,'bad',true)).toThrow('project ref');
 });
+test('reviewed Supabase CA fingerprint, provenance and validity are pinned',async()=>{
+  const ca=loadPinnedCA(),cert=new X509Certificate(ca);
+  expect(ca).toBe(await Bun.file(SUPABASE_CA_FILE).text());
+  expect(cert.fingerprint256).toBe(SUPABASE_CA_FINGERPRINT);
+  expect(cert.subject).toContain('CN=Supabase Root 2021 CA');
+  expect(cert.issuer).toBe(cert.subject);expect(cert.ca).toBe(true);
+  expect(new Date(cert.validFrom).toISOString()).toBe('2021-04-28T10:56:53.000Z');
+  expect(new Date(cert.validTo).toISOString()).toBe('2031-04-26T10:56:53.000Z');
+});
+test('missing, malformed, modified or extra CA trust material fails closed',async()=>{
+  const dir=await mkdtemp(join(tmpdir(),'s6a-ca-'));
+  try {
+    const path=join(dir,'ca.pem');
+    expect(()=>loadPinnedCA(path)).toThrow('missing');
+    await writeFile(path,'-----BEGIN CERTIFICATE-----\nZm9v\n-----END CERTIFICATE-----\n');
+    expect(()=>loadPinnedCA(path)).toThrow('Malformed');
+    const ca=loadPinnedCA();
+    // Valid DER with a changed signature: still parseable, wrong fingerprint.
+    const cert=new X509Certificate(ca),der=Buffer.from(cert.raw);
+    der[der.length-1]=der[der.length-1]!^1;
+    await writeFile(path,`-----BEGIN CERTIFICATE-----\n${der.toString('base64')}\n-----END CERTIFICATE-----\n`);
+    expect(()=>loadPinnedCA(path)).toThrow('fingerprint mismatch');
+    await writeFile(path,ca+ca);expect(()=>loadPinnedCA(path)).toThrow('Malformed');
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+test('native Bun.SQL trusts supplied CA and rejects untrusted chain, wrong hostname and refused TLS without fallback',async()=>{
+  const dir=await mkdtemp(join(tmpdir(),'s6a-native-tls-'));
+  const host='aws-0-eu-central-1.pooler.supabase.com';
+  try {
+    const identity=testCertificate(dir,host);
+    const config=connectionConfig(`postgresql://calendar_backup.${project}:test@${host}/postgres`,project,true);
+    // A local wire-protocol peer, keeping the production SNI and verify-full.
+    for (const scenario of ['trusted','untrusted','hostname','refused'] as const) {
+      const server=await tlsPostgresServer(scenario==='refused'?null:identity);
+      const tls=scenario==='untrusted'?config.tls:{...config.tls,ca:identity.cert,
+        serverName:scenario==='hostname'?'wrong.pooler.supabase.com':config.tls.serverName};
+      const sql=new SQL({...config,url:`postgresql://test:test@127.0.0.1:${server.port}/postgres?sslmode=verify-full`,tls,connectionTimeout:2});
+      try {
+        if(scenario==='trusted') await sql.connect();
+        else await expect(sql.connect()).rejects.toThrow();
+        const stats=await server.stats();
+        expect(stats.startupMessages).toBe(scenario==='trusted'?1:0);
+        expect(stats.connections).toBe(1);
+      }finally{await sql.close({timeout:0});await server.close();}
+    }
+  }finally{await rm(dir,{recursive:true,force:true});}
+},15000);
 test('retention keeps 30 daily / 12 first-success monthly pairs, preserves history layout and fails closed on corruption',async()=>{
   const dir=await mkdtemp(join(tmpdir(),'s6a-retention-'));
   const bytes=new TextEncoder().encode('age-encryption.org/v1\nsynthetic retention fixture (NOT decryptable)');
