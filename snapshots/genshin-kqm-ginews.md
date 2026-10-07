@@ -1438,36 +1438,6 @@ Unlock "Meeting Point: Tidesong Cavern" and upgrade the Meeting Point to Level 2
 
 -----
 
-# ["Adventurer's Booster Bundles" - Round 52 Available for a Limited Time](archive/21883.md)
-## Adventurer's Booster Bundles
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/112dc770760c748f77fcbcbb929882d8_2577404397453496509_transformed.jpg)
-
-Round 52 of Adventurer's Booster Bundles is available for a limited time in the Shop!
-
-〓Adventurer's Instructional Bundle〓
-
-Duration: After the Version 7.1 update – <t class="t_lc" contenteditable="false">2026/10/07 23:59</t>
-
-Purchase Requirements: Adventure Rank 25 or above
-
-Bundle Contents: Virtuous Share Bundle ×25, Mora ×150,000
-
-Bundle Price: Now 10% off for a limited time! The price after discount is 680 Genesis Crystals. Can be purchased up to three times in total.
-
-※ Virtuous Share Bundle: After usage, you can select any one 3-star Talent Level-Up Material from all the options available in the current Version.
-
-〓Adventurer's Jumbo Ore Bundle〓
-
-Duration: After the Version 7.1 update – <t class="t_lc" contenteditable="false">2026/10/07 23:59</t>
-
-Purchase Requirements: Adventure Rank 25 or above
-
-Bundle Contents: Mystic Enhancement Ore ×100, Mora ×100,000
-
-Bundle Price: Now 10% off for a limited time! The price after discount is 680 Genesis Crystals. Can be purchased up to five times in total.
-
------
-
 # ["Moontrace" Event Details](archive/21884.md)
 ## Moontrace
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/7907d83c5432d75d68d61e8ace6ef758_7423804670023482212_transformed.jpg)
