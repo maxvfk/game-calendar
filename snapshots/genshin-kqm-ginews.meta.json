@@ -2,12 +2,12 @@
   "contentKind": "markdown",
   "sourceId": "genshin-kqm-ginews",
   "url": "https://api.github.com/repos/KQM-git/GINews/contents/readme.md",
-  "contentHash": "9ed5502ea1ac31f427a483d15dd55cf279a36ab20ecc49082fee115ec99b7ba6",
-  "bytes": 110207,
-  "etag": "\"6564e2b681b6f73734dfefdf405989b36e17fe63\"",
-  "lastModified": "Thu, 08 Oct 2026 08:00:54 GMT",
-  "contentChangedAt": "2026-10-08T12:06:54.568Z",
-  "lastConfirmedAt": "2026-10-08T22:13:20.429Z",
+  "contentHash": "4e88e3dbc148d216cabb8f193b50468faeca97452d952880f6a7396df69df32a",
+  "bytes": 110339,
+  "etag": "\"83bbbb27730e05ff4c7ac29e12430ae06588efa3\"",
+  "lastModified": "Fri, 09 Oct 2026 08:24:45 GMT",
+  "contentChangedAt": "2026-10-09T11:58:41.281Z",
+  "lastConfirmedAt": "2026-10-09T11:58:41.281Z",
   "eventCount": 12,
   "charset": "utf-8"
 }
