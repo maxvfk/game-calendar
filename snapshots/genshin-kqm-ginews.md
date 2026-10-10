@@ -1,3 +1,39 @@
+# ["Predictive Victory Dynamics" Event: Predict the Outcome of Battles](archive/21887.md)
+## Predictive Victory Dynamics
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/5d6d4968b2e59e6f3346af687966bd28_5852306448032983720_transformed.jpg)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/08/21/39cd938bcf0542bb6333437a2c2a21b4_1631474449051988747_transformed.png)
+
+〓Event Duration〓
+
+Event Duration: <t class="t_gl" contenteditable="false">2026/10/12 10:00</t> – <t class="t_gl" contenteditable="false">2026/10/20 09:59</t>
+
+Result Announcement: <t class="t_gl" contenteditable="false">2026/10/20 10:00</t> – <t class="t_gl" contenteditable="false">2026/10/23 09:59</t>
+
+*The timing of this event is quite unusual. Travelers are advised to check the event interface for the relevant times and participate before it's too late!
+
+〓Eligibility〓
+
+Adventure Rank 20 or above
+
+Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
+
+※ Complete Archon Quest Chapter VII: Act IV "A Rekviem for the Underworld" first to get the best experience from this event.
+
+〓Event Details〓
+
+● During the event, 8 rounds of battles will become available over time. A set number of "Victory Emblems" will be distributed each round. Travelers must predict the outcome based on both teams' lineups and allocate their Victory Emblems to the team they believe will win.
+
+● During the event period, Travelers can make predictions for each matchup. Predictions for each round remain open for 24 hours. Check the "Time Remaining for This Prediction Round" display on the event interface and be sure to participate before time runs out.
+
+● After each round ends, Travelers will receive a "Prediction Score" based on the battle results and the accuracy of their prediction. Participate in each round and reach the specified "Prediction Score" requirements to obtain various rewards.
+
+※ Once the prediction deadline for each round has passed, participation rewards for that round will no longer be available. Please plan your time accordingly and submit your predictions promptly, Traveler.
+
+-----
+
 # [Event Wish "Void Star's Advent" - Boosted Drop Rate for "Void Star" Skirk (Cryo)!](archive/21888.md)
 ## Event Wish "Void Star's Advent"
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/8668a2e84580c1426c290a447320bcd9_5708783295049261864_transformed.jpg)

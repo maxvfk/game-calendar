@@ -2,12 +2,12 @@
   "contentKind": "json",
   "sourceId": "nte-steamnews-official",
   "url": "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=4508340&count=50&maxlength=0&feeds=steam_community_announcements",
-  "contentHash": "77603b8a26f3e9619c0a6d6e1016cb28f5e6e912bbf441716008bf8dbb6c3e7f",
-  "bytes": 100860,
+  "contentHash": "53df7a1d520a50125c504441ef008dd4bd143ee44bb3c833b37ab0d0c5a44e7d",
+  "bytes": 102062,
   "etag": null,
   "lastModified": null,
-  "contentChangedAt": "2026-10-08T12:07:00.924Z",
-  "lastConfirmedAt": "2026-10-09T21:46:54.953Z",
+  "contentChangedAt": "2026-10-10T11:15:17.657Z",
+  "lastConfirmedAt": "2026-10-10T11:15:17.657Z",
   "eventCount": 43,
   "charset": "utf-8"
 }
