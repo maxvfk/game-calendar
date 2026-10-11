@@ -977,38 +977,6 @@ And complete the World Quest "Battlefield of Dice, Cats, and Cards"
 
 -----
 
-# [Genshin Impact 6th Anniversary Forum Commenting Event! Primogems, Mora, and Blessing of the Welkin Moon Await~](archive/21893.md)
-## Genshin Impact's 6th Anniversary Forum Commenting Event Featuring Blessing of the Welkin Moon Begins!
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/04/0ef6f588983f7f08f182cf64c8c94b5d_7754111835044043015_transformed.png)
-
-Dear Traveler,
-
-The Genshin Impact 6th Anniversary Forum Commenting Event has begun! Leave a comment for a chance to win a Blessing of the Welkin Moon!
-
-This time, there'll be no limit on the number of rewards that will be given out! The more of you that participate, the more rewards there'll be!
-
-[Go to Event >>](https://www.hoyolab.com/article_pre/18014398241022174?utm_id=2&utm_medium=notice&utm_source=ingame)
-
-Event Duration
-
-September 28 – October 11, 2026 (UTC+8)
-
-How to Participate
-
-Head to the comments section of the event post and share a beautiful photo you've taken of a Genshin Impact character
-
-Event Rewards
-
-1. 10% of participating Travelers will be randomly selected to receive Blessing of the Welkin Moon ×1.
-
-2. The remaining 90% of participating Travelers who do not receive a Blessing of the Welkin Moon will each receive Mora ×100,000.
-
-3. 6,000 Travelers who commented will each receive Primogems ×100. This will be done by a random draw.
-
-4. All Travelers who commented will receive a Genshin Impact 6th Anniversary Comment Decoration.
-
------
-
 # [Stygian Onslaught Event: Disturbance-affected Ley Line challenges](archive/21168.md)
 ## Stygian Onslaught
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2025/10/23/40da7ab1ce17afd008e7a10c6ee6e67b_3372052251159312794_transformed.jpg)
@@ -1066,46 +1034,6 @@ Rewards for "Fearless" and "Dire" difficulties can only be claimed upon completi
 "Normal," "Advancing," and "Hard" difficulties support matchmaking or Co-Op Mode within the same world.
 
 "Menacing," "Fearless," and "Dire" difficulties only support Co-Op challenges within the same world.
-
------
-
-# ["Silverwing in Pursuit of the Moon" Event: Take Part to Obtain the Event-Exclusive Weapon "Silver Light (Sword)"](archive/21886.md)
-## Silverwing in Pursuit of the Moon
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/22f2f523e19349f439b81b1c8e7a18f4_8177819633981078287_transformed.jpg)
-
-〓Event Rewards〓
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/08/21/26bb3730bfd0dfd96a8d32c442cdd6c4_8926197329413901596_transformed.png)
-
-〓Event Duration〓
-
-Event Details | Event Details | Start Time | End Time
---- | --- | --- | ---
-Event Gameplay Phases | Phase I | <t class="t_lc" contenteditable="false">2026/09/24 10:00</t> | <t class="t_lc" contenteditable="false">2026/10/12 03:59</t>
-^ | Phase II | <t class="t_lc" contenteditable="false">2026/09/26 04:00</t> | ^
-^ | Phase III | <t class="t_lc" contenteditable="false">2026/09/28 04:00</t> | ^
-
-〓Eligibility〓
-
-Adventure Rank 20 or above
-
-Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
-
-※ Complete the Story Quests "Dulciaria Structura Chapter: Act I" and "Tapirus Somniator Chapter: Act I," and the Event Quest "A Lanternlit Ode to the Silver Moon" first to get the best experience from this event.
-
-〓Event Details〓
-
-● During the event, three gameplay modes will be available: "The Great Chase and Dispelling," "Banner Against the Dark," and "Spiritshot Salvo."
-
-● In "The Great Chase and Dispelling," Travelers need to control a rattan figure to move along specific paths, collecting adeptal power or dispelling evil energy encountered along the way to achieve a higher score.
-
-● In "Banner Against the Dark," Travelers need to defeat as many normal opponents as possible in the first phase, and deal as much damage as possible to the boss in the second phase to achieve a higher score.
-
-● In "Spiritshot Salvo," Travelers need to use Sigils and spells to fire Spiritshots and defeat as many enemies as possible.
-
-● During the event, Travelers can also accept "Festive Priorities" and "Wondrous Anecdotes" quests. Complete these quests to obtain Primogems and other rewards.
-
-● Complete the various gameplay modes to obtain "Festive Cheer." Accumulate "Festive Cheer" and reach the specified amounts to claim rewards including Silver Light (Sword), Primogems, Crown of Insight, and event-exclusive Weapon Refinement Materials.
 
 -----
 
