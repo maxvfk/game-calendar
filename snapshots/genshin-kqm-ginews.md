@@ -1037,34 +1037,6 @@ Rewards for "Fearless" and "Dire" difficulties can only be claimed upon completi
 
 -----
 
-# [Event Wish "When Warm Winds Cavort" - Boosted Drop Rate for "Snowy Banquet's Sharp Blade" Vesna (Anemo)!](archive/21876.md)
-## Event Wish "When Warm Winds Cavort"
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/0280fb4b14ec01bb37bb3ee0253a108a_8262450589619702638_transformed.jpg)
-
-Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
-
-〓Event Wish Details〓
-
-Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
---- | --- | ---
-After the Version 7.1 update  –  <t class="t_lc" contenteditable="false">2026/10/13 17:59</t> | "Snowy Banquet's Sharp Blade" Vesna (Anemo) | "Kätzlein Cocktail" Diona (Cryo)
-^ | ^ | "Enigmatic Machinist" Faruzan (Anemo)
-^ | ^ | "Frozen Ardor" Chongyun (Cryo)
-
-● During this Event Wish, the event-exclusive 5-star character "Snowy Banquet's Sharp Blade" Vesna (Anemo) will receive a huge drop-rate boost!
-
-● During this event wish, the 4-star characters "Kätzlein Cocktail" Diona (Cryo), "Enigmatic Machinist" Faruzan (Anemo), and "Frozen Ardor" Chongyun (Cryo) will receive a huge drop-rate boost!
-
-※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
-
-※ This is for "Character Event Wish." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
-
-※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
-
-※ For more information, go to the Wish screen and select Details in the bottom-left corner.
-
------
-
 # [Cosmetic Event Ode 2 New Mechanics Description](archive/21902.md)
 ## Cosmetic Event Ode 2 Mechanics Description
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/17/4d86ed525f736bb2443e75e7e5407678_445197683755154974_transformed.jpg)
@@ -1296,62 +1268,6 @@ Manekina Cosmetic "Rose's Lament" | ^
 ● After the Version 7.1 update, a new Elite (4-Star) Set Catalog "The Art of Spontaneity" will be added to the Standard Ode "Encounter Echoes."
 
 ※ For more information, go to the Standard Ode screen and select Details in the bottom-left corner.
-
------
-
-# [Event Wish "Surging Ballad" - Boosted Drop Rate for "Lingering Siren-Song" Vodyanitsa (Hydro)!](archive/21877.md)
-## Event Wish "Surging Ballad"
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/194df26048090eade34d12649e298ec7_559849886015315427_transformed.jpg)
-
-Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
-
-〓Event Wish Details〓
-
-Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
---- | --- | ---
-After the Version 7.1 update  –  <t class="t_lc" contenteditable="false">2026/10/13 17:59</t> | "Lingering Siren-Song" Vodyanitsa (Hydro) | "Kätzlein Cocktail" Diona (Cryo)
-^ | ^ | "Enigmatic Machinist" Faruzan (Anemo)
-^ | ^ | "Frozen Ardor" Chongyun (Cryo)
-
-● During this event wish, the event-exclusive 5-star character "Lingering Siren-Song" Vodyanitsa (Hydro) will receive a huge drop-rate boost!
-
-● During this event wish, the 4-star characters "Kätzlein Cocktail" Diona (Cryo), "Enigmatic Machinist" Faruzan (Anemo), and "Frozen Ardor" Chongyun (Cryo) will receive a huge drop-rate boost!
-
-※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
-
-※ This is for "Character Event Wish-2." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
-
-※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
-
-※ For more information, go to the Wish screen and select Details in the bottom-left corner.
-
------
-
-# [Event Wish "Epitome Invocation" - Boosted Drop Rate for Beyond the Chrysalis (Sword) and Hymn of the Maelstrom (Catalyst)!](archive/21878.md)
-## Event Wish "Epitome Invocation"
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/41a1d242fc5fd77e49c4912082735dc3_3571449661991950272_transformed.jpg)
-
-Travelers, stock up on weapons and characters in "Epitome Invocation" to make your party stronger in combat!
-
-〓Event Wish Details〓
-
-Event Wish Duration | Promotional Weapons (5-Star) | Featured Weapons (4-Star)
---- | --- | ---
-After the Version 7.1 update  –  <t class="t_lc" contenteditable="false">2026/10/13 17:59</t> | Beyond the Chrysalis (Sword)  Hymn of the Maelstrom (Catalyst) | New Bough (Sword)
-^ | ^ | Winter's Heavy Heart (Catalyst)
-^ | ^ | Breezeborne Refrain (Bow)
-^ | ^ | Favonius Greatsword (Claymore)
-^ | ^ | Dragon's Bane (Polearm)
-
-● During this event wish, the event-exclusive 5-star weapons Beyond the Chrysalis (Sword) and Hymn of the Maelstrom (Catalyst) will receive a huge drop-rate boost!
-
-● During this event wish, the event-exclusive 4-star weapons New Bough (Sword), Winter's Heavy Heart (Catalyst), and Breezeborne Refrain (Bow), as well as the 4-star weapons Favonius Greatsword (Claymore) and Dragon's Bane (Polearm) will receive a huge drop-rate boost!
-
-● During this event wish, use Epitomized Path to chart a course towards a promotional 5-star weapon, such as Beyond the Chrysalis (Sword) or Hymn of the Maelstrom (Catalyst). For more information on Epitomized Path, go to the Wish screen and select Details in the bottom-left corner.
-
-※ Of the above weapons, the event-exclusive weapons will not be available in the standard wish "Wanderlust Invocation."
-
-※ For more information, go to the Wish screen and select Details in the bottom-left corner.
 
 -----
 
