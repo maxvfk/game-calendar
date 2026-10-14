@@ -1,12 +1,12 @@
 {
   "sourceId": "nte-ntebuild-btr",
   "url": "https://www.ntebuild.com/events",
-  "contentHash": "d500450294d36b85fd466ca3bafd5ea4d1bd8e2ef5b63c0182c46f30c04c5d2f",
-  "bytes": 301631,
+  "contentHash": "60ee3c82af955ee5d8bbc1d295cdff06ade98dacd9542316fba6415e0c3ecef9",
+  "bytes": 301258,
   "etag": null,
   "lastModified": null,
-  "contentChangedAt": "2026-10-07T11:51:45.211Z",
-  "lastConfirmedAt": "2026-10-13T21:53:43.281Z",
-  "eventCount": 4,
+  "contentChangedAt": "2026-10-14T10:20:40.824Z",
+  "lastConfirmedAt": "2026-10-14T10:20:40.824Z",
+  "eventCount": 3,
   "charset": "utf-8"
 }
