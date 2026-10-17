@@ -563,3 +563,99 @@ Repository:
 - `snapshots/endfield-wikigg-events.html`
 - `src/ingest/parsers/wikigg.ts`
 - `src/ingest/parsers/game8.ts`
+
+## 16. Source drift investigation — 2026-10-17 (2026-10-18 Moscow)
+
+This dated finding supersedes the historical "current season" references above.
+The accepted source-driven architecture and validation contract are unchanged.
+
+### Confirmed source facts
+
+Both live wiki requests returned HTTP 200 after the robots gate was checked.
+The Event page discovers **Season of Phantasia**, and its machine-readable timers
+agree with that season page's regional header:
+
+| Season region | Published start | Published end | UTC start / end |
+| --- | --- | --- | --- |
+| Asia | 2026-10-15 12:00 UTC+8 | 2026-11-05 11:59 UTC+8 | Oct 15 04:00Z / Nov 5 03:59Z |
+| Americas / Europe | 2026-10-15 23:00 UTC-5 | 2026-11-05 11:59 UTC-5 | Oct 16 04:00Z / Nov 5 16:59Z |
+
+The actual season table explicitly states all three rows as **Server Time**:
+
+| Cycle | Published start | Published end |
+| --- | --- | --- |
+| I | 2026-10-15 12:00 | 2026-10-22 03:59 |
+| II | 2026-10-22 04:00 | 2026-10-29 03:59 |
+| III | 2026-10-29 04:00 | 2026-11-05 11:59 |
+
+The table is ordered and contiguous under its existing last-minute/next-minute
+notation. The cycle ends fit the regional season ends. The **western Cycle I
+start does not**: 12:00 UTC-5 = Oct 15 17:00Z, eleven hours before the same page's
+season start at Oct 16 04:00Z. Asia matches. This is an upstream internal
+contradiction, not an unrecognized table, timezone format or changed end-minute
+convention. No source statement permits treating that first table timestamp as
+Asia-only, silently clipping it, or moving either published timestamp.
+
+The parser assumes that explicit Server Time applies in each stated region and
+that Cycle I begins with its season. Its rejection is correct under that contract.
+The intended correction upstream is **not established** by these contradictory
+wiki facts. The last-known-good Illusion snapshot must remain intact; it must not
+be relabelled or published as current Phantasia cycles. The separate Event season
+row still carries the sourced final deadline; no redundant Cycle III is added.
+
+Sources and reproducible test-only excerpts:
+
+- https://endfield.wiki.gg/wiki/Event
+- https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Phantasia
+- `test/fixtures/endfield/README.md` records capture provenance and full-body hashes.
+
+### Shadow Marked: reviewed encoding error, not a source disagreement
+
+Direct HTTP 200 capture of the **English official article** on 2026-10-17 at
+21:56:39Z, after its robots.txt returned 200 / Allow `/`:
+https://endfield.gryphline.com/en-us/news/5208
+(full-body SHA-256 `21e81fa09610af3f6982e0afe22683668e517956af23be901c7503cec5141c1b`).
+
+It explicitly gives the Shadow Marked event from Oct 5 12:00 to Oct 19 **04:00
+server time**. The article identifies Asia as UTC+8 and Americas/Europe as UTC-5.
+The official CN notice https://endfield.hypergryph.com/news/2653 also states
+Oct 19 04:00. The current wiki timer `data-end` and tooltip agree with 04:00.
+The wiki's static Asia placeholder has a misleading UTC clock/local-zone label;
+the parser correctly reads `data-end`, not that placeholder.
+
+The repository introduced 03:59 in reviewed commit `bf4935e`, despite the research
+recording 04:00. There is no sourced basis to subtract a minute from this event.
+This is not a generic inclusive/exclusive conversion and does not affect banners
+whose sources explicitly say 11:59 or cycles whose sources say 03:59.
+
+Correction for `endfield:monumental-etching-shadow-marked:2026-10-05`:
+
+| Field / region | Incorrect reviewed instant | Correct official instant |
+| --- | --- | --- |
+| `endsAt` / Asia | 2026-10-18T19:59:00Z | 2026-10-18T20:00:00Z |
+| Americas / Europe | 2026-10-19T08:59:00Z | 2026-10-19T09:00:00Z |
+
+The actual merge conflict was `endsAt`, first detected in Asia, delta 1/60 hour:
+`reviewed-endfield` was retained over `endfield-wikigg-events`. Both records had
+the same event ID. The correction preserves that ID, day start, exact ends,
+official URL/provenance and original `firstSeenAt`; only this row is re-reviewed.
+The current Endfield merge now has zero conflicts. The independent NTE Circle
+Bounty conflict remains visible. A regression still requires review for a real
+one-minute official/wiki discrepancy.
+
+### Minimal safe operational handling
+
+Keep the source enabled and the existing failure threshold. The existing
+`rejected` outcome with HTTP 200 already distinguishes a semantically unusable
+body from transport failure. The parser now includes the region and both UTC
+starts in the error, without changing any acceptance predicate. No new healthy
+or degraded-success state is justified: this source still cannot publish cycles.
+
+Restore offline CI/Pages by correcting the reviewed record and separating
+historical regression captures from rolling production snapshots. Keep a current
+snapshot merge check, including its zero-conflict assertion, rather than hiding
+live conflicts. Publish other validated sources and the season row under the
+existing pipeline while Echoes remains unavailable/broken; do not manufacture a
+fully green Refresh. Resume Echoes acceptance only when upstream supplies a
+consistent explicit regional schedule, then run normal Refresh and verify its
+commit's CI/Pages. No new coverage, projected dates or fallback fixture is needed.

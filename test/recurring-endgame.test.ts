@@ -115,7 +115,7 @@ test("source-controlled challenge deadlines are regional or unknown as published
   const load = async (game: string) => materializeReviewedBatch(await Bun.file(`data/reviewed/${game}.json`).json()).events;
   const endfield = [
     ...await load("endfield"),
-    ...parseWikiGgEchoesSeason(await Bun.file("snapshots/endfield-wikigg-echoes.html").text(), {
+    ...parseWikiGgEchoesSeason(await Bun.file("test/fixtures/endfield/illusion-2026-09-24.html").text(), {
       game: "endfield", sourceId: "endfield-wikigg-echoes", now,
       sourceUrl: "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Illusion",
     }),
@@ -124,7 +124,7 @@ test("source-controlled challenge deadlines are regional or unknown as published
   const c2 = endfield.find(e => e.title.endsWith("Cycle II"))!;
   expect(c1.regionEnds?.asia).toBe("2026-09-30T19:59:00.000Z");
   expect(c2.regionEnds?.america).toBe("2026-10-08T08:59:00.000Z");
-  expect(endfield.find(e => e.title === "Monumental Etching: Shadow Marked")?.regionEnds?.europe).toBe("2026-10-19T08:59:00.000Z");
+  expect(endfield.find(e => e.title === "Monumental Etching: Shadow Marked")?.regionEnds?.europe).toBe("2026-10-19T09:00:00.000Z");
   expect(endfield.some(e => e.title.endsWith("Cycle III"))).toBe(false);
   const genshin = await load("genshin");
   expect(genshin.find(e => e.title.includes("Disturbance Outbreak"))?.regionEnds?.asia).toBe("2026-10-09T19:59:00.000Z");

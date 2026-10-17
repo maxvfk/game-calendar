@@ -1,7 +1,70 @@
 # Game calendar implementation status
 
-Updated 2026-10-06. Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-18 (Moscow; source checks 2026-10-17 UTC). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
+
+## Urgent Endfield source drift / CI recovery — 2026-10-18
+
+Status: **local repair validated; full Refresh acceptance blocked by an upstream
+Phantasia contradiction. Hosted publication verification pending.** This section
+is independent of Account/User S6 and Timeline M1/M2.
+
+- Baseline CURRENT main verified as `3447f4e0f5222ec62afcfae0397475dcb46cda53`;
+  fresh branch `fix/endfield-source-drift-20261018`. Actual logs inspected:
+  [Refresh 39062823744](https://github.com/maxvfk/game-calendar/actions/runs/39062823744)
+  confirmed 7/8 sources, retained rejected Echoes body, reported six consecutive
+  failures / one broken source, then committed snapshots. Echoes last accepted
+  confirmation: `2026-10-14T20:47:25.387Z`, still Illusion.
+  [CI 39062845198](https://github.com/maxvfk/game-calendar/actions/runs/39062845198)
+  checked out that main SHA: 1046 pass / 1 optional skip / 3 fail; feed/build/Pages
+  skipped. The same three focused failures reproduced locally before edits.
+- **Echoes is an upstream contradiction, not a parser redesign failure.** Live
+  Event and Phantasia pages both return 200 and publish Asia Oct 15 12:00 UTC+8
+  and Americas/Europe Oct 15 23:00 UTC-5; both end Nov 5 11:59 in their stated
+  zones. The three-cycle table instead starts Cycle I Oct 15 12:00 *Server Time*,
+  eleven hours before the western season. Cycle I/II ends are explicitly
+  Oct 22/29 03:59; Cycle III ends Nov 5 11:59. Full facts, UTC conversions,
+  source hashes and interpretation limits are in
+  `docs/research/endfield-recurring-endgame.md` section 16.
+- The parser's acceptance predicates are unchanged. Its first-cycle mismatch
+  error now identifies region and both UTC instants. Existing `rejected` + HTTP
+  200 already identifies reachable-but-unusable data; no new healthy state or
+  weaker threshold was added. Production snapshots are untouched, Phantasia
+  cycles are withheld, and Illusion is not republished as a new season.
+- **Shadow Marked was corrected, not retained as a real conflict.** English
+  official notice 5208, directly read at 21:56:39Z, explicitly ends at Oct 19
+  04:00 server time and agrees with wiki `data-end`. Our reviewed record wrongly
+  encoded 03:59. Corrected Asia to Oct 18 20:00Z and Americas/Europe to Oct 19
+  09:00Z. Same event ID, day start, exact regional ends, official URL and original
+  `firstSeenAt`; only this row's `reviewedAt` advances. One-minute exact conflicts
+  still require review, with an explicit regression proving it.
+- Historical Illusion/overlap/Snow assertions now read immutable test-only
+  excerpts of this repository's own captures, outside production fixture paths.
+  Current snapshot merge assertions still require zero Endfield conflicts and
+  every unique source ID, accounting for the genuine wiki/reviewed duplicate
+  and higher-confidence reviewed winner. A real Phantasia rejection regression
+  proves unchanged last-known-good bytes/metadata/confirmation and `broken` at
+  the existing third failure. Historical Illusion cycle IDs remain pinned.
+- Local Bun 1.3.14: frozen install, typecheck and build pass; focused Endfield/
+  recurring-endgame tests **21 pass / 0 fail**; full suite **1054 pass / 1 optional
+  age skip / 0 fail** (1055 tests, 51 files). Feed: **172 events / 7 games / 1
+  visible conflict**, only the existing NTE Circle Bounty dispute. All 172 IDs
+  retained; only Shadow Marked's end fields change semantically (apart from
+  normal regenerated parser observation timestamps). Counts: CZN 25, Endfield 8,
+  Genshin 25, HSR 20, NTE 47, WuWa 30, ZZZ 17. Phantasia season ID is
+  `endfield:season-of-phantasia:2026-10-15`; no cycles were invented. Current
+  cycle source is unavailable in the feed (`parsedCount: null`, no false
+  confirmation), with the previously verified hosted refresh still **broken**.
+- Hosted repair PR / main CI / Pages: **pending; not claimed green**.
+  No new hosted Refresh has been dispatched at this checkpoint. Full milestone
+  acceptance is explicitly blocked by the verified source contradiction.
+
+**Next concrete step for this repair:** publish the independently safe CI/data
+corrections, verify hosted CI/Pages, and stop at the source blocker. Keep Echoes
+scheduled and its broken signal visible. Once upstream provides consistent
+explicit regional dates, run normal Refresh on current main and inspect the
+actual refresh commit's CI/feed/Pages; only then close full recovery. Do not
+start another milestone or touch the private backup implementation pin.
 
 ## Completed checkpoints
 

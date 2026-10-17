@@ -52,8 +52,18 @@ export function parseWikiGgEchoesSeason(html: string, ctx: ParseContext): Event[
     }
     return { roman, raw: row[1]!, asia: period(row[1]!, 8, false), west: period(row[1]!, -5, false) };
   });
-  if (cycles[0]!.asia[0] !== asia[0] || cycles[0]!.west[0] !== west[0] ||
-      cycles[1]!.asia[0] !== cycles[0]!.asia[1] + 60_000 ||
+  // Report a reachable but contradictory source precisely. Do not clip the
+  // first cycle to the season or reinterpret a stated Server Time as UTC.
+  for (const [region, seasonStart, cycleStart] of [
+    ["Asia", asia[0], cycles[0]!.asia[0]],
+    ["Americas/Europe", west[0], cycles[0]!.west[0]],
+  ] as const) {
+    if (cycleStart !== seasonStart) {
+      throw new Error(`Echoes cycles conflict with the sourced season window: ${region} Cycle I starts ` +
+        `${new Date(cycleStart).toISOString()}, season starts ${new Date(seasonStart).toISOString()}`);
+    }
+  }
+  if (cycles[1]!.asia[0] !== cycles[0]!.asia[1] + 60_000 ||
       cycles[2]!.asia[0] !== cycles[1]!.asia[1] + 60_000 ||
       cycles[1]!.asia[1] >= asia[1] || cycles[1]!.west[1] >= west[1] ||
       cycles[2]!.asia[0] >= asia[1] || cycles[2]!.west[0] >= west[1]) {

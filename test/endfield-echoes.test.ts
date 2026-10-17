@@ -13,8 +13,13 @@ import { join } from "node:path";
 const now = "2026-09-24T15:00:00.000Z";
 const url = "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Illusion";
 const ctx = { now, game: "endfield" as const, sourceId: ECHOES_SOURCE_ID, sourceUrl: url };
-const html = await Bun.file("snapshots/endfield-wikigg-echoes.html").text();
-const eventHtml = await Bun.file("snapshots/endfield-wikigg-events.html").text();
+// Historical assertions must not depend on snapshots refreshed by production.
+// These independent captures are test-only, never a live-source fallback.
+const html = await Bun.file("test/fixtures/endfield/illusion-2026-09-24.html").text();
+const eventHtml = await Bun.file("test/fixtures/endfield/events-2026-09-24.html").text();
+const phantasiaHtml = await Bun.file("test/fixtures/endfield/phantasia-2026-10-17.html").text();
+const phantasiaEventHtml = await Bun.file("test/fixtures/endfield/events-2026-10-17.html").text();
+const phantasiaUrl = "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Phantasia";
 
 test("Event page discovers the newer active Echoes season during a regional overlap", () => {
   const seasons = parseWikiGgEventsPage(eventHtml, { ...ctx, sourceId: ECHOES_EVENT_SOURCE_ID,
@@ -77,6 +82,71 @@ test("refresh follows the discovered season and does not reuse another season’
     expect(requests[0]?.headers.get("If-None-Match")).toBeNull();
     expect(summary.outcomes[0]?.result).toBe("fetched");
     expect((await store.read(ECHOES_SOURCE_ID))?.meta.url).toBe(url);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("October Event capture discovers Phantasia with its explicit regional season ends", () => {
+  const seasons = parseWikiGgEventsPage(phantasiaEventHtml, { ...ctx, sourceId: ECHOES_EVENT_SOURCE_ID,
+    sourceUrl: "https://endfield.wiki.gg/wiki/Event" });
+  const chosen = selectEchoesSeason(seasons, "2026-10-17T21:55:00.000Z")!;
+  expect(chosen).toMatchObject({
+    id: "endfield:season-of-phantasia:2026-10-15", title: "Season of Phantasia", type: "challenge",
+    startsAt: "2026-10-15T04:00:00.000Z", startPrecision: "exact", endPrecision: "exact",
+    regionEnds: { asia: "2026-11-05T03:59:00.000Z",
+      america: "2026-11-05T16:59:00.000Z", europe: "2026-11-05T16:59:00.000Z" },
+  });
+  expect(echoesSeasonUrl(chosen)).toBe(phantasiaUrl);
+});
+
+test("real Phantasia table is rejected: western Cycle I precedes its season by eleven hours", () => {
+  expect(() => parseWikiGgEchoesSeason(phantasiaHtml, { ...ctx, sourceUrl: phantasiaUrl })).toThrow(
+    "Americas/Europe Cycle I starts 2026-10-15T17:00:00.000Z, season starts 2026-10-16T04:00:00.000Z",
+  );
+});
+
+test("contradictory new season retains last-known-good bytes, metadata and broken-source health", async () => {
+  const root = await mkdtemp(join(tmpdir(), "echoes-rejected-"));
+  const checkedAt = "2026-10-17T21:55:00.000Z";
+  try {
+    const store = new SnapshotStore(root);
+    await store.save(ECHOES_EVENT_SOURCE_ID, { url: "https://endfield.wiki.gg/wiki/Event",
+      body: phantasiaEventHtml, at: checkedAt, etag: null, lastModified: null, eventCount: 5 });
+    await store.save(ECHOES_SOURCE_ID, { url, body: html, at: now,
+      etag: '"illusion"', lastModified: "Thu, 24 Sep 2026 15:00:00 GMT", eventCount: 2 });
+    await store.recordCheck(ECHOES_SOURCE_ID, { at: now, status: 200, ok: true });
+    const previous = (await store.read(ECHOES_SOURCE_ID))!;
+    // Two preceding semantic failures; the third must still trip the existing threshold.
+    for (const at of ["2026-10-16T00:00:00.000Z", "2026-10-16T12:00:00.000Z"]) {
+      await store.recordCheck(ECHOES_SOURCE_ID, { at, status: 200, ok: false });
+    }
+    const requests: Array<{ url: string; headers: Headers }> = [];
+    const summary = await runRefresh({
+      adapters: [ADAPTERS.find(a => a.id === ECHOES_SOURCE_ID)!], store,
+      robots: { allows: async () => ({ allowed: true, reason: "test" }) },
+      fetchImpl: async (request, init) => {
+        requests.push({ url: String(request), headers: new Headers(init?.headers) });
+        return new Response(phantasiaHtml, { status: 200, headers: { "Content-Type": "text/html; charset=utf-8" } });
+      },
+      userAgent: "test", now: () => new Date(checkedAt), sleep: async () => {},
+      dryRun: false, only: ECHOES_SOURCE_ID, force: false,
+      timeoutMs: 5000, log: () => {}, rebuildFeed: null,
+    });
+    expect(requests).toHaveLength(1);
+    expect(requests[0]?.url).toBe(phantasiaUrl);
+    expect(requests[0]?.headers.get("If-None-Match")).toBeNull();
+    expect(requests[0]?.headers.get("If-Modified-Since")).toBeNull();
+    expect(summary.outcomes[0]).toMatchObject({ result: "rejected", status: 200 });
+    expect(summary.changed).toBe(0);
+    expect(summary.confirmed).toBe(0);
+    expect(summary.broken).toEqual([{ sourceId: ECHOES_SOURCE_ID, consecutiveFailures: 3,
+      lastStatus: 200, lastConfirmedAt: now }]);
+    const retained = (await store.read(ECHOES_SOURCE_ID))!;
+    expect(retained.html).toBe(previous.html);
+    expect(retained.meta).toEqual(previous.meta);
+    expect(retained.state.lastConfirmedAt).toBe(now);
+    expect(retained.state.consecutiveFailures).toBe(3);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

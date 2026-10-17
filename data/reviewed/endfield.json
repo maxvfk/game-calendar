@@ -38,23 +38,24 @@
       "confidence": 1
     },
     {
-      "reviewedAt": "2026-09-24T14:47:06.000Z",
+      "reviewedAt": "2026-10-17T21:56:39.000Z",
       "title": "Monumental Etching: Shadow Marked",
       "type": "challenge",
       "summary": "Limited reward window for the permanent Umbral Monument stage series Marked by Dark Shadows; closes at the October 19 server reset.",
       "startsAt": "2026-10-05T00:00:00.000Z",
       "startPrecision": "day",
-      "endsAt": "2026-10-18T19:59:00.000Z",
+      "endsAt": "2026-10-18T20:00:00.000Z",
       "endPrecision": "exact",
       "regionScoped": true,
       "regionEnds": {
-        "asia": "2026-10-18T19:59:00.000Z",
-        "europe": "2026-10-19T08:59:00.000Z",
-        "america": "2026-10-19T08:59:00.000Z"
+        "asia": "2026-10-18T20:00:00.000Z",
+        "europe": "2026-10-19T09:00:00.000Z",
+        "america": "2026-10-19T09:00:00.000Z"
       },
       "sourceUrl": "https://endfield.gryphline.com/en-us/news/5208",
       "provenanceStatus": "official",
-      "confidence": 1
+      "confidence": 1,
+      "firstSeenAt": "2026-09-24T14:47:06.000Z"
     },
     {
       "title": "Resplendent Spectrum",
