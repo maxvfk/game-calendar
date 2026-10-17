@@ -5,8 +5,9 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
 
-Status: **local repair validated; full Refresh acceptance blocked by an upstream
-Phantasia contradiction. Hosted publication verification pending.** This section
+Status: **CI/feed/build/Pages recovered and live; full Refresh acceptance remains
+blocked by a proven upstream Phantasia contradiction. Work stopped at that safe
+source blocker, not declared fully green.** This section
 is independent of Account/User S6 and Timeline M1/M2.
 
 - Baseline CURRENT main verified as `3447f4e0f5222ec62afcfae0397475dcb46cda53`;
@@ -55,16 +56,39 @@ is independent of Account/User S6 and Timeline M1/M2.
   `endfield:season-of-phantasia:2026-10-15`; no cycles were invented. Current
   cycle source is unavailable in the feed (`parsedCount: null`, no false
   confirmation), with the previously verified hosted refresh still **broken**.
-- Hosted repair PR / main CI / Pages: **pending; not claimed green**.
-  No new hosted Refresh has been dispatched at this checkpoint. Full milestone
-  acceptance is explicitly blocked by the verified source contradiction.
+- [PR #23](https://github.com/maxvfk/game-calendar/pull/23), implementation
+  `ebd48090e3d78482e55c1f66d8eea4fdc2799811`, passed
+  [PR CI 39073443428](https://github.com/maxvfk/game-calendar/actions/runs/39073443428)
+  and merged to main as `7f641cb5323e0ed8d8cc60e63b7d26b7f129a786`.
+  [Push CI/Pages 39073514856](https://github.com/maxvfk/game-calendar/actions/runs/39073514856)
+  is **success** in all three jobs: typecheck/test/feed sanity, site build,
+  Pages deploy. Hosted tests: **1054 pass / 1 optional skip / 0 fail**. The job
+  restored `refresh-state-39062823744-1`; deployment reported success at
+  `2026-10-17T22:05:03Z`.
+- The normal public URL
+  https://maxvfk.github.io/game-calendar/data/events.v1.json returned HTTP 200
+  at 22:05:23Z, `generatedAt: 2026-10-17T22:04:29.666Z`, 172 events, all seven
+  games and only the NTE `dateConflicts` notice. Its ID set and all event fields
+  except regenerated parser observation timestamps match the validated local
+  feed. The official Shadow Marked 04:00 regional ends are live; no Phantasia
+  cycles or false cycle-source freshness were published.
+- **Hosted Refresh remains blocked, not recovered.** Latest actually inspected
+  Refresh is still **39062823744 / failure**, Echoes **broken / six consecutive
+  rejections**, last accepted confirmation Oct 14 20:47:25.387Z. No new manual
+  Refresh was dispatched after proving the upstream contradiction; this uses
+  the task's explicit safe-blocker stop condition. The invalid live response
+  was captured and exercised locally, not installed as an accepted snapshot.
+  A post-repair Refresh commit and its CI/Pages are therefore **not verified**,
+  and no claim of a wholly green refresh-to-deploy chain is made.
 
-**Next concrete step for this repair:** publish the independently safe CI/data
-corrections, verify hosted CI/Pages, and stop at the source blocker. Keep Echoes
-scheduled and its broken signal visible. Once upstream provides consistent
-explicit regional dates, run normal Refresh on current main and inspect the
-actual refresh commit's CI/feed/Pages; only then close full recovery. Do not
-start another milestone or touch the private backup implementation pin.
+**Next concrete step for this repair:** obtain an upstream correction or explicit
+regional clarification of western Cycle I versus season start. Keep Echoes
+scheduled and its broken signal visible; other validated sources can publish
+through the recovered CI/Pages path under existing rules. Once the source is
+consistent, manually dispatch normal Refresh on current main (force only for the
+6h interval if needed), verify acceptance/health and the refresh commit's full
+CI/Pages, then close recovery. Work ends here at the source blocker; no other
+milestone or private backup pin change is included.
 
 ## Completed checkpoints
 
