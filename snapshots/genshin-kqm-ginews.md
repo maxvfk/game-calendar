@@ -897,56 +897,6 @@ Fixes an issue whereby after the Ice Coffin of the opponents "Glaciomancer" and 
 
 -----
 
-# [The anniversary web event "Anniversary Memories Album" has begun! Participate in the event and obtain Primogems!](archive/21874.md)
-## The anniversary web event "Anniversary Memories Album" has begun! Participate in the event and obtain Primogems!
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/24/8c95bb9e017837208588eaca4318ec62_6006694332952315255_transformed.jpg)
-
-[>> Click to Take Part in Event <<](https://act.hoyoverse.com/ys/event/e20260928-review-kkmxf9/index.html?game_biz=hk4e_global&sign_type=2&auth_appid=e20260928anniversaryh5&authkey_ver=1&utm_source=ingame&utm_medium=notice)
-
-〓Event Duration〓
-
-<t class="t_gl" contenteditable="false">2026/09/28 11:00</t> – <t class="t_gl" contenteditable="false">2026/10/18 23:59</t>
-
-〓Eligibility〓
-
-Reach Adventure Rank 10 or above
-
-〓Event Description〓
-
-Look back on your journey through Teyvat with Paimon!
-
-This event features three main activities:
-
-1. Join Paimon in "Anniversary Memories Album" and revisit some of the most memorable moments from your journey.
-
-2. Head to the "Theater of Memories" to watch a highlight reel of your adventures from the past year.
-
-3. Don't forget to visit the "Starfarer's Almanac" and find out your Adventure Style!
-
-〓Event Notes〓
-
-Please log in to the event using your HoYoverse Account and select your corresponding character in Genshin Impact to take part. This will ensure that your rewards can be sent and claimed correctly.
-
-After the event ends, you will no longer be able to take part and claim the rewards, so remember to take part in time.
-
-The in-game rewards will be distributed via in-game mail. The mail will expire after 30 days, so don't forget to claim the rewards in time.
-
-This web event is provided purely for entertainment. The content of the event does not represent any actual story or settings in the game. It is not indicative of any related gameplay features in Genshin Impact.
-
-〓Event Rewards〓
-
-1. Browse the Anniversary Memories Album: Obtain Primogem ×60 and Hero's Wit ×5
-
-2. Watch the Theater of Memories performance: Obtain Primogems ×60 and Mystic Enhancement Ore ×5
-
-3. Successfully generate your Adventure Style: Obtain Primogems ×40 and Sanctifying Unction ×5
-
-4. Share any content from the event page: Obtain Mora ×20,000
-
-There are also hidden Easter eggs to discover, with rewards including Primogems ×20 and more~
-
------
-
 # [HoYoLAB Community "Daily Check-In" Feature](archive/21986.md)
 ## Daily Check-In Feature
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2022/12/06/d15f6c61e1d3d62d5e269360aaef7285_3515093605882829658.png)
