@@ -1,3 +1,33 @@
+# ["Carefree Snowball Fight" Event: Fun Throwing Challenge](archive/21891.md)
+## Carefree Snowball Fight
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/684d82e66f2ddec8c156b9f13f5dc991_4296667567912849878_transformed.jpg)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/08/21/c369da49c6d1d95455e84e9d1c564f8e_2780252075207902140_transformed.png)
+
+〓Event Duration〓
+
+<t class="t_lc" contenteditable="false">2026/10/21 10:00</t> – <t class="t_lc" contenteditable="false">2026/11/02 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 20 or above
+
+Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
+
+Complete the "Gunfire in the Silent Lands" quest of the Archon Quest Chapter VII: Act I "Everwinter Without Mercy."
+
+〓Event Details〓
+
+● After the event starts, Travelers will need to enter the challenge in Co-Op Mode and throw snowballs to knock down as many Oddowls as possible within the time limit. As the snowball fight progresses, Wonderbeets will also join the fray. Stand near them to cheer them on, and gain extra buffs once cheering is complete.
+
+● Complete various stage challenges to earn Snowball Cheer. Accumulate Snowball Cheer and reach the specified amounts to claim the corresponding rewards.
+
+● Starting from the first day of this event, Snowball Cheer score is capped at 2,000 points. The cap will rise on Day 3 and again on Day 5, reaching a maximum of 6,000 points.
+
+-----
+
 # ["Predictive Victory Dynamics" Event: Predict the Outcome of Battles](archive/21887.md)
 ## Predictive Victory Dynamics
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/5d6d4968b2e59e6f3346af687966bd28_5852306448032983720_transformed.jpg)
