@@ -1,6 +1,6 @@
 # Timeline Readability M1 — Recognition Metadata Contract
 
-Status: **deferred — do not start until Account/User S6 work is complete or explicitly cleared by the coordinating project chat**  
+Status: **ready — Account/User S6a completed on 2026-10-19 and the coordinating project chat explicitly cleared Timeline work; S6b is separate/non-blocking**  
 Type: bounded implementation milestone  
 Depends on: completed `docs/tasks/TIMELINE-READABILITY-UX-RESEARCH.md`  
 Next milestone: `TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md`
@@ -11,7 +11,7 @@ Continue `maxvfk/game-calendar` from the CURRENT `main`.
 
 This is **Timeline Readability implementation milestone M1 only: Recognition metadata contract**.
 
-Do not start this milestone until the currently active Account/User database and backup/recovery work has been completed or explicitly cleared by the coordinating project chat.
+The Account/User database + backup/recovery blocker is cleared: S6a completed on 2026-10-19. S6b monitoring/cache-removal hardening is a separate milestone and must not be pulled into M1.
 
 Before making changes:
 
