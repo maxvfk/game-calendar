@@ -1150,7 +1150,7 @@ pre-public implementation/audit work, immediately before broad link sharing.
 
 ## Timeline Readability / Recognition UX
 
-Status: **research complete; implementation deferred until Account/User S6 is complete or explicitly cleared**.
+Status: **research complete; Timeline M1 is cleared to start. Account/User S6a completed on 2026-10-19; S6b is separate/non-blocking.**
 
 - A five-step UX research task was completed and reviewed in `docs/tasks/TIMELINE-READABILITY-UX-RESEARCH.md`.
 - The selected direction is **Candidate A′ — Sticky semantic bars**:
@@ -1165,8 +1165,8 @@ Status: **research complete; implementation deferred until Account/User S6 is co
 - Implementation is split into two bounded tasks and intentionally parked:
   1. `docs/tasks/TIMELINE-READABILITY-M1-RECOGNITION-METADATA.md` — additive semantic data contract only;
   2. `docs/tasks/TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md` — Timeline rendering/navigation/accessibility, after merged M1.
-- M1/M2 must not start automatically while S6 remains active. Both require a fresh CURRENT-main check before implementation.
+- The previous Account/User blocker is cleared by completed S6a. S6b monitoring/cache-removal hardening is separate and does not block M1/M2. Both Timeline milestones still require a fresh CURRENT-main check before implementation.
 - The feedback backlog was reconciled on 2026-10-06. Three small UI fixes remain open and unsequenced: mixed reset attribution, explicit Event Detail close/Back dismissal, and `All types` clear-all. Weekly separators remain observed. Event artwork, recognition-first Event Detail redesign, per-game daily passes and any return to type grouping remain larger/deferred work.
 - The original featured-subject feedback also mentioned `Next Up`/checklist surfaces. M1/M2 cover the semantic contract + Timeline only, so those additional compact surfaces remain an explicit follow-up and must not be silently considered resolved when M2 lands.
 
-Next concrete step for this track: **none until S6 is complete/cleared**. Then start Timeline Readability M1 from CURRENT `main`.
+Next concrete step for this track: **start Timeline Readability M1 from CURRENT `main`**. Do not fold S6b into that milestone.
