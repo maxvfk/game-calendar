@@ -1,6 +1,6 @@
 # Improvement backlog
 
-Last full coordination review: **2026-10-06**. The completed Timeline readability research and its deferred implementation tasks are linked below; Account/User S6 remains ahead of those implementation milestones.
+Last full coordination review: **2026-10-19**. Account/User S6a is complete; S6b remains separate/non-blocking. Timeline M1 is now eligible to start from CURRENT `main`.
 
 Intake for observations from normal use on phone and desktop. Discuss and
 refine feedback in ChatGPT before moving an item into an implementation group.
@@ -140,6 +140,24 @@ Important scope clarification:
 - The Event Detail redesign is **not** part of M1/M2.
 - No implementation should begin automatically from this decision; CURRENT `main` and S6 status must be re-checked first.
 
+## Pre-public release gate — Google OAuth publishing
+
+- **Decision:** keep the current controlled/testing OAuth setup during
+  development. Do not recreate the existing owner/wife Supabase users.
+- **Trigger:** immediately before the calendar is shared in the intended open
+  form — "here is the link; sign in with Google and use it" — without manually
+  pre-authorizing each recipient.
+- **Required check:** re-read current Google/Supabase OAuth guidance; confirm the
+  app still requests only identity scopes; review Audience/Branding, redirect
+  URIs and Supabase redirect configuration; determine any current verification
+  or policy requirements.
+- **Action after the check:** move Google OAuth to **Publish app / In
+  production**, then smoke a genuinely new Google account from the public Pages
+  URL and verify isolated profile creation, sync and sign-out/in without
+  affecting existing users.
+- **Scope boundary:** this is a release/configuration gate, not a user-data
+  migration and not a blocker for Timeline M1/M2 or current household use.
+
 ## Feedback-chat reconciliation — 2026-10-06
 
 The separate feedback chat's original eight recognition/readability observations are all accounted for:
@@ -163,7 +181,7 @@ The later small feedback items are also still live and confirmed against current
 
 ## Candidates before Astra audit
 
-Approved but intentionally blocked behind Account/User S6:
+Approved and now unblocked by completed Account/User S6a:
 
 - **Timeline Readability M1 — Recognition Metadata Contract**  
   `docs/tasks/TIMELINE-READABILITY-M1-RECOGNITION-METADATA.md`
