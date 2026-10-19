@@ -942,9 +942,10 @@ S6 had not started at that closure; realtime and multi-profile UI remain outside
 
 ## Account Sync — S6a: private backup + recovery
 
-Status: **implemented and merged; hosted backup acceptance and recovery drill pending**.
-Do not mark S6a complete merely because the scripts/local synthetic drill pass.
-S5/S5.1 remain closed; S6b monitoring/cache-removal work has not started.
+Status: **complete (2026-10-19).** Hosted encrypted backups, real-key
+validation, a controlled single-profile production restore and a fresh deployed
+app read all passed. See the 2026-10-19 drill entry at the end of this section.
+S5/S5.1 remain closed; S6b monitoring/cache-removal work is separate and has not started.
 
 - New short-lived branch `account-sync-s6a-backup` from verified public main
   `c60cba50ba7cd66a7150c33f0a0133f4b8fc72a5` on 2026-10-03. The separate private
@@ -1075,17 +1076,41 @@ S5/S5.1 remain closed; S6b monitoring/cache-removal work has not started.
   reproduced on untouched current main (**1044 pass / 1 skip / 1 fail**).
   No source/test bypass or production execution was added.
 
-Next concrete step after public/private reviewed PRs merge: manually rerun
-**Encrypted personal-data backup** on private `main`, using the new immutable
-public implementation pin. Keep existing `BACKUP_DATABASE_URL`, `AGE_RECIPIENT`
-and `SUPABASE_PROJECT_REF` unchanged. This follow-up does not run or claim
-production acceptance.
-**Verified hosted gates: TLS and semantic schema/project preflight on run
-37643339951. Remaining unverified gates: complete backup-role/policy preflight,
-real encrypted hosted snapshot, real-key decryption/validation, production
-dry-run/controlled restore and fresh deployed app read.** Use only the
-disposable Google test account for the drill, and record actual results before
-closing S6a. No credentials should be pasted into chat.
+- Hosted backup acceptance: with the role-guard fix pinned at
+  `5b2a2b048bae53f32e464b0a91a8f5d9f354b669`, the private backup passed full
+  role/policy/project/schema preflight and committed its first encrypted
+  daily+monthly pair on 2026-10-07 (manual run `37650989484`). Scheduled runs
+  succeeded on 2026-10-08 and every day 2026-10-10 → 2026-10-19. One isolated
+  scheduled failure on 2026-10-09 (`37899103637`, generic sanitized export error,
+  no commit, next run green) is left for S6b monitoring.
+- Production recovery drill on 2026-10-19 followed
+  [S6A-LOCAL-RECOVERY-DRILL.md](tasks/S6A-LOCAL-RECOVERY-DRILL.md) on the
+  operator's trusted PC, from public main `9465f63` and private main `a30b324`:
+  - The 2026-10-19 production snapshot (run `39208997141`) was decrypted and
+    fully validated with the operator's **real** age key in a recovery worktree
+    at its manifest `sourceRevision`. No plaintext was written to disk.
+  - Disposable-account marker state was captured by a fresh pre-change backup
+    (run `39265659289`, private commit `aff3030`), preserved outside the repos
+    and validated. The markers were then changed or removed, and a post-change
+    safety backup was taken (run `39266225373`, commit `0bb7963`).
+  - With the account quiesced, a `--profile` (exactly one disposable default
+    profile) `--dry-run` passed every scope check and showed seven-table plan
+    counts 1/10/3/1/18/3/2 (profiles/progress/daily_marks/ignored/preferences/
+    custom_games/custom_events). After explicit operator approval, a single
+    `--write` committed and verified every row, and a post-write dry-run matched.
+    The restore credential stayed in local process env only and was removed
+    after each run.
+  - A fresh browser profile with cloud-only login showed every pre-change
+    marker restored (progress/note, daily, ignored, theme, custom game/event).
+    The other account was unchanged.
+  - Sanitized record: private
+    `game-calendar-backups/reports/2026-10-19-s6a-local-recovery-drill.md`.
+    The private README Evidence table was reconciled to match.
+
+**S6a is complete.** No code, schema, workflow, credential or pin changed
+during the drill. S6b (monitoring, cache removal) is a separate milestone and
+has not started. Timeline M1/M2 still need their own explicit start from
+CURRENT `main`.
 
 
 ## Timeline Readability / Recognition UX
