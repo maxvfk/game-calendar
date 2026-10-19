@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-10-18 (Moscow; source and hosted checks 2026-10-18 UTC). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-19 (Moscow; S6a production recovery drill complete). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
@@ -1111,6 +1111,41 @@ S5/S5.1 remain closed; S6b monitoring/cache-removal work is separate and has not
 during the drill. S6b (monitoring, cache removal) is a separate milestone and
 has not started. Timeline M1/M2 still need their own explicit start from
 CURRENT `main`.
+
+
+## Pre-public release gate — Google OAuth publishing
+
+Status: **deferred until the main pre-public product work is complete; not a
+blocker for current owner/household use or Timeline M1/M2.**
+
+- The existing Google/Supabase users are real production data identities. Do not
+  recreate, remap or migrate the owner's or wife's users merely because the
+  Google OAuth application's current publishing status was configured for
+  testing during setup.
+- Keep the current restricted/testing OAuth configuration while the calendar is
+  still being developed and used by the existing small trusted set.
+- Before the intended public-sharing scenario — **"here is the link; sign in
+  with your Google account and use it" without manually pre-authorizing each
+  person** — run a fresh Google OAuth production-readiness check against current
+  Google/Supabase guidance.
+- That check must confirm the requested Google scopes remain identity-only
+  (`openid`, email/profile equivalents), review Audience/Branding, authorized
+  redirect URIs, Supabase Site URL/redirect allow-list and any then-current
+  policy/verification requirements. Do not add broader Google API scopes as part
+  of publishing.
+- Only after that review should the OAuth app be moved to
+  **Publish app / In production**. Publishing is an OAuth-access/configuration
+  change, not a migration of Supabase users or calendar data.
+- After publishing, perform a fresh-account production smoke with a Google
+  account that was not previously part of the controlled test set: sign in from
+  the public Pages URL, create the new isolated default profile, sync a small
+  disposable change, sign out/in, and verify existing users remain isolated.
+- If Google introduces a verification, branding or policy requirement that is
+  not satisfied by the identity-only flow, stop and review it rather than
+  weakening auth boundaries or broadening scopes.
+
+**Next concrete step for this gate:** none now. Revisit after the planned
+pre-public implementation/audit work, immediately before broad link sharing.
 
 
 ## Timeline Readability / Recognition UX
