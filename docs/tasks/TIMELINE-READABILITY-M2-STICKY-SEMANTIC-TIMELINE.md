@@ -1,6 +1,6 @@
 # Timeline Readability M2 — Sticky Semantic Timeline
 
-Status: **deferred — do not start until Account/User S6 work is complete or explicitly cleared, and M1 is merged**  
+Status: **deferred only on M1 — Account/User S6a completed on 2026-10-19 and S6b is separate/non-blocking; start after M1 is merged**  
 Type: bounded implementation milestone  
 Depends on:
 - completed `docs/tasks/TIMELINE-READABILITY-UX-RESEARCH.md`
@@ -14,7 +14,7 @@ This is **Timeline Readability implementation milestone M2: Sticky semantic Time
 
 Prerequisites:
 
-- Account/User database work currently ahead of this milestone has been completed or explicitly cleared by the coordinating project chat;
+- Account/User S6a is complete and the coordinating project chat has cleared Timeline work; S6b is separate/non-blocking;
 - Timeline Readability M1 — Recognition Metadata Contract has been merged;
 - `docs/tasks/TIMELINE-READABILITY-UX-RESEARCH.md` remains the authoritative UX specification.
 
