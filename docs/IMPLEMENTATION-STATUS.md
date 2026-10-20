@@ -1325,12 +1325,26 @@ Status: **research and M1 complete; M2 implemented/automatically validated, requ
   long off-screen-end bars, minimum bars, exact/day/unknown ends, ordered
   subjects/items, title fallback, upcoming, completion/conflict and dense
   seven-game data. This is browser automation, **not a real-device manual pass**.
-- No intentional UX-spec divergence. Hosted PR/CI/Pages delivery evidence is
-  recorded in the M2 PR. **Required manual gate remains open:** the operator
-  must run the final UX spec section 14 on a real phone and desktop after
-  deployment. Real touch/scroll behavior, phone text scaling and operator
-  accessibility/readability acceptance have not been claimed as passed.
+- No intentional UX-spec divergence. [PR #31](https://github.com/maxvfk/game-calendar/pull/31)
+  merged as `98506fb946d9c6457fc84122251474d89766933f`.
+  [Main CI/build/Pages](https://github.com/maxvfk/game-calendar/actions/runs/39507927343)
+  succeeded; public index/JS/feed returned HTTP 200 with the M2 implementation.
+- **Partial real-phone manual evidence — 2026-10-21:** the operator supplied
+  an Android Chrome screenshot of the deployed Timeline in `Ending soonest`.
+  The visible current-moment line is near 20% from the left; game/identity text,
+  title truncation and width-dependent deadlines are visible. This static image
+  alone does not prove initial-mount or Jump behavior.
+  The operator then explicitly confirmed that zoom preserves the inspected
+  moment, and switching `By game` / `Ending soonest` and filters preserves
+  position without returning to today. These phone navigation checks **passed**.
+- **Required manual gate remains open.** Upcoming-toggle stability, explicit
+  `Jump to today`, the remaining phone semantic/lifecycle/readability cases
+  (including off-screen-end stickiness and exact/day/unknown ends), and the
+  desktop matrix have not been separately confirmed. Do not infer a full
+  section-14 pass or accessibility/text-scaling acceptance from the screenshot
+  and the two navigation confirmations.
 
-**Next concrete step:** run the deployed M2 phone + desktop smoke matrix and
-record device/browser, results and any concrete failure. Only then close M2.
+**Next concrete step:** finish only the unconfirmed phone + desktop cases in
+the final UX spec section 14 and record the results. Do not repeat the confirmed
+phone zoom/group/filter checks without a new failure. Only then close M2.
 Do not start S6b, broad metadata population or other milestones here.
