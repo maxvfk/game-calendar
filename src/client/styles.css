@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
 /*
- * Two orthogonal colour systems.
+ * Three independent colour systems.
  *
  *   hue  → WHICH GAME  (identity; lives in games.ts, applied inline)
  *   heat → HOW URGENT  (state; the ramp below)
+ *   type → WHAT KIND   (category; text badges only)
  *
  * Keeping them separate is what lets one glance answer "whose event is this?"
  * and "how long have I got?" at the same time. Never colour an urgency element
@@ -63,6 +64,13 @@
  */
 :root {
   color-scheme: dark;
+  /* Always emitted: category tokens are selected dynamically by TypeBadge. */
+  --color-type-banner: #c4b5fd;
+  --color-type-event: #67e8f9;
+  --color-type-challenge: #fdba74;
+  --color-type-login: #86efac;
+  --color-type-shop: #f9a8d4;
+  --color-type-maintenance: #cbd5e1;
 }
 
 :root[data-theme="light"] {
@@ -97,6 +105,13 @@
   --color-near: #2b62c6;
   --color-soon: #8a6008;
   --color-critical: #c81e3c;
+
+  --color-type-banner: #6d28d9;
+  --color-type-event: #0e6478;
+  --color-type-challenge: #9a3412;
+  --color-type-login: #166534;
+  --color-type-shop: #9d174d;
+  --color-type-maintenance: #334155;
 }
 
 html,

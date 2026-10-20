@@ -101,33 +101,49 @@ describe("Timeline semantic payload", () => {
 
 describe("mode-specific measured fit", () => {
   const widths: ContentWidths = { game: 45, type: 20, identity: 100, deadline: 65, compactUnknown: 7, ellipsis: 9, gap: 6 };
-  test("By game drops type, then known date, then truncates identity", () => {
+  test("By game drops known date, truncates identity, then keeps type alone", () => {
     expect(fitTimelineContent(197, "game", false, widths)).toEqual({ type: true, game: 0, identity: 100, deadline: "full" });
-    expect(fitTimelineContent(180, "game", false, widths)).toEqual({ type: false, game: 0, identity: 100, deadline: "full" });
-    expect(fitTimelineContent(150, "game", false, widths)).toEqual({ type: false, game: 0, identity: 100, deadline: null });
-    expect(fitTimelineContent(50, "game", false, widths).identity).toBe(50);
-    expect(fitTimelineContent(8, "game", false, widths).identity).toBe(0);
+    expect(fitTimelineContent(180, "game", false, widths)).toEqual({ type: true, game: 0, identity: 100, deadline: null });
+    expect(fitTimelineContent(126, "game", false, widths)).toEqual({ type: true, game: 0, identity: 100, deadline: null });
+    expect(fitTimelineContent(50, "game", false, widths)).toEqual({ type: true, game: 0, identity: 24, deadline: null });
+    expect(fitTimelineContent(20, "game", false, widths)).toEqual({ type: true, game: 0, identity: 0, deadline: null });
+    expect(fitTimelineContent(19, "game", false, widths)).toEqual({ type: false, game: 0, identity: 0, deadline: null });
   });
-  test("Ending soonest keeps game + identity before repeating a known date", () => {
+  test("Ending soonest drops known date, then identity, then game, before type", () => {
     expect(fitTimelineContent(250, "ending", false, widths).type).toBe(true);
-    expect(fitTimelineContent(230, "ending", false, widths).type).toBe(false);
-    expect(fitTimelineContent(160, "ending", false, widths)).toEqual({ type: false, game: 45, identity: 100, deadline: null });
-    expect(fitTimelineContent(90, "ending", false, widths)).toEqual({ type: false, game: 45, identity: 39, deadline: null });
-    expect(fitTimelineContent(30, "ending", false, widths)).toEqual({ type: false, game: 30, identity: 0, deadline: null });
+    expect(fitTimelineContent(230, "ending", false, widths)).toEqual({ type: true, game: 45, identity: 100, deadline: null });
+    expect(fitTimelineContent(177, "ending", false, widths)).toEqual({ type: true, game: 45, identity: 100, deadline: null });
+    expect(fitTimelineContent(160, "ending", false, widths)).toEqual({ type: true, game: 45, identity: 0, deadline: null });
+    expect(fitTimelineContent(71, "ending", false, widths)).toEqual({ type: true, game: 45, identity: 0, deadline: null });
+    expect(fitTimelineContent(30, "ending", false, widths)).toEqual({ type: true, game: 0, identity: 0, deadline: null });
+    expect(fitTimelineContent(19, "ending", false, widths)).toEqual({ type: false, game: 0, identity: 0, deadline: null });
   });
-  test("unknown survives identity truncation and the physical minimum", () => {
-    expect(fitTimelineContent(50, "game", true, widths)).toEqual({ type: false, game: 0, identity: 37, deadline: "compact" });
+  test("unknown uses '?' alongside high-priority type; accessibility never loses it", () => {
+    expect(fitTimelineContent(50, "game", true, widths)).toEqual({ type: true, game: 0, identity: 11, deadline: "compact" });
     expect(fitTimelineContent(8, "game", true, widths)).toEqual({ type: false, game: 0, identity: 0, deadline: "compact" });
-    expect(fitTimelineContent(90, "ending", true, widths)).toEqual({ type: false, game: 45, identity: 26, deadline: "compact" });
-    expect(fitTimelineContent(30, "ending", true, widths)).toEqual({ type: false, game: 17, identity: 0, deadline: "compact" });
+    expect(fitTimelineContent(90, "ending", true, widths)).toEqual({ type: true, game: 45, identity: 0, deadline: "compact" });
+    expect(fitTimelineContent(33, "ending", true, widths)).toEqual({ type: true, game: 0, identity: 0, deadline: "compact" });
+    for (const mode of ["game", "ending"] as const) {
+      expect(fitTimelineContent(20, mode, true, widths)).toEqual({ type: true, game: 0, identity: 0, deadline: null });
+      expect(fitTimelineContent(7, mode, true, widths).deadline).toBe("compact");
+      expect(fitTimelineContent(0, mode, true, widths).deadline).toBe(null);
+    }
   });
   test("fit scales with actual text metrics, not a desktop threshold", () => {
     for (const scale of [0.8, 1, 1.5, 2]) {
       const scaled = Object.fromEntries(Object.entries(widths).map(([key, value]) => [key, value * scale])) as unknown as ContentWidths;
-      const fit = fitTimelineContent(90 * scale, "ending", true, scaled);
+      const fit = fitTimelineContent(190 * scale, "ending", true, scaled);
       expect(fit.game).toBeCloseTo(45 * scale);
-      expect(fit.identity).toBeCloseTo(26 * scale);
+      expect(fit.identity).toBeCloseTo(100 * scale);
+      expect(fit.type).toBe(true);
       expect(fit.deadline).toBe("compact");
+    }
+  });
+  test("both modes retain the whole compact badge whenever its measured width fits", () => {
+    for (const mode of ["game", "ending"] as const) for (const unknown of [false, true]) {
+      for (let room = 0; room < 300; room++) {
+        expect(fitTimelineContent(room, mode, unknown, widths).type).toBe(room >= widths.type);
+      }
     }
   });
   test("no mode/width combination overruns its measured budget", () => {

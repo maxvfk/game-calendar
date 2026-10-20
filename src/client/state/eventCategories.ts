@@ -25,6 +25,11 @@ export function categoryShort(type: EventType): string {
   return EVENT_CATEGORIES.find((category) => category.id === categoryFor(type))!.short;
 }
 
+/** Theme-aware category tone; independent of game identity and urgency. */
+export function categoryColor(type: EventType): string {
+  return `var(--color-type-${categoryFor(type)})`;
+}
+
 /** A fresh reader sees everything; an empty selection is a deliberate choice. */
 export function allCategories(): EventCategory[] {
   return EVENT_CATEGORIES.map((category) => category.id);

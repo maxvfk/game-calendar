@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-10-21 (Moscow; Timeline M2 implemented/automatically validated, manual smoke gate open). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-21 (Moscow; M2 phone-smoke type-priority/colour follow-up validated, remaining manual gate open). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
@@ -1284,7 +1284,8 @@ Status: **research and M1 complete; M2 implemented/automatically validated, requ
   accessibility. Regional exact ends use the resolved clock, not the fallback
   date. Unknown ends show `end unknown` / `?`, accessible as `End unknown`;
   cross-year dates include the year. No end instant/date is invented.
-- Actual DOM text/badge metrics and the bar/viewport intersection drive fit.
+- Initial M2 fit (superseded by the phone-smoke amendment below): actual DOM
+  text/badge metrics and the bar/viewport intersection drive fit.
   `By game` drops visual type, then known deadline, before truncating identity.
   `Ending soonest` keeps game + identity before a known deadline; compact game
   text survives when identity cannot fit. Unknown-end tokens outlast known
@@ -1344,7 +1345,54 @@ Status: **research and M1 complete; M2 implemented/automatically validated, requ
   section-14 pass or accessibility/text-scaling acceptance from the screenshot
   and the two navigation confirmations.
 
-**Next concrete step:** finish only the unconfirmed phone + desktop cases in
-the final UX spec section 14 and record the results. Do not repeat the confirmed
-phone zoom/group/filter checks without a new failure. Only then close M2.
+### M2 phone-smoke follow-up — TypeBadge priority and category colours
+
+- Baseline CURRENT main: `f2136e171e2e37e207e1bc1ee539ad083d3b679d`;
+  fresh branch `fix/timeline-type-priority-colors`. This is a bounded M2
+  amendment requested after real-phone review, not a new milestone. The updated
+  M2 task explicitly supersedes the original research's type-first removal
+  rules; the rest of Candidate A′ remains in force.
+- Timeline fit retains the complete measured compact badge until that badge
+  itself cannot fit in the payload budget (after existing conflict/urgency
+  reservations). `By game`: type + identity + date → type + identity → type +
+  truncated identity → type → bare. `Ending soonest`: game + type + identity +
+  date → game + type + identity → game + type → type → bare. A badge is never
+  squeezed or truncated to fit. One-line height and `MIN_BAR=34` are unchanged.
+- Unknown-end text still says `end unknown` when the full payload fits. Below
+  that, reserve compact `?` beside type before allocating names. At the
+  type-only limit, the marker can yield visually; below badge width `?` may
+  survive alone. Full accessible type/identity/game/`End unknown` semantics
+  remain at every width. No deadline/date/precision or old-campaign geometry
+  logic changed; no fabricated endpoint was introduced.
+- Shared `TypeBadge` now uses stable theme-aware category tones: Banner violet,
+  Event cyan, Challenge orange, Login green, Shop pink, Maintenance slate.
+  `story` / `rerun` / `other` remain Event. These tokens are independent of
+  game hues and urgency. Full/compact text and `Type: …` accessible labels
+  remain; colour is supplementary. The same component supplies Timeline,
+  EventRow, NextUp and EventDetail. Degradation outside Timeline is unchanged.
+- Bun **1.3.14**: frozen install, typecheck, full test suite and build pass:
+  **1098 pass / 1 optional age skip / 0 fail** (1099 tests, 54 files).
+  Focused semantic/fit/category/mounted-navigation coverage: **23 pass**.
+  The first full run hit the previously observed PGlite hook timeout in
+  `supabase-db.test.ts`; an unchanged full rerun passed. No timeout/test bypass
+  or account/Supabase change was made. Dependencies/lockfile are unchanged.
+- Existing responsive browser sweep was rerun and extended with real measured
+  badge-retention assertions: **272 Chromium assertions**, widths
+  320/390/768/1440, both modes, five zooms, three scroll offsets, no re-jump,
+  inspected-moment zoom, one-line height and containment. Both theme palettes
+  were visually inspected. Badge text/background contrast measured **≥7.53:1
+  dark / ≥4.82:1 light**; forced-colours testing retained text. Built-app smoke
+  passed on the actual offline seven-game feed, including all six live
+  unknown-end rows. Feed remains **181 events / 7 games / 1 existing conflict**.
+- No navigation, ingestion/source-health, personal data/preferences, IDs,
+  Account/Supabase, artwork, type grouping or Event Detail layout change.
+  The already-confirmed phone zoom/group/filter results above remain valid.
+  Hosted PR/merge/CI/Pages evidence is recorded in the follow-up PR.
+
+**Next concrete step:** after deployment, verify the revised type priority and
+category colours on a real phone in both modes (including narrow/unknown-end
+bars and light/dark themes), then finish the previously unconfirmed phone
+Jump/upcoming/semantic cases and desktop smoke. Record results; only then close
+M2. Do not repeat confirmed phone zoom/group/filter checks without a new failure.
+No implementation or automated-validation work remains pending after delivery.
 Do not start S6b, broad metadata population or other milestones here.
