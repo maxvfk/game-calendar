@@ -36,7 +36,9 @@
  *   - A source failing `BROKEN_AFTER_FAILURES` cycles in a row is not "down",
  *     it is broken, and the feed has been quietly serving a stale fixture for a
  *     day and a half. That is reported as `broken` and annotated, and the
- *     workflow turns the run red *after* committing what did work. Exiting
+ *     workflow turns the run red on the transition into broken, *after*
+ *     committing what did work. A continuous outage stays visibly broken
+ *     without sending another failure alert every cycle. Exiting
  *     non-zero here instead would skip the commit and throw the good pages away.
  *   - Hard failures (bad arguments, every source failing, a feed that will not
  *     rebuild) exit non-zero so CI stops before committing anything.
@@ -104,6 +106,8 @@ export interface RefreshSummary {
    * cannot cost a working one its snapshot.
    */
   broken: BrokenSource[];
+  /** Sources crossing the persisted failure threshold during this run. */
+  newlyBroken: BrokenSource[];
   /** Set when the run should exit non-zero. */
   hardFailure: string | null;
   /**
@@ -193,6 +197,7 @@ export async function runRefresh(
     confirmed: 0,
     warnings: [],
     broken: [],
+    newlyBroken: [],
     hardFailure: null,
     assumedRobots: [],
     forced: [],
@@ -230,6 +235,9 @@ export async function runRefresh(
       }
       adapter = { ...candidate, url: echoesSeasonUrl(season) };
     }
+    // Compare persisted health before/after the cycle. An interval skip must
+    // retain standing health without manufacturing a new transition.
+    const previousHealth = await options.store.readState(adapter.id);
     // One source can never take the cycle down with it. Everything inside
     // refreshOne that can fail is handled there; this is the backstop that
     // keeps an unforeseen throw from costing every source after this one its
@@ -274,12 +282,16 @@ export async function runRefresh(
     if (!options.dryRun) {
       const health = await options.store.readState(adapter.id);
       if (health.consecutiveFailures >= BROKEN_AFTER_FAILURES) {
-        summary.broken.push({
+        const broken = {
           sourceId: adapter.id,
           consecutiveFailures: health.consecutiveFailures,
           lastStatus: health.lastStatus,
           lastConfirmedAt: health.lastConfirmedAt,
-        });
+        };
+        summary.broken.push(broken);
+        if (previousHealth.consecutiveFailures < BROKEN_AFTER_FAILURES) {
+          summary.newlyBroken.push(broken);
+        }
       }
     }
   }
@@ -690,6 +702,8 @@ export function annotations(summary: RefreshSummary): string[] {
   for (const b of summary.broken) {
     lines.push(
       `::error title=${b.sourceId} has stopped answering::` +
+        (summary.newlyBroken.some((source) => source.sourceId === b.sourceId)
+          ? "Newly broken. " : "Still broken. ") +
         `${b.consecutiveFailures} cycles failing in a row; ` +
         `last status ${b.lastStatus ?? "none"}; ` +
         `last confirmed ${b.lastConfirmedAt ?? "never"}. ` +
@@ -705,18 +719,22 @@ export function annotations(summary: RefreshSummary): string[] {
 /** `$GITHUB_STEP_SUMMARY` markdown: one row per source, statuses included. */
 export function stepSummary(summary: RefreshSummary): string {
   const cell = (text: string) => text.replaceAll("|", "\\|");
+  const broken = new Set(summary.broken.map((source) => source.sourceId));
+  const newlyBroken = new Set(summary.newlyBroken.map((source) => source.sourceId));
   const rows = summary.outcomes.map(
     (o) =>
-      `| \`${o.sourceId}\` | ${o.result} | ${o.status ?? "—"} | ` +
+      `| \`${o.sourceId}\` | ${o.result} | ` +
+      `${newlyBroken.has(o.sourceId) ? "broken (new)" : broken.has(o.sourceId) ? "broken (ongoing)" : "—"} | ` +
+      `${o.status ?? "—"} | ` +
       `${o.eventCount ?? "—"} | ${cell(o.note)} |`,
   );
 
   const head =
     `### Refresh: ${summary.changed} changed, ` +
     `${summary.confirmed}/${summary.attempted} confirmed, ` +
-    `${summary.broken.length} broken\n\n` +
-    `| source | result | status | events | note |\n` +
-    `| --- | --- | --- | --- | --- |\n`;
+    `${summary.broken.length} broken, ${summary.newlyBroken.length} newly broken\n\n` +
+    `| source | result | health | status | events | note |\n` +
+    `| --- | --- | --- | --- | --- | --- |\n`;
 
   const tail =
     summary.hardFailure === null
@@ -729,8 +747,8 @@ export function stepSummary(summary: RefreshSummary): string {
 /**
  * `$GITHUB_OUTPUT` values the workflow branches on.
  *
- * `broken` is deliberately an output rather than an exit code: the workflow has
- * to commit the sources that did work before it turns the run red.
+ * Health is deliberately an output rather than an exit code: the workflow has
+ * to commit the sources that did work before newly broken sources turn it red.
  */
 export function outputs(summary: RefreshSummary): string[] {
   return [
@@ -738,6 +756,7 @@ export function outputs(summary: RefreshSummary): string[] {
     `attempted=${summary.attempted}`,
     `confirmed=${summary.confirmed}`,
     `broken=${summary.broken.length}`,
+    `newlyBroken=${summary.newlyBroken.length}`,
   ];
 }
 
@@ -1030,7 +1049,8 @@ async function main(): Promise<number> {
 
   console.log(
     `\n${summary.changed} changed, ${summary.confirmed}/${summary.attempted} confirmed, ` +
-      `${summary.warnings.length} warnings, ${summary.broken.length} broken`,
+      `${summary.warnings.length} warnings, ${summary.broken.length} broken, ` +
+      `${summary.newlyBroken.length} newly broken`,
   );
   // One line per warning, and every warning is in `summary.warnings` — printing
   // a category separately here once double-reported the assumed-robots hosts
@@ -1060,9 +1080,8 @@ async function main(): Promise<number> {
     return 1;
   }
 
-  // Broken sources exit 0 on purpose. The workflow reads the `broken` output and
-  // fails the run *after* committing, so one dead wiki cannot stop nine live
-  // ones from reaching the site.
+  // Broken sources exit 0 on purpose. The workflow reads `newlyBroken` and fails
+  // on transitions *after* committing. Persistent outages remain annotated.
   return 0;
 }
 
