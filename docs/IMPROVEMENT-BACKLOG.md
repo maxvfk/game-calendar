@@ -19,6 +19,15 @@ For each item, use this compact format:
 
 ## Observed issues / feedback
 
+
+- **Title:** Audit date/time precision downgrades against exact source timestamps
+  - **Observation:** phone smoke exposed a CZN banner case where the calendar intentionally shows a day-only deadline even though the live game countdown and the current Prydwen snapshot both indicate an exact end instant. Sereniel and Peko currently carry `data-end-global="2026-10-21T00:00:00.000Z"`, while the parser deliberately ignores machine timestamps because earlier Prydwen timestamps had disagreed with official STOVE maintenance boundaries.
+  - **Desired behavior:** systematically review all similar ingestion paths where a source exposes an exact timestamp/countdown but the calendar intentionally downgrades it to `day` or `unknown`. Promote precision only when the exact boundary is independently trustworthy; otherwise keep the conservative precision and document why.
+  - **Area:** data clarity / ingestion / source quality
+  - **Priority:** pre-Astra data-quality follow-up; do not fold into Timeline M2
+  - **Status:** refined
+  - **Notes / constraints:** start with CZN banners (Sereniel/Peko as the concrete trigger), then search other parsers/reviewed-data paths for explicit precision downgrades or ignored machine timestamps. Do not globally trust hidden/countdown timestamps merely because they exist. Preserve event IDs, provenance, source-health/LKG rules and fail closed on conflicting evidence. Also consider adding reliable `recognitionSubjects` while touching a reviewed record, but keep recognition metadata separate from timestamp trust.
+
 - **Title:** Stronger weekly separators on the daily Timeline
   - **Observation:** adjacent weeks are not visually distinct enough when scanning the daily Timeline.
   - **Desired behavior:** make the boundary between Sunday and Monday more visible than ordinary day separators, for example with a slightly thicker and/or more contrasting divider.
