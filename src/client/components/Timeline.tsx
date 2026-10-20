@@ -449,10 +449,13 @@ export function Timeline({
                       // it — growing `overflow-auto`'s scrollWidth into empty space
                       // with no gridlines or axis is exactly what the board exists
                       // to avoid.
-                      const right = Math.min(
-                        x(plottedEnd ?? plottedStart + 14 * DAY),
-                        chartWidth,
-                      );
+                      // Unknown means still open, including old campaigns.
+                      // A start+14d drawing cap could put the whole live bar
+                      // behind today. Continue to the board edge with a frayed
+                      // wash and explicit unknown token, never a dated endpoint.
+                      const right = plottedEnd === null
+                        ? chartWidth
+                        : Math.min(x(plottedEnd), chartWidth);
                       const width = Math.min(
                         Math.max(right - left, MIN_BAR),
                         Math.max(0, chartWidth - left),

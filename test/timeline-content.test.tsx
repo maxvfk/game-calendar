@@ -58,6 +58,19 @@ describe("Timeline semantic payload", () => {
     });
   });
 
+  test("an old unknown-end live campaign reaches the current board window", () => {
+    const event = { ...base, startsAt: "2026-06-01T00:00:00Z", endsAt: null, endPrecision: "unknown" as const };
+    const clock = clockFor(event, "europe", NOW);
+    expect(clock.live).toBe(true);
+    const html = renderToStaticMarkup(<Timeline rows={[{ event, clock }]} now={NOW} dayWidth={72} onZoom={() => {}} group="game" onGroup={() => {}} showUpcoming={false} splitUpcoming onOpen={() => {}} isDone={() => false} />);
+    const boardWidth = Number(/style="width:([\d.]+)px;min-width:100%"/.exec(html)?.[1]);
+    const bar = /data-timeline-event="[^"]+"[^>]*style="([^"]+)"/.exec(html)?.[1] ?? "";
+    expect(boardWidth).toBeGreaterThan(0);
+    expect(Number(/width:([\d.]+)px/.exec(bar)?.[1])).toBe(boardWidth);
+    expect(html).toContain("End unknown");
+    expect(html).toContain("mask-image:linear-gradient");
+  });
+
   test("cross-year dates include the year", () => {
     const event = { ...base, endsAt: "2027-01-05T00:00:00Z" };
     expect(timelineDeadline(event, clockFor(event, "europe", NOW), NOW).text).toContain("2027");

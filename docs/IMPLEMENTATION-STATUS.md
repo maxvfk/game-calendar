@@ -1294,6 +1294,11 @@ Status: **research and M1 complete; M2 implemented/automatically validated, requ
   completion and urgency. Bars remain 36px high and `MIN_BAR` remains **34px**.
 - Edge masks now affect only the decorative wash/boundaries. This preserves
   clipped-start/frayed-end honesty without fading away sticky readable text.
+  A directly related existing defect was found on the current feed: drawing an
+  unknown end at `start + 14 days` hid old still-live campaigns behind today.
+  Unknown bars now continue to the current board edge with the frayed wash and
+  explicit unknown semantics; that edge is not presented as an end date. A
+  regression covers a months-old live campaign. The board range stays bounded.
   Upcoming start styling/markers, completion dimming and conflict/urgency cues
   remain. No type grouping, row reordering, artwork or Event Detail changes.
 - Initial mount and explicit `Jump to today` anchor **actual `x(now)`**, at
@@ -1303,10 +1308,10 @@ Status: **research and M1 complete; M2 implemented/automatically validated, requ
   account data migration, ID/completion key, storage, export/import, ingestion,
   source-health or Supabase changes were made.
 - Bun **1.3.14**: `bun install --frozen-lockfile`, `bun run typecheck`, `bun test`
-  and `bun run build` pass. Full suite: **1094 pass / 1 optional age skip /
-  0 fail** (1095 tests, 54 files). New focused semantic/fit + mounted navigation
-  tests: **15 pass**; focused semantic/day/navigation tests also pass with
-  `TZ=America/New_York` (**20 pass**) for day printing/DST behavior. The isolated
+  and `bun run build` pass. Full suite: **1095 pass / 1 optional age skip /
+  0 fail** (1096 tests, 54 files). New focused semantic/fit + mounted navigation
+  tests: **16 pass**; focused semantic/day/navigation tests also pass with
+  `TZ=America/New_York` (**21 pass**) for day printing/DST behavior. The isolated
   mounted React test uses pinned dev-only `happy-dom` and explicit geometry;
   it tests initial empty/nonempty mounting, filter/feed/range replacements,
   group/upcoming/split changes, day/clock ticks, hidden badge accessibility,
