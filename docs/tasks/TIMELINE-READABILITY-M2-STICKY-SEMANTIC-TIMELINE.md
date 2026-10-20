@@ -1,6 +1,6 @@
 # Timeline Readability M2 — Sticky Semantic Timeline
 
-Status: **implemented and automatically validated 2026-10-21; required real-phone + operator desktop smoke pending — not complete. See `docs/IMPLEMENTATION-STATUS.md`.**
+Status: **M2 phone-smoke follow-up implemented and automatically validated 2026-10-21: high-priority compact type + shared category colours. Remaining manual phone/desktop smoke stays open; M2 is not complete. See `docs/IMPLEMENTATION-STATUS.md`.**
 
 Type: bounded implementation milestone  
 Depends on:
@@ -80,15 +80,21 @@ Do not add normal start→end text ranges.
 
 ## Mode-specific degradation
 
+**Phone-smoke amendment — 2026-10-21:** the operator requires high visual type
+priority and category colours. The following rules supersede the type-first
+removal rules in the original final UX research specification (sections 2, 7
+and 10) and the initial M2 implementation. All other accepted M2 behavior stays
+in force. This is a bounded M2 follow-up, not a new milestone.
+
 Do not use one universal content hierarchy.
 
 For `By game`, known end:
 
 ```text
 [type] identity · deadline
-→ identity · deadline
-→ identity
-→ truncated identity
+→ [type] identity
+→ [type] truncated identity
+→ [type]
 → bare bar
 ```
 
@@ -98,15 +104,19 @@ For `Ending soonest`, known end:
 
 ```text
 game · [type] identity · deadline
-→ game · identity · deadline
-→ game · identity
-→ game · truncated identity
-→ compact/truncated game
+→ game · [type] identity
+→ game · [type]
+→ [type]
+→ bare bar
 ```
 
-The queue ordering already communicates deadline priority, so on narrow bars preserve game + identity before repeating a known date.
+The queue ordering already communicates deadline priority. A known date yields
+first; identity and then game yield before the compact type badge.
 
-Unknown-end semantics must remain explicit for as long as practical.
+For unknown ends, prefer type + compact `?` before allocating space to names.
+At the type-only limit the visual unknown token may yield, but `End unknown`
+must always remain in the accessible name. Below the badge's own measured width,
+`?` may remain alone if it fits. Never fabricate a deadline.
 
 Do not reduce the existing `MIN_BAR` merely to fit text.
 
@@ -116,11 +126,29 @@ Use measured available space or an equivalently robust fit strategy rather than 
 
 ## Type semantics and accessibility
 
-The visual `TypeBadge` may disappear first when space is constrained.
+The visual compact `TypeBadge` must survive until its own measured width cannot
+fit in the available payload budget. It must never be truncated to fit.
 
 However, event type must remain available in the accessible event name / sr-only semantics.
 
-Update the existing `TypeBadge`/Timeline assumptions and tests that currently imply a visible badge on every narrow bar.
+At the absolute minimum or a nearly scrolled-away tail, a badge may still be
+impossible to fit; full event meaning must remain accessible there.
+
+Use the shared `TypeBadge` for stable category colours in Timeline, EventRow,
+NextUp and EventDetail. Colour is supplementary to text and accessible labels.
+
+| Category | Stable hue |
+| --- | --- |
+| Banner | Violet |
+| Event | Cyan |
+| Challenge | Orange |
+| Login | Green |
+| Shop | Pink |
+| Maintenance | Slate |
+
+Provide readable light/dark variants. Keep game hues and urgency colours
+independent. `story` / `rerun` / `other` continue mapping to Event. Do not change
+layout/degradation outside Timeline.
 
 Accessible semantics must preserve, where applicable:
 
@@ -206,6 +234,9 @@ Add focused automated tests where practical for:
 - recognition/title fallback rendering;
 - exact/day/unknown deadline semantics;
 - mode-specific degradation helpers;
+- high-priority compact type through narrow/type-only/bare stages in both modes;
+- unknown-end compact/accessibility behavior alongside the high-priority type;
+- stable shared category colour mapping and text semantics independent of colour;
 - accessible semantics when visual TypeBadge disappears;
 - initial future-biased anchor;
 - `Jump to today`;

@@ -5,6 +5,7 @@ import { TypeBadge } from "../src/client/components/TypeBadge.tsx";
 import {
   allCategories,
   categoryFor,
+  categoryColor,
   EVENT_CATEGORIES,
   toggleCategory,
 } from "../src/client/state/eventCategories.ts";
@@ -42,4 +43,27 @@ test("filters expose six pressed choices and badges convey type in text", () => 
   for (const category of EVENT_CATEGORIES) expect(filters).toContain(category.label);
   expect(renderToStaticMarkup(<TypeBadge type="challenge" />)).toContain("Challenge");
   expect(renderToStaticMarkup(<TypeBadge type="shop" compact />)).toContain('aria-label="Type: Shop"');
+});
+
+test("stable category colours are independent of game, urgency and aliased event type", () => {
+  expect(EventType.options.map(categoryColor)).toEqual([
+    "var(--color-type-banner)", "var(--color-type-event)", "var(--color-type-event)",
+    "var(--color-type-challenge)", "var(--color-type-login)", "var(--color-type-shop)",
+    "var(--color-type-maintenance)", "var(--color-type-event)",
+  ]);
+  expect(new Set(EVENT_CATEGORIES.map(category => categoryColor(category.id === "event" ? "story" : category.id))).size).toBe(6);
+});
+
+test("colour is supplementary: full/compact badges keep category text and accessible labels", () => {
+  for (const category of EVENT_CATEGORIES) for (const compact of [false, true]) {
+    const type = category.id === "event" ? "story" : category.id;
+    const html = renderToStaticMarkup(<TypeBadge type={type} compact={compact} />);
+    expect(html).toContain(`data-event-category="${category.id}"`);
+    expect(html).toContain(`color:${categoryColor(type)}`);
+    expect(html).toContain(`aria-label="Type: ${category.badge}"`);
+    expect(html).toContain(`>${compact ? category.short : category.badge}</span>`);
+  }
+  for (const type of ["story", "rerun", "other"] as const) {
+    expect(renderToStaticMarkup(<TypeBadge type={type} compact />)).toContain('data-event-category="event"');
+  }
 });

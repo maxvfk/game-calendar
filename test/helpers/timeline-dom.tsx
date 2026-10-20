@@ -91,8 +91,20 @@ await click(Array.from(container.querySelectorAll("button")).find(b => b.textCon
 assert.equal(jumps, 2);
 assert.equal(pane().scrollLeft, scrollToToday(timelineX(props.now, min, 108), paneWidth));
 
-// Force a narrow visible tail. Type/identity may disappear, the full accessible
-// name and day-only semantics must survive every visual degradation.
+// Both modes keep type alone on a narrow tail after identity/game yield.
+for (const group of ["game", "ending"] as const) {
+  props.group = group;
+  await render();
+  pane().scrollLeft = timelineX(timelineEndMs(row)!, min, 108) - 38;
+  await act(async () => {
+    pane().dispatchEvent(new win.Event("scroll"));
+    await new Promise(resolve => setTimeout(resolve, 30));
+  });
+  const label = container.querySelector("[data-timeline-label]")!;
+  assert.equal(label.textContent, "Bn");
+  assert(label.querySelector('[aria-label="Type: Banner"]'));
+}
+// Below even the badge width, the full accessible name still survives.
 pane().scrollLeft = timelineX(timelineEndMs(row)!, min, 108) - 20;
 await act(async () => {
   pane().dispatchEvent(new win.Event("scroll"));
@@ -113,5 +125,25 @@ await act(async () => { secondRoot.render(<Timeline {...props} />); });
 assert.equal(jumps, 3);
 assert.equal(pane().scrollLeft, scrollToToday(timelineX(props.now, min, 108), paneWidth, true));
 await act(async () => { secondRoot.unmount(); });
+
+// Unknown-end compact text survives alongside type where it can fit. At the
+// type-only limit or zero-width tail, End unknown stays in the accessible name.
+const unknownEvent = { ...event, endsAt: null, endPrecision: "unknown" as const };
+const unknownRow = { event: unknownEvent, clock: clockFor(unknownEvent, "europe", NOW) };
+const thirdRoot = createRoot(container as unknown as HTMLElement);
+desktop = false;
+for (const mode of ["game", "ending"] as const) {
+  for (const width of [60, 34, 20]) {
+    paneWidth = width;
+    await act(async () => { thirdRoot.render(<Timeline {...props} group={mode} rows={[unknownRow]} />); });
+    const bar = container.querySelector("[data-timeline-event]")!;
+    assert(bar.getAttribute("aria-label")!.includes("End unknown"));
+    assert(bar.getAttribute("aria-label")!.includes("Type: Banner"));
+    const label = bar.querySelector("[data-timeline-label]")!;
+    assert.equal(!!label.querySelector('[aria-label="Type: Banner"]'), width >= 34);
+    assert.equal(!!label.querySelector('[aria-label="End unknown"]'), width === 60);
+  }
+}
+await act(async () => { thirdRoot.unmount(); });
 await win.happyDOM.close();
 console.log("Timeline DOM navigation passed");

@@ -71,7 +71,7 @@ export interface ContentFit {
   deadline: "full" | "compact" | null;
 }
 
-/** Mode-specific priority, after reserving room for conflict/urgency cues. */
+/** Phone-smoke priority: keep compact type until the badge itself cannot fit. */
 export function fitTimelineContent(
   available: number, mode: TimelineGroup, unknown: boolean, w: ContentWidths,
 ): ContentFit {
@@ -84,20 +84,25 @@ export function fitTimelineContent(
   if (size(game, w.type, w.identity, w.deadline) <= room) {
     return { type: true, game, identity: w.identity, deadline: "full" };
   }
-  if (size(game, w.identity, w.deadline) <= room) {
-    return { type: false, game, identity: w.identity, deadline: "full" };
+  // Below the badge's own width, unknown can still show '?'. The complete
+  // accessible name always retains both type and End unknown, even at zero px.
+  if (w.type > room) {
+    return { type: false, game: 0, identity: 0,
+      deadline: unknown && w.compactUnknown <= room ? "compact" : null };
   }
-  // A known date yields before recognition. An unknown end cannot be read
-  // from the geometry, so reserve its compact token before truncating names.
-  const deadline = unknown && w.compactUnknown <= room ? "compact" : null;
-  const namesRoom = Math.max(0, room - (deadline ? w.compactUnknown + w.gap : 0));
+  // A known deadline yields before identity. Unknown is more important than a
+  // known date: reserve '?' beside the badge before allocating names. At the
+  // type-only limit the marker yields visually, never in accessibility.
+  const deadline = unknown && size(w.type, w.compactUnknown) <= room ? "compact" : null;
+  const namesRoom = Math.max(0, room - w.type - (deadline ? w.compactUnknown + w.gap : 0));
   if (mode === "game") {
-    return { type: false, game: 0, identity: namesRoom >= w.ellipsis ? Math.min(w.identity, namesRoom) : 0, deadline };
+    const identityRoom = namesRoom - w.gap;
+    return { type: true, game: 0, identity: identityRoom >= w.ellipsis ? Math.min(w.identity, identityRoom) : 0, deadline };
   }
-  if (size(game, Math.min(w.identity, w.ellipsis)) <= namesRoom) {
-    return { type: false, game, identity: Math.min(w.identity, namesRoom - game - w.gap), deadline };
+  if (size(game, w.identity) + w.gap <= namesRoom) {
+    return { type: true, game, identity: w.identity, deadline };
   }
-  return { type: false, game: namesRoom >= w.ellipsis ? Math.min(game, namesRoom) : 0, identity: 0, deadline };
+  return { type: true, game: game + w.gap <= namesRoom ? game : 0, identity: 0, deadline };
 }
 
 /** Readable intersection of a bar's padded interior and the scroll viewport. */
