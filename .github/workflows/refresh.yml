@@ -111,10 +111,12 @@ jobs:
         if: always()
         env:
           BROKEN: ${{ steps.refresh.outputs.broken }}
+          NEWLY_BROKEN: ${{ steps.refresh.outputs.newlyBroken }}
           REFRESH_OUTCOME: ${{ steps.refresh.outcome }}
         run: |
           if [ "$REFRESH_OUTCOME" != "success" ]; then exit 0; fi
-          if [ -n "$BROKEN" ] && [ "$BROKEN" != "0" ]; then
-            echo "::error::$BROKEN source(s) have stopped answering"
+          echo "$BROKEN source(s) currently broken; $NEWLY_BROKEN newly broken (see source annotations and summary)"
+          if [ -n "$NEWLY_BROKEN" ] && [ "$NEWLY_BROKEN" != "0" ]; then
+            echo "::error::$NEWLY_BROKEN source(s) newly broken"
             exit 1
           fi

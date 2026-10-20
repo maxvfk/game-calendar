@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-10-19 (Moscow; S6a production recovery drill complete). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-21 (Moscow; source-health alert dedup implemented and validated). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
@@ -1148,28 +1148,62 @@ blocker for current owner/household use or Timeline M1/M2.**
 pre-public implementation/audit work, immediately before broad link sharing.
 
 
-## Source-health notification follow-up — 2026-10-20
+## Source-health alert dedup — 2026-10-21
 
-Status: **ready; complete before Timeline M1.** The data-safety behavior is
-already correct, but the scheduled workflow currently sends repeated failure
-mail while the same source remains continuously broken.
+Status: **implemented and locally validated; post-merge hosted Refresh acceptance
+is pending the next eligible normal cycle.** Task:
+`docs/tasks/SOURCE-HEALTH-ALERT-DEDUP.md`.
 
-- Latest observed scheduled Refresh `39406158497`: refresh, bookkeeping,
-  snapshot commit and feed publication all succeeded; only the final
-  `Report source health` step failed. The resulting snapshot commit
-  `7399ec1d` triggered CI `39406203379`, which succeeded. The known
-  Endfield Echoes snapshot remains last-confirmed on 2026-10-14 while the
-  ordinary Endfield Event source and other working sources continue to confirm
-  and publish.
-- Do not acknowledge/whitelist Echoes. Implement a generic transition rule:
-  persistent sources remain visibly `broken`, but the workflow becomes red
-  only when a source crosses into broken state (and again if it later recovers
-  and re-breaks). A different newly-broken source must still alert even while a
-  known source remains broken.
-- Task: `docs/tasks/SOURCE-HEALTH-ALERT-DEDUP.md`.
+- Baseline CURRENT main: `668192994aa6aa9ac397602d3cc2cbf970511e05`;
+  branch `fix/source-health-alert-dedup`. Actual latest scheduled
+  [Refresh 39494275065](https://github.com/maxvfk/game-calendar/actions/runs/39494275065)
+  confirmed **6/8** sources, committed two changed bodies/confirmation metadata
+  and dispatched publication. Only `Report source health` failed. Echoes was
+  already **broken / 12 failures / HTTP 200**, last confirmed
+  `2026-10-14T20:47:25.387Z`, with the same western Phantasia cycle/season
+  contradiction. WuWa was also already **broken / 5 failures / HTTP 200**, last
+  confirmed `2026-10-18T09:43:11.393Z`: 7/10 still-live identities disappeared
+  in the candidate 10 → 3 row response, so the previous snapshot was retained.
+  The triggered [CI/Pages 39494325800](https://github.com/maxvfk/game-calendar/actions/runs/39494325800)
+  passed all three jobs: **1054 pass / 1 optional skip / 0 fail**, feed
+  **181 events / 7 games / 1 existing NTE Circle Bounty conflict**.
+- `runRefresh` derives `newlyBroken` from each selected source's persisted
+  `SnapshotState.consecutiveFailures` before/after its cycle: below the existing
+  **3** threshold before, at/above it after. `broken` remains the full standing
+  list, including interval-skipped broken sources. Recovery resets the streak
+  normally; another third failure alerts again. A new broken source alerts even
+  while another source stays broken. No acknowledgement database or
+  source-specific exception was added.
+- Outputs expose both `broken` and `newlyBroken`. GitHub's final health gate
+  fails only for nonzero `newlyBroken`, after snapshot commit/feed dispatch.
+  The retained Gitea workflow uses the same rule to avoid incompatible health
+  gates. Existing error annotations remain on **every** broken source, with
+  `Newly broken` / `Still broken` context; step summary rows distinguish
+  `broken (new)` from `broken (ongoing)` and show both totals.
+- **No source-health/LKG acceptance rule was relaxed.** Threshold,
+  failure/rejection accounting, robots/interval/override/no-retry rules,
+  parser-zero/disappearance/boundary/conflict protections and hard failures are
+  unchanged. `SnapshotStore`, parsers, checked-in snapshots and event data are
+  untouched. Repeated all-source failure still fails even with no new health
+  transition; no Phantasia cycle dates are accepted or invented.
+- Local Bun **1.3.14**: `bun install --frozen-lockfile`, `bun run typecheck`,
+  `bun test`, `bun run build` all pass. Focused Refresh tests: **90 pass / 0 fail**.
+  Full suite: **1057 pass / 1 optional age skip / 0 fail** (1058 tests, 51 files).
+  Regression coverage includes failures 1–5, recovery/re-break, a second source,
+  interval skip, separate outputs and execution of both workflows' actual Bash
+  health gates. Build: **181 events / 7 games / 1 existing conflict**;
+  Phantasia cycles remain withheld.
+- Hosted Refresh acceptance has **not yet been observed** for the new code.
+  The latest source checks at `2026-10-20T20:42Z` were less than six hours old
+  during this work. No forced refresh, failure-streak reset or cache edit was
+  used for a demonstration. On the next eligible normal cycle, verify that the
+  existing broken sources stay visible, newly-broken count is zero unless a
+  real new transition occurs, valid sources publish, and triggered CI/Pages
+  succeeds. Implementation PR/checks provide the merge/deployment evidence.
 
-**Next concrete step:** implement and merge the bounded alert-dedup task, verify
-that no ingestion/LKG/source-health rule was weakened, then start Timeline M1.
+**Next concrete step:** Timeline M1 from CURRENT `main` after this alert-dedup
+change is merged; do not start it as part of this milestone. The independent
+Echoes contradiction and WuWa disappearance review remain source blockers.
 
 
 ## Timeline Readability / Recognition UX

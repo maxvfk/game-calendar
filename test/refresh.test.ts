@@ -156,6 +156,7 @@ describe("a normal cycle", () => {
       const summary = await runRefresh(opts);
       expect(summary.outcomes[0]?.result).toBe("failed");
       expect(summary.broken.length).toBe(cycle === BROKEN_AFTER_FAILURES - 1 ? 1 : 0);
+      expect(summary.newlyBroken).toEqual(summary.broken);
       if (cycle === BROKEN_AFTER_FAILURES - 1) {
         expect(summary.broken[0]?.sourceId).toBe(active.id);
         expect(annotations(summary).some((line) => line.startsWith(`::error title=${active.id}`))).toBe(true);
@@ -1008,6 +1009,7 @@ describe("a source that has stopped answering", () => {
     const summary = await runRefresh(failing().opts);
     expect(summary.warnings).toHaveLength(1);
     expect(summary.broken).toEqual([]);
+    expect(summary.newlyBroken).toEqual([]);
     expect(summary.hardFailure).toBeNull();
   });
 
@@ -1042,21 +1044,27 @@ describe("a source that has stopped answering", () => {
     }
   });
 
-  test("three cycles running is broken, and still exits without a hard failure", async () => {
-    let summary = await runRefresh(failing().opts);
-    for (let i = 1; i < BROKEN_AFTER_FAILURES; i += 1) {
+  test("only the third failure alerts; later failures remain visibly broken", async () => {
+    for (let i = 0; i < BROKEN_AFTER_FAILURES + 2; i += 1) {
       // Each cycle is a fresh run six hours later, so the interval is clear.
       const later = new Date(NOW.getTime() + i * SIX_HOURS_MS);
-      summary = await runRefresh({ ...failing().opts, now: () => later });
+      const summary = await runRefresh({ ...failing().opts, now: () => later });
+      const isBroken = i + 1 >= BROKEN_AFTER_FAILURES;
+      const isNew = i + 1 === BROKEN_AFTER_FAILURES;
+      expect(summary.broken).toHaveLength(isBroken ? 1 : 0);
+      expect(summary.newlyBroken).toEqual(isNew ? summary.broken : []);
+      expect(outputs(summary)).toContain(`broken=${isBroken ? 1 : 0}`);
+      expect(outputs(summary)).toContain(`newlyBroken=${isNew ? 1 : 0}`);
+      if (isBroken) {
+        expect(summary.broken[0]?.consecutiveFailures).toBe(i + 1);
+        expect(summary.broken[0]?.lastStatus).toBe(403);
+        expect(summary.broken[0]?.lastConfirmedAt).toBeNull();
+        expect(annotations(summary)[0]).toContain(isNew ? "Newly broken" : "Still broken");
+        expect(stepSummary(summary)).toContain(isNew ? "broken (new)" : "broken (ongoing)");
+      }
+      // The workflow must still commit/publish the working source first.
+      expect(summary.hardFailure).toBeNull();
     }
-
-    expect(summary.broken).toHaveLength(1);
-    expect(summary.broken[0]?.consecutiveFailures).toBe(BROKEN_AFTER_FAILURES);
-    expect(summary.broken[0]?.lastStatus).toBe(403);
-    expect(summary.broken[0]?.lastConfirmedAt).toBeNull();
-    // Not a hard failure: the workflow has to commit the sources that did work
-    // before it turns the run red.
-    expect(summary.hardFailure).toBeNull();
   });
 
   test("stays broken while it is being skipped for the interval", async () => {
@@ -1073,9 +1081,11 @@ describe("a source that has stopped answering", () => {
 
     expect(summary.outcomes[0]?.result).toBe("skipped_interval");
     expect(summary.broken).toHaveLength(1);
+    expect(summary.newlyBroken).toEqual([]);
+    expect(stepSummary(summary)).toContain("broken (ongoing)");
   });
 
-  test("one good cycle clears it", async () => {
+  test("recovery resets health and a later re-break alerts again", async () => {
     for (let i = 0; i < BROKEN_AFTER_FAILURES; i += 1) {
       const at = new Date(NOW.getTime() + i * SIX_HOURS_MS);
       await runRefresh({ ...failing().opts, now: () => at });
@@ -1090,6 +1100,55 @@ describe("a source that has stopped answering", () => {
 
     expect(summary.outcomes[0]?.result).toBe("fetched");
     expect(summary.broken).toEqual([]);
+    expect(summary.newlyBroken).toEqual([]);
+    expect((await store.readState(adapter().id)).consecutiveFailures).toBe(0);
+
+    // A recovery ends the continuous outage; the next third failure must alert.
+    for (let i = 1; i <= BROKEN_AFTER_FAILURES; i += 1) {
+      const at = new Date(recovered.getTime() + i * SIX_HOURS_MS);
+      const next = await runRefresh({ ...failing().opts, now: () => at });
+      expect(next.newlyBroken).toHaveLength(i === BROKEN_AFTER_FAILURES ? 1 : 0);
+      if (i === BROKEN_AFTER_FAILURES) {
+        expect(next.newlyBroken).toEqual(next.broken);
+        expect(next.broken[0]?.lastConfirmedAt).toBe(recovered.toISOString());
+      }
+    }
+  });
+
+  test("a second source alerts while the first remains broken", async () => {
+    let at = NOW.getTime();
+    const { opts } = options({
+      adapters: [adapter(), adapter({ id: "second", url: "https://second.test/events" }),
+        adapter({ id: "working", url: "https://working.test/events" })],
+      now: () => new Date(at),
+      responder: ({ url }) => new Response(url.includes("working.test") ? "<event>" : "", {
+        status: url.includes("working.test") ? 200 : 503,
+      }),
+    });
+    // A is already broken; B is one cycle behind it.
+    for (let i = 0; i < BROKEN_AFTER_FAILURES; i += 1) {
+      await store.recordCheck(adapter().id, { at: new Date(at).toISOString(), status: 503, ok: false });
+      if (i > 0) await store.recordCheck("second", { at: new Date(at).toISOString(), status: 503, ok: false });
+      at += SIX_HOURS_MS;
+    }
+    const summary = await runRefresh(opts);
+    expect(summary.broken.map((s) => s.sourceId)).toEqual([adapter().id, "second"]);
+    expect(summary.newlyBroken.map((s) => s.sourceId)).toEqual(["second"]);
+    expect(outputs(summary)).toContain("broken=2");
+    expect(outputs(summary)).toContain("newlyBroken=1");
+    expect(summary.hardFailure).toBeNull();
+  });
+
+  test("persistent broken sources do not suppress an all-source hard failure", async () => {
+    const { opts } = options({ responder: () => new Response("", { status: 503 }) });
+    for (let i = 0; i <= BROKEN_AFTER_FAILURES; i += 1) {
+      const summary = await runRefresh({ ...opts, now: () => new Date(NOW.getTime() + i * SIX_HOURS_MS) });
+      expect(summary.hardFailure).toBe("all 1 attempted sources failed");
+      if (i === BROKEN_AFTER_FAILURES) {
+        expect(summary.broken).toHaveLength(1);
+        expect(summary.newlyBroken).toEqual([]);
+      }
+    }
   });
 
   test("a dry run reports no health, because it asked nothing", async () => {
@@ -1099,6 +1158,7 @@ describe("a source that has stopped answering", () => {
     }
     const summary = await runRefresh(options({ dryRun: true }).opts);
     expect(summary.broken).toEqual([]);
+    expect(summary.newlyBroken).toEqual([]);
   });
 });
 
@@ -1127,6 +1187,7 @@ describe("what the runner reports to the runner", () => {
         lastConfirmedAt: "2026-08-14T05:27:00.000Z",
       },
     ],
+    newlyBroken: [],
     hardFailure: null,
     assumedRobots: [],
     forced: [],
@@ -1174,6 +1235,7 @@ describe("what the runner reports to the runner", () => {
   test("the step summary carries the status codes", () => {
     const md = stepSummary(broken);
     expect(md).toContain("1 broken");
+    expect(md).toContain("0 newly broken");
     expect(md).toContain("genshin-game8-events");
     expect(md).toContain("403");
     // A note holding a pipe would otherwise split the row into new columns.
@@ -1183,10 +1245,12 @@ describe("what the runner reports to the runner", () => {
     })).toContain("a \\| b");
   });
 
-  test("broken is an output, not an exit code", () => {
+  test("current and newly broken are separate outputs, not exit codes", () => {
     // Exiting non-zero would skip the commit and throw away the pages that did
     // arrive; the workflow fails on this output after committing instead.
     expect(outputs(broken)).toContain("broken=1");
+    expect(outputs(broken)).toContain("newlyBroken=0");
+    expect(outputs({ ...broken, newlyBroken: broken.broken })).toContain("newlyBroken=1");
     expect(outputs(broken)).toContain("changed=0");
   });
 });
@@ -1273,20 +1337,43 @@ describe("the workflows that drive the refresh", () => {
     expect(refresh).toContain("EVENT_NAME: ${{ github.event_name }}");
   });
 
-  test("refresh.yml turns red on a broken source only after committing", async () => {
-    // Six of seven sources failed every cycle for three days and every run
-    // showed a green tick. Reporting it must not cost the sources that did work
-    // their snapshot, so the health check has to be the last step.
-    const refresh = await read("refresh.yml");
-    const health = refresh.indexOf("Report source health");
-    const commit = refresh.indexOf("Commit refreshed snapshots");
-    const publish = refresh.indexOf("Publish the refreshed feed");
+  for (const forge of [".github", ".gitea"]) {
+    test(`${forge}/refresh.yml alerts on transitions only after commit/publish`, async () => {
+      // Six of seven sources failed every cycle for three days and every run
+      // showed a green tick. Reporting it must not cost the sources that did work
+      // their snapshot, so the health check has to be the last step.
+      const refresh = await Bun.file(new URL(`../${forge}/workflows/refresh.yml`, import.meta.url)).text();
+      const health = refresh.indexOf("Report source health");
+      const commit = refresh.indexOf("Commit refreshed snapshots");
+      const publish = refresh.indexOf("Publish the refreshed feed");
 
-    expect(health).toBeGreaterThan(commit);
-    expect(health).toBeGreaterThan(publish);
-    expect(refresh.slice(health)).toContain("steps.refresh.outputs.broken");
-    expect(refresh.slice(health)).toContain("exit 1");
-  });
+      expect(health).toBeGreaterThan(commit);
+      expect(health).toBeGreaterThan(publish);
+      expect(refresh.slice(health)).toContain("steps.refresh.outputs.broken");
+      expect(refresh.slice(health)).toContain("NEWLY_BROKEN: ${{ steps.refresh.outputs.newlyBroken }}");
+      expect(refresh.slice(health)).toContain("exit 1");
+
+      // Execute the actual health gate: persistent broken counts cannot fail it,
+      // and a new source must alert even while another is persistently broken.
+      const script = refresh.slice(health).split("run: |\n")[1]!;
+      for (const [broken, newlyBroken, outcome, exitCode] of [
+        ["0", "0", "success", 0],
+        ["1", "1", "success", 1],
+        ["1", "0", "success", 0],
+        ["2", "1", "success", 1],
+        ["", "", "failure", 0], // Already red from the Refresh hard failure.
+      ] as const) {
+        const result = Bun.spawnSync(["bash", "-e", "-c", script], {
+          env: { ...process.env, BROKEN: broken, NEWLY_BROKEN: newlyBroken, REFRESH_OUTCOME: outcome },
+          stdout: "pipe", stderr: "pipe",
+        });
+        expect(result.exitCode).toBe(exitCode);
+        if (outcome === "success") {
+          expect(result.stdout.toString()).toContain(`${broken} source(s) currently broken`);
+        }
+      }
+    });
+  }
 
   test("refresh.yml publishes even when no snapshot bytes changed", async () => {
     // A 304 updates lastConfirmedAt in the bookkeeping cache without touching

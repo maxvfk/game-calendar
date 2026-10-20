@@ -1,6 +1,7 @@
 # Source-health alert dedup — transition-based workflow failure
 
-Status: **ready — complete before Timeline M1**  
+Status: **implemented and validated — hosted Refresh acceptance pending next eligible cycle**
+
 Type: narrowly scoped ingestion/operations maintenance milestone  
 Depends on: existing refresh/LKG/source-health behavior on CURRENT `main`  
 Next milestone: `TIMELINE-READABILITY-M1-RECOGNITION-METADATA.md`
