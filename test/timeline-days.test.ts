@@ -65,8 +65,9 @@ test("a date-only source occupies the printed dates without claiming a clock tim
   expect(timelineEndMs({ event: regional, clock: regionalClock })).toBe(regionalClock.endsMs);
 });
 
-test("today opens near the centre and does not scroll before the board", () => {
-  expect(scrollToToday(900, 360)).toBe(720);
+test("now opens at 20% on phone, 25% on desktop, and clamps at the board start", () => {
+  expect(scrollToToday(900, 360)).toBe(828);
+  expect(scrollToToday(900, 1200, true)).toBe(600);
   expect(scrollToToday(60, 360)).toBe(0);
 });
 

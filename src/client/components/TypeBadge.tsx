@@ -1,7 +1,7 @@
 import type { EventType } from "../../shared/schema.ts";
 import { categoryBadge, categoryShort } from "../state/eventCategories.ts";
 
-/** A text cue on every event, including narrow timeline bars. */
+/** A visual type cue. Timeline may omit it when its full accessible name carries type. */
 export function TypeBadge({ type, compact = false }: { type: EventType; compact?: boolean }) {
   const label = categoryBadge(type);
   return (

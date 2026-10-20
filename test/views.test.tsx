@@ -426,11 +426,11 @@ describe("Timeline stacking", () => {
     }
   });
 
-  test("the list and timeline name an event's type without relying on game colour", () => {
+  test("the list badge and timeline accessible name convey type without relying on game colour", () => {
     const listed = render(<EventRow row={rows[0]!} now={NOW} completed={false} onOpen={() => {}} />);
     expect(listed).toContain('aria-label="Type: Event"');
     expect(listed).toContain(">Event</span>");
-    expect(board("game")).toContain('aria-label="Type: Event"');
+    expect(board("game")).toContain("Type: Event (story)");
   });
 
   test("the rendered board has a daily grid, a labelled today line, and a scroll pane", () => {
@@ -562,8 +562,8 @@ describe("Timeline: expand", () => {
       /style="width:([\d.]+)px;min-width:100%"/.exec(html)?.[1],
     );
     // The bar's box is `margin-left` plus `width`; both are inline styles on
-    // the same button this fixture's title makes unique to find.
-    const bar = /title="Open-Ended Rerun[^"]*"[^>]*style="([^"]+)"/.exec(html)?.[1] ?? "";
+    // the same button identified by this fixture's stable event ID.
+    const bar = /data-timeline-event="[^"]*open-ended-rerun[^"]*"[^>]*style="([^"]+)"/.exec(html)?.[1] ?? "";
     const marginLeft = Number(/margin-left:([\d.]+)px/.exec(bar)?.[1]);
     const width = Number(/width:([\d.]+)px/.exec(bar)?.[1]);
 
