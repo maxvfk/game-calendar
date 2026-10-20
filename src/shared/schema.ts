@@ -59,6 +59,17 @@ export const ProvenanceStatus = z.enum([
 ]);
 export type ProvenanceStatus = z.infer<typeof ProvenanceStatus>;
 
+/**
+ * Ordered genuine featured subjects (characters, items, or co-headliners).
+ * Populate only from structured/reviewed evidence, never marketing-title guesses.
+ * Optional on events: the required official title remains the fallback and ID input.
+ */
+export const RecognitionSubjects = z.array(
+  z.string().min(1).max(200).refine((subject) => subject.trim().length > 0, {
+    message: "recognition subject must not be blank",
+  }),
+).min(1);
+
 export const GachaEvent = z
   .object({
     id: z.string(),
@@ -66,6 +77,7 @@ export const GachaEvent = z
     title: z.string().min(1).max(200),
     /** Optional Russian display title; `title` remains the stable ID input. */
     titleRu: z.string().min(1).max(200).optional(),
+    recognitionSubjects: RecognitionSubjects.optional(),
     type: EventType,
     summary: z.string().max(500).nullable(),
 

@@ -67,6 +67,17 @@ export type GachaEvent = z.infer<typeof GachaEvent>;
 
 ### Field notes that matter
 
+**`recognitionSubjects?: string[]` (Timeline M1, additive v1 field).** Ordered
+genuine featured subjects: headline characters, featured weapons/Light Cones/
+W-Engines, or genuine co-headliners. When present, the array must be nonempty;
+each subject must contain non-whitespace text and be at most 200 characters.
+Values and order are preserved. Populate only from structured or reviewed
+evidence; never infer them heuristically from marketing titles. Every event
+class may omit the field, keeping the required official `title` as fallback.
+Reviewed ingestion and `events.v1.json` share the same validation. Metadata is
+not an ID input, does not bump feed schema version, and is not personal/custom
+event storage. M1 adds no presentation behavior.
+
 **`endsAt: null` is a first-class state, not an error.** Many events are announced with "duration
 TBD" or "until the next version update". The correct representation is `endsAt: null` with
 `endPrecision: "unknown"`. The extractor is instructed to produce this and the UI renders it
