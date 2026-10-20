@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-10-21 (Moscow; Timeline M1 recognition metadata implemented and validated). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-21 (Moscow; Timeline M2 implemented/automatically validated, manual smoke gate open). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
@@ -1208,7 +1208,7 @@ Echoes contradiction and WuWa disappearance review remain source blockers.
 
 ## Timeline Readability / Recognition UX
 
-Status: **research complete; M1 recognition metadata implemented and validated. M2 has not started. Account/User S6a completed on 2026-10-19; S6b is separate/non-blocking.**
+Status: **research and M1 complete; M2 implemented/automatically validated, required real-phone + operator desktop smoke pending. M2 is not complete. Account/User S6a completed on 2026-10-19; S6b is separate/non-blocking.**
 
 - A five-step UX research task was completed and reviewed in `docs/tasks/TIMELINE-READABILITY-UX-RESEARCH.md`.
 - The selected direction is **Candidate A′ — Sticky semantic bars**:
@@ -1270,7 +1270,67 @@ Status: **research complete; M1 recognition metadata implemented and validated. 
   ingestion acceptance rule was changed. PR/hosted validation is recorded in
   the implementation PR.
 
-**Next concrete step:** after merged M1, start M2 Sticky semantic Timeline from
-then-CURRENT `main` in a separately authorized Work. M2 rendering, sticky content,
-viewport/navigation, TypeBadge and accessibility behavior were not started here.
-Do not fold S6b or broad metadata population into M2.
+### M2 sticky semantic Timeline — 2026-10-21
+
+- Baseline CURRENT main: `34ab4bf0aca4eb5cbc944040c44a4be59690aa85`, merged
+  M1 PR #30; fresh branch `feat/timeline-m2-sticky-semantic`. Authoritative
+  Candidate A′ final UX specification was read; no broad research reopened.
+- Sticky content joins declared `recognitionSubjects` with ` + `, preserving
+  order, or uses the required title. The full official title remains in the
+  tooltip/accessible name when subjects are used. No metadata was populated.
+- Known deadlines show a compact end date without an always-on clock. Day-only
+  ends print the source date (local input date for custom events), have a dashed
+  underline on the sticky date token, and explicitly say `end date only` in
+  accessibility. Regional exact ends use the resolved clock, not the fallback
+  date. Unknown ends show `end unknown` / `?`, accessible as `End unknown`;
+  cross-year dates include the year. No end instant/date is invented.
+- Actual DOM text/badge metrics and the bar/viewport intersection drive fit.
+  `By game` drops visual type, then known deadline, before truncating identity.
+  `Ending soonest` keeps game + identity before a known deadline; compact game
+  text survives when identity cannot fit. Unknown-end tokens outlast known
+  deadline text. At the physical minimum or a nearly scrolled-away tail, text
+  may yield completely; the full accessible event name always retains game,
+  type, identity/title, truthful deadline/precision, upcoming, conflict,
+  completion and urgency. Bars remain 36px high and `MIN_BAR` remains **34px**.
+- Edge masks now affect only the decorative wash/boundaries. This preserves
+  clipped-start/frayed-end honesty without fading away sticky readable text.
+  A directly related existing defect was found on the current feed: drawing an
+  unknown end at `start + 14 days` hid old still-live campaigns behind today.
+  Unknown bars now continue to the current board edge with the frayed wash and
+  explicit unknown semantics; that edge is not presented as an end date. A
+  regression covers a months-old live campaign. The board range stays bounded.
+  Upcoming start styling/markers, completion dimming and conflict/urgency cues
+  remain. No type grouping, row reordering, artwork or Event Detail changes.
+- Initial mount and explicit `Jump to today` anchor **actual `x(now)`**, at
+  **20% below lg / 25% at lg and above**. Ordinary updates never request a jump;
+  the pane stays mounted through empty filters. Native range clamping is still
+  permitted. Zoom retains the inspected centre moment. No preferences or
+  account data migration, ID/completion key, storage, export/import, ingestion,
+  source-health or Supabase changes were made.
+- Bun **1.3.14**: `bun install --frozen-lockfile`, `bun run typecheck`, `bun test`
+  and `bun run build` pass. Full suite: **1095 pass / 1 optional age skip /
+  0 fail** (1096 tests, 54 files). New focused semantic/fit + mounted navigation
+  tests: **16 pass**; focused semantic/day/navigation tests also pass with
+  `TZ=America/New_York` (**21 pass**) for day printing/DST behavior. The isolated
+  mounted React test uses pinned dev-only `happy-dom` and explicit geometry;
+  it tests initial empty/nonempty mounting, filter/feed/range replacements,
+  group/upcoming/split changes, day/clock ticks, hidden badge accessibility,
+  zoom and explicit Jump. It does not claim CSS-layout validation.
+- Offline build still produces **181 events / 7 games / 1 existing NTE Circle
+  Bounty conflict**, without changing data files or ID logic. Chromium CSS
+  verification adds **152 responsive assertions** at 320/390/768/1440px,
+  both modes, five zoom values and several scroll offsets: anchor, no re-jump,
+  inspected-moment zoom, one-line height, label containment and payload fit.
+  Screenshots were visually inspected for narrow/desktop layouts, including
+  long off-screen-end bars, minimum bars, exact/day/unknown ends, ordered
+  subjects/items, title fallback, upcoming, completion/conflict and dense
+  seven-game data. This is browser automation, **not a real-device manual pass**.
+- No intentional UX-spec divergence. Hosted PR/CI/Pages delivery evidence is
+  recorded in the M2 PR. **Required manual gate remains open:** the operator
+  must run the final UX spec section 14 on a real phone and desktop after
+  deployment. Real touch/scroll behavior, phone text scaling and operator
+  accessibility/readability acceptance have not been claimed as passed.
+
+**Next concrete step:** run the deployed M2 phone + desktop smoke matrix and
+record device/browser, results and any concrete failure. Only then close M2.
+Do not start S6b, broad metadata population or other milestones here.

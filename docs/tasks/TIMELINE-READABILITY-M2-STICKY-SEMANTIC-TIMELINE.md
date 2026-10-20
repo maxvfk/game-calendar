@@ -1,6 +1,7 @@
 # Timeline Readability M2 — Sticky Semantic Timeline
 
-Status: **deferred only on M1 — Account/User S6a completed on 2026-10-19 and S6b is separate/non-blocking; start after M1 is merged**  
+Status: **implemented and automatically validated 2026-10-21; required real-phone + operator desktop smoke pending — not complete. See `docs/IMPLEMENTATION-STATUS.md`.**
+
 Type: bounded implementation milestone  
 Depends on:
 - completed `docs/tasks/TIMELINE-READABILITY-UX-RESEARCH.md`

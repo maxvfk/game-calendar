@@ -1,10 +1,11 @@
-import { Fragment, useLayoutEffect, useRef } from "react";
+import { Fragment, useLayoutEffect, useRef, useState } from "react";
 import { useGameMeta } from "../state/gameMeta.tsx";
 import type { LaneId } from "../../shared/custom.ts";
 import { DAY, dayOnlyEnd, endingSoonestFirst } from "../../shared/time.ts";
 import type { RowEvent } from "./EventRow.tsx";
 import { URGENCY_COLOR } from "./Meter.tsx";
-import { TypeBadge } from "./TypeBadge.tsx";
+import { TimelineLabel } from "./TimelineLabel.tsx";
+import { recognitionIdentity, timelineAccessibleName, timelineDeadline, visibleBarContent } from "../state/timelineContent.ts";
 import {
   timelineLanes,
   TIMELINE_GROUPS,
@@ -44,17 +45,6 @@ const PAST_LIMIT = 60 * DAY;
 
 /** The narrowest a bar is drawn, so a two-day event is still a target. */
 const MIN_BAR = 34;
-
-/**
- * How wide a bar has to be before the merged board tags it with its game.
- *
- * The tag is what replaces the lane heading, so it wants to be on every bar —
- * but a bar narrower than this has no room for the tag *and* a title, and what
- * a reader gets is a truncated game name reading as a broken word. Below the
- * threshold the hue and the tooltip carry it, which is what a two-day bar could
- * say about itself anyway.
- */
-const TAG_FROM = 96;
 
 /**
  * How far apart two start markers have to be before both are drawn.
@@ -160,6 +150,33 @@ export function Timeline({
 }) {
   const gameMeta = useGameMeta();
   const scroller = useRef<HTMLDivElement>(null);
+  const initialized = useRef(false);
+  const [viewport, setViewport] = useState({ left: 0, width: 0 });
+
+  // One observer/listener for the board; at most one React update per scroll
+  // frame. Labels fit the visible part of a bar, even with its end off-screen.
+  useLayoutEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+    let frame = 0;
+    const read = () => {
+      setViewport(old => old.left === el.scrollLeft && old.width === el.clientWidth
+        ? old : { left: el.scrollLeft, width: el.clientWidth });
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(read);
+    };
+    const observer = new ResizeObserver(read);
+    observer.observe(el);
+    el.addEventListener("scroll", onScroll, { passive: true });
+    read();
+    return () => {
+      observer.disconnect();
+      el.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
 
   // Held back rather than filtered away by the caller, so the control can say
   // how many there are — a board that silently drops a third of the schedule is
@@ -191,12 +208,10 @@ export function Timeline({
   const x = (ms: number) => timelineX(ms, min, dayWidth);
   const chartWidth = Math.ceil(x(max));
 
-  // Day width is fixed in pixels even on a narrow phone. Centre today when
-  // the window permits; do not re-scroll as the clock ticks within the day.
-  const todayX = Math.round(x(localDayStart(now)));
+  // Only an initial open or an explicit Jump asks to navigate to now.
   const jumpToNow = (behavior: ScrollBehavior) => {
     const el = scroller.current;
-    el?.scrollTo({ left: scrollToToday(todayX, el.clientWidth), behavior });
+    el?.scrollTo({ left: scrollToToday(x(now), el.clientWidth, window.matchMedia("(min-width: 64rem)").matches), behavior });
   };
 
   /**
@@ -205,7 +220,7 @@ export function Timeline({
    * of the scroll area would throw whatever they were reading off the screen,
    * and re-opening at today would undo the scrolling they did to get there.
    */
-  const hold = useRef<{ ms: number; px: number } | null>(null);
+  const hold = useRef<{ ms: number; px: number; dayWidth: number } | null>(null);
 
   const zoom = (by: 1 | -1) => {
     const el = scroller.current;
@@ -213,7 +228,7 @@ export function Timeline({
       // The middle of the view is what a reader is looking at, so that is what
       // stays put.
       const px = el.clientWidth / 2;
-      hold.current = { ms: timelineMsAt(el.scrollLeft + px, min, dayWidth), px };
+      hold.current = { ms: timelineMsAt(el.scrollLeft + px, min, dayWidth), px, dayWidth: stepDayWidth(dayWidth, by) };
     }
     onZoom(stepDayWidth(dayWidth, by));
   };
@@ -221,24 +236,18 @@ export function Timeline({
   // Before paint, so a zoom never shows a frame at the wrong offset.
   useLayoutEffect(() => {
     const el = scroller.current;
-    if (el === null) return;
+    if (el === null || el.clientWidth === 0 || plotted.length === 0) return;
     const anchor = hold.current;
-    if (anchor !== null) {
+    if (anchor !== null && anchor.dayWidth === dayWidth) {
       hold.current = null;
       el.scrollLeft = Math.max(0, x(anchor.ms) - anchor.px);
-      return;
+    } else if (!initialized.current) {
+      initialized.current = true;
+      jumpToNow("instant");
     }
-    el.scrollTo({ left: scrollToToday(todayX, el.clientWidth), behavior: "instant" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [todayX]);
-
-  if (rows.length === 0) {
-    return (
-      <p className="px-4 py-10 text-sm text-muted">
-        Nothing to plot. Adjust the game or event type filters to see a schedule.
-      </p>
-    );
-  }
+    setViewport(old => old.left === el.scrollLeft && old.width === el.clientWidth
+      ? old : { left: el.scrollLeft, width: el.clientWidth });
+  });
 
   const lanes = timelineLanes(drawn, group, splitUpcoming, gameOrder);
   // From `drawn`, not `plotted`: the bars on the board include whatever
@@ -288,7 +297,11 @@ export function Timeline({
         </div>
       </div>
 
-      {plotted.length === 0 ? (
+      {rows.length === 0 ? (
+        <p className="px-4 py-10 text-sm text-muted">
+          Nothing to plot. Adjust the game or event type filters to see a schedule.
+        </p>
+      ) : plotted.length === 0 ? (
         /* Not the same emptiness as no rows at all: everything the reader can
            see is still ahead of them, and the board is hiding it on purpose.
            Say which, or the control above reads as broken. */
@@ -300,9 +313,10 @@ export function Timeline({
           — switch on “Show events that haven't started”, under “What you see”
           in settings below.
         </p>
-      ) : (
+      ) : null}
       <div
         ref={scroller}
+        hidden={plotted.length === 0}
         /*
          * The pane scrolls, not the page — which is what lets the axis stay
          * put. Capped rather than fixed: three lanes take the height they need
@@ -435,42 +449,42 @@ export function Timeline({
                       // it — growing `overflow-auto`'s scrollWidth into empty space
                       // with no gridlines or axis is exactly what the board exists
                       // to avoid.
-                      const right = Math.min(
-                        x(plottedEnd ?? plottedStart + 14 * DAY),
-                        chartWidth,
-                      );
+                      // Unknown means still open, including old campaigns.
+                      // A start+14d drawing cap could put the whole live bar
+                      // behind today. Continue to the board edge with a frayed
+                      // wash and explicit unknown token, never a dated endpoint.
+                      const right = plottedEnd === null
+                        ? chartWidth
+                        : Math.min(x(plottedEnd), chartWidth);
                       const width = Math.min(
                         Math.max(right - left, MIN_BAR),
                         Math.max(0, chartWidth - left),
                       );
                       const done = isDone(event.id);
+                      const deadline = timelineDeadline(event, clock, now);
+                      const disputed = !!conflicts?.length;
+                      const accessible = timelineAccessibleName(event, clock, game.name, deadline.accessible, disputed, done);
                       return (
                         <Fragment key={event.id}>
                         {i === breakAt && <NotStarted />}
                         <button
                           type="button"
                           onClick={() => onOpen(event.id)}
-                          // The game is in the tooltip on the merged board
-                          // because the bar can be too narrow to show the tag
-                          // it carries, and colour alone is not an answer once
-                          // thirteen games share one stack.
-                          title={
-                            (heading === null
-                              ? `${game.name} — ${event.title}`
-                              : event.title) +
-                            (notStarted
-                              ? ` — not started yet, begins ${dayLabel(plottedStart)}`
-                              : "") +
-                            (event.startPrecision === "day" ? " — start date only" : "") +
-                            (dayOnlyEnd(event) ? " — end date only" : "") +
-                            (conflicts && conflicts.length > 0 ? " — date disputed" : "")
-                          }
-                          className={`relative flex h-9 items-center gap-2 rounded-[5px] px-3 text-left text-[0.75rem] font-medium transition-opacity hover:opacity-100 ${
+                          aria-label={accessible}
+                          title={accessible + (notStarted ? ` — begins ${dayLabel(plottedStart)}` : "")}
+                          data-timeline-event={event.id}
+                          className={`relative flex h-9 items-center rounded-[5px] px-2 text-left text-[0.75rem] font-medium transition-opacity hover:opacity-100 ${
                             done ? "opacity-35" : "opacity-90"
                           }`}
                           style={{
                             marginLeft: left,
                             width,
+                            color: "var(--color-ink)",
+                          }}
+                        >
+                          {/* Keep edge honesty on the wash: a multi-week fade
+                              must never erase the sticky readable payload. */}
+                          <span aria-hidden className="pointer-events-none absolute inset-0 rounded-[5px]" style={{
                             // Thinner wash on an event nobody can play yet, so
                             // a glance at the board separates what is running
                             // from what is merely scheduled without reading a
@@ -490,50 +504,19 @@ export function Timeline({
                             // started before the window. Both are honest about
                             // what is not shown.
                             maskImage: edgeMask(clippedStart, unknownEnd),
-                            color: "var(--color-ink)",
-                          }}
-                        >
-                          {/* Sticky clamps to the bar's own box, so a name can
-                              never wander outside the event it belongs to. */}
-                          <span
-                            className="sticky flex min-w-0 items-center gap-1.5 truncate"
-                            style={{ left: PIN }}
-                          >
-                            {heading === null && width >= TAG_FROM && (
-                              <span
-                                className="eyebrow shrink-0 text-[0.5625rem]"
-                                style={{ color: game.hue }}
-                              >
-                                {game.short}
-                              </span>
-                            )}
-                            <TypeBadge type={event.type} compact />
-                            <span className="min-w-0 truncate">{event.title}</span>
-                            {conflicts && conflicts.length > 0 && (
-                              <span className="shrink-0 text-soon" aria-label="Date disputed">!</span>
-                            )}
-                            {(event.startPrecision === "day" || dayOnlyEnd(event)) && (
-                              <span className="sr-only">
-                                {event.startPrecision === "day" ? " — start date only" : ""}
-                                {dayOnlyEnd(event) ? " — end date only" : ""}
-                              </span>
-                            )}
-                            {notStarted && (
-                              /* The dashed edge and the labelled rule above it
-                                 say this to a reader looking at the board; a
-                                 screen reader gets neither, and a bar that has
-                                 not started is not a bar that is running. */
-                              <span className="sr-only">
-                                {" "}
-                                — not started yet, begins{" "}
-                                {dayLabel(plottedStart)}
-                              </span>
-                            )}
-                          </span>
-                          <span
-                            aria-hidden
-                            className="ml-auto size-1.5 shrink-0 rounded-full"
-                            style={{ background: URGENCY_COLOR[clock.urgency] }}
+                          }} />
+                          <TimelineLabel
+                            identity={recognitionIdentity(event)}
+                            deadline={deadline.text}
+                            unknown={deadline.unknown}
+                            dayOnly={deadline.dayOnly}
+                            type={event.type}
+                            game={game.short}
+                            hue={game.hue}
+                            mode={group}
+                            available={visibleBarContent(left, width, viewport.left, viewport.width)}
+                            disputed={disputed}
+                            urgency={URGENCY_COLOR[clock.urgency]}
                           />
                         </button>
                         </Fragment>
@@ -546,7 +529,6 @@ export function Timeline({
           </div>
         </div>
       </div>
-      )}
     </>
   );
 }
@@ -611,8 +593,8 @@ export function timelineMsAt(px: number, min: number, dayWidth: number): number 
   return start + (offset - days) * (nextLocalDayStart(start) - start);
 }
 
-export function scrollToToday(todayX: number, viewportWidth: number): number {
-  return Math.max(0, todayX - viewportWidth / 2);
+export function scrollToToday(nowX: number, viewportWidth: number, desktop = false): number {
+  return Math.max(0, nowX - viewportWidth * (desktop ? 0.25 : 0.20));
 }
 
 /** A date-only source tells us a calendar cell, not an hour within that cell. */
