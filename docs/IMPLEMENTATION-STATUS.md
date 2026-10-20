@@ -1148,6 +1148,30 @@ blocker for current owner/household use or Timeline M1/M2.**
 pre-public implementation/audit work, immediately before broad link sharing.
 
 
+## Source-health notification follow-up — 2026-10-20
+
+Status: **ready; complete before Timeline M1.** The data-safety behavior is
+already correct, but the scheduled workflow currently sends repeated failure
+mail while the same source remains continuously broken.
+
+- Latest observed scheduled Refresh `39406158497`: refresh, bookkeeping,
+  snapshot commit and feed publication all succeeded; only the final
+  `Report source health` step failed. The resulting snapshot commit
+  `7399ec1d` triggered CI `39406203379`, which succeeded. The known
+  Endfield Echoes snapshot remains last-confirmed on 2026-10-14 while the
+  ordinary Endfield Event source and other working sources continue to confirm
+  and publish.
+- Do not acknowledge/whitelist Echoes. Implement a generic transition rule:
+  persistent sources remain visibly `broken`, but the workflow becomes red
+  only when a source crosses into broken state (and again if it later recovers
+  and re-breaks). A different newly-broken source must still alert even while a
+  known source remains broken.
+- Task: `docs/tasks/SOURCE-HEALTH-ALERT-DEDUP.md`.
+
+**Next concrete step:** implement and merge the bounded alert-dedup task, verify
+that no ingestion/LKG/source-health rule was weakened, then start Timeline M1.
+
+
 ## Timeline Readability / Recognition UX
 
 Status: **research complete; Timeline M1 is cleared to start. Account/User S6a completed on 2026-10-19; S6b is separate/non-blocking.**
@@ -1169,4 +1193,4 @@ Status: **research complete; Timeline M1 is cleared to start. Account/User S6a c
 - The feedback backlog was reconciled on 2026-10-06. Three small UI fixes remain open and unsequenced: mixed reset attribution, explicit Event Detail close/Back dismissal, and `All types` clear-all. Weekly separators remain observed. Event artwork, recognition-first Event Detail redesign, per-game daily passes and any return to type grouping remain larger/deferred work.
 - The original featured-subject feedback also mentioned `Next Up`/checklist surfaces. M1/M2 cover the semantic contract + Timeline only, so those additional compact surfaces remain an explicit follow-up and must not be silently considered resolved when M2 lands.
 
-Next concrete step for this track: **start Timeline Readability M1 from CURRENT `main`**. Do not fold S6b into that milestone.
+Next concrete step for this track: **after the source-health alert-dedup follow-up is merged, start Timeline Readability M1 from CURRENT `main`**. Do not fold S6b into that milestone.
