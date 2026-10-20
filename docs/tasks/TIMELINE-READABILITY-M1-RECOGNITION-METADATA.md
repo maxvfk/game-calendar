@@ -1,6 +1,6 @@
 # Timeline Readability M1 — Recognition Metadata Contract
 
-Status: **ready — Account/User S6a completed on 2026-10-19 and the coordinating project chat explicitly cleared Timeline work; S6b is separate/non-blocking**  
+Status: **implemented and validated 2026-10-21 — see `docs/IMPLEMENTATION-STATUS.md`; M2 not started**
 Type: bounded implementation milestone  
 Depends on: completed `docs/tasks/TIMELINE-READABILITY-UX-RESEARCH.md`  
 Next milestone: `TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md`

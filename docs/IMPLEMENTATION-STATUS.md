@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-10-21 (Moscow; source-health alert dedup implemented and validated). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-21 (Moscow; Timeline M1 recognition metadata implemented and validated). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
@@ -1208,7 +1208,7 @@ Echoes contradiction and WuWa disappearance review remain source blockers.
 
 ## Timeline Readability / Recognition UX
 
-Status: **research complete; Timeline M1 is cleared to start. Account/User S6a completed on 2026-10-19; S6b is separate/non-blocking.**
+Status: **research complete; M1 recognition metadata implemented and validated. M2 has not started. Account/User S6a completed on 2026-10-19; S6b is separate/non-blocking.**
 
 - A five-step UX research task was completed and reviewed in `docs/tasks/TIMELINE-READABILITY-UX-RESEARCH.md`.
 - The selected direction is **Candidate A′ — Sticky semantic bars**:
@@ -1220,11 +1220,57 @@ Status: **research complete; Timeline M1 is cleared to start. Account/User S6a c
   - re-anchor only on initial Timeline open and explicit `Jump to today`, not on filters/group/upcoming/refresh;
   - no event-type category bands in the selected implementation direction.
 - One review correction was added to the final spec: the visual `TypeBadge` may disappear first on a narrow bar, but event type must remain in accessible semantics.
-- Implementation is split into two bounded tasks and intentionally parked:
+- Implementation is split into two bounded tasks:
   1. `docs/tasks/TIMELINE-READABILITY-M1-RECOGNITION-METADATA.md` — additive semantic data contract only;
   2. `docs/tasks/TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md` — Timeline rendering/navigation/accessibility, after merged M1.
 - The previous Account/User blocker is cleared by completed S6a. S6b monitoring/cache-removal hardening is separate and does not block M1/M2. Both Timeline milestones still require a fresh CURRENT-main check before implementation.
 - The feedback backlog was reconciled on 2026-10-06. Three small UI fixes remain open and unsequenced: mixed reset attribution, explicit Event Detail close/Back dismissal, and `All types` clear-all. Weekly separators remain observed. Event artwork, recognition-first Event Detail redesign, per-game daily passes and any return to type grouping remain larger/deferred work.
 - The original featured-subject feedback also mentioned `Next Up`/checklist surfaces. M1/M2 cover the semantic contract + Timeline only, so those additional compact surfaces remain an explicit follow-up and must not be silently considered resolved when M2 lands.
 
-Next concrete step for this track: **after the source-health alert-dedup follow-up is merged, start Timeline Readability M1 from CURRENT `main`**. Do not fold S6b into that milestone.
+### M1 recognition metadata — 2026-10-21
+
+- Baseline CURRENT main: `929f62881566d8670ae4dd730b47aadbf9635c87` (includes
+  merged source-health alert dedup); fresh branch
+  `feat/timeline-m1-recognition-metadata`. Task:
+  `docs/tasks/TIMELINE-READABILITY-M1-RECOGNITION-METADATA.md`.
+- Canonical `GachaEvent` and reviewed ingestion now accept optional
+  `recognitionSubjects?: string[]`, sharing one validator. A present array must
+  contain at least one subject; strings must contain non-whitespace text and be
+  at most 200 characters. Values/order are preserved. No title parsing,
+  inferred subjects, schema-version bump or UI consumption was added.
+- Reviewed materialization explicitly carries the field. Existing merge winner
+  selection, canonical feed validation and JSON serialization preserve it
+  without changes. `eventId()`, completion/progress keys, dates/precision,
+  provenance/conflicts, custom storage/IDs, exports/preferences and Account/
+  Supabase are unchanged. Old nonempty v1 feeds and custom events remain valid
+  without the field; the required official title remains the fallback.
+- Only two reviewed Genshin records were populated, using the explicit subjects
+  already recorded in their reviewed summaries and linked notice `166200`:
+  `When Warm Winds Cavort` → `Vesna`; `Epitome Invocation — Version 7.1 Phase I`
+  → `Beyond the Chrysalis`, `Hymn of the Maelstrom` in that order. These are
+  existing historical feed records, not a claim of new source verification or
+  active banner coverage. No new source fetch/research or review timestamp was
+  needed; all original reviewed values/timestamps remain unchanged. No safe
+  two-character co-headliner example was established, so that shape is tested
+  synthetically. Ordinary events retain omitted metadata. Broad catalogue
+  population and future structured-parser extraction remain separate work.
+- Bun **1.3.14**: frozen install, typecheck, full tests and build pass. Focused
+  contract/integration tests: **22 pass / 0 fail**. Full suite: **1079 pass /
+  1 optional age skip / 0 fail** (1080 tests, 52 files). Initial full run hit an
+  existing PGlite setup hook timeout in `supabase-db.test.ts`; the exact unmodified
+  `bun test` rerun passed, without changing timeouts or tests. The local runtime
+  needed its `bunx` executable alias restored before the successful build.
+- Tests cover omission, one character, ordered characters/items, empty arrays,
+  blank/whitespace/mixed-invalid strings, wrong types, old nonempty feed JSON,
+  merge/serialization, pinned derived and explicit IDs, custom events, and the
+  actual offline feed builder in an isolated output directory. Before/after
+  feed comparison retains **all 181 IDs / 7 games / 1 existing NTE Circle Bounty
+  conflict**. Event values differ only by the two additive metadata fields and
+  normal regenerated parser observation timestamps. No source-health or
+  ingestion acceptance rule was changed. PR/hosted validation is recorded in
+  the implementation PR.
+
+**Next concrete step:** after merged M1, start M2 Sticky semantic Timeline from
+then-CURRENT `main` in a separately authorized Work. M2 rendering, sticky content,
+viewport/navigation, TypeBadge and accessibility behavior were not started here.
+Do not fold S6b or broad metadata population into M2.

@@ -77,6 +77,7 @@
     },
     {
       "title": "When Warm Winds Cavort",
+      "recognitionSubjects": ["Vesna"],
       "type": "banner",
       "summary": "Vesna character event wish; Diona, Faruzan, and Chongyun receive boosted drop rates.",
       "startsAt": "2026-09-23T00:00:00.000Z",
@@ -113,6 +114,7 @@
     },
     {
       "title": "Epitome Invocation — Version 7.1 Phase I",
+      "recognitionSubjects": ["Beyond the Chrysalis", "Hymn of the Maelstrom"],
       "type": "banner",
       "summary": "Weapon event wish featuring Beyond the Chrysalis and Hymn of the Maelstrom.",
       "startsAt": "2026-09-23T00:00:00.000Z",
