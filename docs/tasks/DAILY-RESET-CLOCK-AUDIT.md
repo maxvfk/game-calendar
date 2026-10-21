@@ -1,6 +1,6 @@
 # Audit game daily reset schedules — source-backed follow-up
 
-Status: **backlog / research-first**, created from operator phone observation 2026-10-21.
+Status: **ready for standalone Chat research — no Work or code changes**, created from operator phone observation 2026-10-21.
 Independent of completed UI small fixes (PR #44) and Timeline label polish.
 
 ## Trigger and evidence boundaries
@@ -78,3 +78,37 @@ without a separate implementation task/approval.
 
 When the operator provides a specific game + selected region + shown countdown
 and in-game reset time, use that as a high-priority reproducible test case.
+
+
+## Execution mode: ordinary Chat research
+
+This audit is deliberately suitable for a **new ordinary ChatGPT chat**, not a
+coding Work session. The chat can inspect current GitHub code and external
+sources, build an evidence matrix, and commit an auditable research report.
+Do not treat this chat as the source of truth; persist the outcome in GitHub.
+
+- Start from CURRENT `main`; the baseline above documents the original
+  hypothesis, not permanent repo state. Do not revisit unrelated source
+  coverage research.
+- Create the focused report
+  `docs/research/daily-reset-clocks.md` with the evidence matrix, source
+  dates/URLs, per-game per-region actual and code-calculated UTC clocks,
+  unknowns/conflicts, and a clear diagnosis of confirmed errors vs assumptions.
+- For each claim, distinguish **official**, **in-game/firsthand**,
+  **independent secondary**, and **inference**. When in-game data is needed,
+  identify exactly the missing screenshot/game/region, but finish the remaining
+  report without blocking on it.
+- Include DST examples for applicable server clocks, and a dependency/risk
+  section on persisted daily keys and sync. Prefer one actionable, small,
+  separately scoped implementation follow-up **only if** confirmed evidence
+  justifies a clock change.
+- Update `docs/IMPLEMENTATION-STATUS.md` with the audit outcome and
+  `Next concrete step`, then open a docs-only PR. No production constants,
+  migrations, tests, feed snapshots or application code in this research PR.
+- If repo writes, PR or other connectors are unavailable in the chat,
+  produce the complete Markdown report in the answer and explicitly mark
+  GitHub publication as uncompleted rather than claiming it was saved.
+
+Completion criterion: evidence-backed report and a concrete recommendation,
+**not** a speculative change to reset hours. Afterwards use a separate Work
+only for an approved, bounded implementation milestone.
