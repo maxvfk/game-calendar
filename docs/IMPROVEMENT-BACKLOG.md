@@ -19,6 +19,14 @@ For each item, use this compact format:
 
 ## Observed issues / feedback
 
+- **Title:** Audit real per-game daily reset clocks and regional server mappings
+  - **Observation:** after PR #44, the operator confirmed nearest-game attribution works but reports that actual Daily Reset countdown times appear wrong. No particular game's actual timestamp has been verified yet. Current shared reset logic defaults to 04:00 server-local with fixed UTC offsets and sparse exceptions; NTE/CZN have no game-specific reset overrides.
+  - **Desired behavior:** verify authoritative per-game daily reset instants for shipped games and relevant regions, compare to calculated app times, distinguish known vs unknown and DST, then propose a separate safe correction.
+  - **Area:** reset scheduling / data correctness / personal daily keys
+  - **Priority:** operator-observed follow-up; research-first, separate from UI-polish
+  - **Status:** observed / investigation task ready; no reset fixes yet
+  - **Notes / constraints:** `docs/tasks/DAILY-RESET-CLOCK-AUDIT.md`. `dayKey` feeds persisted daily logs/streaks and account sync: changing clock constants without analyzing existing data can shift historic day keys. Do not guess unverified hours or mix event banner boundaries with daily-task resets.
+
 - **Title:** Timeline Ending soonest hides titles rather than truncating on phone
   - **Observation:** Android Chrome operator screenshot 2026-10-21 has several otherwise visible event bars showing only game, TypeBadge and urgency dot, whereas wider desktop displays identities. `fitTimelineContent()` in `Ending soonest` currently returns `identity: 0` if the complete measured identity cannot fit after game+badge, even when part of it would fit; an old unit test codifies this.
   - **Desired behavior:** show an ellipsized event recognition/title fragment whenever genuinely usable measured width remains, retaining the accepted high-priority compact TypeBadge; game text can yield if it prevents an otherwise useful identity. Keep truthful deadlines and full accessible names.
