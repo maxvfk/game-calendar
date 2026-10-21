@@ -1844,3 +1844,11 @@ before implementation began. Independent PR #45 reset-clock audit docs remain.
 **Next concrete step:** after PR #46 delivery, operator Android Chrome/PC smoke: long labels and short
 tails at several zooms in both modes, badge/indicator separation, full detail
 names, and existing inspected-time behavior. Stop after this scope.
+
+
+### Timeline label truncation — operator acceptance (2026-10-21)
+
+- Current main implementation: [PR #46](https://github.com/maxvfk/game-calendar/pull/46), merged as `5a4f9a84020513891dd0429e0e0f1a7d5860ed6a`; hosted [main CI/Pages 39662911628](https://github.com/maxvfk/game-calendar/actions/runs/39662911628) succeeded.
+- After the Work completed, the operator reported: **“я проверил, все работает нормально”**. Treat this as manual acceptance of the originally reported missing-name/truncation fix. The exact device, zoom and view matrix used for manual acceptance was not specified, so do not claim each was separately tested by the operator. Automated Chromium evidence remains recorded in the prior section.
+- `docs/tasks/TIMELINE-LABEL-TRUNCATION-FIX.md` is now **complete / accepted**. No further label work scheduled. The separately tracked per-game Daily Reset **clock accuracy audit** (`docs/tasks/DAILY-RESET-CLOCK-AUDIT.md`) remains open; UI attribution being correct does not validate reset-hour configuration.
+- **Next concrete step:** choose the next independent planned milestone (e.g. reset clock audit), starting from CURRENT main. Do not restart finished Timeline label or M2 work without a new reproduced defect.
