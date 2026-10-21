@@ -31,11 +31,12 @@ export function TypeFilters({
           <button
             key={id}
             type="button"
+            aria-label={label}
             aria-pressed={selected.includes(id)}
             onClick={() => onChange(toggleCategory(selected, id))}
             className={`rounded-full border px-2.5 py-1 text-xs ${selected.includes(id) ? "border-ink/60 bg-raised text-ink" : "border-hairline text-faint"}`}
           >
-            {label}
+            {wrapped && id === "login" ? "Login" : wrapped && id === "shop" ? "Shop" : label}
           </button>
         ))}
       </div>
