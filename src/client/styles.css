@@ -550,7 +550,7 @@ body {
 }
 .account-popover .account-actions { align-items: flex-start; flex-direction: column; }
 .account-popover button { min-height: 44px; }
-/* Denser mobile filter rows, with separated 32px targets (header stays 44px). */
+/* Denser filter rows, with separated 32px targets. Header frames are 34px. */
 .filter-reset, .filter-chips button, .filter-panel-heading .header-icon { min-height: 32px; }
 .filter-panel-heading .header-icon { min-width: 32px; }
 .filter-chips button { padding-inline: 8px; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
@@ -558,17 +558,19 @@ body {
 
 @media (width < 768px) {
   .desktop-account, .desktop-types, .desktop-focus, .app-counts { display: none; }
-  .app-header { position: relative; gap: 4px; padding: 6px 8px; }
+  .app-header { position: relative; gap: 4px; padding: 4px 8px; }
   .app-wordmark { font-size: 0.75rem; letter-spacing: 0; white-space: nowrap; }
   .mobile-account, .mobile-filters-trigger { display: flex; }
   .mobile-filters-panel:not([hidden]) { display: block; }
   .mobile-account-fallback { position: relative; display: flex; justify-content: flex-end; }
-  .view-tabs { flex-shrink: 0; }
+  .view-tabs { flex-shrink: 0; padding: 2px; }
+  .mobile-account > .header-icon, .mobile-filters-trigger { min-height: 34px; }
   .mobile-filters-trigger {
     flex: 1 0 auto;
     gap: 4px;
     padding-inline: 6px;
     border: 1px solid var(--color-hairline);
+    border-radius: 8px;
     background: var(--color-surface);
     font-size: 0.75rem;
   }
@@ -576,7 +578,7 @@ body {
     border-color: var(--color-near);
     background: var(--color-raised);
   }
-  .view-tabs button { min-width: 44px; min-height: 44px; padding: 4px 7px; }
+  .view-tabs button { min-width: 44px; min-height: 28px; padding: 0 7px; }
   .filters-button-label { display: inline; white-space: nowrap; }
   .app-header[data-compact] .app-wordmark { font-size: 11px; }
   .app-header[data-compact] .view-tabs button { min-width: 44px; }

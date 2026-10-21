@@ -202,3 +202,13 @@ icon may yield first. The existing measured large-text fallback remains.
 This is panel density only; do not change Timeline bar height/navigation,
 Auth/Sync, desktop layout, filter semantics or Reset scope. Final refined
 real-phone smoke remains with the operator.
+
+
+## Operator header-height refinement — 2026-10-21
+
+After accepting the compact filter panel, the operator requested a shorter
+header and equal visible heights for Filters and the view-toggle frame.
+Supersede the preceding 44px-header constraint for mobile: 34px normal-size
+outer frames, 28px inner tabs, 4px header vertical padding; controls can grow
+for enlarged text. Keep the accepted panel, desktop, Auth/Sync and Timeline
+behavior. Final real-phone visual smoke remains the operator's gate.

@@ -41,14 +41,19 @@ try {
     const noOverflow = async (label, textScale = 1) => {
       const geometry = await page.evaluate(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth,
         controls: [...document.querySelectorAll(".app-header button")].filter(el => el.getClientRects().length).map(el => {
-          const r = el.getBoundingClientRect(); return { left: r.left, right: r.right, width: r.width, height: r.height };
+          const r = el.getBoundingClientRect(); return { left: r.left, right: r.right, width: r.width, height: r.height, tab: el.getAttribute("role") === "tab" };
         }) }));
       if (textScale === 1) check(geometry.scroll <= geometry.width, `${width} ${label}: sideways page overflow ${JSON.stringify(geometry)}`);
       // Pre-existing settings rows overflow at 200% root text. Scope the new
       // header/panel acceptance without silently changing unrelated settings.
       check(await page.locator(".app-header").evaluate(el => el.scrollWidth <= el.clientWidth), `${label}: header overflow`);
       check(await page.locator(".mobile-filters-panel").evaluate(el => el.hidden || el.scrollWidth <= el.clientWidth), `${label}: panel overflow`);
-      for (const r of geometry.controls) check(r.left >= 0 && r.right <= width && r.width >= 44 && r.height >= 44, `${label}: clipped/short target ${JSON.stringify(r)}`);
+      const frameHeights = await page.locator(".app-header").evaluate(el => [
+        el.querySelector(".mobile-filters-trigger").getBoundingClientRect().height,
+        el.querySelector(".view-tabs").getBoundingClientRect().height,
+      ]);
+      check(Math.abs(frameHeights[0] - frameHeights[1]) <= .5, `${label}: control frames aligned`);
+      for (const r of geometry.controls) check(r.left >= 0 && r.right <= width && r.width >= 44 && r.height >= (r.tab ? 28 : 34), `${label}: clipped/short target ${JSON.stringify(r)}`);
     };
     if (width >= 768) {
       check(!(await page.locator(".mobile-filters-trigger").isVisible()), "desktop trigger hidden");
@@ -66,6 +71,14 @@ try {
     check(!(await page.locator(".app-counts").isVisible()), "mobile subtitle absent");
     await noOverflow("collapsed");
     const trigger = page.getByRole("button", { name: /^Filters/ });
+    const headerHeights = await page.locator(".app-header").evaluate(el => ({
+      header: el.getBoundingClientRect().height,
+      filters: el.querySelector(".mobile-filters-trigger").getBoundingClientRect().height,
+      tabs: el.querySelector(".view-tabs").getBoundingClientRect().height,
+    }));
+    check(headerHeights.header <= 44, `compact mobile header: ${JSON.stringify(headerHeights)}`);
+    check(Math.abs(headerHeights.filters - headerHeights.tabs) <= .5, "Filters and view toggle frames have equal height");
+    check(headerHeights.filters === 34, "normal-size control frames are 34px high");
     const buttonLayout = await trigger.evaluate(el => {
       const rect = el.getBoundingClientRect();
       const brand = document.querySelector(".app-wordmark").getBoundingClientRect();
