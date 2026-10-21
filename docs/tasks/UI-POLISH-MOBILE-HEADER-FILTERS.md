@@ -1,6 +1,10 @@
 # UI polish — compact mobile header and wrapped filters
 
-Status: **ready / approved product UX — implement as one bounded Work after completed Timeline M2**
+Status: **implemented / merged / deployed — final operator real-phone smoke pending**
+Delivery: [PR #37](https://github.com/maxvfk/game-calendar/pull/37);
+[main CI/build/Pages](https://github.com/maxvfk/game-calendar/actions/runs/39631262345).
+See `docs/IMPLEMENTATION-STATUS.md` for validation, the pre-existing 200%-text
+settings overflow limit, and the remaining manual acceptance gate.
 Type: **standalone UI-polish task**, not Timeline M2 and not the unrelated small UI-fix batch.
 
 ## Context / decision
