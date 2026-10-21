@@ -8,6 +8,19 @@ export function recognitionIdentity(event: Pick<DisplayEvent, "title" | "recogni
   return event.recognitionSubjects?.length ? event.recognitionSubjects.join(" + ") : event.title;
 }
 
+const graphemes = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+
+/** Minimum useful prefix: three graphemes plus ellipsis, or the whole short name.
+ * Measure in the label's real font; don't split emoji/combining sequences. */
+export function minimumIdentityText(identity: string): string {
+  let prefix = "", count = 0;
+  for (const { segment } of graphemes.segment(identity.trimStart())) {
+    if (count++ === 3) return prefix + "…";
+    prefix += segment;
+  }
+  return prefix;
+}
+
 export function timelineDeadline(event: DisplayEvent, clock: EventClock, now: number) {
   if (clock.endsMs === null) {
     return { text: "end unknown", accessible: "End unknown", unknown: true, dayOnly: false };
@@ -60,7 +73,7 @@ export interface ContentWidths {
   identity: number;
   deadline: number;
   compactUnknown: number;
-  ellipsis: number;
+  minimumIdentity: number;
   gap: number;
 }
 
@@ -95,14 +108,20 @@ export function fitTimelineContent(
   // type-only limit the marker yields visually, never in accessibility.
   const deadline = unknown && size(w.type, w.compactUnknown) <= room ? "compact" : null;
   const namesRoom = Math.max(0, room - w.type - (deadline ? w.compactUnknown + w.gap : 0));
+  const identityWithin = (budget: number) => budget >= Math.min(w.identity, w.minimumIdentity)
+    ? Math.min(w.identity, Math.max(0, budget)) : 0;
   if (mode === "game") {
-    const identityRoom = namesRoom - w.gap;
-    return { type: true, game: 0, identity: identityRoom >= w.ellipsis ? Math.min(w.identity, identityRoom) : 0, deadline };
+    return { type: true, game: 0, identity: identityWithin(namesRoom - w.gap), deadline };
   }
-  if (size(game, w.identity) + w.gap <= namesRoom) {
-    return { type: true, game, identity: w.identity, deadline };
+  // Keep game alongside a useful title fragment. If it crowds the title out,
+  // reclaim its width before giving up event identity. Badge/unknown reservations
+  // above stay intact; every actual child-to-child gap is included.
+  const withGame = identityWithin(namesRoom - game - (game > 0 ? 2 : 1) * w.gap);
+  if (withGame > 0) {
+    return { type: true, game, identity: withGame, deadline };
   }
-  return { type: true, game: game + w.gap <= namesRoom ? game : 0, identity: 0, deadline };
+  const identity = identityWithin(namesRoom - w.gap);
+  return { type: true, game: identity > 0 ? 0 : game + w.gap <= namesRoom ? game : 0, identity, deadline };
 }
 
 /** Readable intersection of a bar's padded interior and the scroll viewport. */

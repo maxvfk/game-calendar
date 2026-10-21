@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import type { EventType } from "../../shared/schema.ts";
 import type { TimelineGroup } from "../state/lanes.ts";
-import { fitTimelineContent, type ContentWidths } from "../state/timelineContent.ts";
+import { fitTimelineContent, minimumIdentityText, type ContentWidths } from "../state/timelineContent.ts";
 import { TypeBadge } from "./TypeBadge.tsx";
 
 const GAME_CLASS = "eyebrow shrink-0 truncate text-[0.5625rem]";
@@ -19,8 +19,8 @@ export function TimelineLabel({ identity, deadline, unknown, dayOnly, type, game
     if (!el) return;
     const read = () => {
       const children = Array.from(el.children).map(child => child.getBoundingClientRect().width);
-      const [game = 0, type = 0, identity = 0, deadline = 0, compactUnknown = 0, ellipsis = 0, indicators = 0] = children;
-      const next = { game, type, identity, deadline, compactUnknown, ellipsis, indicators,
+      const [game = 0, type = 0, identity = 0, deadline = 0, compactUnknown = 0, minimumIdentity = 0, indicators = 0] = children;
+      const next = { game, type, identity, deadline, compactUnknown, minimumIdentity, indicators,
         gap: parseFloat(getComputedStyle(el).columnGap) || 0 };
       setWidths(old => old && Object.keys(next).every(key => old[key as keyof typeof next] === next[key as keyof typeof next]) ? old : next);
     };
@@ -51,7 +51,7 @@ export function TimelineLabel({ identity, deadline, unknown, dayOnly, type, game
         <span>{identity}</span>
         <span>{deadline}</span>
         <span>?</span>
-        <span>…</span>
+        <span>{minimumIdentityText(identity)}</span>
         {indicators}
       </span>
       </span>

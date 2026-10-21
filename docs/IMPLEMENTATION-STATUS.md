@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-10-21 (Moscow; all three small UI fixes implemented/browser-validated; hosted delivery tracked with their PR; final operator real-device smoke pending; M2 remains complete). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-21 (Moscow; narrow Timeline label truncation implemented/browser-validated; hosted delivery tracked with its PR; final operator real-device smoke pending; M2 remains complete). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
@@ -1682,7 +1682,7 @@ header height and equal frames on the phone. No other milestone is included.
   regressions, merge/deploy, then operator phone/desktop smoke.
 
 
-### Pending Timeline label readability fix — approved 2026-10-21
+### Timeline label readability intake — approved 2026-10-21 (implementation below)
 
 - Operator's Android Chrome screenshot in `Ending soonest` shows real event
   bars that display game + TypeBadge + urgency dot, **but no identity text**.
@@ -1795,3 +1795,52 @@ no other milestone is started.
 - **Next concrete step:** collect a concrete observed mismatch
   (game, selected region, displayed time and known in-game reset) and run
   this targeted audit independently of Timeline label readability Work.
+
+
+## Timeline label truncation fix — 2026-10-21 (Moscow)
+
+Scope: only `docs/tasks/TIMELINE-LABEL-TRUNCATION-FIX.md`. Baseline current
+main `769c5f4`; fresh branch `fix/timeline-label-truncation`. Small UI fixes
+PR #44 was already merged (`c54ec98`) and its main CI/build/Pages had succeeded
+before implementation began. Independent PR #45 reset-clock audit docs remain.
+
+- Confirmed regression on the original source: 160px measured payload yields
+  **0 identity**, although **83px** remains after game + compact TypeBadge +
+  gaps. New regression first failed on that source, then passed after the fix.
+- `Ending soonest` now uses available width for a CSS-ellipsized identity,
+  retaining game when it leaves useful title text. Otherwise game yields
+  before the identity. Minimum useful text is measured three graphemes plus
+  ellipsis (or a shorter complete identity), preserving emoji/combining
+  sequences. `By game` keeps its existing truncation path and now uses the
+  same useful-prefix floor to avoid an ellipsis alone. Compact TypeBadge
+  remains higher priority; unknown `?` reservation and truthful known/day
+  deadline rules remain. Full accessible names/tooltips are unchanged.
+- Actual 200%-root-text Chromium geometry exposed existing rem inline padding
+  disagreeing with the fixed 8px pin/intersection, squeezing sticky tails to
+  x=0. Inline bar padding now stays 8px; outer bar dimensions/date coordinates,
+  M2 temporal preservation, scrolling, zoom and navigation are unchanged.
+- Bun 1.3.14 frozen install, typecheck, ordinary full `bun test` and complete
+  build pass: **1110 pass / 1 existing optional age skip / 0 fail**, 1111 tests
+  across 56 files. Offline feed remains **179 events / 7 games / 1 existing
+  NTE conflict**. No refresh, feed/data/ID, metadata, Account/Sync, filters,
+  reset-clock, week-line, Event Detail or unrelated milestone change.
+- New real Chromium 153 runner checks measured CSS payload/visible intersection:
+  **35014 assertions**, 320/360/390/768/1440px, both modes/themes, 100%/200%
+  text, 6/32/72/108px per day, now and known-end tail offsets. Long/short
+  fallback and one/multiple subjects, custom game/event, conflict/urgency,
+  exact/day/unknown and upcoming cases are covered. It observes 1194 truncated
+  identities, 110 game-width reclamations, 372 full deadlines and 2104 tiny
+  tails, checking containment, badge priority, useful text and no overlap.
+- Existing Chromium suites also pass unchanged: M2 temporal viewport **372
+  UTC + 372 America/New_York**; mobile header/filter **441**, including the
+  built production bundle and actual AuthRoot guest bootstrap.
+- Visually inspected screenshots and reproduction:
+  [browser evidence](evidence/timeline-label-truncation/README.md). Automated
+  Chromium evidence does not constitute Android hardware/PC operator acceptance.
+
+- Delivery: [PR #46](https://github.com/maxvfk/game-calendar/pull/46); final
+  hosted CI/merge/Pages and public-asset verification are recorded in that PR.
+
+**Next concrete step:** after PR #46 delivery, operator Android Chrome/PC smoke: long labels and short
+tails at several zooms in both modes, badge/indicator separation, full detail
+names, and existing inspected-time behavior. Stop after this scope.
