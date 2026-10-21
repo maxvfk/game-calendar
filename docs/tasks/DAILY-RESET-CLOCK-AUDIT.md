@@ -1,0 +1,80 @@
+# Audit game daily reset schedules — source-backed follow-up
+
+Status: **backlog / research-first**, created from operator phone observation 2026-10-21.
+Independent of completed UI small fixes (PR #44) and Timeline label polish.
+
+## Trigger and evidence boundaries
+
+The operator confirms that the new `Today's dailies` header correctly identifies
+the game/group whose reset is nearest, but suspects **the underlying game reset
+times are wrong**. No game, region, displayed timestamp or authoritative actual
+reset has yet been independently verified in this task. Do not claim a specific
+configuration error from this observation alone.
+
+Checked against main `c54ec98c14df2eb8d78a7202c8e5cdd7d30f260c`:
+- `src/client/components/Dailies.tsx` `nextDailyReset()` finds the earliest
+  existing per-item `now + resetsIn` and deduplicates groups by game.
+- `src/shared/daily.ts` `dayKey()`, `nextResetMs()`, `msUntilReset()`,
+  `dayStartMs()` all depend on `resetShiftMs()`.
+- `src/shared/time.ts` assumes daily rollover at 04:00 of server-local time,
+  with fixed region offsets (`asia: +8`, `europe: +1`, `america: -5`)
+  unless overridden by `src/shared/games.ts`.
+- Among the currently shipped games, `endfield` overrides `europe: -5`;
+  other shipped games (Genshin, HSR, WuWa, ZZZ, NTE, CZN) have no reset
+  overrides in their GameMeta. **This is implementation evidence, not
+  independent verification of the actual reset clocks.**
+- Some game-specific sources are silent or ambiguous about resets (especially
+  NTE/CZN), which is why assuming the regional default may be unsafe.
+
+## Research objective (first milestone: no code changes)
+
+Confirm each shipped game's current **daily-task reset instant**, scoped to
+the actual server group and the reader's configured region:
+Genshin, HSR, WuWa, ZZZ, Endfield, NTE and CZN. Check which use fixed UTC
+offsets versus time zones with DST, and whether the user's region selection
+maps to those server groups. Separate maintenance/event/battle-pass resets
+from the **daily login/task reset**, which need not coincide.
+
+Produce a compact evidence matrix with, for every game and relevant region:
+- server group and semantics of the UI `Region` selection;
+- independently sourced exact reset hour and UTC conversion, with date and
+  daylight-saving treatment, or an explicit **unknown/unverified**;
+- source URLs, evidence type (official schedule or in-game observation;
+  secondary sources only where appropriate), checked-at date, conflicts;
+- current code's corresponding expectation and a concrete discrepancy if
+  confirmed, including an example absolute UTC timestamp.
+
+Where evidence is insufficient, preserve the uncertainty rather than invent
+a default as if it were confirmed. The audit may recommend clarifying copy or
+an explicit unsupported status, but do not change semantics silently.
+
+## Storage/safety implications before a code-fix milestone
+
+The reset instant feeds `dayKey()`, daily checkboxes, catch-up, streaks,
+import/export, account sync and profile-stored day-key records. A change to
+`resetOffsets`, `RESET_HOUR_LOCAL`, `resetHourLocal` or regional mappings
+can relabel historical daily ticks. Document exact compatibility/migration
+implications **before** approving an implementation.
+
+Explicitly evaluate daylight-saving crossings, region changes, account
+profiles and existing saved logs, new-reader behavior, and tests for
+`nextResetMs`, `dayKey`, `dailyDays`, `catchUpDays`, `streakOf` and
+`dailySummary`. Distinguish genuine reset-rule errors from a user-selected
+wrong region, browser timezone display and server maintenance windows.
+
+## Delivery and scope
+
+Start from CURRENT main. Read `AGENTS.md`, `docs/IMPLEMENTATION-STATUS.md`,
+this task, relevant clock/game/daily code and focused tests. Consult fresh
+primary sources or in-game evidence **for reset clocks**, not broad event
+coverage research already completed.
+
+For this audit milestone, commit **only research findings, evidence and a
+proposed separate bounded implementation plan**. Update
+`docs/IMPLEMENTATION-STATUS.md` with concrete verified facts and next step;
+open a short PR. Do **not** modify clock logic, day-key storage, account/sync,
+event IDs, canonical feed, UI polish, source ingestion or other milestones
+without a separate implementation task/approval.
+
+When the operator provides a specific game + selected region + shown countdown
+and in-game reset time, use that as a high-priority reproducible test case.
