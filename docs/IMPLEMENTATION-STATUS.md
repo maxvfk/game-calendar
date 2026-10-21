@@ -1631,3 +1631,30 @@ do not start the separate small UI-fix batch or another milestone.
 density on the phone after PR #39's deployment. The PR records final hosted
 evidence; this document does not claim a refined real-phone pass. No other
 UI-fix or milestone is included.
+
+
+### Mobile header height / aligned frames — 2026-10-21
+
+- Operator accepted the 32px filter panel after PR #39, then supplied another
+  phone screenshot requesting a shorter header and equal Filters/view-toggle
+  frame heights. Baseline CURRENT main `de4bfa10ca14585d817c05e83ff045fa9cc229b4`;
+  branch `fix/mobile-header-height`. This supersedes the earlier fixed 44px
+  mobile-header target decision only; the accepted filter panel is retained.
+- Mobile header vertical padding is 4px. Filters and the outside frame of
+  List/Timeline are both **34px** high at normal text size; the tabs' inner
+  buttons are 28px with 2px frame padding and 1px borders. The header is
+  **43px** including its bottom border. The person trigger follows the same
+  34px row; existing account-popover controls keep their prior sizing.
+  Minimum heights allow enlarged text to grow; named icon fallback still fits.
+  Desktop rules, filter panel, Auth/Sync and Timeline runtime are unchanged.
+- Frozen install, typecheck, full tests and build pass on Bun 1.3.14:
+  **1101 pass / 1 existing optional skip / 0 fail**. Browser header/filter
+  checks now total **441**: explicit equal 34px frames, header <=44px,
+  containment/touch dimensions, prior filters/Reset/account behavior, both
+  themes and 100%/200% text. Existing M2 Chromium regression: **372 passed**.
+  Actual screenshots inspected at phone widths. Final real-phone visual
+  acceptance remains with the operator. Hosted evidence is recorded in this
+  follow-up's PR.
+
+**Next concrete step:** after this follow-up's Pages deploy, operator checks
+header height and equal frames on the phone. No other milestone is included.
