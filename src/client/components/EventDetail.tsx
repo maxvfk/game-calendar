@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGameMeta } from "../state/gameMeta.tsx";
 import {
   isCustomEventId,
@@ -84,6 +84,8 @@ export function EventDetail({
     | undefined;
 }) {
   const gameMeta = useGameMeta();
+  const closeButton = useRef<HTMLButtonElement>(null);
+  const dialog = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState(false);
   const { event, clock } = row;
   const game = gameMeta(event.game);
@@ -96,11 +98,23 @@ export function EventDetail({
   const dayEnd = dayOnlyEnd(event);
 
   useEffect(() => {
+    const invoker = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    closeButton.current?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") { e.preventDefault(); onClose(); }
+      if (e.key !== "Tab") return;
+      const controls = Array.from(dialog.current?.querySelectorAll<HTMLElement>(
+        'button:not(:disabled), a[href], input:not(:disabled), textarea:not(:disabled), select:not(:disabled), [tabindex="0"]',
+      ) ?? []).filter(el => el.getClientRects().length > 0);
+      const first = controls[0], last = controls.at(-1);
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      if (invoker?.isConnected) invoker.focus({ preventScroll: true });
+    };
   }, [onClose]);
 
   return (
@@ -112,11 +126,18 @@ export function EventDetail({
         className="absolute inset-0 bg-scrim backdrop-blur-sm"
       />
       <div
+        ref={dialog}
         role="dialog"
         aria-modal="true"
         aria-label={event.title}
         className="relative max-h-[88vh] w-full overflow-y-auto rounded-t-2xl border border-hairline bg-surface p-5 sm:max-w-lg sm:rounded-2xl"
       >
+        <div className="sticky -top-5 z-20 -mx-5 -mt-5 mb-2 flex justify-end border-b border-hairline bg-surface px-3 py-2">
+          <button ref={closeButton} type="button" onClick={onClose}
+            className="min-h-11 min-w-11 rounded-lg border border-hairline px-4 text-sm font-medium text-ink hover:bg-raised focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink">
+            Close
+          </button>
+        </div>
         <p className="eyebrow" style={{ color: game.hue }}>
           {game.name}
         </p>

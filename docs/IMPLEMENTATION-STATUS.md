@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-10-21 (Moscow; compact mobile header/filters implemented; final operator real-phone smoke pending; M2 remains complete). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-21 (Moscow; all three small UI fixes implemented/browser-validated; hosted delivery tracked with their PR; final operator real-device smoke pending; M2 remains complete). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
@@ -1702,3 +1702,72 @@ header height and equal frames on the phone. No other milestone is included.
 - **Next concrete step:** implement focused fit correction, unit and actual
   Chromium phone/desktop width regressions, standard checks, PR/merge/deploy,
   then final operator real-phone smoke. Do not start unrelated milestones.
+
+
+## Small UI fixes — implementation and browser validation, 2026-10-21
+
+Scope: only `docs/tasks/UI-POLISH-SMALL-FIXES.md`, from CURRENT main
+`b3095d350d254bda7bef1155fffcba02c20cb56c`; branch
+`fix/ui-polish-small-fixes`. **All three required fixes are implemented.**
+`All types` was already complete and was not changed.
+
+- **Daily Reset:** nearest exact computed boundary is attributed to the first
+  game in user order, with `+N` for additional distinct games sharing that
+  boundary. Multiple items of one game count once. Both timer and attribution
+  use the same `DailyItem.resetsIn`/`now`; no rounded-string grouping or new
+  reset clock. Shared clocks retain `resets in`. The row stays single-line at
+  320px, with tighter heading tracking/gaps, a non-shrinking group count/timer,
+  and complete game names in its accessible label/tooltip. Existing daily
+  keys, chores, custom-game fallback, ticks, region/reset logic and sync stay.
+- **Event Detail:** sticky in-sheet Close has a 44px target, receives initial
+  focus and stays reachable after scrolling. Keyboard focus stays inside and
+  returns to a connected invoker without scrolling. Backdrop/Escape still
+  close. App uses one document-scoped history coordinator across profile
+  remounts/StrictMode: one owned entry per open sheet, event switches reuse it,
+  Close consumes it, native Back closes first, and queued rapid opens wait for
+  consumption. Reload/deletion/profile teardown dismiss rather than resurrect.
+  URL, base path, query/hash and foreign history state are preserved; entries
+  changed by foreign navigation/OAuth-style URL cleanup are not traversed.
+  History never restores an event ID. Browser Forward can visit an inert
+  forward slot (the History API cannot delete it); it is neutralized without
+  reopening, and subsequent opens prune the old forward tail, avoiding
+  accumulating modal entries or automatic back loops.
+- **Weekly Timeline lines:** existing `dayBoundaries`/`timelineX` now draw each
+  local Monday midnight as a 2px `faint/60` decorative line; ordinary days remain
+  1px `hairline/40`. No day widths, date labels, bar geometry or M2 navigation
+  changed. Grid lines stay behind bars/labels and TODAY, with no pointer target.
+  Both modes, themes, phone/desktop, zoom extremes and local DST are verified.
+- **Local checks:** Bun 1.3.14 frozen install, typecheck and complete build
+  pass. Final full suite (`TMPDIR=/dev/shm/game-calendar-tests bun test`): **1107 pass / 1 existing optional age skip / 0 fail**,
+  1108 tests across 56 files. Focused small-fix suite also passes in
+  America/New_York and Europe/Berlin. Offline feed still has **179 events /
+  7 games / 1 existing NTE Circle Bounty conflict**. No source refresh, data,
+  IDs, storage/auth/sync or mobile-header/filter implementation changed.
+- **Real Chromium 153:** new reproducible runner + fixtures verify App history/
+  focus/Close and native history edge cases, and per-cell rendering/placement
+  across the week-line matrix: **61364 assertions**. Existing runners pass:
+  M2 **372 UTC + 372 America/New_York**, mobile header/filter **441**. Initial
+  concurrent runs hit existing test/smooth-scroll timing limits; standalone
+  browser repeats pass. Plain `bun test` passed once, but later repeats hit
+  existing Supabase setup / backup retention timeouts on the container overlay.
+  The final full run with RAM-backed temporary files passes without changing
+  any timeout, assertion or repository test configuration. This is automated browser
+  evidence, not Android hardware acceptance or real OAuth sign-in.
+- Visually inspected screenshots and exact matrix/reproduction notes:
+  [browser evidence](evidence/ui-polish-small-fixes/README.md).
+- Delivery: [PR #44](https://github.com/maxvfk/game-calendar/pull/44).
+  [PR CI 39645460126](https://github.com/maxvfk/game-calendar/actions/runs/39645460126)
+  passed check/build on implementation head `49044769d754e7dfbc09978a4af3331944a6a1d3`.
+  Actual hosted log: ordinary `bun test` **1107 pass / 1 optional skip / 0 fail**;
+  feed **179 events / 7 games / 1 existing conflict**. Pages is correctly
+  skipped for the PR. The PR description records final merge/main-CI/Pages
+  evidence after delivery. Final operator phone/desktop acceptance remains pending. During
+  implementation, main's docs-only PR #43 was integrated without changing
+  runtime/tests; its separate label-truncation task remains unstarted.
+
+**Next concrete step:** after delivery, operator smoke on Android Chrome and
+PC: mixed daily-reset attribution; Close and Back-first dismissal from both
+views followed by normal Back; daily vs Monday vs TODAY contrast in both
+Timeline modes/themes and min/max zoom. Confirm filtering after closing detail
+retains the inspected moment, allowing existing nearest-edge clamps. Stop here;
+no other milestone is started.

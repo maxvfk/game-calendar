@@ -1,6 +1,6 @@
 # UI-polish small fixes — daily reset, Event Detail and weekly separators
 
-Status: **ready — implement after compact mobile header/filters delivery**  
+Status: **implemented and browser-validated — hosted delivery tracked in PR; operator real-device smoke pending**
 Scope: **three approved small UI fixes**: daily reset attribution, Event Detail dismissal and clearer weekly Timeline separators.  
 Timeline M2 and the mobile-header task remain separate and must not be reopened.
 
@@ -151,3 +151,18 @@ claim manual acceptance or an unrun browser check.
   or source-data precision research.
 - Stop after the **three fixes** and their automated/browser validation.
   Weekly separators are approved for implementation in this Work.
+
+
+## Implementation evidence — 2026-10-21
+
+All three fixes implemented from main `b3095d3`; see the new small-fix section
+in `docs/IMPLEMENTATION-STATUS.md` and
+[Chromium screenshots/matrix](../evidence/ui-polish-small-fixes/README.md).
+Frozen install, typecheck and build pass; full tests pass (1107 / 1 optional
+skip) with RAM-backed TMPDIR after intermittent existing backup/Supabase
+timeouts on the container overlay (details in status). Also passing:
+native browser history checks, weekly-line layout/DST checks, existing M2
+UTC/New York and mobile-header regressions. Hosted delivery is recorded with
+[delivery PR #44](https://github.com/maxvfk/game-calendar/pull/44).
+**Operator Android/PC smoke remains pending.** All types,
+M2 viewport runtime, mobile header and Auth/Sync were not reworked.

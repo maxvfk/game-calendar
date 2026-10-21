@@ -49,9 +49,9 @@ For each item, use this compact format:
   - **Desired behavior:** make the boundary between Sunday and Monday more visible than ordinary day separators, for example with a slightly thicker and/or more contrasting divider.
   - **Area:** UI
   - **Priority:** approved pre-Astra UI fix
-  - **Status:** approved / task ready
+  - **Status:** implemented / browser-validated 2026-10-21; operator real-device smoke pending
   - **Notes / constraints:** operator explicitly requested implementation on 2026-10-21. Emphasize the Sunday→Monday local day boundary using a modest stronger grid line, while keeping it subordinate to TODAY and without adding mobile clutter, changing event/calendar geometry or interfering with M2 inspected-time preservation.
-  - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — **implement** with reset attribution and Event Detail dismissal.
+  - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — implemented with reset attribution and Event Detail dismissal; see IMPLEMENTATION-STATUS and browser evidence.
 
 - **Title:** Per-game daily pass countdowns
   - **Observation:** the app has daily chores but no personal tracking for 30-day login/subscription passes such as Genshin's Blessing of the Welkin Moon.
@@ -66,18 +66,18 @@ For each item, use this compact format:
   - **Desired behavior:** keep the compact nearest-reset countdown but identify which game or reset group it belongs to, for example `next: Genshin · 4h 25m` or `next: Genshin +2 · 4h 25m` when several games reset together.
   - **Area:** UI / data clarity
   - **Priority:** undecided
-  - **Status:** refined
+  - **Status:** implemented / browser-validated 2026-10-21; operator real-device smoke pending
   - **Notes / constraints:** avoid adding a full per-game timer row to the collapsed dailies strip; the goal is to remove ambiguity without making the section taller. Per-game server/reset semantics already exist and should remain the source of truth.
-  - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — implementation approved; not yet done.
+  - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — implemented; see IMPLEMENTATION-STATUS and browser evidence.
 
 - **Title:** Make event details explicitly dismissible
   - **Observation:** event details currently have no visible close control. On touch devices the reader must tap the backdrop, which can be awkward on a large bottom sheet; the browser/system Back button navigates away instead of dismissing the open details.
   - **Desired behavior:** add a clear close button inside the detail sheet and make browser/system Back dismiss the currently open event detail before normal page navigation resumes.
   - **Area:** interaction / UI
   - **Priority:** undecided
-  - **Status:** refined
+  - **Status:** implemented / browser-validated 2026-10-21; operator real-device smoke pending
   - **Notes / constraints:** preserve backdrop tap and Escape as secondary dismissal paths. The close control needs a comfortable mobile touch target and must remain visible/reachable when the sheet content scrolls. Opening/closing details should integrate with history without creating duplicate or sticky history entries.
-  - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — implementation approved; not yet done.
+  - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — implemented; see IMPLEMENTATION-STATUS and browser evidence.
 
 - **Title:** Toggle all event types off from `All types`
   - **Observation:** `All types` selects every event category, but tapping it again while all categories are already selected does not provide a quick way to clear the selection.
@@ -158,7 +158,7 @@ Agreed sequencing before the independent Astra audit:
 1. complete Account/User **S6**;
 2. implement Timeline Readability **M1 — Recognition Metadata Contract**;
 3. implement Timeline Readability **M2 — Sticky Semantic Timeline** and perform the required phone/desktop smoke;
-4. address the small UI feedback batch (mixed reset attribution, explicit Event Detail Close/Back dismissal, `All types` clear-all, and evaluate stronger weekly separators);
+4. finish operator smoke of the implemented small UI batch (mixed reset attribution, explicit Event Detail Close/Back dismissal, stronger Monday separators); `All types` was already completed separately;
 5. make an explicit product decision on **event artwork**;
 6. if artwork is accepted, use that decision as an input to the separate **recognition-first Event Detail redesign**;
 7. treat **per-game daily passes** as an independent personal-data feature that may be sequenced separately but is intended before the Astra baseline freeze;
@@ -201,13 +201,13 @@ The separate feedback chat's original eight recognition/readability observations
 7. **Rewards as another recognition cue** → retained inside the deferred recognition-first Event Detail redesign, not added to dense Timeline bars.
 8. **Clear Event Detail hierarchy** → preserved as the separate deferred Event Detail redesign milestone.
 
-The later small feedback items are also still live and confirmed against current code:
+Small-feedback implementation state updated 2026-10-21:
 
-- mixed reset countdown is still ambiguous about **which** game/reset group is next;
-- Event Detail still lacks a visible in-sheet Close control and Back-first dismissal;
-- `All types` still does not clear all when tapped while fully selected;
-- weekly Timeline separators are still not stronger than ordinary daily separators;
-- per-game daily passes remain an unimplemented new feature.
+- mixed daily-reset attribution, sticky Event Detail Close/Back-first dismissal,
+  and stronger Monday Timeline lines are implemented and browser-validated;
+  final operator Android/PC smoke is pending (see IMPLEMENTATION-STATUS);
+- `All types` select-all/clear-all was completed separately in PR #37;
+- per-game daily passes remain an unimplemented independent feature.
 
 ## Candidates before Astra audit
 
@@ -218,7 +218,7 @@ Approved and now unblocked by completed Account/User S6a:
 - **Timeline Readability M2 — Sticky Semantic Timeline**  
   `docs/tasks/TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md`
 
-Small refined fixes that remain unsequenced: mixed daily-reset attribution, explicit Event Detail dismissal/Back behavior, and `All types` clear-all. Stronger weekly separators remain observed rather than approved.
+The three approved small fixes are implemented/browser-validated; final operator real-device smoke remains. All types was completed separately. Do not restart these fixes or other milestones automatically.
 
 ## Deferred until after Astra audit
 
