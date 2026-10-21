@@ -1622,10 +1622,12 @@ do not start the separate small UI-fix batch or another milestone.
   all existing filter/Reset/Auth-state/navigation checks, both themes and
   200% text. Screenshots inspected at 320/360/390px. Existing M2 temporal
   viewport browser regression also passes **372 checks**.
-- Hosted delivery evidence is tracked with this follow-up's implementation PR.
+- Hosted CI/merge/Pages delivery evidence is tracked in
+  [follow-up PR #39](https://github.com/maxvfk/game-calendar/pull/39).
   Final real-phone smoke of the refined button/spacing remains the operator's
   gate; the previously documented unrelated 200%-text settings limit remains.
 
-**Next concrete step:** finish this bounded follow-up's hosted CI/merge/Pages,
-then operator checks the refined button width and panel density on the phone.
-No other UI-fix or milestone is included.
+**Next concrete step:** operator checks the refined button width and panel
+density on the phone after PR #39's deployment. The PR records final hosted
+evidence; this document does not claim a refined real-phone pass. No other
+UI-fix or milestone is included.
