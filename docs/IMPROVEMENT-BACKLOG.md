@@ -19,6 +19,14 @@ For each item, use this compact format:
 
 ## Observed issues / feedback
 
+- **Title:** Compact mobile header, account status and wrapped filters
+  - **Observation:** after accepted Timeline M2, a phone screenshot showed that the independent account/sync text strip, live/upcoming subtitle, horizontal type-filter strip and Focus strip consume much of the usable viewport.
+  - **Desired behavior:** use one compact phone header with small EVENTCLOCK logo, Filters toggle, Checklist/Timeline selector and truthful account/sync-status button at far right. Keep filters collapsed by default; expanded panel shows all type and enabled-game Focus chips with wrapping, a Reset filters control and an explicit collapse button. The header toggle must close it too.
+  - **Area:** mobile UI / interaction / auth-status presentation
+  - **Priority:** approved pre-Astra UI-polish, separate bounded Work
+  - **Status:** approved / task ready
+  - **Notes / constraints:** authoritative task: `docs/tasks/UI-POLISH-MOBILE-HEADER-FILTERS.md`. Reset only type categories and single-game focus, never game enablement/order or Upcoming. Include the `All types` select-all/clear-all fix in this task (avoid duplicate implementation in the later small UI-fix batch). Desktop, account/sync mechanics, event IDs, and M2 viewport semantics must remain intact. Layout mockups from coordination were illustrative; code must fit real 320–390px widths.
+
 
 - **Title:** Audit date/time precision downgrades against exact source timestamps
   - **Observation:** phone smoke exposed a CZN banner case where the calendar intentionally shows a day-only deadline even though the live game countdown and the current Prydwen snapshot both indicate an exact end instant. Sereniel and Peko currently carry `data-end-global="2026-10-21T00:00:00.000Z"`, while the parser deliberately ignores machine timestamps because earlier Prydwen timestamps had disagreed with official STOVE maintenance boundaries.
@@ -66,7 +74,7 @@ For each item, use this compact format:
   - **Area:** interaction / UI
   - **Priority:** undecided
   - **Status:** refined
-  - **Notes / constraints:** do not add a separate `None` button. `All types` should appear active only when every category is selected; with a partial or empty selection it should appear inactive.
+  - **Notes / constraints:** do not add a separate `None` button. `All types` should appear active only when every category is selected; with a partial or empty selection it should appear inactive. The implementation is assigned to `docs/tasks/UI-POLISH-MOBILE-HEADER-FILTERS.md`, not to the later remaining small-fix Work.
 
 
 - **Title:** Use featured subjects as compact event labels
