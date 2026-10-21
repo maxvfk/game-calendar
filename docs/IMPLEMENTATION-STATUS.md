@@ -1756,8 +1756,12 @@ Scope: only `docs/tasks/UI-POLISH-SMALL-FIXES.md`, from CURRENT main
 - Visually inspected screenshots and exact matrix/reproduction notes:
   [browser evidence](evidence/ui-polish-small-fixes/README.md).
 - Delivery: [PR #44](https://github.com/maxvfk/game-calendar/pull/44).
-  Its description records the verified hosted CI/merge/Pages evidence after
-  delivery. Final operator phone/desktop acceptance remains pending. During
+  [PR CI 39645460126](https://github.com/maxvfk/game-calendar/actions/runs/39645460126)
+  passed check/build on implementation head `49044769d754e7dfbc09978a4af3331944a6a1d3`.
+  Actual hosted log: ordinary `bun test` **1107 pass / 1 optional skip / 0 fail**;
+  feed **179 events / 7 games / 1 existing conflict**. Pages is correctly
+  skipped for the PR. The PR description records final merge/main-CI/Pages
+  evidence after delivery. Final operator phone/desktop acceptance remains pending. During
   implementation, main's docs-only PR #43 was integrated without changing
   runtime/tests; its separate label-truncation task remains unstarted.
 
