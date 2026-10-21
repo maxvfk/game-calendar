@@ -1666,17 +1666,17 @@ header height and equal frames on the phone. No other milestone is included.
   (PR #40 mobile-header frame-height follow-up). `All types` select-all/
   clear-all is **already implemented** by PR #37 in the shared
   `TypeFilters.tsx`, confirmed in code. It is **excluded** from the next Work.
-- Two confirmed open fixes: **attribute mixed daily reset countdown to the
-  next-reset game(s)**, and **add visible in-sheet Event Detail Close plus
-  browser/Android Back-first dismissal**. Code still shows the ambiguous
-  mixed `next reset in` label, and EventDetail has only backdrop/Escape.
-- Weekly Timeline separators are only **observed**, not approved. The next Work
-  should assess whether stronger weekly boundaries help across phone/desktop
-  widths and zooms; do not change the grid without further operator acceptance.
+- Three approved open fixes: **attribute mixed daily reset countdown to the
+  next-reset game(s)**, **add visible in-sheet Event Detail Close plus
+  browser/Android Back-first dismissal**, and **make the Sunday-to-Monday
+  Timeline grid boundary visibly stronger than ordinary daily lines**.
+  The operator explicitly promoted weekly separators from assessment-only to
+  **required implementation** on 2026-10-21. Use local-date/DST-safe placement,
+  low visual salience under TODAY, and leave Timeline M2 viewport unaffected.
 - Dedicated small Work task: `docs/tasks/UI-POLISH-SMALL-FIXES.md`.
   No runtime changes in this documentation step. Mobile-header PR #40's
   real-phone acceptance status remains separately recorded; do not silently
   infer it from this task.
-- **Next concrete step:** implement the two fixes from then-CURRENT main,
-  run full baseline + real-browser Back/navigation regression, merge/deploy
-  and ask for operator phone/desktop smoke; record weekly assessment only.
+- **Next concrete step:** implement all three approved fixes from then-CURRENT
+  main, run full baseline + real-browser Back/navigation and week-line rendering
+  regressions, merge/deploy, then operator phone/desktop smoke.
