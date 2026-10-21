@@ -1,6 +1,6 @@
 # Timeline Readability M2 — Sticky Semantic Timeline
 
-Status: **M2 phone-smoke follow-up implemented and automatically validated 2026-10-21: high-priority compact type + shared category colours. Remaining manual phone/desktop smoke stays open; M2 is not complete. See `docs/IMPLEMENTATION-STATUS.md`.**
+Status: **complete — 2026-10-21. M2 implementation, TypeBadge follow-up and viewport fix PR #34 deployed; operator accepted phone/PC smoke. Bounded-range closest-edge scroll clamping is intentional. See `docs/IMPLEMENTATION-STATUS.md`.**
 
 Type: bounded implementation milestone  
 Depends on:
@@ -291,3 +291,19 @@ Do not:
 - refactor unrelated Timeline code merely for cleanliness.
 
 Finish after M2 implementation, validation, documentation and required smoke.
+
+## Closure / operator acceptance (2026-10-21)
+
+- PR #31 implemented Candidate A′; PR #32 updated high-priority TypeBadge
+  retention and colours; PR #34 fixed inspected-time preservation across
+  filters/Upcoming and passed browser-level geometry tests.
+- PR #34 was deployed to Pages, and the operator confirmed that the corrected
+  filtering/Upcoming navigation works on both Android phone and PC.
+- Extreme filtering leaves a shorter board and can clamp the inspected
+  position to the closest scrollable edge, as permitted by the specification.
+  Operator screenshot is consistent with this boundary case; the original
+  20%/25% anchor does not apply after a constrained range/filter update.
+- M2 acceptance is complete. Historical implementation instructions and
+  pre-acceptance smoke requirements above remain as task history; the current
+  authoritative closure and remaining-project status are documented in
+  docs/IMPLEMENTATION-STATUS.md. No new milestone was started.

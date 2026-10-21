@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-10-21 (Moscow; M2 phone-smoke type-priority/colour follow-up validated, remaining manual gate open). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-21 (Moscow; Timeline M2 operator phone/PC smoke accepted after PR #34; M2 complete). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
@@ -1208,7 +1208,7 @@ Echoes contradiction and WuWa disappearance review remain source blockers.
 
 ## Timeline Readability / Recognition UX
 
-Status: **research and M1 complete; M2 implemented/automatically validated, required real-phone + operator desktop smoke pending. M2 is not complete. Account/User S6a completed on 2026-10-19; S6b is separate/non-blocking.**
+Status: **research, M1 and M2 complete (2026-10-21); PR #34 deployed and operator phone/PC smoke accepted. Account/User S6a completed on 2026-10-19; S6b is separate/non-blocking.**
 
 - A five-step UX research task was completed and reviewed in `docs/tasks/TIMELINE-READABILITY-UX-RESEARCH.md`.
 - The selected direction is **Candidate A′ — Sticky semantic bars**:
@@ -1457,9 +1457,32 @@ Status: **research and M1 complete; M2 implemented/automatically validated, requ
   other views are unchanged. Delivery: [PR #34](https://github.com/maxvfk/game-calendar/pull/34);
   hosted CI/merge/Pages evidence is recorded in that PR.
 
-**Next concrete step after deployment:** operator re-smoke on **Android Chrome
-and PC**. In each Timeline mode, scroll away from today and toggle a game,
-category and Upcoming; confirm the same date stays centred when the range
-allows it (otherwise the closest edge), including all-hidden/return. Check
-Jump to today and zoom. **M2 remains open pending explicit deployed phone and
-PC confirmation.** No new milestone or unrelated follow-up is started.
+### M2 operator acceptance — real phone and PC (2026-10-21)
+
+- After merged [PR #34](https://github.com/maxvfk/game-calendar/pull/34)
+  was deployed through successful [main CI/Pages run 39611480568](https://github.com/maxvfk/game-calendar/actions/runs/39611480568),
+  the operator re-tested on both Android phone and PC and reported that
+  filtering and Upcoming navigation now work correctly, with no other M2
+  defect identified. This supersedes the earlier filter failure and pending
+  manual-acceptance statements above.
+- The operator also observed position shifts under some combinations of
+  filters that hide almost all events. Supplied desktop screenshot: only
+  Genshin focus (10 live, zero upcoming), with the latest visible dated events
+  ending around November 3 and the board's right edge near November 5.
+  The TODAY line is no longer at the initial 25% desktop target. That
+  observation is **consistent with intentional closest-edge scroll clamping**
+  after the available date range contracts, rather than evidence of a new
+  re-anchor to today. The screenshot alone cannot establish every preceding
+  offset, but the documented contract explicitly permits such clamping,
+  and browser regressions cover feasible and infeasible retention.
+- Decision: **accept M2 as complete** on the basis of operator phone/PC smoke,
+  PR #34's validated temporal restoration and the allowed range-boundary
+  behavior. Do not extend the board with invented future dates or empty weeks
+  solely to force a 20%/25% TODAY position after narrowing filters. If later
+  evidence shows a jump while preservation was geometrically possible, file a
+  separate reproducible defect with before/after dates and filter state.
+
+**Next concrete step:** M2 is closed; no further M2 changes are required.
+Choose the next independent prioritized project task separately from CURRENT
+main. Do not start S6b, source/data research, recognition-population work, or
+other milestones automatically.
