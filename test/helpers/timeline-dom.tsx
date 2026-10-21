@@ -11,6 +11,10 @@ let jumps = 0;
 Object.defineProperty(win.HTMLElement.prototype, "clientWidth", { get() {
   return this.classList.contains("scroll-pane") && !this.hidden ? paneWidth : 0;
 } });
+Object.defineProperty(win.HTMLElement.prototype, "scrollWidth", { get() {
+  return this.classList.contains("scroll-pane")
+    ? Math.max(paneWidth, parseFloat((this.firstElementChild as HappyHTMLElement | null)?.style.width ?? "0")) : 0;
+} });
 win.HTMLElement.prototype.scrollTo = function(options: unknown) {
   this.scrollLeft = (options as { left: number }).left;
   jumps++;
@@ -66,7 +70,13 @@ assert.notEqual(pane().scrollLeft, scrollToToday(timelineX(new Date(2026, 9, 20)
 assert(container.querySelector("[data-timeline-label]")!.textContent!.includes("Subject A + Subject B"));
 assert(container.querySelector("[data-timeline-label] .border-dashed"));
 
+const currentMin = () => {
+  const plotted = props.rows.filter(r => props.showUpcoming || !r.clock.upcoming);
+  return boardWindow(plotted.map(r => r.clock.startsMs), plotted.map(r => r.clock.endsMs ?? r.clock.startsMs + 14 * 86400000), props.now).min;
+};
 pane().scrollLeft = 900;
+await act(async () => { pane().dispatchEvent(new win.Event("scroll")); });
+const inspectedBeforeFilters = timelineMsAt(pane().scrollLeft + paneWidth / 2, currentMin(), props.dayWidth);
 for (const change of [
   { group: "ending" as const }, { group: "game" as const },
   { rows: [older, row] }, // feed/filter alters the board origin
@@ -78,7 +88,10 @@ for (const change of [
 ]) {
   props = { ...props, ...change };
   await render();
-  assert.equal(pane().scrollLeft, 900);
+  if (props.rows.length) {
+    assert(Math.abs(timelineMsAt(pane().scrollLeft + paneWidth / 2, currentMin(), props.dayWidth) - inspectedBeforeFilters) < 1,
+      "filters must preserve the inspected timestamp, not numeric scrollLeft");
+  }
   assert.equal(jumps, 1);
 }
 
@@ -145,5 +158,50 @@ for (const mode of ["game", "ending"] as const) {
   }
 }
 await act(async () => { thirdRoot.unmount(); });
+
+// Range changes: test calendar coordinates in both modes/scales, including
+// unrepresentable anchors and a scroll immediately followed by a filter (no
+// delivered scroll event). Chromium separately verifies native layout/clamp.
+const fourthRoot = createRoot(container as unknown as HTMLElement);
+paneWidth = 360;
+const shortEvent = { ...event, id: "hsr:short:2026-10-15", game: "hsr" as const,
+  type: "challenge" as const, startsAt: "2026-10-15T00:00:00Z", endsAt: "2026-11-05T00:00:00Z" };
+const shortRow = { event: shortEvent, clock: clockFor(shortEvent, "europe", NOW) };
+const fourthRender = () => act(async () => { fourthRoot.render(<Timeline {...props} />); });
+const changeKeepingTime = async (change: Partial<typeof props>) => {
+  const moment = timelineMsAt(pane().scrollLeft + paneWidth / 2, currentMin(), props.dayWidth);
+  props = { ...props, ...change };
+  await fourthRender();
+  const desired = timelineX(moment, currentMin(), props.dayWidth) - paneWidth / 2;
+  const expected = Math.max(0, Math.min(pane().scrollWidth - paneWidth, desired));
+  assert(Math.abs(pane().scrollLeft - expected) < .01);
+};
+for (const group of ["game", "ending"] as const) for (const dayWidth of [32, 72, 108]) {
+  props = { ...props, rows: [older, row, shortRow, future], now: NOW, group, dayWidth, showUpcoming: true };
+  await fourthRender();
+  pane().scrollLeft = timelineX(NOW + 3 * 86400000, currentMin(), dayWidth) - paneWidth / 2;
+  await changeKeepingTime({ rows: [shortRow, future] }); // changed origin
+  await changeKeepingTime({ showUpcoming: false }); // shorter max, feasible
+  await changeKeepingTime({ showUpcoming: true });
+  // Right edge no longer fits when Upcoming disappears. Clamp, then preserve
+  // that newly inspected moment when the full range returns.
+  pane().scrollLeft = pane().scrollWidth - paneWidth;
+  await changeKeepingTime({ showUpcoming: false });
+  assert.equal(pane().scrollLeft, pane().scrollWidth - paneWidth);
+  await changeKeepingTime({ showUpcoming: true });
+  await changeKeepingTime({ dayWidth: 13 }); // zoom out to an unscrollable board
+  const held = timelineMsAt(pane().scrollLeft + paneWidth / 2, currentMin(), props.dayWidth);
+  props.rows = []; await fourthRender();
+  props.now += 1000; props.dayWidth = 72; await fourthRender(); // updates while hidden
+  props.rows = [shortRow, future]; await fourthRender();
+  assert.equal(pane().scrollLeft, Math.max(0, Math.min(pane().scrollWidth - paneWidth,
+    timelineX(held, currentMin(), props.dayWidth) - paneWidth / 2)));
+  // At the old left edge a later origin cannot preserve the earlier moment.
+  await changeKeepingTime({ rows: [older, row] });
+  pane().scrollLeft = 0;
+  await changeKeepingTime({ rows: [shortRow] });
+  assert.equal(pane().scrollLeft, 0);
+}
+await act(async () => { fourthRoot.unmount(); });
 await win.happyDOM.close();
 console.log("Timeline DOM navigation passed");
