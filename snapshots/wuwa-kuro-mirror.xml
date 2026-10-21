@@ -4,7 +4,7 @@
     <link href="https://wutheringwaves.kurogames.com/en/main/news/" rel="alternate" type="text/html"/>
     <link href="https://raw.githubusercontent.com/TheLovinator1/wutheringwaves/refs/heads/master/articles_latest.xml" rel="self" type="application/atom+xml"/>
     <id>urn:wutheringwaves:feed</id>
-    <updated>2026-10-13T19:10:35+00:00</updated>
+    <updated>2026-10-20T18:18:40+00:00</updated>
     <subtitle>Latest articles from Wuthering Waves</subtitle>
     <icon>https://raw.githubusercontent.com/TheLovinator1/wutheringwaves/refs/heads/master/logo.png</icon>
     <logo>https://raw.githubusercontent.com/TheLovinator1/wutheringwaves/refs/heads/master/logo.png</logo>
@@ -17,12 +17,232 @@
     </author>
     
                 <entry>
+                    <id>urn:article:5668</id>
+                    <title>[Version 3.7 Featured Resonator/Weapon Convene: Phase Ⅱ]</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5668" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p><strong>[Tomorrow in the Frame] Featured Resonator Convene</strong></p>
+<p>During the event, <strong>5-Star Resonator: Lucilla, 4-Star Resonators: Lumi, Danjin, and Chixia</strong> receive boosted drop rates!</p>
+<h1>Duration</h1>
+<p>2026-10-22 10:00 - 2026-11-11 11:59 (server time)</p>
+<h1>Eligibility</h1>
+<ul>
+<li>
+<p>Reach Union Level 5.</p>
+</li>
+<li>
+<p>Or complete the combat trial in First Resonance.</p>
+</li>
+<li>
+<p>Or access Main Quest Fast Track Event and proceed with the Main Quest until you reach a certain point.</p>
+</li>
+</ul>
+<h1>Convene Rules</h1>
+<ul>
+<li>
+<p>[Tomorrow in the Frame] is a Featured Resonator Convene event banner. Use Radiant Tide to convene. You are guaranteed at least one 4-Star or higher rarity Resonator or Weapon every 10 attempts.</p>
+</li>
+<li>
+<p>The guarantee count is shared among all Featured Resonator Convene events and is carried over until a 5-Star Resonator is obtained.</p>
+</li>
+<li>
+<p>Featured Resonator Lucilla is exclusive to the [Tomorrow in the Frame] Featured Resonator Convene and will not be available by other means once the event ends.</p>
+</li>
+<li>
+<p>Featured Resonator Lucilla&#39;s Waveband will be simultaneously made available in the Afterglow Coral Store with a limit of 2 purchases, and it will be removed once the Convene event ends.</p>
+</li>
+<li>
+<p>During the event, all the Resonators who receive boosted drop rates will become available in Ascendant Aces as Trial Resonators. Complete their Ascendant Aces challenges to obtain rewards.</p>
+</li>
+</ul>
+<p><em>For more details, please refer to the in-game Convene page.</em></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792425600000/xhali8ty5l43rrwp79-1792491287655.jpg" /></p>
+<p><strong>[Freeze Frame] Featured Weapon Convene</strong></p>
+<p>During the event, <strong>5-Star Weapon: Freeze Frame, 4-Star Weapons: Overture, Relativistic Jet, Amity Accord</strong> receive boosted drop rates!</p>
+<h1>Duration</h1>
+<p>2026-10-22 10:00 - 2026-11-11 11:59 (server time)</p>
+<h1>Eligibility</h1>
+<ul>
+<li>
+<p>Reach Union Level 5.</p>
+</li>
+<li>
+<p>Or complete the combat trial in First Resonance.</p>
+</li>
+<li>
+<p>Or access Main Quest Fast Track Event and proceed with the Main Quest until you reach a certain point.</p>
+</li>
+</ul>
+<h1>Convene Rules</h1>
+<ul>
+<li>
+<p>[Absolute Pulsation] is a Featured Weapon Convene event banner.</p>
+</li>
+<li>
+<p>Use Forging Tide to convene. You are guaranteed at least one 4-Star or higher rarity Resonator or Weapon every 10 attempts.</p>
+</li>
+<li>
+<p>The guarantee count is shared among all Featured Weapon Convene events and is carried over until a 5-Star Weapon is obtained.</p>
+</li>
+<li>
+<p>The 5-Star Weapon you Convene is guaranteed to be Freeze Frame.</p>
+</li>
+<li>
+<p>Featured Weapon Freeze Frame is exclusive to the Featured Weapon Convene and will not be available by other means once the event ends.</p>
+</li>
+</ul>
+<p><em>For more details, please refer to the in-game Convene page.</em></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792425600000/mkwgesoxygmvpr5kwu-1792490848114.jpg" /></p>
+<p><strong>[Undefined Spectrum] Featured Resonator Convene</strong></p>
+<p>During the event, 5-Star Resonator: <strong>Lynae, 4-Star Resonators: Lumi, Danjin, and Chixia</strong> receive boosted drop rates!</p>
+<h1>Duration</h1>
+<p>2026-10-22 10:00 - 2026-11-11 11:59 (server time)</p>
+<h1>Eligibility</h1>
+<ul>
+<li>
+<p>Reach Union Level 5.</p>
+</li>
+<li>
+<p>Or complete the combat trial in First Resonance.</p>
+</li>
+<li>
+<p>Or access Main Quest Fast Track Event and proceed with the Main Quest until you reach a certain point.</p>
+</li>
+</ul>
+<h1>Convene Rules</h1>
+<ul>
+<li>
+<p>[Undefined Spectrum] is a Featured Resonator Convene event banner. Use Radiant Tide to convene. You are guaranteed at least one 4-Star or higher rarity Resonator or Weapon every 10 attempts.</p>
+</li>
+<li>
+<p>The guarantee count is shared among all Featured Resonator Convene events and is carried over until a 5-Star Resonator is obtained.</p>
+</li>
+<li>
+<p>Featured Resonator Lynae is exclusive to the [Undefined Spectrum] Featured Resonator Convene and will not be available by other means once the event ends.</p>
+</li>
+<li>
+<p>Featured Resonator Lynae&#39;s Waveband will be simultaneously made available in the Afterglow Coral Store with a limit of 2 purchases, and it will be removed once the Convene event ends.</p>
+</li>
+<li>
+<p>During the event, all the Resonators who receive boosted drop rates will become available in Ascendant Aces as Trial Resonators. Complete their Ascendant Aces challenges to obtain rewards.</p>
+</li>
+</ul>
+<p><em>For more details, please refer to the in-game Convene page.</em></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792425600000/avcdasdjqql65vo90n-1792490903974.jpg" /></p>
+<p><strong>[Spectrum Blaster] Featured Weapon Convene</strong></p>
+<p>During the event, <strong>5-Star Weapon: Spectrum Blaster, 4-Star Weapons: Overture, Relativistic Jet, Amity Accord</strong> receive boosted drop rates!</p>
+<h1>Duration</h1>
+<p>2026-10-22 10:00 - 2026-11-11 11:59 (server time)</p>
+<h1>Eligibility</h1>
+<ul>
+<li>
+<p>Reach Union Level 5.</p>
+</li>
+<li>
+<p>Or complete the combat trial in First Resonance.</p>
+</li>
+<li>
+<p>Or access Main Quest Fast Track Event and proceed with the Main Quest until you reach a certain point.</p>
+</li>
+</ul>
+<h1>Convene Rules</h1>
+<ul>
+<li>
+<p>[Absolute Pulsation] is a Featured Weapon Convene event banner.</p>
+</li>
+<li>
+<p>Use Forging Tide to convene. You are guaranteed at least one 4-Star or higher rarity Resonator or Weapon every 10 attempts.</p>
+</li>
+<li>
+<p>The guarantee count is shared among all Featured Weapon Convene events and is carried over until a 5-Star Weapon is obtained.</p>
+</li>
+<li>
+<p>The 5-Star Weapon you Convene is guaranteed to be Spectrum Blaster.</p>
+</li>
+<li>
+<p>Featured Weapon Spectrum Blaster is exclusive to the Featured Weapon Convene and will not be available by other means once the event ends.</p>
+</li>
+</ul>
+<p><em>For more details, please refer to the in-game Convene page.</em></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792425600000/swu3k9nrl8j55cd92n-1792490946923.jpg" /></p>]]></content>
+                    <published>2026-10-20T18:18:40+00:00</published>
+                    <updated>2026-10-20T18:18:40+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5653</id>
+                    <title>Upcoming Events in Wuthering Waves Version 3.7</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5653" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>Here is a compilation of the upcoming events in Version 3.7. Don&#39;t miss out!<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792425600000/1xox7ovygipiiwnsnc-1792460373670.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792425600000/jm2rsgb1yukr435fgj-1792460385632.jpg" /></p>]]></content>
+                    <published>2026-10-20T09:40:28+00:00</published>
+                    <updated>2026-10-20T09:40:28+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5644</id>
+                    <title>Profile Reveal | Power of Ten — Suoming</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5644" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>Loading Data&gt;&gt;&gt;</p>
+<h1>Suoming</h1>
+<p>Born in Huating, Mengzhou, she founded the Ten Seals Covenant as its Seal Master to liberate her homeland from the Evil Miasma. Later, by the Sentinel&#39;s decree, she served as Intendant of the Ministry of Sentinel Affairs, watching over all of Mengzhou.<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/pschl2zbs6d2meg84m-1792137929039.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/f3ci7wtfxus6zl1lbe-1792137955242.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/0xyrumpv62m78ml2mn-1792138024135.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/okv7ggh4djaxdke86w-1792138130984.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/qz1a3fkcac9as1oceb-1792138150407.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/tk9vkmghyeici95l42-1792138277420.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/ch5jwzs4ssa0fojxff-1792138444444.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/g30vhq05jjs5plx75l-1792138467380.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/5regub0in3y7l2abc5-1792138486258.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/0pci0q1quwuo5rsifn-1792138636832.jpg" /></p>]]></content>
+                    <published>2026-10-16T16:19:24+00:00</published>
+                    <updated>2026-10-16T16:19:24+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5626</id>
+                    <title>Resonator Review | Memory Palace — Lucilla</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5626" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>Lucilla, President of Startorch Academy and idealist with both feet on the ground. She holds quiet vigil over her students as they rise to challenge the very sky.<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792166400000/sgkj4fwuwzyzct5ou2-1792207561469.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792166400000/upkjxvcen2sk5af43s-1792207580965.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792166400000/9407hszvlvg9namnbx-1792207597875.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792166400000/m8k6ahcf9p850qu9gm-1792207617807.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792166400000/xpqdl500gw6pafzggl-1792207637574.jpg" /></p>]]></content>
+                    <published>2026-10-14T17:06:43+00:00</published>
+                    <updated>2026-10-14T17:06:43+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
                     <id>urn:article:5625</id>
                     <title>Post-Lament Anthropocene: Stars Intertwined | Suoming</title>
                     <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5625" rel="alternate" type="text/html"/>
                     <content type="html"><![CDATA[<p>Suoming, Seal Master of the Ten Seals Covenant, and Intendant of Mengzhou&#39;s Ministry of Sentinel Affairs. Any enemy of Mengzhou is an enemy of mine.<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/qd896gmi8vbx2y88u4-1791889690987.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/zm9nkndv997c882njm-1791889720639.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/e0a9eydav0vmwlk9p3-1791889736034.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/1ax9ws51n7gt7y1rm2-1791889760750.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/ye1qy4npc8qbh6l8nf-1791889779658.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/rhhup331oqf93uyzcb-1792139567076.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/b9zlc9nemmgbw6sryk-1792139339366.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/3vjcsyu7iwuecv6qlj-1792139357330.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/zrrpgp6v1u53wqhsh0-1792139387755.gif" /></p>]]></content>
                     <published>2026-10-13T19:10:35+00:00</published>
                     <updated>2026-10-13T19:10:35+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5616</id>
+                    <title>Resonator Review | Radiant Spectrum — Lynae</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5616" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>A Startorch Academy prep student whose head-turning, electric style hides an inner focus as explosive as a coiled spring.<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792166400000/qmxeklhslwrv9x47n7-1792207724518.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/0u8ig9corvctx99x7m-1791806502425.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/3bihqf3u7i1w666a6s-1791806540958.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/90ou3jpjohrnhho7jj-1791873983899.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/qfv9jnsq0q81icv8kq-1791874011500.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/12e7z0fxckpp1vr5jv-1791874045918.png" /></p>]]></content>
+                    <published>2026-10-12T20:08:28+00:00</published>
+                    <updated>2026-10-12T20:08:28+00:00</updated>
                     <category term="Notice"/>
                     <author>
                         <name>Wuthering Waves</name>
@@ -1344,411 +1564,6 @@
 <p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/r91mvk48mbsl1q730y-1790399204157.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/e77sr96svw18mlri9y-1790399656039.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/njtfczgm42en2r9mzv-1790399670157.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/roy00p511wma6g3yfw-1790399946176.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/20anexfap89runqaia-1790399988947.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/8r85v465e936ndfqtb-1790400007222.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/umzmr4nvnqknjw9xxr-1790400126514.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/xa8vom6woiuuh6md0c-1790405552882.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/if580m97rzh5i6fo5w-1790405594778.gif" /></p>]]></content>
                     <published>2026-09-26T13:08:39+00:00</published>
                     <updated>2026-09-26T13:08:39+00:00</updated>
-                    <category term="Notice"/>
-                    <author>
-                        <name>Wuthering Waves</name>
-                        <email>wutheringwaves_ensupport@kurogames.com</email>
-                        <uri>https://wutheringwaves.kurogames.com</uri>
-                    </author>
-                </entry>
-        
-                <entry>
-                    <id>urn:article:5513</id>
-                    <title>About Tiered Client Resource Downloads</title>
-                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5513" rel="alternate" type="text/html"/>
-                    <content type="html"><![CDATA[<p>Dear Rovers, To deliver a higher-quality gaming experience across a wide range of device specifications, the &#34;Tiered Client Resource Downloads&#34; feature is scheduled to be launched soon on Wuthering Waves, initially as a limited test. This feature allows you to select and download game resources of your preferred graphics quality based on the storage space and specifications of your device. With this feature, you can reduce storage space usage while maintaining satisfactory graphics quality.</p>
-<p><strong>Feature Overview</strong></p>
-<p><strong>What is Tiered Client Resource Downloads?</strong></p>
-<p>Tiered Client Resource Downloads is a feature that allows you to select between different resource tiers. In future versions of Wuthering Waves, the original single resource package will be divided into three tiers based on differences in graphics quality, models, and other game assets: UHD, HD, and SD. You may select and download the tier that best suits the storage space and specifications of your device.</p>
-<p>This feature is designed to allow you to choose better graphics quality or lower storage space usage based on your actual gaming needs, thereby providing a better gaming experience.</p>
-<p><strong>Tier Specifications</strong></p>
-<p>Tiered Client Resource Downloads will be available for the PC, iOS, and Android versions of the game. The package tiers vary in in-game graphics quality, video bitrate, and other game assets. Supported platforms and tiers are outlined below:</p>
-<p>| | | |</p>
-<p>| --- | --- | --- |</p>
-<p>| <strong>Platform</strong> | <strong>Available Tiers</strong> | <strong>Maximum Number of Local Packages</strong> |</p>
-<p>| PC | UHD/HD/SD | Up to 3 packages (tiers) installed locally |</p>
-<p>| iOS/Android | HD/SD | Up to 1 package (tier) installed locally |</p>
-<p><em>Due to platform restrictions, platforms not listed above currently do not support resource tiering. Once this feature goes live, the HD package will be downloaded by default on those platforms.</em></p>
-<p><em>Due to hardware limitations, only the SD package is available on certain mobile devices, in order to ensure a stable, smooth gaming experience. Please refer to your actual in-game experience.</em></p>
-<p>Package Downloading &amp; Switching</p>
-<ul>
-<li>PC：</li>
-</ul>
-<p>Download your desired tier or tiers directly from the launcher. You can install up to 3 different tiers locally and switch between them any time. If you have multiple tiers installed, to run the game, simply choose one tier from the launcher to launch (only one can run at a time). If you need to uninstall a specific tier, select the corresponding package before uninstalling.</p>
-<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/akiwebsite/website2.0/images/1790179200000/ra44knce3qj436ld16-1790244779956.jpeg" /></p>
-<ul>
-<li>iOS / Android:</li>
-</ul>
-<p>Select your desired package tier from the in-game &#34;Download Resources&#34; menu. Once the download is complete, you can redownload and switch to another tier via Settings &gt; Graphics &gt; Resource Quality.</p>
-<p><em>On mobile devices, every switch between packages requires downloading the difference between the HD and SD packages.</em></p>
-<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/akiwebsite/website2.0/images/1790179200000/f48jecwi96jekqev2d-1790244779832.jpeg" /></p>
-<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/akiwebsite/website2.0/images/1790179200000/3mwlvzyis9as4kmihz-1790244779922.jpeg" /></p>
-<p><strong>Test Schedule</strong></p>
-<ul>
-<li>
-<p>Test Participants and Test Schedule</p>
-</li>
-<li>
-<p>PC (※Official Launcher): The test will become gradually available on PC after the Version 3.7 update.</p>
-</li>
-<li>
-<p>iOS/Android Mobile: The test will become available on all iOS/Android mobile devices after the Version 3.7 update.</p>
-</li>
-<li>
-<p>Notes</p>
-</li>
-<li>
-<p>We will soon (during Version 3.6) make a PC launcher update available to some of the Rovers who are granted access to the limited test. However, the &#34;Tiered Client Resource Downloads&#34; feature will only go live after the Version 3.7 update. During Version 3.6, being granted access to the limited test will not affect your current gaming experience.</p>
-</li>
-<li>
-<p>Following the Version 3.7 update, PC users who have not been granted access to the limited test will have their resource package updated to the High-Definition (HD) version by default. Once you enter the test, you can adjust the resource tier based on your needs.</p>
-</li>
-</ul>
-<p><em>The feature will also be gradually made available on PC platforms with non-official launchers after the test concludes. Please stay tuned for future announcements.</em></p>
-<p><strong>Notes &amp; Reminders</strong></p>
-<p><strong>About Version 3.7 Pre-download</strong></p>
-<ul>
-<li>
-<p>PC (※Official Launcher):</p>
-</li>
-<li>
-<p>For Rovers who are granted access to the limited test and update the official launcher during Version 3.6, Version 3.7 pre-download will be temporarily unavailable due to cross-version functionality differences. You may select and download a suitable resource tier after the Version 3.7 update.</p>
-</li>
-<li>
-<p>For Rovers who do not gain access to the limited test during Version 3.6, pre-download will remain available, and if they use the pre-download feature, the HD resource tier will be downloaded by default. After gaining test access in Version 3.7, you can then choose a resource tier based on your needs.</p>
-</li>
-<li>
-<p>iOS/Android Mobile:</p>
-</li>
-<li>
-<p>Once Version 3.7 pre-download becomes available, only a portion of the resources will be pre-downloaded on iOS and Android mobile devices. The remaining tiered resources will be downloaded separately after the Version 3.7 update, based on the package selected.</p>
-</li>
-</ul>
-<p><em>The Pre-download feature from Version 3.7 onward will function as usual, and the pre-downloaded resources will be of the same tier as your currently selected resources.</em></p>
-<p><strong>How to Choose a Package Tier</strong></p>
-<p>After the Version 3.7 update, if you have been included in the limited test, the recommended package will be marked on your device based on the device specifications. Alternatively, you can refer to the following specs table to select the right package.</p>
-<ul>
-<li>PC</li>
-</ul>
-<p>| | | | | |</p>
-<p>| --- | --- | --- | --- | --- |</p>
-<p>| <strong>CPU</strong> | <strong>GPU</strong> | <strong>Recommended</strong> <strong>RAM</strong> | <strong>Recommended Resolution</strong> | <strong>Recommended Package</strong> |</p>
-<p>| Intel i7-12700/AMD R7 7700 | RTX4080/RX 7900 XT | 32G | 3840X2160 | UHD |</p>
-<p>| Intel i7-9700/AMD R7 3700X | RTX3060/RX6700XT/Arc B580 | 32G | 2560X1440 | HD |</p>
-<p>| Intel i5-9400/AMD R7 2700 | GTX 1060/RX 570/Arc A380 | 16G | 1920X1080 | SD |</p>
-<ul>
-<li>iOS</li>
-</ul>
-<p>| | | | |</p>
-<p>| --- | --- | --- | --- |</p>
-<p>| <strong>Model</strong> | <strong>Chip</strong> | <strong>RAM</strong> | <strong>Recommended Package</strong> |</p>
-<p>| iPhone14/iPad mini (6th generation) | A15 | 6G | HD |</p>
-<p>| iPhone11/iPad (9th generation) | A13 | 4G | SD |</p>
-<ul>
-<li>Android</li>
-</ul>
-<p>| | | |</p>
-<p>| --- | --- | --- |</p>
-<p>| <strong>Chipset</strong> | <strong>RAM</strong> | <strong>Recommended Package</strong> |</p>
-<p>| Snapdragon 8 Gen1/MediaTek Dimensity 9000/Kirin 9010/Exynos 2200 | 8G | HD |</p>
-<p>| Snapdragon 855/MediaTek Dimensity 1000/Kirin 980/Exynos 9820 | 6G | SD |</p>
-<p><strong>About In-Game Resource Adjustments</strong></p>
-<ul>
-<li>Graphics Resource Adjustments</li>
-</ul>
-<p>After the release of the &#34;Tiered Client Resource Downloads&#34; feature, the Ultra Quality option in the in-game Graphics Quality settings will be available only in the UHD package. Therefore, after Version 3.7 goes live, if you are not in the limited test, you will temporarily be unable to enable the Ultra Graphics option on PC. To enable this option, you need to download the UHD package first after entering the test.</p>
-<ul>
-<li>Video Resource Adjustments</li>
-</ul>
-<p>After the release of the &#34;Tiered Client Resource Downloads&#34; feature, bitrates of certain cutscenes and other video assets will be adjusted accordingly; consequently, visual fidelity may differ between packages.</p>
-<p>Following the Version 3.7 update, because PC users who have not been granted access to the limited test will download the HD package by default, the visual performance of certain video resources may be somewhat different from the previous versions. When you are granted test access, you can download the UHD package for higher bitrates.</p>
-<ul>
-<li>Future Resource Adjustments</li>
-</ul>
-<p>The upcoming &#34;Tiered Client Resource Downloads&#34; feature is currently under continuous optimization. In the future, we may adjust the resources included in each tier based on in-game performance and player feedback. The adjusted resources may differ slightly from those in the current test version. Announcements about adjustments in this regard will be made during the corresponding versions. Please stay tuned.</p>
-<p><strong>About Release Schedule on PC Platforms Using Non-official Launchers</strong></p>
-<ul>
-<li>Steam</li>
-</ul>
-<p>To bring the &#34;Tiered Client Resource Downloads&#34; feature to Steam, we plan to release the official launcher on this platform in the future. When the Official Launcher becomes available on Steam, the platform will also support pre-download for the game. Please remember to update your launcher and experience the new features. These features are currently under active development and will be made available as soon as possible. We will notify you of the release schedule and detailed instructions on how to update the launcher in future announcements. Please stay tuned.</p>
-<p><strong>FAQ</strong></p>
-<p>Q: Are package tiers the same as in-game graphics settings?</p>
-<p>A: No, they are different. The package tier determines the upper limit of the quality of the downloaded resources, such as image clarity and video bitrate, while in-game graphics settings remain adjustable. However, visual performance and resolution will vary from tier to tier even with the same graphics settings. For example, with the High Quality option enabled, the UHD package delivers higher image clarity and shows more details than the HD package.</p>
-<p>Q: What are the differences between the various package tiers?</p>
-<p>A: The package tiers vary in package size, video bitrate, and highest available resolution. For instance, the differences between the available tiers in Version 3.7 are as follows:</p>
-<p>| | | | | | |</p>
-<p>| --- | --- | --- | --- | --- | --- |</p>
-<p>| <strong>Platform</strong> | <strong>Package Tier</strong> | <strong>Size (excluding cutscenes)</strong> | <strong>Size (including cutscenes)</strong> | <strong>Recommended Resolution</strong> | <strong>Highest Available Graphics Quality</strong> |</p>
-<p>| PC | UHD | 99G | 128G | 3840X2160 | Ultra Quality |</p>
-<p>| HD | 80G | 97G | 2560X1440 | High Quality |</p>
-<p>| SD | 58G | 70G | 1920X1080 | Balanced |</p>
-<p>| iOS / Android | HD | 40G | 53G | / | High Quality |</p>
-<p>| SD | 35G | 43G | / | Balanced |</p>
-<p><em>Package sizes shown are estimates. Please refer to the actual sizes in Version 3.7.</em></p>
-<p>Q: How do I know which package to choose?</p>
-<p>A: If you have been included in the limited test, the recommended package will be marked on your device based on the device specifications. Alternatively, you can refer to the specs table listed in the &#34;How to Choose a Package Tier&#34; section.</p>
-<p>Q: Can I download a tier higher than what is recommended?</p>
-<p>A: Yes. The recommendation is made based on your device specifications. You are free to download any tier you prefer. However, downloading a tier higher than recommended will take up unnecessary storage space and could cause framerate fluctuations, device overheating, and other issues. Please adjust accordingly based on your experience.</p>
-<p><em>Due to hardware limitations, only the SD package is available on certain iOS/Android devices, in order to ensure a stable, smooth gaming experience.</em></p>
-<p>Q: How many packages can I install locally?</p>
-<p>A: Up to 3 different package tiers can be installed locally at the same time on PC; there is no need to uninstall existing tiers before downloading new ones. Only 1 package tier can be installed locally at the same time on mobile devices, and every switch between packages requires downloading the difference between the packages.</p>
-<p>Q: If I&#39;m in the limited test, can I exit it and pre-download Version 3.7?</p>
-<p>A: Unfortunately, once you enter the test during Version 3.6, you cannot exit it. You may select and download a suitable resource tier after the Version 3.7 update. Thank you for your support and understanding.</p>
-<p>Q: Will my access to the pre-download option be affected if I&#39;m not in the limited test?</p>
-<p>A: No. If you&#39;re not in the limited test, you can pre-download as normal, but the HD package will be pre-downloaded by default. For more details, please refer to the &#34;About Version 3.7 Pre-download&#34; section above.</p>
-<p>Q: Can I participate in the test if I&#39;m not using the official launcher on PC?</p>
-<p>A: The test is currently available only on PC devices using the official launcher. Access to this feature will be gradually opened to other PC platforms with non-official launchers once the test concludes. For details, please refer to the &#34;About Release Schedule on PC Platforms Using Non-official Launchers&#34; section.</p>
-<p>Q: Will the resources of each tier change in the future?</p>
-<p>A: The upcoming &#34;Tiered Client Resource Downloads&#34; feature is currently under continuous optimization. In the future, we may adjust the resources included in each tier based on in-game performance and player feedback. The adjusted resources may differ to some extent from those in the current test version. Announcements about adjustments in this regard will be made during the corresponding versions. Please stay tuned.</p>
-<p>We will continue to refine the &#34;Tiered Client Resource Downloads&#34; feature based on player feedback. If you encounter any issues or have any suggestions, please access the in-game [Feedback] feature to submit your feedback. Thank you for your support and understanding.</p>
-<p>Wuthering Waves Dev Team</p>]]></content>
-                    <published>2026-09-24T18:20:49+00:00</published>
-                    <updated>2026-09-24T18:20:49+00:00</updated>
-                    <category term="Notice"/>
-                    <author>
-                        <name>Wuthering Waves</name>
-                        <email>wutheringwaves_ensupport@kurogames.com</email>
-                        <uri>https://wutheringwaves.kurogames.com</uri>
-                    </author>
-                </entry>
-        
-                <entry>
-                    <id>urn:article:5498</id>
-                    <title>Resonator Review | Eye of Unraveling — Chisa</title>
-                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5498" rel="alternate" type="text/html"/>
-                    <content type="html"><![CDATA[<p>&#34;Just an ordinary student.&#34;</p>
-<p>Calmly, she introduces herself, a faint iridescent shimmer flickering in her eyes. Again, the structures of the world reveal themselves in her vision. Narrowing her eyes, she singles out the very thread that tugs at life itself.</p>
-<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/7431wxv55x4rh2w64f-1790236497297.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/ynvsr4gjwv0zyoztf1-1790236518742.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/kdvfucuhqw96oo14fy-1790236559517.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/gomg22yzigxj872r1i-1790236579395.jpg" /></p>]]></content>
-                    <published>2026-09-24T15:57:26+00:00</published>
-                    <updated>2026-09-24T15:57:26+00:00</updated>
-                    <category term="Notice"/>
-                    <author>
-                        <name>Wuthering Waves</name>
-                        <email>wutheringwaves_ensupport@kurogames.com</email>
-                        <uri>https://wutheringwaves.kurogames.com</uri>
-                    </author>
-                </entry>
-        
-                <entry>
-                    <id>urn:article:5497</id>
-                    <title>Post-Lament Anthropocene: Stars Intertwined | Hsin</title>
-                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5497" rel="alternate" type="text/html"/>
-                    <content type="html"><![CDATA[<p>I am the guide of Mengzhou&#39;s civilization, Sentinel Hsin the Moon Fox. Arbiter, at last we meet.</p>
-<p>Mm. That is a fitting opening for a &#34;first meeting,&#34; is it not? But... from now on, please. I insist you call me &#34;Hsin.&#34;—Hsin</p>
-<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/t0igwiu17tftzqcza4-1790235991105.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/z1r0g1dg4j661lhb30-1790236011394.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/xn1nfxtorcj23q7p2y-1790236035989.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/1ge8ld37paijy48pkl-1790236062999.jpg" /></p>
-<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/g7sjmquh622p3yggd3-1790236312747.jpg" /></p>
-<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/fn5nfmoinf1kozvvpq-1790236103212.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/s1wmo03xv3vhqmgqvt-1790236159819.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/dtsghsrtyloakdh0le-1790236175378.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/i3aks02hpma64f9fap-1790236185746.gif" /></p>]]></content>
-                    <published>2026-09-24T15:52:40+00:00</published>
-                    <updated>2026-09-24T15:52:40+00:00</updated>
-                    <category term="Notice"/>
-                    <author>
-                        <name>Wuthering Waves</name>
-                        <email>wutheringwaves_ensupport@kurogames.com</email>
-                        <uri>https://wutheringwaves.kurogames.com</uri>
-                    </author>
-                </entry>
-        
-                <entry>
-                    <id>urn:article:5492</id>
-                    <title>Profile Reveal | Fractal Proliferation — Hsin</title>
-                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5492" rel="alternate" type="text/html"/>
-                    <content type="html"><![CDATA[<p>Loading Data&gt;&gt;&gt;</p>
-<h1>Hsin</h1>
-<p>Sentinel Hsin, guide of Mengzhou&#39;s civilization. Deeply emotional and fond of worldly joys, She has long kept the fires of mortal life burning amid the bustle of trade and the shifting of seasons.</p>
-<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/0nonxtjcew8k63mqnj-1790233739147.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/vax53ru9d8bmcixufb-1790233780368.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/6kjoju8pbibeenrimi-1790233980308.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/m49nc09qa9b6ix8scp-1790234000163.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/y4qrcs1u5sqj3d66f1-1790234014604.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/xvcytth4djkgss3wsl-1790234148890.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/vn8kqol7bbxb96barp-1790234160850.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/x62hyf1iwoytme6b3e-1790234296931.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/zgiv4l7nfzmmlkdmd6-1790234371134.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/w26q4ag7q8gyxn4i7o-1790234463267.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/y34r2olx8kybtggia7-1790234476802.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/bi8f25qfaxxzu3frzj-1790234568129.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/7mod0fk2aya729tq8n-1790234579037.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/uec0xd8uxwyj05kjgp-1790234803731.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790179200000/g0hzkerk5zhu0j55xl-1790234881517.jpg" /></p>]]></content>
-                    <published>2026-09-24T15:31:12+00:00</published>
-                    <updated>2026-09-24T15:31:12+00:00</updated>
-                    <category term="Notice"/>
-                    <author>
-                        <name>Wuthering Waves</name>
-                        <email>wutheringwaves_ensupport@kurogames.com</email>
-                        <uri>https://wutheringwaves.kurogames.com</uri>
-                    </author>
-                </entry>
-        
-                <entry>
-                    <id>urn:article:5476</id>
-                    <title>Wuthering Waves Version 3.7 Update Maintenance Notice</title>
-                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5476" rel="alternate" type="text/html"/>
-                    <content type="html"><![CDATA[<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790006400000/m39h4r47zx7muv6xlk-1790072631821.jpg" />Dear Rovers,</p>
-<p>To bring you exciting new content and a better gaming experience, we will soon be conducting the update maintenance for Version 3.7: Prism&#39;s Illusion, Heart&#39;s Illumination.</p>
-<p>During the maintenance, you will be unable to log in to the game, so please plan your time accordingly. Additionally, due to the large size of the update, we recommend updating the game while connected to a Wi-Fi network. We apologize for any inconvenience this may cause.</p>
-<p><strong>[Maintenance Time &amp; Compensation Details]</strong></p>
-<p><strong>✦Maintenance Time:</strong> <strong>2026-09-30 04:00 - 2026-09-30 11:00 (UTC+8)</strong></p>
-<p><strong>✦Maintenance Compensation: Astrite x300, Crystal Solvent x2</strong></p>
-<p><strong>✦Compensation Eligibility: Create a character and unlock the Mail feature before 2026-09-30 04:00 (UTC+8). The compensation will remain claimable until the next version update.</strong></p>
-<p><em>In the event that the maintenance is extended, the dev team will issue a follow-up notice and adjust the compensation accordingly.</em></p>
-<p><strong>[How to Update]</strong></p>
-<p><strong>Once the maintenance for the version update begins, you can follow the following instructions to update your client.</strong></p>
-<ul>
-<li>
-<p>PC: Close the game, restart the launcher, and then click on &#34;Update.&#34;</p>
-</li>
-<li>
-<p>Android: Launch the game and follow the instructions in the update pop-up window to complete the update.</p>
-</li>
-<li>
-<p>iOS: Download/update the game in the App Store.</p>
-</li>
-<li>
-<p>Mac: Download/update the game in the App Store.</p>
-</li>
-<li>
-<p>PS5™: Open the home screen &gt; Select Wuthering Waves &gt; Press the OPTIONS button to Check for Update</p>
-</li>
-<li>
-<p>XBOX Series X|S: Open the home screen &gt; Select &#34;My games &amp; apps&#34; &gt; Go to &#34;Manage Updates&#34; to find Wuthering Waves &gt; Update the game.</p>
-</li>
-<li>
-<p>XBOX PC: Open the XBOX app &gt; Select &#34;My Library&#34; &gt; Select Wuthering Waves and open the Manage screen &gt; Go to the Files tab and select Check for Update.</p>
-</li>
-</ul>
-<p><strong>[Pre-download]</strong></p>
-<p><strong>✦Pre-download Start Time:</strong> <strong>2026-09-28 10:00 (UTC+8)</strong></p>
-<p><strong>[Required Pre-download Storage Space]</strong></p>
-<p><strong>PC: 46GB (Actual package size: 26GB)</strong></p>
-<p><strong>Android/iOS: 20GB (Actual package size: 13GB)</strong></p>
-<p><em>Pre-download may not be possible if your device does not have enough spare storage space. To ensure there is sufficient storage space for resource integration during the update maintenance, a certain amount of space must be reserved. If the reserved space is insufficient, the update maintenance will not be completed.</em></p>
-<p><em>After the update maintenance is complete, the extra space used for the resources merging process will be automatically freed up.</em></p>
-<p><strong>[How to Pre-download]</strong></p>
-<p><strong>PC: When pre-download for the latest version becomes available, &#34;New Version Pre-download&#34; appears below the &#34;Start&#34; button on the launcher interface. Select this option to pre-download the resources.</strong></p>
-<p><strong>Android/iOS: When pre-download for the latest version becomes available, press the &#34;Pre-download&#34; button, either on the title screen after a successful login or on the in-game Terminal page, and confirm to pre-download the resources.</strong></p>
-<p><em>You can continue playing the game while the pre-downloading process is ongoing. The process can be paused at any time. Whether it is complete or not, the update maintenance will speed up to a certain degree when initiated.</em></p>
-<p><em>Please ensure that you have a stable network connection during the pre-downloading process.</em></p>
-<p><strong>[About the Schedule for the &#34;Tiered Client Resource Downloads&#34; Limited Test]</strong></p>
-<p><strong>✦Test Participants and Test Schedule</strong></p>
-<p>PC (※Official Launcher): The test will become available in stages on PC following the Version 3.7 update.</p>
-<p>iOS/Android Mobile: The test will become available on all iOS/Android mobile devices following the Version 3.7 update.</p>
-<h1>Notes</h1>
-<ul>
-<li>
-<p>We will soon (during Version 3.6) make a PC launcher update available to some of the Rovers who are granted access to the limited test. However, the &#34;Tiered Client Resource Downloads&#34; feature will only go live after the Version 3.7 update. During Version 3.6, being granted access to the limited test will not affect your current gaming experience.</p>
-</li>
-<li>
-<p>Following the Version 3.7 update, Rovers who have not been granted access to the limited test will have their resource package updated to the High-Definition (HD) version by default. Once you enter the test, you can adjust the resource tier based on your needs.</p>
-</li>
-</ul>
-<p><em>The feature will also be gradually made available on PC platforms with non-official launchers after the test concludes. Please stay tuned for future announcements.</em></p>
-<p><strong>✦Additional Notes on the Limited Test and Version 3.7 Pre-Download</strong></p>
-<p><strong>PC (※Official Launcher):</strong></p>
-<ul>
-<li>
-<p>For Rovers who are granted access to the limited test and update the official launcher during Version 3.6, Version 3.7 pre-download will be temporarily unavailable due to cross-version functionality differences. You may select and download a suitable resource tier after the Version 3.7 update.</p>
-</li>
-<li>
-<p>For Rovers who do not gain access to the limited test during Version 3.6, pre-download will remain available, and if they use the pre-download feature, the High-Definition (HD) resource tier will be downloaded by default. After gaining test access in Version 3.7, you can then choose a resource tier based on your needs.</p>
-</li>
-</ul>
-<p><strong>iOS/Android Mobile:</strong></p>
-<ul>
-<li>Once Version 3.7 pre-download becomes available, only a portion of the resources will be pre-downloaded on iOS and Android mobile devices. The remaining tiered resources will be downloaded separately after the Version 3.7 update, based on the package selected.</li>
-</ul>
-<p><em>The Pre-download feature from Version 3.7 onward will function as usual, and the pre-downloaded resources will be of the same tier as your currently selected resources.</em></p>
-<hr />
-<p><strong>[Version 3.7 Preview]</strong></p>
-<p><strong>[New Resonators]</strong></p>
-<p><strong>5-Star Resonator: Hsin (Electro/Rectifier)</strong></p>
-<p><strong>※Obtainable through the [As Full as Tonight, Forever] Featured Resonator Convene.</strong></p>
-<p><strong>5-Star Resonator: Suoming (Electro/Sword)</strong></p>
-<p><strong>※Obtainable through the [Nine Deaths, One Unbent Heart] Featured Resonator Convene.</strong></p>
-<p><strong>[New Weapons]</strong></p>
-<p><strong>5-Star Weapon: Blooming Jadehaven (Rectifier)</strong></p>
-<p><strong>※Obtainable through the [Blooming Jadehaven] Featured Weapon Convene.</strong></p>
-<p><strong>5-Star Weapon: Unspoken Rue (Sword)</strong></p>
-<p><strong>※Obtainable through the [Unspoken Rue] Featured Weapon Convene.</strong></p>
-<p><strong>[New Location]</strong></p>
-<p><strong>Simulacrum Nexus of Mengzhou</strong></p>
-<p><strong>Area includes: Heartscape Labyrinth, Heart of Flames, Heart of Frost, Heart of Bloom, Heart of Stillness, Heart of Ruin, Heart of Appearance</strong></p>
-<p><strong>※Reach the location during Main Quest Chapter IV Act IV &#34;Simulacrum of the Heart.&#34;</strong></p>
-<p><strong>[New Echoes]</strong></p>
-<p><strong>Formrender, Soulfrayer, Skywatch Lancer, Bloomburst Puppet, Jade Nether Serpent and one new COST 4 Echo</strong></p>
-<p><strong>New Sonata Effects: Heart of Sworn Vigil (5pcs Set), Flash of Electric Reflection (5pcs Set), Flower of Tinged Yearning (5pcs Set)</strong></p>
-<p><strong>New Tacet Fields: Heart of Stillness Tacet Field, Heart of Flames Tacet Field</strong></p>
-<p><strong>New Tacet Discord Nest: Simulacrum Nexus Tacet Discord Nest</strong></p>
-<p><strong>[New Story]</strong></p>
-<p><strong>[Main Quest] Chapter IV Act IV: Simulacrum of the Heart</strong></p>
-<p><strong>New Quest Type</strong></p>
-<p><strong>Tales Quest: Moonlike Heart, Mortal Longing</strong></p>
-<p><strong>※Eligibility: Complete Main Quest Chapter IV Act IV &#34;Simulacrum of the Heart.&#34;</strong></p>
-<p><strong>[Gameplay Optimizations]</strong></p>
-<p><strong>Added support for Echo Stack storage.</strong></p>
-<p><strong>Added Replay Mode, which allows you to replay the Main Quests of Versions 1.1, 1.2, 1.3.</strong></p>
-<p><strong>Added 3D display mode for lineups.</strong></p>
-<p><strong>Optimized the functionality and usability of the in-game camera.</strong></p>
-<p><strong>Optimized the Echo Recommendation feature by adding display of recommendations suitable for different Resonance Modes.</strong></p>
-<p><strong>[Other Optimization]</strong></p>
-<p><strong>Added support for Tiered Client Resource Downloads; you can select a specific tier of graphics quality to download.</strong></p>
-<p><strong>※This optimization will be available in the form of a limited test.</strong></p>
-<p><strong>[Other New Content]</strong></p>
-<p><strong>Sigils: Showtime, All Forms in One Heart</strong></p>
-<p><strong>Avatar: Wooly&#39;s Blessing</strong></p>
-<p><strong>Motorbike Livery: Fox Shadow at Sunset</strong></p>
-<p><strong>Phantom Echoes: Phantom - Skywatch Lancer, Phantom - Smolder</strong></p>
-<p><strong>※Sigil: Showtime and Avatar: Wooly&#39;s Blessing can be obtained by participating in the Leisure Event &#34;Cubie Wars.&#34;</strong></p>
-<p><strong>[New Merch]</strong></p>
-<p><strong>Accessories: Hsin - Spring in Bloom, Suoming - Glazed Roseate</strong></p>
-<p><strong>WavesLine Looks: Light of Waking Moon (WavesLine Theme), Solicitude of the Heart (WavesLine Decor), Glow of Lanterns (Chat Background), Rice Cake (Chat Bubble)</strong></p>
-<p><strong>The Moonlit Path event will be available in Version 3.7. During the event, obtain Moonlit Rings unlock the following new rewards.</strong></p>
-<p><strong>Accessories: Hsin - Where Dreams Shine Clear, Rover - Not Even Close</strong></p>
-<p><strong>Sigil: Not Even Close</strong></p>
-<p><strong>Avatar: Abby Tossing</strong></p>
-<p><strong>Motorbike Accessory: Hsin Cube</strong></p>
-<p><strong>Collection Item: Cloudview Seat</strong></p>
-<p><strong>※Collection Items can be equipped on the Utility Wheel and used in the Overworld.</strong></p>
-<p><strong>[Special Events]</strong></p>
-<p><strong>[Cubie Wars] Leisure Event</strong></p>
-<p><strong>[Dreams in the Capsule] Area Exploration Event</strong></p>
-<p><strong>[Past Dreams, Traced Seals] Photo Collection Event</strong></p>
-<p><strong>[Echo Erase] Leisure Event</strong></p>
-<p><strong>[Artisan&#39;s Search] Featured Combat Event</strong></p>
-<p><strong>[Beyond the Waves: Land of Xuanfang] Featured Exploration Event</strong></p>
-<p><strong>[Gifts of Waking Moon] 7-Day Login Event</strong></p>
-<p><strong>[Version Special Login Event]</strong></p>
-<p><strong>[Gifts of Singing Drizzle] Limited-Time Login Event</strong></p>
-<p><strong>[Web Events]</strong></p>
-<p><strong>[Waking Moon Fishing] Web Event</strong></p>
-<p><strong>[Back to Solaris] Web Event</strong></p>
-<p><strong>[New Permanent Event]</strong></p>
-<p><strong>[Blooms for the Shadow]</strong></p>
-<p><em>For more details on the new content, optimizations, and bug fixes coming to the game in Version 3.7, please stay tuned for the upcoming release notes.</em></p>
-<hr />
-<p><strong>[Device Requirements]</strong></p>
-<p>To ensure a smooth installation and gaming experience, please refer to the following requirements:</p>
-<ol>
-<li>Minimum</li>
-</ol>
-<p>Android: [System] Android 7.0 or later; [Processor] Snapdragon 835, MediaTek G71/72 or processors of better/equivalent performance; [RAM] 4 GB or more</p>
-<p>iOS: [System] iOS 14 or later; [Model] iPhone 11 or newer, iPad with A13 Bionic or processors of better/equivalent performance; [RAM] 4 GB or more</p>
-<p>Mac: [System] macOS 12.0 or later; [Model] m1 or newer; [RAM] 16 GB or more</p>
-<p>PC: [System] Windows 10 64-bit; [CPU] Intel I5 (9th Gen)/Ryzen 2700; [GPU] Geforce 1060/RX570/Intel ARC A380, [RAM] 16 GB or more</p>
-<ol start="2">
-<li>Recommended</li>
-</ol>
-<p>Android: [System] Android 7.0 or later; [Processor] Snapdragon 8 Gen1+/Gen2/Gen3 or MediaTek processors of better/equivalent performance; [RAM] 6 GB or more</p>
-<p>iOS: [System] iOS 15 or later; [Model] iPhone 13 or newer, iPad with A15 Bionic or processors of better/equivalent performance; [RAM] 6 GB or more</p>
-<p>Mac: [System] macOS 15.0 or later; [Model] m3 or newer; [RAM] 16 GB or more</p>
-<p>PC: [System] Windows 10 64-bit; [CPU] Intel I7 (9th Gen)/Ryzen 3700, [GPU] Geforce 2060/RX5700XT/Intel ARC A750; [RAM] 16 GB or more</p>
-<ol start="3">
-<li>Required Storage Space</li>
-</ol>
-<p>Android/iOS: 60 GB</p>
-<p>Mac: 150 GB</p>
-<p>PC: 100 GB; it&#39;s recommended to install the game on an SSD.</p>
-<p>PS5™: Please make sure your device has sufficient available storage to complete the update successfully.</p>
-<p>XBOX Series X|S|PC: Please make sure your device has sufficient available storage to complete the update successfully.</p>
-<ol start="4">
-<li>Controller Support</li>
-</ol>
-<p>Wuthering Waves currently supports the following controllers on Mobile:</p>
-<p>Wireless Controllers: Xbox series, Xbox Elite series, DualShock®4, DualSense®, DualSense Edge™</p>
-<p>Wuthering Waves currently supports the following controllers on Mac:</p>
-<p>Wired/Wireless Controllers: Xbox series, Xbox Elite series, DualShock®4, DualSense®, DualSense Edge™</p>
-<p>Wuthering Waves currently supports the following controllers on PC:</p>
-<p>Wired/Wireless Controllers: Xbox series, Xbox Elite series, DualSense®, DualSense Edge™</p>
-<p>Wired Controllers: DualShock®4</p>
-<p><em>When you connect any other controller that supports multiple input modes to a PC, it is recommended that you set the controller to XInput mode for the best experience.</em></p>]]></content>
-                    <published>2026-09-22T18:26:15+00:00</published>
-                    <updated>2026-09-22T18:26:15+00:00</updated>
                     <category term="Notice"/>
                     <author>
                         <name>Wuthering Waves</name>
