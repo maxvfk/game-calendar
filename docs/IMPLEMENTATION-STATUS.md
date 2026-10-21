@@ -1410,10 +1410,56 @@ Status: **research and M1 complete; M2 implemented/automatically validated, requ
   This remains **M2 follow-up**, not a new milestone; no runtime fix has
   been made in this documentation-only change.
 
-**Next concrete step:** hand the focused viewport-preservation task to the
-existing M2 Work from CURRENT main; require failing-before/fixed-after
-temporal-position regression tests, real-browser geometry coverage, all four
-project checks, PR/merge and CI/Pages confirmation. Then have the operator
-retest the affected filter/upcoming navigation on phone and PC (plus Jump/zoom).
-**Keep M2 open until explicit deployed manual acceptance.** Do not start
-S6b, broad metadata population or unrelated milestones.
+### M2 viewport-preservation fix — automated validation (2026-10-21)
+
+- Started from CURRENT main `2a5b2b8` (the operator's regression task, PR #33).
+  **Confirmed root cause**, rather than accepting the hypothesis: both the
+  mounted React regression and actual Chromium regression fail on this base.
+  Filtering away the earliest game changes the board origin by 40 days;
+  Chromium retains scrollLeft **1984 px**, moving the centre timestamp by
+  **40 days**. The correct offset for that moment is **704 px** at 32 px/day
+  and a 320 px viewport. No remount or Jump invocation is involved.
+- `Timeline.tsx` now snapshots the inspected centre in the old calendar
+  coordinates **before DOM mutations** (`getSnapshotBeforeUpdate`). After the
+  new range/scale is laid out it restores that moment, clamped to the actual
+  native scroll extent. Capturing in an ordinary post-mutation layout effect
+  would lose information when a shrinking range has already clamped scrollLeft.
+  This also catches a scroll immediately followed by filtering, before its
+  scroll event/RAF. A temporarily empty pane retains the last real moment;
+  restoration does not re-initialize. After an unavoidable clamp, subsequent
+  range expansion preserves the newly inspected centre rather than bouncing
+  back to an obsolete moment. Zoom uses this same single restoration path;
+  initial and explicit Jump retain their 20%/25% anchors.
+- Replaced the happy-dom helper's misleading fixed-pixel assertions with
+  timestamp assertions, and added both-mode/multi-scale feasible/clamped range,
+  hidden-update/restore and immediate-scroll coverage. Existing type-only,
+  unknown-end, accessible-name and initial/Jump/zoom checks remain.
+- Added a reproducible **real Chromium/CSS** fixture and runner:
+  `test/helpers/timeline-browser.tsx`, `scripts/check-timeline-browser.mjs`.
+  The runner's header documents invocation with an external Playwright install;
+  `CHROMIUM_EXECUTABLE_PATH` optionally selects an installed Chromium binary.
+  No production dependency or lockfile change. **372 checks per run**, with
+  both UTC and America/New_York browser timezones: widths 320/390/768/1440,
+  both modes, three scales, game/category filtering, Upcoming bounds changes,
+  split/group, feed replacement, rerender, capped-origin clock/day/second
+  updates, all-hidden/return, rapid scroll/filter, feasible retention, left and
+  right native clamping, post-clamp expansion, centre zoom and explicit Jump.
+- Bun **1.3.14**: all four required commands passed (frozen install, typecheck,
+  `bun test`, build): **1098 pass / 1 optional age skip / 0 fail**, 1099 tests
+  across 54 files. Existing responsive/browser sweep also passed **272
+  assertions**; its old numeric-scroll check now checks the inspected moment.
+  Built-app smoke passed on the current offline feed in both modes at phone
+  and desktop widths, all seven games, six live unknown-end bars, no page
+  errors. Build: **179 events / 7 games / 1 existing conflict**. Source reminder
+  warnings are unchanged; no refresh/ingestion/data work was performed.
+- Only runtime change: Timeline viewport navigation. TypeBadge, deadline/day/
+  unknown semantics, IDs, preferences, personal data, Account/Supabase and
+  other views are unchanged. PR/merge and hosted CI/Pages evidence will be
+  recorded in the focused fix PR.
+
+**Next concrete step after deployment:** operator re-smoke on **Android Chrome
+and PC**. In each Timeline mode, scroll away from today and toggle a game,
+category and Upcoming; confirm the same date stays centred when the range
+allows it (otherwise the closest edge), including all-hidden/return. Check
+Jump to today and zoom. **M2 remains open pending explicit deployed phone and
+PC confirmation.** No new milestone or unrelated follow-up is started.

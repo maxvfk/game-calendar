@@ -1,4 +1,4 @@
-import { Fragment, useLayoutEffect, useRef, useState } from "react";
+import { Component, Fragment, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { useGameMeta } from "../state/gameMeta.tsx";
 import type { LaneId } from "../../shared/custom.ts";
 import { DAY, dayOnlyEnd, endingSoonestFirst } from "../../shared/time.ts";
@@ -214,34 +214,15 @@ export function Timeline({
     el?.scrollTo({ left: scrollToToday(x(now), el.clientWidth, window.matchMedia("(min-width: 64rem)").matches), behavior });
   };
 
-  /**
-   * A moment in time to hold still through the next re-render, and where in the
-   * pane to hold it. Set when the reader zooms: rescaling around the left edge
-   * of the scroll area would throw whatever they were reading off the screen,
-   * and re-opening at today would undo the scrolling they did to get there.
-   */
-  const hold = useRef<{ ms: number; px: number; dayWidth: number } | null>(null);
+  // TemporalViewport preserves the inspected centre through scale changes too.
+  const zoom = (by: 1 | -1) => onZoom(stepDayWidth(dayWidth, by));
 
-  const zoom = (by: 1 | -1) => {
-    const el = scroller.current;
-    if (el !== null) {
-      // The middle of the view is what a reader is looking at, so that is what
-      // stays put.
-      const px = el.clientWidth / 2;
-      hold.current = { ms: timelineMsAt(el.scrollLeft + px, min, dayWidth), px, dayWidth: stepDayWidth(dayWidth, by) };
-    }
-    onZoom(stepDayWidth(dayWidth, by));
-  };
-
-  // Before paint, so a zoom never shows a frame at the wrong offset.
+  // The child restores its temporal snapshot before this layout effect reads
+  // the final offset for sticky-label fitting. Only first content opens at now.
   useLayoutEffect(() => {
     const el = scroller.current;
     if (el === null || el.clientWidth === 0 || plotted.length === 0) return;
-    const anchor = hold.current;
-    if (anchor !== null && anchor.dayWidth === dayWidth) {
-      hold.current = null;
-      el.scrollLeft = Math.max(0, x(anchor.ms) - anchor.px);
-    } else if (!initialized.current) {
+    if (!initialized.current) {
       initialized.current = true;
       jumpToNow("instant");
     }
@@ -314,16 +295,8 @@ export function Timeline({
           in settings below.
         </p>
       ) : null}
-      <div
-        ref={scroller}
-        hidden={plotted.length === 0}
-        /*
-         * The pane scrolls, not the page — which is what lets the axis stay
-         * put. Capped rather than fixed: three lanes take the height they need
-         * and nothing scrolls vertically at all.
-         */
-        className="scroll-pane relative max-h-[72vh] overflow-auto overscroll-x-contain"
-      >
+      <TemporalViewport paneRef={scroller} min={min} dayWidth={dayWidth}
+        chartWidth={chartWidth} hidden={plotted.length === 0}>
         <div className="relative" style={{ width: chartWidth, minWidth: "100%" }}>
           {/* Gridlines first, so everything else paints over them. */}
           <div aria-hidden className="pointer-events-none absolute inset-0">
@@ -528,9 +501,66 @@ export function Timeline({
             })}
           </div>
         </div>
-      </div>
+      </TemporalViewport>
     </>
   );
+}
+
+type ViewportProps = {
+  paneRef: RefObject<HTMLDivElement | null>;
+  min: number;
+  dayWidth: number;
+  chartWidth: number;
+  hidden: boolean;
+  children: ReactNode;
+};
+
+/**
+ * Capture the centre in the OLD calendar coordinates, before DOM mutations can
+ * change the origin or natively clamp scrollLeft. A layout-effect read is too
+ * late for a shrinking range. React's pre-mutation snapshot also catches a
+ * scroll whose native scroll event/RAF has not been delivered yet.
+ */
+class TemporalViewport extends Component<ViewportProps, object, number | null> {
+  private hiddenMoment: number | null = null;
+
+  private geometryChanged(previous: ViewportProps) {
+    return previous.min !== this.props.min || previous.dayWidth !== this.props.dayWidth
+      || previous.chartWidth !== this.props.chartWidth || previous.hidden !== this.props.hidden;
+  }
+
+  override getSnapshotBeforeUpdate(previous: ViewportProps): number | null {
+    if (!this.geometryChanged(previous)) return null;
+    if (previous.hidden) return this.hiddenMoment;
+    const el = this.props.paneRef.current;
+    return el && el.clientWidth > 0
+      ? timelineMsAt(el.scrollLeft + el.clientWidth / 2, previous.min, previous.dayWidth)
+      : null;
+  }
+
+  override componentDidUpdate(previous: ViewportProps, _state: Readonly<object>, moment: number | null) {
+    if (!this.geometryChanged(previous)) return;
+    if (this.props.hidden) {
+      // Hidden panes have zero geometry. Keep the last real inspected moment
+      // until rows return, without re-initializing or anchoring to today.
+      this.hiddenMoment = moment;
+      return;
+    }
+    const el = this.props.paneRef.current;
+    if (el && el.clientWidth > 0 && moment !== null) {
+      const desired = timelineX(moment, this.props.min, this.props.dayWidth) - el.clientWidth / 2;
+      el.scrollLeft = Math.max(0, Math.min(el.scrollWidth - el.clientWidth, desired));
+    }
+    this.hiddenMoment = null;
+  }
+
+  override render() {
+    // Capped rather than fixed: short boards need no vertical scrolling.
+    return <div ref={this.props.paneRef} hidden={this.props.hidden}
+      className="scroll-pane relative max-h-[72vh] overflow-auto overscroll-x-contain">
+      {this.props.children}
+    </div>;
+  }
 }
 
 /**

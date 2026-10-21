@@ -1,6 +1,6 @@
 # Timeline Readability M2 — Preserve temporal viewport through filters / Upcoming
 
-Status: **open — operator-reported manual-smoke regression; implementation and deployed re-smoke pending (2026-10-21).**
+Status: **fix implemented and automatically validated (2026-10-21); PR/Pages delivery tracked in the focused fix PR. Open pending operator re-smoke on Android Chrome and PC; M2 is not complete.**
 
 Type: bounded M2 bugfix / acceptance follow-up, **not** a new milestone.
 
@@ -58,3 +58,29 @@ bun run build
 - Browser automation is not a real-phone manual pass; **M2 remains open pending explicit operator confirmation**.
 
 Out of scope: new milestones, type grouping, recognition-metadata population, Event Detail/artwork, date precision/source-health/ingestion, Account/Supabase, event IDs, unrelated UI.
+
+## Implementation evidence (2026-10-21)
+
+- Base main: `2a5b2b8`. Both the mounted React timestamp regression and actual
+  Chromium regression fail before the fix. At 320 px / 32 px per day, filtering
+  the oldest game shifts min by 40 days, retains scrollLeft 1984 px, and shifts
+  the centre date by 40 days; 704 px preserves the original moment. This proves
+  changed-origin reinterpretation. Native max clamping is separately covered
+  as a legitimate range constraint, rather than treated as a Jump-to-today bug.
+- Timeline captures the centre timestamp before DOM mutation, restores it
+  after range/scale updates within actual scroll bounds, and retains it through
+  empty panes. One path handles zoom and range changes; initial/explicit Jump
+  retain their accepted anchors. TypeBadge and semantic rendering are untouched.
+- `test/helpers/timeline-dom.tsx` now asserts timestamps and covers feasible and
+  impossible ranges, both modes/scales, hidden updates and immediate filtering.
+  `scripts/check-timeline-browser.mjs` + its typed fixture reproduce the original
+  failure and verify actual CSS/native scrolling: 372 checks each in UTC and
+  America/New_York, four viewport widths, both modes, three scales. See the
+  runner header for setup/invocation; no new project dependencies.
+- Required frozen install, typecheck, full tests (1098 pass, 1 optional skip,
+  0 fail) and build passed. Existing responsive sweep (272 checks) and built-app
+  seven-game feed smoke passed. CI/merge/Pages evidence is recorded in the PR.
+- **Remaining manual acceptance only after delivery:** repeat affected game/
+  category/Upcoming navigation away from today in both modes on Android Chrome
+  and PC, including all-hidden/return and closest-edge limits; check Jump and
+  zoom. Browser automation does not count as that manual acceptance.
