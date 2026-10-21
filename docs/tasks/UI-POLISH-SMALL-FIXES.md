@@ -163,5 +163,6 @@ skip) with RAM-backed TMPDIR after intermittent existing backup/Supabase
 timeouts on the container overlay (details in status). Also passing:
 native browser history checks, weekly-line layout/DST checks, existing M2
 UTC/New York and mobile-header regressions. Hosted delivery is recorded with
-the delivery PR. **Operator Android/PC smoke remains pending.** All types,
+[delivery PR #44](https://github.com/maxvfk/game-calendar/pull/44).
+**Operator Android/PC smoke remains pending.** All types,
 M2 viewport runtime, mobile header and Auth/Sync were not reworked.

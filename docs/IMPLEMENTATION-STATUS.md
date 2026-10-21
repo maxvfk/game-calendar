@@ -1682,6 +1682,28 @@ header height and equal frames on the phone. No other milestone is included.
   regressions, merge/deploy, then operator phone/desktop smoke.
 
 
+### Pending Timeline label readability fix — approved 2026-10-21
+
+- Operator's Android Chrome screenshot in `Ending soonest` shows real event
+  bars that display game + TypeBadge + urgency dot, **but no identity text**.
+  Code review confirmed the `Ending soonest` fit branch in
+  `src/client/state/timelineContent.ts` is all-or-nothing on measured
+  `identity`; it drops titles to zero instead of truncating although a
+  partial title could fit. Old `test/timeline-content.test.tsx` tests
+  explicitly encode this result. No feed disappearance was established.
+- New separate task `docs/tasks/TIMELINE-LABEL-TRUNCATION-FIX.md` specifies
+  measured-width ellipsis/truncation on phones, retaining high-priority compact
+  TypeBadge, truthful deadlines, full accessible names and real M2 viewport
+  preservation. The previously accepted M2 all-or-nothing `Ending soonest`
+  identity degradation is intentionally superseded **only for this behavior**.
+- This is **docs/intake only**, not a runtime fix. Keep the currently active
+  three-part `UI-POLISH-SMALL-FIXES.md` Work independent. Start new short Work
+  for labels from then-CURRENT main **after** that PR is merged.
+- **Next concrete step:** implement focused fit correction, unit and actual
+  Chromium phone/desktop width regressions, standard checks, PR/merge/deploy,
+  then final operator real-phone smoke. Do not start unrelated milestones.
+
+
 ## Small UI fixes — implementation and browser validation, 2026-10-21
 
 Scope: only `docs/tasks/UI-POLISH-SMALL-FIXES.md`, from CURRENT main
@@ -1733,8 +1755,11 @@ Scope: only `docs/tasks/UI-POLISH-SMALL-FIXES.md`, from CURRENT main
   evidence, not Android hardware acceptance or real OAuth sign-in.
 - Visually inspected screenshots and exact matrix/reproduction notes:
   [browser evidence](evidence/ui-polish-small-fixes/README.md).
-- Hosted PR/CI/merge/Pages evidence: recorded in the delivery PR linked below
-  after creation. Final operator phone/desktop acceptance remains pending.
+- Delivery: [PR #44](https://github.com/maxvfk/game-calendar/pull/44).
+  Its description records the verified hosted CI/merge/Pages evidence after
+  delivery. Final operator phone/desktop acceptance remains pending. During
+  implementation, main's docs-only PR #43 was integrated without changing
+  runtime/tests; its separate label-truncation task remains unstarted.
 
 **Next concrete step:** after delivery, operator smoke on Android Chrome and
 PC: mixed daily-reset attribution; Close and Back-first dismissal from both
