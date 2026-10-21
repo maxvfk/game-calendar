@@ -1,8 +1,6 @@
 # Timeline — retain readable event titles on narrow screens
 
-Status: implemented and Chromium-validated; PR/merge/Pages delivery tracked in
-IMPLEMENTATION-STATUS and the delivery PR. Final operator real-device smoke
-remains pending. Original finding: Android screenshot 2026-10-21.
+Status: **complete / operator accepted 2026-10-21**. PR #46 merged, hosted CI/Pages green, and the operator subsequently confirmed the deployed fix works normally. Original finding: Android screenshot 2026-10-21. Exact manual smoke matrix was not provided.
 
 ## Verified finding
 
