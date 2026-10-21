@@ -1,6 +1,6 @@
 # Timeline Readability M2 — Preserve temporal viewport through filters / Upcoming
 
-Status: **fix implemented and automatically validated (2026-10-21); delivery via [PR #34](https://github.com/maxvfk/game-calendar/pull/34). Open pending operator re-smoke on Android Chrome and PC; M2 is not complete.**
+Status: **complete — PR #34 merged/deployed; operator re-smoke on Android Chrome and PC accepted 2026-10-21. Extreme filter combinations can intentionally clamp to the nearest board edge; M2 complete.**
 
 Type: bounded M2 bugfix / acceptance follow-up, **not** a new milestone.
 
@@ -84,3 +84,15 @@ Out of scope: new milestones, type grouping, recognition-metadata population, Ev
   category/Upcoming navigation away from today in both modes on Android Chrome
   and PC, including all-hidden/return and closest-edge limits; check Jump and
   zoom. Browser automation does not count as that manual acceptance.
+
+## Operator acceptance (2026-10-21)
+
+After deployed PR #34, the operator reported that corrected filter/Upcoming
+navigation works on both phone and PC. In very sparse filtered sets, the
+viewport can still shift where the remaining board is too short to retain
+the inspected centre; the provided screenshot shows a Genshin-only board
+near its last dated event and is consistent with allowed native clamping.
+There is no verified new defect beyond this bounded behavior. This explicit
+operator result supersedes the pending acceptance instructions above and
+closes this fix as part of completed M2. Should a reproducible non-clamped
+jump appear later, track it separately with before/after dates.
