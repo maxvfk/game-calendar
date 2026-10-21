@@ -19,6 +19,14 @@ For each item, use this compact format:
 
 ## Observed issues / feedback
 
+- **Title:** Timeline Ending soonest hides titles rather than truncating on phone
+  - **Observation:** Android Chrome operator screenshot 2026-10-21 has several otherwise visible event bars showing only game, TypeBadge and urgency dot, whereas wider desktop displays identities. `fitTimelineContent()` in `Ending soonest` currently returns `identity: 0` if the complete measured identity cannot fit after game+badge, even when part of it would fit; an old unit test codifies this.
+  - **Desired behavior:** show an ellipsized event recognition/title fragment whenever genuinely usable measured width remains, retaining the accepted high-priority compact TypeBadge; game text can yield if it prevents an otherwise useful identity. Keep truthful deadlines and full accessible names.
+  - **Area:** Timeline UI / responsive readability
+  - **Priority:** approved mobile usability fix, after current small UI-fix Work
+  - **Status:** approved / task ready
+  - **Notes / constraints:** `docs/tasks/TIMELINE-LABEL-TRUNCATION-FIX.md`. Separate short Work from `UI-POLISH-SMALL-FIXES.md`; preserve M2 temporal viewport, badge priority, modes, scroll and auth/filter layouts. Narrow scrolled-off event tails may legitimately lack label.
+
 - **Title:** Compact mobile header, account status and wrapped filters
   - **Observation:** after accepted Timeline M2, a phone screenshot showed that the independent account/sync text strip, live/upcoming subtitle, horizontal type-filter strip and Focus strip consume much of the usable viewport.
   - **Desired behavior:** use one compact phone header with small EVENTCLOCK logo, Filters toggle, Checklist/Timeline selector and truthful account/sync-status button at far right. Keep filters collapsed by default; expanded panel shows all type and enabled-game Focus chips with wrapping, a Reset filters control and an explicit collapse button. The header toggle must close it too.
