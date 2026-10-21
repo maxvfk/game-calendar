@@ -1486,3 +1486,30 @@ Status: **research, M1 and M2 complete (2026-10-21); PR #34 deployed and operato
 Choose the next independent prioritized project task separately from CURRENT
 main. Do not start S6b, source/data research, recognition-population work, or
 other milestones automatically.
+
+
+## Pre-Astra UI polish — compact mobile header and wrapped filters (approved 2026-10-21)
+
+- M2 research/M1/M2 are closed and accepted with operator phone/desktop smoke.
+  A separate new mobile usability finding is **not** an M2 regression:
+  permanent type filters, Focus and account/sync text consume too much vertical
+  room above the Calendar on a real phone.
+- The operator reviewed successive mockups and approved a single compact mobile
+  header: reduced EVENTCLOCK title (no mobile live/upcoming subtitle), a
+  collapsible Filters control, existing view toggle, and an account/status icon
+  at the far right. The always-visible mobile account text strip moves behind
+  the truthful account/status disclosure. Existing auth/sync behavior stays.
+- Filters default collapsed on phone. When expanded they show **all** event
+  type and enabled-game Focus choices, wrapping rather than horizontally
+  scrolling, plus `Reset filters` and an explicit in-panel collapse button;
+  the top Filters control is itself a toggle. An active-filter cue is visible
+  even while collapsed. Reset affects **only** types + Focus, not hidden games,
+  Upcoming or other preferences. `All types` select-all/clear-all is bundled
+  with this same task to avoid duplicate touch points.
+- **Implementation task ready:** `docs/tasks/UI-POLISH-MOBILE-HEADER-FILTERS.md`.
+  This is a **standalone short UI-polish Work**, not bundled with mixed-reset
+  countdown, Detail Close/Back, weekly separators, source research, artwork,
+  S6b or the finished M2. No runtime code changed in this documentation step.
+- **Next concrete step:** run the compact-mobile-header Work from then-CURRENT
+  main; merge/deploy after required checks, then operator phone + desktop smoke.
+  The unrelated small UI-fix items can follow separately.
