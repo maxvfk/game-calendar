@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-10-21 (Moscow; Timeline M2 operator phone/PC smoke accepted after PR #34; M2 complete). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-21 (Moscow; compact mobile header/filters implemented; final operator real-phone smoke pending; M2 remains complete). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
@@ -1513,3 +1513,69 @@ other milestones automatically.
 - **Next concrete step:** run the compact-mobile-header Work from then-CURRENT
   main; merge/deploy after required checks, then operator phone + desktop smoke.
   The unrelated small UI-fix items can follow separately.
+
+
+### Compact mobile header / filters implementation — 2026-10-21
+
+- Baseline CURRENT main `56bb3ce1c86268f4c1e9339e86ce3378bf8dc6d3`;
+  bounded branch `feat/mobile-header-filters`, implementing only
+  `docs/tasks/UI-POLISH-MOBILE-HEADER-FILTERS.md`.
+- Below 768 CSS px the persistent account/status, counts, type and Focus rows
+  are replaced by one compact header: EVENTCLOCK, Filters, List/Timeline,
+  person/status button at the far right. Tabs retain accessible Checklist /
+  Timeline names and existing `prefs.view` values. Real measured overflow at
+  large text sizes switches tabs to named icons without shrinking their 44px
+  targets; no second permanent header row. The existing desktop placements
+  remain visible from 768px, with no duplicate accessible mobile controls.
+- Filters are session-only component state, initially collapsed. Both the top
+  toggle and explicit in-panel collapse close it; Escape restores focus to the
+  trigger. The inline panel pushes content down, never auto-closes on selection,
+  and wraps all Types and enabled games in the chosen order, including custom
+  lanes. Zero/one enabled game gets truthful text instead of an inert chooser.
+  Existing single-game Focus toggling and Next progression remain. The active
+  cue has a textual accessible equivalent and selected chips use aria-pressed.
+- All types clears an all-selected set, otherwise selects all. Reset changes
+  only `visibleCategories` and `focusGame`; hidden/known games, order, Upcoming,
+  completion/ignored settings, region, zoom, view and personal data are retained.
+  Empty-result reset, partial/none/all, focused-game return and shared Checklist /
+  Timeline selection are covered. Opening/closing the panel retains the same
+  Timeline DOM pane and inspected time; no Jump/key/navigation code changed.
+- AuthRoot still owns the same ViewState, SyncStatus and actions. Mobile account
+  disclosure reuses its actual email/status/pending/last-sync/warnings and
+  sign-in, sign-out, retry, and deferred setup actions. Escape/close restores
+  focus; outside pointer/focus dismisses the popover. Guest is neutral with +;
+  only actual synced/no-pending state gets a positive cue; syncing, pending,
+  offline/network, auth/schema/error and clock warning are distinct. Established
+  offline cache mode cannot show green. Account access also remains available
+  during feed loading/error and onboarding. Auth bootstrap, sync engine,
+  profile keys, pending mutations and first-login contracts are unchanged.
+- Bun 1.3.14: frozen install, typecheck, full suite and build pass:
+  **1101 pass / 1 existing optional age skip / 0 fail**, 1102 tests in 55 files.
+  Focused tests mount real AuthRoot with isolated fake auth/sync transports,
+  exercise existing actions and readable warnings, and verify guest profile
+  isolation / controller cleanup on sign-out. No real OAuth login is simulated.
+- Reproducible `scripts/check-mobile-header-browser.mjs` + its fixture add
+  **384 Chromium assertions**: 320/360/390px, desktop 768/1440 fallback,
+  all chips/order/custom games, empty results, exact Reset boundary, filter
+  persistence, same-pane inspected-time/clamping, disclosures/focus/actions,
+  all status cues, dark/light and 100%/200% root text. Production JS + actual
+  AuthRoot guest bootstrap are additionally smoked at 320/1440px. Screenshots
+  were visually inspected for phone widths and both themes. Existing M2 real
+  Chromium regression passes **372 checks in UTC and 372 in America/New_York**.
+- **Text-scaling limit, outside this task:** at 200% root text the new header
+  and expanded panel fit; the pre-existing bottom game-order/settings controls
+  can still widen the page. Reproduced independently on unchanged baseline
+  `56bb3ce`: at 320px, `7 of 8 on · your order` extends to x=346.94px and
+  `Reset to A–Z` to x=353.77px. Those exact overflows persist in this Work;
+  unrelated settings were not redesigned. At ordinary text size all tested
+  phone pages have no horizontal page overflow.
+- Offline build retains **179 events / 7 games / 1 existing NTE Circle Bounty
+  conflict**; data/snapshots/IDs, ingestion/source-health, TypeBadge, Timeline
+  navigation, account storage/Supabase and other milestones are unchanged.
+- PR / hosted CI / merge / Pages: pending delivery evidence below. Final
+  real-phone smoke is explicitly reserved for the operator after deployment.
+
+**Next concrete step:** finish this implementation's PR/CI/merge/Pages and
+record evidence, then operator real-phone smoke of collapsed/expanded filters,
+Reset, account disclosure, themes and inspected-time preservation. Do not
+start the separate small UI-fix batch or another milestone.

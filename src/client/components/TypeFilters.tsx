@@ -9,18 +9,20 @@ import {
 export function TypeFilters({
   selected,
   onChange,
+  wrapped = false,
 }: {
+  wrapped?: boolean;
   selected: readonly EventCategory[];
   onChange: (selected: EventCategory[]) => void;
 }) {
   const all = selected.length === EVENT_CATEGORIES.length;
   return (
-    <div className="border-b border-hairline px-4 py-2.5">
-      <div className="scroll-x flex items-center gap-1.5 whitespace-nowrap pb-1" role="group" aria-label="Event types">
+    <div className={wrapped ? "wrapped-type-filters" : "border-b border-hairline px-4 py-2.5"}>
+      <div className={wrapped ? "filter-chips flex flex-wrap items-center gap-1.5" : "scroll-x flex items-center gap-1.5 whitespace-nowrap pb-1"} role="group" aria-label="Event types">
         <button
           type="button"
           aria-pressed={all}
-          onClick={() => onChange(allCategories())}
+          onClick={() => onChange(all ? [] : allCategories())}
           className={`rounded-full border px-2.5 py-1 text-xs ${all ? "border-ink text-ink" : "border-hairline text-muted"}`}
         >
           All types

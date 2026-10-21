@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { fetchFeed, type FeedState } from "./api.ts";
 import { Controls } from "./components/Controls.tsx";
 import { Dailies } from "./components/Dailies.tsx";
@@ -21,7 +21,7 @@ import { useDailyLog, type DailyLogMap } from "./state/useDailyLog.ts";
 import { adoptNewLanes, usePrefs, type Prefs } from "./state/usePrefs.ts";
 import { buildExportData, parseImportData, triggerDownload } from "./state/export.ts";
 import { snapDayWidth } from "./state/zoom.ts";
-import { categoryFor } from "./state/eventCategories.ts";
+import { allCategories, categoryFor, EVENT_CATEGORIES } from "./state/eventCategories.ts";
 import { useCustom, type EventDraft } from "./state/useCustom.ts";
 import { compareRows, SORT_MODES, type Activity, type SortMode } from "./state/sort.ts";
 import {
@@ -98,7 +98,11 @@ function useNow(intervalMs = 1000): number {
   return now;
 }
 
-export function App({ storageKeys }: { storageKeys: ProfileStorageKeys }) {
+export function App({ storageKeys, accountControl }: { storageKeys: ProfileStorageKeys; accountControl?: ReactNode }) {
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const filtersButton = useRef<HTMLButtonElement>(null);
+  const header = useRef<HTMLElement>(null);
+  const closeFilters = () => { setFiltersOpen(false); filtersButton.current?.focus(); };
   const [state, setState] = useState<FeedState>({ status: "loading" });
   const [openId, setOpenId] = useState<string | null>(null);
   // The event most recently ignored, so it can be put back without hunting for
@@ -111,6 +115,21 @@ export function App({ storageKeys }: { storageKeys: ProfileStorageKeys }) {
   // from `prefs` is what stops a reload putting a timeline reader back on the
   // list they did not choose.
   const view = prefs.view;
+  // Large text must keep four reachable touch targets at narrow widths. Measure
+  // the real fonts rather than guessing a device/text-size breakpoint.
+  useLayoutEffect(() => {
+    const element = header.current;
+    if (!element) return;
+    const measure = () => {
+      element.removeAttribute("data-compact");
+      if (element.scrollWidth > element.clientWidth) element.setAttribute("data-compact", "true");
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    for (const child of Array.from(element.children)) observer.observe(child);
+    measure();
+    return () => observer.disconnect();
+  }, [state.status, prefs.onboarded]);
   const ignored = useMarkSet(storageKeys.ignored);
   const prog = useProgress(storageKeys.progress);
   const daily = useDailyLog(storageKeys.daily);
@@ -399,12 +418,13 @@ export function App({ storageKeys }: { storageKeys: ProfileStorageKeys }) {
   );
 
   if (state.status === "loading") {
-    return <Shell><p className="px-4 py-16 text-sm text-muted">Loading events…</p></Shell>;
+    return <Shell><div className="mobile-account-fallback">{accountControl}</div><p className="px-4 py-16 text-sm text-muted">Loading events…</p></Shell>;
   }
 
   if (state.status === "error") {
     return (
       <Shell>
+        <div className="mobile-account-fallback">{accountControl}</div>
         <div className="px-4 py-16">
           <p className="eyebrow text-critical">Events unavailable</p>
           <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted">
@@ -422,6 +442,7 @@ export function App({ storageKeys }: { storageKeys: ProfileStorageKeys }) {
     return (
       <GameMetaProvider value={gameMeta}>
         <Shell>
+          <div className="mobile-account-fallback">{accountControl}</div>
           <Welcome
             available={ordered}
             onConfirm={(chosen, chosenView) =>
@@ -449,8 +470,9 @@ export function App({ storageKeys }: { storageKeys: ProfileStorageKeys }) {
    * and on the timeline, which has no rail, that same rule puts it back at the
    * top of the page. Rendered once per view, never twice on one page.
    */
-  const focusBar = (
+  const focusBar = (wrapped = false) => (
     <GameFocus
+      wrapped={wrapped}
       games={enabled}
       focus={focus}
       counts={perGame}
@@ -464,12 +486,12 @@ export function App({ storageKeys }: { storageKeys: ProfileStorageKeys }) {
   return (
     <GameMetaProvider value={gameMeta}>
     <Shell>
-      <header className="flex items-center justify-between gap-4 border-b border-hairline px-4 pb-3 pt-5">
+      <header ref={header} className="app-header flex items-center justify-between gap-4 border-b border-hairline px-4 pb-3 pt-5">
         <div>
-          <p className="font-display text-[0.9375rem] font-bold tracking-[0.02em] lg:text-lg">
+          <p className="app-wordmark font-display text-[0.9375rem] font-bold tracking-[0.02em] lg:text-lg">
             EVENT<span className="text-near">CLOCK</span>
           </p>
-          <p className="mt-0.5 flex items-center gap-1.5 text-xs text-faint">
+          <p className="app-counts mt-0.5 flex items-center gap-1.5 text-xs text-faint">
             {live.length} live · {upcoming.length} upcoming
             {!online && (
               <span className="inline-flex items-center gap-1 text-soon">
@@ -480,10 +502,20 @@ export function App({ storageKeys }: { storageKeys: ProfileStorageKeys }) {
           </p>
         </div>
 
+        <button type="button" ref={filtersButton} className="mobile-filters-trigger header-icon"
+          aria-label={`Filters${prefs.visibleCategories.length !== EVENT_CATEGORIES.length || focus !== null ? " — active" : ""}`}
+          aria-expanded={filtersOpen} aria-controls="mobile-filters"
+          onClick={() => setFiltersOpen(!filtersOpen)}>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+            <path d="M4 6h16M7 12h10M10 18h4" />
+          </svg>
+          <span className="filters-button-label">Filters</span>
+          {(prefs.visibleCategories.length !== EVENT_CATEGORIES.length || focus !== null) && <span aria-hidden="true" className="active-filter-dot" />}
+        </button>
         <div
           role="tablist"
           aria-label="View"
-          className="flex rounded-lg border border-hairline p-0.5"
+          className="view-tabs flex rounded-lg border border-hairline p-0.5"
         >
           {/* The id is a stored value (`prefs.view`) and the label is copy, so
               they are allowed to drift: renaming the tab must not silently move
@@ -497,22 +529,42 @@ export function App({ storageKeys }: { storageKeys: ProfileStorageKeys }) {
             <button
               key={id}
               role="tab"
+              aria-label={label}
+              title={label}
               aria-selected={view === id}
               onClick={() => update({ view: id })}
               className={`rounded-[6px] px-2.5 py-1.5 text-xs font-medium transition-colors ${
                 view === id ? "bg-raised text-ink" : "text-faint hover:text-muted"
               }`}
             >
-              {label}
+              <span className={id === "soon" ? "checklist-label" : ""}>{label}</span>
+              {id === "soon" && <span className="list-label" aria-hidden="true">List</span>}
+              <svg className="tab-symbol" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+                <path d={id === "soon" ? "M8 6h13M8 12h13M8 18h13M2 6h2M2 12h2M2 18h2" : "M3 5h18M5 2v6M12 2v6M19 2v6M3 11h8v4H3zM10 18h11v4H10z"} />
+              </svg>
             </button>
           ))}
         </div>
+        {accountControl}
       </header>
 
-      <TypeFilters
+      <section id="mobile-filters" aria-label="Filters" hidden={!filtersOpen}
+        className="mobile-filters-panel border-b border-hairline p-4"
+        onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); closeFilters(); } }}>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <h2 className="eyebrow">Filters</h2>
+          <button type="button" className="filter-reset text-xs underline"
+            onClick={() => update({ visibleCategories: allCategories(), focusGame: null })}>Reset filters</button>
+          <button type="button" className="header-icon" aria-label="Collapse filters" onClick={closeFilters}>⌃</button>
+        </div>
+        <h3 className="eyebrow mb-2">Types</h3>
+        <TypeFilters wrapped selected={prefs.visibleCategories} onChange={(visibleCategories) => update({ visibleCategories })} />
+        <div className="mt-4">{focusBar(true)}</div>
+      </section>
+      <div className="desktop-types"><TypeFilters
         selected={prefs.visibleCategories}
         onChange={(visibleCategories) => update({ visibleCategories })}
-      />
+      /></div>
 
       {view === "soon" ? (
         /*
@@ -534,7 +586,7 @@ export function App({ storageKeys }: { storageKeys: ProfileStorageKeys }) {
                 full-height divider would spend most of its length walling off
                 an empty gap. It travels with the panel as that pins. */}
             <div className="scroll-pane lg:sticky lg:top-0 lg:max-h-screen lg:overflow-y-auto lg:border-r lg:border-hairline">
-          {focusBar}
+          <div className="desktop-focus">{focusBar()}</div>
 
           <NextUp
             rows={headline}
@@ -610,7 +662,7 @@ export function App({ storageKeys }: { storageKeys: ProfileStorageKeys }) {
                       : `${upcoming.length} events have`
                   } not started yet — switch on “Show events that haven't started”, under “What you see” in settings below.`
                 : prefs.visibleCategories.length === 0
-                  ? "No event types selected. Choose one above, or select All types."
+                  ? "No event types selected. Open Filters and choose a type, or reset filters."
                 : focus !== null
                   ? `Nothing running in ${gameMeta(focus).name}. Try another game, or show all of them.`
                   : "Nothing to show. Every game is switched off, or you've finished everything and hidden completed events."}
@@ -620,7 +672,7 @@ export function App({ storageKeys }: { storageKeys: ProfileStorageKeys }) {
         </div>
       ) : (
         <>
-          {focusBar}
+          <div className="desktop-focus">{focusBar()}</div>
 
           <Timeline
             rows={visible}
