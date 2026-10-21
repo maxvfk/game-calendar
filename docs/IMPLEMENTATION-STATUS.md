@@ -1594,3 +1594,38 @@ both themes, no sideways pan at normal text, and Timeline inspected-time
 preservation including legitimate closest-edge clamping. The documented
 pre-existing 200%-text settings overflow remains outside this task. Stop here;
 do not start the separate small UI-fix batch or another milestone.
+
+
+### Mobile phone-smoke visual follow-up — 2026-10-21
+
+- Operator reported the deployed implementation works well, requesting two
+  visual refinements against the accepted prototype: a real Filters button
+  filling the unused header width, and shorter rows in the expanded panel.
+  Baseline CURRENT main: `33a16fe4332db00e9ad8ce2468ea610612c8e023`;
+  branch `fix/mobile-filter-density`. This continues only the same UI task.
+- Mobile Filters is now a bordered, labelled flex-growing button between the
+  wordmark and tabs, using a funnel icon and an expanded-state border/wash.
+  At 320px the funnel yields to the visible Filters label; large-text measured
+  compact fallback retains its accessible name. Header/tab/account targets
+  remain 44px. No extra row or saved preference was added.
+- Wrapped filter chips use 32px minimum height rather than 44px, retain 6px
+  separation and grow naturally with enlarged text. Horizontal chip padding
+  and panel/heading/section spacing are reduced; Next is 28px high. Mobile
+  visible copy becomes Login / Shop while existing full accessible names,
+  category IDs and desktop labels remain. At 390px the fixture's type chips
+  fit two rows; 320px fits three. Timeline bar height and navigation are not
+  part of this density change.
+- Frozen install, typecheck, full tests and build pass on Bun 1.3.14:
+  **1101 pass / 1 existing optional skip / 0 fail**. Extended browser regression:
+  **405 Chromium checks**, including bordered flex fill without unused gaps,
+  visible normal-size phone label, measured 32px chips, compact-panel height,
+  all existing filter/Reset/Auth-state/navigation checks, both themes and
+  200% text. Screenshots inspected at 320/360/390px. Existing M2 temporal
+  viewport browser regression also passes **372 checks**.
+- Hosted delivery evidence is tracked with this follow-up's implementation PR.
+  Final real-phone smoke of the refined button/spacing remains the operator's
+  gate; the previously documented unrelated 200%-text settings limit remains.
+
+**Next concrete step:** finish this bounded follow-up's hosted CI/merge/Pages,
+then operator checks the refined button width and panel density on the phone.
+No other UI-fix or milestone is included.

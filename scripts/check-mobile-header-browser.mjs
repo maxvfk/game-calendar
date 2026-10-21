@@ -66,6 +66,17 @@ try {
     check(!(await page.locator(".app-counts").isVisible()), "mobile subtitle absent");
     await noOverflow("collapsed");
     const trigger = page.getByRole("button", { name: /^Filters/ });
+    const buttonLayout = await trigger.evaluate(el => {
+      const rect = el.getBoundingClientRect();
+      const brand = document.querySelector(".app-wordmark").getBoundingClientRect();
+      const tabs = document.querySelector(".view-tabs").getBoundingClientRect();
+      return { width: rect.width, leftGap: rect.left - brand.right, rightGap: tabs.left - rect.right,
+        grow: getComputedStyle(el).flexGrow, border: getComputedStyle(el).borderTopStyle,
+        label: getComputedStyle(el.querySelector(".filters-button-label")).display };
+    });
+    check(buttonLayout.grow === "1" && buttonLayout.border === "solid", "Filters is a bordered expanding button");
+    check(buttonLayout.leftGap <= 4.1 && buttonLayout.rightGap <= 4.1, "Filters fills spare horizontal space");
+    check(buttonLayout.label !== "none", "Filters label visible at normal phone text size");
     await page.locator(".scroll-pane").evaluate(el => { el.scrollLeft += 180; }); await settle();
     await preserve(() => trigger.click(), "opening filters retains time");
     check(await trigger.getAttribute("aria-expanded") === "true", "expanded state");
@@ -85,6 +96,12 @@ try {
       check(new Set(geometry.children.map(c => c.top)).size > 1, "chips wrap to multiple rows");
       check(geometry.children.every(c => c.right <= width), "no offscreen chip");
     }
+    const chipHeights = await panel.locator(".filter-chips button").evaluateAll(els => els.map(el => el.getBoundingClientRect().height));
+    check(chipHeights.every(h => h >= 32 && h <= 33), "filter rows use compact 32px targets");
+    check(await types.getByRole("button", { name: "Login / rewards", exact: true }).textContent() === "Login", "compact Login copy retains accessible meaning");
+    check(await types.getByRole("button", { name: "Shop / exchange", exact: true }).textContent() === "Shop", "compact Shop copy retains accessible meaning");
+    const panelHeight = await panel.evaluate(el => el.getBoundingClientRect().height);
+    check(panelHeight <= (width === 390 ? 290 : 340), `compact panel height at ${width}: ${panelHeight}`);
     const baseline = await prefs();
     await types.getByRole("button", { name: "All types", exact: true }).click(); await settle();
     check((await prefs()).visibleCategories.length === 0, "All types clears all");

@@ -549,8 +549,11 @@ body {
   overflow-wrap: anywhere;
 }
 .account-popover .account-actions { align-items: flex-start; flex-direction: column; }
-.account-popover button, .filter-reset, .filter-chips button { min-height: 44px; }
-.filter-chips button { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+.account-popover button { min-height: 44px; }
+/* Denser mobile filter rows, with separated 32px targets (header stays 44px). */
+.filter-reset, .filter-chips button, .filter-panel-heading .header-icon { min-height: 32px; }
+.filter-panel-heading .header-icon { min-width: 32px; }
+.filter-chips button { padding-inline: 8px; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
 .filter-chips .hue-chip { flex-shrink: 1; }
 
 @media (width < 768px) {
@@ -560,9 +563,21 @@ body {
   .mobile-account, .mobile-filters-trigger { display: flex; }
   .mobile-filters-panel:not([hidden]) { display: block; }
   .mobile-account-fallback { position: relative; display: flex; justify-content: flex-end; }
-  .view-tabs { margin-left: auto; flex-shrink: 0; }
+  .view-tabs { flex-shrink: 0; }
+  .mobile-filters-trigger {
+    flex: 1 0 auto;
+    gap: 4px;
+    padding-inline: 6px;
+    border: 1px solid var(--color-hairline);
+    background: var(--color-surface);
+    font-size: 0.75rem;
+  }
+  .mobile-filters-trigger[aria-expanded="true"] {
+    border-color: var(--color-near);
+    background: var(--color-raised);
+  }
   .view-tabs button { min-width: 44px; min-height: 44px; padding: 4px 7px; }
-  .filters-button-label { display: none; }
+  .filters-button-label { display: inline; white-space: nowrap; }
   .app-header[data-compact] .app-wordmark { font-size: 11px; }
   .app-header[data-compact] .view-tabs button { min-width: 44px; }
   .app-header[data-compact] .view-tabs span, .app-header[data-compact] .filters-button-label { display: none; }
@@ -570,7 +585,7 @@ body {
   .checklist-label { display: none; }
   .list-label { display: inline; }
   .wrapped-game-focus > div:first-child { flex-wrap: wrap; }
-  .wrapped-game-focus > div:first-child button { min-height: 44px; max-width: 100%; text-align: left; }
+  .wrapped-game-focus > div:first-child button { min-height: 28px; max-width: 100%; text-align: left; }
 }
 @media (480px <= width < 768px) {
   .app-wordmark { font-size: 0.9375rem; }
@@ -581,5 +596,7 @@ body {
 /* At large text sizes, compact the wordmark/tabs without shrinking targets. */
 @media (width < 360px) {
   .app-wordmark { font-size: 11px; }
+  .mobile-filters-trigger > svg { display: none; }
+  .app-header[data-compact] .mobile-filters-trigger > svg { display: block; }
   .view-tabs button { padding-inline: 5px; font-size: 11px; }
 }

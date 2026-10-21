@@ -187,3 +187,18 @@ Create PR/merge/deploy only this task's implementation. If PR/hosted/manual
 checks cannot be completed, explicitly leave the corresponding gate open.
 Do not start the separate small UI-fix batch, source-quality audits, artwork,
 S6b or another milestone in the same Work.
+
+
+## Operator visual refinement after first deployment — 2026-10-21
+
+The operator accepted functional behavior and supplied real-phone + prototype
+screenshots, asking for two bounded visual changes: Filters must be a bordered
+button filling all spare width between wordmark and view tabs, and expanded
+filter rows/spacing must be denser. Use 32px minimum wrapped chip targets with
+6px separation (grow with enlarged text), tighter panel spacing, and mobile
+Login / Shop labels with existing full accessible meaning. Keep 44px header
+controls. At ordinary phone text size retain the Filters label; at 320px its
+icon may yield first. The existing measured large-text fallback remains.
+This is panel density only; do not change Timeline bar height/navigation,
+Auth/Sync, desktop layout, filter semantics or Reset scope. Final refined
+real-phone smoke remains with the operator.

@@ -507,7 +507,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
           aria-expanded={filtersOpen} aria-controls="mobile-filters"
           onClick={() => setFiltersOpen(!filtersOpen)}>
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-            <path d="M4 6h16M7 12h10M10 18h4" />
+            <path d="M3 4h18l-7 8v7l-4 2v-9z" />
           </svg>
           <span className="filters-button-label">Filters</span>
           {(prefs.visibleCategories.length !== EVENT_CATEGORIES.length || focus !== null) && <span aria-hidden="true" className="active-filter-dot" />}
@@ -549,17 +549,17 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
       </header>
 
       <section id="mobile-filters" aria-label="Filters" hidden={!filtersOpen}
-        className="mobile-filters-panel border-b border-hairline p-4"
+        className="mobile-filters-panel border-b border-hairline p-3"
         onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); closeFilters(); } }}>
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="filter-panel-heading mb-2 flex flex-wrap items-center justify-between gap-2">
           <h2 className="eyebrow">Filters</h2>
           <button type="button" className="filter-reset text-xs underline"
             onClick={() => update({ visibleCategories: allCategories(), focusGame: null })}>Reset filters</button>
           <button type="button" className="header-icon" aria-label="Collapse filters" onClick={closeFilters}>⌃</button>
         </div>
-        <h3 className="eyebrow mb-2">Types</h3>
+        <h3 className="eyebrow mb-1.5">Types</h3>
         <TypeFilters wrapped selected={prefs.visibleCategories} onChange={(visibleCategories) => update({ visibleCategories })} />
-        <div className="mt-4">{focusBar(true)}</div>
+        <div className="mt-3">{focusBar(true)}</div>
       </section>
       <div className="desktop-types"><TypeFilters
         selected={prefs.visibleCategories}
