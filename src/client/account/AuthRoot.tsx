@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { bootstrapLocalProfile, profileKeys } from "../state/storage.ts";
+import { AccountDisclosure, accountCue } from "../components/AccountDisclosure.tsx";
 import { App } from "../App.tsx";
 import {
   hasCloudData, hasGuestData, materializeCloud, personalCounts, pullCloud,
@@ -19,7 +20,7 @@ import { isRetryableTransportError } from "./transport.ts";
 type Guest = ReturnType<typeof bootstrapLocalProfile>;
 type Choice = { ownerId: string; email: string; profileId: string; guest: Guest;
   local: PersonalState; cloud: SyncState; resumable: boolean };
-type ViewState =
+export type ViewState =
   | { kind: "loading"; guest: Guest }
   | { kind: "guest"; guest: Guest; message?: string; retryOnline?: boolean }
   | { kind: "deferred"; guest: Guest; email: string; message?: string }
@@ -296,8 +297,8 @@ export function AuthRoot({ guest }: { guest: Guest }) {
     ["pending", "syncing", "synced", "offline", "network"].includes(syncStatus.kind)
     ? { ...syncStatus, kind: navigator.onLine === false ? "offline" : "network" } as SyncStatus
     : syncStatus;
-  return <>
-    <nav aria-label="Account" className="mx-auto flex max-w-7xl flex-wrap items-center justify-end gap-3 px-4 py-2 text-xs text-faint">
+  const accountActions = <>
+    <nav aria-label="Account" className="account-actions flex flex-wrap items-center gap-3 text-xs text-faint">
       {account ? <>
         <span>{view.email}</span>
         <span role="status">{displayedStatus === null ? "Sync starting…" :
@@ -338,6 +339,12 @@ export function AuthRoot({ guest }: { guest: Guest }) {
     </nav>
     {(actionError || ("message" in view && view.message)) &&
       <p role="alert" className="mx-auto max-w-7xl px-4 text-xs text-soon">{actionError ?? ("message" in view ? view.message : "")}</p>}
-    <App key={account ? view.profileId : view.guest.profileId} storageKeys={active} />
+  </>;
+  const cue = accountCue(view.kind, account ? displayedStatus : null, offlineAccount,
+    Boolean(actionError || ("message" in view && view.message)));
+  return <>
+    <div className="desktop-account mx-auto max-w-7xl px-4 py-2">{accountActions}</div>
+    <App key={account ? view.profileId : view.guest.profileId} storageKeys={active}
+      accountControl={<AccountDisclosure cue={cue}>{accountActions}</AccountDisclosure>} />
   </>;
 }

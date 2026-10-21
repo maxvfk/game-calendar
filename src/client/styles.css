@@ -503,3 +503,83 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--color-hairline) transparent;
 }
+
+/* One mobile header; the desktop account/filter/Focus placement stays intact. */
+.mobile-filters-trigger, .mobile-account, .mobile-filters-panel, .list-label,
+.mobile-account-fallback, .tab-symbol { display: none; }
+.desktop-account .account-actions { justify-content: flex-end; }
+.header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 8px;
+}
+.mobile-filters-trigger { display: none; }
+.account-cue, .active-filter-dot { position: absolute; }
+.account-cue {
+  right: 0;
+  bottom: 2px;
+  min-width: 15px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 15px;
+  border-radius: 50%;
+  background: var(--color-raised);
+  color: var(--color-muted);
+}
+.account-cue[data-tone="synced"] { color: var(--color-type-login); }
+.account-cue[data-tone="warning"] { color: var(--color-critical); }
+.account-cue[data-tone="waiting"] { color: var(--color-soon); }
+.active-filter-dot { right: 3px; top: 6px; width: 6px; height: 6px; border-radius: 50%; background: var(--color-near); }
+.account-trigger, .mobile-filters-trigger { position: relative; }
+.account-popover {
+  position: absolute;
+  z-index: 50;
+  right: 8px;
+  top: 100%;
+  width: min(340px, calc(100% - 16px));
+  padding: 12px;
+  border: 1px solid var(--color-hairline);
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: 0 8px 24px #0003;
+  overflow-wrap: anywhere;
+}
+.account-popover .account-actions { align-items: flex-start; flex-direction: column; }
+.account-popover button, .filter-reset, .filter-chips button { min-height: 44px; }
+.filter-chips button { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+.filter-chips .hue-chip { flex-shrink: 1; }
+
+@media (width < 768px) {
+  .desktop-account, .desktop-types, .desktop-focus, .app-counts { display: none; }
+  .app-header { position: relative; gap: 4px; padding: 6px 8px; }
+  .app-wordmark { font-size: 0.75rem; letter-spacing: 0; white-space: nowrap; }
+  .mobile-account, .mobile-filters-trigger { display: flex; }
+  .mobile-filters-panel:not([hidden]) { display: block; }
+  .mobile-account-fallback { position: relative; display: flex; justify-content: flex-end; }
+  .view-tabs { margin-left: auto; flex-shrink: 0; }
+  .view-tabs button { min-width: 44px; min-height: 44px; padding: 4px 7px; }
+  .filters-button-label { display: none; }
+  .app-header[data-compact] .app-wordmark { font-size: 11px; }
+  .app-header[data-compact] .view-tabs button { min-width: 44px; }
+  .app-header[data-compact] .view-tabs span, .app-header[data-compact] .filters-button-label { display: none; }
+  .app-header[data-compact] .tab-symbol { display: block; }
+  .checklist-label { display: none; }
+  .list-label { display: inline; }
+  .wrapped-game-focus > div:first-child { flex-wrap: wrap; }
+  .wrapped-game-focus > div:first-child button { min-height: 44px; max-width: 100%; text-align: left; }
+}
+@media (480px <= width < 768px) {
+  .app-wordmark { font-size: 0.9375rem; }
+  .filters-button-label, .checklist-label { display: inline; }
+  .mobile-filters-trigger { gap: 4px; padding-inline: 6px; }
+  .list-label { display: none; }
+}
+/* At large text sizes, compact the wordmark/tabs without shrinking targets. */
+@media (width < 360px) {
+  .app-wordmark { font-size: 11px; }
+  .view-tabs button { padding-inline: 5px; font-size: 11px; }
+}

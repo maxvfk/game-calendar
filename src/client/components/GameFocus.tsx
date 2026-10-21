@@ -22,6 +22,7 @@ export function GameFocus({
   next,
   onFocus,
   onAdvance,
+  wrapped = false,
 }: {
   /**
    * Games the reader has switched on, in **their** order.
@@ -29,6 +30,7 @@ export function GameFocus({
    * Was feed order — whichever game held the first event row — until
    * `orderGames` became the one rule every surface listing a game goes through.
    */
+  wrapped?: boolean;
   games: LaneId[];
   focus: LaneId | null;
   /** Outstanding rows per game, so a chip says whether it is worth a visit. */
@@ -42,12 +44,14 @@ export function GameFocus({
   const gameMeta = useGameMeta();
   // With one game there is nothing to focus down to, and the bar would just be
   // a chip that does nothing.
-  if (games.length < 2) return null;
+  if (games.length < 2) return wrapped ? <section><h3 className="eyebrow mb-2">Games / Focus</h3><p className="text-xs text-muted">
+    {games.length === 1 ? `Showing ${gameMeta(games[0]!).name}` : "No games enabled. Choose games in settings."}
+  </p></section> : null;
 
   return (
-    <section className="border-b border-hairline px-4 py-3">
+    <section className={wrapped ? "wrapped-game-focus" : "border-b border-hairline px-4 py-3"}>
       <div className="flex items-baseline justify-between gap-3">
-        <p className="eyebrow">Focus</p>
+        <p className="eyebrow">{wrapped ? "Games / Focus" : "Focus"}</p>
         <button
           type="button"
           onClick={onAdvance}
@@ -71,7 +75,7 @@ export function GameFocus({
         // well, so a chip that rises a pixel under the cursor loses that pixel
         // and its ring to the scroller's edge. `mt` gives the same total gap
         // back.
-        className="scroll-x -mx-4 mt-1 flex gap-1.5 px-4 pb-1 pt-1 lg:flex-wrap"
+        className={wrapped ? "filter-chips mt-2 flex flex-wrap gap-1.5" : "scroll-x -mx-4 mt-1 flex gap-1.5 px-4 pb-1 pt-1 lg:flex-wrap"}
       >
         <Chip
           label="All"
