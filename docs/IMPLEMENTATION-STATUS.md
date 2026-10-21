@@ -1572,10 +1572,25 @@ other milestones automatically.
 - Offline build retains **179 events / 7 games / 1 existing NTE Circle Bounty
   conflict**; data/snapshots/IDs, ingestion/source-health, TypeBadge, Timeline
   navigation, account storage/Supabase and other milestones are unchanged.
-- PR / hosted CI / merge / Pages: pending delivery evidence below. Final
-  real-phone smoke is explicitly reserved for the operator after deployment.
+- Delivery: [PR #37](https://github.com/maxvfk/game-calendar/pull/37), head
+  `d731387499c8458be1d7828f71021ed466bac5b4`, passed
+  [PR CI 39631123805](https://github.com/maxvfk/game-calendar/actions/runs/39631123805)
+  and merged as `bbff4a1c573a53dc1bbae0f3a2ac68a4ab2e2f16`.
+  [Main CI/build/Pages 39631262345](https://github.com/maxvfk/game-calendar/actions/runs/39631262345)
+  succeeded in all three jobs. Actual hosted test log: **1101 pass / 1 skip /
+  0 fail** on Bun 1.3.14. Public index, main.js, styles.css and feed returned
+  HTTP 200. Cache-busted public JS/CSS are byte-identical to the validated local
+  build (JS SHA-256 `556cb1d77cb5c6bb72c3ee03b1db3c03717ab39b682b8c8250629a552bad1bf4`).
+  Public feed generated `2026-10-21T16:03:56.402Z`: **179 events / 7 games /
+  1 existing conflict**. This establishes deployed runtime assets, not a
+  real-phone manual pass.
+- **Implementation / automated checks / PR / merge / deploy are complete.**
+  Final real-phone acceptance remains open and is explicitly reserved for the
+  operator. Do not infer a real-device pass from Chromium screenshots.
 
-**Next concrete step:** finish this implementation's PR/CI/merge/Pages and
-record evidence, then operator real-phone smoke of collapsed/expanded filters,
-Reset, account disclosure, themes and inspected-time preservation. Do not
-start the separate small UI-fix batch or another milestone.
+**Next concrete step:** operator real-phone smoke on the deployed site:
+collapsed/expanded filters, All types, Reset, account disclosure/status/actions,
+both themes, no sideways pan at normal text, and Timeline inspected-time
+preservation including legitimate closest-edge clamping. The documented
+pre-existing 200%-text settings overflow remains outside this task. Stop here;
+do not start the separate small UI-fix batch or another milestone.
