@@ -1,7 +1,7 @@
-# UI-polish small fixes — reset attribution and Event Detail dismissal
+# UI-polish small fixes — daily reset, Event Detail and weekly separators
 
 Status: **ready — implement after compact mobile header/filters delivery**  
-Scope: **two confirmed UI/interaction fixes + one read-only weekly-separator assessment**.  
+Scope: **three approved small UI fixes**: daily reset attribution, Event Detail dismissal and clearer weekly Timeline separators.  
 Timeline M2 and the mobile-header task remain separate and must not be reopened.
 
 ## Baseline verified 2026-10-21
@@ -18,9 +18,10 @@ At main `c5e540c30ae9e6ed6cf5d7b51990b407b85379ac`:
   no visible inside-sheet Close button. Browser/system Back does not dismiss it.
   `App.tsx` currently owns `openId` / `setOpenId` for both Checklist and
   Timeline, without modal history handling.
-- A more visible weekly boundary in Timeline is recorded in
-  `docs/IMPROVEMENT-BACKLOG.md` as an **observation**, not an approved layout.
-  Do not automatically change the grid just because this task mentions it.
+- Weekly separators were previously recorded as an observed possibility.
+  On 2026-10-21 the operator explicitly **made this a required UI fix**
+  to be implemented with the two fixes above. This supersedes the previous
+  assessment-only restriction in this task and backlog.
 
 Use CURRENT main as actual source of truth if anything has changed by Work start.
 
@@ -70,17 +71,32 @@ short-lived, owned history state entry while the dialog is open, but must:
 
 Do **not** redesign Event Detail hierarchy/artwork/metadata/progress controls.
 
-## 3. Weekly separators — assessment only
+## 3. Implement more visible weekly Timeline separators (required)
 
-Evaluate current daily grid at narrow + wide widths and multiple zoom levels
-against the accepted M2 readability rules. Specifically, ask whether adding a
-slightly stronger Sunday/Monday boundary genuinely helps scanning without
-competing with TODAY, deadlines, sticky text and dense mobile event bars.
+The user explicitly approved **implementation**, not merely an assessment.
+Make the transition from **Sunday to Monday** easier to see than an ordinary
+daily cell boundary in both `By game` and `Ending soonest`.
 
-Record the evidence and a concise recommendation in
-`docs/IMPLEMENTATION-STATUS.md`. **Do not implement a weekly separator under
-this task without new operator approval**; it is not a confirmed defect and is
-not essential for closing the two fixes above.
+- Use the **same local calendar date arithmetic** as the existing
+  `dayBoundaries` / `timelineX` grid. Detect **Monday's local midnight**
+  (`getDay() === 1` on each local day boundary); do not add 7 × 24h steps or
+  assume a fixed UTC weekday, which would break in DST/timezones.
+- Prefer a modestly stronger vertical line (slightly thicker and/or higher
+  contrast). It must read across the plotted Timeline grid, without changing
+  column widths, positioning or date-label spacing.
+- Keep it visibly subordinate to the TODAY marker and without obscuring
+  sticky labels, bars, category badges, deadlines, their frayed edges or
+  interaction hit targets. Lines must remain decorative/non-interactive.
+- Make it distinguishable in light/dark themes, including narrow mobile widths
+  and the smallest/largest existing zoom values; avoid a bright, heavy weekly
+  band or any extra row/legend/persistent controls.
+- Reuse existing grid/boundary computations and minimally scoped styling.
+  Do **not** reopen M2 viewport/history/navigation logic or change date
+  precision semantics.
+
+Include visual screenshots and automated rendering/placement checks at phone
+and desktop widths; manual acceptance after Pages deploy should include the
+contrast between regular daily lines, Monday and TODAY.
 
 ## Checks and acceptance
 
@@ -96,7 +112,10 @@ Add focused regression tests for:
   Back-first dismissal and subsequent normal Back navigation; reopening and
   repeated close cycles; no stale history entries or accidental reopens;
 - compatibility with mobile account/filter disclosure and M2 inspected-time
-  viewport (including filtering after closing detail).
+  viewport (including filtering after closing detail);
+- Monday local calendar boundary selection (non-Mondays remain ordinary),
+  DST/timezone behavior, daily-cell geometry preserved, both group modes and
+  multiple zoom levels, decorative stacking below TODAY and event labels.
 
 Use a real browser for history/Back behavior, not only simulated happy-dom
 events. Run existing mobile-header and Timeline browser checks where
@@ -113,12 +132,13 @@ bun run build
 ```
 
 After implementation, update `docs/IMPLEMENTATION-STATUS.md` with facts,
-checks, weekly-separator recommendation, hosted PR/CI/Pages evidence, remaining
-manual phone/desktop smoke. Update backlog states only for independently
+checks, weekly-separator implementation and browser screenshots, hosted
+PR/CI/Pages evidence, remaining manual phone/desktop smoke. Update backlog states only for independently
 verified fixes.
 
 Create a short-lived branch, PR, merge, deploy if possible. The operator
-confirms mobile browser Back/Close and mixed dailies after deployment. Never
+confirms mobile browser Back/Close, mixed dailies and new week separators
+after deployment. Never
 claim manual acceptance or an unrun browser check.
 
 ## Explicit exclusions
@@ -127,6 +147,7 @@ claim manual acceptance or an unrun browser check.
   or `All types` behavior.
 - Do not change Timeline M2 navigation or event types, feed/dates/provenance,
   source-health, Supabase/OAuth, Account Sync, stored preferences or event IDs.
-- Do not add weekly styling automatically, artwork, daily passes, S6b, or
-  source-data precision research.
-- Stop at these two fixes and the documented weekly-separator assessment.
+- Do not add unrelated Timeline redesign/grouping, artwork, daily passes, S6b,
+  or source-data precision research.
+- Stop after the **three fixes** and their automated/browser validation.
+  Weekly separators are approved for implementation in this Work.

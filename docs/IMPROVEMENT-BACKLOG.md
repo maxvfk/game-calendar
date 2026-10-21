@@ -40,10 +40,10 @@ For each item, use this compact format:
   - **Observation:** adjacent weeks are not visually distinct enough when scanning the daily Timeline.
   - **Desired behavior:** make the boundary between Sunday and Monday more visible than ordinary day separators, for example with a slightly thicker and/or more contrasting divider.
   - **Area:** UI
-  - **Priority:** undecided
-  - **Status:** observed
-  - **Notes / constraints:** keep the weekly separator visually subordinate to the current-day marker and avoid adding clutter to the dense mobile view.
-  - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — evaluate only; no visual change without operator approval.
+  - **Priority:** approved pre-Astra UI fix
+  - **Status:** approved / task ready
+  - **Notes / constraints:** operator explicitly requested implementation on 2026-10-21. Emphasize the Sunday→Monday local day boundary using a modest stronger grid line, while keeping it subordinate to TODAY and without adding mobile clutter, changing event/calendar geometry or interfering with M2 inspected-time preservation.
+  - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — **implement** with reset attribution and Event Detail dismissal.
 
 - **Title:** Per-game daily pass countdowns
   - **Observation:** the app has daily chores but no personal tracking for 30-day login/subscription passes such as Genshin's Blessing of the Welkin Moon.
