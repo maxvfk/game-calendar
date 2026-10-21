@@ -1771,3 +1771,27 @@ views followed by normal Back; daily vs Monday vs TODAY contrast in both
 Timeline modes/themes and min/max zoom. Confirm filtering after closing detail
 retains the inspected moment, allowing existing nearest-edge clamps. Stop here;
 no other milestone is started.
+
+
+### Game Daily Reset clock correctness — separate follow-up noted 2026-10-21
+
+- Operator reports that PR #44 correctly attributes the nearest daily reset
+  to a game/group but that the **underlying reset times appear inaccurate**.
+  This is a potential existing clock/configuration problem, **not proof that
+  the new attribution algorithm is wrong**. No per-game true reset instant
+  has yet been independently verified against the user's observation.
+- `nextDailyReset` uses `msUntilReset` from
+  `dayKey`/`nextResetMs`/`resetShiftMs`. Current default is 04:00
+  server-local with fixed region offsets; Endfield has a Europe override.
+  NTE/CZN retain the regional default in `GAMES`; the actual game-server
+  behavior requires source/in-game verification.
+- This matters beyond the displayed timer: reset clock assumptions determine
+  profile-stored daily day keys, history, streaks and synchronization behavior.
+  Do not simply adjust constants before reviewing storage compatibility.
+- **Separate research-first task filed:** `docs/tasks/DAILY-RESET-CLOCK-AUDIT.md`.
+  Audit the seven currently shipped games with dated authoritative evidence,
+  DST/server mappings and migration risk; return a bounded implementation
+  proposal. **No reset clock or UI runtime change is included in this entry.**
+- **Next concrete step:** collect a concrete observed mismatch
+  (game, selected region, displayed time and known in-game reset) and run
+  this targeted audit independently of Timeline label readability Work.
