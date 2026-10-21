@@ -1838,7 +1838,9 @@ before implementation began. Independent PR #45 reset-clock audit docs remain.
   [browser evidence](evidence/timeline-label-truncation/README.md). Automated
   Chromium evidence does not constitute Android hardware/PC operator acceptance.
 
-**Next concrete step:** finish hosted PR/merge/Pages verification (recorded in
-the delivery PR), then operator Android Chrome/PC smoke: long labels and short
+- Delivery: [PR #46](https://github.com/maxvfk/game-calendar/pull/46); final
+  hosted CI/merge/Pages and public-asset verification are recorded in that PR.
+
+**Next concrete step:** after PR #46 delivery, operator Android Chrome/PC smoke: long labels and short
 tails at several zooms in both modes, badge/indicator separation, full detail
 names, and existing inspected-time behavior. Stop after this scope.
