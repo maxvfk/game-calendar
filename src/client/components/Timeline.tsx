@@ -450,7 +450,9 @@ export function Timeline({
                           aria-label={accessible}
                           title={accessible + (notStarted ? ` — begins ${dayLabel(plottedStart)}` : "")}
                           data-timeline-event={event.id}
-                          className={`relative flex h-9 items-center rounded-[5px] px-2 text-left text-[0.75rem] font-medium transition-opacity hover:opacity-100 ${
+                          // Match PIN/visibleBarContent's pixel inset even with
+                          // enlarged root text; rem padding squeezes sticky tails.
+                          className={`relative flex h-9 items-center rounded-[5px] px-[8px] text-left text-[0.75rem] font-medium transition-opacity hover:opacity-100 ${
                             done ? "opacity-35" : "opacity-90"
                           }`}
                           style={{

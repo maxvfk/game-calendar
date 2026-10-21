@@ -1,6 +1,8 @@
 # Timeline — retain readable event titles on narrow screens
 
-Status: approved standalone UI fix. Operator Android screenshot 2026-10-21.
+Status: implemented and Chromium-validated; PR/merge/Pages delivery tracked in
+IMPLEMENTATION-STATUS and the delivery PR. Final operator real-device smoke
+remains pending. Original finding: Android screenshot 2026-10-21.
 
 ## Verified finding
 
@@ -85,3 +87,22 @@ operator. Explicitly disclose any unrun checks or blocked delivery.
 
 No feed, metadata, provenance, source health, Account/Sync, artwork,
 calendar geometry, other polish items, S6b or new milestones.
+
+## Implementation evidence
+
+- Started from current main `769c5f4`, after small UI fixes PR #44 had merged
+  and its main CI/build/Pages succeeded. PR #45's independent reset-clock
+  audit documentation is retained without runtime clock changes.
+- The new 160px regression fails on the original fit: expected 83px of useful
+  event identity, received zero. It passes with measured partial-title fitting.
+- Minimum useful prefix is measured in the actual font, respecting Unicode
+  grapheme boundaries. Short complete names fit below that prefix threshold.
+  Both modes avoid an ellipsis-only title. Type/unknown semantics retain their
+  existing reservation; game text is reclaimed before a useful identity is lost.
+- Root-text scaling no longer enlarges inline bar padding beyond the existing
+  8px geometry pin. No outer bar, viewport, scroll, zoom or navigation change.
+- Reproducible browser runner and visually inspected screenshots:
+  [evidence](../evidence/timeline-label-truncation/README.md). Final checks and
+  hosted delivery are recorded in IMPLEMENTATION-STATUS and the delivery PR.
+- Final Android/PC real-device smoke is explicitly reserved for the operator.
+  No other milestone is started.
