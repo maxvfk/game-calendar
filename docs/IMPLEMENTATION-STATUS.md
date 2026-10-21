@@ -1389,10 +1389,31 @@ Status: **research and M1 complete; M2 implemented/automatically validated, requ
   The already-confirmed phone zoom/group/filter results above remain valid.
   Hosted PR/merge/CI/Pages evidence is recorded in the follow-up PR.
 
-**Next concrete step:** after deployment, verify the revised type priority and
-category colours on a real phone in both modes (including narrow/unknown-end
-bars and light/dark themes), then finish the previously unconfirmed phone
-Jump/upcoming/semantic cases and desktop smoke. Record results; only then close
-M2. Do not repeat confirmed phone zoom/group/filter checks without a new failure.
-No implementation or automated-validation work remains pending after delivery.
-Do not start S6b, broad metadata population or other milestones here.
+### M2 manual smoke regression — viewport changes with filters/Upcoming (2026-10-21)
+
+- After the TypeBadge follow-up, the operator reported that **changing filters
+  and toggling Upcoming shifts the inspected Timeline position on both Android
+  phone and PC**. This supersedes the earlier provisional filter-stability
+  phone pass, including the “already confirmed” language above; do not
+  treat filter/upcoming stability as accepted. No other M2 defect was reported
+  in this latest operator pass.
+- Code-review hypothesis (not yet reproduced in a failing browser test):
+  Timeline recomputes its board min/max from the plotted rows, but non-zoom
+  rerenders retain numeric scrollLeft rather than the timestamp at the
+  viewport anchor. A changed min therefore changes the visible date;
+  shrinking max can additionally invoke native scroll clamping. Existing
+  happy-dom navigation assertions check fixed scrollLeft, not inspected
+  time, and do not model real scroll geometry. The implementation Work must
+  verify the actual cause(s), not treat the hypothesis as proven.
+- Focused fix task:
+  docs/tasks/TIMELINE-READABILITY-M2-VIEWPORT-PRESERVATION-FIX.md.
+  This remains **M2 follow-up**, not a new milestone; no runtime fix has
+  been made in this documentation-only change.
+
+**Next concrete step:** hand the focused viewport-preservation task to the
+existing M2 Work from CURRENT main; require failing-before/fixed-after
+temporal-position regression tests, real-browser geometry coverage, all four
+project checks, PR/merge and CI/Pages confirmation. Then have the operator
+retest the affected filter/upcoming navigation on phone and PC (plus Jump/zoom).
+**Keep M2 open until explicit deployed manual acceptance.** Do not start
+S6b, broad metadata population or unrelated milestones.
