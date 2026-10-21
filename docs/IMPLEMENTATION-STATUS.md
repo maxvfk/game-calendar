@@ -1653,8 +1653,8 @@ UI-fix or milestone is included.
   containment/touch dimensions, prior filters/Reset/account behavior, both
   themes and 100%/200% text. Existing M2 Chromium regression: **372 passed**.
   Actual screenshots inspected at phone widths. Final real-phone visual
-  acceptance remains with the operator. Hosted evidence is recorded in this
-  follow-up's PR.
+  acceptance remains with the operator. Hosted CI/merge/Pages evidence is
+  recorded in [PR #40](https://github.com/maxvfk/game-calendar/pull/40).
 
-**Next concrete step:** after this follow-up's Pages deploy, operator checks
+**Next concrete step:** after PR #40’s Pages deploy, operator checks
 header height and equal frames on the phone. No other milestone is included.
