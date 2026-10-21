@@ -1680,3 +1680,25 @@ header height and equal frames on the phone. No other milestone is included.
 - **Next concrete step:** implement all three approved fixes from then-CURRENT
   main, run full baseline + real-browser Back/navigation and week-line rendering
   regressions, merge/deploy, then operator phone/desktop smoke.
+
+
+### Pending Timeline label readability fix — approved 2026-10-21
+
+- Operator's Android Chrome screenshot in `Ending soonest` shows real event
+  bars that display game + TypeBadge + urgency dot, **but no identity text**.
+  Code review confirmed the `Ending soonest` fit branch in
+  `src/client/state/timelineContent.ts` is all-or-nothing on measured
+  `identity`; it drops titles to zero instead of truncating although a
+  partial title could fit. Old `test/timeline-content.test.tsx` tests
+  explicitly encode this result. No feed disappearance was established.
+- New separate task `docs/tasks/TIMELINE-LABEL-TRUNCATION-FIX.md` specifies
+  measured-width ellipsis/truncation on phones, retaining high-priority compact
+  TypeBadge, truthful deadlines, full accessible names and real M2 viewport
+  preservation. The previously accepted M2 all-or-nothing `Ending soonest`
+  identity degradation is intentionally superseded **only for this behavior**.
+- This is **docs/intake only**, not a runtime fix. Keep the currently active
+  three-part `UI-POLISH-SMALL-FIXES.md` Work independent. Start new short Work
+  for labels from then-CURRENT main **after** that PR is merged.
+- **Next concrete step:** implement focused fit correction, unit and actual
+  Chromium phone/desktop width regressions, standard checks, PR/merge/deploy,
+  then final operator real-phone smoke. Do not start unrelated milestones.
