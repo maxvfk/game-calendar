@@ -1,6 +1,6 @@
 # Timeline Readability M2 — Preserve temporal viewport through filters / Upcoming
 
-Status: **fix implemented and automatically validated (2026-10-21); PR/Pages delivery tracked in the focused fix PR. Open pending operator re-smoke on Android Chrome and PC; M2 is not complete.**
+Status: **fix implemented and automatically validated (2026-10-21); delivery via [PR #34](https://github.com/maxvfk/game-calendar/pull/34). Open pending operator re-smoke on Android Chrome and PC; M2 is not complete.**
 
 Type: bounded M2 bugfix / acceptance follow-up, **not** a new milestone.
 
@@ -79,7 +79,7 @@ Out of scope: new milestones, type grouping, recognition-metadata population, Ev
   runner header for setup/invocation; no new project dependencies.
 - Required frozen install, typecheck, full tests (1098 pass, 1 optional skip,
   0 fail) and build passed. Existing responsive sweep (272 checks) and built-app
-  seven-game feed smoke passed. CI/merge/Pages evidence is recorded in the PR.
+  seven-game feed smoke passed. CI/merge/Pages evidence is recorded in [PR #34](https://github.com/maxvfk/game-calendar/pull/34).
 - **Remaining manual acceptance only after delivery:** repeat affected game/
   category/Upcoming navigation away from today in both modes on Android Chrome
   and PC, including all-hidden/return and closest-edge limits; check Jump and

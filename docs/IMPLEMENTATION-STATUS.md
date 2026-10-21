@@ -1454,8 +1454,8 @@ Status: **research and M1 complete; M2 implemented/automatically validated, requ
   warnings are unchanged; no refresh/ingestion/data work was performed.
 - Only runtime change: Timeline viewport navigation. TypeBadge, deadline/day/
   unknown semantics, IDs, preferences, personal data, Account/Supabase and
-  other views are unchanged. PR/merge and hosted CI/Pages evidence will be
-  recorded in the focused fix PR.
+  other views are unchanged. Delivery: [PR #34](https://github.com/maxvfk/game-calendar/pull/34);
+  hosted CI/merge/Pages evidence is recorded in that PR.
 
 **Next concrete step after deployment:** operator re-smoke on **Android Chrome
 and PC**. In each Timeline mode, scroll away from today and toggle a game,
