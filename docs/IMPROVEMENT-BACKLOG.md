@@ -43,6 +43,7 @@ For each item, use this compact format:
   - **Priority:** undecided
   - **Status:** observed
   - **Notes / constraints:** keep the weekly separator visually subordinate to the current-day marker and avoid adding clutter to the dense mobile view.
+  - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — evaluate only; no visual change without operator approval.
 
 - **Title:** Per-game daily pass countdowns
   - **Observation:** the app has daily chores but no personal tracking for 30-day login/subscription passes such as Genshin's Blessing of the Welkin Moon.
@@ -59,6 +60,7 @@ For each item, use this compact format:
   - **Priority:** undecided
   - **Status:** refined
   - **Notes / constraints:** avoid adding a full per-game timer row to the collapsed dailies strip; the goal is to remove ambiguity without making the section taller. Per-game server/reset semantics already exist and should remain the source of truth.
+  - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — implementation approved; not yet done.
 
 - **Title:** Make event details explicitly dismissible
   - **Observation:** event details currently have no visible close control. On touch devices the reader must tap the backdrop, which can be awkward on a large bottom sheet; the browser/system Back button navigates away instead of dismissing the open details.
@@ -67,14 +69,17 @@ For each item, use this compact format:
   - **Priority:** undecided
   - **Status:** refined
   - **Notes / constraints:** preserve backdrop tap and Escape as secondary dismissal paths. The close control needs a comfortable mobile touch target and must remain visible/reachable when the sheet content scrolls. Opening/closing details should integrate with history without creating duplicate or sticky history entries.
+  - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — implementation approved; not yet done.
 
 - **Title:** Toggle all event types off from `All types`
   - **Observation:** `All types` selects every event category, but tapping it again while all categories are already selected does not provide a quick way to clear the selection.
   - **Desired behavior:** make `All types` a two-state aggregate toggle: when not all categories are selected, tapping it selects all; when all categories are selected, tapping it clears all categories.
   - **Area:** interaction / UI
-  - **Priority:** undecided
-  - **Status:** refined
+  - **Priority:** complete
+  - **Status:** resolved (PR #37; verified against current main 2026-10-21)
   - **Notes / constraints:** do not add a separate `None` button. `All types` should appear active only when every category is selected; with a partial or empty selection it should appear inactive. The implementation is assigned to `docs/tasks/UI-POLISH-MOBILE-HEADER-FILTERS.md`, not to the later remaining small-fix Work.
+
+  - **Implementation:** shared `TypeFilters.tsx` aggregates `All types` as select-all/clear-all in desktop and mobile. Do not repeat in the next small UI-fix Work.
 
 
 - **Title:** Use featured subjects as compact event labels

@@ -1658,3 +1658,25 @@ UI-fix or milestone is included.
 
 **Next concrete step:** after PR #40’s Pages deploy, operator checks
 header height and equal frames on the phone. No other milestone is included.
+
+
+### Remaining small UI-fix batch — scoped 2026-10-21
+
+- CURRENT main at scope check: `c5e540c30ae9e6ed6cf5d7b51990b407b85379ac`
+  (PR #40 mobile-header frame-height follow-up). `All types` select-all/
+  clear-all is **already implemented** by PR #37 in the shared
+  `TypeFilters.tsx`, confirmed in code. It is **excluded** from the next Work.
+- Two confirmed open fixes: **attribute mixed daily reset countdown to the
+  next-reset game(s)**, and **add visible in-sheet Event Detail Close plus
+  browser/Android Back-first dismissal**. Code still shows the ambiguous
+  mixed `next reset in` label, and EventDetail has only backdrop/Escape.
+- Weekly Timeline separators are only **observed**, not approved. The next Work
+  should assess whether stronger weekly boundaries help across phone/desktop
+  widths and zooms; do not change the grid without further operator acceptance.
+- Dedicated small Work task: `docs/tasks/UI-POLISH-SMALL-FIXES.md`.
+  No runtime changes in this documentation step. Mobile-header PR #40's
+  real-phone acceptance status remains separately recorded; do not silently
+  infer it from this task.
+- **Next concrete step:** implement the two fixes from then-CURRENT main,
+  run full baseline + real-browser Back/navigation regression, merge/deploy
+  and ask for operator phone/desktop smoke; record weekly assessment only.
