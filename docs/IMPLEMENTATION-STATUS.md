@@ -1852,3 +1852,27 @@ names, and existing inspected-time behavior. Stop after this scope.
 - After the Work completed, the operator reported: **“я проверил, все работает нормально”**. Treat this as manual acceptance of the originally reported missing-name/truncation fix. The exact device, zoom and view matrix used for manual acceptance was not specified, so do not claim each was separately tested by the operator. Automated Chromium evidence remains recorded in the prior section.
 - `docs/tasks/TIMELINE-LABEL-TRUNCATION-FIX.md` is now **complete / accepted**. No further label work scheduled. The separately tracked per-game Daily Reset **clock accuracy audit** (`docs/tasks/DAILY-RESET-CLOCK-AUDIT.md`) remains open; UI attribution being correct does not validate reset-hour configuration.
 - **Next concrete step:** choose the next independent planned milestone (e.g. reset clock audit), starting from CURRENT main. Do not restart finished Timeline label or M2 work without a new reproduced defect.
+
+
+### Daily Reset clock audit — seven-step research plan (2026-10-22)
+
+- Operator requested splitting the research into **seven focused steps, one
+  currently shipped game per step**, instead of searching all seven in one
+  chat. This is **ordinary Chat research**, not runtime implementation.
+- Source-of-truth task `docs/tasks/DAILY-RESET-CLOCK-AUDIT.md` now defines
+  priority order: **Endfield → NTE → CZN → Genshin → HSR → WuWa → ZZZ**.
+  Each step checks its own authoritative reset clock, server groups, region
+  mapping, UTC/DST, current-code discrepancies, source quality and stored
+  `dayKey`/sync compatibility before proposing any change.
+- Per-game evidence lives in `docs/research/daily-reset-clocks/<game>.md`;
+  `docs/research/daily-reset-clocks.md` becomes the progressive comparison
+  index. Each completed step can land in a small docs-only PR; step 7 also
+  synthesizes all reports and a safe implementation proposal. Stop after one
+  game each time; do not redo completed source research.
+- **Current status: 0/7 games researched under this task.** No reset clocks,
+  daily keys, user data or runtime source behavior changed by planning.
+- **Next concrete step:** start an ordinary Chat with **step 1/7:
+  Arknights: Endfield** using the parameterized prompt in the task. Review
+  the sourced report, then decide when to start step 2. A game-specific
+  screenshot of an incorrect countdown is valuable but not a prerequisite
+  for researching supported official reset rules.

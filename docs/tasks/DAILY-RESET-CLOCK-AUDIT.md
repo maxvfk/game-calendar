@@ -1,6 +1,6 @@
 # Audit game daily reset schedules — source-backed follow-up
 
-Status: **ready for standalone Chat research — no Work or code changes**, created from operator phone observation 2026-10-21.
+Status: **ready for seven sequential, per-game Chat research steps — no runtime changes**, created from operator phone observation 2026-10-21; seven-step plan approved 2026-10-22.
 Independent of completed UI small fixes (PR #44) and Timeline label polish.
 
 ## Trigger and evidence boundaries
@@ -80,35 +80,100 @@ When the operator provides a specific game + selected region + shown countdown
 and in-game reset time, use that as a high-priority reproducible test case.
 
 
-## Execution mode: ordinary Chat research
+## Execution mode — seven focused research steps
 
-This audit is deliberately suitable for a **new ordinary ChatGPT chat**, not a
-coding Work session. The chat can inspect current GitHub code and external
-sources, build an evidence matrix, and commit an auditable research report.
-Do not treat this chat as the source of truth; persist the outcome in GitHub.
+**Operator decision 2026-10-22:** research **one game at a time**, with
+one independently reviewable report and optional docs-only PR per game.
+Use an ordinary ChatGPT chat, **not Work**. Separate short chats per game
+are fine and help keep scope focused. Each chat begins with CURRENT main
+and the task, reads the earlier reports only for relevant mapping or migration
+constraints, and does not repeat other games' source research. Stop after
+the assigned game; do not automatically advance to the next one.
 
-- Start from CURRENT `main`; the baseline above documents the original
-  hypothesis, not permanent repo state. Do not revisit unrelated source
-  coverage research.
-- Create the focused report
-  `docs/research/daily-reset-clocks.md` with the evidence matrix, source
-  dates/URLs, per-game per-region actual and code-calculated UTC clocks,
-  unknowns/conflicts, and a clear diagnosis of confirmed errors vs assumptions.
-- For each claim, distinguish **official**, **in-game/firsthand**,
-  **independent secondary**, and **inference**. When in-game data is needed,
-  identify exactly the missing screenshot/game/region, but finish the remaining
-  report without blocking on it.
-- Include DST examples for applicable server clocks, and a dependency/risk
-  section on persisted daily keys and sync. Prefer one actionable, small,
-  separately scoped implementation follow-up **only if** confirmed evidence
-  justifies a clock change.
-- Update `docs/IMPLEMENTATION-STATUS.md` with the audit outcome and
-  `Next concrete step`, then open a docs-only PR. No production constants,
-  migrations, tests, feed snapshots or application code in this research PR.
-- If repo writes, PR or other connectors are unavailable in the chat,
-  produce the complete Markdown report in the answer and explicitly mark
-  GitHub publication as uncompleted rather than claiming it was saved.
+Order prioritizes uncertain or exceptional clocks first:
 
-Completion criterion: evidence-backed report and a concrete recommendation,
-**not** a speculative change to reset hours. Afterwards use a separate Work
-only for an approved, bounded implementation milestone.
+| Step | Game | Detailed evidence file |
+| --- | --- | --- |
+| 1 | Arknights: Endfield | `docs/research/daily-reset-clocks/endfield.md` |
+| 2 | Neverness to Everness | `docs/research/daily-reset-clocks/nte.md` |
+| 3 | Chaos Zero Nightmare | `docs/research/daily-reset-clocks/czn.md` |
+| 4 | Genshin Impact | `docs/research/daily-reset-clocks/genshin.md` |
+| 5 | Honkai: Star Rail | `docs/research/daily-reset-clocks/hsr.md` |
+| 6 | Wuthering Waves | `docs/research/daily-reset-clocks/wuwa.md` |
+| 7 | Zenless Zone Zero | `docs/research/daily-reset-clocks/zzz.md` |
+
+For **each** game, complete the same high-quality evidence contract:
+
+1. Inspect current `AGENTS.md`, this task, the clock mapping in
+   `src/shared/time.ts`/`daily.ts`/`games.ts`, pertinent tests, and
+   relevant `IMPLEMENTATION-STATUS.md` details.
+2. Research this game's actual **daily-task/day-key rollover**, not banner
+   launch/end, shop, season, patch, maintenance or battle-pass intervals.
+   Prefer dated official service/server documentation and directly observable
+   in-game countdowns; independent secondary sources may corroborate.
+3. Resolve its real regional server groups and map them explicitly to the
+   app's `america`, `europe`, `asia` selector. Note if the selector
+   cannot express the real game's region model.
+4. Record stated local reset hour, *absolute UTC example* for each
+   supported group, DST/timezone behavior (with before/after examples where
+   relevant), code-calculated UTC instant, and result:
+   **confirmed correct / confirmed discrepancy / unverified / conflicting**.
+   Cite URLs and checked date for each finding. Do not pass off an
+   assumed 04:00 local clock as a confirmed game fact.
+5. If a correction appears warranted, describe exact impact on
+   `dayKey`, old daily ticks, streaks, catch-up, export/import and
+   Account Sync. No migration or runtime edits yet; distinguish a true
+   error from user Region or browser timezone mismatch.
+6. Create/update **only the assigned game's** detailed report path above.
+   The report must be self-sufficient, distinguish fact/inference/unknown,
+   list source timestamps, and end with one concrete next step. If the
+   GitHub connector cannot write, return full Markdown in chat and state
+   publication did not occur. Do not claim success without verifying the file.
+7. Add a short entry to the cumulative index
+   `docs/research/daily-reset-clocks.md` with status, evidence link and
+   one-line diagnosis. Do **not** repeat the other game's research or
+   overwrite their verified content. Update `IMPLEMENTATION-STATUS.md`
+   with step N/7 completion and next game. A small docs-only PR/merge per
+   game is acceptable and makes the next chat independent.
+
+**Step 7 additionally closes the research series**: only after all seven
+evidence files exist, reconcile the index into a cross-game comparison,
+identify any contradictory reset/region semantics, and propose an ordered
+bounded implementation plan with storage compatibility risks. Do not invent
+missing evidence just to call the matrix complete. If any step remains
+unverified, index it as an open gap rather than broadening step 7 into
+another game's new research.
+
+No code changes, no preference/data migrations, no app build changes, no
+feed/source refresh, no unrelated research. Keep this research separate
+from the completed Timeline and mobile UI milestones. A future Work may
+implement approved corrections in small independently testable changes.
+
+### Reusable one-game chat prompt
+
+```text
+Continue the DAILY-RESET-CLOCK-AUDIT research for maxvfk/game-calendar
+from CURRENT main. Perform ONLY step <N>/7: <GAME>, as ordered in
+docs/tasks/DAILY-RESET-CLOCK-AUDIT.md.
+
+Research the actual daily reset for this game, regional server mapping,
+UTC and DST behavior, and compare against the app's code. Use fresh,
+attributed sources; distinguish confirmed facts, in-game evidence,
+inferences, disagreements and unknowns. Include migration/sync risks
+of changing dayKey. Do not change code or the clock constants.
+
+Save the game-specific detailed report to the exact path in the task;
+update docs/research/daily-reset-clocks.md and the implementation status,
+and create a docs-only PR/merge when available. Verify GitHub writes.
+If source evidence or GitHub access is incomplete, report it plainly.
+
+Stop after this game's findings; do not research the next game.
+On step 7, also synthesize all seven prior reports into the final index,
+without redoing previous investigations.
+```
+
+### Research completion criterion
+
+Seven source-backed per-game reports (including honest unknowns), one
+consolidated index, and a safe concrete implementation recommendation.
+Merely filling seven rows without evidence is **not** completion.
