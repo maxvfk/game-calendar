@@ -141,6 +141,20 @@ export function dailyGroups(
   return groups;
 }
 
+/** Exact computed boundaries, deduplicated by game in the reader's order. */
+export function nextDailyReset(groups: readonly DailyGroup[], now: number) {
+  const items = groups.flatMap(group => group.items);
+  if (!items.length) return null;
+  const boundary = Math.min(...items.map(item => now + item.resetsIn));
+  const games = groups.filter(group => group.items.some(item => now + item.resetsIn === boundary));
+  const unique = games.filter((group, index) => games.findIndex(g => g.game === group.game) === index);
+  return {
+    resetsIn: boundary - now,
+    games: unique,
+    mixed: items.some(item => now + item.resetsIn !== boundary),
+  };
+}
+
 export function Dailies({
   games,
   events,
@@ -220,20 +234,27 @@ export function Dailies({
 
   // With mixed reset clocks there is no single "resets in", so the header
   // reports the next one to land and says that it is the next one.
-  const soonest = Math.min(...items.map((i) => i.resetsIn));
-  const mixed = new Set(items.map((i) => i.resetsIn)).size > 1;
+  const reset = nextDailyReset(groups, now)!;
+  const resetGames = reset.games.map(group => group.meta.name).join(", ");
 
   return (
     <section className="relative border-b border-hairline px-4 py-4">
       {burst > 0 && <Fireworks key={burst} />}
 
-      <div className="relative flex items-baseline justify-between gap-3">
-        <h2 className="eyebrow">
+      <div className="relative flex items-baseline justify-between gap-2">
+        <h2 className="eyebrow shrink-0" style={{ letterSpacing: "0.02em" }}>
           Today's dailies · {complete}/{total}
         </h2>
-        <p className="tnum text-[0.6875rem] text-faint">
-          {mixed ? "next reset in " : "resets in "}
-          {formatRemaining(soonest)}
+        <p className="tnum flex min-w-0 items-baseline gap-0.5 whitespace-nowrap text-[0.6875rem] text-faint"
+          title={reset.mixed ? `Next reset: ${resetGames}` : undefined}
+          aria-label={reset.mixed ? `Next reset: ${resetGames} in ${formatRemaining(reset.resetsIn)}` : undefined}>
+          {reset.mixed ? <>
+            <span className="shrink-0">next:</span>
+            <span className="truncate">{reset.games[0]!.meta.short}</span>
+            {reset.games.length > 1 && <span className="shrink-0">+{reset.games.length - 1}</span>}
+            <span className="shrink-0">·</span>
+          </> : <span className="shrink-0">resets in</span>}
+          <span className="shrink-0">{formatRemaining(reset.resetsIn)}</span>
         </p>
       </div>
 

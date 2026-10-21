@@ -3,6 +3,7 @@ import { fetchFeed, type FeedState } from "./api.ts";
 import { Controls } from "./components/Controls.tsx";
 import { Dailies } from "./components/Dailies.tsx";
 import { GameFocus } from "./components/GameFocus.tsx";
+import { useEventDetailHistory } from "./state/useEventDetailHistory.ts";
 import { EventDetail } from "./components/EventDetail.tsx";
 import { EventRow, type DailyBadge, type RowEvent } from "./components/EventRow.tsx";
 import { NextUp } from "./components/NextUp.tsx";
@@ -104,7 +105,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
   const header = useRef<HTMLElement>(null);
   const closeFilters = () => { setFiltersOpen(false); filtersButton.current?.focus(); };
   const [state, setState] = useState<FeedState>({ status: "loading" });
-  const [openId, setOpenId] = useState<string | null>(null);
+  const { openId, openDetail, closeDetail } = useEventDetailHistory();
   // The event most recently ignored, so it can be put back without hunting for
   // a row that just disappeared.
   const [lastIgnored, setLastIgnored] = useState<{ id: string; title: string } | null>(null);
@@ -401,6 +402,11 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
     return { event, clock: clockFor(event, prefs.region, now) };
   })();
 
+  // Deletion/feed replacement must also consume the modal's history entry.
+  useEffect(() => {
+    if (openId !== null && openRow === null && state.status === "ready") closeDetail();
+  }, [openId, openRow, state.status, closeDetail]);
+
   /** One row, wired up. Both lists render the same thing from the same props. */
   const renderRow = (row: RowEvent) => (
     <EventRow
@@ -413,7 +419,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
       daily={dailyBadge(row)}
       ignored={isIgnored(row.event.id)}
       onRestore={(id) => ignored.toggle(id)}
-      onOpen={setOpenId}
+      onOpen={openDetail}
     />
   );
 
@@ -591,7 +597,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
           <NextUp
             rows={headline}
             focused={focus === null ? null : gameMeta(focus).name}
-            onOpen={setOpenId}
+            onOpen={openDetail}
           />
 
           {/* The chores no wiki publishes, and the only thing on this page
@@ -692,7 +698,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
             // Lanes stack in the reader's game order, so their main game is the
             // top lane rather than whichever one held the first row.
             gameOrder={ordered}
-            onOpen={setOpenId}
+            onOpen={openDetail}
             isDone={isDone}
             expand={expandOccurrences}
           />
@@ -722,7 +728,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
           // The stored id is enough: `displayEventFor` resolves a rule to
           // whichever occurrence the sheet can show, and to the rule itself
           // when it has none.
-          onOpen: setOpenId,
+          onOpen: openDetail,
         }}
         onExport={() =>
           exportProgress(prog.progress, daily.logs, ignored.marks, {
@@ -790,6 +796,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
 
       {openRow !== null && (
         <EventDetail
+          key={openRow.event.id}
           row={openRow}
           completed={isDone(openRow.event.id)}
           ignored={isIgnored(openRow.event.id)}
@@ -807,7 +814,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
           onEffort={prog.setEffort}
           onNote={prog.setNote}
           onIgnore={(id) => toggleIgnored(id, openRow.event.title)}
-          onClose={() => setOpenId(null)}
+          onClose={closeDetail}
           own={(() => {
             // The row may be one occurrence of a rule. Marks key off the
             // occurrence; the record to edit is the rule behind it.

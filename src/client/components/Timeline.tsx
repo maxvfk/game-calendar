@@ -303,7 +303,11 @@ export function Timeline({
             {days.map((ms) => (
               <span
                 key={ms}
-                className="absolute bottom-0 top-10 w-px bg-hairline/40"
+                data-day-boundary={ms}
+                data-week-start={new Date(ms).getDay() === 1 ? "true" : undefined}
+                className={new Date(ms).getDay() === 1
+                  ? "timeline-week-line absolute bottom-0 top-10 w-[2px] bg-faint/60"
+                  : "absolute bottom-0 top-10 w-px bg-hairline/40"}
                 style={{ left: x(ms) }}
               />
             ))}
