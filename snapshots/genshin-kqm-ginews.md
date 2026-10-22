@@ -1,3 +1,57 @@
+# [Visit the Starlit Gala Web Event to Unlock Your Wonderland Year in Review Report!](archive/21908.md)
+## Starlit Gala: Genshin Impact Miliastra Wonderland Web Event Update!
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/15/17ce4718f54a3a21719e7d07731a1b21_1092535759659879610_transformed.jpg)
+
+Dear Traveler, more content is now available in the Starlit Gala web event. Unlock your Wonderland Year in Review Report and claim more rewards!
+
+Celebrate the Starlit Gala together and make your own memories!
+
+[>> Click to Take Part in Event <<](https://act.hoyoverse.com/ys/event/e20261001ugc-ali0ea/index.html?game_biz=hk4e_global&sign_type=2&auth_appid=e20261001ugcanniversary&authkey_ver=1&utm_source=ingame&utm_medium=notice)
+
+〓Event Duration〓
+
+Start Time:
+
+America Server: October 21, 2026 (UTC+8)
+
+Asia & TW, HK, MO & Europe Servers: October 22, 2026 (UTC+8)
+
+End Time:
+
+November 3, 2026 04:00 (UTC+8)
+
+※ Rewards cannot be claimed after the event ends. Please claim them in time.
+
+〓Eligibility〓
+
+Travelers who have reached Adventure Rank 1 or above can participate in this event.
+
+※ The data for the Wonderland Year in Review Report of the "Starlit Gala" event will be collected between the Version Luna II update and October 18, 2026, 00:00 (UTC+8) (there may be a margin of error of about 30 minutes).
+
+〓Event Description〓
+
+During the event, Travelers can click to view their Wonderland Year in Review Report and look back on their exclusive memories in Miliastra Wonderland~
+
+Once you have finished viewing the full Wonderland Year in Review Report, your Wonderland Report Summary page will be generated, and you can share it freely!
+
+〓Event Rewards〓
+
+View the entire Wonderland Year in Review Report and share it to claim Geode of Replication ×100 and the Facial Makeup "Delicate Heart."
+
+Complete more event tasks to claim Geodes of Replication, the Manekin Action "V for Victory," and Mora ×20,000.
+
+〓Event Notes〓
+
+1. Please log in to the event using your HoYoverse Account and select your corresponding character in Genshin Impact to take part. This will ensure that your rewards can be sent and claimed correctly.
+
+2. After the event ends, you will no longer be able to take part and claim the rewards, so remember to take part in time.
+
+3. The in-game rewards will be distributed via in-game mail. The mail will expire after 30 days, so don't forget to claim the rewards in time.
+
+4. This web event is provided purely for entertainment. The content of the event does not represent any actual story or settings in the game. It is not indicative of any related gameplay features in Genshin Impact.
+
+-----
+
 # ["Carefree Snowball Fight" Event: Fun Throwing Challenge](archive/21891.md)
 ## Carefree Snowball Fight
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/684d82e66f2ddec8c156b9f13f5dc991_4296667567912849878_transformed.jpg)
