@@ -7,5 +7,6 @@ Research only; runtime, stored marks and Sync unchanged.
 | --- | --- | --- | --- |
 | 1 | Endfield | Confirmed correct: Asia 20:00Z previous date, western 09:00Z | [endfield](daily-reset-clocks/endfield.md) |
 | 2 | NTE | Conflicting core clock/DST; four servers but no SEA selector | [nte](daily-reset-clocks/nte.md) |
+| 3 | CZN | Confirmed error: published 18:00Z; code varies by Region | [czn](daily-reset-clocks/czn.md) |
 
-Progress: **2/7**. Next: CZN. See reports for evidence and unknowns.
+Progress: **3/7**. Next: Genshin. See reports for evidence and unknowns.
