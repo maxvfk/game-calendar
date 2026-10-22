@@ -1,6 +1,10 @@
 # Endfield Echoes of War — Season of Phantasia cycle missing from Timeline
 
-**Status:** user-observed coverage regression / scoped follow-up; not implemented.
+**Status:** research complete 2026-10-22; coverage repair proposed separately, not implemented.
+**Result:** see `docs/research/endfield-recurring-endgame.md` §17 and
+`docs/tasks/ENDFIELD-PHANTASIA-REVIEWED-CYCLE-DEADLINES.md`.
+Official cycle endpoints verified; wiki still contradictory/broken. Historical
+investigation instructions below are retained, not a request to repeat research.
 **Reported:** 2026-10-22, in-game screenshot supplied by operator.
 **Separate from:** `docs/tasks/DAILY-RESET-CLOCK-AUDIT.md` (daily task rollover).
 
