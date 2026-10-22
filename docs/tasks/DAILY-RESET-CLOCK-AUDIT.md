@@ -1,6 +1,6 @@
 # Audit game daily reset schedules — source-backed follow-up
 
-Status: **ready for one seven-stage research Work (no runtime changes)**. Originally created 2026-10-21; seven-step plan approved 2026-10-22. Operator then approved a **single uninterrupted Work** to execute all seven steps without manually launching each game. Ordinary one-game Chat remains an optional fallback.
+Status: **research complete — 7/7 stages (2026-10-22), docs-only**. [Results and bounded proposal](../research/daily-reset-clocks.md). CZN has a confirmed daily-clock discrepancy; NTE permanent-task clock/DST remains conflicting. Runtime changes and migration require a separate implementation task. The execution instructions below are retained for provenance/resume of genuine evidence gaps; do not repeat completed reports.
 Independent of completed UI small fixes (PR #44) and Timeline label polish.
 
 ## Trigger and evidence boundaries
