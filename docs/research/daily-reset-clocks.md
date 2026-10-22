@@ -3,8 +3,10 @@
 Checked **2026-10-22 (Moscow)**. All **7/7 research stages complete**, in the
 approved order, with a separate GitHub commit/report per game.
 **Research completion does not mean all clocks are resolved:** NTE remains
-conflicting. No runtime code, reset constants, user data, account/sync, event
-feed, ingestion or UI was changed.
+unverified. Its [focused follow-up](daily-reset-clocks/nte.md#focused-follow-up--2026-10-22)
+from main `581d36f` adds permanent-task Japanese sources and original SEA/NA
+testimony without reopening the other six games. No runtime code, reset constants,
+user data, account/sync, event feed, ingestion or UI was changed.
 
 Baseline: main `e05fa8b64262b35607a6296171604f6eb79fedea`.
 Task: [DAILY-RESET-CLOCK-AUDIT](../tasks/DAILY-RESET-CLOCK-AUDIT.md).
@@ -21,7 +23,7 @@ CZN's corrected day-label convention is intentionally undecided.
 | Step / game | Real server mapping to app Region | Sourced daily rule | Current code UTC (Asia / Europe / America) | Assessment and evidence |
 | --- | --- | --- | --- | --- |
 | 1 [Endfield](daily-reset-clocks/endfield.md) | Asia → asia; Americas/Europe → america or europe | 04:00; fixed +8 / −5 western; 20:00Z / 09:00Z | 20:00 / 09:00 / 09:00 | **Confirmed correct**; official released login clock + historical official reset + task corroboration |
-| 2 [NTE](daily-reset-clocks/nte.md) | Asia, America, Europe; separate SEA lacks selector | Core clock conflicting: 04:00 vs 05:00 claims and western conversions; official 05:00 applies to named events | 20:00 / 03:00 / 09:00 | **Conflicting/unverified**; permanent tasks and DST not settled |
+| 2 [NTE](daily-reset-clocks/nte.md) | Asia, America, Europe; separate SEA lacks selector | Asia 05:00 JST hypothesis matches 20:00Z; SEA 21:00Z candidate is weekly evidence; official 05:00 remains event-specific | 20:00 / 03:00 / 09:00 | **No specific clock error proved**; permanent regional instants/offsets and DST remain unverified |
 | 3 [CZN](daily-reset-clocks/czn.md) | Published service schedule is UTC-based; geographic choices should not invent separate clocks; account topology not certified | **18:00Z daily**; 03:00 KST next date equivalent | 20:00 / 03:00 / 09:00 | **Confirmed discrepancy**; official indexed reset table + independent full-text table/report |
 | 4 [Genshin](daily-reset-clocks/genshin.md) | America/Europe/Asia; TW-HK-MO uses asia clock alias | 04:00 fixed −5/+1/+8 | 20:00 / 03:00 / 09:00 | **Confirmed correct**; explicit official commissions clock and offsets + KQM corroboration |
 | 5 [HSR](daily-reset-clocks/hsr.md) | America/Europe/Asia; TW-HK-MO uses asia clock alias | 04:00 fixed −5/+1/+8 | 20:00 / 03:00 / 09:00 | **Confirmed correct by converging sources**; publisher-hosted login text, independent Daily Training and regional references; primary-access limits |
@@ -123,8 +125,11 @@ Observed contracts:
    rollout. No destructive historical migration is supported by existing data.
    A forward-only correction preserves claims, but cannot promise to reconstruct
    every historical true streak; state that limit explicitly.
-4. **NTE verification only.** Obtain permanent-task countdown + selected server
-   + absolute UTC for each server and western before/after DST, or publisher
+4. **NTE verification only.** The focused follow-up found no specific UTC error
+   and does not justify a clock implementation Work. Japanese local 05:00 can
+   equal the existing 20:00Z; explicit SEA 21:00Z evidence concerns weekly stamina,
+   so an Asia clock alias remains unproved. Obtain permanent-task countdown +
+   selected server + absolute UTC for each server and western before/after DST, or publisher
    clarification. Keep named event clocks separate. No generic 05:00 change.
 5. **Optional low-risk server wording/aliases.** Explain selected game server
    versus browser display timezone; explain supported clock aliases without
