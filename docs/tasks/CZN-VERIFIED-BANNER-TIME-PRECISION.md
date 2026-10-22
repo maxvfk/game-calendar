@@ -1,6 +1,7 @@
 # CZN verified banner time precision — bounded reviewed correction
 
-**Status:** ready; not implemented by the 2026-10-22 audit.
+**Status:** complete and deployed in PR #59 (2026-10-22); durable factual
+capture tests in #61. Daily reset is unchanged.
 **Evidence:** [event-time-precision-audit.md](../research/event-time-precision-audit.md),
 sections 4–7, S1–S8.
 **Scope:** one CZN-only implementation Work from CURRENT main. Use the existing
@@ -75,5 +76,5 @@ every future maintenance-linked card.
 8. Update implementation status/backlog, docs/data/tests PR, successful CI,
    merge and verify the public feed's exact fields. Do not start other tasks.
 
-**Next concrete step:** execute this task after separate authorization; audit
-delivery does not itself authorize production corrections.
+**Next concrete step:** final operator phone/PC acceptance; no further
+production precision expansion is authorized by this completed task.

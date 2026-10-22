@@ -1,6 +1,7 @@
 # Genshin Phase II character banners — verified regional end precision
 
-**Status:** ready; not implemented by the 2026-10-22 audit.
+**Status:** complete and deployed in PR #60 (2026-10-22); durable factual
+capture tests in #61.
 **Evidence:** [event-time-precision-audit.md](../research/event-time-precision-audit.md),
 S9–S11. Independent from the CZN task and region-start design.
 
@@ -67,5 +68,5 @@ weapon banner under this precision task. Carefree Snowball Fight and other
 - Run the four AGENTS commands, update implementation status/backlog, PR/green
   CI/merge and verify current published feed. Preserve source-health/LKG.
 
-**Next concrete step:** execute as its own small reviewed-data correction after
-separate authorization; do not combine with CZN or regionStarts design.
+**Next concrete step:** final operator phone/PC acceptance; regionStarts and
+other precision cases remain separate and are not started by this task.

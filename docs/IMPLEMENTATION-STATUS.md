@@ -1,7 +1,80 @@
 # Game calendar implementation status
 
-Updated 2026-10-22 (Moscow; event time precision audit complete, bounded CZN/Genshin reviewed tasks ready; NTE follow-up and Phantasia research retained; runtime/data unchanged). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-22 (Moscow; verified data corrections deployed; CZN Daily Reset blocked at compatibility design). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
+
+## Sequential verified corrections — final gated result (2026-10-22)
+
+**Steps 1–3 complete and deployed; step 4 BLOCKED at a documented technical
+compatibility gate. No CZN daily clock, stored label, history, import/export,
+Account Sync or other runtime change was published. Final operator acceptance
+on physical phone/PC remains pending.**
+
+| Milestone | Result | Delivery / merge SHA | PR CI / push CI-Pages |
+| --- | --- | --- | --- |
+| Endfield Phantasia Cycle I/II | Complete | #58 / 9c1b9e3a9f1a0b0f59d7e3c6a3d9446d9c73e4be | 39806589922 / 39806775938 success |
+| Six CZN banners | Complete | #59 / 1956c13610d5787eb4bda4e29503b6653a6bfed7 | 39807945889 / 39808092840 success |
+| Two Genshin Phase II ends | Complete | #60 / 12d29a7cf40634f4b1bc0a9dc601b1fb9d3c9bae | 39808985859 / 39809203300 success |
+| CZN daily 18:00Z | Blocked; design only | This documentation checkpoint | Runtime intentionally unchanged |
+
+- Test durability follow-up [PR #61](https://github.com/maxvfk/game-calendar/pull/61),
+  head `b5de7f5200f01ac498648b4df7be79f75104e265`, merge
+  `56d4248d2f13273e995b81541ca150279feb1fd1`: PR CI 39810305244 and push
+  CI/Pages 39810476226 succeeded. Historical assertions now use factual immutable
+  excerpts; separate current rolling merge checks remain. No semantic feed
+  change. One local PGlite initialization timeout resolved on complete rerun.
+- Frozen install, typecheck and full build pass for this docs-only checkpoint.
+  The unmodified default local test runner repeatedly reached the existing
+  5000ms PGlite setup timeout (one run also timed out in backup retention).
+  A full local `bun test --timeout 15000` run passes: **1126 pass / 1 existing
+  optional age skip / 0 fail**. No repository test timeout/skip was changed;
+  standard hosted `bun test` remains a mandatory PR/merge gate.
+  Final semantic inventory: 178 rows / seven games, exactly two added Endfield
+  IDs plus six CZN and two Genshin winners changed from the #57 baseline.
+  Only the pre-existing NTE Circle Bounty conflict remains. No src, snapshots
+  or Supabase migration changed. Reviewed old values/timestamps are unchanged.
+- Live feed checks after each data deployment confirm exact fields and preserved
+  firstSeenAt. Chrome guest smoke: Endfield Endgame/Ending soonest and both
+  regional groups; CZN exact Nine detail, retained pre-update Done, Rossweisse
+  day end, Tiphera/Tiana Upcoming; Genshin all three regional Timeline ends,
+  Event Detail and retained pre-update Done. Local runtime localhost is not
+  reachable from this cloud browser; no phone-size or real-device claim is made.
+- **Step 4 finding:** locally reproduced existing Sync key collision/mismatch
+  for mixed clock interpretations and old offline tombstones. Wire/SQL has no
+  clock policy; unknown daily metadata is stripped, a new preference is rejected,
+  and the old v1 importer ignores version. Constant-only, fake-offset,
+  countdown-only or local-marker changes cannot satisfy the safety conditions.
+  [CZN-DAILY-RESET-FORWARD-ONLY-DESIGN.md](tasks/CZN-DAILY-RESET-FORWARD-ONLY-DESIGN.md)
+  records exact counterexamples, read-only reproduction, all shared consumers,
+  preserved-history requirements, proposed versioned forward cutover and its
+  unproven old-client/offline/import/rollback obligations.
+- Outstanding product/protocol decisions: UTC opening-date versus KST next-date
+  stored labels; whether CZN daily writes can require an updated client after
+  an account/profile cutover. Either label still needs a server-visible policy,
+  legacy import isolation and explicit old-client/outbox treatment. No historical
+  completion instants can be reconstructed from changedAt. No production identity
+  or user data was accessed for the compatibility probes.
+- Known retained limits: Echoes automatic source remains broken/unavailable with
+  Illusion LKG; reviewed deadlines restore coverage, not automatic health.
+  Rossweisse/Sig Dec 2 exact end is still unconfirmed. Current CZN daily reset
+  remains incorrect until its compatibility gate is resolved. No NTE reset,
+  S6b, UI polish, Astra audit or other milestone was started.
+
+Operator smoke after updating/reloading the PWA:
+
+1. Endfield + Endgame + Ending soonest: Cycle II precedes the season final;
+   Asia Oct 28 19:59Z, Europe/America Oct 29 08:59Z. Cycle I is historical.
+2. CZN banners: Nine/Alcea end Nov 3 18:00Z; Upcoming reveals Tiphera/Tiana
+   ending Nov 24 18:00Z. Rossweisse/Sig keep a Dec 2 date-only end.
+3. Genshin Phase II banners: Nov 3 06:59Z / 13:59Z / 19:59Z for
+   Asia / Europe / America. Event Detail and Timeline agree in local display.
+4. Confirm existing event completion marks remain attached after reload on both
+   phone and PC. Daily reset is intentionally not a delivered correction.
+
+**Next concrete step:** operator phone/PC acceptance for the three deployed data
+repairs. For CZN daily reset, choose labels and old-client update policy before
+separately authorizing protocol/cutover implementation. Stop this Work here.
+Release CI/merge/deployment evidence for this documentation checkpoint is on its PR.
 
 ## Verified precision regression durability follow-up (2026-10-22)
 

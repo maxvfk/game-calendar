@@ -1,7 +1,7 @@
 # Phantasia — official reviewed internal cycle deadlines
 
-**Status:** implementation-ready proposal; NOT implemented or authorized by the
-research Work. Requires a separate user instruction to execute.
+**Status:** complete and deployed in PR #58 (2026-10-22), authorized by the
+sequential implementation Work. Automatic wiki recovery remains blocked.
 **Basis:** `docs/research/endfield-recurring-endgame.md` §17, checked 2026-10-22.
 **Scope:** bounded Endfield reviewed data and focused regression/visibility tests.
 No parser acceptance, health policy, source disabling, LKG rewrite, schema change,
