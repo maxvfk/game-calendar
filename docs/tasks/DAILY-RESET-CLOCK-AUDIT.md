@@ -1,6 +1,6 @@
 # Audit game daily reset schedules — source-backed follow-up
 
-Status: **ready for seven sequential, per-game Chat research steps — no runtime changes**, created from operator phone observation 2026-10-21; seven-step plan approved 2026-10-22.
+Status: **ready for one seven-stage research Work (no runtime changes)**. Originally created 2026-10-21; seven-step plan approved 2026-10-22. Operator then approved a **single uninterrupted Work** to execute all seven steps without manually launching each game. Ordinary one-game Chat remains an optional fallback.
 Independent of completed UI small fixes (PR #44) and Timeline label polish.
 
 ## Trigger and evidence boundaries
@@ -80,15 +80,62 @@ When the operator provides a specific game + selected region + shown countdown
 and in-game reset time, use that as a high-priority reproducible test case.
 
 
-## Execution mode — seven focused research steps
+## Execution mode — one Work, seven sequenced research stages
 
-**Operator decision 2026-10-22:** research **one game at a time**, with
-one independently reviewable report and optional docs-only PR per game.
-Use an ordinary ChatGPT chat, **not Work**. Separate short chats per game
-are fine and help keep scope focused. Each chat begins with CURRENT main
-and the task, reads the earlier reports only for relevant mapping or migration
-constraints, and does not repeat other games' source research. Stop after
-the assigned game; do not automatically advance to the next one.
+**Latest operator decision 2026-10-22:** execute **all seven games in one
+Work session, automatically advancing from game to game**, without seven manual
+chat launches. Research **one game at a time** and complete that game's report
+before beginning the next. Preserve isolated evidence and a clearly restartable
+checkpoint after every game. Do not combine multiple games into one superficial
+research pass.
+
+The earlier ordinary-Chat-per-game option remains valid as a fallback; its
+instruction to stop after one game **does not apply to the all-seven Work**.
+Work must not wait for approval or ask for a new launch between stages. Only a
+genuine product decision or external credentials/configuration should block a
+particular proposed implementation, and none are required to record honest
+unknowns and continue research.
+
+Work workflow:
+- Start from fresh CURRENT main; read `AGENTS.md`, this task, relevant
+  `IMPLEMENTATION-STATUS.md`, actual `src/shared/time.ts`, `daily.ts`,
+  `games.ts` and focused tests. Do **not** treat the old baseline SHA or
+  historical descriptions in this task as current code.
+- Create **one short-lived docs-only branch**. For each game in order, do
+  targeted web/source verification, save its self-contained report, update the
+  cumulative index, and make a small logical **commit as a durable checkpoint**.
+  The report and index must survive loss of the long session context.
+- After each stage, verify the report exists and is committed. Then continue
+  directly with the next game, consulting prior reports only as needed for
+  shared server/region semantics or data-migration risks.
+- Keep the research standards below unchanged: distinguish official,
+  in-game, secondary and inferred evidence; use dates and links; record
+  exact absolute UTC examples and DST semantics; never invent a reset hour
+  simply to fill the matrix. If primary material is inaccessible or
+  contradictory, mark it **unverified/conflicting**, describe what would
+  resolve it, and continue to the next game.
+- Once all seven game files are saved, reconcile the index into a
+  cross-game matrix, rank **confirmed** discrepancies versus hypotheses,
+  review effects on `dayKey`, historical ticks, streaks, export/import and
+  Account Sync, and propose **separate, minimal, safe implementation tasks**.
+  Changing current reset clocks or performing migration is outside this Work.
+- Update `docs/IMPLEMENTATION-STATUS.md` with a per-game completion/unknown
+  table, sources and the next concrete step. Finish with **one docs-only PR**,
+  hosted CI, merge to main if permitted, and verify the actual merge. No Pages
+  deploy or runtime test claim is needed for docs-only changes; report checks
+  actually executed. Do not use seven unnecessary PRs.
+- If Work becomes constrained by its available time/context/usage, save the
+  current full reports/index/status in the branch and open a partial docs-only
+  PR **before exiting**. State which stages really completed and which
+  remain, with a restart instruction from the current main/branch. Do not
+  claim 7/7 merely because seven placeholder rows exist. Never promise
+  asynchronous continuation beyond the Work session.
+
+**Scope boundary:** this is daily-task reset auditing only. The independently
+tracked `ENDFIELD-ECHOES-PHANTASIA-CYCLE-COVERAGE.md` concerns rotating
+endgame cycles, not Daily Reset, and must **not** be implemented or researched
+again in this Work. Similarly do not restart broad event source-coverage
+research, UI polish, S6b or Astra audit.
 
 Order prioritizes uncertain or exceptional clocks first:
 
@@ -131,10 +178,10 @@ For **each** game, complete the same high-quality evidence contract:
    publication did not occur. Do not claim success without verifying the file.
 7. Add a short entry to the cumulative index
    `docs/research/daily-reset-clocks.md` with status, evidence link and
-   one-line diagnosis. Do **not** repeat the other game's research or
-   overwrite their verified content. Update `IMPLEMENTATION-STATUS.md`
-   with step N/7 completion and next game. A small docs-only PR/merge per
-   game is acceptable and makes the next chat independent.
+   one-line diagnosis. Do **not** repeat other games' research or overwrite
+   verified content. In the single all-seven Work, **commit this checkpoint**
+   and advance to the next game automatically; record all seven outcomes in
+   `IMPLEMENTATION-STATUS.md` before the final docs-only PR.
 
 **Step 7 additionally closes the research series**: only after all seven
 evidence files exist, reconcile the index into a cross-game comparison,
@@ -149,7 +196,11 @@ feed/source refresh, no unrelated research. Keep this research separate
 from the completed Timeline and mobile UI milestones. A future Work may
 implement approved corrections in small independently testable changes.
 
-### Reusable one-game chat prompt
+### Optional fallback: reusable one-game chat prompt
+
+Use only if the single seven-stage Work cannot finish and research is being
+continued as individually launched Chat sessions. It does not override the
+operator-approved automated progression of the primary Work.
 
 ```text
 Continue the DAILY-RESET-CLOCK-AUDIT research for maxvfk/game-calendar
