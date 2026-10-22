@@ -1,5 +1,15 @@
 # CZN 18:00 UTC daily reset — forward-only compatibility gate
 
+> **Decision update — 2026-10-23:** The operator approved
+> **UTC opening-date** labels and **requiring an updated compatible PWA for
+> new CZN daily writes after server-confirmed cutover**. These choices supersede
+> the two unresolved product options recorded in this 2026-10-22 investigation.
+> They do **not** remove the SQL/RPC, offline Sync, history, export/import,
+> backup and rollout proof obligations below. The separately authorized
+> implementation scope is
+> [CZN-DAILY-RESET-SAFE-CUTOVER-IMPLEMENTATION.md](CZN-DAILY-RESET-SAFE-CUTOVER-IMPLEMENTATION.md).
+> No production clock/policy change has been deployed.
+
 **Status: BLOCKED — no runtime rollout.** Technical evaluation completed
 2026-10-22 for step 4 of VERIFIED-DATA-CORRECTIONS-SEQUENTIAL.
 Baseline runtime: main `12d29a7cf40634f4b1bc0a9dc601b1fb9d3c9bae`;

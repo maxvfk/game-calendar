@@ -1,14 +1,45 @@
 # Game calendar implementation status
 
-Updated 2026-10-22 (Moscow; verified data corrections deployed; CZN Daily Reset blocked at compatibility design). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-23 (Moscow; data corrections operator-accepted; CZN Daily Reset decisions approved, safe cutover task prepared). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
+
+## CZN Daily Reset — product decisions approved, separate Work queued (2026-10-23)
+
+- The operator completed real phone/PC smoke of the 2026-10-22 Endfield
+  Phantasia, six CZN banner and two Genshin Phase II corrections. Regional
+  dates, Timeline/Event Detail and existing marks were accepted. Upcoming
+  was initially hidden because its setting was off; enabling
+  "Show events that haven't started" showed the future records correctly.
+  **All three shipped data corrections are operator-accepted; no UI defect.**
+- Explicit **product decision 1:** fixed CZN daily reset at 18:00 UTC,
+  game-day stored label = **UTC opening date** of the 18:00-to-18:00 period,
+  identical across Asia/Europe/America.
+- Explicit **product decision 2:** require a compatible updated PWA for
+  *new CZN daily writes* after server-confirmed profile cutover.
+  Cached old clients must not mutate new-policy daily rows; other games'
+  Sync must continue. Protect on the server, preserve old offline outbox and
+  legacy histories, avoid silent renaming/retiming.
+- Authorized task:
+  [CZN-DAILY-RESET-SAFE-CUTOVER-IMPLEMENTATION.md](tasks/CZN-DAILY-RESET-SAFE-CUTOVER-IMPLEMENTATION.md).
+  It uses the completed [forward-only investigation](tasks/CZN-DAILY-RESET-FORWARD-ONLY-DESIGN.md),
+  with a **prove-first gate** for SQL/RPC, import/export, legacy marks and old
+  PWA clients. A separate Work may implement and release only after real
+  compatibility/hosted safety proof; otherwise it must stop at a concrete
+  docs-only blocker or code-not-enabled checkpoint.
+- **Current production reset remains incorrect** until that separate Work
+  proves and deploys the new policy. The operator's agreement is not itself
+  a database migration, rollout or claim of completed correction. S6a
+  backup-contract and hosted migration prerequisites remain explicit.
+
+**Next concrete step:** launch a bounded Work from CURRENT main using the
+new task; do not start S6b, Astra, NTE or other independent work automatically.
 
 ## Sequential verified corrections — final gated result (2026-10-22)
 
 **Steps 1–3 complete and deployed; step 4 BLOCKED at a documented technical
 compatibility gate. No CZN daily clock, stored label, history, import/export,
 Account Sync or other runtime change was published. Final operator acceptance
-on physical phone/PC remains pending.**
+on physical phone/PC was subsequently confirmed on 2026-10-23 (see above).**
 
 | Milestone | Result | Delivery / merge SHA | PR CI / push CI-Pages |
 | --- | --- | --- | --- |
@@ -71,9 +102,9 @@ Operator smoke after updating/reloading the PWA:
 4. Confirm existing event completion marks remain attached after reload on both
    phone and PC. Daily reset is intentionally not a delivered correction.
 
-**Next concrete step:** operator phone/PC acceptance for the three deployed data
-repairs. For CZN daily reset, choose labels and old-client update policy before
-separately authorizing protocol/cutover implementation. Stop this Work here.
+**At 2026-10-22 checkpoint:** phone/PC acceptance and CZN decisions were pending.
+Both were subsequently resolved on 2026-10-23, as recorded in the newer section above.
+The original sequential Work remains closed.
 Release CI/merge/deployment evidence for this documentation checkpoint is on its PR.
 
 ## Verified precision regression durability follow-up (2026-10-22)
