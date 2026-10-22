@@ -11,7 +11,7 @@ import { assertExactBoundary, detailHtml } from "./helpers/verified-records.tsx"
 
 const ctx = { now: "2026-10-22T15:39:28.550Z", game: "czn" as const,
   sourceId: "czn-prydwen-banners", sourceUrl: "https://www.prydwen.gg/chaos-zero-nightmare/banners" };
-const automatic = parsePrydwenCzn(await Bun.file("snapshots/czn-prydwen-banners.html").text(), ctx);
+const automatic = parsePrydwenCzn(await Bun.file("test/fixtures/czn/verified-banners-2026-10-22.html").text(), ctx);
 const reviewed = materializeReviewedBatch(await Bun.file("data/reviewed/czn.json").json()).events;
 const corrected = reviewed.filter(e => /^(Nine|Alcea|Tiphera|Tiana|Rossweisse|Sig) Rate-Up Rescue$/.test(e.title));
 const merged = mergeEvents([reviewed, automatic]);
@@ -96,8 +96,18 @@ test("historical Sereniel/Peko midnight is independently promotable, generic fut
       sourceUrl: "https://page.onstove.com/chaoszeronightmare/en/view/14554254" })) }).events;
   expect(mergeEvents([official, old]).conflicts).toEqual([]);
   expect(mergeEvents([official, old]).events).toEqual([...official].sort((a, b) => a.id.localeCompare(b.id)));
-  for (const e of automatic.filter(e => /Blazebell|Vivian|Dahlia|Edelyn/.test(e.title))) {
+  const future = automatic.filter(e => /Blazebell|Vivian|Dahlia|Edelyn/.test(e.title));
+  expect(future).toHaveLength(4);
+  for (const e of future) {
     expect(e.startPrecision).toBe("day");
     expect(e.endPrecision).toBe("day");
   }
+});
+
+// A rolling source may legitimately retire historical cards; validate those it still carries.
+test("rolling CZN capture preserves reviewed precedence without requiring expired cards", async () => {
+  const current = parsePrydwenCzn(await Bun.file("snapshots/czn-prydwen-banners.html").text(), ctx);
+  const result = mergeEvents([reviewed, current]);
+  expect(result.conflicts).toEqual([]);
+  for (const e of corrected) expect(result.events.find(p => p.id === e.id)).toEqual(e);
 });
