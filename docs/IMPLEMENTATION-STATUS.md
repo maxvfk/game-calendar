@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-10-22 (Moscow; Phantasia research complete, official reviewed-cycle proposal ready, automatic source still blocked; Daily Reset 7/7 and UI acceptance retained; runtime/data unchanged). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-22 (Moscow; event time precision audit complete, bounded CZN/Genshin reviewed tasks ready; NTE follow-up and Phantasia research retained; runtime/data unchanged). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
@@ -1979,31 +1979,49 @@ Keep NTE's permanent-task/server/DST verification as an explicit independent
 evidence gap. Do not repeat the five other game reports or start another milestone.
 
 
-### Event start/end precision audit — research task prepared (2026-10-22)
+### Event start/end precision audit — research complete (2026-10-22)
 
-- Operator approved a separate second research Work, distinct from the
-  concurrently assigned Endfield Echoes Phantasia investigation.
-- `docs/tasks/EVENT-TIME-PRECISION-AUDIT.md` scopes a **docs-only** precision
-  audit: start with CZN Sereniel/Peko Prydwen machine timestamps versus
-  explicit STOVE schedule, then inventory and assess *currently active*
-  parser/reviewed-data exact-to-day/unknown downgrades across all seven games.
-- Confirmed *implementation fact*, not a proven data bug:
-  `src/ingest/parsers/prydwen-czn.ts` intentionally takes visible
-  `data-range-global` day dates and ignores exact-looking machine countdown
-  attributes because a prior capture contradicted maintenance boundaries.
-  Test `test/prydwen-czn.test.ts` codifies conservative day/unknown behavior.
-  Trusting the quoted Oct 21 timestamp without independent evidence would
-  break source confidence rules.
-- Required output `docs/research/event-time-precision-audit.md`: code-based
-  candidate inventory, CZN investigation, verified-versus-uncertain findings,
-  exact regional UTC evidence and scoped corrective handoff. Preserve
-  fail-closed/LKG, provenance, stable event IDs and published data.
-- **Status: research not executed**, no runtime changes. Daily Reset's
-  7/7 audit remains completed, and Phantasia cycle source recovery remains a
-  separate task.
-- **Next concrete step:** start a short research-only Work from CURRENT main,
-  complete the audit, docs-only PR/CI/merge, then independently authorize
-  confirmed source-specific implementation fixes.
+- Full bounded audit of the eight active adapters, seven reviewed files,
+  recurring paths, precision schema, merge and display/expiry behavior completed.
+  [Detailed report](research/event-time-precision-audit.md) includes the
+  seven-game matrix, immutable evidence URLs, classifications and UTC mappings.
+- Baseline `581d36f`; delivery rebased onto CURRENT main `6afe31b`,
+  preserving #55 NTE Daily Reset follow-up. No audited runtime/data differences.
+- **CZN Sereniel/Peko historical exact end confirmed:** official event schedule
+  plus Oct 21 maintenance establishes **00:00 UTC**, not a generic ISO-midnight
+  inference. Historical capture agrees; both cards have left today's feed.
+  Generic Prydwen downgrade remains justified by real 07:00/00:01 conflicts.
+- **Confirmed current CZN gaps:** Nine/Alcea Oct 13–Nov 3 18:00Z and announced
+  Tiphera/Tiana Nov 3–24 18:00Z publish day/day. Rossweisse/Sig's actual Oct 21
+  05:00Z opening is day; Dec 2 end remains day pending its maintenance notice.
+  Historical Olga trial's Sep 30 end can separately gain verified precision;
+  other old rows are not blanket-approved.
+- **Genshin:** current Phase II character banners have independently supported
+  14:59 server ends (Nov 3 06:59Z Asia / 13:59Z Europe / 19:59Z America), but
+  publish day/day. Bounded official/mirror synthesis is recorded explicitly;
+  no universal `t_lc/t_gl` contract is claimed.
+- HSR/WuWa/ZZZ day starts often represent regional or after-update openings;
+  schema lacks regionStarts. NTE server-time periods lack a verified UTC mapping.
+  Endfield ordinary exact ends preserved; Phantasia stays separate. No new
+  same-ID reviewed override suppression or other-game end defect was established.
+- Prepared two unexecuted, separate tasks:
+  [CZN verified banners](tasks/CZN-VERIFIED-BANNER-TIME-PRECISION.md) and
+  [Genshin Phase II ends](tasks/GENSHIN-PHASE-II-VERIFIED-END-PRECISION.md).
+  They use existing reviewed enrichment, stable IDs and official provenance;
+  no automatic timestamp-trust or source-health relaxation.
+- Local Bun 1.3.14 frozen install/typecheck/build passed; final suite
+  **1110 pass / 1 existing optional age skip / 0 fail**, 1111 tests / 56 files.
+  Initial eight failures were missing local Gitea baseline files, resolved by
+  retrieving them unchanged. Build **176 records / 7 games / 1 existing NTE
+  conflict**. Public feed generated 11:30:52Z matches all local IDs and time
+  boundaries. No network Refresh, browser smoke or live correction claimed.
+- Research task/backlog updated. Delivery is docs-only; hosted CI and merge/main
+  evidence recorded in the PR. No runtime, parser, snapshot, reviewed JSON,
+  published dates/IDs, completion data, Account Sync or Daily Reset change.
+
+**Next concrete step:** separately execute the CZN reviewed-precision task,
+then the independent two-row Genshin end task. Keep uncertain tag/region mappings
+as evidence gaps; no implementation or other milestone started here.
 
 
 ### Phantasia cycle coverage — focused research completed (2026-10-22)
