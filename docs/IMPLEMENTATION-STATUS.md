@@ -3,6 +3,41 @@
 Updated 2026-10-22 (Moscow; event time precision audit complete, bounded CZN/Genshin reviewed tasks ready; NTE follow-up and Phantasia research retained; runtime/data unchanged). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
+## Sequential verified corrections — milestone 3 (2026-10-22)
+
+- Milestone 2 shipped as [PR #59](https://github.com/maxvfk/game-calendar/pull/59),
+  head `b1be0dee34558b02dbb1bc77b752d53676f7d2d9`, merge
+  `1956c13610d5787eb4bda4e29503b6653a6bfed7`. PR CI 39807945889 and push
+  CI/Pages 39808092840 succeeded. Public feed generated 15:48:01.525Z confirms
+  all six exact fields, preserved firstSeenAt and unchanged sole NTE conflict.
+  Live Chrome: Nine exact start/end, official source and Done mark survive
+  deployment/refresh; Rossweisse retains date-only end and Time unconfirmed.
+- Fresh main `1956c13`: only `genshin:void-stars-advent:2026-10-13` and
+  `genshin:la-chanson-cerise:2026-10-13` gain official reviewed exact ends:
+  Nov 3 06:59Z Asia / 13:59Z Europe / 19:59Z America. Day starts, titles,
+  stable IDs and published firstSeenAt `2026-10-22T15:48:01.525Z` preserved.
+  All other reviewed rows/timestamps and generic KQM parsing are unchanged.
+- Fresh publisher indexed article 47010361 still states Oct 13 18:00–Nov 3
+  14:59; matched Skirk publisher article 47031763 explicitly says Server Time.
+  Fresh complete KQM archives 21888 and 21889 reproduce both boundaries with
+  the same t_lc tag and named banners. This is bounded evidence synthesis,
+  not a universal tag/zone contract. Direct HoYoLAB full text remains a JS shell.
+- Tests cover same-ID whole-record precedence, exact endpoints at ±1ms in
+  every region, regional expiry/order, Timeline and Event Detail rendering,
+  unsupported-region canonical fallback, legacy marks/export/import, and minute
+  conflicts including western-only changes. Carefree stays day precision;
+  no weapon banner, regionStarts, parser, clock or user-data change.
+- Frozen install, typecheck, full tests and build passed: 1124 pass, one existing
+  optional age skip, zero failures. Semantic feed diff: same 178 IDs, only two
+  changed winners, only existing NTE Circle Bounty conflict. Source-health/LKG
+  are unchanged. Historical coverage test retains its original 17-row subset.
+- This milestone's hosted CI/deploy/browser results are recorded in the next
+  checkpoint. Final operator phone/PC smoke remains outstanding by design.
+
+**Next concrete step:** verify this deployment and the three regional browser
+ends, then evaluate CZN daily-clock compatibility; stop at documented design
+if old-client/offline/history safety cannot be proved.
+
 ## Sequential verified corrections — milestone 2 (2026-10-22)
 
 - Milestone 1 shipped as [PR #58](https://github.com/maxvfk/game-calendar/pull/58),
