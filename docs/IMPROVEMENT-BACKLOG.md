@@ -57,7 +57,8 @@ For each item, use this compact format:
   - **Desired behavior:** systematically review all similar ingestion paths where a source exposes an exact timestamp/countdown but the calendar intentionally downgrades it to `day` or `unknown`. Promote precision only when the exact boundary is independently trustworthy; otherwise keep the conservative precision and document why.
   - **Area:** data clarity / ingestion / source quality
   - **Priority:** pre-Astra data-quality follow-up; do not fold into Timeline M2
-  - **Status:** refined
+  - **Status:** refined / research task ready
+  - **Task:** `docs/tasks/EVENT-TIME-PRECISION-AUDIT.md` — separate research-only Work; CZN first, then bounded scan of other active sources; no runtime changes.
   - **Notes / constraints:** start with CZN banners (Sereniel/Peko as the concrete trigger), then search other parsers/reviewed-data paths for explicit precision downgrades or ignored machine timestamps. Do not globally trust hidden/countdown timestamps merely because they exist. Preserve event IDs, provenance, source-health/LKG rules and fail closed on conflicting evidence. Also consider adding reliable `recognitionSubjects` while touching a reviewed record, but keep recognition metadata separate from timestamp trust.
 
 - **Title:** Stronger weekly separators on the daily Timeline
