@@ -10,5 +10,6 @@ Research only; runtime, stored marks and Sync unchanged.
 | 3 | CZN | Confirmed error: published 18:00Z; code varies by Region | [czn](daily-reset-clocks/czn.md) |
 | 4 | Genshin | Confirmed correct: 04:00 on fixed +8/+1/−5 | [genshin](daily-reset-clocks/genshin.md) |
 | 5 | HSR | Confirmed correct by converging sources; primary-access limits recorded | [hsr](daily-reset-clocks/hsr.md) |
+| 6 | WuWa | Supported correct; regional secondary evidence, old-guide conflicts | [wuwa](daily-reset-clocks/wuwa.md) |
 
-Progress: **5/7**. Next: WuWa. See reports for evidence and unknowns.
+Progress: **6/7**. Next: ZZZ and synthesis. See reports for evidence and unknowns.
