@@ -53,13 +53,14 @@ For each item, use this compact format:
 
 
 - **Title:** Audit date/time precision downgrades against exact source timestamps
-  - **Observation:** phone smoke exposed a CZN banner case where the calendar intentionally shows a day-only deadline even though the live game countdown and the current Prydwen snapshot both indicate an exact end instant. Sereniel and Peko currently carry `data-end-global="2026-10-21T00:00:00.000Z"`, while the parser deliberately ignores machine timestamps because earlier Prydwen timestamps had disagreed with official STOVE maintenance boundaries.
-  - **Desired behavior:** systematically review all similar ingestion paths where a source exposes an exact timestamp/countdown but the calendar intentionally downgrades it to `day` or `unknown`. Promote precision only when the exact boundary is independently trustworthy; otherwise keep the conservative precision and document why.
-  - **Area:** data clarity / ingestion / source quality
-  - **Priority:** pre-Astra data-quality follow-up; do not fold into Timeline M2
-  - **Status:** refined / research task ready
-  - **Task:** `docs/tasks/EVENT-TIME-PRECISION-AUDIT.md` — separate research-only Work; CZN first, then bounded scan of other active sources; no runtime changes.
-  - **Notes / constraints:** start with CZN banners (Sereniel/Peko as the concrete trigger), then search other parsers/reviewed-data paths for explicit precision downgrades or ignored machine timestamps. Do not globally trust hidden/countdown timestamps merely because they exist. Preserve event IDs, provenance, source-health/LKG rules and fail closed on conflicting evidence. Also consider adding reliable `recognitionSubjects` while touching a reviewed record, but keep recognition metadata separate from timestamp trust.
+  - **Observation:** CZN Sereniel/Peko exposed day-only deadlines despite candidate machine clocks. Historical Oct 21 00:00Z end is now independently confirmed by official banner + maintenance notices; generic Prydwen timestamps still contain real conflicts.
+  - **Desired behavior:** enrich only independently verified event boundaries, preserving conservative handling of ambiguous machine/server clocks.
+  - **Area:** source ingestion / time precision / data clarity
+  - **Priority:** confirmed upcoming CZN and Genshin banner deadlines first
+  - **Status:** research complete 2026-10-22 / bounded fixes prepared; no runtime correction yet
+  - **Task:** [EVENT-TIME-PRECISION-AUDIT](tasks/EVENT-TIME-PRECISION-AUDIT.md); [full seven-game findings](research/event-time-precision-audit.md).
+  - **Implementation handoffs:** [CZN verified banner precision](tasks/CZN-VERIFIED-BANNER-TIME-PRECISION.md), then independent [Genshin Phase II ends](tasks/GENSHIN-PHASE-II-VERIFIED-END-PRECISION.md). Exact Nine/Alcea and Tiphera/Tiana UTC periods, Rossweisse/Sig opening, and two Genshin regional ends confirmed. No blanket hidden-timestamp promotion.
+  - **Notes / constraints:** historical Sereniel/Peko have left today's feed; do not resurrect them. Regional starts lack regionStarts representation; NTE server mapping and other Genshin tags remain evidence gaps. Preserve IDs/marks, provenance, per-row review times, source-health/LKG and Account Sync; no Daily Reset or Phantasia changes. Recognition metadata is separate scope.
 
 - **Title:** Stronger weekly separators on the daily Timeline
   - **Observation:** adjacent weeks are not visually distinct enough when scanning the daily Timeline.

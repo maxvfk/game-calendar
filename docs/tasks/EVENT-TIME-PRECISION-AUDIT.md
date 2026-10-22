@@ -1,6 +1,8 @@
 # Event time precision audit — exact source instants lost as day/unknown
 
-**Status:** ready for a standalone research-only Work.
+**Status:** research complete 2026-10-22; no runtime implementation. See
+[full report](../research/event-time-precision-audit.md) and its two bounded
+reviewed-data handoffs. Hosted CI/merge evidence is recorded in the delivery PR.
 **Scope:** audit published game-event start/end precision across the seven shipped
 games. No runtime code, production feed, snapshots or reviewed event edits.
 
