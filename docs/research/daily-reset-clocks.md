@@ -6,5 +6,6 @@ Research only; runtime, stored marks and Sync unchanged.
 | Step | Game | Outcome | Report |
 | --- | --- | --- | --- |
 | 1 | Endfield | Confirmed correct: Asia 20:00Z previous date, western 09:00Z | [endfield](daily-reset-clocks/endfield.md) |
+| 2 | NTE | Conflicting core clock/DST; four servers but no SEA selector | [nte](daily-reset-clocks/nte.md) |
 
-Progress: **1/7**. Next: NTE. See each report for source strength and unknowns.
+Progress: **2/7**. Next: CZN. See reports for evidence and unknowns.
