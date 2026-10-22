@@ -9,5 +9,6 @@ Research only; runtime, stored marks and Sync unchanged.
 | 2 | NTE | Conflicting core clock/DST; four servers but no SEA selector | [nte](daily-reset-clocks/nte.md) |
 | 3 | CZN | Confirmed error: published 18:00Z; code varies by Region | [czn](daily-reset-clocks/czn.md) |
 | 4 | Genshin | Confirmed correct: 04:00 on fixed +8/+1/−5 | [genshin](daily-reset-clocks/genshin.md) |
+| 5 | HSR | Confirmed correct by converging sources; primary-access limits recorded | [hsr](daily-reset-clocks/hsr.md) |
 
-Progress: **4/7**. Next: HSR. See reports for evidence and unknowns.
+Progress: **5/7**. Next: WuWa. See reports for evidence and unknowns.
