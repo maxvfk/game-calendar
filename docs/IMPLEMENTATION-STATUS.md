@@ -1943,7 +1943,7 @@ implementation proposal: [daily-reset-clocks.md](research/daily-reset-clocks.md)
 | Game | Result | Evidence report |
 | --- | --- | --- |
 | Endfield | Confirmed correct: Asia 20:00Z previous UTC date; Americas/Europe 09:00Z | [endfield](research/daily-reset-clocks/endfield.md) |
-| NTE | Conflicting permanent-task hour/offset/DST; official 05:00 is event-specific; SEA selector gap confirmed | [nte](research/daily-reset-clocks/nte.md) |
+| NTE | Focused follow-up: no specific UTC error proved; Japanese 05:00 can match Asia 20:00Z; SEA 21:00Z is weekly evidence; core offsets/DST unresolved | [nte](research/daily-reset-clocks/nte.md) |
 | CZN | **Confirmed error**: published daily 18:00Z versus app's regional 20:00/03:00/09:00Z | [czn](research/daily-reset-clocks/czn.md) |
 | Genshin | Confirmed correct fixed regional 04:00 | [genshin](research/daily-reset-clocks/genshin.md) |
 | HSR | Confirmed correct by converging sources; publisher-hosted/login and secondary task/regional evidence distinguished | [hsr](research/daily-reset-clocks/hsr.md) |
@@ -2052,3 +2052,39 @@ Prior general research and §16 historical findings are preserved.
 its official evidence and publish only the bounded cycle deadlines. Automatic
 wiki recovery still requires explicit consistent upstream regional opening data.
 Do not repeat this research or begin the repair automatically.
+
+
+### NTE permanent daily reset — focused follow-up completed (2026-10-22)
+
+Docs-only continuation from CURRENT main `581d36f25e05dcfebc726ca07118492bd2cd9bd5`.
+[Full evidence and observation gate](research/daily-reset-clocks/nte.md#focused-follow-up--2026-10-22);
+[updated seven-game index](research/daily-reset-clocks.md). The other six reports
+were not researched again; concurrent precision/Phantasia documentation is preserved.
+
+- New Japanese sources explicitly concern permanent Exploration Guide tasks,
+  not event quests. Local 05:00 JST/KST would equal the app's Asia 20:00Z;
+  language/residence does not prove selected server. This narrows the apparent
+  04:00/05:00 contradiction without certifying the server's clock offset.
+- Original SEA testimony explicitly reports 05:00 UTC+8 (21:00Z), but its
+  directly observed system is weekly City Stamina. SEA's distinct server is
+  official; a distinct permanent Guide clock remains a hypothesis. No SEA
+  selector exists today; neither aliasing it to Asia nor adding a clock is
+  justified by the current permanent-task evidence.
+- EU 03:00Z and NA 09:00Z provisional player claims agree with current outputs
+  for the reported period. No official all-region core clock/DST rule or
+  server-verified absolute-UTC Guide rollover capture was found. Publication
+  timestamps, relative Reddit ages and event reset rules do not fill that gap.
+- Required next evidence: selected-server + UTC-clock + Guide countdown and
+  actual rollover on all four servers; compare Asia/SEA 20:00Z versus 21:00Z;
+  paired EU/US observations across the first production autumn transitions.
+- **Concrete NTE clock error: not confirmed. Clock implementation Work: evidence
+  insufficient.** No runtime/reset-hour/dayKey/data/Account Sync changes or
+  migration. Historical day strings must remain intact if a future correction
+  is independently established; edit timestamps cannot safely retime marks.
+- Bun 1.3.14 frozen install/typecheck/build passed; **1110 pass / 1 existing
+  optional age skip / 0 fail**. NTE-only current-helper/boundary/Intl probes
+  passed. Hosted CI and merge evidence belongs to the docs-only delivery PR.
+
+**Next concrete NTE step:** collect the specifically missing in-game observations
+or publisher clarification. Do not implement a universal 05:00 override, infer
+DST from summer wall time, or repeat the completed seven-game audit.
