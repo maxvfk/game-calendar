@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-10-21 (Moscow; narrow Timeline label truncation implemented/browser-validated; hosted delivery tracked with its PR; final operator real-device smoke pending; M2 remains complete). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-22 (Moscow; Daily Reset research 7/7 complete, CZN discrepancy confirmed, NTE unresolved; runtime clocks/data unchanged; M2 and Timeline label acceptance retained). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
@@ -1854,7 +1854,11 @@ names, and existing inspected-time behavior. Stop after this scope.
 - **Next concrete step:** choose the next independent planned milestone (e.g. reset clock audit), starting from CURRENT main. Do not restart finished Timeline label or M2 work without a new reproduced defect.
 
 
-### Daily Reset clock audit — seven-step research plan (2026-10-22)
+### Daily Reset clock audit — seven-step research plan (2026-10-22; historical)
+
+**Superseded planning checkpoint.** Execution mode and results are recorded in
+“Daily Reset clock audit — seven-stage research completed” below; do not launch
+seven ordinary chats or repeat completed research.
 
 - Operator requested splitting the research into **seven focused steps, one
   currently shipped game per step**, instead of searching all seven in one
@@ -1903,7 +1907,10 @@ names, and existing inspected-time behavior. Stop after this scope.
   blocker). Do not begin this investigation automatically.
 
 
-### Daily Reset research — one seven-stage Work approved (2026-10-22)
+### Daily Reset research — one seven-stage Work approved (2026-10-22; historical)
+
+**Plan executed.** See the completed 7/7 research section below for current
+results and the next implementation boundary.
 
 - Operator superseded the previously planned seven manually launched ordinary
   chats with **one Work session that automatically completes all seven
@@ -1922,3 +1929,51 @@ names, and existing inspected-time behavior. Stop after this scope.
 - **Next concrete step:** launch a single research-only Work from CURRENT
   main using the all-seven execution prompt; after the report PR, review
   supported corrections and authorize any runtime implementation separately.
+
+
+### Daily Reset clock audit — seven-stage research completed (2026-10-22)
+
+**Research complete: 7/7**, in one sequential Work, with one independent
+report/commit per game. NTE's unresolved clock is an explicit evidence gap,
+not an unfinished report. Baseline main:
+`e05fa8b64262b35607a6296171604f6eb79fedea`.
+Consolidated comparison, sources, source-access limits, DST examples and safe
+implementation proposal: [daily-reset-clocks.md](research/daily-reset-clocks.md).
+
+| Game | Result | Evidence report |
+| --- | --- | --- |
+| Endfield | Confirmed correct: Asia 20:00Z previous UTC date; Americas/Europe 09:00Z | [endfield](research/daily-reset-clocks/endfield.md) |
+| NTE | Conflicting permanent-task hour/offset/DST; official 05:00 is event-specific; SEA selector gap confirmed | [nte](research/daily-reset-clocks/nte.md) |
+| CZN | **Confirmed error**: published daily 18:00Z versus app's regional 20:00/03:00/09:00Z | [czn](research/daily-reset-clocks/czn.md) |
+| Genshin | Confirmed correct fixed regional 04:00 | [genshin](research/daily-reset-clocks/genshin.md) |
+| HSR | Confirmed correct by converging sources; publisher-hosted/login and secondary task/regional evidence distinguished | [hsr](research/daily-reset-clocks/hsr.md) |
+| WuWa | Supported correct; recent official sign-in clock and secondary regional/DST evidence; old conversion conflicts documented | [wuwa](research/daily-reset-clocks/wuwa.md) |
+| ZZZ | Supported correct; official login clock plus independent daily-task/regional evidence; misleading source headings rejected | [zzz](research/daily-reset-clocks/zzz.md) |
+
+- No runtime, reset constant, saved user data, Account Sync, event IDs, source
+  ingestion, feed, Timeline or Endfield Echoes changes. Official URLs freshly
+  checked; some primary pages only expose indexed text/JS shells, explicitly
+  recorded. No authenticated game countdown was observed.
+- CZN at Oct 22 12:00Z should next reset Oct 22 18:00Z; actual app nextResetMs
+  returns Asia Oct 22 20:00Z, Europe Oct 23 03:00Z, America Oct 23 09:00Z.
+  2/9/15h differences refer to that exact probe.
+- A reset correction can alter dayKey/summary/streak interpretation without
+  rewriting stored strings. Logs lack per-day completion instants/server/policy;
+  Sync keys subject/day and edit timestamps cannot reconstruct those facts.
+  Preserve historical claims; no bulk-shift/duplicate/delete migration.
+  UTC-18:00 and KST-03:00 have the same instant but day labels differ by one:
+  choose label/cutover semantics before a CZN runtime fix. Review shared
+  dayStartMs/event-date and serverOffsetUtc consumers separately.
+- Local checks on Bun 1.3.14: frozen install, typecheck, **1110 pass /
+  1 optional age skip / 0 fail**, full build passed. Initial build needed a
+  missing local bunx alias; fixed environment only. No source refresh.
+  Existing build output: 176 events / 7 games / 1 existing conflict; this is
+  validation of unchanged runtime, not new event research.
+- All seven research checkpoints are saved in GitHub. One final docs-only PR
+  carries hosted-CI/merge evidence in its description; no runtime deploy claim.
+
+**Next concrete step:** prepare a separately authorized CZN-only clock-fix task
+that decides game-day labels and a safe forward transition, preserves IDs/history,
+and covers legacy import, two-device/offline Sync plus daily helper boundaries.
+Keep NTE's permanent-task/server/DST verification as an explicit independent
+evidence gap. Do not repeat the five other game reports or start another milestone.
