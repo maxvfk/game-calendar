@@ -3,6 +3,42 @@
 Updated 2026-10-22 (Moscow; event time precision audit complete, bounded CZN/Genshin reviewed tasks ready; NTE follow-up and Phantasia research retained; runtime/data unchanged). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
+## Sequential verified corrections — milestone 2 (2026-10-22)
+
+- Milestone 1 shipped as [PR #58](https://github.com/maxvfk/game-calendar/pull/58),
+  head `1c64ddfaee083a2dd629289b5cef34de69680214`, merge
+  `9c1b9e3a9f1a0b0f59d7e3c6a3d9446d9c73e4be`. PR CI 39806589922 and push
+  CI/Pages 39806775938 succeeded. Public feed generated 15:39:28.550Z contains
+  178 rows and both exact cycle maps. Live Chrome guest smoke: Endfield focus,
+  Endgame, Ending soonest and Event Detail show Cycle II before season final;
+  Europe Oct 29 08:59Z and Asia Oct 28 19:59Z display correctly. Cycle I is expired.
+- Fresh main `9c1b9e3`; six existing CZN banner IDs are now official reviewed
+  winners. Nine/Alcea: Oct 13 18:00Z–Nov 3 18:00Z; Tiphera/Tiana: Nov 3
+  18:00Z–Nov 24 18:00Z. Rossweisse/Sig start Oct 21 05:00Z; Dec 2 end remains
+  day precision. Published firstSeenAt `2026-10-22T15:39:28.550Z` is preserved
+  verbatim for these automatically materialized rows; all other reviewed rows
+  and timestamps remain unchanged. Parser, snapshots, health and daily clock unchanged.
+- Rechecked STOVE 14555091/14593128 paired normal-rescue UTC schedules,
+  14592676 named Rossweisse/Sig maintenance window and 14592548 actual 05:00
+  completion using fresh publisher-hosted indexed excerpts. Direct notices are
+  JS shells, as in the audit. No specific Dec 2 maintenance timing was located;
+  search date-format false positives (February 12) were excluded.
+- Focused regressions cover all three regions at exact end ±1ms, openings,
+  Upcoming/deadline sorting, Timeline and Event Detail precision, old completion
+  export/import, minute and region-only conflicts, and conservative future cards.
+  Historical Sep 22 fixture assertions retain their original three banner rows;
+  a separate current-snapshot merge asserts all six new winners. A test-only
+  two-card factual Oct 20 excerpt demonstrates independently confirmed midnight
+  without changing the parser or reviving Sereniel/Peko in production.
+- Frozen install, typecheck, full tests and build passed: 1120 pass, one existing
+  optional age skip, zero failures. Semantic diff: same 178 IDs; exactly six
+  corrected winners; no new conflict (only existing NTE Circle Bounty).
+- This milestone's hosted PR/Pages and browser release evidence is recorded
+  after merge in the next checkpoint. Physical phone/PC smoke remains with operator.
+
+**Next concrete step:** verify CZN deployment, then correct only the two Genshin
+Phase II ends from refreshed main. CZN daily reset remains gated separately.
+
 ## Sequential verified corrections — milestone 1 (2026-10-22)
 
 - Baseline `818ec016cb159664422e4af3de557a23edf2da92`; PR #57 push CI

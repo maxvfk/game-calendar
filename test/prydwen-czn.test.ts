@@ -21,7 +21,7 @@ test("official reviewed banners preserve ID, STOVE URL, and exact boundaries", a
   const parsed = parse();
   const merged = mergeEvents([reviewed, parsed]);
   expect(merged.conflicts).toEqual([]);
-  for (const e of reviewed.filter((e) => e.type === "banner")) {
+  for (const e of reviewed.filter((e) => e.type === "banner" && /Olga|Emilie|Narja.*Gaya/.test(e.title))) {
     expect(parsed.some((p) => p.id === e.id)).toBe(true);
     expect(merged.events.find((m) => m.id === e.id)).toEqual(e);
   }
@@ -33,5 +33,6 @@ test("unknown templates and malformed or mismatched ranges fail", () => {
   const changeFirstCard = (range: string) => html.replace(/<article\b[^>]*data-banner-card="true"[\s\S]*?<\/article>/,
     (card) => card.replace('data-range-global="Sep 22, 2026 – Oct 13, 2026"', `data-range-global="${range}"`));
   expect(() => parse(changeFirstCard("TBA"))).toThrow();
+  expect(() => parse(changeFirstCard("Feb 30, 2026 – Oct 13, 2026"))).toThrow("Invalid Prydwen date");
   expect(() => parse(changeFirstCard("Sep 23, 2026 – Oct 13, 2026"))).toThrow("Narja/Gaya periods disagree");
 });
