@@ -2106,3 +2106,28 @@ were not researched again; concurrent precision/Phantasia documentation is prese
 **Next concrete NTE step:** collect the specifically missing in-game observations
 or publisher clarification. Do not implement a universal 05:00 override, infer
 DST from summer wall time, or repeat the completed seven-game audit.
+
+
+### Sequential implementation Work — verified data corrections queued (2026-10-22)
+
+- Operator authorized preparing **one sequential Work** for the independently
+  researched repairs rather than manually launching each implementation:
+  1. Endfield Phantasia official reviewed Cycle I/II deadlines;
+  2. six CZN verified banner time-precision rows;
+  3. two Genshin Phase II regional exact-end rows;
+  4. CZN fixed **18:00 UTC** daily reset **only if** a complete forward-only
+     dayKey/history/import/two-device/offline Sync compatibility design is
+     proven, implemented and tested. If not, deliver a design/blocked task,
+     with no unsafe CZN clock change.
+- Execution contract is `docs/tasks/VERIFIED-DATA-CORRECTIONS-SEQUENTIAL.md`.
+  One session, **new short-lived branch and PR per milestone**, full four
+  `AGENTS.md` gates and deployed-feed validation, start each independent next
+  step from the newly merged CURRENT main. No need for seven-game re-research,
+  broad parser rewrites or automatic Astra launch.
+- **Planning only at this checkpoint.** No reviewed event data, reset helpers,
+  personal data, source-health, CI behavior or sync code changed. Earlier
+  research-completed implementation tasks remain the acceptance criteria
+  for stages 1–3, not evidence that repairs have shipped.
+- **Next concrete step:** launch one Work using this orchestration task;
+  review which production corrections actually deployed, the step 4 safety
+  decision and the operator's final mobile/PC smoke results.
