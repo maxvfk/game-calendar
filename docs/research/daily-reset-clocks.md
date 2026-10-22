@@ -11,5 +11,6 @@ Research only; runtime, stored marks and Sync unchanged.
 | 4 | Genshin | Confirmed correct: 04:00 on fixed +8/+1/−5 | [genshin](daily-reset-clocks/genshin.md) |
 | 5 | HSR | Confirmed correct by converging sources; primary-access limits recorded | [hsr](daily-reset-clocks/hsr.md) |
 | 6 | WuWa | Supported correct; regional secondary evidence, old-guide conflicts | [wuwa](daily-reset-clocks/wuwa.md) |
+| 7 | ZZZ | Supported correct; secondary region/DST evidence, source typos rejected | [zzz](daily-reset-clocks/zzz.md) |
 
-Progress: **6/7**. Next: ZZZ and synthesis. See reports for evidence and unknowns.
+Progress: **7/7 research stages**. NTE core clock remains unresolved. Synthesis and final checks next.
