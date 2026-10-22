@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-Updated 2026-10-22 (Moscow; Daily Reset research 7/7 complete, CZN discrepancy confirmed, NTE unresolved; runtime clocks/data unchanged; M2 and Timeline label acceptance retained). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-22 (Moscow; Phantasia research complete, official reviewed-cycle proposal ready, automatic source still blocked; Daily Reset 7/7 and UI acceptance retained; runtime/data unchanged). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
@@ -2004,3 +2004,51 @@ evidence gap. Do not repeat the five other game reports or start another milesto
 - **Next concrete step:** start a short research-only Work from CURRENT main,
   complete the audit, docs-only PR/CI/merge, then independently authorize
   confirmed source-specific implementation fixes.
+
+
+### Phantasia cycle coverage — focused research completed (2026-10-22)
+
+Docs-only investigation from CURRENT main `0c33ca534c01d6522300c7c6ba0f716502a70b4f`.
+Before delivery, rebased onto `60ab1a5` (concurrent precision-audit planning
+PR #53); preserved that separate task/status section in full.
+Full evidence, response hashes, UTC conversions, precision limits and alternatives:
+[endfield-recurring-endgame.md §17](research/endfield-recurring-endgame.md#17-phantasia-cycle-coverage-investigation--2026-10-22).
+Prior general research and §16 historical findings are preserved.
+
+- Latest actual [Refresh 39762240523](https://github.com/maxvfk/game-calendar/actions/runs/39762240523),
+  Oct 22 10:19Z: 15 consecutive rejected HTTP-200 cycle responses; 7/8 confirmed,
+  1 ongoing broken, 0 newly broken. Workflow success is alert dedup, not recovery.
+  Illusion LKG remains unchanged; build-feed withholds it for Phantasia by URL.
+  Deployed feed at 10:52:41Z has 176 events / 7 games, season `challenge` row
+  present, no Phantasia cycles; cycle source is unavailable, not falsely fresh.
+- Fresh current wiki reproduces the precise western start mismatch. Official
+  version notes 9560 and the visually read official @AKEndfield infographic
+  independently confirm cycle ends Oct 22 / Oct 29 03:59 and season end Nov 5
+  11:59, with next cycle starts Oct 22 / Oct 29 04:00, fixed UTC+8 / UTC−5.
+- **Cause established:** wiki western header differs by a day from the official
+  planned Oct 14 23:00 opening; generic first table start also wrongly asserts
+  Oct 15 12:00 server time for the west. Parser correctly rejects its explicit
+  inconsistent input. Editorial intent and actual maintenance reopening minute
+  remain unverified; no parser clipping or timezone special case is justified.
+  Operator 14.10 start agrees with western planned date, but 9h08 lacks capture
+  clock/server context and cannot independently establish a UTC deadline.
+- **Safe proposal:** existing reviewed channel, official provenance, day-precision
+  canonical starts, two sourced internal cycle deadline rows, no duplicate
+  Cycle III. Upcoming Cycle II end: Oct 28 19:59Z Asia / Oct 29 08:59Z west;
+  following opening one minute later. Leave automatic source broken/LKG intact.
+- Separate concrete task prepared:
+  [ENDFIELD-PHANTASIA-REVIEWED-CYCLE-DEADLINES.md](tasks/ENDFIELD-PHANTASIA-REVIEWED-CYCLE-DEADLINES.md).
+  Original research task marked complete. **No implementation started:** no
+  runtime/parser/source/snapshot/reviewed/feed/ID change, no Daily Reset,
+  Account Sync or Timeline UI scope. Future task includes stable identities,
+  regional expiry/filter/sort, automatic recovery/dedup and disagreement tests.
+- Local Bun 1.3.14 frozen install/typecheck/full build pass; **1110 pass /
+  1 existing optional age skip / 0 fail**, 1111 tests across 56 files.
+  Build 176 events / 7 games / 1 existing NTE conflict. Fresh live-source parser
+  rejection reproduced separately. Hosted CI/merge evidence belongs to the
+  docs delivery PR; no live coverage repair is claimed.
+
+**Next concrete step:** separately authorize the reviewed-data task, recheck
+its official evidence and publish only the bounded cycle deadlines. Automatic
+wiki recovery still requires explicit consistent upstream regional opening data.
+Do not repeat this research or begin the repair automatically.

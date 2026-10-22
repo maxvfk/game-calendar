@@ -1,7 +1,9 @@
 # Arknights: Endfield — recurring endgame calendar research
 
-**Status:** implementation-ready for Echoes of War classification/cycle handling and current Umbral Monument limited-event coverage; other repeatable systems classified for scope  
-**checkedAt:** 2026-09-24  
+**Status:** historical baseline retained; Phantasia investigation complete in §17 (2026-10-22), official reviewed-deadline follow-up ready; automatic wiki still blocked
+
+**checkedAt:** 2026-10-22 (original general audit: 2026-09-24)
+
 **baseline main SHA:** `ebcfd2bfd7340330f62b2b53bd0e510fe31e0806`
 
 ## Why this exists
@@ -659,3 +661,199 @@ existing pipeline while Echoes remains unavailable/broken; do not manufacture a
 fully green Refresh. Resume Echoes acceptance only when upstream supplies a
 consistent explicit regional schedule, then run normal Refresh and verify its
 commit's CI/Pages. No new coverage, projected dates or fallback fixture is needed.
+
+## 17. Phantasia cycle coverage investigation — 2026-10-22
+
+**Result:** publication failure reproduced; independent official cycle deadlines
+verified. Recommend a bounded reviewed-data follow-up, **not a parser relaxation**.
+No runtime, parser, source configuration, snapshot, reviewed record, feed or ID
+was changed in this investigation. Sections 1–16 retain their historical findings;
+this section supersedes their unresolved primary-evidence status for Phantasia.
+Baseline CURRENT main: `0c33ca534c01d6522300c7c6ba0f716502a70b4f`.
+
+### 17.1 Evidence and reproducibility
+
+Fresh direct HTTP reads on Oct 22 (UTC; Moscow = UTC+3):
+
+| Evidence | Retrieved | Result / SHA-256 of full response bytes |
+| --- | --- | --- |
+| [Current season wiki](https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Phantasia) | 11:06:29Z | 200; revision 66316; `dfcd6151179092c8784fe698bb15063f0a51fbce6c176dd276c0c8c9cadab58d` |
+| [Official version notes 9560](https://endfield.gryphline.com/en-us/news/9560) | 11:06:29Z | 200; `ec286972651a16074d995b9ae700851c094ab92bdd6b5917c8dacb0c3dc6b21c` |
+| [Official @AKEndfield cycle announcement](https://x.com/AKEndfield/status/2109871758140711172) | 11:08:00Z | 200; rendered text and media URL present; `6052b37659d7ea0b0ee555bf784e278bc62fb0fd3e71c8ff892230ea139a81a2` |
+| [Official post's cycle infographic](https://pbs.twimg.com/media/HUPRW3QbgAAK4sK?format=webp&name=large) | 11:08:33Z | 200; visually read; `d9fade5c7075f4e7e7c377f45112e4546b4762a5f89ba4fd2b145f122476e3ae` |
+| [Deployed feed](https://maxvfk.github.io/game-calendar/data/events.v1.json) | 11:06:28Z | 200; `b84c99575c943e9aaaae6a7712df180dd1da1a8ff4cc249776dcdbf1af5ffa8d` |
+
+Read wiki/official robots before direct article requests: both 200, wildcard
+allows `/`; wiki declares reference use and prohibits training. Research only,
+no scheduled source scrape or production Refresh was run. No official artwork
+or account screenshot is republished in this public repository. The wiki file
+page separately identifies the infographic as Hypergryph promotional artwork;
+its original/thumbnail image endpoints returned 403 in this environment. A
+Reddit repost was visually checked for discovery, then superseded by the actual
+media URL embedded in the official X post. It is **not** the provenance authority.
+Web-search opening of wiki/X returned 403 even though direct HTTP succeeded;
+the conclusions above come from the successful direct responses, not snippets.
+
+The official image was manually inspected, including all three duration blocks
+and its bottom timezone legend. Exact short labels: `Asia Server Time Zone:
+UTC+8` and `Americas / Europe Server Time Zone: UTC−5`. Its first cycle opens
+with the version update, rather than an independently specified wall-clock hour.
+Official notes independently specify the season's final 11:59 server-time end.
+
+### 17.2 Exact regional schedule and precision limits
+
+These are **published schedules**, not a newly observed live game-server trace.
+The official image supplies all cycle endpoints; the version notice supplies
+maintenance and season context. Both server offsets are fixed numeric offsets.
+Europe in the app maps to the **Americas/Europe UTC−5 game group**, not CET/CEST;
+no DST shift on Oct 25 or Nov 1 applies to these server instants. Only display
+conversion to a user's civil timezone may change.
+
+| Cycle | Asia, UTC+8 | Americas/Europe, UTC−5 | UTC instants: Asia / Americas-Europe |
+| --- | --- | --- | --- |
+| I start | After version update; planned Oct 15 12:00 | After version update; planned Oct 14 23:00 | Planned Oct 15 04:00Z for both; **actual reopening minute unverified** |
+| I end | Oct 22 03:59 | Oct 22 03:59 | Oct 21 19:59Z / Oct 22 08:59Z |
+| II start | Oct 22 04:00 | Oct 22 04:00 | Oct 21 20:00Z / Oct 22 09:00Z |
+| II end | Oct 29 03:59 | Oct 29 03:59 | Oct 28 19:59Z / Oct 29 08:59Z |
+| III start | Oct 29 04:00 | Oct 29 04:00 | Oct 28 20:00Z / Oct 29 09:00Z |
+| III end / season end | Nov 5 11:59 | Nov 5 11:59 | Nov 5 03:59Z / Nov 5 16:59Z |
+
+All dates are **2026**. Do not turn the planned first opening into an exact
+observed timestamp: official notice 9560 explicitly allows maintenance to end
+earlier/later. The exact first playable instant remains unknown here; it is
+unnecessary for publishing the two internal deadlines. Likewise keep sourced
+03:59 ends and 04:00 next starts as distinct fields: the existing calendar
+contract preserves the published last-minute notation. There is no evidence
+for a second-level 03:59:59 cutoff, nor permission to shift `endsAt` to 04:00.
+
+At retrieval time 11:06Z on Oct 22, Cycle II had begun in **both** server groups.
+The next internal deadline is therefore Cycle II's end on Oct 28 19:59Z (Asia)
+or Oct 29 08:59Z (Americas/Europe), followed one minute later by Cycle III.
+In Moscow those next openings are Oct 28 23:00 and Oct 29 12:00 respectively.
+These conversions are derived from explicit source timestamps, not recurrence.
+
+**In-game observation:** operator reports season date range 14.10–05.11 and
+9h08 remaining to a cycle. The Oct 14 start date agrees with the official western
+planned opening date; it conflicts with the wiki western Oct 15 header. This
+is corroboration, **not independent proof of server selection or actual opening**.
+Capture clock, server group and UI timezone semantics were not supplied; no
+exact UTC boundary can be reconstructed from 9h08. Do not reverse-engineer a
+region from that timer. To verify game execution rather than announcement,
+obtain a redacted server-group screen plus synchronized UTC capture immediately
+before/after a cycle transition. The research does not require that evidence to
+use the explicitly published future deadline through reviewed ingestion.
+
+### 17.3 What is proven about Cycle I
+
+The fresh wiki still repeats §16 unchanged:
+
+- header: Asia Oct 15 12:00 UTC+8; western Oct 15 23:00 UTC−5;
+- table and Cycle I prose: Oct 15 12:00 **Server Time**, without a regional
+  exception; later endpoints agree with the official image;
+- current season page has no `data-start` timer attributes. Its parser reads
+  explicit regional header text. The separate Event snapshot supplies season
+  timers; do not confuse static placeholders with its machine-readable dates.
+
+Current parser on these freshly downloaded bytes throws exactly:
+
+```text
+Echoes cycles conflict with the sourced season window: Americas/Europe Cycle I starts 2026-10-15T17:00:00.000Z, season starts 2026-10-16T04:00:00.000Z
+```
+
+This establishes the **mechanical cause** of missing cycle publication. With
+the official evidence, two source problems can now be distinguished:
+
+1. The wiki western header places the start one calendar day after the official
+   planned Oct 14 23:00 opening. A timezone/DST interpretation cannot reconcile
+   these dates; actual reopening remains qualified as above.
+2. The generic Cycle I start substitutes Oct 15 12:00 server time for an
+   update-controlled simultaneous opening. Applied literally to the western
+   group this is Oct 15 17:00Z, **13 hours after** the official planned opening.
+   It is also 11 hours before its own faulty western header. These are different
+   comparisons; do not describe the official discrepancy as 11 hours.
+
+**Conclusion:** the supplied wiki representation is internally contradictory
+and conflicts with the official update-opening semantics. No timezone parsing
+bug was found; the rejection is correct for its current explicit-input contract.
+An Asia-only meaning for the first table start is plausible editorial intent,
+but **not stated by the wiki** and not a safe generic parser rule. Fixing just
+the western header would still leave the first table start mismatched. Actual
+wiki editor intent and actual maintenance completion minute are not proven.
+There is no basis for clipping dates or special-casing Phantasia in the parser.
+
+### 17.4 Production chain, LKG and health
+
+Reviewed current parser/season selection, refresh and SnapshotStore, build-feed,
+reviewed ingestion/schema/merge, pinned Endfield tests, production snapshots,
+deployed feed and actual latest Refresh job logs.
+
+- [Refresh 39762240523](https://github.com/maxvfk/game-calendar/actions/runs/39762240523),
+  Oct 22 10:19Z, job `119768988780`: Phantasia rejected after HTTP 200 with the
+  exact error above; **15 consecutive failures**, last accepted confirmation
+  `2026-10-14T20:47:25.387Z`; 7/8 confirmed, 1 broken, **0 newly broken**.
+  Workflow success does not imply Echoes recovery. Existing alert dedup leaves
+  an ongoing failure annotated and does not repeat the transition failure.
+- `snapshots/endfield-wikigg-echoes.meta.json` still identifies **Illusion**, two
+  events, hash `563cecf363e9568fa615df35b753718c81b56f0d34189ba47005d67693519a89`.
+  Refresh rejection preserves those bytes/metadata. No state-cache file was
+  fabricated for this research; actual failure count comes from hosted logs.
+- `scripts/build-feed.ts` dynamically selects Phantasia from the Event source,
+  then detects that the LKG document URL is Illusion. It withholds cycle rows
+  instead of relabelling old cycles or treating them as current. This is the
+  second, expected stage of the fail-closed chain.
+- Deployed feed `generatedAt: 2026-10-22T10:52:41.123Z`: **176 events**, 7 games.
+  Phantasia season row remains `endfield:season-of-phantasia:2026-10-15`,
+  `challenge`, with Asia Nov 5 03:59Z and western Nov 5 16:59Z ends. No Phantasia
+  cycles are present. Echoes health in the feed is **unavailable**: eventCount 0,
+  parsedCount null and all success/confirmation timestamps null. Hosted broken
+  health and feed unavailable metadata are separate representations, not a
+  healthy current-season LKG claim.
+- `test/endfield-echoes.test.ts` pins old Illusion IDs, rejects the captured
+  contradictory Phantasia page, and verifies unchanged LKG/confirmation plus
+  broken threshold on semantic rejection. That regression must remain valid.
+- `challenge` classification is already fixed. The season is eligible for
+  Endgame; nonexistent cycle records cannot be restored with a filter/UI fix.
+  Existing regional ends and exact deadlines are sufficient for `Ending soonest`.
+
+### 17.5 Minimal safe recovery options
+
+| Option | Benefit | Limitation / decision |
+| --- | --- | --- |
+| Interpret or clip wiki Cycle I in the parser | Could resume automatic source | Rejected: upstream does not state an exception; relaxing equality conceals real contradictions; one header correction alone is insufficient |
+| Wait for explicit consistent upstream regional first-cycle dates | Clean automatic recovery with existing acceptance checks | Safe but no guaranteed response time; recheck season and Event pages together, then normal Refresh/CI/Pages; no invented replacement snapshot |
+| Reviewed records from official cycle announcement | Existing schema/merge path; restores current deadlines without trusting faulty opening metadata | **Recommended bounded next task**; automatic wiki stays broken until its own recovery; preserve official provenance and stable identities |
+| New official automatic image/OCR parser | Potential future automation | Disproportionate and fragile for this one-season gap; not needed now |
+
+Official cycle endpoint evidence is now sufficient for the reviewed path.
+Use the announcement post as the record `sourceUrl`, with the linked official
+media URL/hash and timezone conversions documented here. `provenanceStatus:
+"official"`, extractionMethod `manual` (set by reviewed materializer), actual
+row-specific `reviewedAt`, no batch-wide false recheck. It must **not** claim
+that the wiki became healthy, overwrite its LKG or change its sourceId.
+
+Concrete separately authorized task:
+[ENDFIELD-PHANTASIA-REVIEWED-CYCLE-DEADLINES.md](../tasks/ENDFIELD-PHANTASIA-REVIEWED-CYCLE-DEADLINES.md).
+Publish only the two sourced internal cycle deadline rows using existing day
+start semantics; Cycle I is already expired, while Cycle II is the useful
+upcoming row. No new Cycle III row: the season already supplies its final end.
+No infinite recurrence, new source, schema/UI change or exact-opening invention.
+
+**Residual blockers:** automatic source acceptance still requires consistent
+explicit regional opening data upstream. The precise actual Cycle I opening
+requires a completion notice or dated in-game evidence; it does **not** block
+day-precision reviewed cycle deadline rows. The operator's precise 9h08 UTC
+mapping remains unverifiable without capture context. These are separate from
+the now independently confirmed cycle deadlines.
+
+### 17.6 Validation and delivery scope
+
+Bun 1.3.14: frozen install, typecheck, full `bun test` (**1110 pass / 1 existing
+optional age skip / 0 fail**, 1111 tests across 56 files) and full build passed.
+Offline feed remains 176 events / 7 games / 1 existing NTE Circle Bounty conflict.
+Fresh live wiki rejection also reproduced with the unmodified parser. No network
+Refresh, data write or browser runtime acceptance is claimed. Only documentation
+is delivered; hosted PR CI and merge evidence are recorded on the delivery PR.
+
+**Next concrete step:** separately authorize the bounded reviewed-data task,
+recheck the official announcement, then add current-season cycle deadlines with
+unchanged safety rules. Do not implement it as part of this research Work.
