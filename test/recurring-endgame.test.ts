@@ -120,8 +120,8 @@ test("source-controlled challenge deadlines are regional or unknown as published
       sourceUrl: "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Illusion",
     }),
   ];
-  const c1 = endfield.find(e => e.title.endsWith("Cycle I"))!;
-  const c2 = endfield.find(e => e.title.endsWith("Cycle II"))!;
+  const c1 = endfield.find(e => e.title === "Echoes of War: Season of Illusion — Cycle I")!;
+  const c2 = endfield.find(e => e.title === "Echoes of War: Season of Illusion — Cycle II")!;
   expect(c1.regionEnds?.asia).toBe("2026-09-30T19:59:00.000Z");
   expect(c2.regionEnds?.america).toBe("2026-10-08T08:59:00.000Z");
   expect(endfield.find(e => e.title === "Monumental Etching: Shadow Marked")?.regionEnds?.europe).toBe("2026-10-19T09:00:00.000Z");

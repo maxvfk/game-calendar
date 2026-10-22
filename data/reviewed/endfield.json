@@ -70,6 +70,46 @@
       "sourceUrl": "https://x.com/AKEndfield/status/2101884123958952272",
       "provenanceStatus": "official",
       "confidence": 1
+    },
+    {
+      "id": "endfield:echoes-of-war-season-of-phantasia-cycle-i:2026-10-15",
+      "reviewedAt": "2026-10-22T15:34:05.115Z",
+      "title": "Echoes of War: Season of Phantasia — Cycle I",
+      "type": "challenge",
+      "summary": "Official internal cycle deadline at 03:59 server time (Asia UTC+8; Americas/Europe UTC−5). Cycle II opens at 04:00 server time, one minute later; the season continues. Start is a calendar-day anchor, not an exact regional opening.",
+      "startsAt": "2026-10-15T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-21T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-21T19:59:00.000Z",
+        "europe": "2026-10-22T08:59:00.000Z",
+        "america": "2026-10-22T08:59:00.000Z"
+      },
+      "sourceUrl": "https://x.com/AKEndfield/status/2109871758140711172",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "id": "endfield:echoes-of-war-season-of-phantasia-cycle-ii:2026-10-22",
+      "reviewedAt": "2026-10-22T15:34:05.115Z",
+      "title": "Echoes of War: Season of Phantasia — Cycle II",
+      "type": "challenge",
+      "summary": "Official internal cycle deadline at 03:59 server time (Asia UTC+8; Americas/Europe UTC−5). Cycle III opens at 04:00 server time, one minute later; the season continues. Start is a calendar-day anchor, not an exact regional opening.",
+      "startsAt": "2026-10-22T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-28T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-28T19:59:00.000Z",
+        "europe": "2026-10-29T08:59:00.000Z",
+        "america": "2026-10-29T08:59:00.000Z"
+      },
+      "sourceUrl": "https://x.com/AKEndfield/status/2109871758140711172",
+      "provenanceStatus": "official",
+      "confidence": 1
     }
   ]
 }

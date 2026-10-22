@@ -3,6 +3,37 @@
 Updated 2026-10-22 (Moscow; event time precision audit complete, bounded CZN/Genshin reviewed tasks ready; NTE follow-up and Phantasia research retained; runtime/data unchanged). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
+## Sequential verified corrections — milestone 1 (2026-10-22)
+
+- Baseline `818ec016cb159664422e4af3de557a23edf2da92`; PR #57 push CI
+  [39803945073](https://github.com/maxvfk/game-calendar/actions/runs/39803945073)
+  succeeded, including Pages. No open PR or parallel correction was present.
+- Added exactly two official reviewed Phantasia Cycle I/II rows with pinned
+  canonical day IDs, day starts and exact regional ends. Cycle I is historical;
+  Cycle II ends Oct 28 19:59Z Asia / Oct 29 08:59Z Americas-Europe. Season final
+  remains single and unchanged. Existing reviewed rows/timestamps are unchanged.
+- Fresh official X post and original infographic returned HTTP 200. The post
+  still embeds `HUPRW3QbgAAK4sK`; visually reconfirmed 03:59 cycle ends, next-cycle
+  04:00 starts and fixed +8/−5 server legend. Image SHA-256 remains
+  `d9fade5c7075f4e7e7c377f45112e4546b4762a5f89ba4fd2b145f122476e3ae`.
+- Full frozen install, typecheck, test and build gates passed: 1114 pass,
+  1 existing optional age skip, zero failures. Focused tests cover regional
+  end−1ms/end/end+1ms, live Endgame/Ending soonest selection, hypothetical
+  consistent recovery deduplication and one-minute regional conflict review.
+  Historical Illusion assertions now identify their season explicitly.
+- Semantic feed diff: only the two new IDs, no removals or changes to existing
+  event values apart from generated parser observation timestamps. Feed 178
+  records, seven games, sole existing NTE Circle Bounty conflict. Echoes remains
+  unavailable in feed with no fabricated confirmation; parser rejection/LKG and
+  broken-health regressions pass. No Refresh was dispatched.
+- Hosted PR CI, merge, Pages/feed and browser acceptance are release gates;
+  concrete run/SHA results will be recorded in the next milestone checkpoint.
+  Local browser cannot reach this runtime's localhost; use deployed Pages for
+  browser smoke. Final physical Android/PC acceptance remains with operator.
+
+**Next concrete step:** verify this milestone's CI/deploy and regional browser
+behavior, then begin CZN six-row precision from freshly fetched main.
+
 ## Urgent Endfield source drift / CI recovery — 2026-10-18
 
 Status: **CI/feed/build/Pages recovered and live; full Refresh acceptance remains

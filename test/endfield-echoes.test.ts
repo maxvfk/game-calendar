@@ -35,7 +35,7 @@ test("Event page discovers the newer active Echoes season during a regional over
 test("real season snapshot yields the old IDs and explicit regional cycle deadlines", async () => {
   const cycles = parseWikiGgEchoesSeason(html, ctx);
   const reviewed = materializeReviewedBatch(await Bun.file("data/reviewed/endfield.json").json()).events;
-  expect(reviewed.some(e => e.title.includes("Cycle I") || e.title.includes("Cycle II"))).toBe(false);
+  expect(reviewed.some(e => e.title.includes("Season of Illusion"))).toBe(false);
   expect(cycles.map(e => e.id)).toEqual([
     "endfield:echoes-of-war-season-of-illusion-cycle-i:2026-09-24",
     "endfield:echoes-of-war-season-of-illusion-cycle-ii:2026-10-01",
