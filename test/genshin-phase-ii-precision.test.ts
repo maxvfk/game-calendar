@@ -11,7 +11,7 @@ import { assertExactBoundary } from "./helpers/verified-records.tsx";
 
 const ctx = { now: "2026-10-22T15:48:01.525Z", sourceId: "genshin-kqm-ginews", game: "genshin" as const,
   sourceUrl: "https://api.github.com/repos/KQM-git/GINews/contents/readme.md" };
-const automatic = parseKqmGinNews(await Bun.file("snapshots/genshin-kqm-ginews.md").text(), ctx);
+const automatic = parseKqmGinNews(await Bun.file("test/fixtures/genshin/phase-ii-2026-10-22.md").text(), ctx);
 const reviewed = materializeReviewedBatch(await Bun.file("data/reviewed/genshin.json").json()).events;
 const ids = ["genshin:void-stars-advent:2026-10-13", "genshin:la-chanson-cerise:2026-10-13"];
 const corrected = reviewed.filter(e => ids.includes(e.id));
@@ -72,4 +72,11 @@ test("both legacy completion identities survive export/import and refreshed offi
   const rows = merged.events.filter(e => ids.includes(e.id)).map(event => ({ event, clock: clockFor(event, "europe", Date.parse(ctx.now)) }));
   expect(outstanding(rows, id => restored[id]?.status === "done", () => false)).toEqual([]);
   expect(JSON.stringify(progress)).toBe(serialized);
+});
+
+test("rolling Genshin capture keeps reviewed winners when old notices rotate out", async () => {
+  const current = parseKqmGinNews(await Bun.file("snapshots/genshin-kqm-ginews.md").text(), ctx);
+  const result = mergeEvents([reviewed, current]);
+  expect(result.conflicts).toEqual([]);
+  for (const e of corrected) expect(result.events.find(p => p.id === e.id)).toEqual(e);
 });

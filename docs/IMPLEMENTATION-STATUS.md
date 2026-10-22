@@ -3,6 +3,27 @@
 Updated 2026-10-22 (Moscow; event time precision audit complete, bounded CZN/Genshin reviewed tasks ready; NTE follow-up and Phantasia research retained; runtime/data unchanged). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
+## Verified precision regression durability follow-up (2026-10-22)
+
+- Milestone 3 shipped in [PR #60](https://github.com/maxvfk/game-calendar/pull/60),
+  head `02893d6cda25f34d4cd2cce8faa735e6d9872ef5`, merge
+  `12d29a7cf40634f4b1bc0a9dc601b1fb9d3c9bae`. PR CI 39808985859 and push
+  CI/Pages 39809203300 succeeded. Public feed generated 15:55:12.631Z has
+  both regional maps, unchanged 178 IDs/firstSeenAt and sole NTE conflict.
+  Live Chrome checked Asia/Europe/America Timeline endpoints and exact Event
+  Detail; the pre-deployment Void Star's Advent Done mark remains attached.
+- Before closing the data milestones, pinned factual test-only excerpts from
+  this repository's Oct 22 captures. Historical precision/identity assertions
+  must survive normal source removal of expired cards. Separate rolling-source
+  checks still enforce reviewed winners and zero game-specific conflicts without
+  requiring an expired card to remain upstream. No invented upstream data.
+- Test/data isolation follow-up only: no runtime, reviewed data, snapshots,
+  storage, health or semantic feed change. All four AGENTS gates pass:
+  1126 pass / one existing optional age skip / zero failures.
+
+**Next concrete step:** finish CI/deploy verification for this test-only
+checkpoint, then publish the gated CZN daily-reset compatibility decision.
+
 ## Sequential verified corrections — milestone 3 (2026-10-22)
 
 - Milestone 2 shipped as [PR #59](https://github.com/maxvfk/game-calendar/pull/59),
