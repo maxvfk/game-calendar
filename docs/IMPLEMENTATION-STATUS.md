@@ -1876,3 +1876,28 @@ names, and existing inspected-time behavior. Stop after this scope.
   the sourced report, then decide when to start step 2. A game-specific
   screenshot of an incorrect countdown is valuable but not a prerequisite
   for researching supported official reset rules.
+
+
+### Endfield Echoes of War — Phantasia cycle deadline visibility gap (2026-10-22)
+
+- Operator supplied an in-game screenshot: `Сезон фантазий`
+  14.10–05.11.2026, `Цикл фантазий`, countdown **9h08 to next cycle**.
+  The upcoming cycle rotation is not visible in Game Calendar. The screenshot
+  does not independently establish the exact UTC deadline or selected server
+  group, and the account-identifying image was not committed to the public repo.
+- Existing `docs/research/endfield-recurring-endgame.md` §16 already confirms
+  that the current Phantasia cycle parser rejects the wiki's internally
+  contradictory **western Cycle I start** and preserves fail-closed/LKG
+  constraints. Endfield's **season end** remains a separate sourced event;
+  the internal cycle transitions were intentionally withheld.
+- This is a high-relevance **source-coverage/freshness gap**, not the
+  Daily Reset daily-task clock audit and not a Timeline rendering regression.
+  Do not treat UI changes or assumed 7-day repeats as a fix.
+- Focused follow-up filed:
+  `docs/tasks/ENDFIELD-ECHOES-PHANTASIA-CYCLE-COVERAGE.md`.
+  **Documentation only** in this step; no parser, data, user settings,
+  event IDs or source-health changes.
+- **Next concrete step:** independently validate current official/in-game
+  regional cycle boundaries and wiki source consistency, then specify the
+  smallest safe source-driven fix (or explicitly retain the unresolved
+  blocker). Do not begin this investigation automatically.

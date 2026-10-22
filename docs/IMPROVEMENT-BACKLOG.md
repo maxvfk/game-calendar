@@ -19,6 +19,14 @@ For each item, use this compact format:
 
 ## Observed issues / feedback
 
+- **Title:** Endfield Echoes of War — current Phantasia cycle deadline absent
+  - **Observation:** operator's in-game screenshot (2026-10-22) shows `Сезон фантазий` 14.10–05.11.2026 and `Цикл фантазий` with **9h08 until the next cycle**, but the upcoming cycle transition is not visible in the calendar. This is not the Nov 5 season-end deadline.
+  - **Desired behavior:** current, independently sourced Endfield cycle deadlines visible as Endgame/challenge rows without inventing recurrence or discarding contradicting timestamps.
+  - **Area:** source ingestion / event coverage / time-sensitive endgame
+  - **Priority:** observed, time-sensitive source-coverage gap; distinct from daily reset clock audit
+  - **Status:** open / investigation queued; no runtime fix
+  - **Notes / constraints:** existing `docs/research/endfield-recurring-endgame.md` §16 confirms Phantasia's western Cycle I source contradiction and safe `rejected`/LKG behavior. New user screenshot is first-hand evidence of cycle-rotation impact, not proof of an exact UTC boundary; it contains user-identifying account UI and was not uploaded publicly. Focused follow-up: `docs/tasks/ENDFIELD-ECHOES-PHANTASIA-CYCLE-COVERAGE.md`. Do not weaken source-health or synthesize 7-day periods.
+
 - **Title:** Audit real per-game daily reset clocks and regional server mappings
   - **Observation:** after PR #44, the operator confirmed nearest-game attribution works but reports that actual Daily Reset countdown times appear wrong. No particular game's actual timestamp has been verified yet. Current shared reset logic defaults to 04:00 server-local with fixed UTC offsets and sparse exceptions; NTE/CZN have no game-specific reset overrides.
   - **Desired behavior:** verify authoritative per-game daily reset instants for shipped games and relevant regions, compare to calculated app times, distinguish known vs unknown and DST, then propose a separate safe correction.
