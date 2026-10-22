@@ -300,6 +300,48 @@
       "provenanceStatus": "official",
       "confidence": 1,
       "reviewedAt": "2026-09-23T00:08:13.000Z"
+    },
+    {
+      "id": "genshin:void-stars-advent:2026-10-13",
+      "reviewedAt": "2026-10-22T15:50:10.221Z",
+      "firstSeenAt": "2026-10-22T15:48:01.525Z",
+      "title": "Void Star's Advent",
+      "type": "banner",
+      "summary": "Version 7.1 Phase II character Event Wish. Published Nov 3 14:59 server-time end: fixed UTC+8 Asia, UTC+1 Europe and UTC−5 America. Opening remains a calendar-day anchor because regional starts are not represented.",
+      "startsAt": "2026-10-13T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-03T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-03T06:59:00.000Z",
+        "europe": "2026-11-03T13:59:00.000Z",
+        "america": "2026-11-03T19:59:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/47010361",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "id": "genshin:la-chanson-cerise:2026-10-13",
+      "reviewedAt": "2026-10-22T15:50:10.221Z",
+      "firstSeenAt": "2026-10-22T15:48:01.525Z",
+      "title": "La Chanson Cerise",
+      "type": "banner",
+      "summary": "Version 7.1 Phase II character Event Wish. Published Nov 3 14:59 server-time end: fixed UTC+8 Asia, UTC+1 Europe and UTC−5 America. Opening remains a calendar-day anchor because regional starts are not represented.",
+      "startsAt": "2026-10-13T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-03T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-03T06:59:00.000Z",
+        "europe": "2026-11-03T13:59:00.000Z",
+        "america": "2026-11-03T19:59:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/47010361",
+      "provenanceStatus": "official",
+      "confidence": 1
     }
   ]
 }
