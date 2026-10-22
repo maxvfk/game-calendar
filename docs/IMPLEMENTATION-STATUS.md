@@ -1977,3 +1977,30 @@ that decides game-day labels and a safe forward transition, preserves IDs/histor
 and covers legacy import, two-device/offline Sync plus daily helper boundaries.
 Keep NTE's permanent-task/server/DST verification as an explicit independent
 evidence gap. Do not repeat the five other game reports or start another milestone.
+
+
+### Event start/end precision audit — research task prepared (2026-10-22)
+
+- Operator approved a separate second research Work, distinct from the
+  concurrently assigned Endfield Echoes Phantasia investigation.
+- `docs/tasks/EVENT-TIME-PRECISION-AUDIT.md` scopes a **docs-only** precision
+  audit: start with CZN Sereniel/Peko Prydwen machine timestamps versus
+  explicit STOVE schedule, then inventory and assess *currently active*
+  parser/reviewed-data exact-to-day/unknown downgrades across all seven games.
+- Confirmed *implementation fact*, not a proven data bug:
+  `src/ingest/parsers/prydwen-czn.ts` intentionally takes visible
+  `data-range-global` day dates and ignores exact-looking machine countdown
+  attributes because a prior capture contradicted maintenance boundaries.
+  Test `test/prydwen-czn.test.ts` codifies conservative day/unknown behavior.
+  Trusting the quoted Oct 21 timestamp without independent evidence would
+  break source confidence rules.
+- Required output `docs/research/event-time-precision-audit.md`: code-based
+  candidate inventory, CZN investigation, verified-versus-uncertain findings,
+  exact regional UTC evidence and scoped corrective handoff. Preserve
+  fail-closed/LKG, provenance, stable event IDs and published data.
+- **Status: research not executed**, no runtime changes. Daily Reset's
+  7/7 audit remains completed, and Phantasia cycle source recovery remains a
+  separate task.
+- **Next concrete step:** start a short research-only Work from CURRENT main,
+  complete the audit, docs-only PR/CI/merge, then independently authorize
+  confirmed source-specific implementation fixes.
