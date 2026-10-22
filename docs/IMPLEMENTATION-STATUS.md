@@ -1901,3 +1901,24 @@ names, and existing inspected-time behavior. Stop after this scope.
   regional cycle boundaries and wiki source consistency, then specify the
   smallest safe source-driven fix (or explicitly retain the unresolved
   blocker). Do not begin this investigation automatically.
+
+
+### Daily Reset research — one seven-stage Work approved (2026-10-22)
+
+- Operator superseded the previously planned seven manually launched ordinary
+  chats with **one Work session that automatically completes all seven
+  research stages sequentially**, while preserving one independently sourced
+  file/commit per game. Order unchanged: **Endfield → NTE → CZN → Genshin
+  → HSR → WuWa → ZZZ**. No per-stage manual consent or new Work launch needed.
+- `docs/tasks/DAILY-RESET-CLOCK-AUDIT.md` now defines this execution mode,
+  shared evidence requirements, durable per-game checkpoints, cumulative
+  `docs/research/daily-reset-clocks.md` and one final docs-only PR/merge.
+  A partial PR is an acceptable honest checkpoint if time/context limits
+  intervene; never claim missing research is complete.
+- **Current research status: 0/7 reports on main at plan update.**
+  Existing operator observation of suspect times remains unverified.
+  This is scheduling/research only: no clock constant, persisted `dayKey`,
+  Account Sync, event feed or Endfield Echoes endgame source has changed.
+- **Next concrete step:** launch a single research-only Work from CURRENT
+  main using the all-seven execution prompt; after the report PR, review
+  supported corrections and authorize any runtime implementation separately.
