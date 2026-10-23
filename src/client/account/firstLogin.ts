@@ -1,3 +1,5 @@
+import { CZN_CUTOVER_ENABLED, CZN_SUBJECT } from "../../shared/cznDaily.ts";
+import { cznRemote, readCzn, preserveCznLegacy, buildCznExport, importCzn, importLegacyCzn, bindCznPolicy } from "./cznProtocol.ts";
 import { CustomEvent, CustomGame } from "../../shared/custom.ts";
 import { PreferenceKey, SyncMutation, type SyncState } from "../../shared/sync.ts";
 import { PROFILE_KEYS, profileKeys } from "../state/storage.ts";
@@ -140,7 +142,21 @@ export async function completeFirstLogin(store: Store, profileId: string, ownerI
     if (pendingPlan(store, profileId, ownerId, guestId) === null) {
       savePlan(store, profileId, ownerId, guestId, plan);
     }
-    await applyCloudMutations(profileId, plan);
+    let outgoing = plan;
+    if (CZN_CUTOVER_ENABLED) {
+      const reply = await cznRemote.negotiate(profileId, false);
+      if (!canActivate()) throw new Error("Account session changed during setup");
+      const source = preserveCznLegacy(store, readCzn(store, guestId));
+      let target = importCzn(store, readCzn(store, profileId), buildCznExport(source));
+      if (reply.policy) {
+        target = bindCznPolicy(store, target, reply.policy);
+        const held = plan.filter(row => row.kind === "daily" && row.key.subjectId === CZN_SUBJECT);
+        if (held.length) importLegacyCzn(store, target, { format: "gacha-tracker-export", version: 1,
+          unresolvedMutations: held });
+        outgoing = plan.filter(row => !(row.kind === "daily" && row.key.subjectId === CZN_SUBJECT));
+      }
+    }
+    await applyCloudMutations(profileId, outgoing);
   }
   // Pull the server's winner after conditional apply. This covers stale guest
   // rows and explicit false/deleted remote rows without local union heuristics.

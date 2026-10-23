@@ -13,7 +13,8 @@ export type Manifest = z.infer<typeof ManifestSchema>;
 export async function ageEncrypt(plaintext: string, recipient: string): Promise<Uint8Array> {
   if (!/^age1[a-z0-9]+$/.test(recipient) || recipient.startsWith('age1pq1')) throw new Error('Expected one native age X25519 public recipient');
   const proc = Bun.spawn(['age','--encrypt','--recipient',recipient],{stdin:new TextEncoder().encode(plaintext),stdout:'pipe',stderr:'pipe'});
-  const [bytes,,code] = await Promise.all([new Response(proc.stdout).bytes(),new Response(proc.stderr).text(),proc.exited]);
+  const [buffer,,code] = await Promise.all([new Response(proc.stdout).arrayBuffer(),new Response(proc.stderr).text(),proc.exited]);
+  const bytes = new Uint8Array(buffer);
   if (code!==0 || bytes.length===0 || !new TextDecoder().decode(bytes.slice(0,22)).startsWith('age-encryption.org/v1\n'))
     throw new Error('age encryption failed');
   return bytes;

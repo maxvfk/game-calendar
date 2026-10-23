@@ -86,6 +86,7 @@ export function dailyGroups(
   meta: (id: LaneId) => GameMeta,
   startOf: (event: DisplayEvent) => number,
   showChores = true,
+  omitCznChore = false,
 ): DailyGroup[] {
   // A lane can arrive through an event without being in `games` — an event on a
   // game the reader has since switched off, say — and dropping it here would
@@ -109,7 +110,7 @@ export function dailyGroups(
     // or writes its ticks here, so `dailies:<game>` keeps every day the reader
     // ever logged and switching back on restores the lot. A game the reader
     // invented never had one to begin with.
-    if (showChores && !isCustomGameId(lane)) {
+    if (showChores && !isCustomGameId(lane) && !(omitCznChore && lane === "czn")) {
       items.push({
         key: dailiesId(lane as GameId),
         game: lane,
@@ -163,6 +164,7 @@ export function Dailies({
   daysFor,
   onToggleDay,
   showChores,
+  omitCznChore = false,
 }: {
   /** Every lane the reader is looking at, in their own order. */
   games: LaneId[];
@@ -175,6 +177,7 @@ export function Dailies({
   region: Region;
   /** Whether to carry each game's standing chore — `prefs.showChores`. */
   showChores: boolean;
+  omitCznChore?: boolean;
   now: number;
   daysFor: (id: string) => string[];
   onToggleDay: (id: string, day: string) => void;
@@ -201,6 +204,7 @@ export function Dailies({
     gameMeta,
     (event) => Date.parse(event.startsAt),
     showChores,
+    omitCznChore,
   );
   const items = groups.flatMap((group) => group.items);
   const total = items.length;

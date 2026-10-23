@@ -46,3 +46,34 @@ clear epoch/history, deploy an incompatible old reader as recovery, or use a
 pre-cutover restore tool that does not understand the live fence.
 
 Standing `dailies:czn` only. No event IDs, event clocks, other games or data sources.
+
+## Disabled client and staging-only encrypted tooling
+
+`CZN_CUTOVER_ENABLED=false` is a compiled constant, not a URL/localStorage flag.
+The App/first-login/export and mixed Sync integration is dormant. No new RPC is
+called and no new local keys are written by the default deployed release.
+The candidate panel uses separate policy registers, clipped catch-up/history,
+read-only/recovery/update actions. Old guest/foreign-epoch data remains an
+unresolved source; it is never silently converted into current completions.
+
+`bun scripts/czn-cutover/cli.ts backup|validate|restore` uses verified TLS and
+explicit staging project/role checks. It hard-refuses the production ref.
+Backup needs `--project-ref`, `--output`, `--source-revision` plus the existing
+BACKUP_DATABASE_URL/AGE_RECIPIENT environment conventions. Validate needs
+`--project-ref`, `--snapshot`, `--identity`. Restore additionally needs explicit
+`--write --all-profiles` and local RESTORE_DATABASE_URL. It reads old encrypted
+v1 pairs and distinct `.czn-v2.snapshot.age` pairs. v2 outputs are immutable and
+separate from v1 retention directories; the staging tool intentionally never
+prunes old recovery points. No plaintext snapshot is persisted.
+
+Private workflow v2 scheduling/retention and immutable pin coordination still
+need review before any hosted migration; this staging tool does not authorize
+production access. The operator's existing scheduled v1 backup stays unchanged.
+
+Local acceptance also includes actual age encrypt/decrypt, v1/v2 guarded restore,
+ciphertext corruption, real new-client controller → SQL transport, mixed legacy
+outbox preservation, import idempotence, account/profile isolation and disabled
+zero-network/UI tests. The `age` round-trip test runs when age + age-keygen are
+installed; ordinary CI retains its explicit optional skip if unavailable.
+Browser/Auth/PostgREST/two-connection race and physical-device smoke require the
+isolated hosted target; SSR markup tests are not substitutes for those gates.
