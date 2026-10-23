@@ -1,9 +1,38 @@
 # Game calendar implementation status
 
-Updated 2026-10-23 (Moscow; CZN safe cutover Gate A evaluated: design-only blocked, runtime unchanged). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-23 (Moscow; CZN server/backup candidate locally implemented; production disabled). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
-## CZN safe cutover — Gate A checkpoint, design-only blocked (2026-10-23)
+## CZN cutover — local server/backup implementation, production disabled (2026-10-23)
+
+- Continued from CURRENT main `7b71154` after #64; the operator explicitly
+  superseded the docs-only stop when staging is unavailable. No repeated research.
+- Supabase plugin inventory: one active production project `game-calendar`,
+  no development branches or separate staging. Organization Free. A read-only
+  metadata query confirmed role `postgres`, CREATE privilege, PostgreSQL 17.6.
+  No production data/table reads, SQL writes, project/branch creation or migration.
+- Additive server candidate in `supabase/czn-cutover/` (CLI-generated filename,
+  deliberately OUTSIDE auto-discovered deployed migrations); enabled=false.
+  Exact policy/epoch, owner-scoped reads, strict v2 write RPC, irreversible old
+  writer fence and shared profile lock. Mixed v1 batches hold CZN and accept
+  unrelated games. Disabled capability never creates a cutover; disabling later
+  never reopens old CZN writes. Standing subject only; event clocks unchanged.
+- Parallel strict v2 logical snapshot/contract includes all extension rows,
+  security-critical RPC definitions/ACLs and RLS. Existing v1 contract, migrations,
+  backup CLI/private pin remain unchanged. Old preflight fails closed on extension.
+  Candidate recovery reads v1 or v2, preserves live fence/new CZN tombstones and
+  frozen legacy rows, rejects conflicting epochs, and does not restore release
+  enablement. It is not yet wired into hosted age/encryption CLI or private pin.
+- Local actual SQL/PGlite tests cover disabled/enabled cutover, stale same/different
+  keys, false/replay, malformed epochs/dates/fields, RLS/bypass/roles, rollback
+  fence, snapshot corruption and v1/v2 recovery. Hosted migration, two-connection
+  race testing and Auth smoke remain unavailable without staging. No production
+  reset correction claimed. Client continuation follows in a separate small PR.
+
+**Next concrete step:** finish the disabled client/journal/export path locally,
+then provision isolated staging for the hosted server/backup/client release gates.
+
+## CZN safe cutover — Gate A checkpoint, design-only blocked (historical 2026-10-23)
 
 - Baseline CURRENT main `ce5bffa2ba67d2703b14e03012d351a4a2d9eff3`;
   post-merge #63 [CI 39868203557](https://github.com/maxvfk/game-calendar/actions/runs/39868203557)
