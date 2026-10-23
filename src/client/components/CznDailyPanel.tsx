@@ -2,9 +2,9 @@ import {cznDayKey,cznDays,cznNextReset,type CznMutation} from '../../shared/cznD
 import {streakOf} from '../../shared/daily.ts';
 import type {CznLocal} from '../account/cznProtocol.ts';
 import {formatRemaining} from '../../shared/time.ts';
-/** Isolated view for the disabled candidate; never overlays legacy event checklists. */
-export function CznDailyPanel({state,now,readOnly,onToggle,onExport,onUpdate}:{
-  state:CznLocal;now:number;readOnly:boolean;onToggle:(day:string,done:boolean)=>void;
+/** Isolated 18:00 UTC policy view; never overlays legacy event checklists. */
+export function CznDailyPanel({state,now,readOnly,canStart=false,onToggle,onExport,onUpdate}:{
+  state:CznLocal;now:number;readOnly:boolean;canStart?:boolean;onToggle:(day:string,done:boolean)=>void;
   onExport:()=>void;onUpdate:()=>void;
 }){
   const today=cznDayKey(now),days=state.policy?cznDays(now,state.policy.cutoverAt):[];
@@ -17,7 +17,11 @@ export function CznDailyPanel({state,now,readOnly,onToggle,onExport,onUpdate}:{
   return <section aria-label="CZN daily policy" className="rounded-xl border border-hairline p-3 text-sm">
     <p>CZN · daily reset 18:00 UTC · {formatRemaining(cznNextReset(now)-now)}</p>
     <p>UTC opening date: {today} · Streak since cutover: {streakOf(completed,today)}</p>
-    {readOnly&&<p role="status">CZN is read-only. Update the app or export recovery. Other games can sync.</p>}
+    {/* No confirmed epoch is not an outdated app: never tell an updated client to update. */}
+    {state.policy===null?<p role="status">{canStart
+      ?'The 18:00 UTC CZN daily is available. Enable it for this profile to start a new streak; earlier CZN history stays preserved separately.'
+      :'The 18:00 UTC CZN daily is not active yet. Earlier CZN history stays preserved; other games sync normally.'}</p>
+      :readOnly&&<p role="status">CZN is read-only. Update the app or export recovery. Other games can sync.</p>}
     <div className="my-2 flex flex-wrap gap-2">{days.map(day=><button key={day} type="button" disabled={readOnly}
       aria-pressed={completed.includes(day)} onClick={()=>onToggle(day,!completed.includes(day))}>{day}{completed.includes(day)?' ✓':''}</button>)}</div>
     <p>Legacy history is preserved separately. Unresolved legacy changes are never new-policy completions.</p>

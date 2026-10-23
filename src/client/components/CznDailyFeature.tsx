@@ -7,7 +7,7 @@ import {triggerDownload} from '../state/export.ts';
 import {CznDailyPanel} from './CznDailyPanel.tsx';
 /** Mounted only by the compile-time release gate. No URL/localStorage switch can enable it. */
 export function CznDailyFeature({profileId,now}:{profileId:string;now:number}){
-  const [state,setState]=useState<CznLocal|null>(null),[readOnly,setReadOnly]=useState(true);
+  const [state,setState]=useState<CznLocal|null>(null),[readOnly,setReadOnly]=useState(true),[serverEnabled,setServerEnabled]=useState(false);
   const [message,setMessage]=useState(''),[busy,setBusy]=useState(false);
   const live=useRef(true),owner=useRef<string|null>(null),inFlight=useRef(false);
   const guest=profileId.startsWith('local:');
@@ -19,7 +19,7 @@ export function CznDailyFeature({profileId,now}:{profileId:string;now:number}){
         owner.current=data.user.id;if(!active())throw new Error('Account session changed');}
       if(guest){setState(startGuestCzn(localStorage,readCzn(localStorage,profileId)));setReadOnly(false);}
       else{const result=await syncCzn(localStorage,profileId,active,undefined,true,cutover);
-        if(!active())return;setState(result.state);setReadOnly(result.readOnly);}
+        if(!active())return;setState(result.state);setReadOnly(result.readOnly);setServerEnabled(result.serverEnabled);}
       setMessage('');
     }catch(error){if(live.current){const cached=readCzn(localStorage,profileId);setState(cached);setReadOnly(!cached.policy);setMessage(error instanceof Error?error.message:String(error));}}
     finally{inFlight.current=false;if(live.current)setBusy(false);}
@@ -37,12 +37,12 @@ export function CznDailyFeature({profileId,now}:{profileId:string;now:number}){
       window.removeEventListener('account-sync-remote-change',remote);window.removeEventListener('czn-policy-import',online);};
   },[profileId]);
   if(!CZN_CUTOVER_ENABLED)return null;
-  return <div>{message&&<p role="status">{message}</p>}{state&&<CznDailyPanel state={state} now={now} readOnly={readOnly}
+  return <div>{message&&<p role="status">{message}</p>}{state&&<CznDailyPanel state={state} now={now} readOnly={readOnly} canStart={serverEnabled}
     onToggle={(day,done)=>{if(readOnly||!active())return;try{const next=queueCzn(localStorage,readCzn(localStorage,profileId),day,done);
       setState(next);if(!guest)void refresh();}catch(error){setMessage(String(error));}}}
     onExport={()=>{try{const snapshot=preserveCznLegacy(localStorage,readCzn(localStorage,profileId));
       triggerDownload(buildCznExport(snapshot),'czn-recovery.json');}catch(error){setMessage(String(error));}}}
     onUpdate={()=>{void navigator.serviceWorker?.getRegistration().then(r=>r?.update());}}/>}
-    {!guest&&state?.policy===null&&<button disabled={busy} type="button" onClick={()=>void refresh(true)}>Enable CZN 18:00 UTC daily policy</button>}
+    {!guest&&state?.policy===null&&serverEnabled&&<button disabled={busy} type="button" onClick={()=>void refresh(true)}>Enable CZN 18:00 UTC daily policy</button>}
   </div>;
 }

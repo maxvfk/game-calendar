@@ -2,8 +2,8 @@ import { z } from 'zod';
 import { DAY, HOUR } from './time.ts';
 export const CZN_POLICY = 'czn-daily-utc18-opening-v1' as const;
 export const CZN_SUBJECT = 'dailies:czn' as const;
-// This release is a local candidate. Flipping this requires hosted gates + a reviewed release PR.
-export const CZN_CUTOVER_ENABLED: boolean = false;
+// GO 3 client release: compatible policy-aware client on. Server capability is a separate operator switch.
+export const CZN_CUTOVER_ENABLED: boolean = true;
 export function cznDayKey(ms: number): string { return new Date(ms-18*HOUR).toISOString().slice(0,10); }
 export function cznDayStart(day: string): number { return Date.parse(`${day}T00:00:00Z`)+18*HOUR; }
 export function cznNextReset(ms: number): number { return Math.floor((ms-18*HOUR)/DAY)*DAY+42*HOUR; }
