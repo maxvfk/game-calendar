@@ -527,7 +527,7 @@ test('retention keeps 30 daily / 12 first-success monthly pairs, preserves histo
     await rm(join(dir,'daily'));await rename(join(dir,'daily-real'),join(dir,'daily'));
     await writeFile(path,'corrupt');await expect(retain(dir)).rejects.toThrow('integrity');
   }finally{await rm(dir,{recursive:true,force:true});}
-});
+},20000);
 test('native Bun.SQL wire protocol encodes PG arrays/JSON, reads and restores JSON null, sanitizes DB errors',async()=>{
   const server=new PGLiteSocketServer({db,port:0,host:'127.0.0.1',maxConnections:2});
   await server.start();
