@@ -3,7 +3,8 @@
 **Status 2026-10-23: GO 1 and GO 2 COMPLETE (the GO 2 owner Auth/Sync smoke passed,
 operator). GO 3 PARTIAL — awaiting operator real-device acceptance: the policy-aware
 client is live on Pages (#76 `d163e12`, deployed 19:52:24Z) and the server capability is
-`enabled=true` (19:58:49Z). No epoch exists until an owner presses Enable in the app.**
+`enabled=true` (19:58:49Z). The operator smoke passed steps 1, 2 and 4–6; step 3 is not
+verified; the 18:00 UTC rollover (step 7) is still to be observed.**
 No production SQL beyond the reviewed switches, user-row deletion or emergency disable
 is authorized by this document. No staging will be created.
 The default path preserves every legacy CZN row unchanged in `daily_marks`; the
@@ -417,3 +418,17 @@ policy**; this is the owner-confirmed negotiation that creates the profile epoch
 
 Record device/browser/build IDs and outcomes privately. Local/SSR tests do not
 constitute this smoke. Stop before unrelated milestones.
+
+**Results 2026-10-23 (Android Chrome tab + PC):**
+
+| Step | Result |
+| --- | --- |
+| 1 | PASS |
+| 2 | PASS |
+| 3 | NOT VERIFIED: after airplane mode Chrome kept reporting offline, so the old build sent nothing |
+| 4 | PASS: same epoch, legacy CZN held as 1 pending + 1 labelled legacy day, other games synced |
+| 5 | PASS |
+| 6 | PASS |
+| 7 | pending: the 18:00 UTC rollover on 2026-10-24 |
+
+Details: [implementation status](IMPLEMENTATION-STATUS.md).

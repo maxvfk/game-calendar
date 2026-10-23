@@ -44,9 +44,30 @@ namespace. Legacy rows are untouched. Other games, event IDs, Timeline and sourc
   idempotently); no epoch until an owner presses Enable; 19:52–19:58Z "not active yet" window.
   Emergency disable SQL is documented but needs a separate operator decision.
 
-**Next concrete step:** operator real-device smoke (phone + PC) per the
-[handoff checklist](CZN-PRODUCTION-CUTOVER.md#exact-real-device-smoke-now-due--server-enabled-2026-10-23-195849z),
-starting with **Enable CZN 18:00 UTC daily policy** on PC. GO 3 stays PARTIAL until it passes.
+- **Operator real-device smoke** (Android Chrome tab + PC browser, same account,
+  2026-10-23 20:18–21:03Z):
+  - **Step 1 PASS.** The phone still ran the cached pre-#76 build. Offline it marked the legacy
+    CZN chip and ZZZ (2 pending), then a view preference (3 pending).
+  - **Step 2 PASS.** PC pressed Enable (owner-confirmed epoch). Today `2026-10-23` true→false,
+    and false persisted after reload, with the correct countdown.
+  - **Step 3 NOT VERIFIED.** After airplane mode Chrome kept reporting offline, so the
+    old build never sent its batch. Server-side fence enforcement is covered by the PG17 CI job.
+  - **Step 4 PASS.** The phone took the waiting update. It joined the same epoch (no Enable
+    prompt, PC false kept). ZZZ and the preference synced. The legacy CZN mutation was held
+    as `1 pending` ("CZN legacy changes held …") and preserved as 1 labelled legacy day; it
+    was not converted into a new-policy completion.
+  - **Step 5 PASS.** The updated phone, offline, toggled true/false/true. ✓ and pending survived
+    an offline reload. After reconnecting: 0 new-policy pending and ✓ on both devices.
+  - **Step 6 PASS.** The operator confirmed other-game changes sync both ways.
+  - **Step 7 pending.** Rollover to `2026-10-24` at 18:00 UTC still has to be observed.
+    The local midnight at 21:00Z did not change the CZN day label, as intended.
+- **Follow-ups found during the smoke** (UI only, no data effect; separate small PR):
+  - the CZN panel's buttons are unstyled and look like text;
+  - an updated client with a held legacy row permanently shows `1 pending` with "update or
+    export recovery" wording.
+
+**Next concrete step:** observe the 18:00 UTC rollover on phone and PC (step 7). Then record
+GO 3 COMPLETE (step 3 stays "not verified" with its reason).
 
 ## CZN GO 2 — disabled additive production migration APPLIED (2026-10-23)
 
