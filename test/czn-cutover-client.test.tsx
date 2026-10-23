@@ -131,3 +131,13 @@ test('failed capability negotiation holds only CZN while real legacy engine sync
     push:async(_p,rows)=>{expect(rows).toEqual([other]);cloud=applyMutation(cloud,other).state;}});
   expect(result.heldCzn).toBe(1);expect(JSON.parse(store.getItem(keys.outbox)!)).toEqual([held]);
 });
+
+test('same-epoch import holds dates outside the authoritative policy window as raw recovery only',()=>{
+  const {store,state}=ready();const source=queueCzn(store,state,'2026-10-22',true,at);
+  const exported=buildCznExport(source);
+  exported.state.rows=[{...source.rows[0]!,dayKey:'2020-01-01'},{...source.rows[0]!,dayKey:'2099-01-01',mutationId:'99999999-9999-4999-8999-999999999999'}];
+  exported.state.pending=exported.state.rows;
+  const imported=importCzn(store,state,exported);
+  expect(imported.rows).toEqual([]);expect(imported.pending).toEqual([]);
+  expect(JSON.parse(imported.imports[0]!).state.rows).toEqual(exported.state.rows);
+});

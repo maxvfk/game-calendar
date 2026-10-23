@@ -47,7 +47,11 @@ export function importCzn(store:CznStore,state:CznLocal,input:unknown):CznLocal{
   if(state.imports.includes(raw))return state;
   // Foreign/guest epochs are retained as a recovery source, never accepted as server authority.
   const same=state.profileId===parsed.state.profileId&&state.policy!==null&&JSON.stringify(state.policy)===JSON.stringify(parsed.state.policy);
-  const sourceRows=same?parsed.state.rows:[];
+  const floor=state.policy?cznDayKey(Date.parse(state.policy.cutoverAt)):null;
+  const today=cznDayKey(Date.now());
+  // A valid export is still untrusted portable data. Out-of-window rows stay
+  // in the source envelope, not in a streak or an unsendable server batch.
+  const sourceRows=same?parsed.state.rows.filter(row=>floor!==null&&row.dayKey>=floor&&row.dayKey<=today):[];
   const ids=new Set(state.pending.map(r=>r.mutationId));
   const next={...state,rows:mergeCzn(state.rows,sourceRows),
     pending:[...state.pending,...sourceRows.filter(r=>!ids.has(r.mutationId))],imports:[...state.imports,raw]};
