@@ -1,11 +1,13 @@
-# CZN server/backup release — INSTALLED IN PRODUCTION, DISABLED (GO 2, 2026-10-23)
+# CZN server/backup release — INSTALLED AND ENABLED IN PRODUCTION (GO 3, 2026-10-23)
 
 > **GO 2 (2026-10-23):** this exact candidate (SHA256 `a5fdb230…`) was applied to
 > production in one transaction, with `enabled=false` and no epochs. The SQL file's own
 > header comment ("Not installed") is historical and is kept byte-for-byte
 > because the reviewed hash covers it. Do not re-apply it; it now fails on existing objects.
-> Enablement (GO 3) needs a separate operator GO. Evidence:
-> [CZN-PRODUCTION-CUTOVER](../../docs/CZN-PRODUCTION-CUTOVER.md).
+> **GO 3 (2026-10-23):** the compatible client went live first (#76, Pages 19:52:24Z), then
+> `czn_daily_release.enabled=true` (19:58:49Z). Epochs are created only by owner-confirmed
+> negotiation. The real-device acceptance is still pending; any emergency disable needs a
+> separate operator decision. Evidence: [CZN-PRODUCTION-CUTOVER](../../docs/CZN-PRODUCTION-CUTOVER.md).
 
 > **2026-10-23 operator-directed alternative:** The operator chose to plan a
 > direct production release **without provisioning staging**, accepting a narrower

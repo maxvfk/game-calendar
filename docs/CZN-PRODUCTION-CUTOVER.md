@@ -1,11 +1,11 @@
 # CZN direct-production handoff — STOP before GO
 
-**Status 2026-10-23: GO 1 (backup transition) COMPLETE. GO 2 (disabled additive
-migration) APPLIED in production and verified, except the owner-authenticated
-Sync smoke, which is still manual. Server `enabled=false`, client compiled off, no epochs.
-GO 3 (enablement) NOT started; it needs a separate operator GO.**
-No production SQL, user-row deletion or CZN enablement is authorized by this
-document. No staging will be created.
+**Status 2026-10-23: GO 1 and GO 2 COMPLETE (the GO 2 owner Auth/Sync smoke passed,
+operator). GO 3 PARTIAL — awaiting operator real-device acceptance: the policy-aware
+client is live on Pages (#76 `d163e12`, deployed 19:52:24Z) and the server capability is
+`enabled=true` (19:58:49Z). No epoch exists until an owner presses Enable in the app.**
+No production SQL beyond the reviewed switches, user-row deletion or emergency disable
+is authorized by this document. No staging will be created.
 The default path preserves every legacy CZN row unchanged in `daily_marks`; the
 new namespace starts empty. Clearing history is unnecessary and would not clear
 cached PWA outboxes. No Auth/profile/database reset is part of this release.
@@ -115,6 +115,28 @@ cached PWA outboxes. No Auth/profile/database reset is part of this release.
   Operator read-only production `restore --all-profiles --read-only` dry-run passed for
   the v2 pair and for v1 pair `8dfb3183…` into live v2, with no writes. All v1 pairs and
   the pre-cutover archive are preserved.
+- **GO 3 (2026-10-23, operator-authorized):**
+  - *Stage A* 19:38Z, operator read-only `go3-preflight`: exact v2 `17bcce56…`,
+    `enabled=false`, no epochs/marks, 17 effective ACL/RLS/RPC checks, anon PostgREST denied,
+    internal/control schemas not exposed, no backup in flight.
+  - *Stage B* [#76](https://github.com/maxvfk/game-calendar/pull/76) merged `d163e121e3cc5212f5faba234586950a7c2453b3`
+    19:50:59Z; post-merge [CI 40014645816](https://github.com/maxvfk/game-calendar/actions/runs/40014645816)
+    green incl. PG17 job; **Deploy to Pages 19:52:24Z**. The published `main.js` contains the
+    new panel strings and `czn_daily_negotiate` (SW build `a0f29694…`). `CZN_CUTOVER_ENABLED=true`;
+    a real defect was fixed (an updated client without an epoch was told to "Update the app", and
+    "Enable" was offered while the server was off). The background refresh always
+    negotiates `cutover=false`.
+  - *Pre-activation recovery point*: [run 40014899612](https://github.com/maxvfk/game-calendar-backups/actions/runs/40014899612)
+    → `233c098`, v2 createdAt `19:53:46.615Z`, SHA256 `abe17e00…1b2f`; real-key validate PASS
+    (`enabled=false`, no epochs); archived outside retention.
+  - *Stage C* operator `go3-activate` (rehearsed on synthetic PG17 first): full pre-checks
+    repeated, explicit `ENABLE CZN`, one transaction `update … set enabled=true where
+    singleton and enabled=false` with in-transaction guards (exactly one row; policy/marks
+    still empty). **COMMIT 19:58:49Z** (`UPDATE 1`). Post: `enabled=true`, no epochs/marks
+    created by the switch, all 17 ACL/RLS/RPC checks unchanged, exact v2 preflight, anon denied.
+  - *Post-activation backup*: [run 40015709343](https://github.com/maxvfk/game-calendar-backups/actions/runs/40015709343)
+    → `d16be75`, createdAt `20:00:12.432Z`, SHA256 `3bc0ce2b…1304`; real-key validate PASS;
+    snapshot shows `enabled=true`, no epochs/new marks, legacy CZN rows retained.
 
 ## Backup and recovery commands
 
@@ -266,7 +288,8 @@ Timestamp equivalence uses PostgreSQL's microsecond conversion, not JS Date.
    `snapshots/v2`, successful local decrypt, and v2 recovery dry-run. Complete
    isolated local actual v1/v2 recovery from the operator's real pair without
    uploading data. Record acceptance privately. Preserve the pre-migration pair.
-7. The compatible PWA remains compiled off during all prior steps. A later,
+7. *Done 2026-10-23 except the real-device smoke: client #76 deployed 19:52:24Z,
+   server enabled 19:58:49Z, no epoch yet.* The compatible PWA remains compiled off during all prior steps. A later,
    separately reviewed release changes the compiled switch only after server,
    backup and hosted compatibility evidence is accepted. Publish compatible
    policy-aware client, then **separate enablement GO** for server capability.
@@ -295,13 +318,15 @@ All required items must have explicit evidence, not inferred success:
 - [x] Disabled migration explicitly authorized; atomic SQL/hash verified. No
   deletion or full reset; rollback/stop owner available for this maintenance window.
   (GO 2: one transaction, COMMIT 17:51:45Z.)
-- [ ] Immediately afterward: exact v2 preflight, hosted Auth/PostgREST/owner/anon/
+- [x] Immediately afterward: exact v2 preflight, hosted Auth/PostgREST/owner/anon/
   internal RPC checks and other-game smoke; encrypted v2 backup + recovery proof.
   (Passed: exact v2 preflight, PostgREST reload, anon/internal/ACL checks, encrypted
-  v2 backup, local recovery, production read-only dry-run. **Open:** owner-authenticated
-  login/profile read and other-game Sync smoke in the deployed app.)
+  v2 backup, local recovery, production read-only dry-run; operator owner login/profile
+  and other-game Sync smoke OK before GO 3.)
 - [ ] No-staging residual risks explicitly accepted; client/server enablement
   remain separate approvals. Real-device smoke planned; outboxes preserved.
+  (Risks accepted and client/server enabled under the GO 3 approval. **Open:** operator
+  phone + PC smoke below; GO 3 is not complete until it passes.)
 
 Any unchecked item is NO-GO for its dependent step. Missing key/drill, unexpected
 schema, failed backup/CI/API, unknown credentials or lack of approval is a stop,
@@ -341,6 +366,20 @@ availability, so keep both features off on any unrelated Sync regression. No
 user-row deletion is necessary. Historical continuity is deliberately relinquished
 for the new namespace; raw history/outbox remains recoverable.
 
+Residual risks after GO 3 activation (accepted, not yet observed):
+
+- **Cached old PWA on a fenced profile.** A build from before #76 does not know the
+  `update_required` outcome. If its outbox holds a legacy `dailies:czn` mutation, the
+  server applies the other rows in the batch and keeps the CZN row out. The old client
+  then reports a generic Sync error and keeps its whole outbox until it updates. Nothing
+  is lost; resends are idempotent. A normal reload/update fixes it. Never clear site data.
+- **No epoch until the owner confirms.** An updated account client shows "available —
+  Enable" and has no CZN checklist until the owner presses Enable. Legacy CZN history
+  stays readable in the panel and the export. Guests start a local-only epoch automatically.
+- **Window 19:52–19:58Z.** Updated clients showed "not active yet" and could not mark CZN.
+- Not proven without staging: Supabase Auth JWT paths for `czn_daily_negotiate`/
+  `czn_daily_apply` on a real device (operator smoke below) and service-worker update timing.
+
 ## Synthetic UI harness
 
 `test/czn-browser-dom.test.tsx` drives actual React DOM click/reload/export/update
@@ -351,9 +390,13 @@ disposable local page containing `<div id="root"></div>`). Neither harness mount
 in the shipped app or uses Supabase. This is not a real-browser/service-worker or
 hosted Auth smoke.
 
-## Exact real-device smoke (future, after separate activation GO)
+## Exact real-device smoke (now due — server enabled 2026-10-23 19:58:49Z)
 
-Use operator phone with cached old PWA and PC with updated PWA, same account/profile:
+Use operator phone with cached old PWA and PC with updated PWA, same account/profile.
+If the phone has already loaded build `a0f29694…` (it shows the new "CZN · daily reset
+18:00 UTC" panel), the old-PWA parts of steps 1, 3 and 4 cannot be run any more: record
+them as N/A and run the rest. On PC, step 2 starts by pressing **Enable CZN 18:00 UTC daily
+policy**; this is the owner-confirmed negotiation that creates the profile epoch.
 
 1. Export recovery first; record pending count privately. On old phone offline,
    toggle standing CZN and another-game daily; keep original pending/outbox bytes.
