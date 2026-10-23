@@ -1,5 +1,74 @@
 # Game calendar implementation status
 
+## CZN GO 3 — controlled production activation: PARTIAL, awaiting operator real-device acceptance (2026-10-23)
+
+Operator-authorized after GO 1, GO 2 and the operator's GO 2 Auth/Sync smoke (login and
+profile load, another game's daily change, Synced and persisted after reload: all OK). Scope:
+standing `dailies:czn` only, reset 18:00 UTC, UTC opening-date day keys, separate epoch
+namespace. Legacy rows are untouched. Other games, event IDs, Timeline and sources are unchanged.
+
+- **A — final preflight** (operator read-only script, 19:38Z): public `541e46b` (CI 40002213278
+  green), private `fcb24d2`; exact v2 `17bcce56…`; `enabled=false`; no epochs or new marks;
+  17 effective ACL/RLS/RPC checks; anon PostgREST denied; internal/control schemas not exposed;
+  no backup job in flight. Latest complete v2 pair validated, with archives outside retention.
+- **B — client release**: [#76](https://github.com/maxvfk/game-calendar/pull/76) merged
+  `d163e121e3cc5212f5faba234586950a7c2453b3` 19:50:59Z; post-merge
+  [CI 40014645816](https://github.com/maxvfk/game-calendar/actions/runs/40014645816) green (incl. the
+  PG17 concurrency/recovery job); **Pages deployed 19:52:24Z**. The published `main.js` contains
+  the new client (SW build `a0f29694…`). `CZN_CUTOVER_ENABLED=true` turns on the client
+  reviewed in #66/#67/#70.
+  - Defect fixed: with no epoch, an updated client was told to "Update the app", and
+    "Enable" was offered while the server was off. `syncCzn` now returns `serverEnabled`.
+  - Tests: release gate on; explicit disabled path does zero I/O; refresh never requests
+    cutover; the epoch binds only after owner confirmation; renegotiation is idempotent;
+    a changed epoch refuses.
+  - Local evidence (Windows, exact LF bytes): typecheck/build pass; `bun test` 1140 pass /
+    13 fail, identical to untouched `main` on this host (2 more fs tests are flaky on `main`).
+  - Real browser on the local build (guest): 18:00 UTC countdown and UTC opening date
+    correct; true/false persisted across reload; legacy CZN chore hidden.
+- **Recovery point before activation**: [run 40014899612](https://github.com/maxvfk/game-calendar-backups/actions/runs/40014899612)
+  → `233c098`, SHA256 `abe17e00…1b2f`, real-key validate PASS, archived.
+- **C — server activation** (operator `go3-activate`, rehearsed on synthetic PG17): pre-checks
+  repeated, explicit `ENABLE CZN`, one transaction with guards (exactly one disabled row
+  updated; policy/marks still empty). **COMMIT 19:58:49Z.** Post: `enabled=true`, the switch
+  created no epochs/marks, ACL/RLS/RPC unchanged, exact v2 preflight PASS, anon denied.
+- **D — hosted acceptance within safe access**: post-activation backup
+  [run 40015709343](https://github.com/maxvfk/game-calendar-backups/actions/runs/40015709343) →
+  `d16be75`, SHA256 `3bc0ce2b…1304`, real-key validate PASS; snapshot shows `enabled=true`,
+  no epochs/new marks, legacy CZN rows retained. Owner-authenticated
+  `czn_daily_negotiate`/`czn_daily_apply`, epoch/fence semantics on the hosted DB, owner
+  isolation and the old cached PWA against a fenced profile were **not executed** by the
+  agent (no synthetic accounts or JWTs). They are the operator smoke.
+- **Residual risks**: an old cached PWA with a pending legacy CZN mutation on a fenced
+  profile shows a generic Sync error until it updates (no loss; other rows apply
+  idempotently); no epoch until an owner presses Enable; 19:52–19:58Z "not active yet" window.
+  Emergency disable SQL is documented but needs a separate operator decision.
+
+- **Operator real-device smoke** (Android Chrome tab + PC browser, same account,
+  2026-10-23 20:18–21:03Z):
+  - **Step 1 PASS.** The phone still ran the cached pre-#76 build. Offline it marked the legacy
+    CZN chip and ZZZ (2 pending), then a view preference (3 pending).
+  - **Step 2 PASS.** PC pressed Enable (owner-confirmed epoch). Today `2026-10-23` true→false,
+    and false persisted after reload, with the correct countdown.
+  - **Step 3 NOT VERIFIED.** After airplane mode Chrome kept reporting offline, so the
+    old build never sent its batch. Server-side fence enforcement is covered by the PG17 CI job.
+  - **Step 4 PASS.** The phone took the waiting update. It joined the same epoch (no Enable
+    prompt, PC false kept). ZZZ and the preference synced. The legacy CZN mutation was held
+    as `1 pending` ("CZN legacy changes held …") and preserved as 1 labelled legacy day; it
+    was not converted into a new-policy completion.
+  - **Step 5 PASS.** The updated phone, offline, toggled true/false/true. ✓ and pending survived
+    an offline reload. After reconnecting: 0 new-policy pending and ✓ on both devices.
+  - **Step 6 PASS.** The operator confirmed other-game changes sync both ways.
+  - **Step 7 pending.** Rollover to `2026-10-24` at 18:00 UTC still has to be observed.
+    The local midnight at 21:00Z did not change the CZN day label, as intended.
+- **Follow-ups found during the smoke** (UI only, no data effect; separate small PR):
+  - the CZN panel's buttons are unstyled and look like text;
+  - an updated client with a held legacy row permanently shows `1 pending` with "update or
+    export recovery" wording.
+
+**Next concrete step:** observe the 18:00 UTC rollover on phone and PC (step 7). Then record
+GO 3 COMPLETE (step 3 stays "not verified" with its reason).
+
 ## CZN GO 2 — disabled additive production migration APPLIED (2026-10-23)
 
 Operator-authorized GO 2 only. GO 3 (enablement) is not started: server
