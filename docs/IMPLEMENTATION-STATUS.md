@@ -1,9 +1,50 @@
 # Game calendar implementation status
 
-Updated 2026-10-23 (Moscow; data corrections operator-accepted; CZN Daily Reset decisions approved, safe cutover task prepared). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-23 (Moscow; CZN safe cutover Gate A evaluated: design-only blocked, runtime unchanged). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
-## CZN Daily Reset — product decisions approved, separate Work queued (2026-10-23)
+## CZN safe cutover — Gate A checkpoint, design-only blocked (2026-10-23)
+
+- Baseline CURRENT main `ce5bffa2ba67d2703b14e03012d351a4a2d9eff3`;
+  post-merge #63 [CI 39868203557](https://github.com/maxvfk/game-calendar/actions/runs/39868203557)
+  passed. No parallel open PRs at start. Both product decisions remain accepted.
+- [Protocol/checkpoint](tasks/CZN-DAILY-RESET-GATE-A-CHECKPOINT.md) specifies immutable
+  policy/epoch, additive isolated registers, server serialization, old-client ACK,
+  held-journal recovery, guest/account and distinct import format, monotonic
+  recovery fences, exact release/rollback order and future real-device smoke.
+- Disposable PGlite experiment used real current migrations, shared merge,
+  import parser, remote adapter, syncProfile and S6a preflight. It confirmed
+  current collision/metadata failures, then demonstrated CZN holding/isolation,
+  other-game writes, denied direct/helper/other-owner bypass, exact pending
+  false/UUID/version preservation and no false success timestamp. Full probe
+  is embedded in the report. No deployable migration or application code added.
+- **Gate A NOT passed; Gate B not started.** Old bundles preserve their entire
+  queue on an unfamiliar ACK and show generic Sync error; targeted read-only/
+  update UI and unrelated-row finalization require a compatible client. New
+  tables/RPC need a versioned S6a snapshot/contract and a restore path that
+  cannot erase the server fence. Those complete proofs do not exist yet.
+- Applied the approved task's Gate A item 4: no supported privileged hosted
+  migration channel or isolated test account is available. Stop at docs-only
+  checkpoint; no production SQL, reset enablement or user-profile access.
+  Current CZN countdown remains incorrect; no correction deployment claimed.
+- Current backup is healthy: private [run 39909326284](https://github.com/maxvfk/game-calendar-backups/actions/runs/39909326284)
+  succeeded Oct 23; workflow pins public `5b2a2b048bae53f32e464b0a91a8f5d9f354b669`.
+  Only Actions/workflow metadata read, no snapshots/keys. This does not prove
+  new-policy backup/restore compatibility or a local recovery drill.
+- Four AGENTS commands passed (Bun 1.3.14); default suite **1126 pass / 1 existing
+  optional skip / 0 fail**. Build 178 events, seven games, one existing NTE
+  conflict. No clock, Event ID, source-health, Timeline, migration, lockfile or
+  backup contract changes. PR/main CI evidence belongs to the delivery PR.
+- **Manual prerequisite:** isolated Supabase staging administration and a
+  disposable Auth identity via a secure supported channel. There is no reviewed
+  production migration to apply from this checkpoint. Do not send secrets in chat.
+  No new phone/PC smoke is needed for this docs-only delivery; the report defines
+  the exact post-enable two-device test for a future compatible release.
+
+**Next concrete step:** arrange that isolated administrative test target, then
+finish Gate A server/S6a compatibility proofs before production migration.
+
+## CZN Daily Reset — product decisions approved, Work queued (historical 2026-10-23)
 
 - The operator completed real phone/PC smoke of the 2026-10-22 Endfield
   Phantasia, six CZN banner and two Genshin Phase II corrections. Regional
