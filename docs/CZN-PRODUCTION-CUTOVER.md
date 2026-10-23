@@ -60,6 +60,15 @@ cached PWA outboxes. No Auth/profile/database reset is part of this release.
   `supabase/preflight/czn-production-readonly.sql`; not executed in production.
   Exact contract verification remains the CLI below. Current hosted ACL/role
   proof and hosted API checks await production GO.
+- **Operator real-key acceptance (2026-10-23):** latest scheduled v1 pair
+  `2026-10-23` (createdAt `2026-10-23T06:05:10.301Z`, source `5b2a2b04…`,
+  ciphertext SHA256 `d3001dae…4ca6`) decrypted with the operator's private
+  identity via `validate`, then restored by `local-drill.ts` from main `02f3c6c6`
+  into a new empty loopback PG17.11 `czn_recovery_drill`. Independent re-export
+  matched all seven table digests and `dataSha256`; release disabled, no policy/
+  epoch created; nonempty rerun refused; cluster disposed. Details:
+  [implementation status](IMPLEMENTATION-STATUS.md). The pair is kept outside
+  retention, but a fresh pre-migration pair is still required at release time.
 
 ## Backup and recovery commands
 
@@ -185,7 +194,10 @@ Timestamp equivalence uses PostgreSQL's microsecond conversion, not JS Date.
    succeeds. This dual reader covers both sides of the atomic schema change;
    installing schema first would leave the old exporter unable to back up.
 4. **GO: disabled additive migration only.** Immediately rerun read-only
-   preflight against known v1. Apply the exact candidate SQL in ONE transaction
+   preflight against known v1. On Windows, a `core.autocrlf=true` checkout turns
+   the candidate into CRLF bytes (SHA256 `d77a597c…`); take the bytes from Git
+   (`git -c core.autocrlf=false show HEAD:<candidate path>`) and verify SHA256
+   `a5fdb230…` before use. Apply the exact candidate SQL in ONE transaction
    through a reviewed administrator connection (BEGIN, local lock_timeout 10s,
    statement_timeout 120s, candidate bytes, COMMIT), or one atomic Supabase
    migration application after confirming its transactional semantics. Never
@@ -222,6 +234,8 @@ All required items must have explicit evidence, not inferred success:
   v1; ACLs/RLS/function identities unchanged. Empty migration ledger accounted for.
 - [ ] No in-flight exporter; verified archived pre-migration encrypted pair
   identified; operator private key decrypt + actual isolated recovery drill accepted.
+  (Key decrypt + drill passed 2026-10-23 on pair `2026-10-23`; recheck the latest
+  pair and identify the archived pre-migration pair at release time.)
 - [ ] Private workflow transition and exact GO variable explicitly authorized;
   new dual pin exported/decrypted v1 successfully BEFORE disabled migration.
 - [ ] Disabled migration explicitly authorized; atomic SQL/hash verified. No
