@@ -170,10 +170,13 @@ export function startProfileSync(profileId: string, ownerId: string,
       ]);
       if (stopped || !active()) return;
       failures = 0;
-      emit({ kind: result.pending ? "pending" : "synced", pending: result.pending,
+      // Held legacy CZN rows stay in the outbox as recovery source, but they are never
+      // going to be sent: counting them as pending would show "Changes pending" forever.
+      const held = result.heldCzn ?? 0, sendable = result.pending - held;
+      emit({ kind: sendable ? "pending" : "synced", pending: sendable,
         lastSuccessfulSyncAt: result.at, clockWarning: result.clockWarning,
-        ...(result.heldCzn ? { heldCzn: result.heldCzn, message: "CZN legacy changes held: update or export recovery; other games can sync" } : {}) });
-      if (result.pending > (result.heldCzn ?? 0)) schedule(1500);
+        ...(held ? { heldCzn: held, message: `${held} older CZN ${held === 1 ? "change is" : "changes are"} kept on this device, not sent: they predate the 18:00 UTC CZN daily. Export CZN recovery to keep a copy; other games sync normally.` } : {}) });
+      if (sendable > 0) schedule(1500);
     } catch (error) {
       if (stopped || !active()) return;
       const message = error instanceof Error ? error.message : String(error);
