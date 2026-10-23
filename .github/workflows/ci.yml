@@ -108,10 +108,36 @@ jobs:
             }
           '
 
+  czn-postgres17:
+    name: CZN PostgreSQL 17 concurrency and recovery
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:17.6
+        env:
+          POSTGRES_PASSWORD: local-disposable-test-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.14'
+      - run: bun install --frozen-lockfile
+      - name: Install age for mandatory synthetic encrypted recovery tests
+        run: sudo apt-get update && sudo apt-get install -y age
+      - run: bun test test/czn-production.test.ts test/czn-cutover-db.test.ts test/czn-cutover-client.test.tsx test/czn-browser-dom.test.tsx
+      - name: Verify independent PG17 transactions and privileges
+        env:
+          CZN_LOCAL_PG17_URL: postgres://postgres:local-disposable-test-only@127.0.0.1:5432/postgres
+        run: bun scripts/czn-cutover/verify-postgres17.ts
+
   build:
     name: Build site
     runs-on: ubuntu-latest
-    needs: check
+    needs: [check, czn-postgres17]
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2

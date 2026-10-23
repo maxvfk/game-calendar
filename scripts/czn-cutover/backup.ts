@@ -1,8 +1,8 @@
 /** Additive logical snapshot/recovery candidate. Not wired to the hosted v1 age CLI. */
 import { z } from 'zod';
-import { makeSnapshot, validateSnapshot, canonical, sha256, sortRows, type Snapshot, type Rows } from '../account-backup/model.ts';
+import { makeSnapshot, validateSnapshot, canonical, sha256, sortRows, TABLES, type Snapshot, type Rows } from '../account-backup/model.ts';
 import legacyContract from '../../supabase/backup-contract.v1.json';
-import { readRows, restorePlan, writeRestore, type Query } from '../account-backup/database.ts';
+import { readRows, restorePlan, selectProfiles, writeRestore, type Query } from '../account-backup/database.ts';
 import { CZN_TABLES, assertCznTarget } from './contract.ts';
 import { CZN_POLICY, CZN_SUBJECT } from '../../src/shared/cznDaily.ts';
 const instant=z.string().datetime({offset:true});
@@ -53,20 +53,29 @@ export async function readCznSnapshot(query:Query,meta:Parameters<typeof makeSna
   for(const table of CZN_TABLES)extension[table]=(await query(`select to_jsonb(t) as row from public.${table} t`)).map(r=>r.row);
   return makeCznSnapshot(base,extensionSchema.parse(extension),hash);
 }
-/** Caller owns transaction/locks for export. Restore owns its write transaction.
- * Old snapshots recover legacy state only; live fences/new marks always survive.
- * Conflicting epochs refuse rather than choosing one from an edit timestamp. */
-export async function restoreCznSnapshot(query:Query,input:unknown,project:string,hash:string):Promise<void>{
+export function selectCznProfiles(input:Snapshot|CznSnapshot,selection:string[]|'all'){
+  const isV2='base' in input,base=isV2?input.base:input;
+  const data=selectProfiles(base,selection),ids=new Set(data.profiles.map(p=>p.id));
+  const selected=makeSnapshot(data,base);
+  return isV2?makeCznSnapshot(selected,{...input.extension,
+    czn_daily_policy:input.extension.czn_daily_policy.filter(p=>ids.has(p.profile_id)),
+    czn_daily_marks:input.extension.czn_daily_marks.filter(p=>ids.has(p.profile_id))},input.schemaSha256):selected;
+}
+/** Identical read-only planning rules are used before and inside the locked write transaction. */
+export async function planCznRecovery(query:Query,input:unknown,project:string,hash:string){
   // Legacy v1 snapshots stay readable; this never manufactures a policy from old labels.
   const isV1=(input as {format?:string})?.format==='game-calendar-personal';
   const s=isV1?{base:validateSnapshot(input,project,legacyContract.schemaSha256),extension:null}:
     validateCznSnapshot(input,project,hash);
-  await query('begin');try{
-    await query(`lock table public.profiles,public.progress,public.daily_marks,public.ignored,
-      public.preferences,public.custom_games,public.custom_events,public.czn_daily_policy,public.czn_daily_marks
-      in share row exclusive mode`);
     await assertCznTarget(query,project,hash);
-    await restorePlan(query,s.base.data);
+    const plan=await restorePlan(query,s.base.data);
+    // PostgreSQL normalizes timezone representation at microsecond precision. Do not
+    // use JS Date (millisecond truncation), or compare equivalent offsets as conflicts.
+    const normalized={} as Rows;
+    for(const table of TABLES)normalized[table]=sortRows(table,(await query(`select to_jsonb(r) as row from jsonb_populate_recordset(null::public.${table},$1::jsonb) r`,[canonical(s.base.data[table])])).map(r=>r.row as Record<string,unknown>));
+    if(s.extension){
+      for(const table of CZN_TABLES)s.extension[table]=(await query(`select to_jsonb(r) as row from jsonb_populate_recordset(null::public.${table},$1::jsonb) r`,[canonical(s.extension[table])])).map(r=>r.row) as never;
+    }
     const ids=s.base.data.profiles.map(r=>String(r.id));
     const currentPolicies=(await query('select to_jsonb(t) as row from public.czn_daily_policy t where profile_id=any($1::uuid[])',[ids])).map(r=>r.row as Record<string,unknown>);
     for(const p of s.extension?.czn_daily_policy??[]){
@@ -75,10 +84,27 @@ export async function restoreCznSnapshot(query:Query,input:unknown,project:strin
     }
     const frozenIds=currentPolicies.map(p=>String(p.profile_id));
     const live=await readRows(query,ids);
-    const data={...s.base.data,daily_marks:sortRows('daily_marks',[
-      ...s.base.data.daily_marks.filter(r=>r.subject_id!==CZN_SUBJECT||!frozenIds.includes(String(r.profile_id))),
+    const data={...normalized,daily_marks:sortRows('daily_marks',[
+      ...normalized.daily_marks.filter(r=>r.subject_id!==CZN_SUBJECT||!frozenIds.includes(String(r.profile_id))),
       ...live.daily_marks.filter(r=>r.subject_id===CZN_SUBJECT&&frozenIds.includes(String(r.profile_id)))
     ])};
+    for(const row of s.extension?.czn_daily_marks??[]){
+      const current=(await query('select to_jsonb(t) as row from public.czn_daily_marks t where profile_id=$1 and day_key=$2',[row.profile_id,row.day_key]))[0]?.row;
+      if(current&&typeof current==='object'&&(current as Record<string,unknown>).mutation_id===row.mutation_id&&canonical(current)!==canonical(row))
+        throw new Error('Conflicting recovery mutation ID');
+    }
+    return {s,data,plan};
+}
+/** Caller owns transaction/locks for export. Restore owns its write transaction.
+ * Old snapshots recover legacy state only; live fences/new marks always survive.
+ * Conflicting epochs refuse rather than choosing one from an edit timestamp. */
+export async function restoreCznSnapshot(query:Query,input:unknown,project:string,hash:string):Promise<void>{
+  await query('begin');try{
+    await query("set local timezone='UTC'");await query("set local statement_timeout='120s'");await query("set local lock_timeout='10s'");
+    await query(`lock table public.profiles,public.progress,public.daily_marks,public.ignored,
+      public.preferences,public.custom_games,public.custom_events,public.czn_daily_policy,public.czn_daily_marks
+      in share row exclusive mode`);
+    const {s,data}=await planCznRecovery(query,input,project,hash);
     await writeRestore(query,data);
     for(const p of s.extension?.czn_daily_policy??[])await query(`insert into public.czn_daily_policy
       select * from jsonb_populate_record(null::public.czn_daily_policy,$1::jsonb) on conflict do nothing`,[canonical(p)]);

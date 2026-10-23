@@ -575,3 +575,12 @@ recovered from this repository. Recovery assumes the existing project and
 original Auth UUIDs still exist. Realtime, multi-profile UI, cache-removal UI,
 new providers, source ingestion and broader S6b monitoring are outside S6a.
 Failures are visible red Actions; no additional alerting/telemetry is introduced.
+
+## Prepared CZN dual-schema transition (not active)
+
+The v1 scheduled workflow/pin remains active. The additive production-capable
+entrypoint and separate v2 retention/recovery are described in
+[CZN-PRODUCTION-CUTOVER](CZN-PRODUCTION-CUTOVER.md). The old canonical v1 contract
+and CLI remain strict: they refuse the new schema. A reviewed private draft must
+install the dual v1/v2 exporter before additive DDL; then prove v2 recovery before
+activation. Never change the active workflow/pin or apply SQL without operator GO.

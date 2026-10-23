@@ -1,6 +1,38 @@
 # Game calendar implementation status
 
-## CZN direct-production readiness — newly authorized planning task (2026-10-23)
+## CZN direct-production preparation in progress (2026-10-23)
+
+- CURRENT main `b075d8056ffbf6d6ac8876bd6175739de808742d` (#69), post-merge
+  [CI 39949829568](https://github.com/maxvfk/game-calendar/actions/runs/39949829568) successful.
+  Unrelated draft #68 remains parked. Reused #65–#67 without redoing research.
+- Production connector metadata only: `vzzudezdigjwbwfejlsg`, healthy PG17.6.1.166,
+  seven existing public tables with RLS, no CZN tables; CLI migration ledger empty.
+  No production SQL/user contents/credentials, DDL or write smoke performed.
+  Control marker intentionally non-exposed by schema/table ACLs; new preflight
+  explicitly verifies those effective permissions instead of trusting a generic RLS advisory.
+- Added fail-closed dual-schema backup/read-only preflight and independent GO
+  guards, distinct v2 daily/monthly 30/12 retention, v1 encrypted readability and
+  selected-profile v1/v2 dry-run/recovery. Production defaults stay disabled.
+  Recovery preserves live epochs/frozen CZN/false tombstones; equivalent timezone
+  offsets are normalized by PostgreSQL without losing microseconds. No historical
+  dayKey rewrite or deletion is necessary.
+- Four AGENTS commands passed (Bun 1.3.14): frozen install, typecheck,
+  **1151 pass / 1 existing optional skip / 0 fail**, build 178 events / 7 games /
+  1 existing conflict. Actual age and interactive React DOM harness passed.
+  Added isolated PostgreSQL 17.6 CI
+  with independently observed lock waits for both cutover orders and true/false
+  writers. CI results and private draft pin evidence pending completion.
+- Active private S6a main `93128e7fd5ed7e407cee234ba0231a93506f76f2`, public pin
+  `5b2a2b048bae53f32e464b0a91a8f5d9f354b669`; latest export
+  [39909326284](https://github.com/maxvfk/game-calendar-backups/actions/runs/39909326284)
+  successful. Real operator decrypt/recovery drill not independently proven.
+- Exact stop/GO/release/rollback/device smoke: [handoff](CZN-PRODUCTION-CUTOVER.md).
+  No production SQL, active private workflow/pin change, deletion or activation.
+
+**Next concrete step:** finish reviewable PR/CI and private draft preparation;
+then obtain operator acceptance of exact backup-transition/disabled-DDL actions.
+
+## CZN direct-production readiness — original authorization (2026-10-23)
 
 - Operator prefers **no new Supabase staging project or branch** for this small
   two-person deployment and is willing to forgo legacy CZN completion history
