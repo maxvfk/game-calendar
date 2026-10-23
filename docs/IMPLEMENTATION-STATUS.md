@@ -1,5 +1,49 @@
 # Game calendar implementation status
 
+## CZN operator real-key decrypt + local recovery drill accepted (2026-10-23)
+
+Bounded verification only. No hosted connection, production SQL, private
+workflow/pin/variable change, PR #6 merge, Auth change or CZN enablement.
+
+- Tooling: public main `02f3c6c634af2d6c6ef7612148a9a565d8c3b7b5` (#72); private
+  main `93128e7fd5ed7e407cee234ba0231a93506f76f2` and draft #6 head
+  `c602d3101bc733bf6699a8fb6e3fe559a2b90383` rechecked unchanged.
+  Operator Windows host: Bun 1.3.14, age 1.3.2, PostgreSQL **17.11** (official
+  EDB binaries, extract-only: no service, no default cluster).
+- Pair: latest scheduled v1 `snapshots/daily/2026-10-23` from private
+  [run 39909326284](https://github.com/maxvfk/game-calendar-backups/actions/runs/39909326284),
+  createdAt `2026-10-23T06:05:10.301Z`, sourceRevision
+  `5b2a2b048bae53f32e464b0a91a8f5d9f354b669`, canonical v1 schema hash,
+  ciphertext SHA256 `d3001daee2f8a18e20a6fa61ec8df711391fc32a24ca0cc0003b6b833b724ca6`.
+  Only this ciphertext+manifest was fetched; Git blob IDs, size and hash match
+  the manifest/repository. Manifest `recipientSha256` equals the operator's
+  locally derived public recipient. Pair is preserved in operator storage
+  outside both repositories and retention.
+- `production.ts validate` with the operator's real private identity: **PASS**
+  (in-memory decrypt, v1 manifest/payload/integrity). Key contents never shown.
+- `local-drill.ts --execute-local` in a new dedicated cluster (127.0.0.1 only,
+  scram, database `czn_recovery_drill`, user-only ACL folder): **PASS**.
+  Independent read-only re-export of the restored database reproduces every one
+  of the seven per-table digests and the total `dataSha256` of the snapshot:
+  values, LWW versions, explicit false, tombstone/unset rows, sub-millisecond
+  timestamps and frozen legacy CZN daily rows are present and byte-identical.
+  Auth stub contains exactly the snapshot owners; `czn_daily_release.enabled`
+  is false and `czn_daily_policy`/`czn_daily_marks` are empty (no policy or epoch
+  manufactured from v1). A second run on the nonempty database was refused
+  (`empty isolated cluster`) and a re-check showed no change.
+- After success the drill server was stopped and its cluster (data, log,
+  temporary local password) deleted. Encrypted pair and private key retained.
+  No counts, IDs or plaintext recorded; private operator record kept locally.
+- **Windows line-ending hazard found:** with global `core.autocrlf=true` the
+  working-tree candidate SQL is CRLF, SHA256 `d77a597c…`, not the reviewed
+  `a5fdb230…`; `production.ts plan` then prints the CRLF hash. The drill used
+  exact Git bytes (`git -c core.autocrlf=false archive HEAD`), where plan reports
+  `a5fdb230…`. Any operator apply must verify that hash first (see handoff step 4).
+
+**Next concrete step:** explicit operator GO for the backup transition only —
+set `CZN_BACKUP_GO_REVISION`, merge private #6, run it on v1 and revalidate/decrypt
+that exact pair locally. Disabled migration and enablement remain separate GOs.
+
 ## CZN direct-production readiness prepared — awaiting production GO (2026-10-23)
 
 - CURRENT main `b075d8056ffbf6d6ac8876bd6175739de808742d` (#69), post-merge
