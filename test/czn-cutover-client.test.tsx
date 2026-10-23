@@ -117,3 +117,17 @@ test('routine sync timestamps do not grow recovery snapshots, baseline tombstone
   store.setItem(keys.syncMeta,JSON.stringify({baseline:{daily:{falseRow:true}},lastAttemptAt:'third'}));
   expect(preserveCznLegacy(store,next).recovery).toHaveLength(count+1);
 });
+
+test('failed capability negotiation holds only CZN while real legacy engine syncs another game',async()=>{
+  const store=new Store(),keys=profileKeys(profile);
+  writeAccountCache(store,profile,owner,{progress:{},daily:{},ignored:{},prefs:defaults(),customGames:{},customEvents:{}});
+  initializeAccountProfile(store,profile,owner);
+  const held=SyncMutation.parse({kind:'daily',key:{subjectId:CZN_SUBJECT,dayKey:'2026-10-22'},completed:false,
+    changedAt:'2026-10-23T10:00:00Z',mutationId:'11111111-1111-4111-8111-111111111111'});
+  const other=SyncMutation.parse({kind:'ignored',key:'other:event',ignored:true,changedAt:'2026-10-23T10:00:00Z',mutationId:'22222222-2222-4222-8222-222222222222'});
+  store.setItem(keys.outbox,JSON.stringify([held,other]));let cloud=emptySyncState();
+  const result=await syncProfile(store,profile,owner,()=>true,{authenticate:async()=>owner,
+    negotiateCzn:async()=>{throw new Error('capability offline');},pull:async()=>cloud,
+    push:async(_p,rows)=>{expect(rows).toEqual([other]);cloud=applyMutation(cloud,other).state;}});
+  expect(result.heldCzn).toBe(1);expect(JSON.parse(store.getItem(keys.outbox)!)).toEqual([held]);
+});

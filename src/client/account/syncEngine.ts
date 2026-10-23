@@ -79,7 +79,11 @@ export async function syncProfile(store: Store, profileId: string, ownerId: stri
   ensureActive();
   if (userId !== ownerId) throw new Error("Account session changed during sync");
   // Opt-in protocol extension: no new RPC is called in the disabled release.
-  const cznFenced = transport.negotiateCzn ? await transport.negotiateCzn(profileId) : false;
+  let cznFenced = false;
+  if (transport.negotiateCzn) {
+    try { cznFenced = await transport.negotiateCzn(profileId); }
+    catch { cznFenced = true; } // Unknown protocol: hold CZN only; unrelated v1 data can still sync.
+  }
   ensureActive();
   const isHeldCzn = (row: SyncMutation) => cznFenced && row.kind === "daily" && row.key.subjectId === CZN_SUBJECT;
   if (cznFenced) preserveCznLegacy(store, readCzn(store, profileId));
