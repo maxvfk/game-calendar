@@ -41,8 +41,9 @@ provides read-only preflight and dual encrypted backup, separate 30/12 v2 retent
 and selected-profile recovery with an independent exact GO. It has no migration or
 enablement command. The staging-only CLI below still refuses production. Public #70/#71 and post-merge CI passed, including real PG17.6 two-connection
 locking, guarded encrypted operator recovery in a dedicated empty local cluster,
-and legacy/v2 ACL preflight. Private workflow/pin preparation is draft #6 and unmerged. Active
-private main/pin is unchanged. Operator GO is required before any live transition.
+and legacy/v2 ACL preflight. GO 1 (2026-10-23) merged private #6: the active backup
+workflow pins dual exporter `b5d46b5` and exported/decrypted a v1 pair. This SQL is
+still NOT installed; GO 2 (migration) and GO 3 (enablement) need separate operator GO.
 
 ## Original staging-first deployment gates (historical baseline)
 

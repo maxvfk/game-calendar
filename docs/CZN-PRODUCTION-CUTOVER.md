@@ -1,7 +1,9 @@
 # CZN direct-production handoff — STOP before GO
 
-Preparation only. No production SQL, backup workflow/pin switch, user-row deletion,
-or CZN enablement is authorized by this document. No staging will be created.
+**Status 2026-10-23: GO 1 (backup transition) COMPLETE; GO 2 (disabled additive
+migration) and GO 3 (enablement) NOT started and each need a separate operator GO.**
+No production SQL, user-row deletion or CZN enablement is authorized by this
+document. No staging will be created.
 The default path preserves every legacy CZN row unchanged in `daily_marks`; the
 new namespace starts empty. Clearing history is unnecessary and would not clear
 cached PWA outboxes. No Auth/profile/database reset is part of this release.
@@ -39,14 +41,14 @@ cached PWA outboxes. No Auth/profile/database reset is part of this release.
   now fails preflight too. Private draft pin uses this final merged implementation.
 - Prepared [private draft #6](https://github.com/maxvfk/game-calendar-backups/pull/6),
   head `c602d3101bc733bf6699a8fb6e3fe559a2b90383`, proposed public pin
-  `b5d46b5fa0b820f9d244302a77c34e7020cde2ee`. **Do not merge before GO.**
+  `b5d46b5fa0b820f9d244302a77c34e7020cde2ee`. (Merged under GO 1 — see below.)
   It retains the existing schedule/mutex, adds independent exact-pin GO and
   synthetic-only validation. No production credentials in PR CI.
   Final private validation passed: [39956500529](https://github.com/maxvfk/game-calendar-backups/actions/runs/39956500529).
   Its gates include actual proposed shell syntax/encrypted-path allowlist, all four
   AGENTS commands, independent PG17 and the exact operator encrypted local drill.
   Active scheduled workflow was not run or changed by this validation.
-- Active private main remains `93128e7fd5ed7e407cee234ba0231a93506f76f2`,
+- Pre-GO-1 private main was `93128e7fd5ed7e407cee234ba0231a93506f76f2`,
   public pin `5b2a2b048bae53f32e464b0a91a8f5d9f354b669`; latest scheduled
   [39909326284](https://github.com/maxvfk/game-calendar-backups/actions/runs/39909326284)
   succeeded. Its 2026-10-23 v1 manifest was inspected as metadata only; no
@@ -69,6 +71,20 @@ cached PWA outboxes. No Auth/profile/database reset is part of this release.
   epoch created; nonempty rerun refused; cluster disposed. Details:
   [implementation status](IMPLEMENTATION-STATUS.md). The pair is kept outside
   retention, but a fresh pre-migration pair is still required at release time.
+- **GO 1 executed (2026-10-23, operator-authorized):** variable
+  `CZN_BACKUP_GO_REVISION=b5d46b5fa0b820f9d244302a77c34e7020cde2ee`; private #6
+  squash-merged as `ffdd3428b4a08964e1ec466bf328a05ee8da68b5` (workflow blob
+  `b10a96db…`, cron `23 1 * * *`, `personal-data-backup` mutex unchanged). Manual
+  [run 39987601875](https://github.com/maxvfk/game-calendar-backups/actions/runs/39987601875)
+  passed every step with `_source` at `b5d46b5`, detected exact v1 and committed
+  only `snapshots/daily/2026-10-23` as `c00090a15a37a0f9a4c44fd3ccc24180850c8be6`
+  (no `snapshots/v2`; monthly `2026-10` and older dailies unchanged). Manifest:
+  v1, createdAt `2026-10-23T16:32:59.510Z`, source `b5d46b5…`, canonical v1,
+  operator recipient, ciphertext SHA256 `8dfb3183…187c`. Operator decrypted it via
+  `validate` from exact `b5d46b5` bytes and repeated the empty-PG17 local drill
+  (all digests matched, release disabled, rerun refused, cluster disposed).
+  Pre-cutover pair `d3001dae…` stays archived outside retention. No Supabase
+  schema/SQL change, Auth change or enablement.
 
 ## Backup and recovery commands
 
@@ -186,7 +202,8 @@ Timestamp equivalence uses PostgreSQL's microsecond conversion, not JS Date.
    source revision, createdAt and successful local recovery drill. Preserve a
    verified **pre-migration** pair in an operator archive outside retention and
    record its identity. Do not publish plaintext, counts, user IDs or keys.
-3. **GO: backup transition only.** Set the reviewed private variable
+3. **GO: backup transition only** — *done 2026-10-23 (private `ffdd342`, run
+   39987601875, pair `8dfb3183…`).* Set the reviewed private variable
    `CZN_BACKUP_GO_REVISION` to the exact public pin, then merge the reviewed
    private workflow PR. Run it on the still-v1 schema. It must produce a valid
    v1 encrypted pair with the new public revision, and the old schedule remains
@@ -234,10 +251,12 @@ All required items must have explicit evidence, not inferred success:
   v1; ACLs/RLS/function identities unchanged. Empty migration ledger accounted for.
 - [ ] No in-flight exporter; verified archived pre-migration encrypted pair
   identified; operator private key decrypt + actual isolated recovery drill accepted.
-  (Key decrypt + drill passed 2026-10-23 on pair `2026-10-23`; recheck the latest
-  pair and identify the archived pre-migration pair at release time.)
-- [ ] Private workflow transition and exact GO variable explicitly authorized;
+  (Key decrypt + drill passed 2026-10-23 on pre-cutover `d3001dae…` and on the
+  first dual-pin pair `8dfb3183…`, both archived outside retention; immediately
+  before GO 2 recheck no in-flight job and validate the then-latest pair.)
+- [x] Private workflow transition and exact GO variable explicitly authorized;
   new dual pin exported/decrypted v1 successfully BEFORE disabled migration.
+  (GO 1, 2026-10-23: private `ffdd342`, run 39987601875, pair `8dfb3183…`.)
 - [ ] Disabled migration explicitly authorized; atomic SQL/hash verified. No
   deletion or full reset; rollback/stop owner available for this maintenance window.
 - [ ] Immediately afterward: exact v2 preflight, hosted Auth/PostgREST/owner/anon/

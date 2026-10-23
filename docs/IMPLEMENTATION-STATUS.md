@@ -1,5 +1,48 @@
 # Game calendar implementation status
 
+## CZN GO 1 — production backup transition COMPLETE (2026-10-23)
+
+Operator-authorized GO 1 only. GO 2 (disabled additive migration) and GO 3
+(enablement) were not started. No production SQL/DDL, Supabase schema, Auth,
+user-row, `CZN_CUTOVER_ENABLED` or policy change.
+
+- Preflight: public main `ad699ad146673588e92bf6c1884168971b0b2b74` (#73, CI
+  39986520121 success); private main `93128e7fd5ed7e407cee234ba0231a93506f76f2`
+  and draft #6 head `c602d3101bc733bf6699a8fb6e3fe559a2b90383` unchanged, #6
+  validate CI 39956500529 success; no backup job running. Production schema was
+  exact v1 (06:05Z strict-v1 scheduled export; no GO 2 issued), and the new
+  exporter re-detected v1 read-only. v1 retention code is unchanged between old
+  pin `5b2a2b0` and `b5d46b5` (stdout buffering only). Extracted GO guard tested
+  locally: unset/old/short/wrong-project values fail, exact pin+project passes.
+- Transition: `CZN_BACKUP_GO_REVISION=b5d46b5fa0b820f9d244302a77c34e7020cde2ee`
+  (non-secret variable); #6 marked ready and squash-merged with head match as
+  private `ffdd3428b4a08964e1ec466bf328a05ee8da68b5`. Workflow blob `b10a96db…`
+  equals the PR head; cron `23 1 * * *`, `personal-data-backup` mutex,
+  cancel-in-progress false and v1 retention unchanged.
+- Production backup on v1: manual [run 39987601875](https://github.com/maxvfk/game-calendar-backups/actions/runs/39987601875)
+  succeeded on every step (GO guard, tool tests, export, encrypted-path allowlist,
+  commit); `_source` was `b5d46b5`. Commit `c00090a15a37a0f9a4c44fd3ccc24180850c8be6`
+  changed only `snapshots/daily/2026-10-23.snapshot.{age,manifest.json}`
+  (same-day rerun); no `snapshots/v2`. Monthly `2026-10` blob and the other
+  daily pairs and S6a report are unchanged; earlier pairs remain in Git history.
+- Pair metadata: format v1, createdAt `2026-10-23T16:32:59.510Z`, sourceRevision
+  `b5d46b5…`, canonical v1 schema `312a36fa…`, operator `recipientSha256`,
+  ciphertext SHA256 `8dfb31831b26110d35713324d74bb84fc836131fa48596b841cffce2c215187c`,
+  age v1 header; Git blob IDs, size and hash consistent.
+- Independent operator validation from exact `b5d46b5` Git bytes: real-key
+  `production.ts validate` **PASS**; repeated `local-drill.ts` in a new empty
+  loopback PG17.11 `czn_recovery_drill` **PASS**. The independent re-export matched
+  all seven table digests + `dataSha256`; release disabled, no policy/epoch;
+  nonempty rerun refused; temporary cluster deleted. No plaintext on disk.
+- Recovery points: pre-cutover pair `d3001dae…` (private `93128e7`) and the new
+  pair are both archived by the operator outside retention; private history
+  retains every earlier pair.
+
+**Next concrete step:** separate explicit operator GO 2 — wait for no in-flight
+backup, validate the then-latest pair, run read-only `production.ts preflight` at
+exact v1, then apply the exact `a5fdb230…` candidate in one transaction with
+enabled=false (handoff step 4). GO 3 remains separate.
+
 ## CZN operator real-key decrypt + local recovery drill accepted (2026-10-23)
 
 Bounded verification only. No hosted connection, production SQL, private

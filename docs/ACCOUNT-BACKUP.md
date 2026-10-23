@@ -576,11 +576,13 @@ original Auth UUIDs still exist. Realtime, multi-profile UI, cache-removal UI,
 new providers, source ingestion and broader S6b monitoring are outside S6a.
 Failures are visible red Actions; no additional alerting/telemetry is introduced.
 
-## Prepared CZN dual-schema transition (not active)
+## CZN dual-schema transition (active since GO 1, 2026-10-23)
 
-The v1 scheduled workflow/pin remains active. The additive production-capable
-entrypoint and separate v2 retention/recovery are described in
-[CZN-PRODUCTION-CUTOVER](CZN-PRODUCTION-CUTOVER.md). The old canonical v1 contract
-and CLI remain strict: they refuse the new schema. A reviewed private draft must
-install the dual v1/v2 exporter before additive DDL; then prove v2 recovery before
-activation. Never change the active workflow/pin or apply SQL without operator GO.
+The private workflow now pins the dual v1/v2 exporter at public
+`b5d46b5fa0b820f9d244302a77c34e7020cde2ee` (private `ffdd342`, guarded by
+`CZN_BACKUP_GO_REVISION`), with the same 01:23 UTC schedule and mutex. Production
+is still the v1 schema, so it writes the existing v1 daily/monthly pairs; the first
+such pair was decrypted and drilled locally by the operator. Details and the
+remaining GO 2/GO 3 gates: [CZN-PRODUCTION-CUTOVER](CZN-PRODUCTION-CUTOVER.md).
+The old canonical v1 contract and CLI remain strict and refuse the new schema;
+never return to the old `5b2a2b0` pin after v2 DDL. No SQL without operator GO.
