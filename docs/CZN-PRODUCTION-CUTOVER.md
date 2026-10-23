@@ -29,13 +29,23 @@ cached PWA outboxes. No Auth/profile/database reset is part of this release.
   [PR CI 39954344066](https://github.com/maxvfk/game-calendar/actions/runs/39954344066)
   and [main CI/Pages 39954540087](https://github.com/maxvfk/game-calendar/actions/runs/39954540087)
   passed, including PG17.6 two-connection lock waits and recovery.
+- Operator drill/preflight [public #71](https://github.com/maxvfk/game-calendar/pull/71),
+  merged `b5d46b5fa0b820f9d244302a77c34e7020cde2ee`; final
+  [PR CI 39956124419](https://github.com/maxvfk/game-calendar/actions/runs/39956124419)
+  and [main CI/Pages 39956392921](https://github.com/maxvfk/game-calendar/actions/runs/39956392921)
+  passed. The exact encrypted operator path passed in a second empty PG17 service;
+  false/epoch/microseconds preserved, second run refused. Supplemental metadata
+  SQL ran under READ ONLY on local v1/v2. Legacy direct-write or owner-policy drift
+  now fails preflight too. Private draft pin uses this final merged implementation.
 - Prepared [private draft #6](https://github.com/maxvfk/game-calendar-backups/pull/6),
-  head `49a39dcdf59a2bab492e92e2ba015e6c0eb40dc8`, proposed public pin
-  `0a83bae2cfc35328bcc28132d7f6207d929be3aa`. **Do not merge before GO.**
+  head `c602d3101bc733bf6699a8fb6e3fe559a2b90383`, proposed public pin
+  `b5d46b5fa0b820f9d244302a77c34e7020cde2ee`. **Do not merge before GO.**
   It retains the existing schedule/mutex, adds independent exact-pin GO and
   synthetic-only validation. No production credentials in PR CI.
-  [Private CI 39954714455](https://github.com/maxvfk/game-calendar-backups/actions/runs/39954714455)
-  passed full pinned tool checks and isolated PG17.
+  Final private validation passed: [39956500529](https://github.com/maxvfk/game-calendar-backups/actions/runs/39956500529).
+  Its gates include actual proposed shell syntax/encrypted-path allowlist, all four
+  AGENTS commands, independent PG17 and the exact operator encrypted local drill.
+  Active scheduled workflow was not run or changed by this validation.
 - Active private main remains `93128e7fd5ed7e407cee234ba0231a93506f76f2`,
   public pin `5b2a2b048bae53f32e464b0a91a8f5d9f354b669`; latest scheduled
   [39909326284](https://github.com/maxvfk/game-calendar-backups/actions/runs/39909326284)
@@ -78,7 +88,7 @@ After backup-transition GO, with the reviewed source checked out and private
 workflow variable set independently (do not set it merely to run this example):
 
 ```sh
-reviewed_public_revision=0a83bae2cfc35328bcc28132d7f6207d929be3aa
+reviewed_public_revision=b5d46b5fa0b820f9d244302a77c34e7020cde2ee
 bun scripts/czn-cutover/production.ts backup --execute \
   --project-ref vzzudezdigjwbwfejlsg --confirm-project vzzudezdigjwbwfejlsg \
   --source-revision "$reviewed_public_revision" \
@@ -233,8 +243,18 @@ reviewed old workflow only while preflight still proves v1. If additive DDL fail
 atomically, rollback transaction; verify v1 and backup. Once DDL commits, retain
 v2-compatible backup/policy-aware reader even while disabled; do not downgrade to
 the old pin. If hosted checks fail, leave server/client disabled, diagnose, and
-keep backups. Any emergency server disable after enablement is a separate explicit
-operator-authorized `enabled=false` change; it blocks v2 writes/new cutovers but
+keep backups. Any emergency server disable after enablement requires separate operator
+authorization for this exact action (never execute it from this readiness Work):
+
+```sql
+begin;
+set local lock_timeout='10s';
+set local statement_timeout='30s';
+update public.czn_daily_release set enabled=false where singleton=true;
+commit;
+```
+
+Keep the current compatible PWA/policy-aware reader deployed. This change blocks v2 writes/new cutovers but
 never removes epochs or reopens old CZN. Never drop v2 tables/fences, delete
 profiles, rekey labels, clear localStorage/outboxes or restore with an old tool.
 Recovery is a separately approved selected-profile transaction, not a rollback

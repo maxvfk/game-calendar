@@ -40,7 +40,7 @@ try{
   await assertCznTarget(q,project,contract.schemaSha256);await assertAccess(q,2);
   await q('insert into auth.users values($1),($2)',[owner,other]);
   await auth(a,owner);await auth(b,owner);
-  const profile=String((await qa('select public.ensure_default_profile() as id'))[0]!.id);
+  let profile=String((await qa('select public.ensure_default_profile() as id'))[0]!.id);
   const old=(query:typeof q,rows:unknown[])=>query('select public.apply_profile_mutations($1,$2::jsonb) as result',[profile,JSON.stringify(rows)]);
   const negotiate=(query:typeof q)=>query('select public.czn_daily_negotiate($1,true) as result',[profile]);
   assert.equal(((await negotiate(qa))[0]!.result as any).enabled,false);
@@ -49,11 +49,14 @@ try{
   await qa('begin');assert.equal(((await old(qa,[daily(1)]))[0]!.result as any[])[0].outcome,'accepted');
   const bpid=Number((await qb('select pg_backend_pid() as pid'))[0]!.pid);
   const pendingFence=negotiate(qb);await waiting(bpid);await qa('commit');
-  const policy=((await pendingFence)[0]!.result as any).policy;
+  await pendingFence;
   assert.equal((await q('select count(*)::int as n from public.czn_daily_marks'))[0]!.n,0);
   const frozen=JSON.stringify(await q('select to_jsonb(t) as row from public.daily_marks t'));
-  // Cutover first: stale false + another-game batch waits for the profile lock, then CZN is held.
-  await qb('begin');await negotiate(qb);
+  // A fresh profile proves visibility of the FIRST uncommitted fence after the lock wait.
+  // Re-negotiating an already fenced profile would not exercise that MVCC boundary.
+  profile=mid(900);
+  await q("insert into public.profiles(id,owner_id,name,is_default) values($1,$2,'Fresh cutover race',false)",[profile,owner]);
+  await qb('begin');const policy=((await negotiate(qb))[0]!.result as any).policy;
   const apid=Number((await qa('select pg_backend_pid() as pid'))[0]!.pid);
   const pendingOld=old(qa,[daily(2,'dailies:czn',false),daily(3,'dailies:zzz')]);await waiting(apid);await qb('commit');
   assert.deepEqual(((await pendingOld)[0]!.result as any[]).map(r=>r.outcome),['update_required','accepted']);
@@ -75,7 +78,7 @@ try{
   const snapshot=await readCznSnapshot(q,{createdAt:new Date().toISOString(),projectRef:project,sourceRevision:'a'.repeat(40),schemaSha256:contract.schemaSha256,migrationSha256:contract.migrationSha256},contract.schemaSha256);
   await q('update public.czn_daily_release set enabled=false');
   await restoreCznSnapshot(q,snapshot.base,project,contract.schemaSha256);await restoreCznSnapshot(q,snapshot,project,contract.schemaSha256);
-  assert.equal((await q('select epoch::text as epoch from public.czn_daily_policy'))[0]!.epoch,policy.epoch);
+  assert.equal((await q('select epoch::text as epoch from public.czn_daily_policy where profile_id=$1',[profile]))[0]!.epoch,policy.epoch);
   assert.equal((await q('select completed from public.czn_daily_marks'))[0]!.completed,false);
   assert.equal((await q('select enabled from public.czn_daily_release'))[0]!.enabled,false);
   await assert.rejects(apply(qa,v2row(7,true)));
