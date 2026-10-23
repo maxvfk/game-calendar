@@ -1,7 +1,9 @@
 # CZN direct-production handoff — STOP before GO
 
-**Status 2026-10-23: GO 1 (backup transition) COMPLETE; GO 2 (disabled additive
-migration) and GO 3 (enablement) NOT started and each need a separate operator GO.**
+**Status 2026-10-23: GO 1 (backup transition) COMPLETE. GO 2 (disabled additive
+migration) APPLIED in production and verified, except the owner-authenticated
+Sync smoke, which is still manual. Server `enabled=false`, client compiled off, no epochs.
+GO 3 (enablement) NOT started; it needs a separate operator GO.**
 No production SQL, user-row deletion or CZN enablement is authorized by this
 document. No staging will be created.
 The default path preserves every legacy CZN row unchanged in `daily_marks`; the
@@ -85,6 +87,34 @@ cached PWA outboxes. No Auth/profile/database reset is part of this release.
   (all digests matched, release disabled, rerun refused, cluster disposed).
   Pre-cutover pair `d3001dae…` stays archived outside retention. No Supabase
   schema/SQL change, Auth change or enablement.
+- **GO 2 executed (2026-10-23, operator-authorized; enablement excluded):** the
+  operator ran a local fail-closed script (pin `b5d46b5` exact Git bytes, PG17.11
+  `psql`, Session pooler, TLS verify-full with the pinned CA; passwords typed
+  hidden, never shared). Exact-v1 `production.ts preflight --read-only` and
+  read-only admin guards passed (PG17, project marker, no CZN/partial v2 objects).
+  Candidate SHA256 `a5fdb2301b3906d314a9f03afcef41b0de2a0ab8d00e32cd1b97a562172db788`
+  was applied in ONE transaction (lock_timeout 10s, statement_timeout 120s,
+  `ON_ERROR_STOP`), and COMMIT was confirmed at 17:51:45Z. Post-commit read-only checks: one release
+  row `enabled=false`; policy/new marks empty; the implementation moved to
+  `calendar_sync_internal` and is not executable by clients; the wrapper is
+  executable by `authenticated`; anon cannot run CZN RPCs; no direct CZN writes.
+  Exact-v2 preflight passed (`17bcce56…`). Anon PostgREST: CZN objects moved from
+  404 `PGRST205/202` (absent) to 401 `42501` after `NOTIFY pgrst` (schema
+  reloaded); legacy tables/RPC stay 401 `42501`; `calendar_sync_internal` and
+  `calendar_backup_control` are not exposed (406 `PGRST106`).
+- **Backup v2:** [run 39998656242](https://github.com/maxvfk/game-calendar-backups/actions/runs/39998656242)
+  detected exact v2 but committed payloads only (`b869e21`): the private
+  `.gitignore` skipped `*.czn-v2.snapshot.age.manifest.json`. Operator-approved
+  private [#7](https://github.com/maxvfk/game-calendar-backups/pull/7) (`f96684b`)
+  re-included them, restored the two deterministic manifests (validated) and added a
+  `git check-ignore` regression check. [Run 40000730021](https://github.com/maxvfk/game-calendar-backups/actions/runs/40000730021)
+  then committed a complete pair (`fcb24d2`): v2, createdAt `2026-10-23T18:08:54.135Z`,
+  source `b5d46b5…`, ciphertext SHA256 `d83f30d4…b0e1`. Real-key `validate` passed for
+  both v2 pairs; the first one was also restored in an empty local PG17 (all digests,
+  extension equal, no epochs, `enabled=false`, rerun refused, cluster deleted).
+  Operator read-only production `restore --all-profiles --read-only` dry-run passed for
+  the v2 pair and for v1 pair `8dfb3183…` into live v2, with no writes. All v1 pairs and
+  the pre-cutover archive are preserved.
 
 ## Backup and recovery commands
 
@@ -210,7 +240,8 @@ Timestamp equivalence uses PostgreSQL's microsecond conversion, not JS Date.
    01:23 UTC. Revalidate/decrypt this exact pair locally. No migration until this
    succeeds. This dual reader covers both sides of the atomic schema change;
    installing schema first would leave the old exporter unable to back up.
-4. **GO: disabled additive migration only.** Immediately rerun read-only
+4. **GO: disabled additive migration only** — *done 2026-10-23 (COMMIT 17:51:45Z,
+   SQL `a5fdb230…`).* Immediately rerun read-only
    preflight against known v1. On Windows, a `core.autocrlf=true` checkout turns
    the candidate into CRLF bytes (SHA256 `d77a597c…`); take the bytes from Git
    (`git -c core.autocrlf=false show HEAD:<candidate path>`) and verify SHA256
@@ -222,13 +253,16 @@ Timestamp equivalence uses PostgreSQL's microsecond conversion, not JS Date.
    rows, or enable policy. On error ROLLBACK and stop. SQL is additive except
    replacing the old RPC with its owner-locked wrapper; all three v2 tables start
    disabled/empty. Review effective roles, not just table presence.
-5. Run exact-v2 read-only contract/backup-role preflight. Verify PostgREST schema
+5. *Done 2026-10-23 except the owner login/profile/other-game Sync smoke, which
+   is still pending as a manual operator check.* Run exact-v2 read-only
+   contract/backup-role preflight. Verify PostgREST schema
    reload and API exposure using the normal public client: anon denied, actual
    owners only, helper inaccessible, direct writes denied, capability enabled
    false/no epoch. Verify existing owner login/profile read and unrelated-game
    Sync with operator-owned normal actions only; agree any live write smoke first.
    Stop on API drift/RLS/Auth failures. No production synthetic test data.
-6. Run dual-schema private workflow again; require a v2 encrypted pair under
+6. *Done 2026-10-23 (runs 39998656242 + 40000730021, private #7).* Run
+   dual-schema private workflow again; require a v2 encrypted pair under
    `snapshots/v2`, successful local decrypt, and v2 recovery dry-run. Complete
    isolated local actual v1/v2 recovery from the operator's real pair without
    uploading data. Record acceptance privately. Preserve the pre-migration pair.
@@ -245,22 +279,27 @@ Timestamp equivalence uses PostgreSQL's microsecond conversion, not JS Date.
 
 All required items must have explicit evidence, not inferred success:
 
-- [ ] Exact public/private pins and SQL/hash reviewed; four AGENTS commands and
+- [x] Exact public/private pins and SQL/hash reviewed; four AGENTS commands and
   PR/main CI, including isolated PG17 concurrency/ACL/recovery job, green.
-- [ ] Production ref/PG17/role/schema inventory matches; fresh preflight at known
+- [x] Production ref/PG17/role/schema inventory matches; fresh preflight at known
   v1; ACLs/RLS/function identities unchanged. Empty migration ledger accounted for.
-- [ ] No in-flight exporter; verified archived pre-migration encrypted pair
+  (GO 2 17:50Z: exact-v1 preflight + read-only admin guards; no old migration replayed.)
+- [x] No in-flight exporter; verified archived pre-migration encrypted pair
   identified; operator private key decrypt + actual isolated recovery drill accepted.
   (Key decrypt + drill passed 2026-10-23 on pre-cutover `d3001dae…` and on the
   first dual-pin pair `8dfb3183…`, both archived outside retention; immediately
-  before GO 2 recheck no in-flight job and validate the then-latest pair.)
+  before GO 2 the latest pair `8dfb3183…` was revalidated and no job was in flight.)
 - [x] Private workflow transition and exact GO variable explicitly authorized;
   new dual pin exported/decrypted v1 successfully BEFORE disabled migration.
   (GO 1, 2026-10-23: private `ffdd342`, run 39987601875, pair `8dfb3183…`.)
-- [ ] Disabled migration explicitly authorized; atomic SQL/hash verified. No
+- [x] Disabled migration explicitly authorized; atomic SQL/hash verified. No
   deletion or full reset; rollback/stop owner available for this maintenance window.
+  (GO 2: one transaction, COMMIT 17:51:45Z.)
 - [ ] Immediately afterward: exact v2 preflight, hosted Auth/PostgREST/owner/anon/
   internal RPC checks and other-game smoke; encrypted v2 backup + recovery proof.
+  (Passed: exact v2 preflight, PostgREST reload, anon/internal/ACL checks, encrypted
+  v2 backup, local recovery, production read-only dry-run. **Open:** owner-authenticated
+  login/profile read and other-game Sync smoke in the deployed app.)
 - [ ] No-staging residual risks explicitly accepted; client/server enablement
   remain separate approvals. Real-device smoke planned; outboxes preserved.
 

@@ -1,4 +1,11 @@
-# CZN server/backup release candidate — NOT INSTALLED
+# CZN server/backup release — INSTALLED IN PRODUCTION, DISABLED (GO 2, 2026-10-23)
+
+> **GO 2 (2026-10-23):** this exact candidate (SHA256 `a5fdb230…`) was applied to
+> production in one transaction, with `enabled=false` and no epochs. The SQL file's own
+> header comment ("Not installed") is historical and is kept byte-for-byte
+> because the reviewed hash covers it. Do not re-apply it; it now fails on existing objects.
+> Enablement (GO 3) needs a separate operator GO. Evidence:
+> [CZN-PRODUCTION-CUTOVER](../../docs/CZN-PRODUCTION-CUTOVER.md).
 
 > **2026-10-23 operator-directed alternative:** The operator chose to plan a
 > direct production release **without provisioning staging**, accepting a narrower
@@ -42,8 +49,8 @@ and selected-profile recovery with an independent exact GO. It has no migration 
 enablement command. The staging-only CLI below still refuses production. Public #70/#71 and post-merge CI passed, including real PG17.6 two-connection
 locking, guarded encrypted operator recovery in a dedicated empty local cluster,
 and legacy/v2 ACL preflight. GO 1 (2026-10-23) merged private #6: the active backup
-workflow pins dual exporter `b5d46b5` and exported/decrypted a v1 pair. This SQL is
-still NOT installed; GO 2 (migration) and GO 3 (enablement) need separate operator GO.
+workflow pins dual exporter `b5d46b5` and exported/decrypted a v1 pair. GO 2 installed
+this SQL disabled; backups now write `snapshots/v2`. GO 3 (enablement) needs a separate GO.
 
 ## Original staging-first deployment gates (historical baseline)
 
