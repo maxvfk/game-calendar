@@ -82,42 +82,6 @@ Complete the "Gunfire in the Silent Lands" quest of the Archon Quest Chapter VII
 
 -----
 
-# ["Predictive Victory Dynamics" Event: Predict the Outcome of Battles](archive/21887.md)
-## Predictive Victory Dynamics
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/5d6d4968b2e59e6f3346af687966bd28_5852306448032983720_transformed.jpg)
-
-〓Event Rewards〓
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/08/21/39cd938bcf0542bb6333437a2c2a21b4_1631474449051988747_transformed.png)
-
-〓Event Duration〓
-
-Event Duration: <t class="t_gl" contenteditable="false">2026/10/12 10:00</t> – <t class="t_gl" contenteditable="false">2026/10/20 09:59</t>
-
-Result Announcement: <t class="t_gl" contenteditable="false">2026/10/20 10:00</t> – <t class="t_gl" contenteditable="false">2026/10/23 09:59</t>
-
-*The timing of this event is quite unusual. Travelers are advised to check the event interface for the relevant times and participate before it's too late!
-
-〓Eligibility〓
-
-Adventure Rank 20 or above
-
-Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
-
-※ Complete Archon Quest Chapter VII: Act IV "A Rekviem for the Underworld" first to get the best experience from this event.
-
-〓Event Details〓
-
-● During the event, 8 rounds of battles will become available over time. A set number of "Victory Emblems" will be distributed each round. Travelers must predict the outcome based on both teams' lineups and allocate their Victory Emblems to the team they believe will win.
-
-● During the event period, Travelers can make predictions for each matchup. Predictions for each round remain open for 24 hours. Check the "Time Remaining for This Prediction Round" display on the event interface and be sure to participate before time runs out.
-
-● After each round ends, Travelers will receive a "Prediction Score" based on the battle results and the accuracy of their prediction. Participate in each round and reach the specified "Prediction Score" requirements to obtain various rewards.
-
-※ Once the prediction deadline for each round has passed, participation rewards for that round will no longer be available. Please plan your time accordingly and submit your predictions promptly, Traveler.
-
------
-
 # [Participate in "Starlight Voyage: Heart Unbound" to obtain Prismatic Crystals, the token for the Colorful Surprise Box](archive/21901.md)
 ## Starlight Voyage: Heart Unbound
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/17/35629b6c92a60f02d0042907e72c372d_2750764721117474070_transformed.jpg)
@@ -199,34 +163,6 @@ Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-St
 ※ This is for "Character Event Wish-2." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
 
 ※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
-
-※ For more information, go to the Wish screen and select Details in the bottom-left corner.
-
------
-
-# [Event Wish "Epitome Invocation" - Boosted Drop Rates for Azurelight (Sword) and Symphonist of Scents (Polearm)!](archive/21890.md)
-## Event Wish "Epitome Invocation"
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/ccc187c09296b4a1990c8cf98dcadb46_5421147638874447905_transformed.jpg)
-
-Travelers, stock up on weapons and characters in "Epitome Invocation" to make your party stronger in combat!
-
-〓Event Wish Details〓
-
-Event Wish Duration | Promotional Weapons (5-Star) | Featured Weapons (4-Star)
---- | --- | ---
-<t class="t_lc" contenteditable="false">2026/10/13 18:00</t> –  <t class="t_lc" contenteditable="false">2026/11/03 14:59</t> | Azurelight (Sword)  Symphonist of Scents (Polearm) | Sturdy Bone (Sword)
-^ | ^ | Sacrificial Greatsword (Claymore)
-^ | ^ | Favonius Lance (Polearm)
-^ | ^ | The Widsith (Catalyst)
-^ | ^ | Sacrificial Bow (Bow)
-
-● During this event wish, the event-exclusive 5-star weapons Azurelight (Sword) and Symphonist of Scents (Polearm) will receive a huge drop-rate boost!
-
-● During the event, the event-exclusive 4-star weapon Sturdy Bone (Sword), as well as the 4-star weapons Sacrificial Greatsword (Claymore), Favonius Lance (Polearm), The Widsith (Catalyst), and Sacrificial Bow (Bow) will receive a huge drop rate boost!
-
-● During this event wish, use Epitomized Path to chart a course towards a promotional 5-star weapon, such as Azurelight (Sword) or Symphonist of Scents (Polearm). For more information on Epitomized Path, go to the Wish screen and select Details in the bottom-left corner.
-
-※ Of the above weapons, the event-exclusive weapons will not be available in the standard wish "Wanderlust Invocation."
 
 ※ For more information, go to the Wish screen and select Details in the bottom-left corner.
 
@@ -999,6 +935,34 @@ Permanent
 
 -----
 
+# [Event Wish "Epitome Invocation" - Boosted Drop Rates for Azurelight (Sword) and Symphonist of Scents (Polearm)!](archive/21890.md)
+## Event Wish "Epitome Invocation"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/ccc187c09296b4a1990c8cf98dcadb46_5421147638874447905_transformed.jpg)
+
+Travelers, stock up on weapons and characters in "Epitome Invocation" to make your party stronger in combat!
+
+〓Event Wish Details〓
+
+Event Wish Duration | Promotional Weapons (5-Star) | Featured Weapons (4-Star)
+--- | --- | ---
+<t class="t_lc" contenteditable="false">2026/10/13 18:00</t> –  <t class="t_lc" contenteditable="false">2026/11/03 14:59</t> | Azurelight (Sword)  Symphonist of Scents (Polearm) | Sturdy Bone (Sword)
+^ | ^ | Sacrificial Greatsword (Claymore)
+^ | ^ | Favonius Lance (Polearm)
+^ | ^ | The Widsith (Catalyst)
+^ | ^ | Sacrificial Bow (Bow)
+
+● During this event wish, the event-exclusive 5-star weapons Azurelight (Sword) and Symphonist of Scents (Polearm) will receive a huge drop-rate boost!
+
+● During the event, the event-exclusive 4-star weapon Sturdy Bone (Sword), as well as the 4-star weapons Sacrificial Greatsword (Claymore), Favonius Lance (Polearm), The Widsith (Catalyst), and Sacrificial Bow (Bow) will receive a huge drop rate boost!
+
+● During this event wish, use Epitomized Path to chart a course towards a promotional 5-star weapon, such as Azurelight (Sword) or Symphonist of Scents (Polearm). For more information on Epitomized Path, go to the Wish screen and select Details in the bottom-left corner.
+
+※ Of the above weapons, the event-exclusive weapons will not be available in the standard wish "Wanderlust Invocation."
+
+※ For more information, go to the Wish screen and select Details in the bottom-left corner.
+
+-----
+
 # ["Genius Invokation TCG" Heated Battle Mode: Automatic Artistry](archive/21368.md)
 ## Genius Invokation TCG - Heated Battle Mode
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2025/10/10/a066dbf310d6c4a5e2c22b1f8324b732_1404755613436123246_transformed.jpg)
@@ -1038,66 +1002,6 @@ And complete the World Quest "Battlefield of Dice, Cats, and Cards"
 〓Event Details〓
 
 ● After the event starts, Travelers can go to the Invitation Board of The Cat's Tail to participate in "Genius Invokation TCG" duels under the special rules of "Heated Battle Mode."
-
------
-
-# [Stygian Onslaught Event: Disturbance-affected Ley Line challenges](archive/21168.md)
-## Stygian Onslaught
-![Banner](https://sdk.hoyoverse.com/upload/ann/2025/10/23/40da7ab1ce17afd008e7a10c6ee6e67b_3372052251159312794_transformed.jpg)
-
-〓Event Rewards〓
-
-![img](https://sdk.hoyoverse.com/upload/ann/2025/06/05/2b8eaa5bc75b36d842c22a91c3bb4fb4_2475835335613495492.png)
-
-〓Event Duration〓
-
-Event Duration: <t class="t_lc" contenteditable="false">2026/09/30 10:00</t>  - <t class="t_lc" contenteditable="false">2026/11/03 03:59</t>
-
-Disturbance Outbreak: <t class="t_lc" contenteditable="false">2026/09/30 10:00</t>  - <t class="t_lc" contenteditable="false">2026/10/10 03:59</t>
-
-〓Eligibility〓
-
-Adventure Rank 20 or above
-
-And complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
-
-※Complete Archon Quest "Perilous Trail" first to get the best experience from this event.
-
-〓Event Details〓
-
-● Challenge gameplay: You must select a difficulty first. After you enter a challenge, you must complete 3 phases, for a total of 3 time-limited battles. The challenge is considered complete once all opponents in all 3 battles are beaten.
-
-● Difficulty: difficulty levels in ascending order are "Normal," "Advancing," "Hard," "Menacing," "Fearless," and "Dire."
-
-The higher the initial difficulty selected, the more restrictive the rules applied during the challenge, and the tougher enemies will be.
-
-From the "Hard" difficulty onward, you can only unlock the next difficulty by clearing the current one.
-
-● "Exalted Ones": There can be a maximum of 16 "Exalted Ones" at any one time during the challenge.
-
-"Exalted Ones" will obtain buff effects; adding them to your party will help you complete the challenge.
-
-There can be a maximum of 16 "Exalted Ones" at any one time during the challenge, and their number is subject to change.
-
-Under the "Dire" difficulty, "Exalted Ones" no longer obtain buff effects.
-
-● Disturbance Outbreak: In the first 10 days from when the challenge is available, the Ley Line disturbance will be in an "Outbreak" state.
-
-During the Disturbance Outbreak, players with Adventure Rank 45 and above can challenge stages at "Hard" difficulty onwards, and upon completing them, can consume Resin to earn the rewards from their chosen Domains of Blessing, while also accumulating Dire Prestige.
-
-Accumulate a certain amount of Dire Prestige to receive extra Artifact rewards and Dust of Enlightenment.
-
-After the Disturbance Outbreak ends, players will not be able to consume Resins to claim rewards from their selected Domain of Blessing.
-
-● Completing a more difficult challenge will also let you obtain the rewards from the difficulties below that one.
-
-Rewards for "Fearless" and "Dire" difficulties can only be claimed upon completing the single-player challenge.
-
-● Co-Op Mode: All difficulty levels support Co-Op Mode of up to 4 players.
-
-"Normal," "Advancing," and "Hard" difficulties support matchmaking or Co-Op Mode within the same world.
-
-"Menacing," "Fearless," and "Dire" difficulties only support Co-Op challenges within the same world.
 
 -----
 
@@ -1335,6 +1239,66 @@ Manekina Cosmetic "Rose's Lament" | ^
 
 -----
 
+# [Stygian Onslaught Event: Disturbance-affected Ley Line challenges](archive/21168.md)
+## Stygian Onslaught
+![Banner](https://sdk.hoyoverse.com/upload/ann/2025/10/23/40da7ab1ce17afd008e7a10c6ee6e67b_3372052251159312794_transformed.jpg)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2025/06/05/2b8eaa5bc75b36d842c22a91c3bb4fb4_2475835335613495492.png)
+
+〓Event Duration〓
+
+Event Duration: <t class="t_lc" contenteditable="false">2026/09/30 10:00</t>  - <t class="t_lc" contenteditable="false">2026/11/03 03:59</t>
+
+Disturbance Outbreak: <t class="t_lc" contenteditable="false">2026/09/30 10:00</t>  - <t class="t_lc" contenteditable="false">2026/10/10 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 20 or above
+
+And complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
+
+※Complete Archon Quest "Perilous Trail" first to get the best experience from this event.
+
+〓Event Details〓
+
+● Challenge gameplay: You must select a difficulty first. After you enter a challenge, you must complete 3 phases, for a total of 3 time-limited battles. The challenge is considered complete once all opponents in all 3 battles are beaten.
+
+● Difficulty: difficulty levels in ascending order are "Normal," "Advancing," "Hard," "Menacing," "Fearless," and "Dire."
+
+The higher the initial difficulty selected, the more restrictive the rules applied during the challenge, and the tougher enemies will be.
+
+From the "Hard" difficulty onward, you can only unlock the next difficulty by clearing the current one.
+
+● "Exalted Ones": There can be a maximum of 16 "Exalted Ones" at any one time during the challenge.
+
+"Exalted Ones" will obtain buff effects; adding them to your party will help you complete the challenge.
+
+There can be a maximum of 16 "Exalted Ones" at any one time during the challenge, and their number is subject to change.
+
+Under the "Dire" difficulty, "Exalted Ones" no longer obtain buff effects.
+
+● Disturbance Outbreak: In the first 10 days from when the challenge is available, the Ley Line disturbance will be in an "Outbreak" state.
+
+During the Disturbance Outbreak, players with Adventure Rank 45 and above can challenge stages at "Hard" difficulty onwards, and upon completing them, can consume Resin to earn the rewards from their chosen Domains of Blessing, while also accumulating Dire Prestige.
+
+Accumulate a certain amount of Dire Prestige to receive extra Artifact rewards and Dust of Enlightenment.
+
+After the Disturbance Outbreak ends, players will not be able to consume Resins to claim rewards from their selected Domain of Blessing.
+
+● Completing a more difficult challenge will also let you obtain the rewards from the difficulties below that one.
+
+Rewards for "Fearless" and "Dire" difficulties can only be claimed upon completing the single-player challenge.
+
+● Co-Op Mode: All difficulty levels support Co-Op Mode of up to 4 players.
+
+"Normal," "Advancing," and "Hard" difficulties support matchmaking or Co-Op Mode within the same world.
+
+"Menacing," "Fearless," and "Dire" difficulties only support Co-Op challenges within the same world.
+
+-----
+
 # ["Rainbow's End: Resplendent Starlight" Event: Log In to Claim Primogems ×1,600, Intertwined Fate ×10, and Other Rewards](archive/21879.md)
 ## Rainbow's End: Resplendent Starlight
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/13731601c5ec188f8221e2179960f25d_8966757839271822351_transformed.jpg)
@@ -1478,6 +1442,14 @@ Complete Archon Quests: Chapter VII: Act III "White Night, Like a Dream Upon Wak
 
 -----
 
+# [Version 7.1 Benefits Overview](archive/21923.md)
+## Version 7.1 Benefits Overview
+
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/09/12/503dbdabd59d6ff5aebd151d5011b7f7_3634289702927936987_transformed.jpg)
+
+-----
+
 # ["Upstream Variations" World Quest Overview](archive/21882.md)
 ## Upstream Variations
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/ebd7c34e4e6e82a5f6b907fd8a65a85b_739333715900579401_transformed.jpg)
@@ -1504,11 +1476,27 @@ Unlock "Meeting Point: Tidesong Cavern" and upgrade the Meeting Point to Level 2
 
 -----
 
-# [Version 7.1 Benefits Overview](archive/21923.md)
-## Version 7.1 Benefits Overview
+# [Game Survey](archive/21848.md)
+## Complete the Survey and Get Primogems
+![Banner](https://sdk.hoyoverse.com/upload/announcement/2022/08/17/f8c479b1eaf9c19328c56264ca38affe_8815493962934825777.jpg)
 
+Dear Travelers,
 
-![img](https://sdk.hoyoverse.com/upload/ann/2026/09/12/503dbdabd59d6ff5aebd151d5011b7f7_3634289702927936987_transformed.jpg)
+A new adventure has begun! In order to better understand the gaming habits of Travelers and to bring them the best-possible Genshin Impact experience, Paimon has prepared a survey. Travelers who complete the survey will receive Primogems ×50~
+
+〓Survey Period〓
+
+Long-term
+
+〓Survey Link〓
+
+[Click here to fill out the survey.](https://webstatic.hoyoverse.com/common/event/survey-user-v2/index.html?auth_appid=survey_CNn_k-BFsx-seXZlJUP2c9jilDCgAXAuxCjVT72gll6OFBK&game_biz=hk4e_global&surveyId=39582&format=1&sign_type=2&authkey_ver=1)
+
+Travelers can also open the link via Paimon Menu > Mail > Game Survey > Survey Link to access the survey or via Paimon Menu > Survey > Select "Game Survey" to fill out the survey. After completing filling out the survey through any of the steps, you will get a prize, and you don't need to fill it in again~
+
+Survey answers cannot be changed after submission, so please fill it out carefully.
+
+We thank all Travelers for your invaluable feedback!
 
 -----
 
@@ -1537,30 +1525,6 @@ Adventure Rank 20 or above
 ● After unlocking Gnostic Hymn or Gnostic Chorus, you will unlock the Chronicle Boon effect, granting a discount when purchasing the corresponding Miliastra Pass in Miliastra Wonderland. Likewise, unlocking Chronicles of the Realms or Epic of the Realms will grant the Battle Pass Boon effect, offering a discount when purchasing the corresponding Battle Pass in Teyvat. You can check the Boon button on the Miliastra Pass or Battle Pass purchase screen for more details. The Boon effect can only be activated once during the current event period.
 
 ● The Battle Pass and Miliastra Pass share the same start and end dates each period. Please be sure to check the time and claim your rewards promptly.
-
------
-
-# [Game Survey](archive/21848.md)
-## Complete the Survey and Get Primogems
-![Banner](https://sdk.hoyoverse.com/upload/announcement/2022/08/17/f8c479b1eaf9c19328c56264ca38affe_8815493962934825777.jpg)
-
-Dear Travelers,
-
-A new adventure has begun! In order to better understand the gaming habits of Travelers and to bring them the best-possible Genshin Impact experience, Paimon has prepared a survey. Travelers who complete the survey will receive Primogems ×50~
-
-〓Survey Period〓
-
-Long-term
-
-〓Survey Link〓
-
-[Click here to fill out the survey.](https://webstatic.hoyoverse.com/common/event/survey-user-v2/index.html?auth_appid=survey_CNn_k-BFsx-seXZlJUP2c9jilDCgAXAuxCjVT72gll6OFBK&game_biz=hk4e_global&surveyId=39582&format=1&sign_type=2&authkey_ver=1)
-
-Travelers can also open the link via Paimon Menu > Mail > Game Survey > Survey Link to access the survey or via Paimon Menu > Survey > Select "Game Survey" to fill out the survey. After completing filling out the survey through any of the steps, you will get a prize, and you don't need to fill it in again~
-
-Survey answers cannot be changed after submission, so please fill it out carefully.
-
-We thank all Travelers for your invaluable feedback!
 
 -----
 
