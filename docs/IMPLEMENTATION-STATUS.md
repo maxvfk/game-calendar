@@ -1,5 +1,66 @@
 # Game calendar implementation status
 
+## CZN GO 2 — disabled additive production migration APPLIED (2026-10-23)
+
+Operator-authorized GO 2 only. GO 3 (enablement) is not started: server
+`czn_daily_release.enabled=false`, client `CZN_CUTOVER_ENABLED=false`, no profile
+epochs, no PWA release, legacy CZN rows untouched, no Auth/user-row change,
+no production restore. Overall: **migration and hosted/backup checks PASS. The
+owner-authenticated Sync smoke is still a manual check.**
+
+- Inputs: public main `cd619dd11ba2b5904a6d710b8e92c00412766c32` (#74, CI 39989460772
+  success); backup pin `b5d46b5fa0b820f9d244302a77c34e7020cde2ee`; private main
+  `c00090a` before GO 2; no backup job in flight; the latest v1 pair `8dfb3183…`
+  revalidated with the real key and archived outside retention.
+- Method: no Supabase connector or stored credential on the agent side. The operator
+  ran a reviewed local fail-closed PowerShell script: exact Git bytes of the
+  pin, PG17.11 `psql`, Session pooler `aws-1-eu-west-1`, TLS verify-full with the
+  pinned CA, passwords typed hidden, URLs never printed, and an explicit `APPLY GO2`
+  confirmation. It was rehearsed first against a synthetic local PG17 v1 schema
+  (apply + 13 checks; a re-apply fails and rolls back; the guard refuses a v2 DB).
+  Note: the desktop app virtualizes `AppData\Local`, so operator tooling lives
+  under `%USERPROFILE%\CalendarRecovery\go2`.
+- Preflight (read-only): `production.ts preflight` = exact v1 `312a36fa…`
+  (contract, functions, RLS/effective ACL, backup role); admin guards: PG17,
+  project marker, no CZN tables/internal schema/RPCs, legacy RPC + guard function
+  present. Credentials were checked separately beforehand.
+- Migration: candidate SHA256 `a5fdb2301b3906d314a9f03afcef41b0de2a0ab8d00e32cd1b97a562172db788`
+  in ONE transaction (lock_timeout 10s, statement_timeout 120s, ON_ERROR_STOP),
+  **COMMIT 17:51:45Z**. No old migration replayed, no fragments, no synthetic accounts.
+- Post-commit (read-only): one release row `enabled=false`; policy and new marks
+  empty; implementation in `calendar_sync_internal`, not client-executable,
+  schema not client-usable; wrapper executable by `authenticated`; anon cannot run
+  CZN RPCs; no direct CZN writes; release hidden from clients. Exact-v2
+  preflight `17bcce56…` PASS. Anon PostgREST: CZN objects 404 `PGRST205/202` → 401
+  `42501` (schema reloaded after `NOTIFY pgrst`); profiles/daily_marks/legacy RPC
+  401 `42501`; internal/control schemas 406 `PGRST106`.
+- Backup v2: [run 39998656242](https://github.com/maxvfk/game-calendar-backups/actions/runs/39998656242)
+  detected exact v2 but committed only payloads (`b869e21`), because the private
+  `.gitignore` re-included only `20*.snapshot.manifest.json`. The next run would
+  have refused the unpaired files. Operator-approved private
+  [#7](https://github.com/maxvfk/game-calendar-backups/pull/7) (`f96684b`, CI green):
+  `.gitignore` re-include, the two deterministic manifests restored (validated) and a
+  `git check-ignore` regression check (fails on the old rule). [Run 40000730021](https://github.com/maxvfk/game-calendar-backups/actions/runs/40000730021)
+  committed a complete pair (`fcb24d2`): v2, createdAt `2026-10-23T18:08:54.135Z`,
+  source `b5d46b5…`, schema `17bcce56…`, operator recipient, ciphertext SHA256
+  `d83f30d4d56f6b653c6d892e493910b73b695163757f1ccddd54018a0110b0e1`. v1 pairs,
+  v1 monthly and the pre-cutover archive are unchanged.
+- Operator verification: real-key `validate` PASS for both v2 pairs; the latest
+  snapshot has `enabled=false`, no epochs and legacy CZN rows present. Empty loopback
+  PG17.11 `local-drill.ts` on the first v2 pair PASS: all seven base digests +
+  `dataSha256` and the CZN extension match, `enabled=false`, nonempty rerun refused,
+  cluster deleted. Production `restore --all-profiles --read-only` dry-run PASS
+  for the v2 pair and for v1 pair `8dfb3183…` into live v2 (no writes).
+- Not verified / residual (no staging): owner login/profile read and other-game
+  Sync through Supabase Auth JWTs in the deployed app (no safe user token on the agent
+  side); real-device cached-PWA behaviour. The old deployed client's
+  `apply_profile_mutations` now goes through the wrapper; with no policy rows it
+  delegates per mutation to the moved implementation (same 100/256 KB limits).
+
+**Next concrete step:** operator manual smoke in the deployed app (own account:
+profile loads, toggle a non-CZN daily, reach Synced, no CZN reset UI). GO 3
+stays a separate, explicit operator decision.
+
 ## CZN GO 1 — production backup transition COMPLETE (2026-10-23)
 
 Operator-authorized GO 1 only. GO 2 (disabled additive migration) and GO 3

@@ -580,9 +580,13 @@ Failures are visible red Actions; no additional alerting/telemetry is introduced
 
 The private workflow now pins the dual v1/v2 exporter at public
 `b5d46b5fa0b820f9d244302a77c34e7020cde2ee` (private `ffdd342`, guarded by
-`CZN_BACKUP_GO_REVISION`), with the same 01:23 UTC schedule and mutex. Production
-is still the v1 schema, so it writes the existing v1 daily/monthly pairs; the first
-such pair was decrypted and drilled locally by the operator. Details and the
-remaining GO 2/GO 3 gates: [CZN-PRODUCTION-CUTOVER](CZN-PRODUCTION-CUTOVER.md).
+`CZN_BACKUP_GO_REVISION`), with the same 01:23 UTC schedule and mutex. Since GO 2
+(2026-10-23) production is the exact v2 schema (CZN disabled), so the job writes
+`snapshots/v2/daily` (30) and `snapshots/v2/monthly` (12) pairs named
+`*.czn-v2.snapshot.age` + `.manifest.json`; the v1 pairs stay as recovery points
+and are no longer pruned. Private #7 fixed a `.gitignore` gap that had skipped v2
+manifests and added a `git check-ignore` regression check. v1 and v2 pairs were
+decrypted and drilled locally by the operator. Details and the remaining GO 3 gate:
+[CZN-PRODUCTION-CUTOVER](CZN-PRODUCTION-CUTOVER.md).
 The old canonical v1 contract and CLI remain strict and refuse the new schema;
 never return to the old `5b2a2b0` pin after v2 DDL. No SQL without operator GO.
