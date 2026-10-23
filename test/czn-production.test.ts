@@ -37,6 +37,10 @@ test('dual-schema strict preflight accepts v1/v2; rejects drift, partial migrati
     await db.query('insert into calendar_backup_control.project_identity(project_ref) values($1)',[project]);
     expect(await detectContract(q,project)).toBe(1);await assertAccess(q,1);
     await db.exec(await Bun.file(new URL('../supabase/preflight/czn-production-readonly.sql',import.meta.url)).text());
+    await db.exec('grant update on public.daily_marks to authenticated');await expect(assertAccess(q,1)).rejects.toThrow('legacy');
+    await db.exec('revoke update on public.daily_marks from authenticated');
+    await db.exec('create policy widened on public.daily_marks for select to anon using(true)');await expect(assertAccess(q,1)).rejects.toThrow('policy drift');
+    await db.exec('drop policy widened on public.daily_marks');
     await db.exec('grant usage on schema calendar_backup_control to anon');await expect(assertAccess(q,1)).rejects.toThrow('identity');
     await db.exec('revoke usage on schema calendar_backup_control from anon;create table public.czn_daily_release(x int)');
     await expect(detectContract(q,project)).rejects.toThrow('Partial');
