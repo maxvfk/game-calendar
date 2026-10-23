@@ -18,7 +18,9 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   CZN sources and foreign/guest epochs are preserved as unresolved recovery
   sources, not converted or unioned into a new streak; first-login merge keeps
   source bytes/IDs before excluding fenced CZN from its old-RPC batch.
-  Reload/update keeps queues. The user can export or leave ambiguity unresolved.
+  Same-epoch imported dates outside the authoritative cutover/current-day window
+  stay in the raw recovery source; they cannot fabricate a streak or block a
+  server batch. Reload/update keeps queues. The user can export or leave ambiguity unresolved.
 - **Implemented but disabled**: compiled `CZN_CUTOVER_ENABLED=false`, server
   enabled=false, candidate SQL still outside deployed migrations. Default client
   makes zero new-policy network calls/writes and renders no new panel. The actual
@@ -34,7 +36,7 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   foreign profile/guest imports and real client → SQL transport. SSR panel markup
   checked; **no browser/PostgREST/Auth/production or physical-device smoke claimed**.
 - Four AGENTS commands passed on Bun 1.3.14: frozen install, typecheck, full
-  suite **1146 pass / 1 existing optional skip / 0 fail** (new real-age test ran),
+  suite **1147 pass / 1 existing optional skip / 0 fail** (new real-age test ran),
   build **178 events / 7 games / 1 existing NTE conflict**. #65 post-merge
   CI/Pages 39928496105 succeeded. Final client PR/main CI evidence is in its PR.
 - Hosted release remains blocked: no isolated staging project/branch, no disposable
