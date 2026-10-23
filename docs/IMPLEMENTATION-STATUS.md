@@ -54,6 +54,10 @@
   data or roles accepted; synthetic age/PG17 CI verifies actual encrypted restore,
   false/epoch/microseconds and second-run refusal. Operator real-key drill still
   pending; sensitive local cluster must be disposed of privately.
+- Final proof refinement: the cutover-first race uses a fresh profile with its
+  first epoch still uncommitted, so the blocked old RPC must see that new fence
+  after lock release. This supplements the old-write-first and true/false races,
+  rather than relying on idempotent negotiation of an already fenced profile.
 - Exact stop/GO/release/rollback/device smoke: [handoff](CZN-PRODUCTION-CUTOVER.md).
   No production SQL, active private workflow/pin change, deletion or activation.
 
