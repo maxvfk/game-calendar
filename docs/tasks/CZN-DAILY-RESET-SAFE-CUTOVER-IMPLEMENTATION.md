@@ -1,6 +1,7 @@
 # CZN Daily Reset — safe 18:00 UTC forward-only cutover
 
-**Status: implementation task approved for a separately launched bounded Work; NOT implemented or deployed.**
+**Status (2026-10-23): Gate A evaluated — design-only blocked; Gate B not started; NOT implemented or deployed.**
+See [Gate A checkpoint and reproducible proof](CZN-DAILY-RESET-GATE-A-CHECKPOINT.md) for the privileged hosted migration/S6a prerequisites, release order and rollback contract.
 **Product decisions accepted 2026-10-23:** UTC opening-date day labels; incompatible old PWA clients must not write CZN daily marks after cutover. No new manual per-device update workflow is requested from the operator.
 
 ## Sources and bounded outcome

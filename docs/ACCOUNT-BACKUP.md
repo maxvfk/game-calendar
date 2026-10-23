@@ -7,6 +7,24 @@ in the backup-role guard. This narrowly scoped follow-up corrects that guard;
 **successful hosted snapshot and recovery drill remain manual acceptance gates**.
 S6a is not complete until the evidence below is recorded. S5/S5.1 remain closed.
 
+## CZN cutover compatibility checkpoint (2026-10-23)
+
+Current hosted backup metadata is healthy: private Actions run
+[39909326284](https://github.com/maxvfk/game-calendar-backups/actions/runs/39909326284)
+completed successfully on Oct 23. Its workflow pins public implementation
+`5b2a2b048bae53f32e464b0a91a8f5d9f354b669`. This supersedes the historical
+hosted-failure status above; no encrypted payload or recovery key was read,
+and metadata success does not prove a local decrypt/recovery drill.
+
+The proposed CZN policy extension is **not implemented**. Existing seven-table
+schemaVersion 1 tooling cannot silently cover new profile-policy/mark tables:
+strict contract/function hashes and the uncovered-child guard intentionally
+reject it. A future migration needs explicit versioned snapshot/contract and
+v1 readability, private pin coordination, and recovery that cannot remove a
+live cutover fence or reopen old CZN writers. Do not overwrite v1 history or
+relax preflight. Full [Gate A checkpoint](tasks/CZN-DAILY-RESET-GATE-A-CHECKPOINT.md).
+No backup code, canonical contract, SQL, credentials or private workflow changed.
+
 ## Architecture and access
 
 The private repository [maxvfk/game-calendar-backups](https://github.com/maxvfk/game-calendar-backups)
