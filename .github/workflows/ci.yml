@@ -120,6 +120,15 @@ jobs:
         options: >-
           --health-cmd pg_isready --health-interval 5s
           --health-timeout 5s --health-retries 10
+      recovery-postgres:
+        image: postgres:17.6
+        env:
+          POSTGRES_PASSWORD: local-disposable-test-only
+          POSTGRES_DB: czn_recovery_drill
+        ports: ['5433:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
@@ -133,6 +142,10 @@ jobs:
         env:
           CZN_LOCAL_PG17_URL: postgres://postgres:local-disposable-test-only@127.0.0.1:5432/postgres
         run: bun scripts/czn-cutover/verify-postgres17.ts
+      - name: Verify operator local encrypted recovery drill
+        env:
+          CZN_LOCAL_DRILL_URL: postgres://postgres:local-disposable-test-only@127.0.0.1:5433/czn_recovery_drill
+        run: bun scripts/czn-cutover/verify-local-drill.ts
 
   build:
     name: Build site

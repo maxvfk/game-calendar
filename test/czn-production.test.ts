@@ -3,6 +3,7 @@ import {mkdtemp,rm,writeFile,readFile,symlink,mkdir,readdir} from 'node:fs/promi
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {candidateDatabase} from '../scripts/czn-cutover/contract.ts';
+import {localDrill,localDrillConfig} from '../scripts/czn-cutover/local-drill.ts';
 import {detectContract,assertAccess,requireBackupGo,requireRecoveryGo,productionMain,PRODUCTION_PROJECT as project} from '../scripts/czn-cutover/production.ts';
 import {readCznSnapshot,planCznRecovery,selectCznProfiles} from '../scripts/czn-cutover/backup.ts';
 import {storeCzn,retainCzn} from '../scripts/czn-cutover/production-storage.ts';
@@ -15,7 +16,8 @@ import v1 from '../supabase/backup-contract.v1.json';
 import v2 from '../supabase/backup-contract.czn-v2.json';
 const revision='a'.repeat(40),id='11111111-1111-4111-8111-111111111111';
 test('GO guards and default plan fail before network or decryption',async()=>{
-  await productionMain([]);
+  await productionMain([]);await expect(localDrill([])).rejects.toThrow();
+  for(const url of ['postgres://postgres:test@localhost/postgres','postgres://postgres:test@db.'+project+'.supabase.co/czn_recovery_drill','postgres://postgres:test@localhost/czn_recovery_drill?sslmode=disable'])expect(()=>localDrillConfig(url)).toThrow();
   for(const args of [['migrate'],['preflight','--project-ref',project],['backup','--project-ref',project],['plan','--execute'],['restore','--project-ref',project]])
     await expect(productionMain(args)).rejects.toThrow();
   expect(()=>requireBackupGo(project,revision,undefined,project)).toThrow();
@@ -34,6 +36,7 @@ test('dual-schema strict preflight accepts v1/v2; rejects drift, partial migrati
     for(const f of Object.keys(await migrationHashes()))await db.exec(await Bun.file(new URL('../supabase/migrations/'+f,import.meta.url)).text());
     await db.query('insert into calendar_backup_control.project_identity(project_ref) values($1)',[project]);
     expect(await detectContract(q,project)).toBe(1);await assertAccess(q,1);
+    await db.exec(await Bun.file(new URL('../supabase/preflight/czn-production-readonly.sql',import.meta.url)).text());
     await db.exec('grant usage on schema calendar_backup_control to anon');await expect(assertAccess(q,1)).rejects.toThrow('identity');
     await db.exec('revoke usage on schema calendar_backup_control from anon;create table public.czn_daily_release(x int)');
     await expect(detectContract(q,project)).rejects.toThrow('Partial');
@@ -43,6 +46,7 @@ test('dual-schema strict preflight accepts v1/v2; rejects drift, partial migrati
   const candidate=await candidateDatabase();const cq:Query=async(s,p=[]) => (await candidate.query(s,p)).rows as Record<string,unknown>[];
   try{await candidate.query('insert into calendar_backup_control.project_identity(project_ref) values($1)',[project]);
     expect(await detectContract(cq,project)).toBe(2);await assertAccess(cq,2);
+    await candidate.exec(await Bun.file(new URL('../supabase/preflight/czn-production-readonly.sql',import.meta.url)).text());
     await candidate.exec('grant usage on schema calendar_sync_internal to authenticated');await expect(assertAccess(cq,2)).rejects.toThrow('privileges');
   }finally{await candidate.close();}
 },30000);
