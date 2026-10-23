@@ -22,6 +22,35 @@ cached PWA outboxes. No Auth/profile/database reset is part of this release.
   Standing `dailies:czn` only: 18:00 UTC, UTC opening-date. Event clocks, IDs,
   other games, Timeline and source-health are unchanged.
 
+## Immutable readiness evidence (2026-10-23)
+
+- Implementation [public #70](https://github.com/maxvfk/game-calendar/pull/70),
+  merged `0a83bae2cfc35328bcc28132d7f6207d929be3aa`;
+  [PR CI 39954344066](https://github.com/maxvfk/game-calendar/actions/runs/39954344066)
+  and [main CI/Pages 39954540087](https://github.com/maxvfk/game-calendar/actions/runs/39954540087)
+  passed, including PG17.6 two-connection lock waits and recovery.
+- Prepared [private draft #6](https://github.com/maxvfk/game-calendar-backups/pull/6),
+  head `49a39dcdf59a2bab492e92e2ba015e6c0eb40dc8`, proposed public pin
+  `0a83bae2cfc35328bcc28132d7f6207d929be3aa`. **Do not merge before GO.**
+  It retains the existing schedule/mutex, adds independent exact-pin GO and
+  synthetic-only validation. No production credentials in PR CI.
+  [Private CI 39954714455](https://github.com/maxvfk/game-calendar-backups/actions/runs/39954714455)
+  passed full pinned tool checks and isolated PG17.
+- Active private main remains `93128e7fd5ed7e407cee234ba0231a93506f76f2`,
+  public pin `5b2a2b048bae53f32e464b0a91a8f5d9f354b669`; latest scheduled
+  [39909326284](https://github.com/maxvfk/game-calendar-backups/actions/runs/39909326284)
+  succeeded. Its 2026-10-23 v1 manifest was inspected as metadata only; no
+  ciphertext/plaintext/private key was downloaded. This is not a fresh migration
+  backup or operator recovery acceptance.
+- Four AGENTS commands: frozen install/typecheck/tests/build passed; 1151 pass,
+  1 old optional age skip, 0 failures; new real-age tests ran. Build 178 events /
+  7 games / 1 existing conflict. Filesystem-heavy old retention test has an
+  explicit 20s budget after one default-5s timeout; assertions are unchanged.
+- Supplemental catalog-only review SQL is
+  `supabase/preflight/czn-production-readonly.sql`; not executed in production.
+  Exact contract verification remains the CLI below. Current hosted ACL/role
+  proof and hosted API checks await production GO.
+
 ## Backup and recovery commands
 
 `bun scripts/czn-cutover/production.ts` prints an offline plan. It does not open a
@@ -44,6 +73,18 @@ FK children, project mismatch or excessive backup privileges stop the operation.
 The non-exposed control marker intentionally has no RLS; client schema USAGE and
 marker writes must both be denied. A generic RLS advisory alone does not establish
 exposure; verify effective ACLs, never blindly enable RLS or rewrite the marker.
+
+After backup-transition GO, with the reviewed source checked out and private
+workflow variable set independently (do not set it merely to run this example):
+
+```sh
+reviewed_public_revision=0a83bae2cfc35328bcc28132d7f6207d929be3aa
+bun scripts/czn-cutover/production.ts backup --execute \
+  --project-ref vzzudezdigjwbwfejlsg --confirm-project vzzudezdigjwbwfejlsg \
+  --source-revision "$reviewed_public_revision" \
+  --go-revision "${CZN_BACKUP_GO_REVISION:?separate operator GO required}" \
+  --output snapshots
+```
 
 Backup (only after backup-transition GO) additionally requires `--execute`,
 `--confirm-project REF`, immutable `--source-revision SHA`, matching independently
@@ -68,6 +109,34 @@ bun scripts/czn-cutover/production.ts validate --project-ref vzzudezdigjwbwfejls
 
 Decrypted bytes stay in memory. Old v1 and new v2 encrypted snapshots are readable.
 A green export Action/manifest is NOT proof the operator can decrypt/recover.
+
+### Operator actual local recovery drill (no hosted connection)
+
+Use the current reviewed handoff revision containing `local-drill.ts`, and a
+new dedicated **local PostgreSQL 17 cluster**, database `czn_recovery_drill`,
+admin `postgres`. Do not reuse the application database or SSH-tunnel a hosted
+project to localhost. Provision it on the operator machine with their normal
+local container/PG tools, empty of all custom schemas/relations and the roles
+`anon`, `authenticated`, `calendar_backup`. Set `CZN_LOCAL_DRILL_URL` privately
+to a loopback URL for this database; do not paste its password into chat/history.
+Then run locally with the downloaded encrypted pair and operator's private key:
+
+```sh
+bun scripts/czn-cutover/local-drill.ts --execute-local \
+  --project-ref vzzudezdigjwbwfejlsg \
+  --snapshot LOCAL_ENCRYPTED_PAIR --identity LOCAL_OPERATOR_AGE_IDENTITY
+```
+
+Only localhost/127.0.0.1, dedicated database name, PG17 and an empty cluster are
+accepted. No existing schemas/roles/data are overwritten or dropped. After
+decrypt/validation it initializes the exact schema locally, inserts snapshot
+owner IDs into an Auth **stub** (no provider accounts/tokens), restores into v2
+with feature off and verifies rows/epochs/false marks/microseconds. Nothing is
+uploaded or logged; a nonempty second run is refused. A failure also leaves
+this local cluster for private inspection rather than deleting evidence. The
+reconstructed local database contains personal data: operator must protect and
+dispose of that dedicated local cluster afterward; keep encrypted source and
+private key secure. This is recovery proof, not hosted Auth/provider recovery.
 
 Recovery dry-run: use `restore` with the same snapshot/identity, `--profile UUID`
 (repeatable) OR `--all-profiles`, and `--read-only`; local

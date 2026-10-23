@@ -39,7 +39,8 @@ The active no-staging handoff is [CZN-PRODUCTION-CUTOVER](../../docs/CZN-PRODUCT
 `production.ts` defaults to an offline plan, strictly detects known v1/v2 contracts,
 provides read-only preflight and dual encrypted backup, separate 30/12 v2 retention,
 and selected-profile recovery with an independent exact GO. It has no migration or
-enablement command. The staging-only CLI below still refuses production. Active
+enablement command. The staging-only CLI below still refuses production. Public #70 and post-merge CI passed, including real PG17.6 two-connection
+locking and recovery. Private workflow/pin preparation is draft #6 and unmerged. Active
 private main/pin is unchanged. Operator GO is required before any live transition.
 
 ## Original staging-first deployment gates (historical baseline)

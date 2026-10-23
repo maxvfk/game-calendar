@@ -5,7 +5,7 @@ import {readFile} from 'node:fs/promises';
 import {z} from 'zod';
 import {connectionConfig,safeQuery} from '../account-backup/cli.ts';
 import {assertTarget,assertBackupRole,readRows,restorePlan,writeRestore,type Query} from '../account-backup/database.ts';
-import {makeSnapshot,canonical,sha256,type Snapshot} from '../account-backup/model.ts';
+import {makeSnapshot,canonical,sha256,TABLES,type Snapshot} from '../account-backup/model.ts';
 import {ageEncrypt,storeEncrypted} from '../account-backup/storage.ts';
 import {assertCznTarget,assertCznBackupRole,candidateMigration} from './contract.ts';
 import {readCznSnapshot,selectCznProfiles,planCznRecovery,restoreCznSnapshot} from './backup.ts';
@@ -23,12 +23,22 @@ export async function detectContract(query:Query,project:string){
 }
 export async function assertAccess(query:Query,version:1|2){
   // Control schema intentionally has no RLS: effective schema/table privileges must deny clients.
+  const policies=await query(`select schemaname,tablename,policyname,permissive,roles::text,cmd,qual,with_check
+    from pg_policies where schemaname='public' and tablename=any($1::text[]) order by tablename,policyname`,[[...TABLES]]);
+  const expected=v2.contract.policies.filter(p=>(TABLES as readonly string[]).includes(p.tablename));
+  if(canonical(policies)!==canonical(expected))throw new Error('Legacy owner/backup policy drift');
   for(const role of ['anon','authenticated']){
-    const p=(await query(`select has_schema_privilege($1,'calendar_backup_control','USAGE') as control,
+    const legacy=await query(`select relname,relrowsecurity,relforcerowsecurity,
+      has_table_privilege($1,oid,'SELECT') as readable,
+      has_table_privilege($1,oid,'INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER') as writable
+      from pg_class where relnamespace='public'::regnamespace and relname=any($2::text[])`,[role,[...TABLES]]);
+    if(legacy.length!==7||legacy.some(r=>!r.relrowsecurity||r.relforcerowsecurity||r.writable||r.readable!==(role==='authenticated')))
+      throw new Error('Unsafe legacy client privileges/RLS');
+    const p=(await query(`select has_schema_privilege($1,'calendar_backup_control','USAGE,CREATE') as control,
       has_table_privilege($1,'calendar_backup_control.project_identity','INSERT,UPDATE,DELETE,TRUNCATE') as marker_write`,[role]))[0]!;
     if(p.control||p.marker_write)throw new Error('Exposed backup identity');
     if(version===2){
-      const rows=await query(`select has_schema_privilege($1,'calendar_sync_internal','USAGE') as internal,
+      const rows=await query(`select has_schema_privilege($1,'calendar_sync_internal','USAGE,CREATE') as internal,
         exists(select 1 from pg_proc where pronamespace='calendar_sync_internal'::regnamespace and has_function_privilege($1,oid,'EXECUTE')) as helper,
         exists(select 1 from pg_class where relnamespace='public'::regnamespace and relname=any($2::text[]) and
           (not relrowsecurity or relforcerowsecurity or has_table_privilege($1,oid,'INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER'))) as unsafe`,

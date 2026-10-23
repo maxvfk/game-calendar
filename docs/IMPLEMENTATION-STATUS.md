@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-## CZN direct-production preparation in progress (2026-10-23)
+## CZN direct-production readiness prepared — awaiting production GO (2026-10-23)
 
 - CURRENT main `b075d8056ffbf6d6ac8876bd6175739de808742d` (#69), post-merge
   [CI 39949829568](https://github.com/maxvfk/game-calendar/actions/runs/39949829568) successful.
@@ -8,7 +8,7 @@
 - Production connector metadata only: `vzzudezdigjwbwfejlsg`, healthy PG17.6.1.166,
   seven existing public tables with RLS, no CZN tables; CLI migration ledger empty.
   No production SQL/user contents/credentials, DDL or write smoke performed.
-  Control marker intentionally non-exposed by schema/table ACLs; new preflight
+  Control marker is designed to be non-exposed by schema/table ACLs; new preflight
   explicitly verifies those effective permissions instead of trusting a generic RLS advisory.
 - Added fail-closed dual-schema backup/read-only preflight and independent GO
   guards, distinct v2 daily/monthly 30/12 retention, v1 encrypted readability and
@@ -21,16 +21,35 @@
   1 existing conflict. Actual age and interactive React DOM harness passed.
   Added isolated PostgreSQL 17.6 CI
   with independently observed lock waits for both cutover orders and true/false
-  writers. CI results and private draft pin evidence pending completion.
+  writers. [PR #70](https://github.com/maxvfk/game-calendar/pull/70) merged as
+  `0a83bae2cfc35328bcc28132d7f6207d929be3aa`; PR CI 39954344066 and
+  post-merge CI/Pages 39954540087 passed, including actual PG17 independent
+  lock waits in both cutover orders, ACL/RLS and v1/v2 recovery. Host has no
+  local postgres/docker; isolated PG17 service ran in GitHub CI.
+- Prepared [private draft #6](https://github.com/maxvfk/game-calendar-backups/pull/6),
+  head `49a39dcdf59a2bab492e92e2ba015e6c0eb40dc8`, proposed public pin
+  `0a83bae2cfc35328bcc28132d7f6207d929be3aa`, independent exact-pin GO,
+  same 01:23 UTC schedule/mutex and strict v2 encrypted paths. Draft remains
+  unmerged; [synthetic-only CI 39954714455](https://github.com/maxvfk/game-calendar-backups/actions/runs/39954714455)
+  passed frozen install/typecheck/full tests/build and isolated PG17. No secrets/live
+  export used. This does not prove actual private workflow execution on production.
 - Active private S6a main `93128e7fd5ed7e407cee234ba0231a93506f76f2`, public pin
   `5b2a2b048bae53f32e464b0a91a8f5d9f354b669`; latest export
   [39909326284](https://github.com/maxvfk/game-calendar-backups/actions/runs/39909326284)
   successful. Real operator decrypt/recovery drill not independently proven.
+- Added reviewable catalog-only preflight SQL (executes under READ ONLY on v1/v2
+  locally), and an operator local-drill CLI. It accepts only a dedicated empty
+  loopback PG17 cluster/database, decrypts v1/v2 in memory, recreates only local
+  Auth IDs and restores/validates data with feature off. No hosted URL, existing
+  data or roles accepted; synthetic age/PG17 CI verifies actual encrypted restore,
+  false/epoch/microseconds and second-run refusal. Operator real-key drill still
+  pending; sensitive local cluster must be disposed of privately.
 - Exact stop/GO/release/rollback/device smoke: [handoff](CZN-PRODUCTION-CUTOVER.md).
   No production SQL, active private workflow/pin change, deletion or activation.
 
-**Next concrete step:** finish reviewable PR/CI and private draft preparation;
-then obtain operator acceptance of exact backup-transition/disabled-DDL actions.
+**Next concrete step:** operator validates/decrypts latest v1 pair and completes
+isolated recovery drill locally, then gives explicit scoped GO for the reviewed
+backup transition and disabled additive migration. Enablement is separate.
 
 ## CZN direct-production readiness — original authorization (2026-10-23)
 
@@ -52,10 +71,10 @@ then obtain operator acceptance of exact backup-transition/disabled-DDL actions.
 - Production CZN daily reset remains on the old rules; no migrations or flags
   have been enabled by this docs-only task.
 
-**Next concrete step:** run bounded direct-production readiness Work and return
-with reviewable SQL/backup/rollback evidence for an explicit operator GO.
+Historical next step fulfilled by the readiness entry above. Production actions
+still require the separate operator GO.
 
-Updated 2026-10-23 (Moscow; direct CZN production-readiness task queued; candidate disabled, no production cutover). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-23 (direct CZN production-readiness prepared; awaiting GO; candidate disabled, no production cutover). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## CZN cutover — disabled client and encrypted staging tooling (2026-10-23)
@@ -103,9 +122,8 @@ remaining milestones and `AGENTS.md` for non-negotiable data rules.
   [candidate runbook](../supabase/czn-cutover/README.md). Never clear a fence,
   reopen old writers or restore an incompatible old app after cutover.
 
-**Next concrete step:** create/authorize an isolated Supabase staging target,
-apply the reviewed disabled candidate there, and run hosted Auth/PostgREST,
-concurrent-writer and encrypted recovery gates before any production release.
+Historical staging next step superseded by the operator's no-staging decision.
+Use the direct-production handoff and explicit GO boundary above.
 
 ## CZN cutover — local server/backup implementation (historical 2026-10-23)
 

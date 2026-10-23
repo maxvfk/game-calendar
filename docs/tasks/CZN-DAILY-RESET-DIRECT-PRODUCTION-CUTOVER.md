@@ -1,6 +1,12 @@
 # CZN Daily Reset — direct-production cutover readiness (no staging)
 
-**Status (2026-10-23): NEW bounded preparation milestone; NOT authority to execute production migration, delete user rows, or enable policy.**
+**Status (2026-10-23): readiness prepared in public #70; private #6 remains draft with successful synthetic CI.
+Awaiting operator decrypt/recovery evidence and explicit production GO. No production
+SQL, active backup workflow/pin change, deletion or enablement performed.**
+
+Evidence and exact handoff: [CZN-PRODUCTION-CUTOVER](../CZN-PRODUCTION-CUTOVER.md).
+PG17.6 two-connection/ACL/recovery CI passed. Hosted Auth/PostgREST and physical
+device gates remain unpassed; no-staging residual risks are explicit.
 
 ## Authoritative context and decisions
 
