@@ -16,7 +16,12 @@ completed successfully on Oct 23. Its workflow pins public implementation
 hosted-failure status above; no encrypted payload or recovery key was read,
 and metadata success does not prove a local decrypt/recovery drill.
 
-The proposed CZN policy extension is **not implemented**. Existing seven-table
+The CZN policy extension now has a **locally implemented, disabled candidate** in
+[supabase/czn-cutover](../supabase/czn-cutover/README.md), with a parallel v2
+contract, logical restore and staging-only age CLI. It is not installed in
+Supabase and does not replace the private v1 pin. Real synthetic age v1/v2
+encrypt/decrypt and guarded SQL recovery are locally tested; hosted v2/retention/
+pin coordination and Auth/concurrency gates remain open. Existing seven-table
 schemaVersion 1 tooling cannot silently cover new profile-policy/mark tables:
 strict contract/function hashes and the uncovered-child guard intentionally
 reject it. A future migration needs explicit versioned snapshot/contract and

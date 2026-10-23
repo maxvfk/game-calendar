@@ -134,3 +134,10 @@ semantic drift. Generate the canonical contract from migrations; never accept
 a hosted hash as a substitute. Details and actual diagnostics are recorded in
 [the backup runbook](../docs/ACCOUNT-BACKUP.md#hosted-schema-compatibility-follow-up-2026-10-07).
 The hosted backup rerun and recovery drill remain manual acceptance gates.
+
+## Disabled CZN cutover candidate
+
+[czn-cutover/README.md](czn-cutover/README.md) documents a CLI-generated additive
+SQL candidate outside the deployed migrations, parallel backup v2 contract and
+staging-only encrypted tools. Do not apply it automatically or enable the client
+before hosted compatibility/private backup-pin gates pass. Production stays v1.

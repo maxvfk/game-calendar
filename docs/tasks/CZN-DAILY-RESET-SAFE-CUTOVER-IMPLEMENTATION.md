@@ -1,6 +1,6 @@
 # CZN Daily Reset — safe 18:00 UTC forward-only cutover
 
-**Status (2026-10-23 continuation): local server/backup candidate implemented; production disabled. Client continuation and hosted compatibility gates remain open.**
+**Status (2026-10-23 continuation): local protocol/client/backup candidate implemented but disabled. Hosted compatibility/production release gates remain open.**
 The operator superseded Gate A item 4's docs-only stop for missing staging: continue local implementation/tests, never production rollout. See [candidate runbook](../../supabase/czn-cutover/README.md).
 See [Gate A checkpoint and reproducible proof](CZN-DAILY-RESET-GATE-A-CHECKPOINT.md) for the privileged hosted migration/S6a prerequisites, release order and rollback contract.
 **Product decisions accepted 2026-10-23:** UTC opening-date day labels; incompatible old PWA clients must not write CZN daily marks after cutover. No new manual per-device update workflow is requested from the operator.

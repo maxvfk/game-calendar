@@ -1,9 +1,56 @@
 # Game calendar implementation status
 
-Updated 2026-10-23 (Moscow; CZN server/backup candidate locally implemented; production disabled). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+Updated 2026-10-23 (Moscow; CZN protocol/client/backup candidate locally implemented; production disabled). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
-## CZN cutover — local server/backup implementation, production disabled (2026-10-23)
+## CZN cutover — disabled client and encrypted staging tooling (2026-10-23)
+
+- Server/backup candidate [#65](https://github.com/maxvfk/game-calendar/pull/65)
+  merged as `f3cae56cdd6817352d26749f7053a4cd2b0bfcb7`; PR CI 39928334621
+  succeeded. Continued from that CURRENT main with no production SQL/data access.
+- Client now has a separate atomic policy journal, exact raw legacy/outbox/baseline
+  recovery snapshots, strict epoch binding, offline pending/retry/reconciliation,
+  true/false LWW, clipped UTC-opening catch-up and separate legacy history UI.
+  Mixed old Sync holds CZN false/UUID/version rows without acknowledging them,
+  while other games sync; failed capability negotiation holds CZN only and
+  does not block other games. It avoids endless fast retries of held-only queues.
+- Distinct policy export/import integrates with Export/Export all. Legacy v1
+  CZN sources and foreign/guest epochs are preserved as unresolved recovery
+  sources, not converted or unioned into a new streak; first-login merge keeps
+  source bytes/IDs before excluding fenced CZN from its old-RPC batch.
+  Reload/update keeps queues. The user can export or leave ambiguity unresolved.
+- **Implemented but disabled**: compiled `CZN_CUTOVER_ENABLED=false`, server
+  enabled=false, candidate SQL still outside deployed migrations. Default client
+  makes zero new-policy network calls/writes and renders no new panel. The actual
+  production CZN countdown is unchanged and still incorrect until a safe release.
+- Staging-only encrypted CLI added (hard production-ref refusal), distinct v2
+  ciphertext/manifest and old v1 decrypt path. Real age 1.2.1 X25519 round-trip,
+  actual v1/v2 guarded SQL recovery and ciphertext-corruption rejection passed
+  locally using temporary synthetic identities. Raw stdout is explicitly wrapped
+  in Uint8Array after a real round-trip exposed ArrayBuffer incompatibility.
+  Existing production v1 contract, migrations, scheduled workflow/pin are intact.
+- Local tests cover clock boundaries/DST/month/year, disabled behavior, quota
+  failure, original false/UUID/outbox retention, tombstone replay, in-flight edit,
+  foreign profile/guest imports and real client → SQL transport. SSR panel markup
+  checked; **no browser/PostgREST/Auth/production or physical-device smoke claimed**.
+- Four AGENTS commands passed on Bun 1.3.14: frozen install, typecheck, full
+  suite **1146 pass / 1 existing optional skip / 0 fail** (new real-age test ran),
+  build **178 events / 7 games / 1 existing NTE conflict**. #65 post-merge
+  CI/Pages 39928496105 succeeded. Final client PR/main CI evidence is in its PR.
+- Hosted release remains blocked: no isolated staging project/branch, no disposable
+  Auth target, no two-connection race test, no hosted v2 preflight/encrypted backup
+  and no reviewed private v2 pin/scheduling/retention handoff. Only production
+  metadata/role/version was read in Supabase. No real user data was touched.
+- Exact server-first steps/rollback and operator phone/PC smoke remain in
+  [Gate A checkpoint](tasks/CZN-DAILY-RESET-GATE-A-CHECKPOINT.md) and updated
+  [candidate runbook](../supabase/czn-cutover/README.md). Never clear a fence,
+  reopen old writers or restore an incompatible old app after cutover.
+
+**Next concrete step:** create/authorize an isolated Supabase staging target,
+apply the reviewed disabled candidate there, and run hosted Auth/PostgREST,
+concurrent-writer and encrypted recovery gates before any production release.
+
+## CZN cutover — local server/backup implementation (historical 2026-10-23)
 
 - Continued from CURRENT main `7b71154` after #64; the operator explicitly
   superseded the docs-only stop when staging is unavailable. No repeated research.

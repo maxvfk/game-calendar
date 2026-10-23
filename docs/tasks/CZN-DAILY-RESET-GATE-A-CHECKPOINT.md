@@ -1,6 +1,13 @@
 # CZN safe cutover — Gate A checkpoint (2026-10-23)
 
-**Outcome: design-only blocked. Gate A is NOT passed; Gate B was not started.**
+> **Historical checkpoint (#64).** The operator subsequently authorized local
+> implementation even without staging. A disabled protocol/client/backup candidate
+> now exists; see [current implementation status](../IMPLEMENTATION-STATUS.md)
+> and [candidate runbook](../../supabase/czn-cutover/README.md). Hosted gates and
+> production enablement remain unpassed. The observations below are the original
+> #64 checkpoint, not the current implementation inventory.
+
+**Original outcome: design-only blocked. Gate A was NOT passed; Gate B was not started.**
 No application, migration, canonical backup contract, event data or production
 clock was changed. The experiment below is local, synthetic, disposable SQL,
 not a deployment migration and not an implementation of the proposed protocol.

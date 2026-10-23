@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { fetchFeed, type FeedState } from "./api.ts";
 import { Controls } from "./components/Controls.tsx";
+import { CZN_CUTOVER_ENABLED } from "../shared/cznDaily.ts";
+import { buildCznExport, importCzn, importLegacyCzn, readCzn, preserveCznLegacy } from "./account/cznProtocol.ts";
+import { CznDailyFeature } from "./components/CznDailyFeature.tsx";
 import { Dailies } from "./components/Dailies.tsx";
 import { GameFocus } from "./components/GameFocus.tsx";
 import { useEventDetailHistory } from "./state/useEventDetailHistory.ts";
@@ -134,6 +137,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
   const ignored = useMarkSet(storageKeys.ignored);
   const prog = useProgress(storageKeys.progress);
   const daily = useDailyLog(storageKeys.daily);
+  const cznProfileId = CZN_CUTOVER_ENABLED ? storageKeys.daily.slice("gacha-tracker:v2:profile:".length, -":daily".length) : undefined;
   const custom = useCustom(now, storageKeys);
   // Colour only: which ground the page is drawn on, written to the document by
   // the hook. Nothing else in the app asks what it is — the tokens in
@@ -608,7 +612,10 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
               exclusion is `dailyGroups`' to make, not this call site's — filtering
               the lanes out here would also cost a reader's own game its place in
               the order their repeating events are grouped under. */}
+          {CZN_CUTOVER_ENABLED && prefs.showChores && (focus === null ? enabled : [focus]).includes("czn") &&
+            <CznDailyFeature profileId={cznProfileId!} now={now} />}
           <Dailies
+            omitCznChore={CZN_CUTOVER_ENABLED}
             showChores={prefs.showChores}
             games={focus === null ? enabled : [focus]}
             events={todo.filter(repeatsDaily).map((r) => r.event)}
@@ -734,7 +741,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
           exportProgress(prog.progress, daily.logs, ignored.marks, {
             games: custom.games,
             events: custom.events,
-          })
+          }, cznProfileId)
         }
         onImport={(file) =>
           void importProgress(
@@ -743,13 +750,14 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
             daily.merge,
             ignored.merge,
             custom.merge,
+            undefined, cznProfileId,
           )
         }
         onExportAll={() =>
           exportAll(prog.progress, daily.logs, ignored.marks, prefs, {
             games: custom.games,
             events: custom.events,
-          })
+          }, cznProfileId)
         }
         onImportAll={(file) =>
           void importProgress(
@@ -759,6 +767,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
             ignored.merge,
             custom.merge,
             restorePrefs,
+            cznProfileId,
           )
         }
       />
@@ -988,10 +997,11 @@ function exportProgress(
   daily: DailyLogMap,
   ignored: Record<string, { at: string }>,
   own: { games: CustomGames; events: CustomEvents },
+  cznProfileId?: string,
 ) {
   const data = buildExportData(progress, daily, ignored, own);
   triggerDownload(
-    data,
+    cznProfileId ? buildCznExport(preserveCznLegacy(localStorage, readCzn(localStorage, cznProfileId)), data) : data,
     `event-clock-progress-${new Date().toISOString().slice(0, 10)}.json`,
   );
 }
@@ -1002,10 +1012,11 @@ function exportAll(
   ignored: Record<string, { at: string }>,
   prefs: Prefs,
   own: { games: CustomGames; events: CustomEvents },
+  cznProfileId?: string,
 ) {
   const data = buildExportData(progress, daily, ignored, own, prefs);
   triggerDownload(
-    data,
+    cznProfileId ? buildCznExport(preserveCznLegacy(localStorage, readCzn(localStorage, cznProfileId)), data) : data,
     `event-clock-backup-${new Date().toISOString().slice(0, 10)}.json`,
   );
 }
@@ -1017,16 +1028,31 @@ async function importProgress(
   mergeIgnored: (c: Record<string, { at: string }>) => void,
   mergeCustom: (games: unknown, events: unknown) => void,
   restorePrefs?: ((prefs: unknown) => void) | undefined,
+  cznProfileId?: string,
 ) {
   try {
     const text = await file.text();
-    const data = parseImportData(JSON.parse(text));
+    const raw = JSON.parse(text) as { format?: string; personal?: unknown };
+    if (cznProfileId) {
+      const current = readCzn(localStorage, cznProfileId);
+      if (raw.format === "game-calendar-policy-export") {
+        importCzn(localStorage, current, raw);
+        window.dispatchEvent(new Event("czn-policy-import"));
+        if (raw.personal === undefined) return;
+      } else if (raw.format === "gacha-tracker-export") importLegacyCzn(localStorage, current, raw);
+    }
+    const data = parseImportData(raw.format === "game-calendar-policy-export" && cznProfileId ? raw.personal : raw);
     if (data === null) {
       alert("That file isn't an Event Clock export.");
       return;
     }
     if (data.progress !== null) mergeProgress(data.progress);
-    if (data.daily !== null) mergeDaily(data.daily);
+    if (data.daily !== null) {
+      if (cznProfileId) {
+        const safe = { ...data.daily }; delete safe["dailies:czn"];
+        mergeDaily(safe); // CZN v1 source was preserved in recovery, never unioned into policy/history registers.
+      } else mergeDaily(data.daily);
+    }
     if (data.ignored !== null) mergeIgnored(data.ignored);
     mergeCustom(data.customGames, data.customEvents);
 

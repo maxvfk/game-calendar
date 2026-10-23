@@ -102,3 +102,53 @@ test('v2 snapshot validates all columns/false; v1 restore retains live fence, fr
 test('v2 contract regenerates exactly; v1 contract stays unchanged',async()=>{
   expect(await generatedCznContract()).toEqual(newContract);
 },15000);
+test.skipIf(!Bun.which('age')||!Bun.which('age-keygen'))('real age v2 and old v1 decrypt validate then guarded recovery (synthetic only)',async()=>{
+  const {mkdtemp,rm,readFile}=await import('node:fs/promises');const {tmpdir}=await import('node:os');const {join}=await import('node:path');
+  const {encryptCzn,decryptCzn}=await import('../scripts/czn-cutover/encryption.ts');
+  const {ageEncrypt,storeEncrypted}=await import('../scripts/account-backup/storage.ts');
+  const dir=await mkdtemp(join(tmpdir(),'czn-age-'));try{
+    const identity=join(dir,'identity');
+    const gen=Bun.spawn(['age-keygen','-o',identity],{stdout:'pipe',stderr:'pipe'});
+    await new Response(gen.stderr).text();expect(await gen.exited).toBe(0);
+    const pub=Bun.spawn(['age-keygen','-y',identity],{stdout:'pipe',stderr:'pipe'});
+    const recipient=(await new Response(pub.stdout).text()).trim();expect(await pub.exited).toBe(0);
+    const meta={createdAt:new Date().toISOString(),projectRef:project,sourceRevision:'a'.repeat(40),schemaSha256:newContract.schemaSha256,migrationSha256:newContract.migrationSha256};
+    const s=await readCznSnapshot(q,meta,newContract.schemaSha256);
+    const path=await encryptCzn(join(dir,'v2'),s,recipient);
+    const restored=await decryptCzn(path,identity,project,newContract.schemaSha256);
+    expect(restored).toEqual(s);await restoreCznSnapshot(q,restored,project,newContract.schemaSha256);
+    expect((await q('select completed from public.czn_daily_marks'))[0]!.completed).toBe(false);
+    const manifest=await readFile(path+'.manifest.json','utf8');expect(manifest).not.toContain(profile);expect(manifest).not.toContain('counts');
+    const bytes=await ageEncrypt(canonical(baseBefore),recipient);
+    expect(bytes).toBeInstanceOf(Uint8Array);
+    const oldPath=await storeEncrypted(join(dir,'v1'),baseBefore,bytes,recipient);
+    const v1=await decryptCzn(oldPath,identity,project,newContract.schemaSha256);
+    expect(v1).toEqual(baseBefore);await restoreCznSnapshot(q,v1,project,newContract.schemaSha256);
+    expect((await q('select epoch from public.czn_daily_policy'))[0]!.epoch).toBe(epoch);
+    const raw=await Bun.file(path).bytes();raw[raw.length-1]=raw[raw.length-1]!^1;await Bun.write(path,raw);
+    await expect(decryptCzn(path,identity,project,newContract.schemaSha256)).rejects.toThrow('integrity');
+  }finally{await rm(dir,{recursive:true,force:true});}
+},15000);
+test('two actual new clients sync through real SQL; imported legacy and stale old RPC cannot mutate policy false',async()=>{
+  const {readCzn,bindCznPolicy,queueCzn,syncCzn,importLegacyCzn}=await import('../src/client/account/cznProtocol.ts');
+  const {CznPolicy,CznMutation}=await import('../src/shared/cznDaily.ts');
+  await db.exec('update public.czn_daily_release set enabled=true');
+  let negotiated:any;
+  await as(owner,async()=>{negotiated=(await q('select public.czn_daily_negotiate($1,false) as result',[profile]))[0]!.result;});
+  negotiated.policy=CznPolicy.parse(negotiated.policy);
+  class Store {v=new Map<string,string>();getItem(k:string){return this.v.get(k)??null;}setItem(k:string,v:string){this.v.set(k,v);}}
+  const a=new Store(),b=new Store();
+  const state=bindCznPolicy(a,readCzn(a,profile),negotiated.policy);
+  bindCznPolicy(b,readCzn(b,profile),negotiated.policy);
+  queueCzn(a,state,cznDayKey(Date.now()),false,Date.now()+10000);
+  const transport={negotiate:async()=>negotiated,pull:async()=>{
+    let rows:Record<string,unknown>[]=[];await as(owner,async()=>{rows=await q('select to_jsonb(t) as row from public.czn_daily_marks t');});
+    return rows.map(({row}:any)=>CznMutation.parse({policyId:row.policy_id,subjectId:row.subject_id,dayKey:row.day_key,
+      completed:row.completed,changedAt:row.changed_at,mutationId:row.mutation_id}));
+  },push:async(_profile:string,e:string,rows:unknown[])=>{await as(owner,async()=>{await applyNew(rows,e);});}};
+  const synced=await syncCzn(a,profile,()=>true,transport,true);expect(synced.state.pending).toHaveLength(0);
+  const second=await syncCzn(b,profile,()=>true,transport,true);expect(second.state.rows[0]!.completed).toBe(false);
+  importLegacyCzn(b,second.state,{format:'gacha-tracker-export',version:1,daily:{'dailies:czn':{days:[cznDayKey(Date.now())]}}});
+  await as(owner,async()=>{await apply([daily(7,'dailies:czn',cznDayKey(Date.now()),true)]);});
+  expect((await syncCzn(b,profile,()=>true,transport,true)).state.rows[0]!.completed).toBe(false);
+});

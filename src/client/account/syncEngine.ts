@@ -1,4 +1,6 @@
 import { compareVersions, logicalKey, mergeSyncState, type SyncMutation, type SyncState } from "../../shared/sync.ts";
+import { CZN_CUTOVER_ENABLED, CZN_SUBJECT } from "../../shared/cznDaily.ts";
+import { cznRemote, preserveCznLegacy, readCzn } from "./cznProtocol.ts";
 import { flushSync } from "react-dom";
 import { profileKeys } from "../state/storage.ts";
 import { readAccountBinding } from "./firstLogin.ts";
@@ -12,7 +14,7 @@ import { isRetryableTransportError } from "./transport.ts";
 type Store = Pick<Storage, "getItem" | "setItem">;
 export type SyncStatus = { kind: "syncing" | "synced" | "pending" | "offline" | "network" |
   "error" | "auth" | "schema"; pending: number; lastSuccessfulSyncAt?: string;
-  message?: string; clockWarning?: boolean };
+  message?: string; clockWarning?: boolean; heldCzn?: number };
 
 function confirmed(remote: SyncState, row: SyncMutation): boolean {
   const winner = remote[row.kind][logicalKey(row)];
@@ -31,6 +33,7 @@ export async function syncProfile(store: Store, profileId: string, ownerId: stri
     authenticate: () => Promise<string>;
     pull: (id: string, inspect?: (row: Record<string, unknown>) => void) => Promise<SyncState>;
     push: (id: string, rows: SyncMutation[]) => Promise<void>;
+    negotiateCzn?: (id: string) => Promise<boolean>;
   } = {
     authenticate: async () => {
       const { data, error } = await supabase.auth.getUser();
@@ -43,7 +46,8 @@ export async function syncProfile(store: Store, profileId: string, ownerId: stri
       return data.user.id;
     },
     pull: pullCloud, push: applyCloudMutations,
-  }): Promise<{ pending: number; clockWarning: boolean; at: string }> {
+    ...(CZN_CUTOVER_ENABLED ? { negotiateCzn: async (id: string) => (await cznRemote.negotiate(id, false)).policy !== null } : {}),
+  }): Promise<{ pending: number; clockWarning: boolean; at: string; heldCzn?: number }> {
   const ensureActive = () => {
     if (!active() || !readAccountBinding(store, profileId, ownerId)) {
       throw new Error("Account session changed during sync");
@@ -74,6 +78,15 @@ export async function syncProfile(store: Store, profileId: string, ownerId: stri
   const userId = await transport.authenticate();
   ensureActive();
   if (userId !== ownerId) throw new Error("Account session changed during sync");
+  // Opt-in protocol extension: no new RPC is called in the disabled release.
+  let cznFenced = false;
+  if (transport.negotiateCzn) {
+    try { cznFenced = await transport.negotiateCzn(profileId); }
+    catch { cznFenced = true; } // Unknown protocol: hold CZN only; unrelated v1 data can still sync.
+  }
+  ensureActive();
+  const isHeldCzn = (row: SyncMutation) => cznFenced && row.kind === "daily" && row.key.subjectId === CZN_SUBJECT;
+  if (cznFenced) preserveCznLegacy(store, readCzn(store, profileId));
   const before = await transport.pull(profileId, inspectClock);
   ensureActive();
   // Commit a click queued by React before reading the journal or replacing
@@ -86,7 +99,7 @@ export async function syncProfile(store: Store, profileId: string, ownerId: stri
   if (writeSnapshot(store, keys, materializeCloud(prePushState)) && typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent(REMOTE_CHANGE, { detail: profileId }));
   }
-  const sent = readOutbox(store, keys);
+  const sent = readOutbox(store, keys).filter(row => !isHeldCzn(row));
   if (sent.length) await transport.push(profileId, sent);
   ensureActive();
   const remote = sent.length ? await transport.pull(profileId, inspectClock) : before;
@@ -95,7 +108,10 @@ export async function syncProfile(store: Store, profileId: string, ownerId: stri
   // A user may have edited while the network request was in flight. Include
   // those newer mutations even if they were not in the sent batch.
   const latest = readOutbox(store, keys);
-  const { remaining, state } = reconcile(remote, latest);
+  const held = latest.filter(isHeldCzn);
+  const eligible = reconcile(remote, latest.filter(row => !isHeldCzn(row)));
+  const remaining = [...held, ...eligible.remaining];
+  const state = mergeSyncState(eligible.state, stateFromOutbox(held));
   const at = new Date().toISOString();
   const nextMeta: SyncMeta = { ...meta, schemaVersion: 2, baseline: remote,
     lastAttemptAt: at, lastSuccessfulSyncAt: at };
@@ -110,7 +126,7 @@ export async function syncProfile(store: Store, profileId: string, ownerId: stri
   }
   clockWarning ||= Object.values(remote).some((bucket) =>
     Object.values(bucket).some((row) => Date.parse(row.changedAt) > Date.now() + 5 * 60_000));
-  return { pending: remaining.length, clockWarning, at };
+  return { pending: remaining.length, clockWarning, at, ...(held.length ? { heldCzn: held.length } : {}) };
 }
 
 /** One controller per active, verified profile. No network work survives an
@@ -155,8 +171,9 @@ export function startProfileSync(profileId: string, ownerId: string,
       if (stopped || !active()) return;
       failures = 0;
       emit({ kind: result.pending ? "pending" : "synced", pending: result.pending,
-        lastSuccessfulSyncAt: result.at, clockWarning: result.clockWarning });
-      if (result.pending) schedule(1500);
+        lastSuccessfulSyncAt: result.at, clockWarning: result.clockWarning,
+        ...(result.heldCzn ? { heldCzn: result.heldCzn, message: "CZN legacy changes held: update or export recovery; other games can sync" } : {}) });
+      if (result.pending > (result.heldCzn ?? 0)) schedule(1500);
     } catch (error) {
       if (stopped || !active()) return;
       const message = error instanceof Error ? error.message : String(error);
