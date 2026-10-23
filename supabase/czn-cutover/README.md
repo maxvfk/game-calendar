@@ -1,5 +1,15 @@
 # CZN server/backup release candidate — NOT INSTALLED
 
+> **2026-10-23 operator-directed alternative:** The operator chose to plan a
+> direct production release **without provisioning staging**, accepting a narrower
+> historical-CZN preservation goal but **not** authorizing a database wipe or
+> production DDL yet. See
+> [the new direct-production readiness task](../../docs/tasks/CZN-DAILY-RESET-DIRECT-PRODUCTION-CUTOVER.md).
+> The stricter staging-first steps below remain the original safe-release
+> baseline; any deviation needs documented equivalent local tests, an explicit
+> residual-risk assessment and a separate operator GO before production
+> migration, backup workflow switch, deletion, or policy enablement.
+
 This directory is deliberately outside `supabase/migrations`. Current production
 and the private v1 backup pin must not discover/apply this candidate automatically.
 The migration filename was created by Supabase CLI 2.121.0. Existing migrations
