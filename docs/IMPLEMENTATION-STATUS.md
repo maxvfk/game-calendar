@@ -26,13 +26,23 @@
   post-merge CI/Pages 39954540087 passed, including actual PG17 independent
   lock waits in both cutover orders, ACL/RLS and v1/v2 recovery. Host has no
   local postgres/docker; isolated PG17 service ran in GitHub CI.
+- [PR #71](https://github.com/maxvfk/game-calendar/pull/71) merged as
+  `b5d46b5fa0b820f9d244302a77c34e7020cde2ee`; final PR CI 39956124419 and
+  post-merge CI/Pages 39956392921 passed. Exact encrypted operator local drill
+  passed in a second empty PG17 container (false/epoch/microseconds; nonempty
+  rerun refused). Preflight rejects drift in legacy client writes/owner policies
+  as well as v2/internal/control access. Four AGENTS commands passed again,
+  1151 pass / 1 existing optional skip / 0 fail, build 178 / 7 / 1 existing conflict.
 - Prepared [private draft #6](https://github.com/maxvfk/game-calendar-backups/pull/6),
-  head `49a39dcdf59a2bab492e92e2ba015e6c0eb40dc8`, proposed public pin
-  `0a83bae2cfc35328bcc28132d7f6207d929be3aa`, independent exact-pin GO,
+  head `c602d3101bc733bf6699a8fb6e3fe559a2b90383`, proposed public pin
+  `b5d46b5fa0b820f9d244302a77c34e7020cde2ee`, independent exact-pin GO,
   same 01:23 UTC schedule/mutex and strict v2 encrypted paths. Draft remains
-  unmerged; [synthetic-only CI 39954714455](https://github.com/maxvfk/game-calendar-backups/actions/runs/39954714455)
-  passed frozen install/typecheck/full tests/build and isolated PG17. No secrets/live
-  export used. This does not prove actual private workflow execution on production.
+  unmerged; final [synthetic-only CI 39956500529](https://github.com/maxvfk/game-calendar-backups/actions/runs/39956500529)
+  passed actual shell/encrypted-only commit allowlist, all four AGENTS commands,
+  independent PG17 and exact operator local drill. No secrets/live export used.
+  This does not prove actual private workflow execution on production.
+- Rechecked active private workflow blob
+  `dd8b34866ead83c11d5486365166b8b0bccef192` and main unchanged after draft creation.
 - Active private S6a main `93128e7fd5ed7e407cee234ba0231a93506f76f2`, public pin
   `5b2a2b048bae53f32e464b0a91a8f5d9f354b669`; latest export
   [39909326284](https://github.com/maxvfk/game-calendar-backups/actions/runs/39909326284)
