@@ -287,6 +287,36 @@ describe("S5 durable local-first sync", () => {
     }
   });
 
+  test("held legacy CZN rows are reported once, not as never-ending pending or an update prompt", async () => {
+    const store = device();
+    const prior = ["window", "document", "navigator"].map((key) =>
+      [key, Object.getOwnPropertyDescriptor(globalThis, key)] as const);
+    Object.defineProperty(globalThis, "window", { configurable: true, value: new EventTarget() });
+    Object.defineProperty(globalThis, "document", { configurable: true,
+      value: Object.assign(new EventTarget(), { visibilityState: "visible" }) });
+    Object.defineProperty(globalThis, "navigator", { configurable: true, value: { onLine: true } });
+    const statuses: SyncStatus[] = [];
+    let runs = 0;
+    const controller = startProfileSync(profile, owner, () => true,
+      (status) => statuses.push(status), store,
+      async () => { runs++; return { pending: 1, heldCzn: 1, clockWarning: false, at: new Date().toISOString() }; });
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 60));
+      expect(statuses.at(-1)).toMatchObject({ kind: "synced", pending: 0, heldCzn: 1 });
+      expect(statuses.at(-1)?.message).toContain("kept on this device, not sent");
+      expect(statuses.at(-1)?.message).not.toMatch(/update/i);
+      // Held-only rows can never be sent, so they must not start a 1.5 s retry loop.
+      await new Promise((resolve) => setTimeout(resolve, 1700));
+      expect(runs).toBe(1);
+    } finally {
+      controller.stop();
+      for (const [key, descriptor] of prior) {
+        if (descriptor) Object.defineProperty(globalThis, key, descriptor);
+        else Reflect.deleteProperty(globalThis, key);
+      }
+    }
+  });
+
   test("fetch failures keep pending edits local and display retryable network status", async () => {
     const store = device();
     captureAccountWrite(store, profile, "progress", { "opaque:event": { status: "done", at } });

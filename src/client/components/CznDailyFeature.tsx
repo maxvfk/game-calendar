@@ -4,7 +4,7 @@ import {readCzn,startGuestCzn,queueCzn,syncCzn,buildCznExport,preserveCznLegacy,
 import {supabase} from '../account/remote.ts';
 import {readAccountBinding} from '../account/firstLogin.ts';
 import {triggerDownload} from '../state/export.ts';
-import {CznDailyPanel} from './CznDailyPanel.tsx';
+import {CznDailyPanel,cznActionClass} from './CznDailyPanel.tsx';
 /** Mounted only by the compile-time release gate. No URL/localStorage switch can enable it. */
 export function CznDailyFeature({profileId,now}:{profileId:string;now:number}){
   const [state,setState]=useState<CznLocal|null>(null),[readOnly,setReadOnly]=useState(true),[serverEnabled,setServerEnabled]=useState(false);
@@ -43,6 +43,7 @@ export function CznDailyFeature({profileId,now}:{profileId:string;now:number}){
     onExport={()=>{try{const snapshot=preserveCznLegacy(localStorage,readCzn(localStorage,profileId));
       triggerDownload(buildCznExport(snapshot),'czn-recovery.json');}catch(error){setMessage(String(error));}}}
     onUpdate={()=>{void navigator.serviceWorker?.getRegistration().then(r=>r?.update());}}/>}
-    {!guest&&state?.policy===null&&serverEnabled&&<button disabled={busy} type="button" onClick={()=>void refresh(true)}>Enable CZN 18:00 UTC daily policy</button>}
+    {!guest&&state?.policy===null&&serverEnabled&&<button disabled={busy} type="button" className={`${cznActionClass} mt-2 font-semibold`}
+      onClick={()=>void refresh(true)}>Enable CZN 18:00 UTC daily policy</button>}
   </div>;
 }
