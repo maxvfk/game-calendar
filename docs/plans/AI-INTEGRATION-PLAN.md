@@ -17,10 +17,11 @@ This document records a discussion and preserves the design direction for later 
 
 ## 1. Product goals and economic decision
 
-Two independent features may share one tiny, optional DeepSeek API integration:
+Two near-term candidate features may share one tiny, optional DeepSeek API integration. A third **deferred** application (event artwork discovery/verification) can reuse the same provider and client but must remain a separate future track:
 
 1. **Assisted ingestion/review:** classify already-fetched source changes, identify possible omitted events or conflicting dates, prepare evidence-backed review candidates.
 2. **AI presentation / Timeline labels:** generate short, comprehensible event names from source/reviewed metadata and human-readable presentation rules, **without repeatedly editing parsers**.
+3. **Deferred Event Artwork assistance:** locate image candidates from permitted sources, compare them with an event through DeepSeek Vision, and queue only attributed/licensable candidates for review. This is **not** approval to implement the existing artwork backlog.
 
 **One API provider only:** DeepSeek Flash 1017. No generic router, Decisions API, OpenAI/Anthropic/Gemini production API integrations, fallback chain or additional monthly subscription.
 
@@ -58,7 +59,7 @@ The design should be **simple, not a framework**:
 - GitHub Actions may run the AI phase when a source snapshot changes; **normal feed-build, tests and replay stay offline and deterministic**.
 - Network failure, timeout, invalid JSON or missing key must never silently validate suspect dates, break unrelated-source refresh, remove last-known-good events, or create a publication bypass. Treat AI output as untrusted external input.
 - Persist outputs as separate versioned review/presentation artifacts; no mutable model responses during browser rendering.
-- Start with **one provider, two independent modules**, and a shared caller only where it genuinely reduces duplication.
+- Start with **one provider, two independent pilot modules**, and a shared caller only where it genuinely reduces duplication. Keep artwork as a **third, future and separately scoped** track. Do not add a general-purpose agent harness.
 
 ## 4. Track A — Assisted ingestion and review triage
 
@@ -106,7 +107,63 @@ Store editable natural-language rules in a proposed file such as `data/presentat
 - Existing M2 TypeBadge, date precision/unknown symbol, ellipsis, useful minimum identity, bar geometry, mobile widths, filters, viewport/zoom/Jump and browser back must not regress.
 - AI output is computed **server-side on changed events only**, with input/rules/model fingerprint, stable deterministic cache and human-review path. Never call DeepSeek on each user page load. Invalid/uncertain outputs fall back to existing title logic.
 
-## 6. Possible phased experiments — not scheduled milestones
+## 6. DeepSeek context, Search/Fetch and Vision — optional building blocks
+
+This section extends the proposal with **confirmed API capabilities** reviewed on 2026-10-23. They are enabling options, not permissions to fetch, store, publish, or automatically schedule new data/artwork.
+
+### 6.1 Conversation context and persistent research state
+
+- DeepSeek Chat Completions is **stateless**: each model call sees only the messages sent in that call. Multi-turn continuity is possible when the client saves prior \`user\`/\`assistant\` messages and replays them; it does **not** mean that the server retains our conversation.
+- The DeepSeek-compatible Responses API also remains stateless: \`previous_response_id\`, server-side \`conversation\` and \`store\` continuity are not supported. Build any desired state explicitly.
+- Prefer one independent, compact request per ordinary source change, candidate label or artwork check. A **bounded multi-step investigation** may store a versioned state artifact between GitHub Actions runs: verified findings, examined URLs, rejected candidate IDs, unanswered questions, input/source hashes and next review step. Do **not** use an unbounded transcript as canonical truth.
+- Reuse short rules and only the relevant historical excerpts. Cache identical prefixes where feasible, but context caching reduces repeated computation/billing; **it is not memory**. Context-window size is not a promise of perfect long-context reasoning.
+- Tool-calling/long-running investigations require deliberate message/tool-result and \`reasoning_content\` handling per the current DeepSeek rules. No extra agent harness is needed for a **fixed sequence** orchestrated by Bun; autonomous, open-ended tool planning is intentionally deferred.
+- Bound history, expiry/retention, context tokens and total per-investigation cost; do not transmit user accounts, completion marks or Supabase profile data to DeepSeek.
+
+Official: [Multi-round Conversation](https://api-docs.deepseek.com/guides/multi_round_chat/), [Responses API](https://api-docs.deepseek.com/guides/responses_api/), [Thinking Mode](https://api-docs.deepseek.com/guides/thinking_mode/).
+
+### 6.2 Optional external Search and Fetch — not automatic Flash browsing
+
+- The separate DeepSeek Search API (\`POST /v1/tools/search\`) returns ranked **web page** results with URLs, titles, snippets/summaries and optional extracted content. Search supports \`site:\` and date filters. This is **not a dedicated image-search endpoint**.
+- The separate Fetch API (\`POST /v1/tools/fetch\`) retrieves an eligible page as Markdown. It may fail for dynamic, unavailable, blocked or non-extractable pages. Do not assume it provides original HTML, all page scripts, embedded image bytes or a reliable event image inventory.
+- As documented 2026-10-23, Search and Fetch are **$0.75 per 1,000 successful billable calls each**; the model's inference tokens are charged separately. Pricing/quotas can change. Record calls and enforce daily/monthly budget and domain caps.
+- \`deepseek-flash\` **does not automatically browse** merely because we ask it to: the built-in Responses \`web_search\` tool is documented for \`deepseek-v4-pro\`, and is ignored on Flash. Our Bun workflow must explicitly invoke Search/Fetch, enforce allowlists, and pass bounded retrieved content to Flash.
+- **Source-access discipline:** existing project fetch rules and original publishers' robots, terms, licenses, rate limits and attribution still apply. A search-service result **does not license crawling or republishing**. Never use a third-party fetcher as a workaround for a host the normal pipeline is not authorised to retrieve. Prefer permitted official feeds/APIs and already cached snapshots; evaluate search results as *discovery candidates*, not proof of event dates.
+- Separate **what the search engine returned** from **what source evidence actually confirms**; track canonical original URL, observed timestamps, provenance, retrieval metadata, content hash and confidence limitations. Model/search \`authority\` or relevance scores are not official confirmation.
+- For Track A, use external search **only on selected review cases**, not on every run: missing reference, candidate omission, source-date conflict or insufficient evidence; record why it was triggered. No auto-approval of revised dates.
+- For a future artwork track, search may discover *pages* linking to artwork, but a separately reviewed candidate-discovery extractor is still needed to collect image URLs from permitted API/RSS/HTML metadata (\`og:image\`, publication attachments, approved asset manifests).
+
+Official: [Search & Fetch guide](https://api-docs.deepseek.com/guides/search/), [Search API schema](https://api-docs.deepseek.com/api/search/), [Fetch API schema](https://api-docs.deepseek.com/api/fetch/), [Responses API tools](https://api-docs.deepseek.com/guides/responses_api/).
+
+### 6.3 Vision — multimodal analysis, **not** image generation or image search
+
+- Current \`deepseek-flash\` accepts mixed text + images in Chat Completions and Responses. Supported types: JPEG, PNG, GIF and WebP. Supply a permitted, public HTTPS image URL, base64 data URL, or a \`file_id\` uploaded to DeepSeek Files API.
+- Reviewed API constraints: external/base64 image maximum **32 MiB**; Files API references up to **64 MiB**; inline request body up to **48 MiB**. Up to **1,024 billed input tokens per image** under documented resizing rules. The API also has per-request image-count/dimension limits; verify at implementation time.
+- Start with \`detail: "low"\` for inexpensive coarse relevance checks (where sufficient); request higher/original detail only for legible text, artwork identification or visually close candidates. Treat OCR, character identification, model similarity judgements and ratings as fallible; require comparison with source caption/event metadata.
+- External image URLs are fetched by DeepSeek; avoid private/credential-bearing URLs and do not disclose sensitive images. If using Files API for reuse, enforce short expiration or explicit deletion, ownership, retention accounting and acceptable data-sharing policy.
+- Flash's Vision can **describe/classify/compare** images, read visible text and help detect a wrongly associated banner. It **does not itself search the web for image files or generate new art**.
+- No direct model image input is necessary for Timeline-label generation unless a future separately reviewed source legitimately conveys event identity only in an official infographic.
+
+Official: [Vision guide and limits](https://api-docs.deepseek.com/guides/vision/), [Files API](https://api-docs.deepseek.com/guides/files_api/).
+
+### 6.4 Deferred Track C — Event Artwork discovery and matching
+
+**Status: future design candidate only.** The existing Event Artwork backlog is **separate** from both initial DeepSeek pilots and every active Game Calendar milestone. Do not implement images, new UI or artwork ingestion because this plan exists.
+
+Possible later flow:
+
+1. For a **verified event missing artwork**, read its game, category, canonical title, genuine recognition subjects, event dates and original source.
+2. Prefer officially provided image references in the event's already-permitted primary source; if necessary, run narrowly scoped Search for other **eligible official** pages, then use approved fetch/HTML/API/RSS extraction to enumerate candidate image URLs. General web search does not inherently return image candidates.
+3. Perform deterministic checks before AI: host allowlist, licensing/attribution policy, source URL, MIME and actual content type, dimensions/aspect ratio, file size, hash, duplicates, stale/reused art and disallowed hotlinking. Never use an image just because it is reachable.
+4. Send **bounded, deduplicated, rights-cleared candidate images** and brief event metadata to Flash Vision; get structured assessment of visual/event correspondence, readable labels, likely banner-versus-portrait-versus-patch-poster and uncertainties. Model output is advisory, not proof.
+5. Route ambiguous/multiple candidates and all cases with unclear publication rights to **manual/Work review**, or leave the event art empty. Do not borrow a character portrait as a banner or confuse distinct phases/season variants merely to fill a blank.
+6. If later separately approved, persist a versioned mapping from stable Event ID to reviewed asset URL or a legally retainable copy, with source, license/attribution, hash, approval, checkedAt, and any expiration/replacement conditions. Keep original event fields/provenance, historical mark IDs and user's timeline position unchanged. Design responsive/offline/mobile UI as a **separate Event Artwork task**, not this API experiment.
+
+Future policy could live in a natural-language \`data/presentation/artwork-rules.md\` (not created now): prioritise the **actual official event/banner illustration**, prefer official mode/season key art for endgame, reject unrelated game posters, and allow "no suitable image" as an ordinary result. Test on **real sourced positive/negative pairs**, including different characters, weapons, seasons, regions and reruns; measure precision and false matches before enabling any automated selection.
+
+**Must decide later:** whether artwork may be cached/rehosted or only linked; platform licensing, allowed hosts, retention and takedown mechanism, fallback visuals, image dimensions and accessibility, UI placement and maintenance burden. Do not conflate **findable**, **visually correct** and **licensable**.
+
+## 7. Possible phased experiments — not scheduled milestones
 
 **Pilot B first (safer): Timeline labels, shadow-only**
 1. Take representative existing events from all seven games (including challenges, banners, phases, multi-subject cases) plus tricky fixtures.
@@ -123,7 +180,9 @@ Store editable natural-language rules in a proposed file such as `data/presentat
 
 **Separately, if later wanted:** periodic subscribed read-only review of the queue, with user-authorised manual implementation Work for hard cases. This is an orchestration/product-choice decision, not part of either pilot.
 
-## 7. Acceptance gates / evidence
+**Artwork later, not Pilot A/B:** consider a separate permission-first discovery + Vision matching research/implementation specification only after the backlog is explicitly prioritised and legal/source/UI requirements are agreed. Do not bundle it with label rewriting.
+
+## 8. Acceptance gates / evidence
 
 - Prove old `events.v1.json` and cached client feeds without optional label metadata still work. No `eventId` change, progress/done loss, Supabase migration, sync/export regression or clock/provenance change.
 - Identical approved snapshot + rules + saved AI artifact gives **byte-identical offline build**; keyless build passes.
@@ -134,13 +193,14 @@ Store editable natural-language rules in a proposed file such as `data/presentat
 - Review source-data rights, data sent to DeepSeek, caching/retention and secrets before enabling production calls.
 - No unreviewed autonomous merge, production rollout, cron trigger or user notifications.
 
-## 8. Decisions already recorded / deferred
+## 9. Decisions already recorded / deferred
 
 **Accepted planning direction:**
 - DeepSeek V4.1 Flash 1017 only as automated API model; use existing prepaid balance with explicit cap.
 - Prefer simple classification and presentation assistance to autonomous date rewriting.
 - Keep heavy investigation, code fixes and independent source research for separately authorised subscribed Work; periodic read-only review may be considered.
 - Natural-language rules for Timeline titles; source title, IDs and M1/M2 semantics stay intact.
+- Recognise stateless multi-turn context, separate Search/Fetch, and Flash Vision as optional DeepSeek capabilities for future investigation and **deferred** Event Artwork candidate assessment. Neither web search nor Vision grants source-access or artwork-republication rights.
 - Keep the work independent from all active project milestones, especially CZN.
 
 **Still to decide before implementation:**
@@ -149,7 +209,9 @@ Store editable natural-language rules in a proposed file such as `data/presentat
 - precise rule precedence and ambiguity checks for `recognitionSubjects` and regional/multi-banner labels;
 - persistent review queue format, ownership, deduplication and retention;
 - API daily/monthly caps, retry behavior, data-redaction policy and GitHub Actions trigger;
-- whether and how a subscribed periodic task can read the review artifact with the user's available permissions.
+- whether and how a subscribed periodic task can read the review artifact with the user's available permissions;
+- whether Search/Fetch are needed for the review queue at all, and the exact allowlisted, rights-compliant retrieval policy;
+- Event Artwork source/license policy, image candidate extraction, local cache versus remote linking, approval/retention and user-facing UI scope (separate deferred task).
 
 ## References
 
@@ -161,3 +223,8 @@ Store editable natural-language rules in a proposed file such as `data/presentat
 - [Existing ingestion documentation](../INGESTION.md)
 - [Model-routing state in `maxvfk/ai-workflow`](https://github.com/maxvfk/ai-workflow/blob/main/AI_MODEL_CURRENT_STATE.md)
 - [Official DeepSeek API docs](https://api-docs.deepseek.com/)
+- [DeepSeek Multi-round Conversation](https://api-docs.deepseek.com/guides/multi_round_chat/)
+- [DeepSeek Search & Fetch](https://api-docs.deepseek.com/guides/search/)
+- [DeepSeek Vision](https://api-docs.deepseek.com/guides/vision/)
+- [DeepSeek Files API](https://api-docs.deepseek.com/guides/files_api/)
+- [DeepSeek Responses tool-compatibility notes](https://api-docs.deepseek.com/guides/responses_api/)
