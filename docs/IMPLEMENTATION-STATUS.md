@@ -1,6 +1,29 @@
 # Game calendar implementation status
 
-Updated 2026-10-23 (Moscow; CZN protocol/client/backup candidate locally implemented; production disabled). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
+## CZN direct-production readiness — newly authorized planning task (2026-10-23)
+
+- Operator prefers **no new Supabase staging project or branch** for this small
+  two-person deployment and is willing to forgo legacy CZN completion history
+  if that actually simplifies cutover. **No deletion or destructive production
+  action has been authorized**, and the preferred approach preserves old rows
+  unchanged but does not merge them into the new epoch.
+- Task: [CZN-DAILY-RESET-DIRECT-PRODUCTION-CUTOVER.md](tasks/CZN-DAILY-RESET-DIRECT-PRODUCTION-CUTOVER.md).
+  Continue from completed #65–#67; finish encrypted v2 S6a backup/retention/pin
+  readiness, safe operator preflight, local PostgreSQL/Auth/concurrency checks,
+  risk/rollback plan and an explicit server-first GO/NO-GO checklist.
+- This is a **preparation milestone only**. Staging-specific hosted confidence is
+  knowingly unavailable; document that residual risk. Require a separate
+  explicit GO before production DDL, changing the private backup pin/workflow,
+  deleting any user rows or activating CZN. Never reset all profiles/Auth by
+  implication; old PWA writes must remain fenced after cutover. Approved
+  18:00 UTC opening-date and updated-client policies remain unchanged.
+- Production CZN daily reset remains on the old rules; no migrations or flags
+  have been enabled by this docs-only task.
+
+**Next concrete step:** run bounded direct-production readiness Work and return
+with reviewable SQL/backup/rollback evidence for an explicit operator GO.
+
+Updated 2026-10-23 (Moscow; direct CZN production-readiness task queued; candidate disabled, no production cutover). Follow `docs/tasks/SOL6-IMPLEMENTATION-HANDOFF.md` for the
 remaining milestones and `AGENTS.md` for non-negotiable data rules.
 
 ## CZN cutover — disabled client and encrypted staging tooling (2026-10-23)
