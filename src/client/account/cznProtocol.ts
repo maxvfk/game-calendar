@@ -82,14 +82,15 @@ export const cznRemote:CznTransport={
 /** No automatic cutover: caller first obtains enabled capability and explicitly starts.
  * active() must validate the current Auth/profile binding after each network await. */
 export async function syncCzn(store:CznStore,profile:string,active:()=>boolean,
-  transport:CznTransport=cznRemote,enabled=CZN_CUTOVER_ENABLED,cutover=false):Promise<{state:CznLocal;readOnly:boolean}>{
+  transport:CznTransport=cznRemote,enabled=CZN_CUTOVER_ENABLED,cutover=false):Promise<{state:CznLocal;readOnly:boolean;serverEnabled:boolean}>{
   let state=readCzn(store,profile);
-  if(!enabled)return {state,readOnly:true};
+  if(!enabled)return {state,readOnly:true,serverEnabled:false};
   const check=()=>{if(!active())throw new Error('CZN account session changed');};check();
   state=preserveCznLegacy(store,state);
   const reply=negotiationSchema.parse(await transport.negotiate(profile,cutover));check();
   if(reply.policy)state=bindCznPolicy(store,readCzn(store,profile),reply.policy);
-  if(!reply.policy)return {state,readOnly:true};
+  // No confirmed epoch yet: nothing to write. serverEnabled tells the UI whether the owner can start one.
+  if(!reply.policy)return {state,readOnly:true,serverEnabled:reply.enabled};
   const before=await transport.pull(profile);check();
   state=readCzn(store,profile);const sent=state.pending;
   if(reply.enabled&&sent.length){await transport.push(profile,reply.policy.epoch,sent);check();}
@@ -99,7 +100,7 @@ export async function syncCzn(store:CznStore,profile:string,active:()=>boolean,
   const pending=latest.pending.filter(row=>!winners.some(w=>w.dayKey===row.dayKey&&
     (Date.parse(w.changedAt)>Date.parse(row.changedAt)||(Date.parse(w.changedAt)===Date.parse(row.changedAt)&&w.mutationId>=row.mutationId))));
   const next={...latest,rows:mergeCzn(winners,pending),pending};saveCzn(store,next);
-  return {state:next,readOnly:!reply.enabled};
+  return {state:next,readOnly:!reply.enabled,serverEnabled:reply.enabled};
 }
 /** A guest epoch never authorizes account writes and is not automatically adopted on login. */
 export function startGuestCzn(store:CznStore,state:CznLocal,now=Date.now()):CznLocal{

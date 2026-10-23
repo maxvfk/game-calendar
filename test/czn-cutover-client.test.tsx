@@ -31,11 +31,39 @@ test('UTC opening arithmetic at -1/exact/+1ms, next reset inverse, month/year an
   }
   expect(cznDays(at+86400000,policy.cutoverAt)).toEqual(['2026-10-22','2026-10-23']);
 });
-test('disabled release performs zero network/storage changes and renders no feature',async()=>{
+test('GO 3 client release gate is on; an explicitly disabled path still performs zero network/storage changes',async()=>{
+  expect(CZN_CUTOVER_ENABLED).toBe(true);
   const store=new Store();let calls=0;const bad=async()=>{calls++;throw new Error('network should be unused');};
-  await syncCzn(store,profile,()=>true,{negotiate:bad,pull:bad,push:bad});
-  expect(CZN_CUTOVER_ENABLED).toBe(false);expect(calls).toBe(0);expect(store.v.size).toBe(0);
-  expect(renderToStaticMarkup(<CznDailyFeature profileId={profile} now={at}/>)).toBe('');
+  const result=await syncCzn(store,profile,()=>true,{negotiate:bad,pull:bad,push:bad},false);
+  expect(calls).toBe(0);expect(store.v.size).toBe(0);expect(result).toMatchObject({readOnly:true,serverEnabled:false});
+  // Server render only mounts the container; the network refresh runs in an effect, never during render.
+  expect(renderToStaticMarkup(<CznDailyFeature profileId={profile} now={at}/>)).toBe('<div></div>');
+});
+test('before owner confirmation: automatic refresh never requests cutover, no epoch, no CZN writes, accurate status',async()=>{
+  for(const enabled of [false,true]){
+    const store=new Store(),calls:string[]=[];
+    const transport:CznTransport={negotiate:async(_p,cutover)=>{calls.push(`negotiate:${cutover}`);return{protocol:2,enabled,policy:null};},
+      pull:async()=>{calls.push('pull');return[];},push:async()=>{calls.push('push');}};
+    const result=await syncCzn(store,profile,()=>true,transport,true);
+    expect(calls).toEqual(['negotiate:false']);
+    expect(result).toMatchObject({readOnly:true,serverEnabled:enabled});expect(result.state.policy).toBeNull();
+    const html=renderToStaticMarkup(<CznDailyPanel state={result.state} now={at} readOnly canStart={result.serverEnabled}
+      onToggle={()=>{}} onExport={()=>{}} onUpdate={()=>{}}/>);
+    expect(html).not.toContain('Update the app');expect(html).toContain(enabled?'is available':'not active yet');
+  }
+});
+test('server epoch binds only after explicit owner confirmation; renegotiation is idempotent and a changed epoch refuses',async()=>{
+  const store=new Store();let server:CznPolicy|null=null;const requested:boolean[]=[];
+  const transport:CznTransport={negotiate:async(_p,cutover)=>{requested.push(cutover);if(cutover&&!server)server=policy;return{protocol:2,enabled:true,policy:server};},
+    pull:async()=>[],push:async()=>{}};
+  expect((await syncCzn(store,profile,()=>true,transport,true)).state.policy).toBeNull();
+  const confirmed=await syncCzn(store,profile,()=>true,transport,true,true);
+  expect(confirmed).toMatchObject({readOnly:false,serverEnabled:true});expect(confirmed.state.policy).toEqual(policy);
+  expect((await syncCzn(store,profile,()=>true,transport,true)).state.policy).toEqual(policy);
+  expect(requested).toEqual([false,true,false]);
+  server={...policy,epoch:'dddddddd-dddd-4ddd-8ddd-dddddddddddd'};
+  await expect(syncCzn(store,profile,()=>true,transport,true)).rejects.toThrow('CZN epoch changed');
+  expect(readCzn(store,profile).policy).toEqual(policy);
 });
 test('atomic journal preserves malformed/incomplete legacy raw and original false outbox; old-tab edits retained',()=>{
   const store=new Store(),keys=profileKeys(profile);
