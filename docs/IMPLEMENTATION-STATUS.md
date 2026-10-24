@@ -1,5 +1,35 @@
 # Game calendar implementation status
 
+## CZN daily chip in Today's dailies (2026-10-24)
+
+Operator request after GO 3: CZN should look and behave like the other games' dailies. UI
+only. Server, schema, protocol, backup, Sync and existing CZN marks (legacy and new-policy)
+are unchanged.
+
+- [#80](https://github.com/maxvfk/game-calendar/pull/80) merged
+  `5f530fb55067820577cb67732e7afae9b6006191` 2026-10-24T21:18:32Z; post-merge
+  [CI 40133639803](https://github.com/maxvfk/game-calendar/actions/runs/40133639803) green incl.
+  the PG17 job; **Pages deployed 21:20:27Z**. The published `main.js` contains the new chip and
+  details strings, and the old panel text is gone.
+- **Strip.** The CZN chip is the usual hue chip in Today's dailies, with its own key
+  `czn-daily-utc18-opening-v1:dailies:czn` (the legacy `dailies:czn` log is never read or
+  written). It runs on its own clock: 18:00 UTC and UTC opening-date keys in every Region.
+  `next:` includes it; Catch up lists CZN days since cutover only.
+- **No epoch yet** (account): the invite chip "Enable CZN 18:00 UTC". Tapping it is the
+  owner-confirmed negotiation, and it is not counted in `n/m`. Not active / read-only chips
+  are disabled.
+- **Panel → details.** The separate panel became a folded "CZN resets at 18:00 UTC · details"
+  under the strip: status, legacy history, pending count, recovery export, update check.
+- **Controller.** One `useCznDaily` hook (replacing `CznDailyFeature`) feeds the chip and
+  the details. It is inert when CZN is not shown and offline-first from a cached epoch.
+- **Tests.** Policy-item modes; −1/+1 ms around 18:00 UTC in all Regions; legacy key absent;
+  CZN as the next reset; `n/m` excludes the invite; read-only chip disabled; CZN catch-up
+  equals the policy window. The DOM harness now drives the real strip. Windows local run:
+  typecheck/build pass; `bun test` 1143 pass / 13 known host-specific failures (same as
+  untouched `main`). Real browser (guest, local build): tick/untick, reload persistence,
+  details open, 375 px without overflow.
+- The handoff's real-device smoke checklist now describes this UI; the 2026-10-23/24 results stay as recorded.
+
 ## CZN GO 3 — controlled production activation: COMPLETE (2026-10-23, accepted 2026-10-24)
 
 **Accepted 2026-10-24:** the operator observed the 18:00 UTC rollover. Smoke steps 1, 2 and

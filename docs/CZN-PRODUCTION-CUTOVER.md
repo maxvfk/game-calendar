@@ -374,9 +374,10 @@ Residual risks after GO 3 activation (accepted, not yet observed):
   server applies the other rows in the batch and keeps the CZN row out. The old client
   then reports a generic Sync error and keeps its whole outbox until it updates. Nothing
   is lost; resends are idempotent. A normal reload/update fixes it. Never clear site data.
-- **No epoch until the owner confirms.** An updated account client shows "available —
-  Enable" and has no CZN checklist until the owner presses Enable. Legacy CZN history
-  stays readable in the panel and the export. Guests start a local-only epoch automatically.
+- **No epoch until the owner confirms.** An updated account client shows the invite chip
+  "Enable CZN 18:00 UTC" (since #80; before that, a separate panel button) and has no CZN
+  checklist until the owner taps it. Legacy CZN history stays readable in the CZN details
+  and the export. Guests start a local-only epoch automatically.
 - **Window 19:52–19:58Z.** Updated clients showed "not active yet" and could not mark CZN.
 - Not proven without staging: Supabase Auth JWT paths for `czn_daily_negotiate`/
   `czn_daily_apply` on a real device (operator smoke below) and service-worker update timing.
@@ -385,24 +386,36 @@ Residual risks after GO 3 activation (accepted, not yet observed):
 
 `test/czn-browser-dom.test.tsx` drives actual React DOM click/reload/export/update
 handlers in Happy DOM with synthetic localStorage and an offline transport,
-including two retained true/false mutations and read-only state. A standalone
+including two retained true/false mutations and read-only state. Since #80 it renders
+the real Today's dailies strip, with the CZN policy chip beside another game's chore, catch-up included. A standalone
 browser entry is `test/helpers/czn-cutover-entry.tsx` (bundle with Bun into a
 disposable local page containing `<div id="root"></div>`). Neither harness mounts
 in the shipped app or uses Supabase. This is not a real-browser/service-worker or
 hosted Auth smoke.
 
-## Exact real-device smoke (now due — server enabled 2026-10-23 19:58:49Z)
+## Exact real-device smoke (run 2026-10-23/24, results below; reuse for re-checks)
 
 Use operator phone with cached old PWA and PC with updated PWA, same account/profile.
-If the phone has already loaded build `a0f29694…` (it shows the new "CZN · daily reset
-18:00 UTC" panel), the old-PWA parts of steps 1, 3 and 4 cannot be run any more: record
-them as N/A and run the rest. On PC, step 2 starts by pressing **Enable CZN 18:00 UTC daily
-policy**; this is the owner-confirmed negotiation that creates the profile epoch.
+
+**Where things are in the current UI (since #80, `5f530fb`):** CZN is a normal chip
+labelled **CZN** in **Today's dailies**, beside the other games. It has its own clock
+(18:00 UTC, UTC opening-date keys) and counts in `n/m`. `next:` names it when its reset
+is the soonest. **Catch up** lists CZN days since cutover only. A profile without an
+epoch shows the invite chip **Enable CZN 18:00 UTC** instead; tapping it is the
+owner-confirmed negotiation, and it does not count in `n/m`. Read-only or not-active chips are
+disabled. The folded **CZN resets at 18:00 UTC · details** under the strip holds the
+status text, preserved legacy history, pending count, **Export CZN recovery** and
+**Check for app update**. An old cached build (before #76) still shows the legacy **CZN**
+chip in the strip and no details line.
+
+*The run on 2026-10-23/24 used the #76/#78 UI:* a separate "CZN · daily reset 18:00 UTC"
+panel with a date button per day and an "Enable CZN 18:00 UTC daily policy" button. The
+steps are the same; only where you tap differs.
 
 1. Export recovery first; record pending count privately. On old phone offline,
    toggle standing CZN and another-game daily; keep original pending/outbox bytes.
-2. On PC negotiate the epoch and mark today's UTC opening date true then false.
-   Reload: false persists and 18:00 UTC countdown is strictly next boundary.
+2. On PC tap **Enable CZN 18:00 UTC** (only if the invite chip is shown). Then tap the **CZN**
+   chip on and off. Reload: false persists and the strip's 18:00 UTC countdown is strictly the next boundary.
 3. Reconnect old phone: CZN server row/frozen legacy history cannot change;
    old generic Sync error may retain the whole batch. Other-game server write
    succeeds idempotently. Never clear site storage to remove the error.
