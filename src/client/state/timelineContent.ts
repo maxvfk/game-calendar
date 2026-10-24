@@ -2,10 +2,11 @@ import type { DisplayEvent } from "../../shared/custom.ts";
 import { dayOnlyEnd, type EventClock } from "../../shared/time.ts";
 import { categoryBadge } from "./eventCategories.ts";
 import type { TimelineGroup } from "./lanes.ts";
+import { originalTimelineIdentity, timelineIdentity } from "../../shared/timelineIdentity.ts";
 
-/** M1's ordered subjects, with no inference from the canonical title. */
-export function recognitionIdentity(event: Pick<DisplayEvent, "title" | "recognitionSubjects">): string {
-  return event.recognitionSubjects?.length ? event.recognitionSubjects.join(" + ") : event.title;
+/** Approved final-feed copy, then M1 subjects/title. No runtime inference. */
+export function recognitionIdentity(event: Pick<DisplayEvent, "title" | "recognitionSubjects" | "timelineTitle" | "sourceId">): string {
+  return timelineIdentity(event);
 }
 
 const graphemes = new Intl.Segmenter(undefined, { granularity: "grapheme" });
@@ -55,10 +56,12 @@ export function timelineAccessibleName(
   deadline: string, disputed: boolean, done: boolean,
 ): string {
   const identity = recognitionIdentity(event);
+  const original = originalTimelineIdentity(event);
   const type = categoryBadge(event.type);
   return [
     game, `Type: ${type}${type.toLowerCase() !== event.type ? ` (${event.type})` : ""}`,
-    identity, ...(identity === event.title ? [] : [event.title]), deadline,
+    identity, ...(original !== identity && original !== event.title ? [original] : []),
+    ...(identity === event.title ? [] : [event.title]), deadline,
     ...(event.startPrecision === "day" ? ["start date only"] : []),
     ...(clock.upcoming ? ["not started yet"] : []),
     ...(disputed ? ["Date disputed"] : []),

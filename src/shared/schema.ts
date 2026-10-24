@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TimelineTitle } from "./timelineIdentity.ts";
 
 export const GameId = z.enum([
   "genshin",
@@ -78,6 +79,8 @@ export const GachaEvent = z
     /** Optional Russian display title; `title` remains the stable ID input. */
     titleRu: z.string().min(1).max(200).optional(),
     recognitionSubjects: RecognitionSubjects.optional(),
+    /** Approved post-merge presentation only; never an ID/merge input. */
+    timelineTitle: TimelineTitle.optional(),
     type: EventType,
     summary: z.string().max(500).nullable(),
 

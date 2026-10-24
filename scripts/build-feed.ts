@@ -23,6 +23,7 @@ import { missingLightwardPhase } from "../src/ingest/lightward-monitor.ts";
 import { ECHOES_EVENT_SOURCE_ID, ECHOES_SOURCE_ID, echoesSeasonUrl, selectEchoesSeason } from "../src/ingest/echoes-season.ts";
 import { EventFeed, SCHEMA_VERSION, type SourceHealth } from "../src/shared/feed.ts";
 import { Region, type GachaEvent, type GameId } from "../src/shared/schema.ts";
+import { applyTimelineLabels, buildTimelineQueue, labelDiagnostics, queueBytes, TimelineRegistry } from "../src/presentation/timeline-labels.ts";
 
 const OUT = "public/data/events.v1.json";
 const snapshots = new SnapshotStore(process.env["SNAPSHOT_DIR"] ?? "snapshots");
@@ -244,10 +245,12 @@ for (const [, groups] of byGame) {
 
 events.sort((a, b) => a.startsAt.localeCompare(b.startsAt) || a.id.localeCompare(b.id));
 
+// Copy approvals apply only to final winners, never parser/reviewed/recurring IDs.
+const registry = TimelineRegistry.parse(await Bun.file("data/presentation/timeline-labels.v1.json").json());
 const feed = EventFeed.parse({
   schemaVersion: SCHEMA_VERSION,
   generatedAt: now,
-  events,
+  events: applyTimelineLabels(events, registry),
   sources,
   dateConflicts: reviewConflicts.map((c) => ({
     eventId: c.kept.id,
@@ -259,6 +262,10 @@ const feed = EventFeed.parse({
 });
 
 await Bun.write(OUT, `${JSON.stringify(feed, null, 2)}\n`);
+const queue = buildTimelineQueue(feed, registry);
+await Bun.write("public/data/timeline-label-queue.v1.json", queueBytes(queue));
+console.log(`  Timeline review: ${JSON.stringify(queue.counts)}`);
+for (const warning of labelDiagnostics(events, registry).warnings) console.warn(`  ! Timeline copy review: ${warning}`);
 // Durable review evidence, alongside the feed. Preferred reviewed records
 // remain visible; conflicting incoming dates are never silently adopted.
 await Bun.write("public/data/review.v1.json", `${JSON.stringify({

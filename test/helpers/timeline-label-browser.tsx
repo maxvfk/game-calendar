@@ -13,8 +13,8 @@ const custom = CustomGame.parse({ id: "mygame:long-name", name: "A very long cus
 const games = { [custom.id]: custom };
 const resolve = (id: string) => metaFor(id, games);
 const events: DisplayEvent[] = [
-  { title: "An extraordinarily long official event title with a recognizable beginning", game: "genshin", type: "other" },
-  { title: "Si", game: "endfield", type: "banner" },
+  { title: "An extraordinarily long official event title with a recognizable beginning", timelineTitle: "A reviewed long identity that still needs ellipsis at phone widths · Phase II", game: "genshin", type: "other" },
+  { title: "Official short character identity banner", timelineTitle: "Si", game: "endfield", type: "banner" },
   { title: "Official character banner", recognitionSubjects: ["Vesna"], game: "hsr", type: "banner" },
   { title: "Official weapon banner", recognitionSubjects: ["Weapon Alpha", "Weapon Beta"], game: "zzz", type: "banner" },
   { title: "A day-only challenge without an invented clock time", game: "wuwa", type: "challenge", endPrecision: "day" },
