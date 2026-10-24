@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   catchUpDays,
   CATCH_UP_DAYS,
@@ -14,6 +14,7 @@ import type { GameId, Region } from "../../shared/schema.ts";
 import { formatRemaining } from "../../shared/time.ts";
 import { DayPip } from "./DayPip.tsx";
 import { Fireworks } from "./Fireworks.tsx";
+import type { PolicyDaily, PolicyMode } from "../state/cznStrip.ts";
 
 /**
  * The chores no source publishes.
@@ -47,6 +48,17 @@ export interface DailyItem {
    * which has no start because it is a routine rather than an event.
    */
   notBefore: number | null;
+  /**
+   * Only CZN's 18:00 UTC policy chip sets these. It runs on its own clock and day keys, so
+   * its catch-up days come from the policy (never before cutover), not the region clock.
+   */
+  catchUp?: readonly string[];
+  mode?: PolicyMode;
+}
+
+/** Counts toward "n/m" and "all done": a chip that cannot be ticked yet is not a job. */
+function tickable(item: DailyItem): boolean {
+  return item.mode !== "invite" && item.mode !== "inactive";
 }
 
 /** A game and everything of its that wants ticking today. */
@@ -87,6 +99,7 @@ export function dailyGroups(
   startOf: (event: DisplayEvent) => number,
   showChores = true,
   omitCznChore = false,
+  cznPolicy?: PolicyDaily,
 ): DailyGroup[] {
   // A lane can arrive through an event without being in `games` — an event on a
   // game the reader has since switched off, say — and dropping it here would
@@ -110,7 +123,26 @@ export function dailyGroups(
     // or writes its ticks here, so `dailies:<game>` keeps every day the reader
     // ever logged and switching back on restores the lot. A game the reader
     // invented never had one to begin with.
-    if (showChores && !isCustomGameId(lane) && !(omitCznChore && lane === "czn")) {
+    // CZN's chore under its 18:00 UTC policy: the same chip in the same place, but its
+    // own day key, clock and catch-up window. The legacy `dailies:czn` log is never
+    // read or written here, so the old history stays exactly as it was.
+    if (showChores && lane === "czn" && cznPolicy) {
+      const invite = cznPolicy.mode === "invite";
+      items.push({
+        key: cznPolicy.key,
+        game: lane,
+        label: invite ? "Enable CZN 18:00 UTC" : game.short,
+        title: cznPolicy.note,
+        ariaLabel: invite
+          ? `Enable the ${game.name} 18:00 UTC daily`
+          : `${game.name} dailies — ${game.dailyTasks}, resets 18:00 UTC`,
+        today: cznPolicy.today,
+        resetsIn: cznPolicy.resetsIn,
+        notBefore: null,
+        catchUp: cznPolicy.catchUp,
+        mode: cznPolicy.mode,
+      });
+    } else if (showChores && !isCustomGameId(lane) && !(omitCznChore && lane === "czn")) {
       items.push({
         key: dailiesId(lane as GameId),
         game: lane,
@@ -165,6 +197,8 @@ export function Dailies({
   onToggleDay,
   showChores,
   omitCznChore = false,
+  cznPolicy,
+  footer,
 }: {
   /** Every lane the reader is looking at, in their own order. */
   games: LaneId[];
@@ -178,6 +212,10 @@ export function Dailies({
   /** Whether to carry each game's standing chore — `prefs.showChores`. */
   showChores: boolean;
   omitCznChore?: boolean;
+  /** CZN's 18:00 UTC policy chip, when the policy client is on and CZN is shown. */
+  cznPolicy?: PolicyDaily | undefined;
+  /** Rendered under the strip, e.g. the CZN details disclosure. */
+  footer?: ReactNode;
   now: number;
   daysFor: (id: string) => string[];
   onToggleDay: (id: string, day: string) => void;
@@ -205,10 +243,12 @@ export function Dailies({
     (event) => Date.parse(event.startsAt),
     showChores,
     omitCznChore,
+    cznPolicy,
   );
   const items = groups.flatMap((group) => group.items);
-  const total = items.length;
-  const complete = items.filter((i) => daysFor(i.key).includes(i.today)).length;
+  const counted = items.filter(tickable);
+  const total = counted.length;
+  const complete = counted.filter((i) => daysFor(i.key).includes(i.today)).length;
   const allDone = total > 0 && complete === total;
 
   const [burst, setBurst] = useState(0);
@@ -234,7 +274,7 @@ export function Dailies({
     return () => clearTimeout(id);
   }, [burst]);
 
-  if (total === 0) return null;
+  if (items.length === 0) return null;
 
   // With mixed reset clocks there is no single "resets in", so the header
   // reports the next one to land and says that it is the next one.
@@ -286,6 +326,7 @@ export function Dailies({
                 ariaLabel={item.ariaLabel}
                 days={daysFor(item.key)}
                 today={item.today}
+                disabled={item.mode === "readOnly" || item.mode === "inactive"}
                 onToggle={() => onToggleDay(item.key, item.today)}
               />
             </li>
@@ -299,7 +340,9 @@ export function Dailies({
             ? `Tick a day you did but didn't record. The last ${CATCH_UP_DAYS} days, and nothing later than today.`
             : allDone
               ? "All done. Nothing else expires tonight."
-              : `${waiting(total - complete)} still waiting on you today.`}
+              : total === 0
+                ? "Enable the CZN 18:00 UTC daily to start tracking it."
+                : `${waiting(total - complete)} still waiting on you today.`}
         </p>
         {/* The way back to a day you already did. It lives on the section rather
             than on each chip because a chip is a single tick target, and a
@@ -313,6 +356,7 @@ export function Dailies({
           {catchUp ? "Done" : "Catch up"}
         </button>
       </div>
+      {footer}
     </section>
   );
 }
@@ -346,9 +390,13 @@ export function CatchUpPanel({
   daysFor: (id: string) => string[];
   onToggleDay: (id: string, day: string) => void;
 }) {
+  // Only what can be ticked has a past to fill in: an invite or a read-only CZN chip has none.
+  const fillable = groups
+    .map((group) => ({ ...group, items: group.items.filter((item) => tickable(item) && item.mode !== "readOnly") }))
+    .filter((group) => group.items.length > 0);
   return (
     <div className="relative mt-3 flex flex-col gap-3">
-      {groups.map((group) => (
+      {fillable.map((group) => (
         <div key={group.game}>
           <p
             className="text-[0.6875rem] font-semibold"
@@ -360,7 +408,7 @@ export function CatchUpPanel({
             <div key={item.key} className="mt-1.5">
               <p className="truncate text-xs text-muted">{item.label}</p>
               <div className="mt-1 flex flex-wrap gap-1">
-                {catchUpDays(now, region, item.game, item.notBefore).map((day) => (
+                {(item.catchUp ?? catchUpDays(now, region, item.game, item.notBefore)).map((day) => (
                   <DayPip
                     key={day}
                     day={day}
@@ -402,6 +450,7 @@ function TickChip({
   ariaLabel,
   days,
   today,
+  disabled = false,
   onToggle,
 }: {
   label: string;
@@ -410,6 +459,8 @@ function TickChip({
   ariaLabel: string;
   days: string[];
   today: string;
+  /** Shown but not tickable: CZN read-only, or its policy not active yet. */
+  disabled?: boolean;
   onToggle: () => void;
 }) {
   const isDone = days.includes(today);
@@ -419,6 +470,7 @@ function TickChip({
     <button
       type="button"
       onClick={onToggle}
+      disabled={disabled}
       aria-pressed={isDone}
       aria-label={`${ariaLabel}${isDone ? ", done today" : ", not done today"}`}
       title={title}
@@ -426,7 +478,7 @@ function TickChip({
       // hue and arrive inline, which no rule can override, so it is drawn from
       // what inline does not own. `--hue` below is the only thing it needs;
       // pressed-ness it reads off `aria-pressed`, which is already up there.
-      className="hue-chip flex max-w-[15rem] items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium"
+      className="hue-chip flex max-w-[15rem] items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium disabled:cursor-default disabled:opacity-50"
       style={{
         ["--hue" as string]: hue,
         borderColor: isDone ? hue : `color-mix(in srgb, ${hue} 20%, transparent)`,
