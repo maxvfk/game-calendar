@@ -3,7 +3,9 @@ import { fetchFeed, type FeedState } from "./api.ts";
 import { Controls } from "./components/Controls.tsx";
 import { CZN_CUTOVER_ENABLED } from "../shared/cznDaily.ts";
 import { buildCznExport, importCzn, importLegacyCzn, readCzn, preserveCznLegacy } from "./account/cznProtocol.ts";
-import { CznDailyFeature } from "./components/CznDailyFeature.tsx";
+import { CznDailyPanel } from "./components/CznDailyPanel.tsx";
+import { useCznDaily } from "./account/useCznDaily.ts";
+import { CZN_POLICY_ITEM_KEY, cznCompletedDays, cznPolicyDaily } from "./state/cznStrip.ts";
 import { Dailies } from "./components/Dailies.tsx";
 import { GameFocus } from "./components/GameFocus.tsx";
 import { useEventDetailHistory } from "./state/useEventDetailHistory.ts";
@@ -297,6 +299,20 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
   // bottom. The stored value is left alone so switching the game back on
   // restores where they were.
   const focus = resolveFocus(prefs.focusGame, enabled);
+
+  // CZN's 18:00 UTC policy chip lives in the dailies strip like every other chore. One
+  // controller for the chip and its details; inert (no I/O) whenever CZN is not on screen.
+  const cznShown = CZN_CUTOVER_ENABLED && prefs.showChores && (focus === null ? enabled : [focus]).includes("czn");
+  const czn = useCznDaily(cznShown ? cznProfileId : undefined);
+  const cznPolicy = cznShown ? cznPolicyDaily(czn, now) : undefined;
+  const cznDone = cznCompletedDays(czn.state);
+  const stripDaysFor = (id: string) => (id === CZN_POLICY_ITEM_KEY ? cznDone : daily.daysFor(id));
+  const stripToggleDay = (id: string, day: string) => {
+    if (id !== CZN_POLICY_ITEM_KEY) return daily.toggleDay(id, day);
+    // Tapping the invite is the owner's explicit confirmation; nothing else starts an epoch.
+    if (cznPolicy?.mode === "invite") return czn.enable();
+    czn.toggle(day, !cznDone.includes(day));
+  };
 
   /**
    * The filters that decide whether a row is on screen at all.
@@ -612,17 +628,20 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
               exclusion is `dailyGroups`' to make, not this call site's — filtering
               the lanes out here would also cost a reader's own game its place in
               the order their repeating events are grouped under. */}
-          {CZN_CUTOVER_ENABLED && prefs.showChores && (focus === null ? enabled : [focus]).includes("czn") &&
-            <CznDailyFeature profileId={cznProfileId!} now={now} />}
           <Dailies
             omitCznChore={CZN_CUTOVER_ENABLED}
+            cznPolicy={cznPolicy}
+            footer={cznShown && czn.state ? (
+              <CznDailyPanel state={czn.state} readOnly={czn.readOnly} canStart={czn.serverEnabled && !czn.guest}
+                message={czn.message} onExport={czn.exportRecovery} onUpdate={czn.checkUpdate} />
+            ) : undefined}
             showChores={prefs.showChores}
             games={focus === null ? enabled : [focus]}
             events={todo.filter(repeatsDaily).map((r) => r.event)}
             region={prefs.region}
             now={now}
-            daysFor={daily.daysFor}
-            onToggleDay={daily.toggleDay}
+            daysFor={stripDaysFor}
+            onToggleDay={stripToggleDay}
           />
             </div>
           </aside>

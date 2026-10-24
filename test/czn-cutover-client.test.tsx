@@ -10,8 +10,8 @@ import {syncProfile} from '../src/client/account/syncEngine.ts';
 import {defaults} from '../src/client/state/usePrefs.ts';
 import {applyMutation,emptySyncState,SyncMutation} from '../src/shared/sync.ts';
 import {CznDailyPanel} from '../src/client/components/CznDailyPanel.tsx';
-import {CznDailyFeature} from '../src/client/components/CznDailyFeature.tsx';
-import {dailyGroups} from '../src/client/components/Dailies.tsx';
+import {Dailies,dailyGroups,nextDailyReset,CatchUpPanel} from '../src/client/components/Dailies.tsx';
+import {CZN_POLICY_ITEM_KEY,cznCompletedDays,cznPolicyDaily} from '../src/client/state/cznStrip.ts';
 import {metaFor} from '../src/shared/games.ts';
 import {dayKey,nextResetMs} from '../src/shared/daily.ts';
 import {dayStartMs} from '../src/shared/time.ts';
@@ -36,8 +36,6 @@ test('GO 3 client release gate is on; an explicitly disabled path still performs
   const store=new Store();let calls=0;const bad=async()=>{calls++;throw new Error('network should be unused');};
   const result=await syncCzn(store,profile,()=>true,{negotiate:bad,pull:bad,push:bad},false);
   expect(calls).toBe(0);expect(store.v.size).toBe(0);expect(result).toMatchObject({readOnly:true,serverEnabled:false});
-  // Server render only mounts the container; the network refresh runs in an effect, never during render.
-  expect(renderToStaticMarkup(<CznDailyFeature profileId={profile} now={at}/>)).toBe('<div></div>');
 });
 test('before owner confirmation: automatic refresh never requests cutover, no epoch, no CZN writes, accurate status',async()=>{
   for(const enabled of [false,true]){
@@ -47,8 +45,8 @@ test('before owner confirmation: automatic refresh never requests cutover, no ep
     const result=await syncCzn(store,profile,()=>true,transport,true);
     expect(calls).toEqual(['negotiate:false']);
     expect(result).toMatchObject({readOnly:true,serverEnabled:enabled});expect(result.state.policy).toBeNull();
-    const html=renderToStaticMarkup(<CznDailyPanel state={result.state} now={at} readOnly canStart={result.serverEnabled}
-      onToggle={()=>{}} onExport={()=>{}} onUpdate={()=>{}}/>);
+    const html=renderToStaticMarkup(<CznDailyPanel state={result.state} readOnly canStart={result.serverEnabled}
+      onExport={()=>{}} onUpdate={()=>{}}/>);
     expect(html).not.toContain('Update the app');expect(html).toContain(enabled?'is available':'not active yet');
   }
 });
@@ -126,9 +124,10 @@ test('real legacy sync engine holds CZN false despite newer cloud same-label tru
   expect(JSON.parse(store.getItem(keys.outbox)!)).toEqual([held]);expect(result.heldCzn).toBe(1);expect(result.pending).toBe(1);
   expect(readCzn(store,profile).recovery[0]!.outbox).toBe(JSON.stringify([held,other]));
 });
-test('new panel keeps legacy separate/read-only and shared event/other-game clocks stay unchanged',()=>{
-  const {state}=ready();const html=renderToStaticMarkup(<CznDailyPanel state={state} now={at} readOnly onToggle={()=>{}} onExport={()=>{}} onUpdate={()=>{}}/>);
-  expect(html).toContain('18:00 UTC');expect(html).toContain('disabled');expect(html).toContain('Legacy history');expect(html).toContain('Other games can sync');
+test('details keep legacy separate/read-only and shared event/other-game clocks stay unchanged',()=>{
+  const {state}=ready();const html=renderToStaticMarkup(<CznDailyPanel state={state} readOnly onExport={()=>{}} onUpdate={()=>{}}/>);
+  expect(html).toContain('18:00 UTC');expect(html).toContain('Legacy history');expect(html).toContain('Other games can sync');
+  expect(html).not.toContain('aria-pressed');
   for(const region of ['asia','europe','america'] as const){expect(dayKey(at,region,'czn')).not.toBe('');
     expect(nextResetMs(at,region,'genshin')).toBe(dayStartMs(dayKey(at,region,'genshin'),region,'genshin')+86400000);
     const original=dailyGroups(['czn','zzz'],[],at,region,id=>metaFor(id,{}),()=>at);
@@ -168,4 +167,49 @@ test('same-epoch import holds dates outside the authoritative policy window as r
   const imported=importCzn(store,state,exported);
   expect(imported.rows).toEqual([]);expect(imported.pending).toEqual([]);
   expect(JSON.parse(imported.imports[0]!).state.rows).toEqual(exported.state.rows);
+});
+
+test('strip policy item: modes, 18:00 UTC clock in every region, catch-up only since cutover',()=>{
+  const {state}=ready();const view=(over:object={})=>({state,readOnly:false,serverEnabled:true,guest:false,...over});
+  expect(cznPolicyDaily({...view(),state:null},at)).toBeUndefined();
+  expect(cznPolicyDaily(view(),at)!.mode).toBe('active');
+  expect(cznPolicyDaily(view({readOnly:true}),at)!.mode).toBe('readOnly');
+  const none={...state,policy:null};
+  expect(cznPolicyDaily(view({state:none}),at)!.mode).toBe('invite');
+  expect(cznPolicyDaily(view({state:none,guest:true}),at)!.mode).toBe('inactive');
+  expect(cznPolicyDaily(view({state:none,serverEnabled:false}),at)!.mode).toBe('inactive');
+  const before=cznPolicyDaily(view(),at-1)!,after=cznPolicyDaily(view(),at+1)!;
+  expect(before).toMatchObject({today:'2026-10-21',resetsIn:1});expect(after).toMatchObject({today:'2026-10-22',resetsIn:86400000-1});
+  expect(cznPolicyDaily(view(),at+3*86400000)!.catchUp).toEqual(['2026-10-22','2026-10-23','2026-10-24','2026-10-25']);
+  expect(cznPolicyDaily(view({state:none}),at)!.catchUp).toEqual([]);
+  for(const region of ['asia','europe','america'] as const){
+    const groups=dailyGroups(['czn','zzz'],[],at+1,region,id=>metaFor(id,{}),()=>at,true,true,after);
+    const czn=groups.find(g=>g.game==='czn')!.items;
+    expect(czn).toHaveLength(1);expect(czn[0]).toMatchObject({key:CZN_POLICY_ITEM_KEY,label:'CZN',today:'2026-10-22',mode:'active'});
+    expect(groups.flatMap(g=>g.items).some(i=>i.key==='dailies:czn')).toBe(false);
+    expect(groups.find(g=>g.game==='zzz')!.items[0]!.key).toBe('dailies:zzz');
+  }
+  const invite=dailyGroups(['czn'],[],at,'europe',id=>metaFor(id,{}),()=>at,true,true,cznPolicyDaily(view({state:none}),at));
+  expect(invite[0]!.items[0]!.label).toBe('Enable CZN 18:00 UTC');
+});
+
+test('strip: CZN 18:00 UTC can be the next reset; invite/inactive do not count; read-only chip is disabled; catch-up',()=>{
+  const {store,state}=ready();const view={state,readOnly:false,serverEnabled:true,guest:false};
+  const tenToReset=Date.parse('2026-10-24T17:50:00Z');
+  const groups=dailyGroups(['czn','zzz','genshin'],[],tenToReset,'europe',id=>metaFor(id,{}),()=>at,true,true,cznPolicyDaily(view,tenToReset));
+  const reset=nextDailyReset(groups,tenToReset)!;
+  expect(reset.resetsIn).toBe(10*60_000);expect(reset.games[0]!.game).toBe('czn');
+  const render=(policy:ReturnType<typeof cznPolicyDaily>,days:string[]=[])=>renderToStaticMarkup(<Dailies games={['czn','zzz']} events={[]}
+    region="europe" now={tenToReset} showChores omitCznChore cznPolicy={policy} daysFor={id=>id===CZN_POLICY_ITEM_KEY?days:[]} onToggleDay={()=>{}}/>);
+  expect(render(cznPolicyDaily({...view,state:{...state,policy:null}},tenToReset))).toContain('0/1');
+  expect(render(cznPolicyDaily(view,tenToReset))).toContain('0/2');
+  const ticked=queueCzn(store,state,'2026-10-23',true,tenToReset);
+  expect(cznCompletedDays(ticked)).toEqual(['2026-10-23']);
+  expect(render(cznPolicyDaily({...view,state:ticked},tenToReset),cznCompletedDays(ticked))).toContain('1/2');
+  const readOnly=render(cznPolicyDaily({...view,readOnly:true},tenToReset));
+  expect(readOnly).toMatch(/<button[^>]*disabled=""[^>]*aria-label="Chaos Zero Nightmare dailies/);
+  const pips=(html:string)=>(html.match(/aria-label="[^"]*, (?:not )?done"/g)??[]).length;
+  const catchUp=renderToStaticMarkup(<CatchUpPanel groups={groups} now={tenToReset} region="europe" daysFor={()=>[]} onToggleDay={()=>{}}/>);
+  const onlyOthers=renderToStaticMarkup(<CatchUpPanel groups={groups.filter(g=>g.game!=='czn')} now={tenToReset} region="europe" daysFor={()=>[]} onToggleDay={()=>{}}/>);
+  expect(pips(catchUp)-pips(onlyOthers)).toBe(cznPolicyDaily(view,tenToReset)!.catchUp.length);
 });
