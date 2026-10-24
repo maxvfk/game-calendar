@@ -52,6 +52,28 @@ Complete more event tasks to claim Geodes of Replication, the Manekin Action "V 
 
 -----
 
+# ["Overflowing Favor" Event: Double Drops With Artifacts](archive/21053.md)
+## Overflowing Favor
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/71613bec4ef9f79808a3d8659a3de7e3_4543893924710096263.jpg)
+
+During the event, successfully challenge "Domain of Blessing" and consume "Original Resin" to double your rewards.
+
+〓Event Duration〓
+
+<t class="t_lc" contenteditable="false">2026/10/26 04:00</t> - <t class="t_lc" contenteditable="false">2026/11/02 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 20 or above
+
+and after activating the corresponding "Domain of Blessing"
+
+〓Event Details〓
+
+● During the "Overflowing Favor" event, successfully challenge "Domain of Blessing" and consume "Original Resin" to double your rewards. You can double your rewards up to 3 times a day!
+
+-----
+
 # ["Carefree Snowball Fight" Event: Fun Throwing Challenge](archive/21891.md)
 ## Carefree Snowball Fight
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/684d82e66f2ddec8c156b9f13f5dc991_4296667567912849878_transformed.jpg)
