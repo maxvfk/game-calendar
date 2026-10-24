@@ -6,8 +6,8 @@
 > because the reviewed hash covers it. Do not re-apply it; it now fails on existing objects.
 > **GO 3 (2026-10-23):** the compatible client went live first (#76, Pages 19:52:24Z), then
 > `czn_daily_release.enabled=true` (19:58:49Z). Epochs are created only by owner-confirmed
-> negotiation. The real-device acceptance is still pending; any emergency disable needs a
-> separate operator decision. Evidence: [CZN-PRODUCTION-CUTOVER](../../docs/CZN-PRODUCTION-CUTOVER.md).
+> negotiation. The operator real-device acceptance passed on 2026-10-24 (GO 3 COMPLETE). Any
+> emergency disable needs a separate operator decision. Evidence: [CZN-PRODUCTION-CUTOVER](../../docs/CZN-PRODUCTION-CUTOVER.md).
 
 > **2026-10-23 operator-directed alternative:** The operator chose to plan a
 > direct production release **without provisioning staging**, accepting a narrower

@@ -1,6 +1,10 @@
 # Game calendar implementation status
 
-## CZN GO 3 — controlled production activation: PARTIAL, awaiting operator real-device acceptance (2026-10-23)
+## CZN GO 3 — controlled production activation: COMPLETE (2026-10-23, accepted 2026-10-24)
+
+**Accepted 2026-10-24:** the operator observed the 18:00 UTC rollover. Smoke steps 1, 2 and
+4–7 passed; step 3 is not verified, for the reason recorded below. The CZN Daily Reset at
+18:00 UTC is live.
 
 Operator-authorized after GO 1, GO 2 and the operator's GO 2 Auth/Sync smoke (login and
 profile load, another game's daily change, Synced and persisted after reload: all OK). Scope:
@@ -59,15 +63,26 @@ namespace. Legacy rows are untouched. Other games, event IDs, Timeline and sourc
   - **Step 5 PASS.** The updated phone, offline, toggled true/false/true. ✓ and pending survived
     an offline reload. After reconnecting: 0 new-policy pending and ✓ on both devices.
   - **Step 6 PASS.** The operator confirmed other-game changes sync both ways.
-  - **Step 7 pending.** Rollover to `2026-10-24` at 18:00 UTC still has to be observed.
-    The local midnight at 21:00Z did not change the CZN day label, as intended.
-- **Follow-ups found during the smoke** (UI only, no data effect; separate small PR):
-  - the CZN panel's buttons are unstyled and look like text;
-  - an updated client with a held legacy row permanently shows `1 pending` with "update or
-    export recovery" wording.
+  - **Step 7 PASS** (phone, 2026-10-24 20:49Z). UTC opening date `2026-10-24`; a new unchecked
+    `2026-10-24` chip appeared next to `2026-10-23 ✓`; the countdown read 21h 10m to 18:00Z on
+    10-25; 0 new-policy pending; account Synced. The local midnight at 21:00Z on 10-23 had not
+    changed the CZN day label, as intended.
+- **Follow-up fix found during the smoke**: [#78](https://github.com/maxvfk/game-calendar/pull/78)
+  merged `9a145b1a262f3db7cbcd89d12f9b27e669e49315` 2026-10-23T21:18:00Z. Post-merge
+  [CI 40025743497](https://github.com/maxvfk/game-calendar/actions/runs/40025743497) green;
+  Pages deployed 21:20:16Z. UI only, no data or protocol change:
+  - the CZN panel day toggles are now hue chips and the actions are visible buttons
+    (previously unstyled and read as plain text);
+  - a held legacy CZN row is reported once as "kept on this device, not sent" instead of an
+    endless `1 pending` with "update" wording, and it no longer starts a retry loop.
 
-**Next concrete step:** observe the 18:00 UTC rollover on phone and PC (step 7). Then record
-GO 3 COMPLETE (step 3 stays "not verified" with its reason).
+  The operator saw the deployed result: account Synced plus the held-row note, styled chips.
+- **Operator follow-ups (optional, outside GO 3):** keep or remove the temporary operator tooling
+  under `%USERPROFILE%\CalendarRecovery\go2`. The age identity and the archived encrypted pairs
+  stay. Emergency disable remains a separate operator decision.
+
+**Next concrete step:** none for CZN Daily Reset. Normal scheduled v2 backups continue; start
+other milestones only on a new explicit request.
 
 ## CZN GO 2 — disabled additive production migration APPLIED (2026-10-23)
 

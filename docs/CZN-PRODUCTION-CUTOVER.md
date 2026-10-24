@@ -1,10 +1,10 @@
 # CZN direct-production handoff — STOP before GO
 
-**Status 2026-10-23: GO 1 and GO 2 COMPLETE (the GO 2 owner Auth/Sync smoke passed,
-operator). GO 3 PARTIAL — awaiting operator real-device acceptance: the policy-aware
-client is live on Pages (#76 `d163e12`, deployed 19:52:24Z) and the server capability is
-`enabled=true` (19:58:49Z). The operator smoke passed steps 1, 2 and 4–6; step 3 is not
-verified; the 18:00 UTC rollover (step 7) is still to be observed.**
+**Status 2026-10-24: GO 1, GO 2 and GO 3 COMPLETE. CZN Daily Reset at 18:00 UTC is live.**
+The policy-aware client is on Pages: #76 `d163e12` (19:52:24Z), with UI follow-up #78
+`9a145b1` (21:20:16Z). The server capability is `enabled=true` (2026-10-23 19:58:49Z). The
+operator smoke passed steps 1, 2 and 4–7, including the observed 18:00 UTC rollover on
+2026-10-24. Step 3 is not verified: Chrome reported offline after airplane mode.
 No production SQL beyond the reviewed switches, user-row deletion or emergency disable
 is authorized by this document. No staging will be created.
 The default path preserves every legacy CZN row unchanged in `daily_marks`; the
@@ -324,10 +324,10 @@ All required items must have explicit evidence, not inferred success:
   (Passed: exact v2 preflight, PostgREST reload, anon/internal/ACL checks, encrypted
   v2 backup, local recovery, production read-only dry-run; operator owner login/profile
   and other-game Sync smoke OK before GO 3.)
-- [ ] No-staging residual risks explicitly accepted; client/server enablement
+- [x] No-staging residual risks explicitly accepted; client/server enablement
   remain separate approvals. Real-device smoke planned; outboxes preserved.
-  (Risks accepted and client/server enabled under the GO 3 approval. **Open:** operator
-  phone + PC smoke below; GO 3 is not complete until it passes.)
+  (Risks accepted and client/server enabled under the GO 3 approval. Operator phone + PC
+  smoke passed 2026-10-23/24, steps 1, 2 and 4–7; step 3 is not verified. Outboxes were preserved.)
 
 Any unchecked item is NO-GO for its dependent step. Missing key/drill, unexpected
 schema, failed backup/CI/API, unknown credentials or lack of approval is a stop,
@@ -429,6 +429,6 @@ constitute this smoke. Stop before unrelated milestones.
 | 4 | PASS: same epoch, legacy CZN held as 1 pending + 1 labelled legacy day, other games synced |
 | 5 | PASS |
 | 6 | PASS |
-| 7 | pending: the 18:00 UTC rollover on 2026-10-24 |
+| 7 | PASS (2026-10-24 20:49Z): opening date `2026-10-24`, new unchecked chip next to `2026-10-23 ✓`, countdown to 18:00Z on 10-25 |
 
 Details: [implementation status](IMPLEMENTATION-STATUS.md).
