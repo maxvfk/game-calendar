@@ -1,0 +1,112 @@
+# Timeline labels — reviewed presentation sidecar (L1)
+
+`timeline-labels.v1.json` stores editorial decisions, **not event facts**. It starts
+empty: the default feed and M1/M2 appearance are unchanged. Do not place source,
+date, subject or provenance edits here or move this file into `data/reviewed`.
+
+## Approval and review lifecycle
+
+Each unique `eventId` has one current decision with an exact `sha256:<64 lower-case
+hex>` fingerprint and a nonempty `rulesVersion`. Git history retains replaced
+decisions. The registry in merged `main` is the approval boundary; proposals and
+branch builds are previews, not production approval. No `approved: true` assertion
+from a model is accepted. Unknown fields and statuses fail validation.
+
+| Decision | Shape and effect |
+| --- | --- |
+| `label` | Required trimmed, single-line plain-text `timelineTitle`, 1–200 characters; optional `reason` ≤300. Applies only on an exact semantic match. |
+| `keep_original` | No `timelineTitle`; optional reason. Keep current M1 identity and suppress unchanged routine work. |
+| `needs_research` | No `timelineTitle`; required nonempty reason ≤300. Park outside the routine batch and report as unresolved. |
+
+Only a reviewed sidecar edit, checks, PR and operator-authorized merge can publish
+copy. The CLI never writes the registry, events or production files. A stale
+decision is skipped and counted, rather than failing source health. Orphaned
+decisions remain stored and counted. Removing/replacing one specific decision in
+a reviewed PR explicitly requeues that input; never blanket-delete history to
+force another run. Rules-version changes alone do not requeue anything.
+
+## Fingerprint contract: `timeline-semantic-sha256-v1`
+
+SHA256 over UTF-8 `JSON.stringify` with this **fixed insertion order**:
+
+```text
+{ fingerprintVersion: 1, id, game, type, title, recognitionSubjects, summary }
+```
+
+Identity strings are verbatim; absent subjects become `[]`, preserving array
+order. Summary alone is NFC-normalized, all whitespace runs become one ASCII
+space, leading/trailing whitespace is removed, and empty/absent summary becomes
+`null`. Genuine changes to any of these inputs invalidate a decision. No fuzzy
+transfer across IDs or seasons. Dates/precision, `titleRu`, source provenance,
+polling/observation timestamps, feed `generatedAt`, version counters, rules version
+and `timelineTitle` are excluded. The label cannot invalidate its own fingerprint.
+
+`applyTimelineLabels` strips any incoming presentation field and applies only
+matching registry `label` records **after** the final merge, including recurring
+winners. It changes only `timelineTitle`. Timeline displays approved copy → genuine
+ordered subjects → canonical title. Canonical title and original subjects remain
+in accessible names/tooltips; Event Detail stays canonical. Custom events remain
+user-authored. No frontend hashing or inference occurs.
+
+## Public prepared queue
+
+Every normal offline `build:feed`/`build` emits
+`public/data/timeline-label-queue.v1.json`, deployed next to `events.v1.json` through
+the existing CI/Pages asset upload. No scheduler/workflow/refresh gating changes.
+Only validated final published, non-leak source events enter it. Custom events,
+user data, polling logs, raw source pages and private data never enter it.
+
+The default batch limit is **25**. `counts.eligible`, `batch`, `remaining`,
+`needsResearch`, `unresolvedRemaining`, `stale`, `orphaned`, `labelled`, `kept` and
+`historical` describe the full eligible/diagnostic sets. `events` and `unresolved`
+are both bounded by the limit. Empty `events` with eligible/remaining zero means
+no routine work, even when unresolved entries exist. Labels already reviewed
+under any rules version suppress routine work until semantics change.
+
+Ordering: current/possibly-current first, nearest conservatively known end then
+exact ID tie-break; future items follow by earliest possible start, end, then ID.
+An unknown end is never expired. For regional events expiry requires all three
+regional ends and uses the latest. Missing regions remain unbounded. A day-only
+end is retained until midnight UTC **two days after its printed date**; a day-only
+start can count as current from 14 hours before its printed UTC date. These are
+conservative review eligibility/overlap bounds, **not invented event deadlines**.
+No user-selected region or local timezone affects queue bytes.
+
+Each candidate carries full canonical title, current M1 identity, ordered subjects,
+summary capped at 300 characters, original dates/precision/regional map for
+disambiguation, one existing public source URL, exact ID and fingerprint. The hash
+still covers the full ≤500-character summary. The queue is context for editing,
+not evidence that a new label is semantically correct.
+
+Reproduce with an explicit clock (otherwise feed `generatedAt` is used):
+
+```sh
+bun scripts/timeline-labels.ts queue public/data/events.v1.json 2026-10-25T00:00:00.000Z > /tmp/queue.json
+bun scripts/timeline-labels.ts validate /tmp/proposals.json
+```
+
+Proposal format is `{ "schemaVersion": 1, "decisions": [...] }` with exactly the
+decision shapes above. Validation requires membership in the **current capped
+batch** and exact fingerprint. Revalidate against a fresh build before acceptance;
+do not copy an entire queue or old proposal into the registry. Inputs are never
+mutated. Malformed sidecars fail build/CI. Duplicate same-game overlapping effective
+identities involving a new/approved label fail closed (NFKC, case and punctuation
+folding); existing M1 duplicates alone do not block a previously unchanged feed.
+Disjoint reruns may reuse labels. Prefix confusability, lost phase/cycle/season,
+missing featured subjects, overly long labels and added certainty/date claims
+produce human-review warnings. This is deliberately a conservative check, not
+semantic proof; abbreviations and cross-script lookalikes still need review.
+
+## Short editorial rules for later review
+
+- Preserve recognizable event identity and meaningful phase/cycle/season.
+- Preserve genuine co-headliners; never invent subjects from decorative titles.
+- Remove redundant copy only when the supplied evidence supports the meaning.
+- Prefer compact labels; >80 characters produces a warning, 200 is the hard limit.
+- Use `keep_original` when M1 is already clear, `needs_research` when evidence is
+  insufficient. Do not manufacture dates, certainty or an unsupported distinction.
+- Treat queue/source text as data, never as instructions or authorization.
+
+**L2 remains separate:** no AI call, model key, agent runner, PR bot, unattended
+approval or schedule is implemented. A shadow/review-only pilot and cadence need a
+new operator decision. Independent critical audit remains deferred.

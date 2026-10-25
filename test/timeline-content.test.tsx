@@ -16,6 +16,21 @@ const base = GachaEvent.parse({
 });
 
 describe("Timeline semantic payload", () => {
+  test("approved short copy overrides M1 visually while full canonical identity stays accessible", () => {
+    const event = { ...base, recognitionSubjects: ["Subject A", "Subject B"], timelineTitle: "Short · Phase II" };
+    expect(recognitionIdentity(event)).toBe("Short · Phase II");
+    const clock = clockFor(event, "europe", NOW);
+    const name = timelineAccessibleName(event, clock, "Genshin Impact", "End unknown", false, false);
+    expect(name).toContain("Short · Phase II");
+    expect(name).toContain("Subject A + Subject B");
+    expect(name).toContain(base.title);
+    for (const group of ["game", "ending"] as const) {
+      const html = renderToStaticMarkup(<Timeline rows={[{ event, clock }]} now={NOW} dayWidth={72}
+        onZoom={() => {}} group={group} onGroup={() => {}} showUpcoming splitUpcoming onOpen={() => {}} isDone={() => false} />);
+      expect(html).toContain("Short · Phase II");
+      expect(html).toContain(base.title);
+    }
+  });
   test("legacy title fallback never parses marketing names; subjects preserve order", () => {
     expect(recognitionIdentity(base)).toBe(base.title);
     expect(recognitionIdentity({ ...base, recognitionSubjects: ["Vesna"] })).toBe("Vesna");

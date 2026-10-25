@@ -1,6 +1,6 @@
 # Timeline labels L1 — deterministic infrastructure and agent-ready queue
 
-**Status:** approved coordination direction; **implementation not started** (2026-10-25).  
+**Status:** implemented in [PR #84](https://github.com/maxvfk/game-calendar/pull/84) (2026-10-25); local acceptance evidence in `docs/evidence/timeline-labels-l1.md`, final CI/merge/Pages in the PR delivery record.
 **Type:** one bounded implementation milestone.  
 **Repo:** `maxvfk/game-calendar`.  
 **Next phase:** L2 scheduled-agent pilot and cadence **only after a separate operator decision**.
