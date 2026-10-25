@@ -40,6 +40,11 @@ preview, full agentic session per run, auto-mode stalls); PR + auto-merge (PRs o
    (Pages deploys only from `main`); and the operator explicitly says to enable. Otherwise it
    stays off.
 
+4. **Ground guards only in source input.** The novel-word and claim guards compare a label only
+   with the event's canonical input fields (and, later, source excerpts), never with any text a
+   model wrote. This keeps the guard sound when AI summaries arrive
+   (`docs/research/event-context-unified-editorial-design.md`, review note 2).
+
 Other safeguards: per-decision partial acceptance; model job read-only and write job without the
 Claude secret; `concurrency: timeline-labels`; kill switch `vars.TIMELINE_LABELS_AUTO`; rollback
 by reverting the registry-only commit or overriding one decision (automation never rewrites a
@@ -50,7 +55,7 @@ decided event).
 | | Scope | Production effect |
 | --- | --- | --- |
 | M0 | Operator: token secret + `TIMELINE_LABELS_AUTO=off` — **done** | None |
-| M1 | Event Detail shows the AI title with "Original title" below | UI |
+| M1 | Event Detail shows the AI title with "Original title" below; leave room for a later "Original summary" pair | UI |
 | M2 | Deterministic `accept` with fresh-main re-check, guards and tests | None |
 | M3 | `timeline-labels-probe.yml`: manual, read-only, one model call, L1 validator report | None |
 | M3.5 | Rehearsal writes to `timeline-labels/rehearsal` + dispatched CI (no deploy) | None |
