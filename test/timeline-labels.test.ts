@@ -9,6 +9,7 @@ import { originalTimelineIdentity, timelineIdentity } from "../src/shared/timeli
 import { applyTimelineLabels, buildTimelineQueue, labelDiagnostics, queueBytes, semanticFingerprint,
   TimelineRegistry, validateTimelineProposals, type TimelineDecision } from "../src/presentation/timeline-labels.ts";
 import { mergeEvents } from "../src/ingest/merge.ts";
+import { TimelineLabelPreferences, bundleTimelineLabelAgentInput } from "../src/presentation/timeline-label-agent-input.ts";
 
 const AT = "2026-10-25T00:00:00.000Z";
 const empty = { schemaVersion: 1 as const, decisions: [] };
@@ -27,6 +28,39 @@ const decision = (kind: TimelineDecision["decision"] = "label", event = base): T
     : kind === "needs_research" ? { decision: kind, reason: "Need sourced phase identity" } : { decision: kind }),
 });
 const registry = (...decisions: unknown[]) => ({ schemaVersion: 1, decisions });
+
+describe("memory-independent editorial agent bundle", () => {
+  test("includes canonical versioned naming preferences without changing the L1 queue", async () => {
+    const preferences = TimelineLabelPreferences.parse(
+      await Bun.file("data/presentation/timeline-label-preferences.v1.json").json(),
+    );
+    const queue = buildTimelineQueue(feed(), empty, AT);
+    const original = JSON.stringify(queue);
+    const agentInput = bundleTimelineLabelAgentInput(queue, preferences);
+
+    expect(agentInput.schemaVersion).toBe(queue.schemaVersion);
+    expect(agentInput.rulesVersion).toBe(queue.rulesVersion);
+    expect(agentInput.events).toEqual(queue.events);
+    expect(agentInput.counts).toEqual(queue.counts);
+    expect(JSON.stringify(queue)).toBe(original);
+    expect(agentInput.editorialPreferences.preferencesVersion).toBe("v1");
+    expect(agentInput.editorialPreferences.operatorApprovedExamples.some(
+      ex => ex.approvedLabel === "Standard Wish 5-Star Character Invitation",
+    )).toBe(true);
+    expect(agentInput.editorialPreferences.operatorApprovedExamples.some(
+      ex => ex.approvedLabel === "Echoes of War: Season of Phantasia",
+    )).toBe(true);
+    expect(JSON.parse(JSON.stringify(agentInput))).toEqual(agentInput);
+  });
+
+  test("malformed guidance fails closed before publishing agent input", async () => {
+    const preferences = await Bun.file("data/presentation/timeline-label-preferences.v1.json").json();
+    const queue = buildTimelineQueue(feed(), empty, AT);
+    expect(() => bundleTimelineLabelAgentInput(queue, { ...preferences, schemaVersion: 2 })).toThrow();
+    expect(() => bundleTimelineLabelAgentInput(queue, { ...preferences, editorialPreferences: [] })).toThrow();
+    expect(() => bundleTimelineLabelAgentInput(queue, { ...preferences, unknown: "from memory" })).toThrow();
+  });
+});
 
 describe("Git-reviewed strict decision contract", () => {
   test("zero decisions is valid; three decision-specific shapes are valid", () => {
