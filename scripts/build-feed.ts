@@ -24,6 +24,7 @@ import { ECHOES_EVENT_SOURCE_ID, ECHOES_SOURCE_ID, echoesSeasonUrl, selectEchoes
 import { EventFeed, SCHEMA_VERSION, type SourceHealth } from "../src/shared/feed.ts";
 import { Region, type GachaEvent, type GameId } from "../src/shared/schema.ts";
 import { applyTimelineLabels, buildTimelineQueue, labelDiagnostics, queueBytes, TimelineRegistry } from "../src/presentation/timeline-labels.ts";
+import { bundleTimelineLabelAgentInput } from "../src/presentation/timeline-label-agent-input.ts";
 
 const OUT = "public/data/events.v1.json";
 const snapshots = new SnapshotStore(process.env["SNAPSHOT_DIR"] ?? "snapshots");
@@ -264,6 +265,11 @@ const feed = EventFeed.parse({
 await Bun.write(OUT, `${JSON.stringify(feed, null, 2)}\n`);
 const queue = buildTimelineQueue(feed, registry);
 await Bun.write("public/data/timeline-label-queue.v1.json", queueBytes(queue));
+// Agent input embeds the canonical, human-reviewed naming policy while keeping
+// the standalone L1 queue and its exact event/fingerprint contract unchanged.
+const editorialPreferences = await Bun.file("data/presentation/timeline-label-preferences.v1.json").json();
+const agentInput = bundleTimelineLabelAgentInput(queue, editorialPreferences);
+await Bun.write("public/data/timeline-label-agent-input.v1.json", `${JSON.stringify(agentInput, null, 2)}\n`);
 console.log(`  Timeline review: ${JSON.stringify(queue.counts)}`);
 for (const warning of labelDiagnostics(events, registry).warnings) console.warn(`  ! Timeline copy review: ${warning}`);
 // Durable review evidence, alongside the feed. Preferred reviewed records
