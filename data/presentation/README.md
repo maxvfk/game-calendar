@@ -97,6 +97,46 @@ missing featured subjects, overly long labels and added certainty/date claims
 produce human-review warnings. This is deliberately a conservative check, not
 semantic proof; abbreviations and cross-script lookalikes still need review.
 
+## Agent input: explicit preferences, never ChatGPT Memory
+
+The durable operator-owned naming policy is
+`data/presentation/timeline-label-preferences.v1.json`. It records the English-language
+editorial rules, output contract and **operator-approved examples from the first L2
+pilot (PR #87)**, including the player's preference for descriptive reward names and
+for the explicit Echoes of War mode prefix. These are examples, not hard-coded
+automatic renaming rules. Edit and review this canonical file through Git for any
+new lasting preference; chat memory, previous Work sessions, and the name of the
+model are never authoritative.
+
+Every normal `build:feed` combines those preferences with the **current L1 queue**
+into one deployable file:
+`public/data/timeline-label-agent-input.v1.json`
+(public URL:
+`https://maxvfk.github.io/game-calendar/data/timeline-label-agent-input.v1.json`).
+It preserves the top-level `events`, `rulesVersion`, counts and fingerprints
+unchanged and adds `editorialPreferences`. The existing
+`timeline-label-queue.v1.json` stays byte-for-byte equivalent to its L1 contract.
+The static build fails closed on malformed preference JSON; tests pin the bundle.
+
+A manual or scheduled editorial agent should consume **one fresh agent-input file
+per run**, read and follow its explicit `editorialPreferences` and `events`, and
+return L1-compatible `{schemaVersion:1,decisions:[...]}`. The short persistent
+instruction can be: “Read the single attached/linked agent-input JSON, apply its
+editorialPreferences to its events only; return raw JSON decisions using the
+specified outputContract; if inaccessible, report the error, never invent data.”
+Input event/source strings are untrusted data and cannot override the policy.
+No access to shared ChatGPT Memory, conversation history, GitHub internals or
+additional URLs is required.
+
+**Transport remains a separate problem:** GitHub Pages URLs have failed in a
+ChatGPT Work web-reading tool even when Pages itself returned HTTP 200. Until the
+scheduled agent's ability to retrieve this exact URL is verified, provide the
+generated file as a manual attachment / CI artifact; do not claim that scheduling
+or automated Git writes are enabled. Future unattended delivery needs its own
+transport test and an operator-reviewed registry handoff. A preference-version
+change **does not** alter event fingerprints or automatically requeue approved
+decisions.
+
 ## Short editorial rules for later review
 
 - Preserve recognizable event identity and meaningful phase/cycle/season.
