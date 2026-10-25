@@ -1,5 +1,50 @@
 # Game calendar implementation status
 
+## Timeline labels L1 — deterministic infrastructure (2026-10-25)
+
+Implemented in [PR #84](https://github.com/maxvfk/game-calendar/pull/84), from current
+main `d16c567` after #83 ([baseline CI](https://github.com/maxvfk/game-calendar/actions/runs/40143530301)
+successful). Only L1; accepted M1/M2 navigation, geometry and data rules are retained.
+
+- **Registry:** `data/presentation/timeline-labels.v1.json` (initially empty),
+  contract/editorial rules in `data/presentation/README.md`. Strict versioned
+  `label` / `keep_original` / `needs_research`, unique IDs, bounded plain-text
+  copy/reasons. Invalid sidecars fail build/CI; stale/orphaned entries stay in Git
+  and are diagnosed. No source/reviewed record is changed.
+- **Deterministic processing:** `src/presentation/timeline-labels.ts` owns fixed-order
+  semantic SHA256, exact-ID/fingerprint application, repeat suppression, bounded
+  queue, conservative expiry/overlap, duplicate ambiguity checks and read-only
+  proposal validation. Observation/deadline/rules-version changes do not requeue;
+  genuine semantic changes do. Parked research does not loop into routine work.
+- **Feed/UI:** `scripts/build-feed.ts` applies approvals after final merge and emits
+  `public/data/timeline-label-queue.v1.json` through the unchanged CI/Pages pipeline.
+  Optional schema `timelineTitle` is presentation-only. `src/shared/timelineIdentity.ts`
+  and `src/client/state/timelineContent.ts` use approved copy → M1 subjects → title;
+  full canonical title/original subjects remain accessible. Event Detail, source
+  provenance, dates/precision, IDs/completion keys, custom events and old feeds remain
+  compatible. Empty registry leaves the app/feed appearance unchanged.
+- **Local seams/tests:** `scripts/timeline-labels.ts` generates a queue from a fixed
+  feed or validates proposals without writing. `test/timeline-labels.test.ts` includes
+  offline builder/replay regressions. `scripts/prepare-timeline-label-browser.ts`
+  prepares a disposable real-browser fixture; it is never a deployed asset.
+- **Validation:** Bun 1.3.14 frozen install, typecheck, full build pass; full tests
+  **1203 pass / 3 existing age-dependent skips / 0 fail**; focused tests **69 pass**.
+  CLI replay matches built queue bytes. Real Chromium label matrix at 320/390/1440px,
+  both modes/themes, 100%/200% text, long/short copy and truthful ends passed;
+  separate M2 navigation rerun **258 checks passed**. Runtime navigation was unchanged.
+  Detailed evidence/limits: `docs/evidence/timeline-labels-l1.md`.
+- **Queue at local build time:** 179 published source events, 72 eligible, 25 in
+  batch + 47 remaining; 107 historical. No production labels were added. Human review
+  still determines semantic correctness; deterministic warnings are not proof.
+- **Delivery record:** PR #84 carries exact final-head CI, merge SHA, post-merge
+  CI/Pages and public queue verification. Optional physical phone/PC smoke stays
+  with the operator. Independent audit remains deliberately deferred.
+
+**Next concrete step:** a separately authorized L2 shadow/review-only agent pilot
+on representative prepared batches. No AI/API integration, scheduled task, L2,
+PR bot or automatic editorial approval was implemented. Draft #68, CZN,
+Auth/Sync, Supabase and backup are untouched.
+
 ## CZN daily chip in Today's dailies (2026-10-24)
 
 Operator request after GO 3: CZN should look and behave like the other games' dailies. UI

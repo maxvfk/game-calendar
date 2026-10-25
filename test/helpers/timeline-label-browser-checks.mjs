@@ -12,6 +12,7 @@ const load = async (name, width) => {
   return frame.contentWindow;
 };
 let loads = 0, checks = 0, truncated = 0, dates = 0, tails = 0, navigation = 0;
+const navigationOnly = new URL(location.href).searchParams.has("navigationOnly");
 const check = (value, detail) => { if (!value) throw new Error(detail); checks++; };
 document.querySelector("#preview").onclick = async () => {
   await load("labels", Number(document.querySelector("#width").value));
@@ -21,7 +22,7 @@ document.querySelector("#run").onclick = async () => {
   document.querySelector("#run").disabled = true;
   checks = truncated = dates = tails = navigation = 0;
   try {
-    for (const width of [320, 390, 1440]) {
+    for (const width of navigationOnly ? [] : [320, 390, 1440]) {
       const w = await load("labels", width), doc = w.document;
       status.textContent = `Running real CSS label matrix at ${width}px…`;
       for (const theme of ["dark", "light"]) for (const text of [100, 200]) {
@@ -122,13 +123,22 @@ document.querySelector("#run").onclick = async () => {
       }
       await reset(); w.timelineTest.inspect(w.timelineTest.target); await settle();
       [...w.document.querySelectorAll("button")].find(b => b.textContent === "Jump to today").click();
-      await new Promise(resolve => setTimeout(resolve, 650));
-      check(Math.abs(w.timelineTest.read().left - first.left) <= 1, `M2 explicit Jump ${width}`); navigation++;
+      // Native smooth scrolling may take longer in a throttled iframe. Wait
+      // for the actual target, retaining a finite failure deadline.
+      for (let n = 0; n < 25 && Math.abs(w.timelineTest.read().left - first.left) > 1; n++) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+      check(Math.abs(w.timelineTest.read().left - first.left) <= 1,
+        `M2 explicit Jump ${width}: expected ${first.left}, actual ${w.timelineTest.read().left}`); navigation++;
     }
-    check(truncated > 0 && dates > 0 && tails > 0, "matrix must exercise every fit stage");
-    const result = { checks, navigation, truncated, fullDates: dates, tinyTails: tails, widths: [320, 390, 1440], modes: ["game", "ending"], themes: ["dark", "light"], text: [100, 200], dayWidths: [6, 32, 72, 108] };
+    if (!navigationOnly) check(truncated > 0 && dates > 0 && tails > 0, "matrix must exercise every fit stage");
+    const result = { scope: navigationOnly ? "navigation" : "labels + navigation",
+      checks, navigation, truncated, fullDates: dates, tinyTails: tails,
+      widths: [320, 390, 1440], modes: ["game", "ending"],
+      themes: navigationOnly ? [] : ["dark", "light"], text: navigationOnly ? [] : [100, 200],
+      dayWidths: navigationOnly ? [32, 72, 108] : [6, 32, 72, 108] };
     await load("labels", 320);
     status.textContent = `PASS\n${JSON.stringify(result, null, 2)}`;
-  } catch (e) { status.textContent = `FAIL: ${e.stack || e}`; }
+  } catch (e) { status.textContent = `FAIL: ${e.stack || e}\n${JSON.stringify({checks, navigation, truncated, fullDates: dates, tinyTails: tails})}`; }
   finally { document.querySelector("#run").disabled = false; }
 };
