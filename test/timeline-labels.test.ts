@@ -280,7 +280,7 @@ test("actual offline build includes queue, rejects malformed registry, applies s
   try {
     mkdirSync(join(dir, "data/presentation"), { recursive: true });
     mkdirSync(join(dir, "public/data"), { recursive: true });
-    for (const path of ["fixtures", "snapshots", "data/reviewed"]) symlinkSync(join(root, path), join(dir, path));
+    for (const path of ["fixtures", "snapshots", "data/reviewed", "data/presentation/timeline-label-preferences.v1.json"]) symlinkSync(join(root, path), join(dir, path));
     const path = join(dir, "data/presentation/timeline-labels.v1.json");
     const build = () => Bun.spawnSync([process.execPath, join(root, "scripts/build-feed.ts")], { cwd: dir });
     await Bun.write(path, JSON.stringify(empty));
@@ -289,6 +289,13 @@ test("actual offline build includes queue, rejects malformed registry, applies s
     expect(original.events.every(e => e.timelineTitle === undefined)).toBe(true);
     const generated = await Bun.file(join(dir, "public/data/timeline-label-queue.v1.json")).text();
     expect(generated).toBe(queueBytes(buildTimelineQueue(original, empty)));
+    const agentInput = await Bun.file(join(dir, "public/data/timeline-label-agent-input.v1.json")).json();
+    expect(agentInput.events).toEqual(JSON.parse(generated).events);
+    expect(agentInput.rulesVersion).toBe(JSON.parse(generated).rulesVersion);
+    expect(agentInput.counts).toEqual(JSON.parse(generated).counts);
+    expect(agentInput.editorialPreferences).toEqual(
+      await Bun.file(join(root, "data/presentation/timeline-label-preferences.v1.json")).json(),
+    );
     // A fixed final feed + registry + time replays to exactly the built bytes.
     for (let n = 0; n < 2; n++) expect(queueBytes(buildTimelineQueue(JSON.parse(JSON.stringify(original)), empty, original.generatedAt))).toBe(generated);
     const target = original.events.find(e => e.provenanceStatus !== "leak")!;
