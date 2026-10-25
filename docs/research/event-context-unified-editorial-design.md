@@ -81,3 +81,39 @@ The exact strategy for base fingerprint vs evidence-change trigger is an **open 
 5. Add NTE Steam and HSR evidence extractors in **separate** later milestones based on measured gains.
 
 **Next concrete step:** technical design gate in a fresh short-lived Work, while the existing Claude Code Timeline automation continues its original scope. No need to stop or restart that work merely to share these approved product principles.
+
+## Review notes (2026-10-26) and operator sequencing
+
+**Sequencing (operator decision):** finish the autonomous Timeline-label milestones first
+(`docs/tasks/TIMELINE-LABEL-AUTONOMOUS.md`: token fix and probe, M1, M2, M3.5 rehearsal, M4). Start
+the summary work (design gate, WuWa evidence pilot) only after that. The Timeline work keeps its
+own scope and does not wait for this design.
+
+Evidence for the motivation: a Sonnet quality check of the 2026-10-25 queue (25 events, the
+probe's system prompt and agent input) found 15 of 25 events without `summary`; 11 of 25 went to
+`needs_research` for lack of evidence, and none had invented content. The bottleneck is input
+evidence, not the model.
+
+1. **Pick the additive display field.** Prefer `displaySummary` (Event Detail shows
+   `displaySummary ?? summary`) over overlaying `summary` after matching. The canonical `summary`
+   and the label fingerprint then never change, and rolling back one summary means removing one
+   record. The overlay variant hides the same fingerprint cycle inside the build and is easier to
+   get wrong.
+2. **Guards check model output only against untrusted *source* input, never against other model
+   output.** The novel-word and claim guards for both labels and summaries must use canonical
+   event fields plus `sourceExcerpt`, and must never use `displaySummary` or any text the model
+   wrote in the same or an earlier run. Otherwise one response can invent a fact in the summary
+   and "ground" the label on it. This rule also applies to the Timeline `accept` step now (M2).
+3. **Requeue `needs_research` when evidence appears.** If label automation goes live first, events
+   without evidence are recorded as `needs_research` and stay decided while their fingerprint is
+   unchanged. Revisiting them needs the independent evidence key from section 4. The label registry
+   schema is strict, so add an optional `evidenceHash` (or equivalent) only through a versioned
+   migration in the summary work. Do not change the registry schema in the Timeline milestones.
+   Not recording `needs_research` at all is worse: those events would spend tokens on every run.
+4. **Keep the original summary visible.** Like the title (Event Detail shows the AI title with
+   "Original title"), an AI summary needs the canonical `summary` reachable in Event Detail, for
+   example "Original summary" in a collapsible block. The Timeline M1 layout should leave room for
+   this pair.
+5. **Bound excerpt length with a test.** Files in the public repository are public even when not
+   deployed to Pages. Set a hard per-event `sourceExcerpt` length limit with a test. It protects
+   Claude Pro usage and keeps excerpts short and factual for copyright reasons.
