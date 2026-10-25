@@ -1,4 +1,173 @@
 {
   "schemaVersion": 1,
-  "decisions": []
+  "decisions": [
+    {
+      "eventId": "hsr:planar-fissure:2026-10-12",
+      "fingerprint": "sha256:4265d5537a9d5f8723cc64e4bae51a23d07248f60c2e467c4a09fa236f17ceb8",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "wuwa:artisans-search:2026-10-08",
+      "fingerprint": "sha256:079999adefe7f7e09df9cee56aa02542824359d5a705211a1b4087009299ca23",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "wuwa:whimpering-wastes-respawning-waters:2026-09-28",
+      "fingerprint": "sha256:82cfcd9910a3e37e85de819bcf7d7e3198850ef0f780949d5331c08ad819f26e",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "czn:chaos-zero-nightmare-epic-seven-collaboration-event:2026-09-17",
+      "fingerprint": "sha256:8626778b34627deb7b8e6e205a801b6586a4f252ff972203cf7598e3515b0c0f",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Epic Seven Collaboration",
+      "reason": "Removes the repeated game name and generic event wording while preserving the collaboration partner."
+    },
+    {
+      "eventId": "endfield:echoes-of-war-season-of-phantasia-cycle-ii:2026-10-22",
+      "fingerprint": "sha256:17cecbddf0dec00c5dea60133f0d208b6c56ac097f48b7857877710f1676db42",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "genshin:imaginarium-theater-october-2026-season:2026-10-01",
+      "fingerprint": "sha256:8fa81a350fce786866a912d2fa37e309b8847a950a625d6b3bb444013ee1cd3f",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "genshin:moontrace-version-7-1-battle-pass:2026-09-23",
+      "fingerprint": "sha256:f9d686a69165179125c0f9d53730d078391a4cd4b88005df55409d0f78046871",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "genshin:stygian-onslaught-version-7-1:2026-09-30",
+      "fingerprint": "sha256:6441ebf0fc67dd364664687be038c88fe3b90f5439ac600894460b2df42cfa6c",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "czn:alcea-rate-up-rescue:2026-10-13",
+      "fingerprint": "sha256:79d897c08e6ee3ed912ac1c316bc88c74a49376a5826aa089af3541ef550a32f",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Alcea",
+      "reason": "Preserves the featured name; the Timeline already displays the banner type."
+    },
+    {
+      "eventId": "czn:nine-rate-up-rescue:2026-10-13",
+      "fingerprint": "sha256:7b89457aeb27d3e5b8e92181bb6124dd60fd5e7ca1cf6b67a6bf0d084d7d513b",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Nine",
+      "reason": "Preserves the featured name; the Timeline already displays the banner type."
+    },
+    {
+      "eventId": "genshin:a-rekviem-for-the-underworld-limited-time-archon-quest-rewards:2026-09-23",
+      "fingerprint": "sha256:49238c97008b5679331698af7899c1b8ad273091373b9ca5d7dc4a3d4b119c8b",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "A Rekviem for the Underworld — Quest Rewards",
+      "reason": "Preserves the supplied quest name and reward deadline identity while removing redundant wording."
+    },
+    {
+      "eventId": "genshin:across-the-frozen-wilds-honing-ones-edge:2026-09-23",
+      "fingerprint": "sha256:9c9ebb25034ae92b4ee04d0307b0b5706d726c9e6b245972ed7698f6b585105f",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Standard Wish 5-Star Character Invitation",
+      "reason": "Uses the supplied reward description to clarify the event and distinguish it from the event-exclusive character invitation."
+    },
+    {
+      "eventId": "genshin:la-chanson-cerise:2026-10-13",
+      "fingerprint": "sha256:55d760c6b7ecc5df31987caf75d0162cd78b0784a9306c489a67290403c4027c",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "The supplied banner title and summary do not identify its featured character."
+    },
+    {
+      "eventId": "genshin:tabletop-troupe-a-gathering-on-adventurers-eve:2026-09-23",
+      "fingerprint": "sha256:6f135a0ab6c368bff9436088fc2d72bdb35a0fac792cdd5aad3508648c8e724a",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Tabletop Troupe: 5-Star Character Invitation",
+      "reason": "Preserves the event name and clarifies its character invitation reward."
+    },
+    {
+      "eventId": "genshin:void-stars-advent:2026-10-13",
+      "fingerprint": "sha256:d839caa17209478be3bb55e5f5676f5cce39c06697e9ad4259d2b36a404a65e9",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "The supplied banner title and summary do not identify its featured character."
+    },
+    {
+      "eventId": "genshin:carefree-snowball-fight:2026-10-21",
+      "fingerprint": "sha256:c5abe62925cf719c274cc6eb1a14469ca1b9f214447af84f39f71bb39f0f5806",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "genshin:to-temper-thyself-and-journey-far-cycle-5:2026-08-10",
+      "fingerprint": "sha256:66a40315bd04728185f7605ce5fc1d40434dd7a89380cf60f6fc807e85a7b024",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "nte:beyond-the-rails-lucent-circle:2026-10-22",
+      "fingerprint": "sha256:114f21b019c5cdfcad8aaf3ccd79c6f8f305acf2b7bc345110d39984c46eedc5",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "genshin:the-godforsaken-frostlands:2026-08-12",
+      "fingerprint": "sha256:bae01775b192eea3e19acf7e56ef095af0f7ed8f6a23061459325962be6f33b3",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "The Godforsaken Frostlands — Exploration Rewards",
+      "reason": "Clarifies that the deadline concerns limited exploration rewards."
+    },
+    {
+      "eventId": "endfield:carlys-verdant-anthology:2026-10-22",
+      "fingerprint": "sha256:dae4f030cc60f6c5f889da52cd9f007eda7342dc819dba7d38ad844997dbab0a",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:season-of-phantasia:2026-10-15",
+      "fingerprint": "sha256:5e642c72aee96d792676d5d94e7bb333a33cd1f1af93ba695b805a36715bd0d0",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Echoes of War: Season of Phantasia",
+      "reason": "Adds the mode named in the summary while preserving the season identity and distinction from Cycle II."
+    },
+    {
+      "eventId": "endfield:spirits-restoration:2026-10-15",
+      "fingerprint": "sha256:408b307e541cc7ada0a1c6c34343ee7f4ccb51d222af0674bbd07d7342cb8bc2",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:all-the-inky-hues:2026-10-15",
+      "fingerprint": "sha256:b3314a5f3e82ee34a0bce7daa393e8a04e9b28098d6ceadc8d1d75280f6d03d6",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:monumental-etching-forest-of-maras:2026-10-22",
+      "fingerprint": "sha256:fcd8c671330242f99b225dd099df01886474cae4f8915760633372630f826f7a",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "hsr:version-4-6-nameless-honor:2026-09-28",
+      "fingerprint": "sha256:096063e403f5ca472ce1687ff82299541885f52d6ed6b90ba8b8958983a73858",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    }
+  ]
 }
