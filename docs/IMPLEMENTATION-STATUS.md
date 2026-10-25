@@ -1,5 +1,27 @@
 # Game calendar implementation status
 
+## Timeline label agent preferences — memory-independent input (2026-10-25)
+
+- The operator accepted all eight AI-generated Timeline labels in PR #87; first batch
+  completed: 8 `label`, 15 `keep_original`, 2 `needs_research`. In particular, the
+  user explicitly preferred a concrete `Standard Wish 5-Star Character Invitation`
+  and a longer `Echoes of War: Season of Phantasia` over the respective originals.
+- **Canonical editorial preferences:** `data/presentation/timeline-label-preferences.v1.json`,
+  versioned and reviewed in Git. These guide decisions, not source facts, and do not
+  depend on account Memory, previous chats, a given Work session or a model.
+- **Single-file handoff:** `build:feed` additionally emits
+  `public/data/timeline-label-agent-input.v1.json` containing the exact L1 queue
+  plus `editorialPreferences`. The original public `timeline-label-queue.v1.json`
+  and existing proposal/registry contracts are untouched.
+- Strict preference validation and regression tests guard the bundle. No model/API
+  integration, scheduled task, automatic Git write, M1/M2 or source change.
+  External scheduled access to the published URL still needs verification; a manual
+  CI-artifact attachment is an interim option.
+
+**Next concrete step:** verify the published single-file input and run an agent using
+only that file; separately validate unattended retrieval and review-only Git handoff
+before enabling a schedule.
+
 ## Timeline labels L1 — deterministic infrastructure (2026-10-25)
 
 Implemented in [PR #84](https://github.com/maxvfk/game-calendar/pull/84), from current
