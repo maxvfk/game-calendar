@@ -1,0 +1,38 @@
+# Event context enrichment — WuWa source-local extraction pilot
+
+**Status:** specified, **NOT implemented**.
+**Prerequisite:** read `docs/research/event-context-coverage-audit-2026-10-25.md`. Work from CURRENT `main`; read `AGENTS.md`, `docs/IMPLEMENTATION-STATUS.md`, relevant parser and tests.
+**Mode:** one bounded **implementation** milestone, independent of the autonomous Timeline editor.
+
+## Goal
+
+Make the existing scheduled WuWa Atom parser extract short, truthful, **event-local** summaries from the **already ingested** `snapshots/wuwa-kuro-mirror.xml` (or equivalent permitted fixture), instead of emitting `summary: null` for every entry. Use explicit featured-subject fields only if strongly structured and unambiguous in the *same event*.
+
+The published baseline captured at 2026-10-25T09:18:18Z has seven `wuwa-kuro-mirror` final events, all seven with null `summary`. Five appear among the 25 prepared editor candidates. Treat counts as dated baselines; verify against CURRENT main/build before implementation.
+
+## Scope
+
+- `src/ingest/parsers/wuwa-kuro-atom.ts`, narrowly needed helpers/fixtures/tests, and documentation.
+- Extract only one event's own adjacent blurb from the known Atom `entry.content` section, never entire entry/neighboring events. Prefer concise gameplay objective, reward or official event class; avoid eligibility boilerplate, banner pity text and repeated date/schedule prose.
+- Featured character/item extraction must use explicit labels such as `5-Star Resonator:` or `5-Star Weapon:`; protect proper names and co-headliners; **never** guess from decorative banner titles. If ambiguity exists, omit `recognitionSubjects`.
+- Preserve `title`, `eventId()`, `sourceUrl`, date/time/precision, `type`, source provenance, classification, merge semantics and the source-zero gate.
+- Keep `summary` concise, sanitized, within the existing schema's 500-character limit and appropriate for public Event Detail. If there is no clean matching description, use null; do not fill a generic sentence merely to improve the percentage.
+- Do not add new HTTP fetches, AI calls, source adapters, queue schema changes, scheduling, Account/Sync work or automatic Git writes.
+
+## Mandatory regression coverage
+
+1. Current captured Atom rows containing **Tomorrow in the Frame** (explicit featured 5-star Lucilla), **Undefined Spectrum** (Lynae), weapon convenes **Freeze Frame** and **Spectrum Blaster**, and **Echo Erase** (its own gameplay description).
+2. Two or more simultaneous banners in one article: never bleed featured characters/weapons or mechanics across headings.
+3. No descriptive paragraph; malformed/unrelated prose; untrusted HTML; repeated article headings; mixed `Duration`/`Eligibility`/rules sections.
+4. Existing before/after IDs, titles, event counts, source links, date/precision, source parsing and backward compatibility.
+5. Explicit impact on `semanticFingerprint`: add/change `summary` or `recognitionSubjects` -> new fingerprint; unchanged input -> stable fingerprint. Show how existing accepted labels will safely fall back and re-queue.
+6. Check rendered Event Detail or feed serialization does not display noisy/unsafe text.
+
+## Deliverables
+
+- Before/after *source-specific* feed examples and `summary` quality evaluation, not only non-null count; unexpected event diffs must fail or be explained.
+- No changes to the autonomous Timeline editor infrastructure.
+- `bun install --frozen-lockfile`, `bun run typecheck`, `bun test`, `bun run build`.
+- Small branch, PR, post-merge CI verification, update `docs/IMPLEMENTATION-STATUS.md`. Leave physical browser/phone smoke to operator if relevant.
+
+**Stop after this pilot.** Next candidate milestones (NTE Steam, HSR, Genshin/reviewed context) remain separately authorized; do not start automatically.
