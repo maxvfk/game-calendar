@@ -1,0 +1,130 @@
+name: Timeline labels probe (read-only)
+
+# M3 probe for autonomous Timeline naming. It proves that the Claude subscription token
+# works headless in GitHub Actions and measures one real batch. It is read-only: no
+# registry write, no commit, no push, no deploy. Manual runs only, never scheduled.
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Claude model alias"
+        type: choice
+        options: [sonnet, opus]
+        default: sonnet
+
+concurrency:
+  group: timeline-labels
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    if: github.repository == 'maxvfk/game-calendar'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLAUDE_CODE_VERSION: "2.1.310"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3"
+      - run: bun install --frozen-lockfile
+
+      # Built from this exact commit, so the queue and the validator below see the same
+      # feed. No URL is fetched.
+      - name: Build feed and agent input
+        run: bun run build:feed
+
+      - name: Queue size
+        id: queue
+        run: |
+          set -euo pipefail
+          mkdir -p probe
+          cp public/data/timeline-label-agent-input.v1.json probe/agent-input.json
+          n=$(jq '.events | length' probe/agent-input.json)
+          echo "events=$n" >> "$GITHUB_OUTPUT"
+          jq -c '.counts' probe/agent-input.json
+
+      # An empty queue never calls the model.
+      - name: Install Claude Code CLI (pinned)
+        if: steps.queue.outputs.events != '0'
+        run: |
+          set -euo pipefail
+          curl -fsSL https://claude.ai/install.sh | bash -s "$CLAUDE_CODE_VERSION"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      # One call, no tools. The token is visible to this step only.
+      - name: Ask the model for decisions
+        id: model
+        if: steps.queue.outputs.events != '0'
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          MODEL: ${{ inputs.model }}
+          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
+        run: |
+          set -euo pipefail
+          claude --version
+          claude -p "Apply editorialPreferences from the JSON on standard input to its events and return the decisions." \
+            --model "$MODEL" --tools "" --max-turns 3 --no-session-persistence \
+            --system-prompt-file scripts/timeline-label-agent/system-prompt.md \
+            --json-schema "$(cat scripts/timeline-label-agent/decisions.schema.json)" \
+            --output-format json < probe/agent-input.json > probe/claude-result.json
+
+      - name: Extract proposals
+        if: steps.queue.outputs.events != '0'
+        run: |
+          set -euo pipefail
+          if ! jq -e '.subtype == "success" and .structured_output != null' probe/claude-result.json > /dev/null; then
+            echo "::error::No structured output (subtype: $(jq -r '.subtype' probe/claude-result.json))"
+            exit 1
+          fi
+          jq '.structured_output' probe/claude-result.json > probe/proposals.json
+
+      # The existing strict L1 validator, read-only: it never writes the registry.
+      - name: Validate with the L1 validator
+        if: steps.queue.outputs.events != '0'
+        run: bun scripts/timeline-labels.ts validate probe/proposals.json > probe/validation.json
+
+      - name: Report
+        if: always()
+        env:
+          EVENTS: ${{ steps.queue.outputs.events }}
+        run: |
+          {
+            echo "## Timeline labels probe — read-only, nothing was written"
+            echo
+            echo "Queue events: ${EVENTS:-unknown}"
+            if [ "${EVENTS:-}" = "0" ]; then echo; echo "Empty queue: no model call."; fi
+            if [ -f probe/claude-result.json ]; then
+              echo
+              jq -r '"Model run: subtype=\(.subtype), turns=\(.num_turns), duration_ms=\(.duration_ms), client cost estimate USD=\(.total_cost_usd) (subscription, not billed)"' probe/claude-result.json || true
+              jq -r '"Usage: \(.usage | tostring)"' probe/claude-result.json || true
+            fi
+            if [ -f probe/proposals.json ]; then
+              echo
+              jq -r '.decisions | group_by(.decision) | map("\(.[0].decision): \(length)") | join(", ")' probe/proposals.json
+              echo
+              echo "| eventId | decision | timelineTitle / reason |"
+              echo "| --- | --- | --- |"
+              jq -r '.decisions[] | "| \(.eventId) | \(.decision) | \((.timelineTitle // .reason // "") | gsub("\\|"; "/")) |"' probe/proposals.json
+            fi
+            if [ -f probe/validation.json ]; then
+              echo
+              jq -r '"Validator: \(.errors | length) errors, \(.warnings | length) warnings"' probe/validation.json || true
+              jq -r '.errors[]? | "- error: \(.)"' probe/validation.json || true
+              jq -r '.warnings[]? | "- warning: \(.)"' probe/validation.json || true
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: timeline-labels-probe-${{ github.run_id }}
+          path: probe/
+          retention-days: 14
+          if-no-files-found: ignore
