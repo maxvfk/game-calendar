@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Timeline label proposals v1 (model output shape; the strict L1 validator still decides acceptance)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "decisions"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "decisions": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["eventId", "fingerprint", "rulesVersion", "decision"],
+        "properties": {
+          "eventId": { "type": "string", "minLength": 1, "maxLength": 300 },
+          "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+          "rulesVersion": { "type": "string", "minLength": 1, "maxLength": 64 },
+          "decision": { "enum": ["label", "keep_original", "needs_research"] },
+          "timelineTitle": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "reason": { "type": "string", "minLength": 1, "maxLength": 300 }
+        }
+      }
+    }
+  }
+}
