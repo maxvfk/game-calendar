@@ -80,14 +80,24 @@ during implementation):
 capture timestamp**. The actual builder must copy real snapshot metadata,
 or use `null` when unavailable; never synthesize freshness.
 
-- Strict bounds: **up to three** distinct event-local excerpts,
-  **≤240 Unicode characters each**, **≤600 Unicode characters total
-  per event**, **≤2 source documents** after verified association. Source
-  identity/URLs and metadata have separately bounded lengths. No
-  raw markup, images, navigation, whole maintenance post, or instructions.
-  The limit is on combined text **across sources**; overflow causes
-  prioritization of genuinely identifying facts (featured subjects,
-  activity, rewards), not blindly taking the page's first N characters.
+- Strict **pilot ceiling** (operator decision, 2026-10-26):
+  **up to six** distinct event-local excerpts,
+  **≤500 Unicode code points per excerpt**, **≤2,000 Unicode code
+  points total per event**, **≤2 source documents** after verified
+  association. Enforce the **combined** text limit across sources and
+  excerpts; six excerpts are *not* permission to exceed 2,000.
+  Measure by Unicode code points (not JavaScript UTF-16 code units);
+  validate hard bounds and edge cases in tests. Source identity/URLs
+  and metadata have separately bounded lengths. No raw markup, images,
+  navigation, whole maintenance post, or instructions. Prefer concise
+  400–800-character context for simple events, **without padding**.
+  On overflow, prioritize attributable facts (featured subjects, activity,
+  rewards), preserving exact names, numbers and important qualifiers;
+  do not blindly take the first N characters or split facts mid-sentence.
+  These are initial safety ceilings, **not quality targets**. After the
+  first real E1 extraction runs, report per-event lengths, cap hits,
+  omitted material, downstream token use and semantic usefulness
+  before proposing another limit change.
 - Excerpt `kind` is `featured`, `activity` or `rewards`, describing
   *what is quoted/extracted*, not a model classification of the event.
   Keep exact names, numbers, negations and qualifiers; sanitize markup
