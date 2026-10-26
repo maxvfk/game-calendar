@@ -80,14 +80,24 @@ during implementation):
 capture timestamp**. The actual builder must copy real snapshot metadata,
 or use `null` when unavailable; never synthesize freshness.
 
-- Strict bounds: **up to three** distinct event-local excerpts,
-  **≤240 Unicode characters each**, **≤600 Unicode characters total
-  per event**, **≤2 source documents** after verified association. Source
-  identity/URLs and metadata have separately bounded lengths. No
-  raw markup, images, navigation, whole maintenance post, or instructions.
-  The limit is on combined text **across sources**; overflow causes
-  prioritization of genuinely identifying facts (featured subjects,
-  activity, rewards), not blindly taking the page's first N characters.
+- Strict **pilot ceiling** (operator decision, 2026-10-26):
+  **up to six** distinct event-local excerpts,
+  **≤500 Unicode code points per excerpt**, **≤2,000 Unicode code
+  points total per event**, **≤2 source documents** after verified
+  association. Enforce the **combined** text limit across sources and
+  excerpts; six excerpts are *not* permission to exceed 2,000.
+  Measure by Unicode code points (not JavaScript UTF-16 code units);
+  validate hard bounds and edge cases in tests. Source identity/URLs
+  and metadata have separately bounded lengths. No raw markup, images,
+  navigation, whole maintenance post, or instructions. Prefer concise
+  400–800-character context for simple events, **without padding**.
+  On overflow, prioritize attributable facts (featured subjects, activity,
+  rewards), preserving exact names, numbers and important qualifiers;
+  do not blindly take the first N characters or split facts mid-sentence.
+  These are initial safety ceilings, **not quality targets**. After the
+  first real E1 extraction runs, report per-event lengths, cap hits,
+  omitted material, downstream token use and semantic usefulness
+  before proposing another limit change.
 - Excerpt `kind` is `featured`, `activity` or `rewards`, describing
   *what is quoted/extracted*, not a model classification of the event.
   Keep exact names, numbers, negations and qualifiers; sanitize markup
@@ -149,21 +159,31 @@ its `timeline-semantic-sha256-v1` and current `record.sh` in production
 until a separate, rehearsed **v2 migration**. The v2 record keeps the
 existing `eventId`, `fingerprint`, `rulesVersion`, decision and
 approved label plus a validated `origin`:
-`operator_approved | automated | legacy_unknown`, and for automatic
-non-label decisions a nullable `evidenceHashAtDecision`. A
-`legacy_unknown` entry is conservatively protected. The original
+`operator_approved | automated | legacy_unknown`, and for every
+non-label decision a nullable `evidenceHashAtDecision` (null when the
+decision was made without source evidence, which is true of every
+decision recorded before E1). A `legacy_unknown` entry is
+conservatively protected. The original
 label fingerprint remains based solely on canonical
 `{id,game,type,title,recognitionSubjects,summary}`, **never**
 `sourceExcerpt` or `displaySummary`.
 
 **Migration baseline:** PR #87 contains the original **25 operator-reviewed
-decisions**, and automatic commit
-`c0b933f64ccb6bc3e579dc6855ebf7a32022b4ad` added **25 automatic
-decisions**. Materialize that provenance into a checked/validated
-migration manifest keyed by exact `eventId` **and fingerprint**, with
-record-count/content checks; do not query commit history at runtime.
-New/changed entries not unambiguously classified become
-`legacy_unknown`. The migration can use Git history once as evidence,
+decisions**. Automatic decisions are **every** registry-only commit by the
+scheduled/manual Timeline workflow up to the migration commit, not only
+the first one (`c0b933f64ccb6bc3e579dc6855ebf7a32022b4ad`, 25 decisions):
+the Tue/Sat schedule keeps adding them until E2 lands. Identify them once
+at migration time by author `github-actions[bot]`, subject
+`data(timeline): record automatic label decisions`, a diff touching only
+`data/presentation/timeline-labels.v1.json`, and only added or
+fingerprint-replaced records; each record is attributed to the commit
+that last wrote its exact `eventId` **and fingerprint**. Any registry
+change in the same window by another author or commit shape needs
+explicit operator classification. Materialize the result into a
+checked/validated migration manifest keyed by exact `eventId` **and
+fingerprint**, with record-count/content checks per source commit; do
+not query commit history at runtime. Entries still not unambiguously
+classified become `legacy_unknown`. The migration can use Git history once as evidence,
 but must persist its result in versioned data. While migrating, never
 let v1/v2 publishers both accept/write labels. Test a rehearsal build
 and a rollback to v1 before switching the live workflow.
@@ -207,13 +227,21 @@ independent field decisions (or `not_requested` for that field);
 it must not rewrite a decided protected label merely because summary
 is due.
 
-- Automatic `keep_original` and `needs_research` **requeue only on
-  a material, non-null change to verified `evidenceHash`** versus
-  their recorded evidence key. Existing `label` remains in place,
-  regardless of origin, unless the canonical fingerprint changes
-  under existing rules or an operator explicitly reopens it.
-  `operator_approved` and `legacy_unknown` label decisions stay
-  protected on evidence-only changes.
+- **Evidence-only requeue** happens when the current verified
+  `evidenceHash` is non-null and differs from the recorded
+  `evidenceHashAtDecision`. A null recorded key counts as different:
+  "no evidence at decision time, evidence now" is the main case, and
+  it covers every decision recorded before E1. A source outage that
+  yields no evidence never requeues. Eligible decisions:
+  - `automated` `keep_original` and `needs_research`;
+  - `operator_approved` `needs_research` as well, because that
+    decision means "waiting for evidence", not a reviewed choice.
+
+  Protected on evidence-only changes: every `label` regardless of
+  origin, `operator_approved` `keep_original`, and every
+  `legacy_unknown` decision. A label still changes only when the
+  canonical fingerprint changes under existing rules or an operator
+  explicitly reopens it.
 - Summary `display` applies only when base fingerprint and reviewed
   source-evidence hash still match. `keep_original` suppresses repeat
   work until the base/evidence key meaningfully changes. Do not retry

@@ -10,9 +10,10 @@ supersedes the exploratory choices in
 `docs/research/event-context-unified-editorial-design.md`.
 
 - **Service-only event evidence:** deterministic, bounded per-event
-  `sourceExcerpt` (≤3 source-local excerpts, ≤240 characters each,
-  ≤600 total per event) extracted from the already permitted source
-  snapshot. Generated to a local/untracked editorial sidecar, outside
+  `sourceExcerpt` (pilot hard cap: ≤6 source-local excerpts,
+  ≤500 Unicode code points each, **≤2,000 total per event**) extracted
+  from the already permitted source snapshot; actual length/cap-hit
+  metrics will determine whether later tuning is worthwhile. Generated to a local/untracked editorial sidecar, outside
   `public/` and `GachaEvent`. Event content/captured provenance and
   stable `evidenceHash` are separate from the user's summary.
 - **Verified attribution after merge:** exact `sourceEventId` and
@@ -35,13 +36,15 @@ supersedes the exploratory choices in
 - **Durable provenance and requeue:** a future versioned label-decision
   contract explicitly distinguishes `operator_approved`,
   `automated`, and protected `legacy_unknown` records.
-  Use an audited one-time manifest to classify original 25
-  operator-approved PR #87 decisions and 25 automatic commit
-  `c0b933f` decisions; never rely on git history as the sole
-  runtime origin store. Only automatic `keep_original` and
-  `needs_research` are eligible for evidence-only requeue when
-  meaningful, verified source evidence appears. Approved labels
-  and human/unknown decisions are protected.
+  Use an audited one-time manifest to classify the original 25
+  operator-approved PR #87 decisions and **all** automatic
+  registry-only bot commits up to the migration (starting with
+  `c0b933f`; the Tue/Sat schedule keeps adding them); never rely on
+  git history as the sole runtime origin store. Evidence-only requeue
+  (null recorded evidence key counts as changed) covers automatic
+  `keep_original` and `needs_research` plus operator-approved
+  `needs_research`. Labels, operator-approved `keep_original` and
+  unknown-origin decisions are protected.
 - **Next bounded task ready:** `docs/tasks/EVENT-CONTEXT-WUWA-PILOT.md`
   rewritten for **E1 evidence-only WuWa extractor**; original direct
   parser→`summary` task is superseded. E2 origin/summary registries,
@@ -121,19 +124,12 @@ those earlier milestones, not the current `main`. Canonical operating instructio
   Post-merge [CI/Pages 40354623379](https://github.com/maxvfk/game-calendar/actions/runs/40354623379)
   passed on `0c5c47a`.
 
-**Next concrete step:** separate bounded **Event Context technical design gate**
-(`docs/research/event-context-unified-editorial-design.md`), not additional
-Timeline M4 work. Decide the event-local auxiliary `sourceExcerpt` contract,
-post-merge evidence attribution, independent per-field hashes/states and the
-future `displaySummary` overlay. **Operator decision (2026-10-26):** make
-human-reviewed vs automatic editorial provenance a durable, explicit part of
-the future decision contract. Do **not** use Git commit authorship/history
-as the only lasting source of origin; plan a conservative migration for
-legacy registry entries. Then revise
-`docs/tasks/EVENT-CONTEXT-WUWA-PILOT.md` to extract service-only evidence
-rather than writing directly into canonical `summary`. Do not start the
-implementation or modify the running Timeline automation as part of
-this documentation closeout.
+**Next step at that time (done since):** the Event Context technical design
+gate. It closed as D0 in PR #100; see the section above for the current next
+step. **Operator decision (2026-10-26)** carried into D0: make human-reviewed
+vs automatic editorial provenance a durable, explicit part of the future
+decision contract, never Git commit authorship/history alone, with a
+conservative migration for legacy registry entries.
 
 ## Timeline label agent preferences — memory-independent input (2026-10-25)
 
