@@ -138,3 +138,33 @@ export function buildEvidenceSidecar(extraction: Extraction, finalEvents: GachaE
   }
   return EvidenceSidecar.parse({ schemaVersion: 1, extractorVersion: "wuwa-event-local-v1", hashContract: HASH_CONTRACT, entries, unattached, diagnostics });
 }
+
+/**
+ * An invalid auxiliary candidate (or future extractor regression) must not
+ * invalidate a successfully validated canonical feed. Fail closed for ALL
+ * evidence in this run, preserving a machine-readable diagnostic.
+ */
+export function safelyBuildEvidenceSidecar(
+  extraction: Extraction,
+  finalEvents: GachaEvent[],
+  conflicts: MergeResult["conflicts"] = [],
+  mappings: EvidenceMapping[] = [],
+): z.infer<typeof EvidenceSidecar> {
+  try {
+    return buildEvidenceSidecar(extraction, finalEvents, conflicts, mappings);
+  } catch {
+    return EvidenceSidecar.parse({
+      schemaVersion: 1,
+      extractorVersion: "wuwa-event-local-v1",
+      hashContract: HASH_CONTRACT,
+      entries: [],
+      unattached: [],
+      diagnostics: [{
+        code: "sidecar_assembly_failed",
+        sourceEventId: null,
+        sourceUrl: null,
+        detail: "Optional evidence validation failed; all evidence omitted",
+      }],
+    });
+  }
+}

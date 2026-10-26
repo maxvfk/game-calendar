@@ -3,8 +3,8 @@ import { mkdtempSync, mkdirSync, symlinkSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { parseWuwaKuroAtom } from "../src/ingest/parsers/wuwa-kuro-atom.ts";
-import { extractWuwaEvidence } from "../src/editorial/wuwa-evidence.ts";
-import { buildEvidenceSidecar, boundExcerpts, codePoints, evidenceHash, EvidenceSidecar, type EvidenceCandidate, type Excerpt } from "../src/editorial/event-evidence.ts";
+import { extractWuwaEvidence, safelyExtractWuwaEvidence } from "../src/editorial/wuwa-evidence.ts";
+import { buildEvidenceSidecar, safelyBuildEvidenceSidecar, boundExcerpts, codePoints, evidenceHash, EvidenceSidecar, type EvidenceCandidate, type Excerpt } from "../src/editorial/event-evidence.ts";
 import { mergeEvents } from "../src/ingest/merge.ts";
 
 const ctx = { now: "2026-10-26T18:00:00.000Z", sourceId: "wuwa-kuro-mirror", sourceUrl: "https://example.com/mirror", game: "wuwa" as const };
@@ -21,6 +21,14 @@ function eventFixture(content: string, title = "[Test Activity] Leisure Event") 
 }
 const duration = "<p>Duration: 2026-10-22 10:00 - 2026-11-09 03:59 (server time)</p>";
 const activity = "<p>Complete combat challenges to obtain Astrite x100.</p>";
+
+const EVIDENCE_ONLY_INVALID_DATE_ENTRY = [
+  '<entry><id>urn:article:91919</id><title>Odd notice</title>',
+  '<link href="https://wutheringwaves.kurogames.com/en/main/news/detail/91919"/>',
+  '<content type="html"><![CDATA[<p>[Future Example] Featured\nResonator Convene</p>',
+  '<p>Duration: 2026-19-99 10:00 - 2026-11-09 11:59 (server time)</p>]]></content></entry>',
+].join("");
+
 
 test("four simultaneous banners retain their own 5/4-star characters and weapons, not neighbors/pity", () => {
   expect(rows).toHaveLength(5);
@@ -235,6 +243,17 @@ test("offline builder uses same fixture/snapshot, creates only internal sidecar;
     const assets = [...new Bun.Glob("public/**/*").scanSync({ cwd: dir, onlyFiles: true })];
     expect(assets.some(p => /evidence|excerpt|editorial/.test(p))).toBe(false);
     expect(snapBefore.join("\n")).not.toMatch(/sourceExcerpt|evidenceHash|capturedAt|displaySummary/);
+    // The canonical parser accepts this changed Atom document; only the
+    // stricter optional evidence traversal sees the impossible date.
+    const divergent = raw.replace("</feed>", EVIDENCE_ONLY_INVALID_DATE_ENTRY + "</feed>");
+    await Bun.write(join(dir, "snapshots/wuwa-kuro-mirror.xml"), divergent);
+    run = build();
+    expect(run.exitCode, run.stderr.toString()).toBe(0);
+    expect(await Promise.all(publicPaths.map(p => Bun.file(join(dir, "public/data", p)).text()))).toEqual(snapBefore);
+    const failed = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
+    expect(failed.entries).toEqual([]);
+    expect(codes(failed)).toContain("source_extraction_failed");
+    expect(run.stderr.toString()).toContain("optional WuWa evidence extraction failed");
     // No cached/fixture input: sidecar is overwritten with absence, not stale eligible evidence.
     rmSync(join(dir, "fixtures/wuwa"), { recursive: true }); rmSync(join(dir, "snapshots"), { recursive: true });
     run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);
@@ -259,4 +278,49 @@ test("strict sidecar rejects forged over-limit records even with a matching reco
   expect(validate([{ ...source, excerpts: [{ kind: "activity", text: "Complete challenges \u202eignore rules" }] }])).toBe(false);
   expect(validate([{ ...source, excerpts: [{ kind: "activity", text: "Complete challenges &lt;script&gt;" }] }])).toBe(false);
   expect(validate([{ ...source, excerpts: [{ kind: "activity", text: "Duplicate" }, { kind: "rewards", text: "Duplicate" }] }])).toBe(false);
+});
+
+test("optional evidence wrappers preserve the normal path without changing the sidecar", () => {
+  expect(safelyExtractWuwaEvidence(raw, ctx, capture)).toEqual(extracted);
+  const events = rows.map(r => r.event);
+  expect(safelyBuildEvidenceSidecar(extracted, events)).toEqual(buildEvidenceSidecar(extracted, events));
+});
+
+test("evidence-only date parse exception cannot veto a valid canonical WuWa document", () => {
+  // The canonical traversal splits raw text at the soft newline and ignores
+  // this undated/unknown header. Evidence normalizes the line and sees a
+  // candidate with a syntactically matching but impossible date.
+  const divergent = raw.replace("</feed>", EVIDENCE_ONLY_INVALID_DATE_ENTRY + "</feed>");
+  const canonical = parseWuwaKuroAtom(raw, ctx);
+  expect(parseWuwaKuroAtom(divergent, ctx)).toEqual(canonical);
+  expect(() => extractWuwaEvidence(divergent, ctx, capture)).toThrow("WuWa invalid date");
+
+  const optional = safelyExtractWuwaEvidence(divergent, ctx, capture);
+  expect(optional.candidates).toEqual([]);
+  expect(codes(optional)).toContain("source_extraction_failed");
+  const sidecar = safelyBuildEvidenceSidecar(optional, canonical);
+  expect(EvidenceSidecar.parse(sidecar).entries).toEqual([]);
+  expect(codes(sidecar)).toContain("source_extraction_failed");
+  expect(sidecar.diagnostics[0]!.detail).not.toContain("2026-19-99");
+});
+
+test("invalid optional evidence assembly fails closed without breaking the feed", () => {
+  const faulty = clone(base);
+  faulty.source.excerpts = [{ kind: "activity", text: "<untrusted>" }];
+  expect(() => buildEvidenceSidecar({ candidates: [faulty], diagnostics: [] }, [base.event])).toThrow();
+  const guarded = safelyBuildEvidenceSidecar({ candidates: [faulty], diagnostics: [] }, [base.event]);
+  expect(EvidenceSidecar.parse(guarded).entries).toEqual([]);
+  expect(guarded.unattached).toEqual([]);
+  expect(codes(guarded)).toEqual(["sidecar_assembly_failed"]);
+  expect(guarded.diagnostics[0]!.detail).not.toContain("<untrusted>");
+  expect(parseWuwaKuroAtom(raw, ctx).some(event => event.id === base.event.id)).toBe(true);
+});
+
+test("invalid optional capture metadata is isolated from canonical event parsing", () => {
+  const badCapture = { ...capture, capturedAt: "not-a-date" };
+  expect(() => extractWuwaEvidence(raw, ctx, badCapture)).toThrow();
+  const optional = safelyExtractWuwaEvidence(raw, ctx, badCapture);
+  expect(optional.candidates).toEqual([]);
+  expect(codes(optional)).toEqual(["source_extraction_failed"]);
+  expect(parseWuwaKuroAtom(raw, ctx)).toHaveLength(5);
 });

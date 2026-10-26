@@ -1,5 +1,41 @@
 # Game calendar implementation status
 
+## WuWa E1 — optional evidence fail-open hardening (2026-10-26)
+
+**Scope:** focused follow-up to E1 ([PR #103](https://github.com/maxvfk/game-calendar/pull/103));
+the canonical WuWa feed remains authoritative. E2–E4 are not started.
+
+- **Confirmed failure mode:** the stricter `sourceExcerpt` traversal normalizes
+  soft line breaks differently from the canonical WuWa parser; it can see a
+  candidate the canonical parser ignores and throw on its invalid date. Before
+  this change, that *auxiliary* exception propagated through `build:feed`.
+- **Fix:** `safelyExtractWuwaEvidence` catches only auxiliary extraction
+  exceptions, drops **all** WuWa evidence for that failed extraction and
+  emits a bounded `source_extraction_failed` diagnostic; no raw exception
+  or source text goes into the diagnostic. `safelyBuildEvidenceSidecar`
+  similarly handles invalid auxiliary candidates/hash/schema and writes a
+  valid empty sidecar with `sidecar_assembly_failed`. Warnings distinguish
+  evidence failure from canonical parser success. Canonical parser, source
+  health/zero gates, merge, source provenance and public feed errors remain
+  **fail-closed** under existing rules.
+- **Regression:** a real two-mode Atom parser divergence now has an offline
+  `build:feed` replay asserting successful exit, unchanged public feed/queue/
+  input bytes and a diagnosed empty evidence sidecar. Additional tests cover
+  normal-path identical sidecar, invalid capture metadata, and invalid
+  evidence-sidecar assembly.
+- **Checks:** GitHub PR
+  [CI 40382720062](https://github.com/maxvfk/game-calendar/actions/runs/40382720062)
+  green: Bun 1.3.14 frozen install, typecheck, `bun test` **1270 passed /
+  3 existing skips / 0 failures** (67 files), `build:feed` and site build;
+  PG17 recovery/concurrency job passed. PR Pages deployment correctly skipped.
+  No new source fetch, runtime AI call, Timeline registry/fingerprint,
+  schedule, kill switch, `summary`/`timelineTitle`, IDs, UI or Account/Sync change.
+  Post-merge CI/Pages verification will appear in PR delivery record.
+
+**Next concrete step:** separately scoped E2 editorial registry and durable
+provenance migration; explicitly re-inventory all bot decisions at migration
+time. Do not expand this hardening into E2.
+
 ## Event Context E1 — WuWa internal evidence: COMPLETE (2026-10-26)
 
 Implemented from current `main` `25ee442` after PR #100/#101. Detailed contract,
