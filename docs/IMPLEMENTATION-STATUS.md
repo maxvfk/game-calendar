@@ -1,5 +1,63 @@
 # Game calendar implementation status
 
+## Event Context / unified Editorial Agent — D0 DESIGN GATE COMPLETE (2026-10-26)
+
+**Scope:** technical design and task scoping only. Runtime, scheduled Timeline
+M4 agent, parser output, editorial decisions, `summary`, `timelineTitle`, data
+provenance, source access and public feed are **unchanged**. Detailed source-backed
+contract: `docs/research/event-context-editorial-technical-design.md`;
+supersedes the exploratory choices in
+`docs/research/event-context-unified-editorial-design.md`.
+
+- **Service-only event evidence:** deterministic, bounded per-event
+  `sourceExcerpt` (≤3 source-local excerpts, ≤240 characters each,
+  ≤600 total per event) extracted from the already permitted source
+  snapshot. Generated to a local/untracked editorial sidecar, outside
+  `public/` and `GachaEvent`. Event content/captured provenance and
+  stable `evidenceHash` are separate from the user's summary.
+- **Verified attribution after merge:** exact `sourceEventId` and
+  final event ID/source, or explicitly reviewed mapping. No automatic
+  transfer based only on similar titles/date or shared source article:
+  `mergeEvents` currently merges near matches and discards losing
+  record lineage. Ambiguities fail closed and must be diagnosed.
+- **Future presentation:** canonical `summary` stays unchanged; a
+  separate reviewed editorial registry will supply optional
+  `displaySummary` with Event Detail fallback, and reveal
+  `Original summary` when present and different. The existing
+  `timeline-semantic-sha256-v1` excludes both AI copy and service
+  evidence and remains unchanged until a separately approved migration.
+- **One model call, independent outputs:** future unified
+  read-only `propose` job requests summary and/or Timeline label once
+  per union batch; fresh-main `record` job validates each decision
+  separately. Claims are checked against attributable canonical/source
+  facts, never against AI text. AI summary production stays off
+  until shadow evaluation, rehearsal and operator GO.
+- **Durable provenance and requeue:** a future versioned label-decision
+  contract explicitly distinguishes `operator_approved`,
+  `automated`, and protected `legacy_unknown` records.
+  Use an audited one-time manifest to classify original 25
+  operator-approved PR #87 decisions and 25 automatic commit
+  `c0b933f` decisions; never rely on git history as the sole
+  runtime origin store. Only automatic `keep_original` and
+  `needs_research` are eligible for evidence-only requeue when
+  meaningful, verified source evidence appears. Approved labels
+  and human/unknown decisions are protected.
+- **Next bounded task ready:** `docs/tasks/EVENT-CONTEXT-WUWA-PILOT.md`
+  rewritten for **E1 evidence-only WuWa extractor**; original direct
+  parser→`summary` task is superseded. E2 origin/summary registries,
+  E3 one-call shadow and E4 production enablement are **not
+  authorized by this gate**.
+
+**Validation:** architecture checked against CURRENT `main` and
+existing WuWa parser, merge, feed, label fingerprints/accept, Event
+Detail, M4 workflow and tests. Documentation-only; no local Bun
+runtime/test claim. GitHub PR/CI evidence will be recorded upon
+publication.
+
+**Next concrete step:** launch one separate bounded **E1 WuWa
+service-only evidence extraction** implementation Work from then-current
+`main`. Do not start E2–E4 automatically.
+
 ## Autonomous Timeline label editor M0–M4 — COMPLETE (2026-10-26)
 
 **Current-state checkpoint:** the sections below documenting L1/L2 and the early editor-input
