@@ -1,5 +1,82 @@
 # Game calendar implementation status
 
+## Autonomous Timeline label editor M0–M4 — COMPLETE (2026-10-26)
+
+**Current-state checkpoint:** the sections below documenting L1/L2 and the early editor-input
+pilot are *historical*; their "no AI / no scheduler / next pilot" statements described
+those earlier milestones, not the current `main`. Canonical operating instructions:
+`docs/tasks/TIMELINE-LABEL-AUTONOMOUS.md`; editorial registry contract:
+`data/presentation/README.md`.
+
+- **M0/M3, Claude subscription headless:** operator provided
+  `CLAUDE_CODE_OAUTH_TOKEN` in GitHub Actions Secrets; the read-only
+  `timeline-labels-probe.yml` proved a real, structured Sonnet call, exact
+  event IDs/fingerprints and deterministic validation. Probe
+  [40336557898](https://github.com/maxvfk/game-calendar/actions/runs/40336557898)
+  and post-M2 probe
+  [40344178775](https://github.com/maxvfk/game-calendar/actions/runs/40344178775)
+  succeeded (25 accepted, 0 guarded/rejected in the latter).
+- **M1, [PR #94](https://github.com/maxvfk/game-calendar/pull/94):**
+  Event Detail displays an approved `timelineTitle` as the main heading,
+  with canonical `Original title` below; custom events, absent labels and
+  accessible names retain the established fallbacks. No user-data or date change.
+- **M2, [PR #95](https://github.com/maxvfk/game-calendar/pull/95):**
+  `acceptTimelineProposals` validates each model decision independently against
+  the fresh feed and registry. Unknown/expired/stale/already decided items are
+  rejected; name/claim/qualifier/overlap guard failures become
+  `needs_research` with `auto-guard:`. Guard evidence comes exclusively from
+  canonical source inputs, **never model-written text**. Registry writes are
+  deterministic and idempotent.
+- **M3.5, [PR #96](https://github.com/maxvfk/game-calendar/pull/96):**
+  isolated propose/read-only Claude job and record/write job with no Claude
+  token; repeat on fresh `main`, full install/typecheck/tests/build,
+  fast-forward-only `main` push (or disposable rehearsal branch), explicit CI
+  dispatch and report. Rehearsal
+  [40346051669](https://github.com/maxvfk/game-calendar/actions/runs/40346051669)
+  recorded 25/25 decisions onto `timeline-labels/rehearsal`; its dispatched
+  [CI 40346322560](https://github.com/maxvfk/game-calendar/actions/runs/40346322560)
+  passed without Pages deploy.
+- **M4, [PR #97](https://github.com/maxvfk/game-calendar/pull/97):**
+  production-capable `.github/workflows/timeline-labels.yml` scheduled
+  **Tuesday and Saturday, 04:23 UTC (07:23 Moscow)**, using
+  `vars.TIMELINE_LABELS_AUTO == 'on'` as the kill switch for scheduled or manual
+  `main` recording. Default manual target is rehearsal. Empty queue consumes
+  no model call; subscription limits / 429 / 529 skip writing and allow later
+  retry. Access token renewal documented before 2027-10-26.
+- **First actual automated write to production data (manual workflow_dispatch,
+  `target: main`):** [Timeline run 40353294714](https://github.com/maxvfk/game-calendar/actions/runs/40353294714)
+  succeeded, producing **registry-only** commit
+  [`c0b933f64ccb6bc3e579dc6855ebf7a32022b4ad`](https://github.com/maxvfk/game-calendar/commit/c0b933f64ccb6bc3e579dc6855ebf7a32022b4ad)
+  with 25 accepted decisions; dispatched
+  [CI/Pages 40353569869](https://github.com/maxvfk/game-calendar/actions/runs/40353569869)
+  succeeded. Verified registry at 2026-10-26 checkpoint: **50 decisions:
+  12 labels, 30 keep_original, 8 needs_research**. This establishes the
+  unattended **write/deploy path**, but is **not evidence that the Tue/Sat
+  cron has fired**. The current Actions variable value cannot be read via
+  the repository code alone; check GitHub Variables for the live switch state.
+- **Follow-up documentation, [PR #98](https://github.com/maxvfk/game-calendar/pull/98):**
+  future Event Context enrichment must requeue **automatic**
+  `keep_original` **as well as** `needs_research` after a *material*
+  change to sourced evidence. Preserve approved `label` decisions and
+  explicitly protected human-reviewed choices. `sourceExcerpt` remains
+  service-only; this requeue/evidence-key design is **not implemented yet**.
+  Post-merge [CI/Pages 40354623379](https://github.com/maxvfk/game-calendar/actions/runs/40354623379)
+  passed on `0c5c47a`.
+
+**Next concrete step:** separate bounded **Event Context technical design gate**
+(`docs/research/event-context-unified-editorial-design.md`), not additional
+Timeline M4 work. Decide the event-local auxiliary `sourceExcerpt` contract,
+post-merge evidence attribution, independent per-field hashes/states and the
+future `displaySummary` overlay. **Operator decision (2026-10-26):** make
+human-reviewed vs automatic editorial provenance a durable, explicit part of
+the future decision contract. Do **not** use Git commit authorship/history
+as the only lasting source of origin; plan a conservative migration for
+legacy registry entries. Then revise
+`docs/tasks/EVENT-CONTEXT-WUWA-PILOT.md` to extract service-only evidence
+rather than writing directly into canonical `summary`. Do not start the
+implementation or modify the running Timeline automation as part of
+this documentation closeout.
+
 ## Timeline label agent preferences — memory-independent input (2026-10-25)
 
 - The operator accepted all eight AI-generated Timeline labels in PR #87; first batch

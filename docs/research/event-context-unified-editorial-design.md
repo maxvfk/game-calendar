@@ -119,6 +119,19 @@ evidence, not the model.
    operator asks otherwise. Automatic records are identifiable from the bot's registry-only commits
    (`data(timeline): record automatic label decisions`), which the migration can use if it should
    treat them differently from operator-reviewed ones. Cost is small: about 500 tokens per event.
+   **Operator decision (2026-10-26, after Timeline M4):** the future
+   editorial decision contract must explicitly and durably distinguish
+   **human-reviewed/approved** from **automatically accepted** decisions.
+   Use a validated, versioned origin field or a corresponding typed sidecar,
+   **not** Git authorship/commit history as the sole lasting provenance.
+   The existing `timeline-labels.v1.json` has no per-decision origin field:
+   prepare a conservative and reviewable migration of legacy entries;
+   unknown origin must not be silently presumed automatic. On material
+   evidence changes, automatically reopen automatic `keep_original` and
+   `needs_research` only. Protect explicitly human-reviewed choices unless
+   the operator requests a re-review; keep approved `label` untouched.
+   This is a **future design constraint**, not authorization to edit the
+   running Timeline workflow or registry now.
 4. **Keep the original summary visible.** Like the title (Event Detail shows the AI title with
    "Original title"), an AI summary needs the canonical `summary` reachable in Event Detail, for
    example "Original summary" in a collapsible block. The Timeline M1 layout should leave room for
