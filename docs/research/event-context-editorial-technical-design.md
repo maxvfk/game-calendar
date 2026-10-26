@@ -68,7 +68,7 @@ during implementation):
     "sourceId": "wuwa-kuro-mirror",
     "game": "wuwa",
     "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
-    "capturedAt": "2026-10-25T00:00:00.000Z",
+    "capturedAt": null,
     "excerpts": [
       {"kind": "featured", "text": "5-Star Resonator: Lucilla, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!"}
     ]
