@@ -1,0 +1,157 @@
+{
+  "baselineCommit": "72def1e0d076b5da9cbf3ecf37ec2d1a0f743ea4",
+  "history": [
+    {
+      "sha": "f319defd9e9e3e8f96ad469a2b4e440c0ad19a77",
+      "parents": [
+        "d16c5676871a07f6801ca26c9cb2e25a23ec69f2"
+      ],
+      "author": {
+        "name": "maxvfk",
+        "email": "max.vfk@gmail.com"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com"
+      },
+      "subject": "feat(timeline): L1 reviewed label infrastructure and review queue (#84)",
+      "changedFiles": [
+        ".gitignore",
+        "data/presentation/README.md",
+        "data/presentation/timeline-labels.v1.json",
+        "docs/IMPLEMENTATION-STATUS.md",
+        "docs/evidence/timeline-labels-l1.md",
+        "docs/tasks/TIMELINE-LABEL-INFRASTRUCTURE-L1.md",
+        "scripts/build-feed.ts",
+        "scripts/prepare-timeline-label-browser.ts",
+        "scripts/timeline-labels.ts",
+        "src/client/state/timelineContent.ts",
+        "src/presentation/timeline-labels.ts",
+        "src/shared/schema.ts",
+        "src/shared/timelineIdentity.ts",
+        "test/helpers/timeline-label-browser-checks.mjs",
+        "test/helpers/timeline-label-browser.tsx",
+        "test/timeline-content.test.tsx",
+        "test/timeline-labels.test.ts"
+      ],
+      "addedDecisionHashes": []
+    },
+    {
+      "sha": "f75cfbd04fea7100a88e9373543ebaee6ddde22a",
+      "parents": [
+        "60e5c2ab5b633f87d9679d74bb6c543111bebd52"
+      ],
+      "author": {
+        "name": "maxvfk",
+        "email": "max.vfk@gmail.com"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com"
+      },
+      "subject": "data(timeline): approve first 25 Timeline label decisions (#87)",
+      "changedFiles": [
+        "data/presentation/timeline-labels.v1.json",
+        "docs/evidence/timeline-labels-l2-pilot.md"
+      ],
+      "addedDecisionHashes": [
+        "4cceb79a8c5c2b379ac15c554f89542fa6a64c73a6101de2842870266c6186c8",
+        "2f533fc4422920f65323154b4ea834d3cc93ffb933ec56a3c635639afe5801e9",
+        "7b91df1edbf9896c5c2df553bd1c879cc2c29341856a56a2a41e958ee00bfc9e",
+        "d285ab4d8d9183a68fd7b1fa3a0f2c2d93184690d05bfba488dfb810adff54f5",
+        "f2317bdd0c076e42c88eca5d955cfd7a6360f86a8b7bbdef7c73ee5260d6fad9",
+        "dd426b47ff50937489d13c589dff3dd75ff755a42f30bb708eaf2dbf604407a6",
+        "5b5e7fa60c817bf46e5627b86dd8ef1a3b07f8905f9210097bab20663436f537",
+        "e9ea28b1e64c18dbf1e56a58549cdbafd88acfe45e9712eec79af2dc153f449d",
+        "4021966a6ea52998a70329accc6276af96e1647827e60374247a04fe75acbb56",
+        "12c50ad062e187ecd3c0957f3c27f8ed5936c860fe0b4b12663ed93426828c68",
+        "627ee3946a36e68b40c086a62e142a26a78ccafe4f1571d2ffa702f6f044950c",
+        "1dbd1255ab4ae8f417fe31531ea41a4700402a5415c56538063ee09714dd9de1",
+        "8bcacc7725151321ab713bcb9c05794152a41c9cbcf449828c6ce47d10b8e41e",
+        "2cc0d6df2561e1419a3d6fefefb6bcaed04389dff8a17601c3403c1ddebe3235",
+        "a52713a073f4a6b32843afb875d509197d88493e5e8ce3dd2d1da65df5412ce3",
+        "16dcfe157ca7de0e8c6f5642633ba60383707cdc6e0799b2efba03f11ce6b746",
+        "e875a1f70ce346468393ec8a44ed9bccc72261bad4f8a5139e996c9c5dcb3cae",
+        "6effd774e9d27f8d98665c85739d2df5b2ba36cf733c00b5b253b51f46f11847",
+        "8287d922a3c64a7632d5838dc0d6d9b0b6ad45f70139b9a70607ff9cf5761596",
+        "e33c3aaaf4bea40002e2872e9c1b3834d1c09ceaf98cd96063382d8e900dd4a0",
+        "aff430e001e64a0d4d7254a4bc7a7c3982b8b56e0a21d4b39a390f4aec7800bd",
+        "22dbb4ea741555847bf2508d2d2ac241f088ebda60aef3cafb1c1adf153a7f57",
+        "468d0734f8843648e0f4f639de8bc721fd91cc2459cbf1c26bd57670e7351cb0",
+        "165b14acf04f5ad070b9b279b29eb2056fac4d03a18b2430650f9aea20f3d728",
+        "42b6fbef0d03598663a0f6caaf5330a2f0b599708932b0ebae998bbc33e94dd8"
+      ]
+    },
+    {
+      "sha": "c0b933f64ccb6bc3e579dc6855ebf7a32022b4ad",
+      "parents": [
+        "1e1e95013d276a4ed1e16e8f98c60b8967906087"
+      ],
+      "author": {
+        "name": "github-actions[bot]",
+        "email": "41898282+github-actions[bot]@users.noreply.github.com"
+      },
+      "committer": {
+        "name": "github-actions[bot]",
+        "email": "41898282+github-actions[bot]@users.noreply.github.com"
+      },
+      "subject": "data(timeline): record automatic label decisions",
+      "changedFiles": [
+        "data/presentation/timeline-labels.v1.json"
+      ],
+      "addedDecisionHashes": [
+        "5ca5fbc7c10196811e2b0823055e8e50eb7b35aa2c9e002a076b6dff694ea350",
+        "f24dff7b1decea5ec27abad69d70ca110df4fdbbff3165ec18bfe0cfd84837d1",
+        "010e0187cda78ef3c17f61220a2218093e04b1ff7fcbf6754beb84861df6a271",
+        "e58d32a2802c80698a2a08332d0227d1ba919bc99b0ed8fee27e466501df8058",
+        "d52f592f4bd8250737d9a1a4c1b73067ef8ebb9b55ccf007fcfde20bce51e84d",
+        "fd19f4b0e45064f89dcb99f51989fa4bd5b60be97d243f677d52642a2b6e0793",
+        "40a2e7f621c147ea80946fb3332fa163e180ec9bd122e133a99cb0d043275030",
+        "6851e4d8637f55ab4c0094f94f22d79d6ed1763563c23c36774080e1c05537b1",
+        "28af4d0035d1e3dc7c217d29b3c3a762dfd718b00ebc960154ffa383e25a5f7a",
+        "e0e4e3ad629d2e38978ed5341ce5449dc06df6d0c5b4d110c09ae07fad500952",
+        "a85b0633bf8d3685eabff3cf2dda283c646053e9c68b0987666d741bdccd5cc5",
+        "573c1616ebf19d9fb25a1c2d63101d6e27548aa5c9dc788de126d83e708d088b",
+        "7cc3cb2f68270e5d3508a2ac201ae4753375b346e8aa6ddc86a83bb01ed47ce1",
+        "13746af9d1f6bb91874f37ab0c100dc50731b5b99c9997b1978bdf2ab6080ebb",
+        "a85ffb1fdea7564cf3cc30ac6b9517183e3fe72e9ba67b79f3553d7a4651e839",
+        "3c80afa14cc6c35d11388c775f31c9b6363aa700ea3686339990b7f6df9a2634",
+        "f72295d97ea218b059167202fbc2db394ac8fa93dc961ce4de5c1114eaff5b4a",
+        "4d685cdbde989084372ec04ffa2a6240bc1d97e5ff35b37fcc92ef314e499759",
+        "20e2999339a3c746f7da0694e9377c98f9e6ab0a5cf2fb49e00cf374904810fe",
+        "e1f1f0220832e3df8018c3491882314ac34c697fa4856892a7b04f4ded00050f",
+        "2bdd8d4c5967d84a04a27bd5642bdd5c4adf7051ee3ed3724decc23252a7c254",
+        "984a4159ee1593b7162d326ffc3f8f7ac7ca818610f173744f0f6234b5854884",
+        "1e11256c09a28a1cd1db6edaec8a7f94c008ca1210f43a6a569a5b69d64d89fc",
+        "9067f6aa10e85e231e12bc92f8f659363c4b49833cff9c7105b4f70d6917ab0b",
+        "3a642021ce7690fe1400235abdcbdf31df96bcf54f6fd5ae67bb6e28e6279c64"
+      ]
+    }
+  ],
+  "m4Files": [
+    {
+      "path": ".github/workflows/timeline-labels.yml",
+      "sha256": "b7b86cb00e2122d41815c4168d4af47c9a529925b9b3c4d405e042893cce0a57"
+    },
+    {
+      "path": "scripts/timeline-label-agent/record.sh",
+      "sha256": "bfa3fd588c82ef406e13cf5142a8fd652bd7a6b7ff2303f67f2bee89ae90e855"
+    },
+    {
+      "path": "scripts/timeline-labels.ts",
+      "sha256": "939fd5836533b077280527cd61c61ae083d8571e6d7e1a604fc089675b60cbd1"
+    },
+    {
+      "path": "scripts/build-feed.ts",
+      "sha256": "be4ac2db759747dbdea573c44d03923012e8156efefcfa4e9445aa1bceb6d9e5"
+    },
+    {
+      "path": "src/presentation/timeline-labels.ts",
+      "sha256": "1c35e0acefbbbafcf7b7dbb8b83473156732967a8478758eacee3ddc4967c232"
+    },
+    {
+      "path": "src/presentation/timeline-label-accept.ts",
+      "sha256": "30b85022bf4b68c9d42e3b8744c92045729042c856a3767546a5e635a5d17b18"
+    }
+  ]
+}

@@ -1,0 +1,352 @@
+{
+  "schemaVersion": 1,
+  "decisions": [
+    {
+      "eventId": "hsr:planar-fissure:2026-10-12",
+      "fingerprint": "sha256:4265d5537a9d5f8723cc64e4bae51a23d07248f60c2e467c4a09fa236f17ceb8",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "wuwa:artisans-search:2026-10-08",
+      "fingerprint": "sha256:079999adefe7f7e09df9cee56aa02542824359d5a705211a1b4087009299ca23",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "wuwa:whimpering-wastes-respawning-waters:2026-09-28",
+      "fingerprint": "sha256:82cfcd9910a3e37e85de819bcf7d7e3198850ef0f780949d5331c08ad819f26e",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "czn:chaos-zero-nightmare-epic-seven-collaboration-event:2026-09-17",
+      "fingerprint": "sha256:8626778b34627deb7b8e6e205a801b6586a4f252ff972203cf7598e3515b0c0f",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Epic Seven Collaboration",
+      "reason": "Removes the repeated game name and generic event wording while preserving the collaboration partner."
+    },
+    {
+      "eventId": "endfield:echoes-of-war-season-of-phantasia-cycle-ii:2026-10-22",
+      "fingerprint": "sha256:17cecbddf0dec00c5dea60133f0d208b6c56ac097f48b7857877710f1676db42",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "genshin:imaginarium-theater-october-2026-season:2026-10-01",
+      "fingerprint": "sha256:8fa81a350fce786866a912d2fa37e309b8847a950a625d6b3bb444013ee1cd3f",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "genshin:moontrace-version-7-1-battle-pass:2026-09-23",
+      "fingerprint": "sha256:f9d686a69165179125c0f9d53730d078391a4cd4b88005df55409d0f78046871",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "genshin:stygian-onslaught-version-7-1:2026-09-30",
+      "fingerprint": "sha256:6441ebf0fc67dd364664687be038c88fe3b90f5439ac600894460b2df42cfa6c",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "czn:alcea-rate-up-rescue:2026-10-13",
+      "fingerprint": "sha256:79d897c08e6ee3ed912ac1c316bc88c74a49376a5826aa089af3541ef550a32f",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Alcea",
+      "reason": "Preserves the featured name; the Timeline already displays the banner type."
+    },
+    {
+      "eventId": "czn:nine-rate-up-rescue:2026-10-13",
+      "fingerprint": "sha256:7b89457aeb27d3e5b8e92181bb6124dd60fd5e7ca1cf6b67a6bf0d084d7d513b",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Nine",
+      "reason": "Preserves the featured name; the Timeline already displays the banner type."
+    },
+    {
+      "eventId": "genshin:a-rekviem-for-the-underworld-limited-time-archon-quest-rewards:2026-09-23",
+      "fingerprint": "sha256:49238c97008b5679331698af7899c1b8ad273091373b9ca5d7dc4a3d4b119c8b",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "A Rekviem for the Underworld — Quest Rewards",
+      "reason": "Preserves the supplied quest name and reward deadline identity while removing redundant wording."
+    },
+    {
+      "eventId": "genshin:across-the-frozen-wilds-honing-ones-edge:2026-09-23",
+      "fingerprint": "sha256:9c9ebb25034ae92b4ee04d0307b0b5706d726c9e6b245972ed7698f6b585105f",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Standard Wish 5-Star Character Invitation",
+      "reason": "Uses the supplied reward description to clarify the event and distinguish it from the event-exclusive character invitation."
+    },
+    {
+      "eventId": "genshin:la-chanson-cerise:2026-10-13",
+      "fingerprint": "sha256:55d760c6b7ecc5df31987caf75d0162cd78b0784a9306c489a67290403c4027c",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "The supplied banner title and summary do not identify its featured character."
+    },
+    {
+      "eventId": "genshin:tabletop-troupe-a-gathering-on-adventurers-eve:2026-09-23",
+      "fingerprint": "sha256:6f135a0ab6c368bff9436088fc2d72bdb35a0fac792cdd5aad3508648c8e724a",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Tabletop Troupe: 5-Star Character Invitation",
+      "reason": "Preserves the event name and clarifies its character invitation reward."
+    },
+    {
+      "eventId": "genshin:void-stars-advent:2026-10-13",
+      "fingerprint": "sha256:d839caa17209478be3bb55e5f5676f5cce39c06697e9ad4259d2b36a404a65e9",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "The supplied banner title and summary do not identify its featured character."
+    },
+    {
+      "eventId": "genshin:carefree-snowball-fight:2026-10-21",
+      "fingerprint": "sha256:c5abe62925cf719c274cc6eb1a14469ca1b9f214447af84f39f71bb39f0f5806",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "genshin:to-temper-thyself-and-journey-far-cycle-5:2026-08-10",
+      "fingerprint": "sha256:66a40315bd04728185f7605ce5fc1d40434dd7a89380cf60f6fc807e85a7b024",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "nte:beyond-the-rails-lucent-circle:2026-10-22",
+      "fingerprint": "sha256:114f21b019c5cdfcad8aaf3ccd79c6f8f305acf2b7bc345110d39984c46eedc5",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "genshin:the-godforsaken-frostlands:2026-08-12",
+      "fingerprint": "sha256:bae01775b192eea3e19acf7e56ef095af0f7ed8f6a23061459325962be6f33b3",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "The Godforsaken Frostlands — Exploration Rewards",
+      "reason": "Clarifies that the deadline concerns limited exploration rewards."
+    },
+    {
+      "eventId": "endfield:carlys-verdant-anthology:2026-10-22",
+      "fingerprint": "sha256:dae4f030cc60f6c5f889da52cd9f007eda7342dc819dba7d38ad844997dbab0a",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:season-of-phantasia:2026-10-15",
+      "fingerprint": "sha256:5e642c72aee96d792676d5d94e7bb333a33cd1f1af93ba695b805a36715bd0d0",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Echoes of War: Season of Phantasia",
+      "reason": "Adds the mode named in the summary while preserving the season identity and distinction from Cycle II."
+    },
+    {
+      "eventId": "endfield:spirits-restoration:2026-10-15",
+      "fingerprint": "sha256:408b307e541cc7ada0a1c6c34343ee7f4ccb51d222af0674bbd07d7342cb8bc2",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:all-the-inky-hues:2026-10-15",
+      "fingerprint": "sha256:b3314a5f3e82ee34a0bce7daa393e8a04e9b28098d6ceadc8d1d75280f6d03d6",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:monumental-etching-forest-of-maras:2026-10-22",
+      "fingerprint": "sha256:fcd8c671330242f99b225dd099df01886474cae4f8915760633372630f826f7a",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "hsr:version-4-6-nameless-honor:2026-09-28",
+      "fingerprint": "sha256:096063e403f5ca472ce1687ff82299541885f52d6ed6b90ba8b8958983a73858",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "genshin:overflowing-favor:2026-10-26",
+      "fingerprint": "sha256:7c4286683232f0d38db47dd631e0a89b6eb4561f7efa63c9162a26bd03b15a2c",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No supporting detail for a better label."
+    },
+    {
+      "eventId": "wuwa:echo-erase:2026-10-22",
+      "fingerprint": "sha256:071fad1da7cd5278a8cd8d119d59b00c04ad29a8ca8eb81c64329f3da3111a2d",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Already recognizable."
+    },
+    {
+      "eventId": "wuwa:tower-of-adversity-hazard-zone:2026-10-12",
+      "fingerprint": "sha256:00c9ca74b86b71571a5d259687714a7f05e0bd0774d45b1b8f8f7e271be06e8f",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode prefix already present."
+    },
+    {
+      "eventId": "hsr:interastral-peace-gala-one-take:2026-10-21",
+      "fingerprint": "sha256:4c89e7d592b8ec05135dfe8cf7f0cc52c02010d4675bc3ddf070fc7feb379050",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Already recognizable."
+    },
+    {
+      "eventId": "hsr:love-ghosts-robots:2026-09-28",
+      "fingerprint": "sha256:9b96d22f42a335c6dae5af2e6ae81d411a7f042ba29e54a4e74ee9182001168c",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No supporting detail for a better label."
+    },
+    {
+      "eventId": "nte:dazzling-star:2026-10-21",
+      "fingerprint": "sha256:63f3e2d1d930da4a548946a27a50cb1bef68fac0fb49646132a704fa7400a21c",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "Banner title does not identify the featured character or item."
+    },
+    {
+      "eventId": "nte:far-side-of-the-moon:2026-10-21",
+      "fingerprint": "sha256:eb6b76b71285b0ec89fdbd5b37c47a19de90507b344e0352eea0da83b872bbb9",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "Banner title does not identify the featured character or item."
+    },
+    {
+      "eventId": "nte:snap-golden-crackshot:2026-10-21",
+      "fingerprint": "sha256:fdf7f3674da9891edcd0299a1247b185a5c610d7100ce21f1bc953d914d8398c",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No supporting detail for a better label."
+    },
+    {
+      "eventId": "hsr:wishpower-up-down-with-voracity:2026-09-28",
+      "fingerprint": "sha256:0ca7ddf15404b3219ad9ff52716bd821586a2bc3f7d8a86abc5347bbea56c99e",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No supporting detail for a better label."
+    },
+    {
+      "eventId": "nte:gold-clash:2026-10-26",
+      "fingerprint": "sha256:8d8b42f57911dcd996817cf9b601b7f43cc7866b7c572ca46ecd4d3776a22925",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No supporting detail for a better label."
+    },
+    {
+      "eventId": "wuwa:freeze-frame:2026-10-22",
+      "fingerprint": "sha256:e4fd560eaf33722fc1cf7a64460e963667720214fb358d22df8a96351526782f",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "Banner title does not identify the featured character or item."
+    },
+    {
+      "eventId": "wuwa:spectrum-blaster:2026-10-22",
+      "fingerprint": "sha256:acfccb8ba301efc0a89da221e129bf77cb7c37af902cbd66abe5f1474daed821",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "Banner title does not identify the featured character or item."
+    },
+    {
+      "eventId": "wuwa:tomorrow-in-the-frame:2026-10-22",
+      "fingerprint": "sha256:175a859c8e3c09a8ef82b37acb8ffc71882d96d03173444cfb2a26ab791cd5f0",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "Banner title does not identify the featured character or item."
+    },
+    {
+      "eventId": "wuwa:undefined-spectrum:2026-10-22",
+      "fingerprint": "sha256:02f9954a97fc915c9fb3fd8d901c1aa9ac59f8d2dc9404a13efb6980b56c044d",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "Banner title does not identify the featured character or item."
+    },
+    {
+      "eventId": "genshin:spiral-abyss-october-2026-season:2026-10-16",
+      "fingerprint": "sha256:609cfca656ef06febc28571e7b7814589edbe85a317dec285df9a1c858876dff",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Season identity already clear."
+    },
+    {
+      "eventId": "hsr:apocalyptic-shadow-dominance-of-oblivion:2026-10-05",
+      "fingerprint": "sha256:844ef2387b478bf2195fcd776b1adabb7655afcd021184fb5191688bae3cd61a",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode prefix already present."
+    },
+    {
+      "eventId": "wuwa:whimpering-wastes-respawning-waters:2026-10-26",
+      "fingerprint": "sha256:c495a9bd68a4264790fa78bb1e857df622299dd7685dd5aa8f4f47fb24b3896c",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode prefix already present."
+    },
+    {
+      "eventId": "endfield:yuanyuans-blazing-stoves:2026-10-15",
+      "fingerprint": "sha256:bd4fcfa3d6b6f71874ea92b7057c9ed48ee515ce1d94d573efd726cd1d523cfa",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Already recognizable."
+    },
+    {
+      "eventId": "hsr:pure-fiction-imagined-words:2026-10-19",
+      "fingerprint": "sha256:e2690c23557df24ec2b1d96da29fc7a3269a0a917af20a4f970c90a6fd11fd30",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode prefix already present."
+    },
+    {
+      "eventId": "zzz:angels-support-operation:2026-09-09",
+      "fingerprint": "sha256:a02f7828634eabce7d2a714feaa6d7a1cfc7002cd0e58934d538c874d1f248a9",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Already recognizable."
+    },
+    {
+      "eventId": "czn:rossweisse-rate-up-rescue:2026-10-21",
+      "fingerprint": "sha256:e48cc8f8acfaab1d2ba411cac10e17c9dd442c94950bd4a77c18bdeac7673ae1",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Rossweisse",
+      "reason": "Featured name alone, per approved Alcea example."
+    },
+    {
+      "eventId": "czn:sig-rate-up-rescue:2026-10-21",
+      "fingerprint": "sha256:69f41b2bf5f88c46fa23f42ef4572ad6fd0d71c5f188b3fede9a160ba5f9ab6b",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Sig",
+      "reason": "Featured name alone, per approved Alcea example."
+    },
+    {
+      "eventId": "czn:full-scale-offensive-season-4:2026-08-19",
+      "fingerprint": "sha256:24846cc39582f9cc7dcc0ce4d908cdf646b302d72a420957b155c11d15f63102",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Season identity already clear."
+    },
+    {
+      "eventId": "endfield:deep-cold-issue:2026-09-02",
+      "fingerprint": "sha256:14b52c0ed70cbf03ea4c5a8bef45e5452aab516422bf8fdf857ad927a4cb141c",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Umbra of Frigid Eventide Weapon Rate-Up",
+      "reason": "Summary names the featured weapon."
+    },
+    {
+      "eventId": "endfield:resplendent-spectrum:2026-09-24",
+      "fingerprint": "sha256:d86b37fed5edd3fd95ce451d438082ffacb2bb29a926f1abe316b997480bb3d4",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Yvonne RE-Factor Headhunting #1",
+      "reason": "Summary names the featured character and banner."
+    }
+  ]
+}
