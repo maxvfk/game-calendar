@@ -47,7 +47,8 @@ const APPROVED = [
 describe("label guard", () => {
   test("all 8 labels approved in PR #87 pass unchanged", () => {
     const approved = reviewed.decisions.flatMap(d => d.decision === "label" ? [d.timelineTitle] : []);
-    expect(APPROVED.map(a => a.label).sort()).toEqual(approved.sort());
+    // A subset: automatic runs add labels after these.
+    for (const a of APPROVED) expect(approved).toContain(a.label);
     for (const a of APPROVED) expect(labelGuard(event(a), a.label, vocabulary)).toBeNull();
   });
 
