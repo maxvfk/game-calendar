@@ -83,3 +83,24 @@ export function extractWuwaEvidence(raw: string, ctx: ParseContext, capture: Cap
   }
   return result;
 }
+
+/**
+ * Evidence is optional. The canonical adapter has already parsed the source;
+ * stricter evidence-only parsing/metadata must never veto the public feed.
+ * Do not include exception messages (which can contain untrusted source text).
+ */
+export function safelyExtractWuwaEvidence(raw: string, ctx: ParseContext, capture: Capture): Extraction {
+  try {
+    return extractWuwaEvidence(raw, ctx, capture);
+  } catch {
+    return {
+      candidates: [],
+      diagnostics: [{
+        code: "source_extraction_failed",
+        sourceEventId: null,
+        sourceUrl: null,
+        detail: "Optional WuWa evidence extraction failed; source evidence omitted",
+      }],
+    };
+  }
+}
