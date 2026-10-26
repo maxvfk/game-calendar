@@ -10,9 +10,10 @@ supersedes the exploratory choices in
 `docs/research/event-context-unified-editorial-design.md`.
 
 - **Service-only event evidence:** deterministic, bounded per-event
-  `sourceExcerpt` (≤3 source-local excerpts, ≤240 characters each,
-  ≤600 total per event) extracted from the already permitted source
-  snapshot. Generated to a local/untracked editorial sidecar, outside
+  `sourceExcerpt` (pilot hard cap: ≤6 source-local excerpts,
+  ≤500 Unicode code points each, **≤2,000 total per event**) extracted
+  from the already permitted source snapshot; actual length/cap-hit
+  metrics will determine whether later tuning is worthwhile. Generated to a local/untracked editorial sidecar, outside
   `public/` and `GachaEvent`. Event content/captured provenance and
   stable `evidenceHash` are separate from the user's summary.
 - **Verified attribution after merge:** exact `sourceEventId` and
