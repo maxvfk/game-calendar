@@ -1,6 +1,11 @@
 # Event Context / unified Editorial Agent — technical design gate
 
-**Status: design accepted for bounded implementation planning, NOT implemented.**
+**Status: accepted design; implementation is staged, not a completed rollout.**
+E1 and its failure-isolation hardening are complete (#102/#103). E2a provenance
+contracts and historical migration rehearsal are prepared; **production still
+uses v1 M4**, with no v2 cutover or evidence-triggered production requeue.
+See `docs/evidence/editorial-provenance-e2a.md`. Summary/UI work (E2b), E3 and E4
+remain separate, unstarted gates.
 **Baseline:** `main` `533be83639b5cc2ca1a7032e9b7f4edcb8438c9e` (2026-10-26).
 **Related:** `docs/research/event-context-unified-editorial-design.md`,
 `docs/research/event-context-coverage-audit-2026-10-25.md`,

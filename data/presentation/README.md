@@ -178,3 +178,29 @@ reviewed key order, so an unchanged registry is an empty diff.
 through registry-only commits on `main`, but only while the repository variable
 `TIMELINE_LABELS_AUTO` is `on`. The read-only probe (`timeline-labels-probe.yml`) never
 writes it. Independent critical audit remains deferred.
+
+## E2a prepared provenance contract (not live)
+
+`timeline-origin-migration.v1.json` is a versioned **historical audit manifest**,
+not a production decision registry. It anchors the main commit, all registry
+source commits and exact eventId/fingerprint/content hashes used to classify
+operator-approved, automatic and unknown decisions. Its `rehearsal-only` purpose
+is explicit. New registry commits require a new reviewed inventory; ordinary
+M4/CI continues using v1 and does not treat this audit as a live freshness gate.
+
+Strict persisted v2 types, nullable non-label evidence keys, deterministic
+conversion, safe v1 rollback and unwired evidence eligibility live under
+`src/editorial/`. No v2 registry snapshot, reader switch or second writer is
+installed. A future trusted writer assigns origin after validation; model
+proposals cannot confer operator approval. Current source/copy fingerprints,
+queue, accept CLI, record.sh, schedule and kill switch are unchanged.
+
+Use `bun scripts/editorial-provenance.ts inventory <ref>` for offline inspection
+(full local Git history required) and `rehearse <ref>` after a normal build.
+The latter rejects stale history/content and writes only ignored
+`tmp/editorial/provenance-e2a/` previews/rollback/report. It does not fetch, call
+AI, change Git, install a writer or publish decisions. No source/outage failure
+can reopen decisions through the separate evidence helper.
+
+Actual counts, exact trust checks, regression/rollback results, limitations and
+future exclusive-writer cutover gates: `docs/evidence/editorial-provenance-e2a.md`.
