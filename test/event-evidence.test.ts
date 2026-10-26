@@ -25,7 +25,7 @@ const activity = "<p>Complete combat challenges to obtain Astrite x100.</p>";
 const EVIDENCE_ONLY_INVALID_DATE_ENTRY = [
   '<entry><id>urn:article:91919</id><title>Odd notice</title>',
   '<link href="https://wutheringwaves.kurogames.com/en/main/news/detail/91919"/>',
-  '<content type="html"><![CDATA[<p>[Future Example] Featured\\nResonator Convene</p>',
+  '<content type="html"><![CDATA[<p>[Future Example] Featured\nResonator Convene</p>',
   '<p>Duration: 2026-19-99 10:00 - 2026-11-09 11:59 (server time)</p>]]></content></entry>',
 ].join("");
 
