@@ -26,8 +26,8 @@ import { Region, type GachaEvent, type GameId } from "../src/shared/schema.ts";
 import { applyTimelineLabels, buildTimelineQueue, labelDiagnostics, queueBytes, TimelineRegistry } from "../src/presentation/timeline-labels.ts";
 import { bundleTimelineLabelAgentInput } from "../src/presentation/timeline-label-agent-input.ts";
 
-import { buildEvidenceSidecar, type Extraction } from "../src/editorial/event-evidence.ts";
-import { extractWuwaEvidence } from "../src/editorial/wuwa-evidence.ts";
+import { safelyBuildEvidenceSidecar, type Extraction } from "../src/editorial/event-evidence.ts";
+import { safelyExtractWuwaEvidence } from "../src/editorial/wuwa-evidence.ts";
 
 const evidence: Extraction = { candidates: [], diagnostics: [] };
 const OUT = "public/data/events.v1.json";
@@ -180,7 +180,10 @@ for (const configured of ADAPTERS) {
 
   if (adapter.id === "wuwa-kuro-mirror") {
     // Parallel evidence only; use exactly the successful feed document/context.
-    const extracted = extractWuwaEvidence(html, { now, sourceUrl: document.url ?? adapter.url, sourceId: adapter.id, game: adapter.game }, document.capture);
+    const extracted = safelyExtractWuwaEvidence(html, { now, sourceUrl: document.url ?? adapter.url, sourceId: adapter.id, game: adapter.game }, document.capture);
+    if (extracted.diagnostics.some(d => d.code === "source_extraction_failed")) {
+      console.warn("  ! optional WuWa evidence extraction failed; canonical feed parsing succeeded");
+    }
     // Adapter sanitization/expiry is authoritative. Do not resurrect filtered candidates.
     const eligible = new Set(events.map(event => event.id));
     for (const row of extracted.candidates) {
@@ -301,4 +304,8 @@ console.log(
 );
 
 // Service-only, untracked and outside public/. Never included in Pages or Timeline input.
-await Bun.write("tmp/editorial/event-evidence.v1.json", `${JSON.stringify(buildEvidenceSidecar(evidence, events, reviewConflicts), null, 2)}\n`);
+const sidecar = safelyBuildEvidenceSidecar(evidence, events, reviewConflicts);
+if (sidecar.diagnostics.some(d => d.code === "sidecar_assembly_failed")) {
+  console.warn("  ! optional event evidence assembly failed; no evidence will be used");
+}
+await Bun.write("tmp/editorial/event-evidence.v1.json", `${JSON.stringify(sidecar, null, 2)}\n`);
