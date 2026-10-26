@@ -887,6 +887,35 @@ describe("the derived-boundary note", () => {
     expect(html).toContain('href="https://example.test/disagreeing"');
   });
 
+  test("an approved Timeline label leads, with the original title below it", () => {
+    const labelled: DisplayEvent = { ...PARSED, timelineTitle: "Standard Wish Invitation" };
+    const html = render(
+      <EventDetail {...detailProps} row={{ event: labelled, clock: clockFor(labelled, detailProps.region, NOW) }} />,
+    );
+    expect(html).toMatch(/<h2[^>]*>Standard Wish Invitation<\/h2>/);
+    expect(html).toContain("Original title: <span class=\"text-muted\">Walpurgisnacht</span>");
+    expect(html).toContain('aria-label="Standard Wish Invitation (original title: Walpurgisnacht)"');
+  });
+
+  test("without a label the canonical title is the heading and nothing is repeated", () => {
+    const html = render(
+      <EventDetail {...detailProps} row={{ event: PARSED, clock: clockFor(PARSED, detailProps.region, NOW) }} />,
+    );
+    expect(html).toMatch(/<h2[^>]*>Walpurgisnacht<\/h2>/);
+    expect(html).not.toContain("Original title");
+    expect(html).toContain('aria-label="Walpurgisnacht"');
+  });
+
+  test("a reader's own event never takes a Timeline label", () => {
+    const own = { ...asDisplayEvent(OWN), timelineTitle: "ignored" };
+    const html = render(
+      <EventDetail {...detailProps} row={{ event: own, clock: clockFor(own, detailProps.region, NOW) }} />,
+    );
+    expect(html).toMatch(/<h2[^>]*>Walpurgisnacht<\/h2>/);
+    expect(html).not.toContain("ignored");
+    expect(html).not.toContain("Original title");
+  });
+
   test("absent for a reader's own day-precision event", () => {
     // Their date came from their form, so no source or server reset is claimed.
     const own = asDisplayEvent(OWN);

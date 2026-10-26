@@ -24,6 +24,7 @@ import { dailyOverride } from "../../shared/daily.ts";
 import type { Region } from "../../shared/schema.ts";
 import { Meter, URGENCY_COLOR } from "./Meter.tsx";
 import { TypeBadge } from "./TypeBadge.tsx";
+import { detailTitle } from "../../shared/timelineIdentity.ts";
 
 export function EventDetail({
   row,
@@ -96,6 +97,8 @@ export function EventDetail({
   const cadence = cadenceLabel(own?.record.repeat ?? null);
   const readerEntered = event.sourceId === "you";
   const dayEnd = dayOnlyEnd(event);
+  const heading = detailTitle(event);
+  const relabelled = heading !== event.title;
 
   useEffect(() => {
     const invoker = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -129,7 +132,7 @@ export function EventDetail({
         ref={dialog}
         role="dialog"
         aria-modal="true"
-        aria-label={event.title}
+        aria-label={relabelled ? `${heading} (original title: ${event.title})` : event.title}
         className="relative max-h-[88vh] w-full overflow-y-auto rounded-t-2xl border border-hairline bg-surface p-5 sm:max-w-lg sm:rounded-2xl"
       >
         <div className="sticky -top-5 z-20 -mx-5 -mt-5 mb-2 flex justify-end border-b border-hairline bg-surface px-3 py-2">
@@ -142,8 +145,15 @@ export function EventDetail({
           {game.name}
         </p>
         <h2 className="mt-1.5 font-display text-xl font-semibold leading-snug">
-          {event.title}
+          {heading}
         </h2>
+        {/* The approved Timeline label leads, but the source's own title stays
+            one glance away. An edited summary will get the same pair below. */}
+        {relabelled && (
+          <p className="mt-1 text-xs text-faint">
+            Original title: <span className="text-muted">{event.title}</span>
+          </p>
+        )}
         {/* Stated plainly, next to the title rather than buried at the bottom:
             a reader has to be able to tell which dates the app went and found
             and which ones they typed in themselves. */}

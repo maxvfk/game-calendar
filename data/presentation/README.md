@@ -45,7 +45,8 @@ and `timelineTitle` are excluded. The label cannot invalidate its own fingerprin
 matching registry `label` records **after** the final merge, including recurring
 winners. It changes only `timelineTitle`. Timeline displays approved copy → genuine
 ordered subjects → canonical title. Canonical title and original subjects remain
-in accessible names/tooltips; Event Detail stays canonical. Custom events remain
+in accessible names/tooltips. Event Detail heads with the approved copy (never joined
+subjects) and shows the canonical title under it as "Original title". Custom events remain
 user-authored. No frontend hashing or inference occurs.
 
 ## Public prepared queue
