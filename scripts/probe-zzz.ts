@@ -3,6 +3,8 @@ import { mkdir } from "node:fs/promises";
 import { crawlDelayMs, isAllowed, looksLikeHtml, parseRobots, requestTarget } from "../src/ingest/robots.ts";
 
 if (process.env["GITHUB_ACTIONS"] !== "true") throw new Error("Actual Actions runner required");
+const round = process.env["ZZZ_PROBE_ROUND"] ?? "full";
+if (round !== "full" && round !== "mobile") throw new Error("Unknown ZZZ_PROBE_ROUND");
 const root = "source-probes/zzz";
 await mkdir(root, { recursive: true });
 const ua = "gacha-event-tracker/1.0 (+https://github.com/maxvfk/game-calendar)";
@@ -21,7 +23,7 @@ async function capture(url: string, name: string, conditional?: Record<string, s
       location: r.headers.get("location"), contentType: r.headers.get("content-type"),
       etag: r.headers.get("etag"), lastModified: r.headers.get("last-modified"),
       bytes: Buffer.byteLength(body), sha256: hash(body), conditional: conditional ?? null,
-      shape: { html: looksLikeHtml(body), scriptCount: (body.match(/<script\b/gi) ?? []).length,
+      shape: { html: /<!doctype html|<html[\s>]/i.test(body), scriptCount: (body.match(/<script\b/gi) ?? []).length,
         newsLinks: [...new Set(body.match(/\/en-us\/news\/\d+/g) ?? [])].slice(0, 30),
         hasEventDuration: /Event Duration/i.test(body), hasVersion33: /Version 3\.3/.test(body) } };
     responses.push(meta);
@@ -63,7 +65,7 @@ async function website(origin: string, paths: string[], prefix: string) {
     }
   }
 }
-if (process.env["ZZZ_PROBE_ROUND"] === "mobile") {
+if (round === "mobile") {
   await website("https://zenless.hoyoverse.com", ["/m/en-us/news", "/m/en-us/news/166963", "/m/en-us/news/166926"], "zenless-mobile");
 } else {
 await website("https://zenless.hoyoverse.com", ["/en-us/news", "/en-us/news/166963", "/en-us/news/166926", "/en-us/news/166946", "/en-us/news/167038"], "zenless");

@@ -1,6 +1,14 @@
 # P0 — ZZZ unattended source recovery after Version 3.3 coverage emergency
 
-**Priority: P0 (core-game feed degradation). Status: READY, NOT IMPLEMENTED.**
+**Priority: P0 (core-game feed degradation). Status: BLOCKED AT GATE A (2026-10-27); automatic recovery NOT IMPLEMENTED.**
+
+Actual desktop/mobile and Steam runner checks are recorded in
+`docs/research/zzz-source-recovery-p0.md` and
+`docs/evidence/zzz-p0-*-2026-10-27.json` ([PR #107](https://github.com/maxvfk/game-calendar/pull/107)).
+Direct HTML is a shared Nuxt shell; publisher Steam discovery supplies event
+periods but lacks current dated phase/channel notices. Gate B was not started.
+The original implementation contract below remains the requirement for a future
+full recovery; #105's reviewed records are unchanged.
 Start from then-current `main`, `AGENTS.md`, and
 `docs/IMPLEMENTATION-STATUS.md`.
 Initial verified restore:

@@ -1,0 +1,121 @@
+{
+  "capturedAt": "2026-10-26T23:20:28.586Z",
+  "userAgent": "gacha-event-tracker/1.0 (+https://github.com/maxvfk/game-calendar)",
+  "runId": "40419057435",
+  "commit": "5525e1ede2d506f383dddff360f52e8c5470b8f7",
+  "zenless-mobileRobots": {
+    "groups": [],
+    "sitemaps": [],
+    "delay": 2000
+  },
+  "responses": [
+    {
+      "name": "zenless-mobile-robots",
+      "url": "https://zenless.hoyoverse.com/robots.txt",
+      "at": "2026-10-26T23:20:29.011Z",
+      "status": 404,
+      "location": null,
+      "contentType": "application/xml",
+      "etag": null,
+      "lastModified": null,
+      "bytes": 9,
+      "sha256": "0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5",
+      "conditional": null,
+      "shape": {
+        "html": false,
+        "scriptCount": 0,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "zenless-mobile-0",
+      "url": "https://zenless.hoyoverse.com/m/en-us/news",
+      "at": "2026-10-26T23:20:31.020Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "etag": "W/\"a317eb801d178f344fbbef7ad3e3eb86\"",
+      "lastModified": "Thu, 15 Oct 2026 11:56:13 GMT",
+      "bytes": 8184,
+      "sha256": "ad5f5d7f9ae0942fdb68ef458d6d8a12b27eeb5f45a4515d7830d9ad5eab60a1",
+      "conditional": null,
+      "shape": {
+        "html": true,
+        "scriptCount": 15,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "zenless-mobile-conditional",
+      "url": "https://zenless.hoyoverse.com/m/en-us/news",
+      "at": "2026-10-26T23:20:33.025Z",
+      "status": 304,
+      "location": null,
+      "contentType": null,
+      "etag": "W/\"a317eb801d178f344fbbef7ad3e3eb86\"",
+      "lastModified": "Thu, 15 Oct 2026 11:56:13 GMT",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "conditional": {
+        "If-None-Match": "W/\"a317eb801d178f344fbbef7ad3e3eb86\"",
+        "If-Modified-Since": "Thu, 15 Oct 2026 11:56:13 GMT"
+      },
+      "shape": {
+        "html": false,
+        "scriptCount": 0,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "zenless-mobile-1",
+      "url": "https://zenless.hoyoverse.com/m/en-us/news/166963",
+      "at": "2026-10-26T23:20:35.031Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "etag": "W/\"a317eb801d178f344fbbef7ad3e3eb86\"",
+      "lastModified": "Thu, 15 Oct 2026 11:56:13 GMT",
+      "bytes": 8184,
+      "sha256": "ad5f5d7f9ae0942fdb68ef458d6d8a12b27eeb5f45a4515d7830d9ad5eab60a1",
+      "conditional": null,
+      "shape": {
+        "html": true,
+        "scriptCount": 15,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "zenless-mobile-2",
+      "url": "https://zenless.hoyoverse.com/m/en-us/news/166926",
+      "at": "2026-10-26T23:20:37.414Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "etag": "W/\"a317eb801d178f344fbbef7ad3e3eb86\"",
+      "lastModified": "Thu, 15 Oct 2026 11:56:13 GMT",
+      "bytes": 8184,
+      "sha256": "ad5f5d7f9ae0942fdb68ef458d6d8a12b27eeb5f45a4515d7830d9ad5eab60a1",
+      "conditional": null,
+      "shape": {
+        "html": true,
+        "scriptCount": 15,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    }
+  ],
+  "artifact": {
+    "id": 12696816265,
+    "url": "https://github.com/maxvfk/game-calendar/actions/runs/40419057435/artifacts/12696816265",
+    "zipSha256": "b5c0492b66d2e59098037fc57cca48e0fe084277ef3fb6f7d411ff7dfa951da3"
+  }
+}

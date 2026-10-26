@@ -1,0 +1,413 @@
+{
+  "capturedAt": "2026-10-26T23:18:35.990Z",
+  "userAgent": "gacha-event-tracker/1.0 (+https://github.com/maxvfk/game-calendar)",
+  "runId": "40418840773",
+  "commit": "325c8412559dc71a974f92597ae018b056752cc6",
+  "zenlessRobots": {
+    "groups": [],
+    "sitemaps": [],
+    "delay": 2000
+  },
+  "steamRobots": {
+    "groups": [
+      {
+        "agents": [
+          "*"
+        ],
+        "rules": [
+          {
+            "allow": false,
+            "pattern": "/actions/"
+          },
+          {
+            "allow": false,
+            "pattern": "/linkfilter/"
+          },
+          {
+            "allow": false,
+            "pattern": "/tradeoffer/"
+          },
+          {
+            "allow": false,
+            "pattern": "/trade/"
+          },
+          {
+            "allow": false,
+            "pattern": "/email/"
+          }
+        ],
+        "crawlDelaySeconds": null
+      }
+    ],
+    "sitemaps": [],
+    "delay": 2000
+  },
+  "steamConditional": "No ETag/Last-Modified offered; no artificial validators sent",
+  "steamApiContract": {
+    "docs": "https://partner.steamgames.com/doc/webapi/ISteamNews",
+    "terms": "https://steamcommunity.com/dev/apiterms",
+    "appId": 4162040,
+    "feed": "steam_community_announcements"
+  },
+  "steamNews": {
+    "appid": 4162040,
+    "items": [
+      {
+        "gid": "1847286114026951",
+        "title": "Version 3.3 \"Journey to the Sky\" Update Announcement",
+        "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1847286114026951",
+        "date": 1792537224,
+        "feedname": "steam_community_announcements",
+        "contentsLength": 23287
+      },
+      {
+        "gid": "1846018067929199",
+        "title": "Zenless Zone Zero Version 3.3 \"Journey to the Sky\" Special Program Announcement",
+        "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1846018067929199",
+        "date": 1791456540,
+        "feedname": "steam_community_announcements",
+        "contentsLength": 675
+      },
+      {
+        "gid": "1843481262687543",
+        "title": "Version 3.2 \"Their Secret Histories\" Update Announcement",
+        "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1843481262687543",
+        "date": 1788908454,
+        "feedname": "steam_community_announcements",
+        "contentsLength": 27085
+      },
+      {
+        "gid": "1841579228674764",
+        "title": "Version 3.2 \"Their Secret Histories\" Special Program Announcement",
+        "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1841579228674764",
+        "date": 1787556089,
+        "feedname": "steam_community_announcements",
+        "contentsLength": 836
+      },
+      {
+        "gid": "1839676055881914",
+        "title": "🎨 New Zenless Zone Zero Items in the Steam Points Shop! 🎨",
+        "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1839676055881914",
+        "date": 1785315617,
+        "feedname": "steam_community_announcements",
+        "contentsLength": 891
+      },
+      {
+        "gid": "1839041357038306",
+        "title": "Version 3.1 \"The Long Goodbye\" Update Announcement",
+        "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1839041357038306",
+        "date": 1785245172,
+        "feedname": "steam_community_announcements",
+        "contentsLength": 23714
+      },
+      {
+        "gid": "1838407329253942",
+        "title": "Zenless Zone Zero Version 3.1 \"The Long Goodbye\" Special Program Announcement",
+        "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1838407329253942",
+        "date": 1784113636,
+        "feedname": "steam_community_announcements",
+        "contentsLength": 718
+      },
+      {
+        "gid": "1835871199302875",
+        "title": "How to Fix the Issue of Linking the Wrong HoYoverse Account",
+        "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1835871199302875",
+        "date": 1781759074,
+        "feedname": "steam_community_announcements",
+        "contentsLength": 2226
+      },
+      {
+        "gid": "1835871199299000",
+        "title": "Version 3.0 \"A Sleepwalker's Confession\" Update Announcement",
+        "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1835871199299000",
+        "date": 1781650815,
+        "feedname": "steam_community_announcements",
+        "contentsLength": 23333
+      },
+      {
+        "gid": "1835236783572773",
+        "title": "Zenless Zone Zero Steam Version Launches June 17",
+        "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1835236783572773",
+        "date": 1781577040,
+        "feedname": "steam_community_announcements",
+        "contentsLength": 5040
+      },
+      {
+        "gid": "1834602721187193",
+        "title": "Version 3.0 \"A Sleepwalker's Confession\" Special Program Announcement",
+        "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1834602721187193",
+        "date": 1780571145,
+        "feedname": "steam_community_announcements",
+        "contentsLength": 839
+      },
+      {
+        "gid": "1830797770236004",
+        "title": "Zenless Zone Zero is officially coming to Steam",
+        "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1830797770236004",
+        "date": 1777034635,
+        "feedname": "steam_community_announcements",
+        "contentsLength": 393
+      }
+    ]
+  },
+  "responses": [
+    {
+      "name": "zenless-robots",
+      "url": "https://zenless.hoyoverse.com/robots.txt",
+      "at": "2026-10-26T23:18:36.691Z",
+      "status": 404,
+      "location": null,
+      "contentType": "application/xml",
+      "etag": null,
+      "lastModified": null,
+      "bytes": 9,
+      "sha256": "0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5",
+      "conditional": null,
+      "shape": {
+        "html": false,
+        "scriptCount": 0,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "zenless-0",
+      "url": "https://zenless.hoyoverse.com/en-us/news",
+      "at": "2026-10-26T23:18:38.701Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "etag": "W/\"a317eb801d178f344fbbef7ad3e3eb86\"",
+      "lastModified": "Thu, 15 Oct 2026 11:56:13 GMT",
+      "bytes": 8184,
+      "sha256": "ad5f5d7f9ae0942fdb68ef458d6d8a12b27eeb5f45a4515d7830d9ad5eab60a1",
+      "conditional": null,
+      "shape": {
+        "html": true,
+        "scriptCount": 15,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "zenless-conditional",
+      "url": "https://zenless.hoyoverse.com/en-us/news",
+      "at": "2026-10-26T23:18:40.707Z",
+      "status": 304,
+      "location": null,
+      "contentType": null,
+      "etag": "W/\"a317eb801d178f344fbbef7ad3e3eb86\"",
+      "lastModified": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "conditional": {
+        "If-None-Match": "W/\"a317eb801d178f344fbbef7ad3e3eb86\"",
+        "If-Modified-Since": "Thu, 15 Oct 2026 11:56:13 GMT"
+      },
+      "shape": {
+        "html": false,
+        "scriptCount": 0,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "zenless-1",
+      "url": "https://zenless.hoyoverse.com/en-us/news/166963",
+      "at": "2026-10-26T23:18:42.714Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "etag": "W/\"a317eb801d178f344fbbef7ad3e3eb86\"",
+      "lastModified": "Thu, 15 Oct 2026 11:56:13 GMT",
+      "bytes": 8184,
+      "sha256": "ad5f5d7f9ae0942fdb68ef458d6d8a12b27eeb5f45a4515d7830d9ad5eab60a1",
+      "conditional": null,
+      "shape": {
+        "html": true,
+        "scriptCount": 15,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "zenless-2",
+      "url": "https://zenless.hoyoverse.com/en-us/news/166926",
+      "at": "2026-10-26T23:18:44.720Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "etag": "W/\"a317eb801d178f344fbbef7ad3e3eb86\"",
+      "lastModified": "Thu, 15 Oct 2026 11:56:13 GMT",
+      "bytes": 8184,
+      "sha256": "ad5f5d7f9ae0942fdb68ef458d6d8a12b27eeb5f45a4515d7830d9ad5eab60a1",
+      "conditional": null,
+      "shape": {
+        "html": true,
+        "scriptCount": 15,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "zenless-3",
+      "url": "https://zenless.hoyoverse.com/en-us/news/166946",
+      "at": "2026-10-26T23:18:46.726Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "etag": "W/\"a317eb801d178f344fbbef7ad3e3eb86\"",
+      "lastModified": "Thu, 15 Oct 2026 11:56:13 GMT",
+      "bytes": 8184,
+      "sha256": "ad5f5d7f9ae0942fdb68ef458d6d8a12b27eeb5f45a4515d7830d9ad5eab60a1",
+      "conditional": null,
+      "shape": {
+        "html": true,
+        "scriptCount": 15,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "zenless-4",
+      "url": "https://zenless.hoyoverse.com/en-us/news/167038",
+      "at": "2026-10-26T23:18:48.734Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "etag": "W/\"a317eb801d178f344fbbef7ad3e3eb86\"",
+      "lastModified": "Thu, 15 Oct 2026 11:56:13 GMT",
+      "bytes": 8184,
+      "sha256": "ad5f5d7f9ae0942fdb68ef458d6d8a12b27eeb5f45a4515d7830d9ad5eab60a1",
+      "conditional": null,
+      "shape": {
+        "html": true,
+        "scriptCount": 15,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "steam-robots",
+      "url": "https://steamcommunity.com/robots.txt",
+      "at": "2026-10-26T23:18:48.756Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/plain; charset=utf-8",
+      "etag": null,
+      "lastModified": "Fri, 22 Nov 2024 18:31:37 GMT",
+      "bytes": 141,
+      "sha256": "4e3f5ea02946c4677b77402a16fcbecfc02beb880742bc8abb641abe99e82d22",
+      "conditional": null,
+      "shape": {
+        "html": false,
+        "scriptCount": 0,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "steam-0",
+      "url": "https://steamcommunity.com/app/4162040/announcements/",
+      "at": "2026-10-26T23:18:51.125Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=UTF-8",
+      "etag": null,
+      "lastModified": null,
+      "bytes": 173000,
+      "sha256": "2ce38a50e6d083c2629207e47a2a1d6530aa651a8fa3359bb41fd7941b7f5ee7",
+      "conditional": null,
+      "shape": {
+        "html": true,
+        "scriptCount": 31,
+        "newsLinks": [],
+        "hasEventDuration": true,
+        "hasVersion33": true
+      }
+    },
+    {
+      "name": "steam-1",
+      "url": "https://steamcommunity.com/games/4162040/rss/",
+      "at": "2026-10-26T23:18:53.323Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/xml;charset=UTF-8",
+      "etag": null,
+      "lastModified": "Mon, 26 Oct 2026 23:18:00 GMT",
+      "bytes": 132852,
+      "sha256": "8943e89750858574343d43fbb94f742aebaf89b3128fa25c1b7d029ac0bff8df",
+      "conditional": null,
+      "shape": {
+        "html": true,
+        "scriptCount": 0,
+        "newsLinks": [],
+        "hasEventDuration": true,
+        "hasVersion33": true
+      }
+    },
+    {
+      "name": "steam-api-robots",
+      "url": "https://api.steampowered.com/robots.txt",
+      "at": "2026-10-26T23:18:53.523Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/plain",
+      "etag": null,
+      "lastModified": null,
+      "bytes": 26,
+      "sha256": "0f230582d72fef1d9a0eee00314e25c5b163e2406fd87cdba17eefeb578041b5",
+      "conditional": null,
+      "shape": {
+        "html": false,
+        "scriptCount": 0,
+        "newsLinks": [],
+        "hasEventDuration": false,
+        "hasVersion33": false
+      }
+    },
+    {
+      "name": "steam-api-news",
+      "url": "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=4162040&count=50&maxlength=0&feeds=steam_community_announcements",
+      "at": "2026-10-26T23:18:53.721Z",
+      "status": 200,
+      "location": null,
+      "contentType": "application/json; charset=UTF-8",
+      "etag": null,
+      "lastModified": null,
+      "bytes": 116876,
+      "sha256": "73a310931d81661a6a9a4db973ab33e2f2ec2cdc865f7053f9287d41cdb2c161",
+      "conditional": null,
+      "shape": {
+        "html": false,
+        "scriptCount": 0,
+        "newsLinks": [],
+        "hasEventDuration": true,
+        "hasVersion33": true
+      }
+    }
+  ],
+  "artifact": {
+    "id": 12696271497,
+    "url": "https://github.com/maxvfk/game-calendar/actions/runs/40418840773/artifacts/12696271497",
+    "zipSha256": "bfee03d44dcb585d99fd30075bac20ce8eb5202fa2f82788b656ff87116e00af"
+  },
+  "coverageCheck": {
+    "currentVersion": "3.3",
+    "publicationGid": "1847286114026951",
+    "eventDurationFields": 8,
+    "phaseIChannelNoticePresent": false,
+    "phaseIBannerDeadlinePresent": false,
+    "currentGracefulGalePresent": false,
+    "currentJoyauDorePresent": false,
+    "note": "Inspected all 12 publisher posts; historical names in Version 3.0 do not supply current Phase I periods."
+  }
+}

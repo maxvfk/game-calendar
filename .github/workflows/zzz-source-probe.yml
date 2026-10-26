@@ -1,11 +1,19 @@
 name: ZZZ P0 source access gate
+# Manual evidence capture only. No scheduler, feed writes or adapter activation.
+# Allow at least six hours between repeated content probes of the same surface.
 on:
-  pull_request:
-    paths:
-      - scripts/probe-zzz.ts
-      - .github/workflows/zzz-source-probe.yml
+  workflow_dispatch:
+    inputs:
+      round:
+        description: 'Bounded surfaces to recheck (respect six-hour request interval)'
+        type: choice
+        options: [full, mobile]
+        default: full
 permissions:
   contents: read
+concurrency:
+  group: zzz-p0-source-probe
+  cancel-in-progress: false
 jobs:
   probe:
     runs-on: ubuntu-latest
@@ -17,7 +25,7 @@ jobs:
           bun-version: '1.3.14'
       - run: bun scripts/probe-zzz.ts
         env:
-          ZZZ_PROBE_ROUND: mobile
+          ZZZ_PROBE_ROUND: ${{ inputs.round }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
