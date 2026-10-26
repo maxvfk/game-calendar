@@ -1,0 +1,162 @@
+name: Timeline labels
+
+# Autonomous Timeline naming (docs/tasks/TIMELINE-LABEL-AUTONOMOUS.md). M3.5: rehearsal
+# only. A manual run asks the model once, records the accepted decisions on the
+# timeline-labels/rehearsal branch (rebuilt from main each run) and runs CI there.
+# Pages deploys only from main, so a rehearsal never reaches the site. Writing to main
+# and a schedule come in M4, only with explicit operator approval.
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Claude model alias"
+        type: choice
+        options: [sonnet, opus]
+        default: sonnet
+
+concurrency:
+  group: timeline-labels
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  TARGET_BRANCH: timeline-labels/rehearsal
+
+jobs:
+  # Read-only. The only job that sees the Claude token.
+  propose:
+    if: github.repository == 'maxvfk/game-calendar'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      events: ${{ steps.queue.outputs.events }}
+    env:
+      CLAUDE_CODE_VERSION: "2.1.310"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3"
+      - run: bun install --frozen-lockfile
+      - name: Build feed and agent input
+        run: bun run build:feed
+
+      - name: Queue size
+        id: queue
+        run: |
+          set -euo pipefail
+          mkdir -p labels
+          cp public/data/timeline-label-agent-input.v1.json labels/agent-input.json
+          echo "events=$(jq '.events | length' labels/agent-input.json)" >> "$GITHUB_OUTPUT"
+          jq -c '.counts' labels/agent-input.json
+
+      # An empty queue never calls the model.
+      - name: Install Claude Code CLI (pinned)
+        if: steps.queue.outputs.events != '0'
+        run: |
+          set -euo pipefail
+          curl -fsSL https://claude.ai/install.sh | bash -s "$CLAUDE_CODE_VERSION"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Ask the model for decisions
+        if: steps.queue.outputs.events != '0'
+        env:
+          RAW_CLAUDE_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          MODEL: ${{ inputs.model }}
+        run: bash scripts/timeline-label-agent/run-model.sh labels/agent-input.json labels/claude-result.json
+
+      - name: Extract proposals
+        if: steps.queue.outputs.events != '0'
+        run: |
+          set -euo pipefail
+          if ! jq -e '.subtype == "success" and .structured_output != null' labels/claude-result.json > /dev/null; then
+            echo "::error::No structured output (subtype: $(jq -r '.subtype' labels/claude-result.json))"
+            exit 1
+          fi
+          jq '.structured_output' labels/claude-result.json > labels/proposals.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: timeline-labels-proposals-${{ github.run_id }}
+          path: labels/
+          retention-days: 14
+          if-no-files-found: ignore
+
+  # Deterministic. No Claude token; the only job that can push.
+  record:
+    needs: propose
+    if: needs.propose.outputs.events != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3"
+      - run: bun install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: timeline-labels-proposals-${{ github.run_id }}
+          path: ${{ runner.temp }}/labels
+
+      - name: Record on fresh main and push
+        id: record
+        run: bash scripts/timeline-label-agent/record.sh "$RUNNER_TEMP/labels/proposals.json" "$TARGET_BRANCH" "$RUNNER_TEMP/reports"
+
+      # A push with GITHUB_TOKEN starts no workflow, so CI is dispatched and awaited here.
+      - name: Run CI on the recorded commit
+        if: steps.record.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          sha="$(git rev-parse HEAD)"
+          gh workflow run ci.yml --ref "$TARGET_BRANCH"
+          for _ in $(seq 1 30); do
+            run="$(gh run list --workflow ci.yml --branch "$TARGET_BRANCH" --event workflow_dispatch \
+              --commit "$sha" --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
+            [ -n "$run" ] && break
+            sleep 10
+          done
+          if [ -z "${run:-}" ]; then echo "::error::Dispatched CI run not found"; exit 1; fi
+          echo "CI run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$run"
+          gh run watch "$run" --interval 30 --exit-status > /dev/null
+
+      - name: Report
+        if: always()
+        run: |
+          report="$RUNNER_TEMP/reports/accept-report.json"
+          {
+            echo "## Timeline labels — rehearsal on \`$TARGET_BRANCH\` (not deployed)"
+            echo
+            echo "Recorded: ${{ steps.record.outputs.changed || 'no' }}"
+            if [ -f "$report" ]; then
+              echo
+              jq -r '.outcomes | group_by(.outcome) | map("\(.[0].outcome): \(length)") | join(", ")' "$report" || true
+              echo
+              echo "| eventId | outcome | label / why |"
+              echo "| --- | --- | --- |"
+              jq -r '.outcomes[] | "| \(.eventId) | \(.outcome)\(if .decision then " \(.decision)" else "" end) | \((.timelineTitle // ((.why // "") + (if .proposed then " (proposed: \(.proposed))" else "" end))) | gsub("\\|"; "/")) |"' "$report" || true
+              jq -r '.warnings[]? | "- warning: \(.)"' "$report" || true
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: timeline-labels-record-${{ github.run_id }}
+          path: ${{ runner.temp }}/reports/
+          retention-days: 14
+          if-no-files-found: ignore

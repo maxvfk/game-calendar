@@ -60,3 +60,38 @@ describe("timeline label agent probe", () => {
     expect(probe).toContain("accept probe/proposals.json probe/registry-after.json probe/accept-report.json");
   });
 });
+
+const workflow = await Bun.file(".github/workflows/timeline-labels.yml").text();
+const record = await Bun.file("scripts/timeline-label-agent/record.sh").text();
+
+describe("timeline labels rehearsal (M3.5)", () => {
+  const [, propose = "", recordJob = ""] = workflow.split(/\n  (?:propose|record):\n/);
+
+  test("stays manual and targets only the rehearsal branch", () => {
+    expect(workflow).toContain("workflow_dispatch:");
+    expect(workflow).not.toContain("schedule:");
+    expect(workflow).toContain("TARGET_BRANCH: timeline-labels/rehearsal");
+    expect(workflow).not.toMatch(/TARGET_BRANCH: main|--ref main\b|HEAD:main/);
+    expect(workflow).toContain("group: timeline-labels");
+  });
+
+  test("the model job is read-only and the write job never sees the Claude token", () => {
+    expect(workflow.match(/secrets\.CLAUDE_CODE_OAUTH_TOKEN/g)?.length).toBe(1);
+    expect(propose).toContain("secrets.CLAUDE_CODE_OAUTH_TOKEN");
+    expect(propose).toContain("persist-credentials: false");
+    expect(propose).not.toMatch(/contents:\s*write|actions:\s*write|git push/);
+    expect(recordJob).not.toContain("secrets.");
+    expect(recordJob).not.toContain("claude");
+    expect(recordJob).toContain("contents: write");
+  });
+
+  test("record pushes main fast-forward only and gives up after three attempts", () => {
+    expect(record).toContain("main) push_args=() ;;");
+    expect(record).toContain("timeline-labels/rehearsal) push_args=(--force) ;;");
+    expect(record).toMatch(/\*\) echo "::error::Unsupported target branch/);
+    expect(record).toContain("for attempt in 1 2 3; do");
+    expect(record).toContain("git checkout --quiet --detach origin/main");
+    for (const check of ["bun run typecheck", "bun test", "bun run build"]) expect(record).toContain(check);
+    expect(record).toContain("git add -- \"$registry\"");
+  });
+});

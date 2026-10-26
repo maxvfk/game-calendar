@@ -2,8 +2,8 @@
 
 **Status:** M0 done (operator, 2026-10-25). M3 probe ran successfully on 2026-10-26 (below).
 M1 done (Event Detail shows the label). M2 done: deterministic `accept`, dry-run in the probe.
-Nothing writes the registry automatically yet; automation stays off
-(`vars.TIMELINE_LABELS_AUTO = off`).
+M3.5 rehearsal workflow added (`timeline-labels.yml`); it writes only to the rehearsal branch.
+Nothing writes `main` automatically; automation stays off (`vars.TIMELINE_LABELS_AUTO = off`).
 
 ## Chosen architecture
 
@@ -62,7 +62,7 @@ is back in the queue).
 | M1 | Event Detail shows the AI title with "Original title" below; leave room for a later "Original summary" pair — **done** | UI |
 | M2 | Deterministic `accept` with fresh-main re-check, guards and tests — **done**; the git fetch/retry/push loop belongs to M3.5 | None |
 | M3 | `timeline-labels-probe.yml`: manual, read-only, one model call, L1 validator report — **done** | None |
-| M3.5 | Rehearsal writes to `timeline-labels/rehearsal` + dispatched CI (no deploy) | None |
+| M3.5 | Rehearsal writes to `timeline-labels/rehearsal` + dispatched CI (no deploy) — workflow added; done after one green operator run | None |
 | M4 | Scheduled Tue/Fri run writing to `main`, only after M3.5 and explicit operator approval | Yes |
 
 ## Running the M3 probe
@@ -108,5 +108,43 @@ written to the repository.
 - **Token fix:** the first failure ("Not logged in") was a secret saved with a leading space. M2
   trims the token and reports a malformed one without printing it.
 
-Enable criterion 1 (safeguard 3) is met. Criterion 2 (a reasonable accept report) needs one
-probe run after M2; criterion 3 is the M3.5 rehearsal.
+Enable criterion 1 (safeguard 3) is met.
+
+## Probe after M2 (run 40344178775, 2026-10-26, `main` 599a361)
+
+- Token script path works; no whitespace or token-shape warning, so the secret is clean.
+- Sonnet, 2 turns, 34 s, about 16.8k tokens (11.6k cache write, 1.3k cache read, 3.9k output).
+- Same split as before: 5 `label`, 14 `keep_original`, 6 `needs_research`; validator 0 errors.
+- Accept dry run: 25 accepted, 0 guarded, 0 rejected.
+- Two labels were worded differently from the first probe ("Choice of Limited Outfits for the
+  Angels of Delusion", "Umbra of Frigid Eventide Weapon Rate-Up"). Both are supported by the
+  summary. Once recorded, a decision does not change until the event does.
+
+The operator found the report reasonable: enable criterion 2 is met.
+
+## Usage estimate (Claude Pro subscription)
+
+Measured on two full batches: about 4k tokens fixed (system prompt, preferences, CLI) plus about
+500 tokens per event (350 in, 150 out). A full batch of 25 is about 17k tokens; the CLI's
+API-equivalent estimate is $0.09. Nothing is billed: it counts toward the plan's usage limits,
+shared with claude.ai and Claude Code, roughly like one medium chat request with an attachment.
+
+- Backlog today: 48 eligible events, so two runs, about 33k tokens once.
+- After that only new or changed events are queued. At a rough 10 to 25 new events a week and two
+  runs a week (Tue/Fri), that is about 15k to 25k tokens a week, under $1 a month API-equivalent.
+- An empty queue makes no model call. GitHub Actions minutes are free for this public repository.
+- The write job, tests and CI use no Claude usage.
+
+## Running the M3.5 rehearsal
+
+GitHub → Actions → **Timeline labels** → Run workflow (model `sonnet`). The `propose` job builds
+the queue from `main` and asks the model once (read-only, the only job with the token). The
+`record` job, without the token, runs `scripts/timeline-label-agent/record.sh`: fresh `main`,
+`build:feed`, `accept`, typecheck/test/build, commit only the registry, force-push to
+`timeline-labels/rehearsal` (rebuilt from `main` every run), then dispatch `ci.yml` on that
+branch and wait for it. Pages deploys only from `main`, so the site is untouched. The summary
+lists every outcome; artifacts keep the proposals, the accept report and the new registry.
+
+Criterion 3 is met when one rehearsal records decisions and its dispatched CI is green. The
+rehearsal branch is disposable; it is never merged. M4 adds the `main` target (fast-forward
+push only, behind `vars.TIMELINE_LABELS_AUTO`) and the schedule, only on explicit approval.
