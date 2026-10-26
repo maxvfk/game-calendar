@@ -1,7 +1,8 @@
 # Timeline labels — autonomous naming (plan and milestones)
 
 **Status:** M0 done (operator, 2026-10-25). M3 probe ran successfully on 2026-10-26 (below).
-M1 done (Event Detail shows the label). Production automation is **not** implemented and stays off
+M1 done (Event Detail shows the label). M2 done: deterministic `accept`, dry-run in the probe.
+Nothing writes the registry automatically yet; automation stays off
 (`vars.TIMELINE_LABELS_AUTO = off`).
 
 ## Chosen architecture
@@ -13,7 +14,7 @@ by `scripts/timeline-label-agent/decisions.schema.json`, fixed system prompt
 `scripts/timeline-label-agent/system-prompt.md`. The input is built inside the job by
 `build:feed` from the same commit, so no URL is fetched. An empty queue makes no model call.
 
-Writes are deterministic and separate from the model: a future `accept` job without the
+Writes are deterministic and separate from the model: an `accept` job (M3.5/M4) without the
 Claude secret validates every decision, records it in `data/presentation/timeline-labels.v1.json`,
 commits to `main` with `GITHUB_TOKEN` and dispatches `ci.yml` (the existing `refresh.yml`
 pattern). No PR, auto-merge, PAT, GitHub App, server or database.
@@ -34,7 +35,8 @@ preview, full agentic session per run, auto-mode stalls); PR + auto-merge (PRs o
    words (for example `invitation`). All 8 labels from PR #87 must pass unchanged. Negative tests:
    invented character, reward, date/number/certainty, lost season/phase/cycle, URL/markup,
    injected instructions, duplicate overlapping labels. A guard hit becomes `needs_research`
-   with `auto-guard: …; proposed "…"`, never a published label.
+   with `auto-guard: …; proposed "…"`, never a published label. As built in M2, a short list of
+   claim words (for example "guaranteed", "rerun", "ignore") is also checked in lowercase.
 3. **Off until proven.** Enable only after: the probe works with the subscription token in
    Actions and returns valid JSON for the real queue; the accept report is reasonable; a full
    rehearsal writes to `timeline-labels/rehearsal` (not `main`) and its dispatched CI is green
@@ -49,7 +51,8 @@ preview, full agentic session per run, auto-mode stalls); PR + auto-merge (PRs o
 Other safeguards: per-decision partial acceptance; model job read-only and write job without the
 Claude secret; `concurrency: timeline-labels`; kill switch `vars.TIMELINE_LABELS_AUTO`; rollback
 by reverting the registry-only commit or overriding one decision (automation never rewrites a
-decided event).
+decided event; it replaces only a record whose fingerprint no longer matches, because that event
+is back in the queue).
 
 ## Milestones
 
@@ -57,7 +60,7 @@ decided event).
 | --- | --- | --- |
 | M0 | Operator: token secret + `TIMELINE_LABELS_AUTO=off` — **done** | None |
 | M1 | Event Detail shows the AI title with "Original title" below; leave room for a later "Original summary" pair — **done** | UI |
-| M2 | Deterministic `accept` with fresh-main re-check, guards and tests | None |
+| M2 | Deterministic `accept` with fresh-main re-check, guards and tests — **done**; the git fetch/retry/push loop belongs to M3.5 | None |
 | M3 | `timeline-labels-probe.yml`: manual, read-only, one model call, L1 validator report — **done** | None |
 | M3.5 | Rehearsal writes to `timeline-labels/rehearsal` + dispatched CI (no deploy) | None |
 | M4 | Scheduled Tue/Fri run writing to `main`, only after M3.5 and explicit operator approval | Yes |
@@ -65,8 +68,27 @@ decided event).
 ## Running the M3 probe
 
 GitHub → Actions → **Timeline labels probe (read-only)** → Run workflow. The run summary lists
-the model decisions, L1 validator errors/warnings and token usage; the `probe/` artifact keeps
-the input, the raw CLI result, proposals and validation for 14 days. Nothing is written.
+the model decisions, L1 validator errors/warnings, token usage and the M2 accept dry run
+(accepted / guarded / rejected); the `probe/` artifact keeps the input, the raw CLI result,
+proposals, validation, `accept-report.json` and `registry-after.json` for 14 days. Nothing is
+written to the repository.
+
+## M2: what was built
+
+- `src/presentation/timeline-label-accept.ts`: `acceptTimelineProposals(proposals, feed, registry,
+  vocabulary, asOf)` and `labelGuard`. Pure and deterministic; the caller passes the freshest
+  feed and registry, which is the fresh-main re-check. Rules are in `data/presentation/README.md`.
+- `labelVocabulary` in the preferences file (reviewed in Git; today only `invitation`). The
+  preferences also tell the model that other words make a label `needs_research`.
+- `scripts/timeline-labels.ts accept` writes only the output paths it is given.
+- `scripts/timeline-label-agent/run-model.sh`: the single model call, now shared by the probe
+  and later jobs. It strips whitespace from the token, warns about it and about an unexpected
+  token shape, and never prints the token.
+- Measured before choosing the guard: on the 8 labels from PR #87 and the 5 from the probe, the
+  only word missing from an event's own text was "Invitation" (the summary says "Invite"), and
+  "Character" needed the plural rule. All 13 pass; the 25 probe decisions all accept.
+- M3.5 adds the git side: fetch `main`, rebuild the feed, run `accept`, rerun
+  typecheck/test/build, push fast-forward to the rehearsal branch, retry at most three times.
 
 ## Probe results (run 40336557898, 2026-10-26, `main` 20e75cf)
 
@@ -86,4 +108,5 @@ the input, the raw CLI result, proposals and validation for 14 days. Nothing is 
 - **Token fix:** the first failure ("Not logged in") was a secret saved with a leading space. M2
   trims the token and reports a malformed one without printing it.
 
-Enable criterion 1 (safeguard 3) is met. The rest waits for M2 and the M3.5 rehearsal.
+Enable criterion 1 (safeguard 3) is met. Criterion 2 (a reasonable accept report) needs one
+probe run after M2; criterion 3 is the M3.5 rehearsal.

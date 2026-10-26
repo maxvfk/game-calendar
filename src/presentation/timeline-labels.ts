@@ -46,7 +46,7 @@ export function semanticFingerprint(event: GachaEvent): string {
   return `sha256:${createHash("sha256").update(canonical, "utf8").digest("hex")}`;
 }
 
-function publicEvent(event: GachaEvent): boolean {
+export function publicEvent(event: GachaEvent): boolean {
   return event.status === "published" && event.provenanceStatus !== "leak" &&
     event.sourceId !== "you" && !event.id.startsWith("myevent:");
 }
@@ -55,7 +55,7 @@ const compare = (a: string, b: string) => a < b ? -1 : a > b ? 1 : 0;
 /** Latest possible end, only for review ordering/overlap, never a public deadline.
  * Unknown/incomplete regional ends are unbounded. A date-only end is kept for
  * two UTC days to cover the entire named day and server/local-zone uncertainty. */
-function endBound(event: GachaEvent): number {
+export function endBound(event: GachaEvent): number {
   if (event.endsAt === null) return Infinity;
   if (event.regionScoped) {
     const ends = Region.options.map(region => event.regionEnds?.[region]);
@@ -74,7 +74,7 @@ function overlaps(a: GachaEvent, b: GachaEvent): boolean {
 }
 
 export interface LabelDiagnostics { errors: string[]; warnings: string[] }
-const comparable = (s: string) => s.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
+export const comparable = (s: string) => s.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
 
 /** Semantic correctness still needs a human review; these are conservative guards. */
 export function labelDiagnostics(events: readonly GachaEvent[], registry: TimelineRegistry): LabelDiagnostics {

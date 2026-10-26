@@ -4,6 +4,7 @@ import { TimelineDecision, TimelineRegistry } from "../src/presentation/timeline
 const schema = await Bun.file("scripts/timeline-label-agent/decisions.schema.json").json();
 const prompt = await Bun.file("scripts/timeline-label-agent/system-prompt.md").text();
 const probe = await Bun.file(".github/workflows/timeline-labels-probe.yml").text();
+const runner = await Bun.file("scripts/timeline-label-agent/run-model.sh").text();
 const registry = TimelineRegistry.parse(await Bun.file("data/presentation/timeline-labels.v1.json").json());
 
 /** Minimal structural check of one decision against the draft-07 model output schema. */
@@ -51,8 +52,11 @@ describe("timeline label agent probe", () => {
     expect(probe).not.toMatch(/contents:\s*write|actions:\s*write|pull-requests:\s*write/);
     expect(probe).not.toMatch(/git (push|commit)|gh (pr|workflow run)/);
     expect(probe).toContain("persist-credentials: false");
-    expect(probe).toContain('--tools ""');
+    expect(probe).toContain("bash scripts/timeline-label-agent/run-model.sh");
+    expect(runner).toContain('--tools ""');
+    expect(runner).not.toMatch(/set -x|echo "\$token"|echo "\$raw"/);
     expect(probe.match(/secrets\.CLAUDE_CODE_OAUTH_TOKEN/g)?.length).toBe(1);
     expect(probe).not.toContain("timeline-labels.v1.json");
+    expect(probe).toContain("accept probe/proposals.json probe/registry-after.json probe/accept-report.json");
   });
 });
