@@ -172,8 +172,9 @@ preferences file (lowercase words, never names or numbers). A guard hit is recor
 queue until its input changes and the operator can review it. The output keeps the
 reviewed key order, so an unchanged registry is an empty diff.
 
-**Autonomous naming** is planned in
-[TIMELINE-LABEL-AUTONOMOUS](../../docs/tasks/TIMELINE-LABEL-AUTONOMOUS.md). So far only a
-manual, read-only probe workflow (`timeline-labels-probe.yml`) can call the model; it
-dry-runs `accept` into its artifact and never writes this registry. No scheduled run or
-automatic write is enabled. Independent critical audit remains deferred.
+**Autonomous naming** is described in
+[TIMELINE-LABEL-AUTONOMOUS](../../docs/tasks/TIMELINE-LABEL-AUTONOMOUS.md).
+`timeline-labels.yml` runs on Tue and Sat and records accepted decisions in this registry
+through registry-only commits on `main`, but only while the repository variable
+`TIMELINE_LABELS_AUTO` is `on`. The read-only probe (`timeline-labels-probe.yml`) never
+writes it. Independent critical audit remains deferred.
