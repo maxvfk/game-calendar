@@ -21,6 +21,9 @@ export const TimelineLabelPreferences = z.object({
   editorialPreferences: z.array(text).min(1).max(30),
   operatorApprovedExamples: z.array(preferredExample).min(1).max(20),
   outputContract: z.array(text).min(1).max(20),
+  /** Generic words a label may add beyond its event's own text; the accept guard
+   * allows these and nothing else. Lowercase words only, so never a name or number. */
+  labelVocabulary: z.array(z.string().regex(/^[a-z]{2,40}$/)).max(200).optional(),
 }).strict();
 
 export type TimelineLabelPreferences = z.infer<typeof TimelineLabelPreferences>;

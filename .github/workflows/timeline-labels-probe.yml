@@ -1,8 +1,9 @@
 name: Timeline labels probe (read-only)
 
 # M3 probe for autonomous Timeline naming. It proves that the Claude subscription token
-# works headless in GitHub Actions and measures one real batch. It is read-only: no
-# registry write, no commit, no push, no deploy. Manual runs only, never scheduled.
+# works headless in GitHub Actions, measures one real batch and dry-runs the M2 accept
+# step. It is read-only: no registry write, no commit, no push, no deploy. Manual runs
+# only, never scheduled.
 on:
   workflow_dispatch:
     inputs:
@@ -58,22 +59,15 @@ jobs:
           curl -fsSL https://claude.ai/install.sh | bash -s "$CLAUDE_CODE_VERSION"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      # One call, no tools. The token is visible to this step only.
+      # One call, no tools. The token is visible to this step only; the script strips
+      # stray whitespace from it and warns without printing it.
       - name: Ask the model for decisions
         id: model
         if: steps.queue.outputs.events != '0'
         env:
-          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          RAW_CLAUDE_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           MODEL: ${{ inputs.model }}
-          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
-        run: |
-          set -euo pipefail
-          claude --version
-          claude -p "Apply editorialPreferences from the JSON on standard input to its events and return the decisions." \
-            --model "$MODEL" --tools "" --max-turns 3 --no-session-persistence \
-            --system-prompt-file scripts/timeline-label-agent/system-prompt.md \
-            --json-schema "$(cat scripts/timeline-label-agent/decisions.schema.json)" \
-            --output-format json < probe/agent-input.json > probe/claude-result.json
+        run: bash scripts/timeline-label-agent/run-model.sh probe/agent-input.json probe/claude-result.json
 
       - name: Extract proposals
         if: steps.queue.outputs.events != '0'
@@ -89,6 +83,12 @@ jobs:
       - name: Validate with the L1 validator
         if: steps.queue.outputs.events != '0'
         run: bun scripts/timeline-labels.ts validate probe/proposals.json > probe/validation.json
+
+      # Dry run of the deterministic accept step (M2). It writes only into probe/, never
+      # the reviewed registry, so the report shows what automation would record.
+      - name: Accept dry run
+        if: always() && hashFiles('probe/proposals.json') != ''
+        run: bun scripts/timeline-labels.ts accept probe/proposals.json probe/registry-after.json probe/accept-report.json
 
       - name: Report
         if: always()
@@ -118,6 +118,13 @@ jobs:
               jq -r '"Validator: \(.errors | length) errors, \(.warnings | length) warnings"' probe/validation.json || true
               jq -r '.errors[]? | "- error: \(.)"' probe/validation.json || true
               jq -r '.warnings[]? | "- warning: \(.)"' probe/validation.json || true
+            fi
+            if [ -f probe/accept-report.json ]; then
+              echo
+              echo "### Accept dry run (nothing written)"
+              jq -r '.outcomes | group_by(.outcome) | map("\(.[0].outcome): \(length)") | join(", ")' probe/accept-report.json || true
+              jq -r '.outcomes[] | select(.outcome != "accepted") | "- \(.outcome) \(.eventId): \(.why)\(if .proposed then " (proposed: \(.proposed))" else "" end)"' probe/accept-report.json || true
+              jq -r '.warnings[]? | "- warning: \(.)"' probe/accept-report.json || true
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
