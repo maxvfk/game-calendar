@@ -1,5 +1,49 @@
 # Game calendar implementation status
 
+## ZZZ source recovery P0 — Gate A BLOCKED; ingestion NOT restored (2026-10-27)
+
+Current-main baseline `ffe2356` after #105/#106; no concurrent recovery PR
+was open. Actual GitHub-hosted Ubuntu 24.04 runner evidence:
+[desktop + Steam 40418840773](https://github.com/maxvfk/game-calendar/actions/runs/40418840773),
+[mobile 40419057435](https://github.com/maxvfk/game-calendar/actions/runs/40419057435).
+Detailed findings, response hashes, scope of the verdict and fallback:
+`docs/research/zzz-source-recovery-p0.md`; durable metadata under
+`docs/evidence/zzz-p0-*-2026-10-27.json`.
+
+- Official desktop/mobile news index and six sampled detail responses are
+  HTTP 200, but all return the same **8,184-byte Nuxt shell**, with identical
+  SHA-256 and no news links/article body. Robots is HTTP 404 (not a refusal);
+  conditional requests return 304 for the shell, not for news freshness.
+- Verified official publisher Steam distribution (`appid=4162040`): allowed
+  community HTML/RSS HTTP 200; documented GetNewsForApp v2 HTTP 200, 12 posts.
+  Discovery works without per-article IDs. The current 3.3 post has all eight
+  event periods, but no current Phase I channel notice/four-banner deadlines;
+  neither the rerun pair nor its current period can be recovered from it.
+- **Full events + banners Gate A fails on content, not a universal access ban.**
+  No production parser/adapter or fixture-only integration is introduced.
+  Game8 stays disabled. Existing source health, outage/LKG/parser-zero guards,
+  reviewed overrides and recurrence restrictions remain unchanged.
+- Coverage before/after: **30 reviewed records, 8 historical/current banner
+  rows; 14 unexpired (8 active + 6 upcoming) at the first capture**, including
+  #105's 13 current-version rows (8 events, 4 banners, 1 trial). Automatic ZZZ
+  sources **0 → 0**. All reviewed bytes, IDs, provenance, dates and snapshots
+  are unchanged. No event additions or new coverage are claimed.
+- Retained a **manual-only** Actions probe, no schedule. Raw pages stay in
+  seven-day artifacts; committed evidence is metadata/hashes, not full notices.
+- Local checks: frozen install/typecheck/build PASS; `bun test` **1297 pass /
+  3 existing age-dependent skips / 0 fail**, 68 files. Initial PR CI
+  [40418841107](https://github.com/maxvfk/game-calendar/actions/runs/40418841107)
+  passes including PG17/age checks and site build. Final PR delivery and any
+  post-merge checks are recorded on [PR #107](https://github.com/maxvfk/game-calendar/pull/107).
+
+**Next concrete step:** separately scope partial official Steam **events-only**
+recovery (eight 3.3 periods are actually available), explicitly retaining
+reviewed-only banners; or obtain a supported official feed/HTML surface that
+contains dated phase notices before retrying full Gate B. Until then, update
+phase notices through the existing reviewed channel with explicit source review.
+Do not claim unattended banner recovery. Shiyu/Deadly re-anchoring and Timeline
+v2/E2b remain separate and were not started. **STOP after this P0 verdict.**
+
 ## ZZZ P0 coverage recovery — official 3.3 reviewed hotfix (2026-10-27)
 
 **Emergency restoration:** the only listed ZZZ automatic source,
