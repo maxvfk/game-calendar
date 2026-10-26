@@ -1,6 +1,7 @@
 # E1 — WuWa service-only source-excerpt extraction pilot
 
-**Status:** READY FOR A SEPARATE bounded implementation Work; **not started**.
+**Status:** E1 IMPLEMENTED (2026-10-26). Evidence, measurements and verification:
+`docs/evidence/event-context-wuwa-e1.md`. E2–E4 not started.
 **Prerequisite design:** `docs/research/event-context-editorial-technical-design.md`
 (D0 technical gate). Research:
 `docs/research/event-context-coverage-audit-2026-10-25.md`.

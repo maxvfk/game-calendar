@@ -5,7 +5,7 @@ import type { SourceParser } from "./types.ts";
 
 const ENTRY = /<entry>([\s\S]*?)<\/entry>/g;
 const DATE = /(20\d{2})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})/g;
-type Article = { id: string; title: string; lines: string[] };
+type Article = { id: string; title: string; lines: string[]; content: string; headings: string[]; evidenceLines: string[] };
 
 function day(match: RegExpMatchArray): string {
   const date = `${match[1]}-${match[2]}-${match[3]}`;
@@ -32,12 +32,16 @@ function articles(raw: string): Article[] {
     if (!id || !title || !content || link !== `https://wutheringwaves.kurogames.com/en/main/news/detail/${id}`) {
       throw new Error("WuWa Atom article schema/link mismatch");
     }
-    const lines = decodeEntities(content
+    const textLines = (content: string) => decodeEntities(content
       .replace(/<\/(?:p|li|h[1-6]|div)>/gi, "\n")
       .replace(/<br\s*\/?\s*>/gi, "\n")
       .replace(/<[^>]*>/g, " "))
       .split("\n").map(s => s.replace(/\s+/g, " ").trim()).filter(Boolean);
-    return { id, title: decodeEntities(title), lines };
+    const lines = textLines(content);
+    const evidenceLines = textLines(content.replace(/[\r\n]/g, " ").replace(/<\/?(?:span|strong|b|em|i|a)\b[^>]*>/gi, ""));
+    const headings = [...content.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)]
+      .map(m => decodeEntities(m[1]!.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim());
+    return { id, title: decodeEntities(title), lines, content, headings, evidenceLines };
   });
 }
 
@@ -97,23 +101,17 @@ function candidate(article: Article, title: string, type: EventType, line: strin
   });
 }
 
-export function parseWuwaKuroAtom(raw: string, ctx: ParseContext): GachaEvent[] {
+/** Shared identity/date traversal. Evidence never changes the parser's winner selection. */
+export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhitespace = false) {
   const archive = articles(raw);
   if (!archive.length) throw new Error("WuWa Atom entries missing");
   const updates = updateDays(archive);
-  const seen = new Map<string, GachaEvent>();
-  const add = (value: GachaEvent | null) => {
-    if (!value) return;
-    const old = seen.get(value.id);
-    if (old && (old.endsAt !== value.endsAt || old.startsAt !== value.startsAt ||
-      JSON.stringify(old.regionEnds) !== JSON.stringify(value.regionEnds))) {
-      throw new Error(`WuWa Atom conflicting duplicate: ${value.id}`);
-    }
-    if (!old) seen.set(value.id, value);
-  };
+  const result: Array<{ event: GachaEvent; heading: string; lines: string[]; content: string; headings: string[]; repeatedHeading: boolean }> = [];
   for (const article of archive) {
     const standalone = /\[([^\]]+)\]\s+(?:Combat Event|Featured (?:Resonator|Weapon) Convene)/i.exec(article.title)?.[1];
-    const candidates = standalone ? [`[${standalone}] ${/Convene/i.test(article.title) ? "Featured Resonator Convene" : "Combat Event"}`, ...article.lines] : article.lines;
+    // Preserve legacy parser line splitting; evidence normalizes soft newlines inside HTML blocks.
+    const articleLines = evidenceWhitespace ? article.evidenceLines : article.lines;
+    const candidates = standalone ? [`[${standalone}] ${/Convene/i.test(article.title) ? "Featured Resonator Convene" : "Combat Event"}`, ...articleLines] : articleLines;
     for (let i = 0; i < candidates.length; i++) {
       const item = identity(candidates[i]!);
       if (!item) continue;
@@ -124,8 +122,29 @@ export function parseWuwaKuroAtom(raw: string, ctx: ParseContext): GachaEvent[] 
       }
       const duration = near.find(s => /\(server time\)/i.test(s) &&
         (/^Duration:/i.test(s) || /^20\d{2}-/.test(s) || /^Version \d+\.\d+ [Uu]pdate/i.test(s)));
-      if (duration) add(candidate(article, item.title, item.type, duration, updates, ctx));
+      if (duration) {
+        const event = candidate(article, item.title, item.type, duration, updates, ctx);
+        if (event) {
+          const following = candidates.slice(i + 1);
+          const next = following.findIndex(line => identity(line) !== null);
+          result.push({ event, heading: candidates[i]!, lines: next < 0 ? following : following.slice(0, next), content: article.content, headings: article.headings,
+            repeatedHeading: candidates.filter(line => line === candidates[i]).length > 1 });
+        }
+      }
     }
+  }
+  return result;
+}
+
+export function parseWuwaKuroAtom(raw: string, ctx: ParseContext): GachaEvent[] {
+  const seen = new Map<string, GachaEvent>();
+  for (const { event: value } of wuwaEventSections(raw, ctx)) {
+    const old = seen.get(value.id);
+    if (old && (old.endsAt !== value.endsAt || old.startsAt !== value.startsAt ||
+      JSON.stringify(old.regionEnds) !== JSON.stringify(value.regionEnds))) {
+      throw new Error(`WuWa Atom conflicting duplicate: ${value.id}`);
+    }
+    if (!old) seen.set(value.id, value);
   }
   if (!seen.size) throw new Error("WuWa Atom no dated calendar notices");
   return [...seen.values()].sort((a, b) => a.id.localeCompare(b.id));

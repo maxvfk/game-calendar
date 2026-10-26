@@ -26,6 +26,10 @@ import { Region, type GachaEvent, type GameId } from "../src/shared/schema.ts";
 import { applyTimelineLabels, buildTimelineQueue, labelDiagnostics, queueBytes, TimelineRegistry } from "../src/presentation/timeline-labels.ts";
 import { bundleTimelineLabelAgentInput } from "../src/presentation/timeline-label-agent-input.ts";
 
+import { buildEvidenceSidecar, type Extraction } from "../src/editorial/event-evidence.ts";
+import { extractWuwaEvidence } from "../src/editorial/wuwa-evidence.ts";
+
+const evidence: Extraction = { candidates: [], diagnostics: [] };
 const OUT = "public/data/events.v1.json";
 const snapshots = new SnapshotStore(process.env["SNAPSHOT_DIR"] ?? "snapshots");
 
@@ -71,6 +75,7 @@ async function documentFor(adapterId: string, game: GameId) {
       html: cached.html,
       url: cached.meta.url,
       at: freshnessAt(cached),
+      capture: { capturedAt: cached.meta.contentChangedAt, lastConfirmedAt: rawConfirmed, fixtureCaptureDay: null },
       lastConfirmedAt,
       contentChangedAt,
     };
@@ -84,6 +89,7 @@ async function documentFor(adapterId: string, game: GameId) {
     html,
     url: ADAPTERS.find(adapter => adapter.id === adapterId)?.url,
     at: date,
+    capture: { capturedAt: null, lastConfirmedAt: null, fixtureCaptureDay: date?.slice(0, 10) ?? null },
     lastConfirmedAt: null,
     contentChangedAt: date,
   };
@@ -111,6 +117,7 @@ for (const configured of ADAPTERS) {
     adapter.game,
   );
   if (document === null) {
+    if (adapter.id === "wuwa-kuro-mirror") evidence.diagnostics.push({ code: "source_unavailable", sourceEventId: null, sourceUrl: adapter.url, detail: "No snapshot or allowed fixture; no material evidence update" });
     sources.push({
       sourceId: adapter.id,
       game: adapter.game,
@@ -170,6 +177,18 @@ for (const configured of ADAPTERS) {
   const groups = byGame.get(adapter.game) ?? [];
   groups.push({ priority: adapter.priority, events });
   byGame.set(adapter.game, groups);
+
+  if (adapter.id === "wuwa-kuro-mirror") {
+    // Parallel evidence only; use exactly the successful feed document/context.
+    const extracted = extractWuwaEvidence(html, { now, sourceUrl: document.url ?? adapter.url, sourceId: adapter.id, game: adapter.game }, document.capture);
+    // Adapter sanitization/expiry is authoritative. Do not resurrect filtered candidates.
+    const eligible = new Set(events.map(event => event.id));
+    for (const row of extracted.candidates) {
+      if (eligible.has(row.event.id)) evidence.candidates.push(row);
+      else evidence.diagnostics.push({ code: "filtered_source_candidate", sourceEventId: row.event.id, sourceUrl: row.source.sourceUrl, detail: "Source adapter did not publish this exact candidate ID" });
+    }
+    evidence.diagnostics.push(...extracted.diagnostics);
+  }
 
   sources.push(health);
 
@@ -280,3 +299,6 @@ await Bun.write("public/data/review.v1.json", `${JSON.stringify({
 console.log(
   `\n${OUT}: ${events.length} events across ${byGame.size} games, ${conflictCount} conflicts`,
 );
+
+// Service-only, untracked and outside public/. Never included in Pages or Timeline input.
+await Bun.write("tmp/editorial/event-evidence.v1.json", `${JSON.stringify(buildEvidenceSidecar(evidence, events, reviewConflicts), null, 2)}\n`);

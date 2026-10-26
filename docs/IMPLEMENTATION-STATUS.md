@@ -1,5 +1,43 @@
 # Game calendar implementation status
 
+## Event Context E1 — WuWa internal evidence: COMPLETE (2026-10-26)
+
+Implemented from current `main` `25ee442` after PR #100/#101. Detailed contract,
+real source-span examples, fixed-input hashes and measurements:
+`docs/evidence/event-context-wuwa-e1.md`.
+
+- Pure event-local WuWa extractor shares existing identity/date traversal;
+  normalized evidence candidates must still match the original parser output.
+  Public parser interface, event copy/IDs/dates/precision/provenance and merge
+  semantics are preserved.
+- `build:feed` generates **untracked** `tmp/editorial/event-evidence.v1.json`
+  from exactly the feed's successful snapshot/fixture/context. Strict schema,
+  original source references and honest capture metadata, deterministic
+  `event-evidence-sha256-v1`; no evidence in public/Pages/Timeline input.
+- Exact final-winner association, separately attributed same-ID reviewed winners,
+  explicit mapping seam (no production mappings); ambiguous IDs/sections/source
+  conflicts fail closed with internal diagnostics. No fuzzy title transfer.
+- PR #101 bounds enforced: **2,000 Unicode code points/event, 6 excerpts,
+  500/excerpt, 2 documents**, combined across sources. Whole facts only;
+  no truncation, no limit change.
+- Real snapshot: **6/7 WuWa events**, six fragments, **771 code points**;
+  fragment min/median/max **112/123.5/163**, **0 cap hits**, **0 ambiguous
+  associations**. Artisan's Search lacks substantive captured activity and is
+  diagnosed. Approximate context **193 excerpt tokens / 901 eligible-JSON tokens**
+  at 4 characters/token; no model call or tokenizer/cost claim.
+- **Validation:** Bun 1.3.14 frozen install/typecheck/full build PASS;
+  `bun test` **1,266 pass / 3 existing age-dependent skip / 0 fail**;
+  focused WuWa/evidence **24 pass**. Fixed-time whole-repository replay:
+  `events.v1.json`, Timeline queue, agent input and review JSON **byte-identical**
+  to pre-E1 main; automated small-fixture golden replay also passes. Public assets
+  exclude evidence. No workflow/schedule/kill-switch, label registry/fingerprint,
+  UI, Account/Sync or AI changes.
+
+**Next concrete step:** separately authorize **E2 registry/provenance contracts**
+from then-current main; re-inventory all automatic registry writes at migration.
+**Stop after E1**; E2–E4 were not started. PR/CI/merge delivery is recorded in
+this implementation's PR.
+
 ## Event Context / unified Editorial Agent — D0 DESIGN GATE COMPLETE (2026-10-26)
 
 **Scope:** technical design and task scoping only. Runtime, scheduled Timeline
@@ -57,9 +95,8 @@ Detail, M4 workflow and tests. Documentation-only; no local Bun
 runtime/test claim. GitHub PR/CI evidence will be recorded upon
 publication.
 
-**Next concrete step:** launch one separate bounded **E1 WuWa
-service-only evidence extraction** implementation Work from then-current
-`main`. Do not start E2–E4 automatically.
+**Next step at D0 (completed above):** the bounded E1 WuWa service-only evidence
+implementation. E2–E4 remain separately authorized milestones.
 
 ## Autonomous Timeline label editor M0–M4 — COMPLETE (2026-10-26)
 
