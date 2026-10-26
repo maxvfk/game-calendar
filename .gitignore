@@ -143,3 +143,6 @@ snapshots/*.state.json
 # the refresh workflow commits the whole snapshots/ directory, which would
 # otherwise pin a truncated page in git forever.
 snapshots/*.tmp-*
+
+# Generated internal editorial evidence (never Pages assets).
+/tmp/editorial/
