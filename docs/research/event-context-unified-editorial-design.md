@@ -110,6 +110,15 @@ evidence, not the model.
    schema is strict, so add an optional `evidenceHash` (or equivalent) only through a versioned
    migration in the summary work. Do not change the registry schema in the Timeline milestones.
    Not recording `needs_research` at all is worse: those events would spend tokens on every run.
+
+   **Addendum (2026-10-26, label automation going live first):** the requeue covers
+   `keep_original` too, not only `needs_research`. For an opaque event without a summary the model
+   flips between the two across runs (both probes showed it), so either record can mean "not
+   enough evidence". When an event gains new evidence (its evidence key changes), requeue it if
+   its decision is `keep_original` or `needs_research`. An approved `label` stays put unless the
+   operator asks otherwise. Automatic records are identifiable from the bot's registry-only commits
+   (`data(timeline): record automatic label decisions`), which the migration can use if it should
+   treat them differently from operator-reviewed ones. Cost is small: about 500 tokens per event.
 4. **Keep the original summary visible.** Like the title (Event Detail shows the AI title with
    "Original title"), an AI summary needs the canonical `summary` reachable in Event Detail, for
    example "Original summary" in a collapsible block. The Timeline M1 layout should leave room for
