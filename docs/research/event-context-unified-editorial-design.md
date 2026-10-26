@@ -1,5 +1,12 @@
 # Event context + unified editorial agent — design draft (2026-10-25)
 
+> **D0 technical design gate closed (2026-10-26).** The implementation-ready
+> contract and next bounded task now live in
+> `docs/research/event-context-editorial-technical-design.md` and
+> `docs/tasks/EVENT-CONTEXT-WUWA-PILOT.md`. This document is the retained
+> rationale and review discussion; superseded suggestions below must not be
+> treated as current implementation instructions.
+
 **Status: design only. No runtime implementation, changed workflows, new AI calls, or approved storage contract.** Complements `docs/research/event-context-coverage-audit-2026-10-25.md`. Current autonomous Timeline-label milestone is independent; do not interrupt its ongoing work or silently expand it.
 
 ## Product decisions already agreed
