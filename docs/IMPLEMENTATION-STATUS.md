@@ -1,5 +1,51 @@
 # Game calendar implementation status
 
+## Editorial provenance E2a — PREPARED / REHEARSED, NOT LIVE (2026-10-26)
+
+Bounded E2a after E1 #102 and hardening #103. Detailed inventory, contract,
+source commits/counts, offline replay and cutover/rollback gates:
+`docs/evidence/editorial-provenance-e2a.md`.
+
+- Strict persisted Timeline decisions v2: explicit `operator_approved`,
+  `automated`, `legacy_unknown`; nullable evidenceHashAtDecision required for
+  every non-label. Reuses existing decision/copy/fingerprint constraints.
+  No summary registry, displaySummary or Event Detail work.
+- Versioned **historical** `timeline-origin-migration.v1.json`, anchored to
+  main `72def1e`: **50 decisions — 25 operator-approved (#87), 25 automated
+  (c0b933f), 0 legacy_unknown**. Audits every registry-changing commit through
+  that boundary, including author+committer, subject, full diff, per-record
+  eventId/fingerprint/content and replacement lineage. No later registry write
+  exists at this audit boundary; the adapter enumerates future writes too.
+- Pure migration, exact v1 rollback, unwired evidence-only eligibility policy:
+  automated keep/research and operator research may reopen on verified changed
+  evidence (null→hash counts); all labels, operator keep and unknowns protected.
+  Outage/extraction failures, unmatched canonical input and unverified hashes
+  do not requeue. Semantic fingerprint is unchanged.
+- Offline read-only inventory/rehearsal CLI requires full Git history and fails
+  on any new registry history/content, even same-byte reverts. A failed check
+  clears old previews. Temporary v2/rollback/report outputs stay under ignored
+  tmp/editorial; **no v2 production snapshot or second writer** is committed.
+- **Rehearsal:** repeated inventory/migration deterministic; all **12 labels**
+  preserved; **38 non-label evidence keys null**; rollback byte-identical to v1.
+  Disposable actual feed builds from v1 → v2 compatibility projection → rollback
+  preserve all public JSON bytes. New real/synthetic bot commits, altered
+  fingerprints, mixed/unknown edits and replacement history exercised.
+- **Checks:** Bun 1.3.14 frozen install/typecheck/full build PASS;
+  full suite **1,296 pass / 3 existing age-dependent skip / 0 fail** (68 files);
+  new focused suite **26 pass**. Whole-repository fixed-input feed/queue/agent
+  input/review are byte-identical to pre-E2a main. Existing M4 files unchanged.
+  Historical fixture validation works in shallow CI without blocking healthy
+  future v1 writer commits; freshness is a separate rehearsal gate.
+
+**Production remains v1 M4.** No Claude/API call, schedule/kill-switch change,
+production evidence requeue, event/source/summary/timelineTitle/UI/Account change.
+PR/CI/Pages delivery records belong to the implementation PR.
+
+**Next concrete step:** review this preparation and separately scope/authorize
+controlled v2 cutover with fresh inventory, drained/blocked old writers, one
+atomic reader/accept/writer switch and rollback. No live migration is claimed.
+**STOP AFTER E2a**; E2b/E3/E4 were not started.
+
 ## WuWa E1 — optional evidence fail-open hardening (2026-10-26)
 
 **Scope:** focused follow-up to E1 ([PR #103](https://github.com/maxvfk/game-calendar/pull/103));
@@ -32,9 +78,8 @@ the canonical WuWa feed remains authoritative. E2–E4 are not started.
   schedule, kill switch, `summary`/`timelineTitle`, IDs, UI or Account/Sync change.
   Post-merge CI/Pages verification will appear in PR delivery record.
 
-**Next concrete step:** separately scoped E2 editorial registry and durable
-provenance migration; explicitly re-inventory all bot decisions at migration
-time. Do not expand this hardening into E2.
+**Next step after hardening (preparation completed above):** E2a provenance
+contracts and migration rehearsal. Live cutover and E2b/E3/E4 remain gated.
 
 ## Event Context E1 — WuWa internal evidence: COMPLETE (2026-10-26)
 
