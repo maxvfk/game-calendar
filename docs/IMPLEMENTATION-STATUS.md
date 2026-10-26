@@ -1,5 +1,41 @@
 # Game calendar implementation status
 
+## ZZZ P0 coverage recovery — official 3.3 reviewed hotfix (2026-10-27)
+
+**Emergency restoration:** the only listed ZZZ automatic source,
+`zzz-game8-events`, has `scheduled: false` after Game8 CloudFront HTTP 202
+responses from GitHub Actions. No alternative live ZZZ source is configured.
+The previous reviewed batch had 17 historical records, with only
+`Angels Support Operation` still current by 2026-10-27; newer
+Version 3.3 events and banners were missing.
+
+- [PR #105](https://github.com/maxvfk/game-calendar/pull/105) adds **13**
+  officially announced, event-local Version 3.3 records (8 limited events,
+  4 Phase I agent/W-Engine banners, 1 audition/trial row), retaining all
+  17 prior records and their IDs verbatim. Direct official evidence:
+  [Version 3.3 update](https://zenless.hoyoverse.com/en-us/news/166963)
+  and [Phase I channels](https://zenless.hoyoverse.com/en-us/news/166926).
+- Publication contract: official provenance and fresh per-row verification
+  timestamps; day-precision starts rather than inventing a specific
+  post-maintenance instant or one global server clock; independently
+  verified exact Asia/Europe/America *ends* from stated server-local clocks.
+  New version-specific IDs are distinct from earlier identically named
+  events. Do not invent Phase II dates or recurring Shiyu/Deadly resets.
+- **This is a manual reviewed-data restore, not repaired ingestion.**
+  No parser, source access/robots, M4 Timeline, event-ID policy, Account/Sync,
+  source-refresh scheduler or E2a migration code changed. Old reviewed
+  event history is preserved; the issue remains open until automatic ZZZ
+  ingestion works and is observed in CI.
+
+**Next concrete step (P0, independent source-ingestion Work):** validate official
+ZZZ news index/detail access and robots in the actual Actions runner. Implement
+a narrow official ZZZ adapter only if that evidence allows; otherwise identify
+a compliant independently verifiable source and keep reviewed-data updates
+as the interim fallback. Prove future unattended event + banner refresh and
+stable IDs, with source-health/parser-zero gates. Investigate current
+Shiyu/Deadly Assault anchors **separately**, never infer them from stale rules.
+This emergency follow-up must not expand into E2b or a Timeline v2 cutover.
+
 ## Editorial provenance E2a — PREPARED / REHEARSED, NOT LIVE (2026-10-26)
 
 Bounded E2a after E1 #102 and hardening #103. Detailed inventory, contract,
