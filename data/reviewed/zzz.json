@@ -312,6 +312,269 @@
       "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/165979",
       "provenanceStatus": "official",
       "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "All-New Program",
+      "type": "login",
+      "summary": "Log in on seven days during Version 3.3 to earn Encrypted Master Tape ×10.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-30T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-30T19:59:00.000Z",
+        "europe": "2026-12-01T02:59:00.000Z",
+        "america": "2026-12-01T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166963",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "Spooky Funhouse Tales",
+      "type": "other",
+      "summary": "Limited-time funhouse event with Mission and Challenge stages; rewards include Candlelit Scheme W-Engine and Proxy accessories.",
+      "startsAt": "2026-10-22T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-29T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-29T19:59:00.000Z",
+        "europe": "2026-11-30T02:59:00.000Z",
+        "america": "2026-11-30T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166963",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "Cyber Miracle Healer, on Duty!",
+      "type": "other",
+      "summary": "Repair virus-infected Bangboo in daily Antivirus Log stages; rewards include Polychromes, Boopons and upgrade materials.",
+      "startsAt": "2026-10-28T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-15T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-15T19:59:00.000Z",
+        "europe": "2026-11-16T02:59:00.000Z",
+        "america": "2026-11-16T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166963",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "Advanced Bounty: Area Patrol",
+      "type": "other",
+      "summary": "Limited-time double rewards for Area Patrol.",
+      "startsAt": "2026-11-04T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-08T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-08T19:59:00.000Z",
+        "europe": "2026-11-09T02:59:00.000Z",
+        "america": "2026-11-09T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166963",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "\"En-Nah\" Into Your Lap",
+      "type": "login",
+      "summary": "Log in for seven days to earn Boopon ×10.",
+      "startsAt": "2026-11-11T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-30T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-30T19:59:00.000Z",
+        "europe": "2026-12-01T02:59:00.000Z",
+        "america": "2026-12-01T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166963",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "Trails of the Hobbling Crow",
+      "type": "story",
+      "summary": "Limited-time mystery event featuring a detective and the Hobbling Crow.",
+      "startsAt": "2026-11-11T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-29T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-29T19:59:00.000Z",
+        "europe": "2026-11-30T02:59:00.000Z",
+        "america": "2026-11-30T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166963",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "Repair! Drifting Art",
+      "type": "other",
+      "summary": "Limited-time event to help restore a damaged Bangboo art collection.",
+      "startsAt": "2026-11-16T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-29T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-29T19:59:00.000Z",
+        "europe": "2026-11-30T02:59:00.000Z",
+        "america": "2026-11-30T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166963",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "Data Bounty: Combat Simulation",
+      "type": "other",
+      "summary": "Limited-time double rewards for Combat Simulation.",
+      "startsAt": "2026-11-25T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-29T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-29T19:59:00.000Z",
+        "europe": "2026-11-30T02:59:00.000Z",
+        "america": "2026-11-30T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166963",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "Into the Flames of Life",
+      "type": "banner",
+      "recognitionSubjects": [
+        "Phoenix"
+      ],
+      "summary": "Exclusive Channel featuring S-Rank Agent Phoenix (Fire - Anomaly).",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-11T03:59:00.000Z",
+        "europe": "2026-11-11T10:59:00.000Z",
+        "america": "2026-11-11T16:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166926",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "Plume of Rebirth",
+      "type": "banner",
+      "recognitionSubjects": [
+        "Plume of Rebirth"
+      ],
+      "summary": "W-Engine Channel featuring S-Rank W-Engine Plume of Rebirth (Anomaly).",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-11T03:59:00.000Z",
+        "europe": "2026-11-11T10:59:00.000Z",
+        "america": "2026-11-11T16:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166926",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "Graceful Gale",
+      "type": "banner",
+      "recognitionSubjects": [
+        "Velina"
+      ],
+      "summary": "Exclusive Channel featuring S-Rank Agent Velina (Wind - Anomaly).",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-11T03:59:00.000Z",
+        "europe": "2026-11-11T10:59:00.000Z",
+        "america": "2026-11-11T16:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166926",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "Joyau Dore",
+      "type": "banner",
+      "recognitionSubjects": [
+        "Joyau Dore"
+      ],
+      "summary": "W-Engine Channel featuring S-Rank W-Engine Joyau Dore (Anomaly).",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-11T03:59:00.000Z",
+        "europe": "2026-11-11T10:59:00.000Z",
+        "america": "2026-11-11T16:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166926",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-10-26T22:23:02.863Z",
+      "title": "The Final Callback - Audition Stage",
+      "type": "challenge",
+      "recognitionSubjects": [
+        "Phoenix",
+        "Velina"
+      ],
+      "summary": "Trial stages for Phoenix and Velina; first clear awards stage rewards.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-11T03:59:00.000Z",
+        "europe": "2026-11-11T10:59:00.000Z",
+        "america": "2026-11-11T16:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166926",
+      "provenanceStatus": "official",
+      "confidence": 1
     }
   ]
 }
