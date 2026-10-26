@@ -18,3 +18,9 @@ export function timelineIdentity(event: Identity): string {
   return event.sourceId !== "you" && event.timelineTitle !== undefined
     ? event.timelineTitle : originalTimelineIdentity(event);
 }
+
+/** Event Detail heading: approved copy or the canonical title, never joined subjects.
+ * When it differs from `title`, the detail view must also show the canonical title. */
+export function detailTitle(event: Identity): string {
+  return event.sourceId !== "you" && event.timelineTitle !== undefined ? event.timelineTitle : event.title;
+}

@@ -1,7 +1,8 @@
 # Timeline labels — autonomous naming (plan and milestones)
 
-**Status:** M0 done (operator, 2026-10-25). M3 probe workflow added; production automation
-is **not** implemented and stays off (`vars.TIMELINE_LABELS_AUTO = off`).
+**Status:** M0 done (operator, 2026-10-25). M3 probe ran successfully on 2026-10-26 (below).
+M1 done (Event Detail shows the label). Production automation is **not** implemented and stays off
+(`vars.TIMELINE_LABELS_AUTO = off`).
 
 ## Chosen architecture
 
@@ -55,9 +56,9 @@ decided event).
 | | Scope | Production effect |
 | --- | --- | --- |
 | M0 | Operator: token secret + `TIMELINE_LABELS_AUTO=off` — **done** | None |
-| M1 | Event Detail shows the AI title with "Original title" below; leave room for a later "Original summary" pair | UI |
+| M1 | Event Detail shows the AI title with "Original title" below; leave room for a later "Original summary" pair — **done** | UI |
 | M2 | Deterministic `accept` with fresh-main re-check, guards and tests | None |
-| M3 | `timeline-labels-probe.yml`: manual, read-only, one model call, L1 validator report | None |
+| M3 | `timeline-labels-probe.yml`: manual, read-only, one model call, L1 validator report — **done** | None |
 | M3.5 | Rehearsal writes to `timeline-labels/rehearsal` + dispatched CI (no deploy) | None |
 | M4 | Scheduled Tue/Fri run writing to `main`, only after M3.5 and explicit operator approval | Yes |
 
@@ -66,3 +67,23 @@ decided event).
 GitHub → Actions → **Timeline labels probe (read-only)** → Run workflow. The run summary lists
 the model decisions, L1 validator errors/warnings and token usage; the `probe/` artifact keeps
 the input, the raw CLI result, proposals and validation for 14 days. Nothing is written.
+
+## Probe results (run 40336557898, 2026-10-26, `main` 20e75cf)
+
+- **Auth and runtime:** subscription token works in Actions. `claude-sonnet-5-5`, 2 turns, 36 s,
+  about 16.7k tokens (12.8k prompt cache write, 3.9k output). Cost estimate $0.09, covered by
+  the plan.
+- **Input:** 48 eligible events, first batch of 25. The Rate-Up Rescue preference (PR #90) was
+  in the input.
+- **Output:** valid structured JSON, same IDs, order and fingerprints. L1 validator 0 errors; 2
+  warnings from earlier Endfield season/cycle labels.
+- **Decisions:** 5 `label`, 14 `keep_original`, 6 `needs_research`. Labels: Angels of Delusion
+  Limited Outfit Choice; Rossweisse; Sig (the new rule applied); Umbra of Frigid Eventide Weapon
+  Banner; Yvonne RE-Factor Headhunting #1. None used a word missing from the event's input.
+- **Variance:** opaque events without a summary flip between `keep_original` and
+  `needs_research` across runs. This is harmless: `summary` is in the fingerprint, so such an
+  event returns to the queue when a summary appears.
+- **Token fix:** the first failure ("Not logged in") was a secret saved with a leading space. M2
+  trims the token and reports a malformed one without printing it.
+
+Enable criterion 1 (safeguard 3) is met. The rest waits for M2 and the M3.5 rehearsal.
