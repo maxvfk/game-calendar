@@ -41,8 +41,11 @@ Timeline agent continues completely unchanged.
    reward claim. Never spill from adjacent event headings, a
    different banner, eligibility, banner pity rules or maintenance.
    Omit ambiguous fragments rather than paraphrasing or inventing.
-   Limit to 3 excerpts of 240 Unicode characters each and
-   600 Unicode characters combined per event.
+   Pilot ceiling: up to 6 excerpts of at most 500 Unicode
+   code points each, with **2,000 Unicode code points total** across
+   all excerpts and sources. These are hard caps, not a target size;
+   prefer concise clean excerpts, preserve meaning across boundaries,
+   and verify both per-excerpt and total limits with tests.
 4. Associate evidence with a final winner **only via proven same
    source+ID, same exact event ID, or an explicitly reviewed mapping**.
    Never use title similarity, shared article URL, same end date,
@@ -82,8 +85,10 @@ Required offline tests:
 - No description, malformed HTML, misleading instructions,
   repeated headings, maintenance, eligibility-only text and
   long paragraphs fail closed or yield only bounded clean facts.
-- Deterministic normalized text + evidence hash and hard caps;
-  no capture/build clock in the content hash. Modified substantive
+- Deterministic normalized text + evidence hash and **all hard caps
+  (≤6 excerpts, ≤500 Unicode code points each, ≤2,000 combined)**;
+  exercise Unicode, near-limit, over-limit and two-source examples.
+  No capture/build clock in the content hash. Modified substantive
   evidence changes the evidence hash.
 - **Byte-for-byte unchanged** generated `events.v1.json` and
   `timeline-label-queue.v1.json` under identical snapshots and
@@ -98,7 +103,10 @@ Required offline tests:
 - Small deterministic extractor + internal sidecar builder,
   schema and offline tests, grounded before/after examples,
   ambiguous/unavailable association diagnostics and repeatable
-  fixed-input replay.
+  fixed-input replay. Report measured excerpt lengths by event,
+  truncation/cap hits, dropped useful facts (if any), and illustrative
+  token-cost estimates. Do not tune limits further within E1 without
+  evidence and a separate decision.
 - Updated `docs/IMPLEMENTATION-STATUS.md` with actual
   test results and next concrete step.
 - Follow `AGENTS.md`: `bun install --frozen-lockfile`,
