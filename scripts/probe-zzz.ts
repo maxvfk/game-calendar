@@ -11,7 +11,6 @@ const evidence: Record<string, unknown> = {
   runId: process.env["GITHUB_RUN_ID"], commit: process.env["GITHUB_SHA"],
 };
 const responses: Record<string, unknown>[] = [];
-const bodies = new Map<string, string>();
 const hash = (text: string) => new Bun.CryptoHasher("sha256").update(text).digest("hex");
 async function capture(url: string, name: string, conditional?: Record<string, string>) {
   try {
@@ -25,7 +24,7 @@ async function capture(url: string, name: string, conditional?: Record<string, s
       shape: { html: looksLikeHtml(body), scriptCount: (body.match(/<script\b/gi) ?? []).length,
         newsLinks: [...new Set(body.match(/\/en-us\/news\/\d+/g) ?? [])].slice(0, 30),
         hasEventDuration: /Event Duration/i.test(body), hasVersion33: /Version 3\.3/.test(body) } };
-    responses.push(meta); bodies.set(name, body);
+    responses.push(meta);
     await Bun.write(`${root}/${name}.txt`, body); // short-lived diagnostic artifact only
     console.log(JSON.stringify(meta));
     return { r, body };
@@ -64,6 +63,9 @@ async function website(origin: string, paths: string[], prefix: string) {
     }
   }
 }
+if (process.env["ZZZ_PROBE_ROUND"] === "mobile") {
+  await website("https://zenless.hoyoverse.com", ["/m/en-us/news", "/m/en-us/news/166963", "/m/en-us/news/166926"], "zenless-mobile");
+} else {
 await website("https://zenless.hoyoverse.com", ["/en-us/news", "/en-us/news/166963", "/en-us/news/166926", "/en-us/news/166946", "/en-us/news/167038"], "zenless");
 // Official publisher distribution verified at store.steampowered.com/app/4162040.
 await website("https://steamcommunity.com", ["/app/4162040/announcements/", "/games/4162040/rss/"], "steam");
@@ -77,6 +79,7 @@ if (api?.r.status === 200) {
     const data = JSON.parse(api.body);
     evidence["steamNews"] = { appid: data.appnews?.appid, items: data.appnews?.newsitems?.map((item: Record<string, unknown>) => ({ gid: item["gid"], title: item["title"], url: item["url"], date: item["date"], feedname: item["feedname"], contentsLength: String(item["contents"]).length })) };
   } catch { evidence["steamNews"] = "Not JSON"; }
+}
 }
 evidence["responses"] = responses;
 await Bun.write(`${root}/evidence.json`, JSON.stringify(evidence, null, 2) + "\n");
