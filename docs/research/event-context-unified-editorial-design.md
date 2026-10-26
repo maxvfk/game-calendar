@@ -139,6 +139,11 @@ evidence, not the model.
    the operator requests a re-review; keep approved `label` untouched.
    This is a **future design constraint**, not authorization to edit the
    running Timeline workflow or registry now.
+   *Refined after D0 review (2026-10-26):* operator-approved
+   `needs_research` is reopened too, since it means "waiting for evidence";
+   a null evidence key at decision time counts as changed; and the
+   migration counts every automatic bot commit, not only `c0b933f`. See
+   `event-context-editorial-technical-design.md` sections 4–5.
 4. **Keep the original summary visible.** Like the title (Event Detail shows the AI title with
    "Original title"), an AI summary needs the canonical `summary` reachable in Event Detail, for
    example "Original summary" in a collapsible block. The Timeline M1 layout should leave room for
