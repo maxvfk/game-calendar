@@ -149,7 +149,7 @@ export function safelyBuildEvidenceSidecar(
   finalEvents: GachaEvent[],
   conflicts: MergeResult["conflicts"] = [],
   mappings: EvidenceMapping[] = [],
-): EvidenceSidecar {
+): z.infer<typeof EvidenceSidecar> {
   try {
     return buildEvidenceSidecar(extraction, finalEvents, conflicts, mappings);
   } catch {
