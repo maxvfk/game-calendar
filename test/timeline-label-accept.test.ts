@@ -187,23 +187,57 @@ describe("accept on a fresh feed", () => {
 });
 
 describe("model runner script", () => {
-  function run(rawToken: string) {
+  /** A stub `claude` either echoes token and arguments, or fails like the real CLI. */
+  function run(rawToken: string, failure?: { stdout: string; stderr?: string }) {
     const dir = mkdtempSync(join(tmpdir(), "run-model-"));
     try {
       const stub = join(dir, "claude");
-      writeFileSync(stub, '#!/usr/bin/env bash\n[ "$1" = "--version" ] && { echo stub; exit 0; }\n' +
-        'printf "%s\\n%s\\n" "$CLAUDE_CODE_OAUTH_TOKEN" "$*"\n');
+      writeFileSync(stub, '#!/usr/bin/env bash\n[ "$1" = "--version" ] && { echo stub; exit 0; }\n' + (failure
+        ? `cat <<'EOF'\n${failure.stdout}\nEOF\necho '${failure.stderr ?? ""}' >&2\nexit 1\n`
+        : 'printf "%s\\n%s\\n" "$CLAUDE_CODE_OAUTH_TOKEN" "$*"\n'));
       chmodSync(stub, 0o755);
       writeFileSync(join(dir, "in.json"), "{}");
+      const githubOutput = join(dir, "github-output");
+      writeFileSync(githubOutput, "");
       const proc = Bun.spawnSync(["bash", "scripts/timeline-label-agent/run-model.sh", join(dir, "in.json"), join(dir, "out.json")], {
-        env: { ...process.env, PATH: `${dir}${delimiter}${process.env.PATH}`, RAW_CLAUDE_TOKEN: rawToken, MODEL: "sonnet" },
+        env: { ...process.env, PATH: `${dir}${delimiter}${process.env.PATH}`, RAW_CLAUDE_TOKEN: rawToken, MODEL: "sonnet",
+          GITHUB_OUTPUT: githubOutput },
       });
-      // The stub writes the token on the first line and its arguments after it.
-      const lines = proc.exitCode === 0 ? readFileSync(join(dir, "out.json"), "utf8").split("\n") : [];
+      // The echoing stub writes the token on the first line and its arguments after it.
+      const lines = proc.exitCode === 0 && !failure ? readFileSync(join(dir, "out.json"), "utf8").split("\n") : [];
       const out = { token: lines[0], args: lines.slice(1).join("\n") };
-      return { code: proc.exitCode, log: proc.stdout.toString() + proc.stderr.toString(), out };
+      return { code: proc.exitCode, log: proc.stdout.toString() + proc.stderr.toString(), out,
+        outputs: readFileSync(githubOutput, "utf8") };
     } finally { rmSync(dir, { recursive: true, force: true }); }
   }
+
+  test("a subscription limit is a skip, not a failure", () => {
+    const { code, log, outputs } = run("sk-ant-oat01-x", {
+      stdout: '{"type":"result","subtype":"success","is_error":true,"result":"Claude AI usage limit reached|1793050000"}' });
+    expect(code).toBe(0);
+    expect(outputs).toContain("limited=true");
+    expect(log).toContain("::notice::Skipped: the Claude subscription limit");
+  });
+
+  test("a rejected token fails with a renewal hint", () => {
+    const { code, log, outputs } = run("sk-ant-oat01-x", {
+      stdout: '{"type":"result","subtype":"success","is_error":true,"result":"Not logged in · Please run /login"}' });
+    expect(code).not.toBe(0);
+    expect(outputs).not.toContain("limited");
+    expect(log).toContain("The Claude token was rejected");
+  });
+
+  test("any other failure stays a failure", () => {
+    const { code, outputs } = run("sk-ant-oat01-x", { stdout: "", stderr: "Error: something else broke" });
+    expect(code).not.toBe(0);
+    expect(outputs).toBe("");
+  });
+
+  test("words like 'limit' inside a good answer never turn it into a skip", () => {
+    const { code, outputs } = run("sk-ant-oat01-x");
+    expect(code).toBe(0);
+    expect(outputs).toBe("");
+  });
 
   test("strips whitespace from the token and warns without printing it", () => {
     const { code, log, out } = run(" sk-ant-oat01-SECRETVALUE\n");

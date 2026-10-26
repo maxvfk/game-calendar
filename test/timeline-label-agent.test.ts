@@ -64,15 +64,27 @@ describe("timeline label agent probe", () => {
 const workflow = await Bun.file(".github/workflows/timeline-labels.yml").text();
 const record = await Bun.file("scripts/timeline-label-agent/record.sh").text();
 
-describe("timeline labels rehearsal (M3.5)", () => {
+describe("timeline labels workflow (M3.5, M4)", () => {
   const [, propose = "", recordJob = ""] = workflow.split(/\n  (?:propose|record):\n/);
 
-  test("stays manual and targets only the rehearsal branch", () => {
+  test("runs Tue and Sat 07:23 Moscow; manual runs default to the rehearsal branch", () => {
+    expect(workflow).toContain('- cron: "23 4 * * 2,6"');
     expect(workflow).toContain("workflow_dispatch:");
-    expect(workflow).not.toContain("schedule:");
-    expect(workflow).toContain("TARGET_BRANCH: timeline-labels/rehearsal");
-    expect(workflow).not.toMatch(/TARGET_BRANCH: main|--ref main\b|HEAD:main/);
+    expect(workflow).toMatch(/options: \[rehearsal, main\]\n\s+default: rehearsal/);
+    expect(workflow).toContain("TARGET_BRANCH: ${{ (github.event_name == 'schedule' || inputs.target == 'main') && 'main' || 'timeline-labels/rehearsal' }}");
     expect(workflow).toContain("group: timeline-labels");
+  });
+
+  test("nothing targets main unless the kill switch is on", () => {
+    expect(propose).toContain("vars.TIMELINE_LABELS_AUTO == 'on'");
+    expect(propose).toContain("(github.event_name == 'workflow_dispatch' && inputs.target != 'main') ||");
+    expect(recordJob).toContain("needs: propose");
+    expect(workflow).not.toMatch(/HEAD:main|push.*--force.*main/);
+  });
+
+  test("a usage limit skips the write job", () => {
+    expect(propose).toContain("limited: ${{ steps.model.outputs.limited }}");
+    expect(recordJob).toContain("needs.propose.outputs.limited != 'true'");
   });
 
   test("the model job is read-only and the write job never sees the Claude token", () => {

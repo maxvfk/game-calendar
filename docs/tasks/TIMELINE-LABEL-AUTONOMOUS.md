@@ -2,8 +2,9 @@
 
 **Status:** M0 done (operator, 2026-10-25). M3 probe ran successfully on 2026-10-26 (below).
 M1 done (Event Detail shows the label). M2 done: deterministic `accept`, dry-run in the probe.
-M3.5 rehearsal workflow added (`timeline-labels.yml`); it writes only to the rehearsal branch.
-Nothing writes `main` automatically; automation stays off (`vars.TIMELINE_LABELS_AUTO = off`).
+M3.5 done (rehearsal run 40346051669, CI green on the rehearsal branch). M4 done: scheduled
+runs write to `main`, but only while `vars.TIMELINE_LABELS_AUTO` is `on`; it is `off` until the
+operator switches it (see "Enabling and operating").
 
 ## Chosen architecture
 
@@ -62,8 +63,8 @@ is back in the queue).
 | M1 | Event Detail shows the AI title with "Original title" below; leave room for a later "Original summary" pair — **done** | UI |
 | M2 | Deterministic `accept` with fresh-main re-check, guards and tests — **done**; the git fetch/retry/push loop belongs to M3.5 | None |
 | M3 | `timeline-labels-probe.yml`: manual, read-only, one model call, L1 validator report — **done** | None |
-| M3.5 | Rehearsal writes to `timeline-labels/rehearsal` + dispatched CI (no deploy) — workflow added; done after one green operator run | None |
-| M4 | Scheduled Tue/Fri run writing to `main`, only after M3.5 and explicit operator approval | Yes |
+| M3.5 | Rehearsal writes to `timeline-labels/rehearsal` + dispatched CI (no deploy) — **done** | None |
+| M4 | Scheduled Tue/Sat 07:23 Moscow run writing to `main` behind the kill switch — **done**, approved by the operator 2026-10-26 | Yes, once switched on |
 
 ## Running the M3 probe
 
@@ -131,7 +132,7 @@ shared with claude.ai and Claude Code, roughly like one medium chat request with
 
 - Backlog today: 48 eligible events, so two runs, about 33k tokens once.
 - After that only new or changed events are queued. At a rough 10 to 25 new events a week and two
-  runs a week (Tue/Fri), that is about 15k to 25k tokens a week, under $1 a month API-equivalent.
+  runs a week (Tue/Sat), that is about 15k to 25k tokens a week, under $1 a month API-equivalent.
 - An empty queue makes no model call. GitHub Actions minutes are free for this public repository.
 - The write job, tests and CI use no Claude usage.
 
@@ -146,5 +147,30 @@ branch and wait for it. Pages deploys only from `main`, so the site is untouched
 lists every outcome; artifacts keep the proposals, the accept report and the new registry.
 
 Criterion 3 is met when one rehearsal records decisions and its dispatched CI is green. The
-rehearsal branch is disposable; it is never merged. M4 adds the `main` target (fast-forward
-push only, behind `vars.TIMELINE_LABELS_AUTO`) and the schedule, only on explicit approval.
+rehearsal branch is disposable; it is never merged.
+
+**Rehearsal result (run 40346051669, 2026-10-26):** 25 accepted, 0 guarded, 0 rejected; one
+registry-only commit on `timeline-labels/rehearsal` (164 added lines, no existing record
+changed); dispatched CI 40346322560 green, Pages skipped. Registry on the branch: 50 decisions,
+12 labels (8 reviewed + Rossweisse, Sig, Umbra of Frigid Eventide weapon rate-up, Yvonne
+RE-Factor Headhunting #1). Criterion 3 is met.
+
+## Enabling and operating (M4)
+
+- **Schedule:** Tue and Sat 07:23 Moscow (04:23 UTC). Morning, so a usage window spent in the
+  evening has reset; Saturday is after the weekly reset (Sat 04:00). GitHub can delay or drop a
+  scheduled run; the next one picks up the same queue.
+- **Switch on:** GitHub → Settings → Secrets and variables → Actions → Variables →
+  `TIMELINE_LABELS_AUTO` = `on`. Switch off the same way (`off`); scheduled runs then skip.
+  A manual run can also target `main` (input `target: main`), but only while the switch is `on`.
+- **Each run:** model call (read-only job), then `record.sh` on fresh `main`: accept, checks,
+  fast-forward push of a registry-only commit, then CI on that commit, which deploys Pages.
+- **Usage limit:** if the subscription limit is reached or the service is busy, the run is
+  marked skipped with a notice, nothing is written, and the next run retries the same events.
+- **Token renewal:** the setup token was created on 2026-10-26 and lasts one year. Renew it
+  before **2027-10-26**: `claude setup-token`, then save it as the `CLAUDE_CODE_OAUTH_TOKEN`
+  secret. A rejected token fails the run with that hint.
+- **Rollback:** revert the registry-only commit, or override one decision in the registry by
+  hand. Each commit links its run.
+- **Review:** guarded proposals are `needs_research` records whose reason starts with
+  `auto-guard:`; the operator can turn one into a label by hand.

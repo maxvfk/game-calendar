@@ -1,13 +1,24 @@
 name: Timeline labels
 
-# Autonomous Timeline naming (docs/tasks/TIMELINE-LABEL-AUTONOMOUS.md). M3.5: rehearsal
-# only. A manual run asks the model once, records the accepted decisions on the
-# timeline-labels/rehearsal branch (rebuilt from main each run) and runs CI there.
-# Pages deploys only from main, so a rehearsal never reaches the site. Writing to main
-# and a schedule come in M4, only with explicit operator approval.
+# Autonomous Timeline naming (docs/tasks/TIMELINE-LABEL-AUTONOMOUS.md). Asks the model
+# once, records the accepted decisions and runs CI on the recorded commit.
+#
+# Scheduled runs write to main, and so deploy, only while the repository variable
+# TIMELINE_LABELS_AUTO is "on"; otherwise they are skipped. A manual run targets the
+# disposable timeline-labels/rehearsal branch unless "main" is chosen, which needs the
+# same switch. Pages deploys only from main, so a rehearsal never reaches the site.
 on:
+  # Tue and Sat 07:23 Moscow (04:23 UTC): after the night, so an evening's usage window
+  # has reset, and on Saturday after the weekly reset at 04:00.
+  schedule:
+    - cron: "23 4 * * 2,6"
   workflow_dispatch:
     inputs:
+      target:
+        description: "Where to record (main needs TIMELINE_LABELS_AUTO=on)"
+        type: choice
+        options: [rehearsal, main]
+        default: rehearsal
       model:
         description: "Claude model alias"
         type: choice
@@ -22,16 +33,22 @@ permissions:
   contents: read
 
 env:
-  TARGET_BRANCH: timeline-labels/rehearsal
+  TARGET_BRANCH: ${{ (github.event_name == 'schedule' || inputs.target == 'main') && 'main' || 'timeline-labels/rehearsal' }}
+  MODEL: ${{ inputs.model || 'sonnet' }}
 
 jobs:
   # Read-only. The only job that sees the Claude token.
   propose:
-    if: github.repository == 'maxvfk/game-calendar'
+    # The kill switch: nothing targets main unless TIMELINE_LABELS_AUTO is "on".
+    if: >-
+      github.repository == 'maxvfk/game-calendar' &&
+      ((github.event_name == 'workflow_dispatch' && inputs.target != 'main') ||
+       vars.TIMELINE_LABELS_AUTO == 'on')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
       events: ${{ steps.queue.outputs.events }}
+      limited: ${{ steps.model.outputs.limited }}
     env:
       CLAUDE_CODE_VERSION: "2.1.310"
     steps:
@@ -63,15 +80,16 @@ jobs:
           curl -fsSL https://claude.ai/install.sh | bash -s "$CLAUDE_CODE_VERSION"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
+      # A subscription limit sets limited=true and skips the rest; nothing is written.
       - name: Ask the model for decisions
+        id: model
         if: steps.queue.outputs.events != '0'
         env:
           RAW_CLAUDE_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          MODEL: ${{ inputs.model }}
         run: bash scripts/timeline-label-agent/run-model.sh labels/agent-input.json labels/claude-result.json
 
       - name: Extract proposals
-        if: steps.queue.outputs.events != '0'
+        if: steps.queue.outputs.events != '0' && steps.model.outputs.limited != 'true'
         run: |
           set -euo pipefail
           if ! jq -e '.subtype == "success" and .structured_output != null' labels/claude-result.json > /dev/null; then
@@ -79,6 +97,15 @@ jobs:
             exit 1
           fi
           jq '.structured_output' labels/claude-result.json > labels/proposals.json
+
+      - name: Report a skipped run
+        if: steps.queue.outputs.events == '0' || steps.model.outputs.limited == 'true'
+        env:
+          EVENTS: ${{ steps.queue.outputs.events }}
+        run: |
+          if [ "$EVENTS" = 0 ]; then why="empty queue, no model call"
+          else why="Claude subscription limit reached or service busy; nothing written, the next run retries"; fi
+          echo "## Timeline labels — skipped: $why" >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -91,7 +118,7 @@ jobs:
   # Deterministic. No Claude token; the only job that can push.
   record:
     needs: propose
-    if: needs.propose.outputs.events != '0'
+    if: needs.propose.outputs.events != '0' && needs.propose.outputs.limited != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -139,7 +166,8 @@ jobs:
         run: |
           report="$RUNNER_TEMP/reports/accept-report.json"
           {
-            echo "## Timeline labels — rehearsal on \`$TARGET_BRANCH\` (not deployed)"
+            if [ "$TARGET_BRANCH" = main ]; then where="main (deployed by the CI run above)"; else where="\`$TARGET_BRANCH\` (rehearsal, not deployed)"; fi
+            echo "## Timeline labels — recorded on $where"
             echo
             echo "Recorded: ${{ steps.record.outputs.changed || 'no' }}"
             if [ -f "$report" ]; then
