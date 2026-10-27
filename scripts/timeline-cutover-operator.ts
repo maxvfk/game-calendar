@@ -33,6 +33,13 @@ export function observeFreeze(root: string, goInput: unknown, now = new Date().t
   assertFreezeGate(go, observation, go.expectedMain, go.action, now);
   return observation;
 }
+/** Legacy v1 is allowed only before any selector/v2 ledger exists. Never re-import inactive v1. */
+export function sourceStorageVersion(root: string, ref: string): 1 | 2 {
+  const exists = (path: string) => Bun.spawnSync(["git", "cat-file", "-e", `${ref}:${path}`], { cwd: root }).exitCode === 0;
+  if (exists(STORAGE_PATH)) return StorageSelection.parse(JSON.parse(readGit(root, ["show", `${ref}:${STORAGE_PATH}`]))).activeVersion;
+  if (exists(V2_PATH) || exists(CUTOVER_PATH)) throw new Error("incomplete source selection; refusing obsolete v1 fallback");
+  return 1;
+}
 export async function validateCandidate(root: string, goInput: unknown) {
   const go = OperatorGO.parse(goInput);
   if (readGit(root, ["rev-parse", "HEAD"]).trim() !== go.candidate) throw new Error("candidate moved after GO/CI");
@@ -40,6 +47,7 @@ export async function validateCandidate(root: string, goInput: unknown) {
   readGit(root, ["merge-base", "--is-ancestor", go.expectedMain, go.candidate]);
   const s = await loadTimelineStorage(root);
   if (go.action === "cutover") {
+    if (sourceStorageVersion(root, go.expectedMain) !== 1) throw new Error("source already selects v2; never re-import inactive v1");
     const m = CutoverManifest.parse(await Bun.file(resolve(root, CUTOVER_PATH)).json());
     if (m.sourceMain !== go.expectedMain || s.selection.activeVersion !== 2 || s.selection.admission !== "frozen" || s.selection.epoch !== m.targetEpoch) throw new Error("cutover selection/base not frozen or mismatched");
     const audit = loadProvenanceInventory(root, go.expectedMain);
@@ -74,7 +82,9 @@ export function guardedPush(root: string, goInput: unknown, observation: unknown
 async function main() {
   const [mode, file = "HEAD"] = process.argv.slice(2), root = process.cwd();
   if (mode === "inventory" || mode === "bundle") {
-    const a = loadProvenanceInventory(root, file);
+    const source = resolveAuditRef(root, file);
+    if (sourceStorageVersion(root, source) !== 1) throw new Error("source already selects v2; use latest-state rollback, not v1 re-import");
+    const a = loadProvenanceInventory(root, source);
     const blob = readGit(root, ["rev-parse", `${a.cutoff}:${V1_PATH}`]).trim();
     const m = createCutoverManifest(a.manifest, blob, a.registry);
     if (mode === "inventory") console.log(JSON.stringify(m, null, 2));

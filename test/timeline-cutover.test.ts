@@ -250,6 +250,14 @@ test("cutover candidate validates fresh full-history boundary; release is a sepa
   await Bun.write(join(dir, STORAGE_PATH), JSON.stringify(selection)); const candidate = commit(dir, "prepared frozen cutover");
   await validateCandidate(dir, go(base, candidate));
   expect(v2.decisions.every(d => d.origin === "legacy_unknown")).toBe(true);
+  // A second cutover cannot import the now-inactive v1, even with a fresh internally consistent ledger.
+  const activeAudit = loadProvenanceInventory(dir, candidate);
+  const invalidRecutover = createCutoverManifest(activeAudit.manifest, git(dir, ["rev-parse", `${candidate}:${V1_PATH}`]), original);
+  await Bun.write(join(dir, CUTOVER_PATH), JSON.stringify(invalidRecutover));
+  await Bun.write(join(dir, STORAGE_PATH), JSON.stringify({ ...selection, epoch: invalidRecutover.targetEpoch }));
+  const recutover = commit(dir, "invalid v2 to v2 re-import from old v1");
+  expect(validateCandidate(dir, go(candidate, recutover))).rejects.toThrow("source already selects v2");
+  git(dir, ["checkout", "--detach", candidate]);
   // Rollback before any v2 write also works: v1 bytes already match, so no artificial v1 diff.
   const zeroWriteRollback = prepareRollback(v2, selection.epoch);
   await Bun.write(join(dir, `data/presentation/cutover-archives/${zeroWriteRollback.archiveHash}/registry-v2.json`), zeroWriteRollback.archive);
