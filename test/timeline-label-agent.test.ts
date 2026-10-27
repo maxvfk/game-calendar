@@ -57,7 +57,7 @@ describe("timeline label agent probe", () => {
     expect(runner).not.toMatch(/set -x|echo "\$token"|echo "\$raw"/);
     expect(probe.match(/secrets\.CLAUDE_CODE_OAUTH_TOKEN/g)?.length).toBe(1);
     expect(probe).not.toContain("timeline-labels.v1.json");
-    expect(probe).toContain("accept probe/proposals.json probe/registry-after.json probe/accept-report.json");
+    expect(probe).toContain("preview probe/proposals.json probe/registry-after.json probe/accept-report.json");
   });
 });
 
@@ -99,7 +99,7 @@ describe("timeline labels workflow (M3.5, M4)", () => {
 
   test("record pushes main fast-forward only and gives up after three attempts", () => {
     expect(record).toContain("main) push_args=() ;;");
-    expect(record).toContain("timeline-labels/rehearsal) push_args=(--force) ;;");
+    expect(record).toContain("timeline-labels/rehearsal) push_args=(--force-with-lease) ;;");
     expect(record).toMatch(/\*\) echo "::error::Unsupported target branch/);
     expect(record).toContain("for attempt in 1 2 3; do");
     expect(record).toContain("git checkout --quiet --detach origin/main");

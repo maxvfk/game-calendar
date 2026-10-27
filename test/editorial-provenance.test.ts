@@ -203,7 +203,8 @@ describe("origin manifest and exact migration", () => {
 });
 
 test("existing M4 still queues/accepts v1 only; v2 rollback leaves presentation and queue unchanged", async () => {
-  for (const f of historyFixture.m4Files) expect(sha256(await Bun.file(f.path).text()), f.path).toBe(f.sha256);
+  // Immutable E2a fingerprint/accept core stays fixed; E2a.1 explicitly replaces storage/writer adapters.
+  for (const f of historyFixture.m4Files.filter(f => f.path.startsWith("src/presentation/"))) expect(sha256(await Bun.file(f.path).text()), f.path).toBe(f.sha256);
   const v2 = migrateToV2(audit.registry, manifest);
   const feed = EventFeed.parse({ schemaVersion: 1, generatedAt: ctx.now, events: extracted.candidates.map(r => r.event), sources: [] });
   const rollback = rollbackToV1(v2);
@@ -279,6 +280,7 @@ test("actual offline feed build and rollback rehearsal preserve every public JSO
     await Bun.write(join(dir, REGISTRY_PATH), audit.raw);
     const clock = join(dir, "clock.ts");
     await Bun.write(clock, `const Original=Date; globalThis.Date=class extends Original { constructor(v?:string|number) { super(v??${JSON.stringify(ctx.now)}); } static now() { return Original.parse(${JSON.stringify(ctx.now)}); } } as DateConstructor;`);
+    await Bun.write(join(dir, "data/presentation/timeline-storage.v1.json"), JSON.stringify({ schemaVersion: 1, activeVersion: 1, epoch: "timeline-v1-" + "0".repeat(64), admission: "frozen" }));
     const build = async () => {
       const r = Bun.spawnSync([process.execPath, "--preload", clock, join(root, "scripts/build-feed.ts")], { cwd: dir });
       expect(r.exitCode, r.stderr.toString()).toBe(0);
