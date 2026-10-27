@@ -4,6 +4,10 @@
 
 **READY_FOR_CUTOVER (implementation/rehearsal only).** Production remains v1.
 No operator GO, merge, production writer activation or Actions-variable change.
+Prepared draft [PR #115](https://github.com/maxvfk/game-calendar/pull/115).
+Implementation-head [CI 40574284618](https://github.com/maxvfk/game-calendar/actions/runs/40574284618)
+passed on `f2d34a5` (all checks/build/PG17; PR Pages correctly skipped).
+Use the PR's latest exact-head CI for any later GO; no post-cutover evidence exists.
 Task: `docs/tasks/EDITORIAL-TIMELINE-V2-CONTROLLED-CUTOVER.md`.
 Full report/operator freeze/publish/release/rollback runbook:
 `docs/evidence/timeline-v2-controlled-cutover.md`.

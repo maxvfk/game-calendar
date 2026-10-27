@@ -2,6 +2,14 @@
 
 **READY_FOR_CUTOVER (implementation/rehearsal), PREPARED / NOT LIVE.**
 Production GO and live freeze gate remain **BLOCKED / not satisfied**.
+Prepared draft [PR #115](https://github.com/maxvfk/game-calendar/pull/115).
+Implementation-head [CI 40574284618](https://github.com/maxvfk/game-calendar/actions/runs/40574284618)
+passed on `f2d34a5`: check, full build and PG17 recovery/concurrency all passed;
+PR Pages was correctly skipped. The final PR delivery record tracks later
+exact-head documentation CI too; a GO must cite the actual current candidate run.
+The initial shallow-checkout test failure was fixed with a frozen, independently
+hashed real legacy runner fixture and retested in an actual depth-1 checkout.
+
 No production merge, writer activation, Actions variable or workflow-state
 change was performed. The implementation PR must remain unmerged without a
 separate explicit operator GO for a specific window.
