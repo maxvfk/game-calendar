@@ -130,7 +130,7 @@ describe("a normal cycle", () => {
     expect(ADAPTERS.map((a) => a.id).sort()).toEqual([
       "czn-prydwen-banners", "endfield-wikigg-echoes", "endfield-wikigg-events", "genshin-kqm-ginews",
       "hsr-kqm-hsrnews", "nte-ntebuild-btr", "nte-steamnews-official",
-      "wuwa-kuro-mirror",
+      "wuwa-kuro-mirror", "zzz-steam-events-official",
     ]);
     const retired = [
       "genshin-game8-events", "hsr-game8-events", "wuwa-game8-events",

@@ -428,6 +428,7 @@ async function refreshOne(
         "User-Agent": options.userAgent,
         Accept: usesDocumentedGithubContentsApi(adapter) ? "application/vnd.github.raw+json"
           : adapter.contentKind === "json" ? "application/json"
+          : adapter.contentKind === "xml" ? "application/rss+xml,application/atom+xml,application/xml,text/xml"
           : adapter.contentKind === "markdown" ? "text/markdown"
           : "text/html,application/xhtml+xml",
         ...(usesDocumentedGithubContentsApi(adapter) ? { "X-GitHub-Api-Version": "2022-11-28" } : {}),

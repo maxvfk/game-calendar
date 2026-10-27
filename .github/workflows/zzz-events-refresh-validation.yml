@@ -1,0 +1,75 @@
+name: ZZZ events-only real refresh validation
+on:
+  pull_request:
+    types: [opened]
+permissions:
+  contents: read
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+jobs:
+  refresh:
+    if: github.head_ref == 'work/zzz-steam-events-only'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.14'
+      - run: bun install --frozen-lockfile
+      - uses: actions/cache/restore@v4
+        with:
+          path: snapshots/*.state.json
+          key: refresh-state-
+          restore-keys: refresh-state-
+      - name: Normal refresh, ZZZ only, no force or access override
+        run: bun run refresh --only zzz-steam-events-official
+      - name: Verify real capture, discovered posts and final reviewed winners
+        run: |
+          bun -e '
+            const { strict: assert } = await import("node:assert");
+            const { discoverZzzSteamPosts, parseZzzSteamRss } = await import("./src/ingest/parsers/zzz-steam-rss.ts");
+            const { materializeReviewedBatch } = await import("./src/ingest/reviewed.ts");
+            const { hashBody } = await import("./src/ingest/snapshots.ts");
+            const id = "zzz-steam-events-official";
+            const meta = await Bun.file(`snapshots/${id}.meta.json`).json();
+            const state = await Bun.file(`snapshots/${id}.state.json`).json();
+            const raw = await Bun.file(`snapshots/${id}.xml`).text();
+            assert.equal(meta.contentHash, hashBody(raw));
+            assert.equal(state.lastStatus, 200); assert.equal(state.consecutiveFailures, 0);
+            assert.ok(Date.now() - Date.parse(meta.contentChangedAt) < 300000);
+            const parsed = parseZzzSteamRss(raw, {now: state.lastConfirmedAt, game: "zzz", sourceId: id, sourceUrl: meta.url});
+            assert.ok(parsed.length > 0); assert.equal(meta.eventCount, parsed.length);
+            assert.ok(parsed.every(e => e.type !== "banner"));
+            const feed = await Bun.file("public/data/events.v1.json").json();
+            const winners = feed.events.filter(e => e.game === "zzz");
+            assert.equal(new Set(winners.map(e => e.id)).size, winners.length);
+            const reviewed = materializeReviewedBatch(await Bun.file("data/reviewed/zzz.json").json()).events;
+            for (const row of reviewed) {
+              const winner = winners.find(e => e.id === row.id); assert.ok(winner);
+              for (const [key, value] of Object.entries(row)) assert.deepEqual(winner[key], value);
+            }
+            const proof = {runId: process.env.GITHUB_RUN_ID, commit: process.env.GITHUB_SHA,
+              sourceId: id, sourceUrl: meta.url, capturedAt: meta.contentChangedAt, contentHash: meta.contentHash,
+              parsedCount: parsed.length, overlapReviewed: parsed.filter(e => reviewed.some(r => r.id === e.id)).length,
+              finalZzzRecords: winners.length, automaticWinners: winners.filter(e => e.sourceId === id).length,
+              feedRecords: feed.events.length, sourceHealth: feed.sources.find(s => s.sourceId === id),
+              posts: discoverZzzSteamPosts(raw).map(({title,url,author,publishedAt}) => ({title,url,author,publishedAt}))};
+            await Bun.write("tmp/zzz-events-refresh-proof.json", JSON.stringify(proof,null,2)+"\n");
+            console.log(JSON.stringify(proof));
+          '
+          git diff --exit-code -- data/reviewed snapshots/ ':!snapshots/zzz-steam-events-official.xml' ':!snapshots/zzz-steam-events-official.meta.json'
+      - uses: actions/cache/save@v4
+        with:
+          path: snapshots/*.state.json
+          key: refresh-state-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zzz-events-refresh
+          path: |
+            snapshots/zzz-steam-events-official.*
+            tmp/zzz-events-refresh-proof.json
+            public/data/events.v1.json
+          retention-days: 7
