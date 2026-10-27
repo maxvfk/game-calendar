@@ -1,0 +1,2202 @@
+{
+  "capturedAt": "2026-10-27T13:04:40.520Z",
+  "runId": "40508820070",
+  "commit": "bd771d66a4ee5a36a096f92f2f303cc532035817",
+  "userAgent": "gacha-event-tracker/1.0 (+https://github.com/maxvfk/game-calendar)",
+  "runner": {
+    "os": "Linux",
+    "image": "20261026.354.1"
+  },
+  "gates": {
+    "hoyolab": {
+      "robots": {
+        "groups": [
+          {
+            "agents": [
+              "*"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/genshin"
+              }
+            ],
+            "crawlDelaySeconds": null
+          }
+        ],
+        "sitemaps": [
+          "https://www.hoyolab.com/communityWeb/sitemap.xml"
+        ]
+      },
+      "delay": 2000
+    },
+    "zenlessgg": {
+      "robots": {
+        "groups": [
+          {
+            "agents": [
+              "chatgpt-user"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "gptbot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "anthropic-ai"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "claude-web"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "piplbot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "ccbot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "facebookbot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "*"
+            ],
+            "rules": [],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "*"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/*?s="
+              },
+              {
+                "allow": false,
+                "pattern": "/*&s="
+              },
+              {
+                "allow": false,
+                "pattern": "/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/builder/*/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "ahrefsbot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/bangboos/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/bangboos/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/cards/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/cards/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/characters/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/characters/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/collection/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/collection/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/deckpic/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/deckpic/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/decks/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/decks/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/diskdrives/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/diskdrives/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/items/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/items/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/meta/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/meta/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/playtest/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/playtest/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/prices/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/prices/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/products/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/products/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/rules/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/rules/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/tierlist/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/tierlist/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/tournaments/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/tournaments/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/trade/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/trade/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/u/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/u/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/wengines/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/wengines/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*?s="
+              },
+              {
+                "allow": false,
+                "pattern": "/*&s="
+              },
+              {
+                "allow": false,
+                "pattern": "/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/builder/*/"
+              }
+            ],
+            "crawlDelaySeconds": 30
+          },
+          {
+            "agents": [
+              "yandexbot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/bangboos/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/bangboos/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/cards/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/cards/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/characters/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/characters/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/collection/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/collection/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/deckpic/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/deckpic/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/decks/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/decks/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/diskdrives/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/diskdrives/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/items/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/items/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/meta/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/meta/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/playtest/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/playtest/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/prices/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/prices/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/products/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/products/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/rules/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/rules/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/tierlist/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/tierlist/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/tournaments/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/tournaments/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/trade/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/trade/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/u/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/u/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/wengines/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/wengines/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*?s="
+              },
+              {
+                "allow": false,
+                "pattern": "/*&s="
+              },
+              {
+                "allow": false,
+                "pattern": "/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/builder/*/"
+              }
+            ],
+            "crawlDelaySeconds": 30
+          },
+          {
+            "agents": [
+              "baiduspider"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/bangboos/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/bangboos/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/cards/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/cards/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/characters/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/characters/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/collection/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/collection/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/deckpic/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/deckpic/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/decks/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/decks/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/diskdrives/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/diskdrives/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/items/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/items/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/meta/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/meta/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/playtest/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/playtest/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/prices/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/prices/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/products/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/products/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/rules/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/rules/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/tierlist/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/tierlist/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/tournaments/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/tournaments/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/trade/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/trade/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/u/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/u/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/wengines/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/wengines/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*?s="
+              },
+              {
+                "allow": false,
+                "pattern": "/*&s="
+              },
+              {
+                "allow": false,
+                "pattern": "/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/builder/*/"
+              }
+            ],
+            "crawlDelaySeconds": 30
+          },
+          {
+            "agents": [
+              "meta-externalagent"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/bangboos/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/bangboos/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/cards/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/cards/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/characters/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/characters/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/collection/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/collection/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/deckpic/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/deckpic/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/decks/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/decks/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/diskdrives/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/diskdrives/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/items/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/items/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/meta/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/meta/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/playtest/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/playtest/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/prices/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/prices/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/products/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/products/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/rules/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/rules/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/tierlist/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/tierlist/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/tournaments/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/tournaments/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/trade/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/trade/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/u/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/u/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/wengines/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/wengines/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*?s="
+              },
+              {
+                "allow": false,
+                "pattern": "/*&s="
+              },
+              {
+                "allow": false,
+                "pattern": "/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/builder/*/"
+              }
+            ],
+            "crawlDelaySeconds": 30
+          },
+          {
+            "agents": [
+              "bingbot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/*?s="
+              },
+              {
+                "allow": false,
+                "pattern": "/*&s="
+              },
+              {
+                "allow": false,
+                "pattern": "/builder/*/"
+              },
+              {
+                "allow": false,
+                "pattern": "/*/builder/*/"
+              }
+            ],
+            "crawlDelaySeconds": 10
+          },
+          {
+            "agents": [
+              "semrushbot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "dotbot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "mj12bot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "dataforseobot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "petalbot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "blexbot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "barkrowler"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "zoominfobot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "serpstatbot"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "megaindex"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "seokicks"
+            ],
+            "rules": [
+              {
+                "allow": false,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          }
+        ],
+        "sitemaps": [
+          "https://zenless.gg/sitemap_index.xml"
+        ]
+      },
+      "delay": 2000
+    },
+    "icy": {
+      "robots": {
+        "groups": [
+          {
+            "agents": [
+              "*"
+            ],
+            "rules": [
+              {
+                "allow": true,
+                "pattern": "/"
+              },
+              {
+                "allow": false,
+                "pattern": "/d4/login/"
+              },
+              {
+                "allow": false,
+                "pattern": "/sc2/*/modules/"
+              },
+              {
+                "allow": false,
+                "pattern": "/d3/*/modules/"
+              },
+              {
+                "allow": false,
+                "pattern": "/wow/*/modules/"
+              },
+              {
+                "allow": false,
+                "pattern": "/hearthstone/*/modules/"
+              },
+              {
+                "allow": false,
+                "pattern": "/heroes/*/modules/"
+              },
+              {
+                "allow": false,
+                "pattern": "/overwatch/*/modules/"
+              },
+              {
+                "allow": false,
+                "pattern": "/sc2/*/util/"
+              },
+              {
+                "allow": false,
+                "pattern": "/d3/*/util/"
+              },
+              {
+                "allow": false,
+                "pattern": "/wow/*/util/"
+              },
+              {
+                "allow": false,
+                "pattern": "/hearthstone/*/util/"
+              },
+              {
+                "allow": false,
+                "pattern": "/heroes/*/util/"
+              },
+              {
+                "allow": false,
+                "pattern": "/overwatch/*/util/"
+              },
+              {
+                "allow": false,
+                "pattern": "/sc2/*/sets/"
+              },
+              {
+                "allow": false,
+                "pattern": "/d3/*/sets/"
+              },
+              {
+                "allow": false,
+                "pattern": "/wow/*/sets/"
+              },
+              {
+                "allow": false,
+                "pattern": "/hearthstone/*/sets/"
+              },
+              {
+                "allow": false,
+                "pattern": "/heroes/*/sets/"
+              },
+              {
+                "allow": false,
+                "pattern": "/overwatch/*/sets/"
+              },
+              {
+                "allow": false,
+                "pattern": "/sc2/*/types/"
+              },
+              {
+                "allow": false,
+                "pattern": "/d3/*/types/"
+              },
+              {
+                "allow": false,
+                "pattern": "/wow/*/types/"
+              },
+              {
+                "allow": false,
+                "pattern": "/hearthstone/*/types/"
+              },
+              {
+                "allow": false,
+                "pattern": "/heroes/*/types/"
+              },
+              {
+                "allow": false,
+                "pattern": "/overwatch/*/types/"
+              },
+              {
+                "allow": false,
+                "pattern": "/sc2/*/positions/"
+              },
+              {
+                "allow": false,
+                "pattern": "/d3/*/positions/"
+              },
+              {
+                "allow": false,
+                "pattern": "/wow/*/positions/"
+              },
+              {
+                "allow": false,
+                "pattern": "/hearthstone/*/positions/"
+              },
+              {
+                "allow": false,
+                "pattern": "/heroes/*/positions/"
+              },
+              {
+                "allow": false,
+                "pattern": "/overwatch/*/positions/"
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/profile/"
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/user/"
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/login/"
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/search/"
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/tags/"
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/*?advancedSearchForm"
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/*&sortby"
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/*&sortdirection"
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/*?filter"
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/*?_infScroll"
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/*?app=core"
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/*?do="
+              },
+              {
+                "allow": false,
+                "pattern": "/forums/leaderboard"
+              }
+            ],
+            "crawlDelaySeconds": null
+          },
+          {
+            "agents": [
+              "amazonadbot"
+            ],
+            "rules": [
+              {
+                "allow": true,
+                "pattern": "/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          }
+        ],
+        "sitemaps": [
+          "https://www.icy-veins.com/sitemap.xml",
+          "https://www.icy-veins.com/forums/sitemap.php"
+        ]
+      },
+      "delay": 2000
+    },
+    "rng": {
+      "robots": {
+        "groups": [],
+        "sitemaps": []
+      },
+      "delay": 2000
+    },
+    "poly": {
+      "robots": {
+        "groups": [
+          {
+            "agents": [
+              "*"
+            ],
+            "rules": [
+              {
+                "allow": true,
+                "pattern": "/"
+              },
+              {
+                "allow": true,
+                "pattern": "/_next/static/"
+              },
+              {
+                "allow": false,
+                "pattern": "/api/"
+              }
+            ],
+            "crawlDelaySeconds": null
+          }
+        ],
+        "sitemaps": [
+          "https://zzz-poly-cal.vercel.app/sitemap.xml"
+        ]
+      },
+      "delay": 2000
+    }
+  },
+  "responses": [
+    {
+      "name": "hoyolab-robots",
+      "url": "https://www.hoyolab.com/robots.txt",
+      "at": "2026-10-27T13:04:12.139Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/plain",
+      "etag": "\"e9444e5f9d46d788ed377698f1d88bbe\"",
+      "lastModified": "Wed, 27 May 2026 03:24:20 GMT",
+      "server": "AmazonS3",
+      "bytes": 91,
+      "sha256": "a3293525da2ffab88a15512644338cbfcfe13d0573d45810a1e2d3f055be401b",
+      "shape": {
+        "html": false,
+        "scripts": 0,
+        "jsonLd": 0,
+        "channelNames": [],
+        "absoluteDates": [],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [],
+        "surfaceLinks": [],
+        "alternateLinks": []
+      }
+    },
+    {
+      "name": "hoyolab-0",
+      "url": "https://www.hoyolab.com/official/8/notices",
+      "at": "2026-10-27T13:04:14.143Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "etag": "W/\"02b93d19c88b7e864c5956810867fae3\"",
+      "lastModified": "Wed, 23 Sep 2026 02:21:25 GMT",
+      "server": "AmazonS3",
+      "bytes": 7213,
+      "sha256": "df1a3c8d5c71d785644776b884118db5a4a03377ab511f971b6e2df98498e311",
+      "shape": {
+        "html": true,
+        "scripts": 15,
+        "jsonLd": 0,
+        "channelNames": [],
+        "absoluteDates": [],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": true,
+        "scriptSources": [
+          "https://act.hoyoverse.com/common/event/packages/apm-helper/index.js",
+          "/_static/638ef6c.js",
+          "/_static/6e243b8.js",
+          "/_static/8ec38bd.js",
+          "/_static/8a1749d.js",
+          "/_static/959abe0.js",
+          "/_static/d6fa3e1.js",
+          "/_static/2089161.js",
+          "/_static/73c503b.js",
+          "/_static/422a054.js"
+        ],
+        "surfaceLinks": [],
+        "alternateLinks": []
+      }
+    },
+    {
+      "name": "hoyolab-1",
+      "url": "https://www.hoyolab.com/article/47131668",
+      "at": "2026-10-27T13:04:15.925Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "etag": "W/\"02b93d19c88b7e864c5956810867fae3\"",
+      "lastModified": "Wed, 23 Sep 2026 02:21:25 GMT",
+      "server": "AmazonS3",
+      "bytes": 7213,
+      "sha256": "df1a3c8d5c71d785644776b884118db5a4a03377ab511f971b6e2df98498e311",
+      "shape": {
+        "html": true,
+        "scripts": 15,
+        "jsonLd": 0,
+        "channelNames": [],
+        "absoluteDates": [],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": true,
+        "scriptSources": [
+          "https://act.hoyoverse.com/common/event/packages/apm-helper/index.js",
+          "/_static/638ef6c.js",
+          "/_static/6e243b8.js",
+          "/_static/8ec38bd.js",
+          "/_static/8a1749d.js",
+          "/_static/959abe0.js",
+          "/_static/d6fa3e1.js",
+          "/_static/2089161.js",
+          "/_static/73c503b.js",
+          "/_static/422a054.js"
+        ],
+        "surfaceLinks": [],
+        "alternateLinks": []
+      }
+    },
+    {
+      "name": "zenlessgg-robots",
+      "url": "https://zenless.gg/robots.txt",
+      "at": "2026-10-27T13:04:16.144Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/plain; charset=utf-8",
+      "etag": null,
+      "lastModified": "Sun, 25 Oct 2026 10:11:01 GMT",
+      "server": "cloudflare",
+      "bytes": 5430,
+      "sha256": "f42f30548e762adc018b1328bf3978a2d32d853fe870c32939cd7c262bee1139",
+      "shape": {
+        "html": false,
+        "scripts": 0,
+        "jsonLd": 0,
+        "channelNames": [],
+        "absoluteDates": [
+          "2026-08-21",
+          "2026-08-22",
+          "2026-09-27"
+        ],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [],
+        "surfaceLinks": [],
+        "alternateLinks": []
+      }
+    },
+    {
+      "name": "zenlessgg-0",
+      "url": "https://zenless.gg/terms/",
+      "at": "2026-10-27T13:04:18.143Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=UTF-8",
+      "etag": null,
+      "lastModified": "Tue, 27 Oct 2026 13:04:18 GMT",
+      "server": "cloudflare",
+      "bytes": 330030,
+      "sha256": "b29cfdc29592b16d1946c0ef0a14d2246697abc52a9e0b643b3929894c8046f4",
+      "shape": {
+        "html": true,
+        "scripts": 26,
+        "jsonLd": 1,
+        "channelNames": [],
+        "absoluteDates": [
+          "2026-08-28",
+          "2026-10-10",
+          "2026-09-11",
+          "2026-09-06",
+          "2026-10-22",
+          "2026-08-29",
+          "2026-08-23T13:13",
+          "2026-10-21",
+          "2026-10-22 21:53"
+        ],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [
+          "https://www.googletagmanager.com/gtag/js?id=G-D7PQ7M18RP",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/common/js/runtime.b711ac73e72215bd2510.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/common/js/common.ed3d4876e9961a318f47.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/common/js/vendor.eecd732ecf260a381064.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/games/zenless/js/main.84e8927c4052c5cdfcb1.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/sidebar-plugin/assets/js/sidebar.1d017efa8416b92bef80.js",
+          "https://zenless.gg/wp-content/themes/blocksy/static/bundle/main.js?ver=2.1.60"
+        ],
+        "surfaceLinks": [
+          {
+            "href": "https://zenless.gg/terms/",
+            "label": "Terms"
+          },
+          {
+            "href": "https://zenless.gg/privacy/",
+            "label": "Privacy"
+          }
+        ],
+        "alternateLinks": [
+          "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Zenless.gg &raquo; Feed\" href=\"https://zenless.gg/feed/\" />"
+        ]
+      }
+    },
+    {
+      "name": "zenlessgg-0-policy-0",
+      "url": "https://zenless.gg/privacy/",
+      "at": "2026-10-27T13:04:20.109Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=UTF-8",
+      "etag": null,
+      "lastModified": "Tue, 27 Oct 2026 13:04:20 GMT",
+      "server": "cloudflare",
+      "bytes": 336668,
+      "sha256": "fc0ea852795de4a5681ea9a9cdfb50a7eb22adf2b06c25f1430923c1a9e08114",
+      "shape": {
+        "html": true,
+        "scripts": 27,
+        "jsonLd": 1,
+        "channelNames": [],
+        "absoluteDates": [
+          "2026-08-28",
+          "2026-10-10",
+          "2026-09-11",
+          "2026-09-06",
+          "2026-10-22",
+          "2026-08-29",
+          "2026-08-23T13:08",
+          "2026-10-23",
+          "2026-10-24 22:08"
+        ],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [
+          "https://www.googletagmanager.com/gtag/js?id=G-D7PQ7M18RP",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/common/js/runtime.cea7456cdb5280eba486.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/common/js/common.7142b266c48e217899a3.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/common/js/vendor.eecd732ecf260a381064.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/games/zenless/js/main.f202e779a4f17f97863d.js?ver=1.0.0",
+          "/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js",
+          "https://zenless.gg/wp-content/plugins/sidebar-plugin/assets/js/sidebar.1d017efa8416b92bef80.js",
+          "https://zenless.gg/wp-content/themes/blocksy/static/bundle/main.js?ver=2.1.60"
+        ],
+        "surfaceLinks": [
+          {
+            "href": "https://www.google.com/policies/privacy/",
+            "label": "https://www.google.com/policies/privacy/"
+          },
+          {
+            "href": "https://privacy.microsoft.com/en-us/windows-10-microsoft-edge-and-privacy",
+            "label": "https://privacy.microsoft.com/en-us/windows-10-microsoft-edge-and-privacy"
+          },
+          {
+            "href": "https://raptive.com/creator-advertising-privacy-statement/",
+            "label": "https://raptive.com/creator-advertising-privacy-statement/"
+          },
+          {
+            "href": "https://stripe.com/au/privacy",
+            "label": "Stripe"
+          },
+          {
+            "href": "https://www.paypal.com/au/webapps/mpp/ua/privacy-full",
+            "label": "PayPal"
+          },
+          {
+            "href": "https://zenless.gg/terms/",
+            "label": "Terms"
+          },
+          {
+            "href": "https://zenless.gg/privacy/",
+            "label": "Privacy"
+          }
+        ],
+        "alternateLinks": [
+          "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Zenless.gg &raquo; Feed\" href=\"https://zenless.gg/feed/\" />"
+        ]
+      }
+    },
+    {
+      "name": "zenlessgg-1",
+      "url": "https://zenless.gg/news/",
+      "at": "2026-10-27T13:04:22.026Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=UTF-8",
+      "etag": null,
+      "lastModified": "Sun, 25 Oct 2026 17:56:00 GMT",
+      "server": "cloudflare",
+      "bytes": 419626,
+      "sha256": "61e961608bbcdc0daeda8af15267819ae7fc34876ebf8d249192924df099fcec",
+      "shape": {
+        "html": true,
+        "scripts": 26,
+        "jsonLd": 1,
+        "channelNames": [],
+        "absoluteDates": [
+          "2026-08-28",
+          "2026-10-10",
+          "2026-09-11",
+          "2026-09-06",
+          "2026-10-22",
+          "2026-08-29",
+          "2026-10-23",
+          "2026/10/58",
+          "2026-10-24T09:00",
+          "2026/10/71",
+          "2026-10-23T09:00",
+          "2026-10-21T09:00",
+          "2026/10/69",
+          "2026/10/30",
+          "2026/10/19",
+          "2026-10-20T09:00",
+          "2026/10/68",
+          "2026/10/91",
+          "2026-10-19T09:00",
+          "2026/10/45",
+          "2026/10/14",
+          "2026/10/88",
+          "2026-10-17T09:00",
+          "2026/10/81",
+          "2026/10/03",
+          "2026-10-16T09:00",
+          "2026-10-15T09:00",
+          "2026/10/43",
+          "2026-10-14T09:00",
+          "2026-10-12T09:00",
+          "2026/10/13",
+          "2026-10-10T09:00",
+          "2026-10-09T09:00",
+          "2026-10-07T09:00",
+          "2026-10-05T09:00",
+          "2026-10-04T09:00",
+          "2026-10-01T09:00",
+          "2026/10/35",
+          "2026-09-30T09:00",
+          "2026-09-29T09:00",
+          "2026-09-28T09:00",
+          "2026-10-26 01:53"
+        ],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [
+          "https://www.googletagmanager.com/gtag/js?id=G-D7PQ7M18RP",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/common/js/runtime.0842f65b90c3dc9e2f1c.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/common/js/common.82e9035a83992a428b7d.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/common/js/vendor.eecd732ecf260a381064.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/games/zenless/js/main.8d45e2904df9637d30ad.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/sidebar-plugin/assets/js/sidebar.1d017efa8416b92bef80.js",
+          "https://zenless.gg/wp-content/themes/blocksy/static/bundle/main.js?ver=2.1.60"
+        ],
+        "surfaceLinks": [
+          {
+            "href": "https://zenless.gg/v3-3-limited-time-channels-phase-i/",
+            "label": ""
+          },
+          {
+            "href": "https://zenless.gg/v3-3-limited-time-channels-phase-i/",
+            "label": "V3.3 Limited-Time Channels (Phase I)"
+          },
+          {
+            "href": "https://zenless.gg/v3-2-limited-time-channels-phase-ii/",
+            "label": ""
+          },
+          {
+            "href": "https://zenless.gg/v3-2-limited-time-channels-phase-ii/",
+            "label": "V3.2 Limited-Time Channels (Phase II)"
+          },
+          {
+            "href": "https://zenless.gg/terms/",
+            "label": "Terms"
+          },
+          {
+            "href": "https://zenless.gg/privacy/",
+            "label": "Privacy"
+          }
+        ],
+        "alternateLinks": [
+          "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Zenless.gg &raquo; Feed\" href=\"https://zenless.gg/feed/\" />",
+          "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Zenless.gg &raquo; News Category Feed\" href=\"https://zenless.gg/news/feed/\" />"
+        ]
+      }
+    },
+    {
+      "name": "zenlessgg-2",
+      "url": "https://zenless.gg/v3-3-limited-time-channels-phase-i/",
+      "at": "2026-10-27T13:04:24.058Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=UTF-8",
+      "etag": null,
+      "lastModified": "Wed, 21 Oct 2026 10:55:36 GMT",
+      "server": "cloudflare",
+      "bytes": 365679,
+      "sha256": "198d0aae65d63f2133e498f7b5a7768515fc3e9e87e27eb25859db4fa3e9c7c4",
+      "shape": {
+        "html": true,
+        "scripts": 27,
+        "jsonLd": 1,
+        "channelNames": [
+          "Into the Flames of Life",
+          "Graceful Gale",
+          "Plume of Rebirth",
+          "Joyau Dore"
+        ],
+        "absoluteDates": [
+          "2026-08-28",
+          "2026-10-10",
+          "2026-09-11",
+          "2026-09-06",
+          "2026-08-29",
+          "2026-10-19T01:00",
+          "2026-10-19",
+          "2026-10-19T09:00",
+          "2026/11/11 11:59",
+          "2026/10/14",
+          "2026/10/45",
+          "2026/10/19",
+          "2026-10-12T09:00",
+          "2026-10-10T09:00",
+          "2026-10-01T09:00",
+          "2026-09-28T09:00",
+          "2026-10-20 09:17"
+        ],
+        "hasServerTime": true,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [
+          "https://www.googletagmanager.com/gtag/js?id=G-D7PQ7M18RP",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/common/js/runtime.2af489f9b24942e7459b.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/common/js/common.8e1a4eec86fefabe4ffb.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/common/js/vendor.51ad2d1637d17d69e278.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/dotgg-game/games/zenless/js/main.d705f9371c5c03dc6e5e.js?ver=1.0.0",
+          "https://zenless.gg/wp-content/plugins/sidebar-plugin/assets/js/sidebar.b9ed21df42ebd5a0da2f.js",
+          "https://zenless.gg/wp-content/themes/blocksy/static/bundle/main.js?ver=2.1.60"
+        ],
+        "surfaceLinks": [
+          {
+            "href": "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fzenless.gg%2Fv3-3-limited-time-channels-phase-i%2F",
+            "label": ""
+          },
+          {
+            "href": "https://twitter.com/intent/tweet?url=https%3A%2F%2Fzenless.gg%2Fv3-3-limited-time-channels-phase-i%2F&amp;text=V3.3%20Limited-Time%20Channels%20(Phase%20I)",
+            "label": ""
+          },
+          {
+            "href": "https://reddit.com/submit?url=https%3A%2F%2Fzenless.gg%2Fv3-3-limited-time-channels-phase-i%2F&amp;title=V3.3%20Limited-Time%20Channels%20(Phase%20I)",
+            "label": ""
+          },
+          {
+            "href": "https://zenless.gg/v3-2-limited-time-channels-phase-ii/",
+            "label": ""
+          },
+          {
+            "href": "https://zenless.gg/v3-2-limited-time-channels-phase-ii/",
+            "label": "V3.2 Limited-Time Channels (Phase II)"
+          },
+          {
+            "href": "https://zenless.gg/v3-3-limited-time-channels-phase-i/",
+            "label": ""
+          },
+          {
+            "href": "https://zenless.gg/v3-3-limited-time-channels-phase-i/",
+            "label": "V3.3 Limited-Time Channels (Phase I)"
+          },
+          {
+            "href": "https://zenless.gg/terms/",
+            "label": "Terms"
+          },
+          {
+            "href": "https://zenless.gg/privacy/",
+            "label": "Privacy"
+          }
+        ],
+        "alternateLinks": [
+          "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Zenless.gg &raquo; Feed\" href=\"https://zenless.gg/feed/\" />"
+        ]
+      }
+    },
+    {
+      "name": "icy-robots",
+      "url": "https://www.icy-veins.com/robots.txt",
+      "at": "2026-10-27T13:04:24.168Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/plain; charset=utf-8",
+      "etag": "\"699e1de8-58d\"",
+      "lastModified": "Tue, 24 Feb 2026 21:53:44 GMT",
+      "server": "cloudflare",
+      "bytes": 1421,
+      "sha256": "3deff6d209e55be9097776f0e65e9964cee668ec978ade30151a6091a49d0fa2",
+      "shape": {
+        "html": false,
+        "scripts": 0,
+        "jsonLd": 0,
+        "channelNames": [],
+        "absoluteDates": [],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [],
+        "surfaceLinks": [],
+        "alternateLinks": []
+      }
+    },
+    {
+      "name": "icy-0",
+      "url": "https://www.icy-veins.com/zenless-zone-zero/current-banner",
+      "at": "2026-10-27T13:04:26.393Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=utf-8",
+      "etag": null,
+      "lastModified": "Mon, 26 Oct 2026 20:06:36 GMT",
+      "server": "cloudflare",
+      "bytes": 464559,
+      "sha256": "6f8048d6742dc6782e250e284a42cc6d94af31069d7ca4ef03dbf0259cc00803",
+      "shape": {
+        "html": true,
+        "scripts": 35,
+        "jsonLd": 3,
+        "channelNames": [
+          "Into the Flames of Life",
+          "Graceful Gale",
+          "Plume of Rebirth",
+          "Joyau Dore"
+        ],
+        "absoluteDates": [
+          "2026-10-20T00:00",
+          "2026-02-05",
+          "2026-01-21",
+          "2026-03-04",
+          "2026-03-23",
+          "2026-04-15",
+          "2026-05-05",
+          "2026-05-27",
+          "2026-06-16",
+          "2026-07-08",
+          "2026-07-28",
+          "2026-09-08",
+          "2026-08-19",
+          "2026-09-30",
+          "2026-10-20",
+          "2026-11-11",
+          "2026-12-01"
+        ],
+        "hasServerTime": true,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [
+          "//static.icy-veins.com/javascript/./jquery-8101d596b2b8fa35fe3a634ea342d7c3.js",
+          "//static.icy-veins.com/javascript/./icyveins-common-98ecdaafae017bce2dfbd2ded1251870.js",
+          "//static.icy-veins.com/javascript/core-c292f8345d5e9575e383922f3f1f3805.js",
+          "//static.icy-veins.com/javascript/./fullcalendar.global.min-5b27768113ba14473f968141b3f0e023.js",
+          "//static.icy-veins.com/javascript/./calendar-init-03b01393a66835fbac0fc2839bf8458c.js",
+          "//static.icy-veins.com/javascript/./icyveins-zzz-ff064f34cdf4d69dad1035b91915466f.js",
+          "//static.icy-veins.com/javascript/./icyveins-search-tool-daa3f16595759189b77c50957aea36aa.js"
+        ],
+        "surfaceLinks": [
+          {
+            "href": "//www.icy-veins.com/feed.atom",
+            "label": ""
+          },
+          {
+            "href": "//www.icy-veins.com/privacy",
+            "label": "PRIVACY"
+          },
+          {
+            "href": "//www.icy-veins.com/terms",
+            "label": "TERMS OF USE"
+          },
+          {
+            "href": "//www.icy-veins.com/feed.atom",
+            "label": ""
+          }
+        ],
+        "alternateLinks": [
+          "<link href=\"//www.icy-veins.com/feed.atom\" type=\"application/atom+xml\" rel=\"alternate\" title=\"Icy Veins - Feed\" />"
+        ]
+      }
+    },
+    {
+      "name": "icy-0-policy-0",
+      "url": "https://www.icy-veins.com/privacy",
+      "at": "2026-10-27T13:04:28.314Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=utf-8",
+      "etag": null,
+      "lastModified": null,
+      "server": "cloudflare",
+      "bytes": 123511,
+      "sha256": "e8dd7516ad8fe5aac43cb75c869d45da96ec23302b74675524de63ee074af2a8",
+      "shape": {
+        "html": true,
+        "scripts": 28,
+        "jsonLd": 3,
+        "channelNames": [],
+        "absoluteDates": [
+          "2026-09-10T16:09"
+        ],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [
+          "//static.icy-veins.com/javascript/core-66846b84c59b470e6b3787dc8d48a6fb.js",
+          "/_astro/Layout.astro_astro_type_script_index_0_lang.qoJMRrN0.js",
+          "/_astro/Header.astro_astro_type_script_index_0_lang.Dhc9iq7V.js",
+          "//static.icy-veins.com/javascript/./icyveins-editorial-carousel-fb653e4156be9b5f03df6fe0566904d2.js",
+          "/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+        ],
+        "surfaceLinks": [
+          {
+            "href": "https://freestar.com/privacy-policy/",
+            "label": "https://freestar.com/privacy-policy/"
+          },
+          {
+            "href": "https://www.playwire.com/privacy-policy",
+            "label": "https://www.playwire.com/privacy-policy"
+          },
+          {
+            "href": "https://www.zendesk.com/company/agreements-and-terms/privacy-notice/",
+            "label": "https://www.zendesk.com/company/agreements-and-terms/privacy-notice/"
+          },
+          {
+            "href": "/privacy",
+            "label": "Privacy"
+          },
+          {
+            "href": "/terms",
+            "label": "Terms of Use"
+          }
+        ],
+        "alternateLinks": [
+          "<link href=\"//www.icy-veins.com/feed.atom\" type=\"application/atom+xml\" rel=\"alternate\" title=\"Icy Veins - Feed\">"
+        ]
+      }
+    },
+    {
+      "name": "icy-0-policy-1",
+      "url": "https://www.icy-veins.com/terms",
+      "at": "2026-10-27T13:04:30.354Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=utf-8",
+      "etag": null,
+      "lastModified": null,
+      "server": "cloudflare",
+      "bytes": 110064,
+      "sha256": "7fa549ee5667af84b22245d0dba13829616936ef2a86bee7f8cd8a9bfdc6b528",
+      "shape": {
+        "html": true,
+        "scripts": 27,
+        "jsonLd": 3,
+        "channelNames": [],
+        "absoluteDates": [
+          "2026-08-04T11:27"
+        ],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [
+          "//static.icy-veins.com/javascript/core-66846b84c59b470e6b3787dc8d48a6fb.js",
+          "/_astro/Layout.astro_astro_type_script_index_0_lang.qoJMRrN0.js",
+          "/_astro/Header.astro_astro_type_script_index_0_lang.Dhc9iq7V.js",
+          "//static.icy-veins.com/javascript/./icyveins-editorial-carousel-fb653e4156be9b5f03df6fe0566904d2.js"
+        ],
+        "surfaceLinks": [
+          {
+            "href": "//www.icy-veins.com/privacy",
+            "label": "Icy Veins Privacy Policy"
+          },
+          {
+            "href": "//www.icy-veins.com/privacy",
+            "label": "Icy Veins Privacy Policy"
+          },
+          {
+            "href": "/privacy",
+            "label": "Privacy"
+          },
+          {
+            "href": "/terms",
+            "label": "Terms of Use"
+          }
+        ],
+        "alternateLinks": [
+          "<link href=\"//www.icy-veins.com/feed.atom\" type=\"application/atom+xml\" rel=\"alternate\" title=\"Icy Veins - Feed\">"
+        ]
+      }
+    },
+    {
+      "name": "rng-robots",
+      "url": "https://zzz.rng.moe/robots.txt",
+      "at": "2026-10-27T13:04:30.830Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/plain; charset=utf-8",
+      "etag": null,
+      "lastModified": null,
+      "server": "cloudflare",
+      "bytes": 1248,
+      "sha256": "8fa3036c68bfcbd32365f6225d24333264093b7cd38d306e106b4dbdc934fd5b",
+      "shape": {
+        "html": false,
+        "scripts": 0,
+        "jsonLd": 0,
+        "channelNames": [],
+        "absoluteDates": [],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [],
+        "surfaceLinks": [],
+        "alternateLinks": []
+      }
+    },
+    {
+      "name": "rng-0",
+      "url": "https://zzz.rng.moe/en/timeline",
+      "at": "2026-10-27T13:04:32.613Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=utf-8",
+      "etag": null,
+      "lastModified": null,
+      "server": "cloudflare",
+      "bytes": 72461,
+      "sha256": "efc59d6bdd31e821808067c17fd3e57194dffbde1cc82a0a6e6e634022cb686d",
+      "shape": {
+        "html": true,
+        "scripts": 6,
+        "jsonLd": 0,
+        "channelNames": [],
+        "absoluteDates": [],
+        "hasServerTime": true,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [
+          "https://analytics.rng.moe/script.js",
+          "https://s.nitropay.com/ads-1975.js",
+          "https://www.googletagmanager.com/gtag/js?id=G-M0WVQKHS6Q"
+        ],
+        "surfaceLinks": [
+          {
+            "href": "/en/privacy",
+            "label": "Privacy Policy"
+          },
+          {
+            "href": "/en/credits",
+            "label": "Credits"
+          }
+        ],
+        "alternateLinks": []
+      }
+    },
+    {
+      "name": "rng-0-policy-0",
+      "url": "https://zzz.rng.moe/en/privacy",
+      "at": "2026-10-27T13:04:34.511Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=utf-8",
+      "etag": null,
+      "lastModified": null,
+      "server": "cloudflare",
+      "bytes": 23240,
+      "sha256": "c741475883a69d1cc80ac3d89628f45f8af978579bb78b26f9e7d180cbd9c348",
+      "shape": {
+        "html": true,
+        "scripts": 6,
+        "jsonLd": 0,
+        "channelNames": [],
+        "absoluteDates": [],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [
+          "https://analytics.rng.moe/script.js",
+          "https://s.nitropay.com/ads-1975.js",
+          "https://www.googletagmanager.com/gtag/js?id=G-M0WVQKHS6Q"
+        ],
+        "surfaceLinks": [
+          {
+            "href": "https://developers.google.com/terms/api-services-user-data-policy",
+            "label": "Google API Services User Data Policy"
+          },
+          {
+            "href": "https://nitropay.com/privacy",
+            "label": "https://nitropay.com/privacy"
+          },
+          {
+            "href": "/en/privacy",
+            "label": "Privacy Policy"
+          },
+          {
+            "href": "/en/credits",
+            "label": "Credits"
+          }
+        ],
+        "alternateLinks": []
+      }
+    },
+    {
+      "name": "rng-0-policy-1",
+      "url": "https://zzz.rng.moe/en/credits",
+      "at": "2026-10-27T13:04:36.501Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=utf-8",
+      "etag": null,
+      "lastModified": null,
+      "server": "cloudflare",
+      "bytes": 20658,
+      "sha256": "5d0ec9605bd1326cf2aa3320534a285678ac1ebf6f313a3925bc3b22731220ec",
+      "shape": {
+        "html": true,
+        "scripts": 6,
+        "jsonLd": 0,
+        "channelNames": [],
+        "absoluteDates": [],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [
+          "https://analytics.rng.moe/script.js",
+          "https://s.nitropay.com/ads-1975.js",
+          "https://www.googletagmanager.com/gtag/js?id=G-M0WVQKHS6Q"
+        ],
+        "surfaceLinks": [
+          {
+            "href": "/en/privacy",
+            "label": "Privacy Policy"
+          },
+          {
+            "href": "/en/credits",
+            "label": "Credits"
+          }
+        ],
+        "alternateLinks": []
+      }
+    },
+    {
+      "name": "poly-robots",
+      "url": "https://zzz-poly-cal.vercel.app/robots.txt",
+      "at": "2026-10-27T13:04:36.558Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/plain; charset=utf-8",
+      "etag": "\"c11b9c2769b32ac8606ac387e4efe2a0\"",
+      "lastModified": "Mon, 26 Oct 2026 14:51:17 GMT",
+      "server": "Vercel",
+      "bytes": 153,
+      "sha256": "234b377afeca249adf8d0667872fff620fcc12e289ea5db218483f9d15430514",
+      "shape": {
+        "html": false,
+        "scripts": 0,
+        "jsonLd": 0,
+        "channelNames": [],
+        "absoluteDates": [],
+        "hasServerTime": false,
+        "hasNextData": false,
+        "hasNuxtData": false,
+        "scriptSources": [],
+        "surfaceLinks": [],
+        "alternateLinks": []
+      }
+    },
+    {
+      "name": "poly-0",
+      "url": "https://zzz-poly-cal.vercel.app/calendar",
+      "at": "2026-10-27T13:04:38.527Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=utf-8",
+      "etag": "W/\"99e546230e06d87d25176afb1b5a20f4\"",
+      "lastModified": null,
+      "server": "Vercel",
+      "bytes": 136090,
+      "sha256": "966a1e82c334303baafad6b949bf75d61e90e1212d77f75f2d89d86c458bd17c",
+      "shape": {
+        "html": true,
+        "scripts": 24,
+        "jsonLd": 4,
+        "channelNames": [],
+        "absoluteDates": [
+          "2026/10/21",
+          "2026/12/02"
+        ],
+        "hasServerTime": true,
+        "hasNextData": true,
+        "hasNuxtData": false,
+        "scriptSources": [
+          "/_next/static/chunks/04~1iepf6~9pp.js",
+          "/_next/static/chunks/0892op4yene3_.js",
+          "/_next/static/chunks/0~osaxq57w.fo.js",
+          "/_next/static/chunks/1178-9f8prxz7.js",
+          "/_next/static/chunks/turbopack-0rdw_17tbty8i.js",
+          "/_next/static/chunks/0ob99nb70j09o.js",
+          "/_next/static/chunks/07d6q82x~ucxd.js",
+          "/_next/static/chunks/10sdq6k0irxud.js",
+          "/_next/static/chunks/03~yq9q893hmn.js",
+          "/_next/static/chunks/09oahvuvby3ad.js"
+        ],
+        "surfaceLinks": [],
+        "alternateLinks": []
+      }
+    },
+    {
+      "name": "poly-1",
+      "url": "https://zzz-poly-cal.vercel.app/",
+      "at": "2026-10-27T13:04:40.519Z",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=utf-8",
+      "etag": "W/\"90936f9c75222931c907e265264870c9\"",
+      "lastModified": null,
+      "server": "Vercel",
+      "bytes": 130798,
+      "sha256": "4e8bcc3441ce8a6b43c7ba3c0383dfae8ce0048588fea791a06e3a8aca99d1be",
+      "shape": {
+        "html": true,
+        "scripts": 33,
+        "jsonLd": 6,
+        "channelNames": [],
+        "absoluteDates": [],
+        "hasServerTime": false,
+        "hasNextData": true,
+        "hasNuxtData": false,
+        "scriptSources": [
+          "/_next/static/chunks/04~1iepf6~9pp.js",
+          "/_next/static/chunks/0892op4yene3_.js",
+          "/_next/static/chunks/0~osaxq57w.fo.js",
+          "/_next/static/chunks/1178-9f8prxz7.js",
+          "/_next/static/chunks/turbopack-0rdw_17tbty8i.js",
+          "/_next/static/chunks/0ob99nb70j09o.js",
+          "/_next/static/chunks/07d6q82x~ucxd.js",
+          "/_next/static/chunks/16c~qpcmex9ex.js",
+          "/_next/static/chunks/0njj4zo3mpc0x.js",
+          "/_next/static/chunks/03~yq9q893hmn.js",
+          "/_next/static/chunks/09oahvuvby3ad.js"
+        ],
+        "surfaceLinks": [],
+        "alternateLinks": []
+      }
+    }
+  ],
+  "artifact": {
+    "id": 12735359947,
+    "sha256": "52f250487f141039174242ab4351be71073cf43300cee150c8b406b0bf249b5d",
+    "expiresAt": "2026-11-03T13:04:40Z"
+  }
+}
