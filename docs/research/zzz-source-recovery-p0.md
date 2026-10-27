@@ -3,6 +3,10 @@
 **2026-10-27 (Moscow); baseline main `ffe2356`; verdict: BLOCKED for the full
 unattended events + banners milestone. Gate B was not started.**
 
+**Follow-up:** partial Steam events-only ingestion was subsequently implemented
+in #109; see `docs/evidence/zzz-steam-events-recovery.md`. The historical verdict
+below remains applicable to the full events + dated banners goal.
+
 This verdict applies to the tested surfaces and the contract in
 `docs/tasks/ZZZ-SOURCE-RECOVERY-P0.md`. It does not assert that every possible
 publisher surface is inaccessible. Steam is accessible and useful for events;

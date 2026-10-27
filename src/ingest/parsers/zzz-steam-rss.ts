@@ -84,9 +84,15 @@ function oneLine(text: string[], pattern: RegExp, name: string): RegExpExecArray
 
 function parsePost(post: Post, ctx: ParseContext): GachaEvent[] {
   const version = UPDATE_TITLE.exec(post.title)?.[1];
-  if (!version) return []; // previews, account help, store promotions and phase notices are outside this parser
+  if (!version) {
+    if (/\bVersion \d+\.\d+\b/.test(post.title) && /Update Announcement/i.test(post.title)) {
+      throw new Error("ZZZ version-update title template changed");
+    }
+    return []; // previews, account help, store promotions and phase notices are outside this parser
+  }
   const text = lines(post.html);
-  if (!text.some(line => line.includes(`updated content and compensation for Version ${version}`))) {
+  const bodyVersion = new RegExp(`updated content and compensation for Version ${version.replace(".", "\\.")}\\b`);
+  if (!text.some(line => bodyVersion.test(line))) {
     throw new Error("ZZZ title/body version mismatch");
   }
   const startHeadings = text.map((line, i) => /^\\?\[Update Start Time\]$/.test(line) ? i : -1).filter(i => i >= 0);

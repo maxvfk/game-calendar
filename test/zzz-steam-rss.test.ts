@@ -131,6 +131,8 @@ describe("ZZZ strict source boundaries", () => {
       post.replace("Event Duration:", "Expected period:"),
       post.replace("Event Duration:", "Event Duration: a broken duplicate&lt;br&gt;Event Duration:"),
       post.replace("for Version 3.4.", "for Version 3.3."),
+      post.replace("for Version 3.4.", "for Version 3.40."),
+      post.replace("Version 3.4 &quot;Synthetic", "Zenless Zone Zero Version 3.4 &quot;Synthetic"),
     ]) expect(() => parse(wrap([broken, ...items]))).toThrow();
   });
 
