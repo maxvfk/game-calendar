@@ -1,5 +1,27 @@
 # Game calendar implementation status
 
+## Source Recovery D0 — R1/R2/R3 design: DRAFT FOR INDEPENDENT REVIEW (2026-10-27)
+
+Design-only proposal: `docs/tasks/SOURCE-RECOVERY-R1-R3-DESIGN.md`.
+No incident monitor, agent jobs, triggers, credentials, runtime code, permissions,
+source adapters or new workflows implemented in D0.
+
+Operator decisions: R1 deterministic coverage/source monitoring with deduplicated
+GitHub incidents and no AI; R2 manual Claude coding-agent recovery; R3 automatic
+severe-incident Claude coding-agent recovery with stronger bounded resources.
+**R2/R3 both STOP after a draft PR and GitHub notification; no self-review,
+auto-merge, protected-main write or production deployment.** The operator may
+then commission an independent ChatGPT Work or Claude review and explicitly
+request merge separately.
+
+Reuse the **proven** Timeline Claude Pro OAuth CLI path and usage-limit handling
+(`docs/tasks/TIMELINE-LABEL-AUTONOMOUS.md`, `timeline-labels.yml`), but do NOT
+claim tool-capable coding-agent safety/auth/PR-CI are already validated. Security,
+incident dedup, coverage false positives and fail-closed evidence gates need
+independent design review. **Next concrete step:** reviewer Claude familiar with
+Timeline integration critiques D0; amend before separately authorizing R1a.
+
+
 ## ZZZ B1 — unattended banner recovery: IMPLEMENTED, SECONDARY RSS (2026-10-27)
 
 Delivery: [PR #112](https://github.com/maxvfk/game-calendar/pull/112), from main
