@@ -21,11 +21,22 @@ export interface ResetRule {
 
 const monthName = (day: string) => new Intl.DateTimeFormat("en", { month: "long", timeZone: "UTC" }).format(new Date(`${day}T00:00:00Z`));
 
+const cycleDay = (day: string) => new Intl.DateTimeFormat("en-US", {
+  month: "short", day: "numeric", timeZone: "UTC",
+}).format(new Date(`${day}T00:00:00Z`));
+
 export const RESET_RULES: ResetRule[] = [
   { game: "wuwa", mode: "tower", title: () => "Tower of Adversity: Hazard Zone", anchorDay: "2025-02-03", cadence: { days: 28 }, resetHour: 4, effectiveFrom: "2025-02-03", sourceUrl: "https://wutheringwaves.kurogames.com/en/main/news/detail/2094", provenanceStatus: "estimated", confidence: 0.75 },
   { game: "wuwa", mode: "wastes", title: () => "Whimpering Wastes: Respawning Waters", anchorDay: "2025-03-17", cadence: { days: 28 }, resetHour: 4, effectiveFrom: "2025-03-17", sourceUrl: "https://wutheringwaves.kurogames.com/en/main/news/detail/2154", provenanceStatus: "estimated", confidence: 0.75 },
   { game: "genshin", mode: "abyss", title: d => `Spiral Abyss — ${monthName(d)} ${d.slice(0, 4)} Season`, anchorDay: "2024-07-16", cadence: { monthDay: 16 }, resetHour: 4, effectiveFrom: "2024-07-16", sourceUrl: "https://www.hoyolab.com/article/29513513", provenanceStatus: "estimated", confidence: 0.9 },
   { game: "genshin", mode: "theater", title: d => `Imaginarium Theater — ${monthName(d)} ${d.slice(0, 4)} Season`, anchorDay: "2024-08-01", cadence: { monthDay: 1 }, resetHour: 4, effectiveFrom: "2024-08-01", sourceUrl: "https://www.hoyolab.com/article/29513513", provenanceStatus: "estimated", confidence: 0.9 },
+  // Gate and provenance: docs/research/zzz-endgame-reanchoring-2026.md.
+  // The 2.5 anchor is official; generate only from the currently verified cycle,
+  // without backfilling intervening historical schedule exceptions.
+  { game: "zzz", mode: "shiyu-critical-node", title: d => `Shiyu Defense: Critical Node (${cycleDay(d)})`, anchorDay: "2026-01-09", cadence: { days: 14 }, resetHour: 4, effectiveFrom: "2026-10-16", sourceUrl: "https://zenless.hoyoverse.com/en-us/news/161728", provenanceStatus: "estimated", confidence: 0.9 },
+  // Independent dated observations, not an official 2026 phase-change notice.
+  // Only the newly verified current cycle onward is enabled for this mode.
+  { game: "zzz", mode: "deadly-assault", title: d => `Deadly Assault (${cycleDay(d)})`, anchorDay: "2026-01-16", cadence: { days: 14 }, resetHour: 4, effectiveFrom: "2026-10-23", sourceUrl: "https://labz55.com/zzzteamforge/en/deadly-assault", provenanceStatus: "estimated", confidence: 0.75 },
 ];
 
 function nextDay(day: string, cadence: ResetRule["cadence"]): string {
@@ -51,10 +62,18 @@ export function fixedResetCycles(rule: ResetRule, now: string, rules: readonly R
       const regionEnds = Object.fromEntries(Region.options.map(region => [region,
         new Date(Date.parse(`${next}T00:00:00Z`) + (rule.resetHour - serverOffsetUtc(region, rule.game)) * 3_600_000 - 60_000).toISOString(),
       ])) as Record<typeof Region.options[number], string>;
+      // ZZZ recovery publishes ongoing + upcoming cycles, retaining the current
+      // one until its last regional deadline. Other schedules keep their lookback.
+      if (rule.game === "zzz" && Math.max(...Object.values(regionEnds).map(Date.parse)) < Date.parse(now)) {
+        day = next;
+        continue;
+      }
       const title = rule.title(day);
       out.push(GachaEvent.parse({
         id: eventId(rule.game, title, `${day}T00:00:00.000Z`), game: rule.game, title,
-        type: "challenge", summary: `${rule.mode} reset cycle; source date is the server calendar day.`,
+        type: "challenge", summary: rule.game === "zzz"
+          ? "Projected 14-day rotation from a verified reset rule; not an individually announced period."
+          : `${rule.mode} reset cycle; source date is the server calendar day.`,
         startsAt: `${day}T00:00:00.000Z`, startPrecision: "day",
         endsAt: regionEnds.asia, endPrecision: "exact", regionScoped: true, regionEnds,
         sourceUrl: rule.sourceUrl, sourceId: `recurring-${rule.game}-${rule.mode}`,
@@ -71,17 +90,21 @@ export function fixedResetCycles(rule: ResetRule, now: string, rules: readonly R
 
 /** A sourced correction freezes this mode until a newly reviewed effective rule is checked in. */
 export function recurringEndgame(now: string, rules: readonly ResetRule[] = RESET_RULES, sourced: readonly GachaEvent[] = []): GachaEvent[] {
-  const candidates = rules.flatMap(rule => fixedResetCycles(rule, now, rules));
+  const candidates = rules.flatMap(rule => fixedResetCycles(rule, now, rules).map(event => ({ event, rule })));
+  const key = (event: GachaEvent, rule: ResetRule) => event.game === "zzz"
+    ? `${event.sourceId}:${rule.effectiveFrom}` : event.sourceId;
   const frozen = new Set<string>();
-  for (const candidate of candidates) {
+  for (const { event: candidate, rule } of candidates) {
     const observed = sourced.find(e => e.id === candidate.id && e.game === candidate.game && e.type === "challenge" && e.endPrecision === "exact");
     if (observed && (observed.endsAt !== candidate.endsAt ||
+      (candidate.game === "zzz" && observed.startPrecision === "day" && observed.startsAt !== candidate.startsAt) ||
       Region.options.some(region => observed.regionEnds?.[region] !== candidate.regionEnds?.[region]))) {
-      frozen.add(candidate.sourceId);
+      frozen.add(key(candidate, rule));
       console.warn(`  ! recurring rule ${candidate.sourceId} conflicts with sourced ${observed.id}; projections frozen`);
     }
   }
-  return candidates.filter(e => !frozen.has(e.sourceId) || sourced.some(s => s.id === e.id));
+  return candidates.filter(({ event, rule }) => !frozen.has(key(event, rule)) || sourced.some(s => s.id === event.id))
+    .map(({ event }) => event);
 }
 
 /** The regular maintenance clock is an effective-dated rule, never a blanket historical conversion. */

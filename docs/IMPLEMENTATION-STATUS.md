@@ -1,30 +1,64 @@
 # Game calendar implementation status
 
-## Coordination — ZZZ Shiyu / Deadly Assault re-anchoring: TASK READY, NOT IMPLEMENTED (2026-10-27)
+## ZZZ Shiyu / Deadly Assault 2026 re-anchoring: IMPLEMENTED (2026-10-27)
 
-**Operator priority:** restore the missing current Shiyu Defense: Critical Node
-and Deadly Assault cycles **before** the separately planned ZZZ banner source
-B1 and Timeline v2 / Event Context summaries. Task:
-`docs/tasks/ZZZ-ENDGAME-REANCHORING-2026.md`.
+Bounded implementation from current main `103d746`, after #109/#110; no parallel
+re-anchoring PR was present. Task: `docs/tasks/ZZZ-ENDGAME-REANCHORING-2026.md`.
+Per-mode gate, dated sources, exceptions and retrieval limits:
+`docs/research/zzz-endgame-reanchoring-2026.md`. Fixed-clock full-feed proof:
+`docs/evidence/zzz-endgame-feed-replay-2026-10-27.json`.
 
-The historical January 2025 anchors are seven days out of phase with verified
-September 2026 reviewed rotations. New evidence from official Version 2.5
-(https://zenless.hoyoverse.com/en-us/news/161728) establishes the Shiyu
-transition ending January 9, 2026 at 03:59 server time, followed by 14-day
-periods. Independent observations agree with the October 16–30 Shiyu cycle;
-Deadly Assault's October 23–November 6 cycle is consistent with archival
-January 16 and contemporary countdowns but requires its **own anchor gate**.
+- **Shiyu PASS:** canonical official 2.4 amendment and 2.5 transitional Phase I
+  ending January 9 at 03:59 establish the January 9, 2026 04:00 post-transition
+  anchor. Independently dated September/October resets corroborate the current
+  October 16–30 cycle. Official bodies were read through their canonical search
+  index, not fetched as runnable HTML ingestion. A July 7 secondary changelog
+  anomaly remains unexplained; no uninterrupted historical January→October
+  schedule is claimed. Production `effectiveFrom` is conservatively October 16.
+- **Deadly PASS for estimated recurrence:** January 16 anchor is corroborated
+  independently by dated January showcases, August/September observations and
+  the explicit current October 23–November 6 window. No official 2026 phase-change
+  notice was found. Production `effectiveFrom` is October 23; source is the
+  secondary Team Forge page, not an official URL. Neither mode is blocked;
+  neither is labelled individually announced/official.
+- Existing recurring engine, 14-day cadence and 70-day start horizon; both
+  modes publish **estimated projections** (Shiyu 0.9 / Deadly 0.75). Starts retain
+  honest server-day precision, ends exact inclusive 03:59 before 04:00 reset.
+  Fixed Asia +8 / Europe +1 / America −5 offsets are independent of viewer DST.
+  Shiyu October 30 end: **Oct 29 19:59Z / Oct 30 02:59Z / Oct 30 08:59Z**;
+  Deadly November 6 end: **Nov 5 19:59Z / Nov 6 02:59Z / Nov 6 08:59Z**.
+- Current Shiyu **Oct 16→30**, then Oct 30→Nov 13, Nov 13→27, Nov 27→Dec 11,
+  Dec 11→25, Dec 25→Jan 8. Current Deadly **Oct 23→Nov 6**, then Nov 6→20,
+  Nov 20→Dec 4, Dec 4→18, Dec 18→Jan 1, Jan 1→15. Ongoing cycles remain
+  present through the last regional deadline even when their start is >7 days old.
+- At `2026-10-27T11:00Z`: **12 new rotations (2 current + 10 future)**;
+  **54→66 ZZZ records**, **217→229 whole feed**; unexpired ZZZ **14→26**
+  (10 active + 16 upcoming). All 217 previous winners and all 30 reviewed rows
+  remain byte-for-byte equal in the fixed-clock replay, with unchanged source
+  health/conflicts and unrelated-game hash. No snapshots/reviewed files edited.
+  Existing September IDs and completion keys survive; new IDs follow the same
+  `Mode (Mon D)` title/server opening day convention, including year rollover.
+- Explicit sourced rows win without a projection confidence bonus. Exact regional
+  mismatches, including one minute between estimated rows, remain review conflicts
+  and freeze that mode's other projections. A separately verified effective rule
+  can release its future cycles without rewriting historical records. Other
+  recurring schedules and #109 Steam ingestion are unchanged; source freshness
+  is not advanced by calculations.
+- **Validation:** frozen install/typecheck/production build PASS; full tests
+  **1326 pass, 3 existing age-dependent skips, 0 fail** (70 files).
+  15 new regression cases cover anchors, cadence, deadlines, IDs, all reviewed
+  rows/order independence, conflicts, effective overrides and feed isolation.
+  CI/Pages and deployed-feed verification are recorded in the implementation PR.
 
-No recurrence was enabled merely by filing the task. Gate per mode: verify the
-effective rule and source provenance; implement only grounded current/near-term
-cycles using existing fixed-reset engine, exact regional ends and stable IDs;
-otherwise record a real blocker or finite reviewed fallback. All historic
-reviewed records and #109 Steam source stay unchanged.
+**Operator phone smoke still required:** open ZZZ, confirm the two current rows
+and next rotations appear once, switch Asia/Europe/America and compare deadlines
+with each game's countdown; check completion survives reload and September history
+keeps its previous keys. Report any in-game schedule exception for a new effective
+rule. This delivery does not claim a new in-game capture or official Deadly anchor.
 
-**Next concrete step:** separate bounded implementation Work for endgame
-re-anchoring; after acceptance resume ZZZ banner source B1, then consider
-Editorial v2/E2b. No unrelated code was changed in this coordination task.
-
+**Next concrete step:** separate `docs/tasks/ZZZ-BANNER-SOURCE-RECOVERY.md` B1.
+No banner, other endgame, Timeline v2, Event Context or Account/Sync work started.
+**STOP after this milestone.**
 
 ## ZZZ E1 — Steam events-only unattended recovery: COMPLETE (2026-10-27)
 

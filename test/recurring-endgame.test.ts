@@ -55,13 +55,14 @@ test("published October Theater ID survives exact deadline enrichment", async ()
   expect(row.firstSeenAt).toBe("2026-09-21T19:31:13.000Z");
 });
 
-test("2025 ZZZ anchors conflict with current sourced dates, so no unsafe rows are generated", () => {
+test("obsolete 2025 ZZZ anchors stay excluded after effective 2026 re-anchoring", () => {
   const historicalShiyu = "2025-01-03";
   const historicalDeadly = "2025-01-10";
   const differenceInDays = (a: string, b: string) => (Date.parse(`${b}T00:00:00Z`) - Date.parse(`${a}T00:00:00Z`)) / 86_400_000;
   expect(differenceInDays(historicalShiyu, "2026-09-18") % 14).toBe(7);
   expect(differenceInDays(historicalDeadly, "2026-09-11") % 14).toBe(7);
-  expect(cycles.every(e => e.game !== "zzz")).toBe(true);
+  expect(RESET_RULES.filter(r => r.game === "zzz").every(r =>
+    r.anchorDay !== historicalShiyu && r.anchorDay !== historicalDeadly && r.effectiveFrom >= "2026-01-09")).toBe(true);
 });
 
 test("sourced correction freezes a reset mode until its rule is re-anchored", () => {
