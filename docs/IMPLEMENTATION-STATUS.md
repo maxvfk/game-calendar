@@ -1,5 +1,26 @@
 # Game calendar implementation status
 
+## ZZZ recovery coordination — source restoration before editorial summaries (2026-10-27)
+
+Operator priority after the blocked full-source Gate A (#107): **finish ZZZ source
+recovery before Timeline v2 cutover / Event Context E2b–E4 summaries**. This is
+milestone ordering, **not** an implementation claim.
+
+1. First implementation-ready bounded task:
+   `docs/tasks/ZZZ-STEAM-EVENTS-ONLY-RECOVERY.md`: official Steam publisher RSS,
+   real runner ingestion of limited-time events, no invented banner periods,
+   reviewed records/IDs unchanged. Steam event extraction is NOT YET implemented.
+2. Then separately gated banner task:
+   `docs/tasks/ZZZ-BANNER-SOURCE-RECOVERY.md`: find a truly usable compliant
+   dynamic dated-phase source in the actual runner, then implement only if the
+   gate succeeds; otherwise preserve reviewed updates and document the blocker.
+   Banner ingestion is NOT YET implemented.
+3. Resume editorial v2/E2b planning only after these bounded ZZZ recovery
+   steps are assessed; do not misreport events-only as full ZZZ recovery.
+
+Both task specifications were prepared after the #107 evidence; they do not
+change the #107 BLOCKED finding or current production source state.
+
 ## ZZZ source recovery P0 — Gate A BLOCKED; ingestion NOT restored (2026-10-27)
 
 Current-main baseline `ffe2356` after #105/#106; no concurrent recovery PR
