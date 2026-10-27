@@ -1,22 +1,63 @@
 # Game calendar implementation status
 
-## HSR Version 4.6 Treasures Lightward: COVERAGE BUG, P0 TASK READY (2026-10-28)
+## HSR Version 4.6 Treasures Lightward: P0 IMPLEMENTED (2026-10-28)
 
-Task: `docs/tasks/HSR-4-6-LIGHTWARD-COVERAGE-P0.md`; **not yet implemented**.
-The canonical 4.6 official update notice (https://hsr.hoyoverse.com/en-us/news/166468)
-and our own current KQM/HSRNews snapshot `archive/1437.md` explicitly include
-four dated phases: MoC Crossing the Afterlife to Nov 2 03:59 server, AS Dominance
-of Oblivion to Nov 16, PF Imagined Words to Nov 30, next MoC Survival of the
-Fittest Nov 2–Dec 14. Current reviewed HSR contains only expired older phases.
-Source is not broken: the 4.6 snapshot was confirmed Oct 27, yet the parser
-does not read `7. Others → Gameplay → Treasures Lightward` and its regexp
-excludes Memory of Chaos. Existing KQM health is thus a false positive for
-coverage. A focused parser/regression fix is needed, not another source search
-or date recurrence assumption. Previous review rows and all event IDs must be
-preserved. **Next concrete step:** bounded HSR 4.6 Lightward implementation
-Work, tests, PR and CI/Pages; then separately audit remaining HSR 4.6 coverage.
-No other milestone is authorized by documenting this issue.
+Task: `docs/tasks/HSR-4-6-LIGHTWARD-COVERAGE-P0.md`; baseline main `9d112a6`.
+Bounded parser hotfix; delivery/CI/Pages verification will be recorded after merge.
 
+- The actual defect is narrower than the initial task diagnosis: AS Dominance of
+  Oblivion and PF Imagined Words already parsed through an unscoped mode search.
+  Both **Memory of Chaos** phases were missing. The full notice now reads modes
+  only under `7. Others → Gameplay → "Treasures Lightward"`, stopping at the next
+  section. The older 4.5 factual excerpt remains supported without changing IDs.
+- Actual checked-in `snapshots/hsr-kqm-hsrnews.md`, `archive/1437.md`, SHA256
+  `0002a2fa60fc8484b6f1000b8870417a9db53dbd4f7fdbe7d2ac76e491855900`,
+  confirmed `2026-10-27T21:23:33.629Z`: **6→8 parser candidates**, **four explicit
+  Lightward windows**. Snapshot bytes/meta and all 13 reviewed HSR records remain
+  untouched. Source ID and extraction URL remain KQM/HSRNews; independent publisher
+  verification is the official https://hsr.hoyoverse.com/en-us/news/166468 notice.
+  No first-party extraction/provenance claim is fabricated for the mirror.
+- First MoC starts **2026-09-28, day precision** (after update, no guessed
+  completion clock). Subsequent server-clock starts remain day precision under
+  the existing schema. Server/global boundaries are handled independently;
+  exact regional ends below are fixed server offsets, independent of viewer DST.
+
+| Phase | Server end, 03:59 | Asia UTC | Europe UTC | America UTC |
+|---|---|---|---|---|
+| MoC Crossing the Afterlife | Nov 2 | Nov 1 19:59Z | Nov 2 02:59Z | Nov 2 08:59Z |
+| AS Dominance of Oblivion | Nov 16 | Nov 15 19:59Z | Nov 16 02:59Z | Nov 16 08:59Z |
+| PF Imagined Words | Nov 30 | Nov 29 19:59Z | Nov 30 02:59Z | Nov 30 08:59Z |
+| MoC Survival of the Fittest | Dec 14 | Dec 13 19:59Z | Dec 14 02:59Z | Dec 14 08:59Z |
+
+- Fixed-clock actual full-feed replay at **Oct 28 00:00Z: 241→243 total,
+  19→21 HSR**; at **Nov 2 12:00Z: 240→242 total, 19→21 HSR**. Exactly **two newly
+  published IDs** (the two MoCs); existing AS/PF remain unchanged. Every prior
+  winner is byte-equivalent, other source health and the existing single NTE
+  date conflict remain unchanged. Four Lightward rows survive merge exactly once.
+  Evidence: `docs/evidence/hsr-46-lightward-feed-replay-2026-10-28.json`.
+- Seven new regression tests use a bounded factual excerpt of the actual 4.6
+  snapshot: exact three-region windows, day-only update start, all region clocks
+  immediately before/after MoC expiry, global/server independence, duplicate and
+  contradictory schedules, absent/invalid clocks, wrong version, scope decoys,
+  and 4.5 reviewed winner/ID preservation. No cadence generator or new workflow.
+- Validation: frozen install/typecheck/build PASS with Bun **1.3.14**; **1348 pass / 3 skip / 0 fail** (72 files). Self-review of parser boundaries,
+  time semantics, merge identities and the complete diff found no blocker; PR CI
+  and deployment verification remain pending. Local existing age-dependent
+  tests skip when the `age` executable is unavailable; dedicated CI recovery
+  validation installs it. No unrelated game/client/Sync/Timeline changes.
+
+**Remaining gaps outside P0:** the snapshot names 4.6 Astral Trendible / Park
+Souvenir (Availability/Claim Period), Astral Slammers Squad (no explicit end),
+and Anomaly Arbitration: Return to Roots (no explicit phase period). Those 4.6
+rows are absent from the current feed. Current Warp/banner coverage and other
+reward families are not claimed complete; no new research or generalized audit
+was performed here. Historical reviewed AA remains unchanged. These require a
+separate coverage audit and source-grounded dates, never inferred version/cadence.
+
+**Next concrete step:** finish PR review/CI, merge and verify Pages/live feed;
+operator then compares the current MoC deadline against the in-game timer on
+phone/desktop. Afterwards, separately scope the remaining HSR 4.6 coverage audit.
+**STOP after this HSR P0 fix.** PR #115, E2a.1 and Source Recovery are untouched.
 
 ## ZZZ B1 — unattended banner recovery: IMPLEMENTED, SECONDARY RSS (2026-10-27)
 
