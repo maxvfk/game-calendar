@@ -21,3 +21,11 @@ history and re-inventories every registry commit up to a fresh explicit local re
 It rejects a stale manifest. Updating an audit boundary later requires reviewed
 regeneration of its historical fixtures too; a passing historical test is never
 a freshness gate or production-cutover authorization.
+
+
+`record-v1-before-cutover.sh` is the exact production v1 M4 runner at E2a.1
+baseline `ed773a8` (unchanged since the E2a audit). Its SHA256 is independently
+checked against the frozen E2a metadata. The local-remote stale-runner drill runs
+these actual bytes without requiring historical objects in shallow CI. This is
+a test fixture, never an installed writer. Real operator cutover inventory still
+requires complete history and fresh remote checks.

@@ -219,8 +219,11 @@ test("actual old record.sh cannot write, new runner obeys freeze and records v2 
   // Only heavyweight check commands are stubbed. Ticket/reader/accept and Git run for real.
   const quote = (s: string) => "'" + s.replaceAll("'", "'\\''") + "'";
   await Bun.write(join(bin, "bun"), `#!/bin/sh\nif [ "$1" = run ] || [ "$1" = test ]; then exit 0; fi\nexec ${quote(process.execPath)} "$@"\n`); chmodSync(join(bin, "bun"), 0o755);
-  const beforeScript = Bun.spawnSync(["git", "show", `${manifest.sourceMain}:scripts/timeline-label-agent/record.sh`], { cwd: root });
-  expect(beforeScript.exitCode).toBe(0); const old = join(dir, "old-record.sh"); await Bun.write(old, beforeScript.stdout);
+  // Ordinary CI is shallow. Freeze the actual old runner and verify its independent E2a hash.
+  const beforeScript = await Bun.file(join(root, "test/fixtures/editorial/record-v1-before-cutover.sh")).text();
+  const frozenHistory = await Bun.file(join(root, "test/fixtures/editorial/provenance-history-2026-10-26.json")).json();
+  expect(sha256(beforeScript)).toBe(frozenHistory.m4Files.find((f: { path: string }) => f.path === "scripts/timeline-label-agent/record.sh").sha256);
+  const old = join(dir, "old-record.sh"); await Bun.write(old, beforeScript);
   const run = (script: string, ticketArg: boolean) => Bun.spawnSync(["bash", script, p, "main", reports, ...(ticketArg ? [ticket] : [])], { cwd: work, env: { ...process.env, PATH: bin + ":" + process.env.PATH } });
   let r = run(old, false); expect(r.exitCode).not.toBe(0); expect(git(dir, ["--git-dir", bare, "rev-parse", "main"])).toBe(base);
   r = run(join(root, "scripts/timeline-label-agent/record.sh"), true); expect(r.exitCode).not.toBe(0);
