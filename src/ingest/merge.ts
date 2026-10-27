@@ -84,8 +84,14 @@ export function mergeEvents(
     if (existing === undefined) continue;
 
     const conflict = findConflict(existing, incoming, toleranceHours);
+    // A ZZZ projection is not an independent observation. Explicit sourced
+    // cycles override it even when their confidence is lower; keep their IDs/copy.
+    const zzzProjectionPair = isZzzProjection(existing) !== isZzzProjection(incoming) &&
+      existing.game === "zzz" && incoming.game === "zzz";
+    const preferIncoming = zzzProjectionPair ? isZzzProjection(existing)
+      : incoming.confidence > existing.confidence;
     const [winner, loser] =
-      incoming.confidence > existing.confidence
+      preferIncoming
         ? ([incoming, existing] as const)
         : ([existing, incoming] as const);
 
@@ -101,7 +107,7 @@ export function mergeEvents(
     // Agreement from a different source is real evidence; from the same source
     // it is just the same row seen twice.
     const corroborated =
-      winner.sourceId !== loser.sourceId
+      !zzzProjectionPair && winner.sourceId !== loser.sourceId
         ? { ...winner, confidence: Math.min(1, winner.confidence + bonus) }
         : winner;
 
@@ -176,6 +182,10 @@ export function titleExtends(a: string, b: string): boolean {
   return small.every((word, i) => large[i] === word);
 }
 
+function isZzzProjection(event: GachaEvent): boolean {
+  return event.game === "zzz" && /^recurring-zzz-(?:shiyu-critical-node|deadly-assault)$/.test(event.sourceId);
+}
+
 function findConflict(
   a: GachaEvent,
   b: GachaEvent,
@@ -185,19 +195,27 @@ function findConflict(
   // review even at a one-minute gap. Compare every server region rather than
   // only the canonical Asia end; Europe/America can disagree while Asia agrees.
   const official = a.provenanceStatus === "official" || b.provenanceStatus === "official";
+  // Estimated provenance cannot hide an exact one-minute recurrence contradiction.
+  const strictZzz = isZzzProjection(a) || isZzzProjection(b);
   if (a.endPrecision === "exact" && b.endPrecision === "exact" && a.endsAt && b.endsAt) {
     for (const region of ["asia", "europe", "america"] as const) {
       const av = a.regionEnds?.[region] ?? a.endsAt;
       const bv = b.regionEnds?.[region] ?? b.endsAt;
       const deltaHours = hoursBetween(av, bv);
-      if (deltaHours > (official ? 0 : toleranceHours)) {
+      if (deltaHours > (official || strictZzz ? 0 : toleranceHours)) {
         return { field: "endsAt", deltaHours, region };
       }
     }
   }
+  if (strictZzz && a.startPrecision === "day" && b.startPrecision === "day" && a.startsAt !== b.startsAt) {
+    return { field: "startsAt", deltaHours: hoursBetween(a.startsAt, b.startsAt) };
+  }
   if (official && a.startPrecision === "exact" && b.startPrecision === "exact" &&
     a.startsAt !== b.startsAt) {
     return { field: "startsAt", deltaHours: hoursBetween(a.startsAt, b.startsAt) };
+  }
+  if (strictZzz && a.endsAt !== null && b.endsAt !== null && a.endsAt !== b.endsAt) {
+    return { field: "endsAt", deltaHours: hoursBetween(a.endsAt, b.endsAt) };
   }
   if (a.endsAt !== null && b.endsAt !== null) {
     const delta = hoursBetween(a.endsAt, b.endsAt);

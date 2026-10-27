@@ -1,0 +1,212 @@
+{
+  "baselineMain": "103d7461c34380ac8a992c8ae12ce043b5031a75",
+  "fixedClock": "2026-10-27T11:00:00.000Z",
+  "before": {
+    "feed": 217,
+    "zzz": 54
+  },
+  "after": {
+    "feed": 229,
+    "zzz": 66
+  },
+  "allPrior217RowsUnchanged": true,
+  "allSourceHealthUnchanged": true,
+  "allDateConflictsUnchanged": true,
+  "unrelatedEventsSha256": "51ecf6f836781cb0a7e9e01e78ba2843d0b580dcd44d6a84cbef0b17bfac4916",
+  "sourceHealthSha256": "2fb9950853a17a7759477ac6c521ef5e63f22c766424618fd4aa5fc137a6125b",
+  "dateConflictsSha256": "3f6d4315440af74911f657cc0efe350910f6b87399ee5dcb0e01bea0d377aa22",
+  "cycles": [
+    {
+      "id": "zzz:shiyu-defense-critical-node-oct-16:2026-10-16",
+      "title": "Shiyu Defense: Critical Node (Oct 16)",
+      "startsAt": "2026-10-16T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-29T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionEnds": {
+        "asia": "2026-10-29T19:59:00.000Z",
+        "america": "2026-10-30T08:59:00.000Z",
+        "europe": "2026-10-30T02:59:00.000Z"
+      },
+      "provenanceStatus": "estimated",
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/161728",
+      "sourceId": "recurring-zzz-shiyu-critical-node"
+    },
+    {
+      "id": "zzz:deadly-assault-oct-23:2026-10-23",
+      "title": "Deadly Assault (Oct 23)",
+      "startsAt": "2026-10-23T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-05T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionEnds": {
+        "asia": "2026-11-05T19:59:00.000Z",
+        "america": "2026-11-06T08:59:00.000Z",
+        "europe": "2026-11-06T02:59:00.000Z"
+      },
+      "provenanceStatus": "estimated",
+      "sourceUrl": "https://labz55.com/zzzteamforge/en/deadly-assault",
+      "sourceId": "recurring-zzz-deadly-assault"
+    },
+    {
+      "id": "zzz:shiyu-defense-critical-node-oct-30:2026-10-30",
+      "title": "Shiyu Defense: Critical Node (Oct 30)",
+      "startsAt": "2026-10-30T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-12T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionEnds": {
+        "asia": "2026-11-12T19:59:00.000Z",
+        "america": "2026-11-13T08:59:00.000Z",
+        "europe": "2026-11-13T02:59:00.000Z"
+      },
+      "provenanceStatus": "estimated",
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/161728",
+      "sourceId": "recurring-zzz-shiyu-critical-node"
+    },
+    {
+      "id": "zzz:deadly-assault-nov-6:2026-11-06",
+      "title": "Deadly Assault (Nov 6)",
+      "startsAt": "2026-11-06T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-19T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionEnds": {
+        "asia": "2026-11-19T19:59:00.000Z",
+        "america": "2026-11-20T08:59:00.000Z",
+        "europe": "2026-11-20T02:59:00.000Z"
+      },
+      "provenanceStatus": "estimated",
+      "sourceUrl": "https://labz55.com/zzzteamforge/en/deadly-assault",
+      "sourceId": "recurring-zzz-deadly-assault"
+    },
+    {
+      "id": "zzz:shiyu-defense-critical-node-nov-13:2026-11-13",
+      "title": "Shiyu Defense: Critical Node (Nov 13)",
+      "startsAt": "2026-11-13T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-26T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionEnds": {
+        "asia": "2026-11-26T19:59:00.000Z",
+        "america": "2026-11-27T08:59:00.000Z",
+        "europe": "2026-11-27T02:59:00.000Z"
+      },
+      "provenanceStatus": "estimated",
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/161728",
+      "sourceId": "recurring-zzz-shiyu-critical-node"
+    },
+    {
+      "id": "zzz:deadly-assault-nov-20:2026-11-20",
+      "title": "Deadly Assault (Nov 20)",
+      "startsAt": "2026-11-20T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-03T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionEnds": {
+        "asia": "2026-12-03T19:59:00.000Z",
+        "america": "2026-12-04T08:59:00.000Z",
+        "europe": "2026-12-04T02:59:00.000Z"
+      },
+      "provenanceStatus": "estimated",
+      "sourceUrl": "https://labz55.com/zzzteamforge/en/deadly-assault",
+      "sourceId": "recurring-zzz-deadly-assault"
+    },
+    {
+      "id": "zzz:shiyu-defense-critical-node-nov-27:2026-11-27",
+      "title": "Shiyu Defense: Critical Node (Nov 27)",
+      "startsAt": "2026-11-27T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-10T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionEnds": {
+        "asia": "2026-12-10T19:59:00.000Z",
+        "america": "2026-12-11T08:59:00.000Z",
+        "europe": "2026-12-11T02:59:00.000Z"
+      },
+      "provenanceStatus": "estimated",
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/161728",
+      "sourceId": "recurring-zzz-shiyu-critical-node"
+    },
+    {
+      "id": "zzz:deadly-assault-dec-4:2026-12-04",
+      "title": "Deadly Assault (Dec 4)",
+      "startsAt": "2026-12-04T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-17T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionEnds": {
+        "asia": "2026-12-17T19:59:00.000Z",
+        "america": "2026-12-18T08:59:00.000Z",
+        "europe": "2026-12-18T02:59:00.000Z"
+      },
+      "provenanceStatus": "estimated",
+      "sourceUrl": "https://labz55.com/zzzteamforge/en/deadly-assault",
+      "sourceId": "recurring-zzz-deadly-assault"
+    },
+    {
+      "id": "zzz:shiyu-defense-critical-node-dec-11:2026-12-11",
+      "title": "Shiyu Defense: Critical Node (Dec 11)",
+      "startsAt": "2026-12-11T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-24T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionEnds": {
+        "asia": "2026-12-24T19:59:00.000Z",
+        "america": "2026-12-25T08:59:00.000Z",
+        "europe": "2026-12-25T02:59:00.000Z"
+      },
+      "provenanceStatus": "estimated",
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/161728",
+      "sourceId": "recurring-zzz-shiyu-critical-node"
+    },
+    {
+      "id": "zzz:deadly-assault-dec-18:2026-12-18",
+      "title": "Deadly Assault (Dec 18)",
+      "startsAt": "2026-12-18T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-31T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionEnds": {
+        "asia": "2026-12-31T19:59:00.000Z",
+        "america": "2027-01-01T08:59:00.000Z",
+        "europe": "2027-01-01T02:59:00.000Z"
+      },
+      "provenanceStatus": "estimated",
+      "sourceUrl": "https://labz55.com/zzzteamforge/en/deadly-assault",
+      "sourceId": "recurring-zzz-deadly-assault"
+    },
+    {
+      "id": "zzz:shiyu-defense-critical-node-dec-25:2026-12-25",
+      "title": "Shiyu Defense: Critical Node (Dec 25)",
+      "startsAt": "2026-12-25T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2027-01-07T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionEnds": {
+        "asia": "2027-01-07T19:59:00.000Z",
+        "america": "2027-01-08T08:59:00.000Z",
+        "europe": "2027-01-08T02:59:00.000Z"
+      },
+      "provenanceStatus": "estimated",
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/161728",
+      "sourceId": "recurring-zzz-shiyu-critical-node"
+    },
+    {
+      "id": "zzz:deadly-assault-jan-1:2027-01-01",
+      "title": "Deadly Assault (Jan 1)",
+      "startsAt": "2027-01-01T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2027-01-14T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionEnds": {
+        "asia": "2027-01-14T19:59:00.000Z",
+        "america": "2027-01-15T08:59:00.000Z",
+        "europe": "2027-01-15T02:59:00.000Z"
+      },
+      "provenanceStatus": "estimated",
+      "sourceUrl": "https://labz55.com/zzzteamforge/en/deadly-assault",
+      "sourceId": "recurring-zzz-deadly-assault"
+    }
+  ]
+}

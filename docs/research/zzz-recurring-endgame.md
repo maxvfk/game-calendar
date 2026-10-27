@@ -1,6 +1,7 @@
 # Zenless Zone Zero — recurring endgame calendar research
 
-**Status:** historical biweekly rule documented; current anchor unresolved, so recurrence generation is gated
+**Status:** historical audit; superseded for Shiyu/Deadly current anchoring by
+`docs/research/zzz-endgame-reanchoring-2026.md` (2026-10-27). Other modes remain gated.
 **checkedAt:** 2026-09-24  
 **baseline main SHA:** `6884bc79de54ea5b71d4e9b11e331756ac181d27`
 

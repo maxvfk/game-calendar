@@ -278,7 +278,8 @@ test("actual offline full feed preserves unrelated events/conflicts and every re
     expect(after.sources.filter((s: Row) => s.sourceId !== adapter.id)).toEqual(before.sources.filter((s: Row) => s.sourceId !== adapter.id));
     expect(after.dateConflicts).toEqual(before.dateConflicts);
     expect(after.events.length).toBe(before.events.length + 24);
-    expect(after.events.filter((e: Row) => e.game === "zzz")).toHaveLength(54);
+    // The independently enabled endgame generator is present in both builds.
+    expect(after.events.filter((e: Row) => e.game === "zzz")).toHaveLength(before.events.filter((e: Row) => e.game === "zzz").length + 24);
     expect(after.sources.find((s: Row) => s.sourceId === adapter.id)).toMatchObject({ parsedCount: 43, eventCount: 43 });
     for (const row of before.events.filter((e: Row) => e.game === "zzz")) {
       expect(after.events.find((e: Row) => e.id === row.id)).toEqual(row);

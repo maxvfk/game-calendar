@@ -1,6 +1,6 @@
 # ZZZ P0 follow-up — Shiyu Defense and Deadly Assault current endgame re-anchoring
 
-**Priority: urgent coverage gap (Shiyu 2026-10-30 deadline). State: IMPLEMENTATION TASK, NOT STARTED.**
+**Priority: urgent coverage gap (Shiyu 2026-10-30 deadline). State: IMPLEMENTED; delivery verification recorded in the implementation PR.**
 **Scope: two rotating endgame modes only.** This is independently bounded from
 `docs/tasks/ZZZ-BANNER-SOURCE-RECOVERY.md`, Steam events-only #109, and Editorial E2b.
 
@@ -131,3 +131,25 @@ Event Context E2b–E4, Account/Sync, and other games' schedules.
 
 **Stop after this milestone.** B1 banner recovery remains the next separate
 high-priority ZZZ direction; do not start it automatically.
+
+## Implementation result — 2026-10-27
+
+Delivery: [PR #111](https://github.com/maxvfk/game-calendar/pull/111).
+
+Both per-mode evidence gates passed within their stated provenance limits;
+no blocked mode and no finite reviewed fallback was needed. Evidence and unknowns:
+`docs/research/zzz-endgame-reanchoring-2026.md`. Shiyu uses the official January 9
+post-transition anchor with an October 16 production gate; Deadly uses the
+independently corroborated January 16 observational anchor with an October 23 gate.
+All generated rows remain estimated projections. The official Deadly phase-change
+notice, July secondary Shiyu anomaly and fresh in-game capture remain unavailable.
+
+Existing recurring engine now emits 12 current/future rows, with exact regional
+inclusive ends, stable IDs, sourced override/conflict freezes and a 70-day start
+horizon. All 30 reviewed rows and 217 previous full-feed winners are unchanged;
+ZZZ 54→66, whole feed 217→229. Machine-readable fixed-clock proof:
+`docs/evidence/zzz-endgame-feed-replay-2026-10-27.json`. Validation and delivery
+are tracked in `docs/IMPLEMENTATION-STATUS.md` and the implementation PR.
+
+Operator phone/in-game smoke is still outstanding. Next concrete step is Banner
+Recovery B1 in a separate Work; this task does not authorize starting it.
