@@ -1,5 +1,31 @@
 # Game calendar implementation status
 
+## Coordination — ZZZ Shiyu / Deadly Assault re-anchoring: TASK READY, NOT IMPLEMENTED (2026-10-27)
+
+**Operator priority:** restore the missing current Shiyu Defense: Critical Node
+and Deadly Assault cycles **before** the separately planned ZZZ banner source
+B1 and Timeline v2 / Event Context summaries. Task:
+`docs/tasks/ZZZ-ENDGAME-REANCHORING-2026.md`.
+
+The historical January 2025 anchors are seven days out of phase with verified
+September 2026 reviewed rotations. New evidence from official Version 2.5
+(https://zenless.hoyoverse.com/en-us/news/161728) establishes the Shiyu
+transition ending January 9, 2026 at 03:59 server time, followed by 14-day
+periods. Independent observations agree with the October 16–30 Shiyu cycle;
+Deadly Assault's October 23–November 6 cycle is consistent with archival
+January 16 and contemporary countdowns but requires its **own anchor gate**.
+
+No recurrence was enabled merely by filing the task. Gate per mode: verify the
+effective rule and source provenance; implement only grounded current/near-term
+cycles using existing fixed-reset engine, exact regional ends and stable IDs;
+otherwise record a real blocker or finite reviewed fallback. All historic
+reviewed records and #109 Steam source stay unchanged.
+
+**Next concrete step:** separate bounded implementation Work for endgame
+re-anchoring; after acceptance resume ZZZ banner source B1, then consider
+Editorial v2/E2b. No unrelated code was changed in this coordination task.
+
+
 ## ZZZ E1 — Steam events-only unattended recovery: COMPLETE (2026-10-27)
 
 Implemented from current main `e32cd62` after #105/#107/#108; no parallel recovery
