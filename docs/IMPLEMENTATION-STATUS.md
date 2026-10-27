@@ -1,5 +1,23 @@
 # Game calendar implementation status
 
+## HSR Version 4.6 Treasures Lightward: COVERAGE BUG, P0 TASK READY (2026-10-28)
+
+Task: `docs/tasks/HSR-4-6-LIGHTWARD-COVERAGE-P0.md`; **not yet implemented**.
+The canonical 4.6 official update notice (https://hsr.hoyoverse.com/en-us/news/166468)
+and our own current KQM/HSRNews snapshot `archive/1437.md` explicitly include
+four dated phases: MoC Crossing the Afterlife to Nov 2 03:59 server, AS Dominance
+of Oblivion to Nov 16, PF Imagined Words to Nov 30, next MoC Survival of the
+Fittest Nov 2–Dec 14. Current reviewed HSR contains only expired older phases.
+Source is not broken: the 4.6 snapshot was confirmed Oct 27, yet the parser
+does not read `7. Others → Gameplay → Treasures Lightward` and its regexp
+excludes Memory of Chaos. Existing KQM health is thus a false positive for
+coverage. A focused parser/regression fix is needed, not another source search
+or date recurrence assumption. Previous review rows and all event IDs must be
+preserved. **Next concrete step:** bounded HSR 4.6 Lightward implementation
+Work, tests, PR and CI/Pages; then separately audit remaining HSR 4.6 coverage.
+No other milestone is authorized by documenting this issue.
+
+
 ## ZZZ B1 — unattended banner recovery: IMPLEMENTED, SECONDARY RSS (2026-10-27)
 
 Delivery: [PR #112](https://github.com/maxvfk/game-calendar/pull/112), from main
