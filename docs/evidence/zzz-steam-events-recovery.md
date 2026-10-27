@@ -91,9 +91,15 @@ Artifact ZIP SHA-256:
 `0f0de6cef81f179e51bffcb98ec13f030f93a39a834e1750976dfca5bcb8bd79`.
 
 The temporary read-only PR validation workflow is removed from the final tree;
-there is no second production scheduler. It saved refresh state into the normal
-cache lineage, including the new source's check time, without changing unrelated
-snapshot bytes. Future polling belongs to the existing refresh workflow. A final
+there is no second production scheduler. It saved state without changing
+unrelated snapshot bytes, but a PR-scoped cache is not available to main
+([GitHub cache restrictions](https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching#restrictions-for-accessing-a-cache)).
+A source-specific interval bootstrap therefore uses the committed successful
+capture time when ZZZ state is absent and the matching snapshot body exists.
+The first main poll cannot occur before 2026-10-27T06:24:39.002Z; no timestamp
+is relabelled as a new network confirmation. Wrong-URL or missing bodies do not
+activate this fallback; other adapters retain their previous interval behavior.
+Future polling belongs to the existing refresh workflow. A final
 parser hardening rejects title/version-prefix drift; offline replay of the exact
 runner bytes confirms the same 43 candidates with the final code.
 
@@ -106,7 +112,7 @@ three consecutive failures become visibly broken under the existing policy.
 RSS has no explicit no-events declaration, so empty parsing is never treated as
 proof of a quiet calendar. Reviewed rows remain available independently.
 
-Twelve focused offline tests cover the actual RSS factual excerpt, four versions,
+Fourteen focused offline tests cover the actual RSS factual excerpt, four versions,
 future discovery, year/calendar/zone/section boundaries, global version end,
 no banner/trial/recurrence generation, deterministic duplicates, all 19 exact-ID
 reviewed matches, all 30 reviewed winners and integrated real-adapter refresh
@@ -117,7 +123,7 @@ The WuWa golden feed hash only changes for the newly registered unavailable
 ZZZ source-health row in that isolated build. Removing that row reproduces the
 original exact golden bytes; its Timeline queue/agent-input hashes stay unchanged.
 
-Local frozen install/typecheck/full tests/build pass: **1309 pass, 3 existing
+Local frozen install/typecheck/full tests/build pass: **1311 pass, 3 existing
 age-dependent skips, 0 fail**, 69 files. Final-head CI/PG17/Pages delivery is
 recorded on PR #109; no runtime registry/editorial/Account change is included.
 All 30 reviewed JSON rows, event IDs, review timestamps and official URLs are

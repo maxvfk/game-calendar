@@ -351,7 +351,7 @@ async function refreshOne(
   const now = options.now();
   const nowIso = now.toISOString();
   const meta = await store.readMeta(adapter.id);
-  const state = await store.readState(adapter.id);
+  let state = await store.readState(adapter.id);
   // Metadata alone is not a usable last-known-good document. A crash or a
   // partial restore may leave it without the body; sending its ETag can yield
   // a 304 that falsely confirms a snapshot we cannot build from.
@@ -359,6 +359,18 @@ async function refreshOne(
   const hasBody = sameUrl && meta !== null &&
     await Bun.file(store.bodyPath(adapter.id, meta.contentKind)).exists();
   const headers = store.conditionalHeaders(hasBody ? meta : null);
+
+  // ZZZ is bootstrapped from a reviewed real-runner snapshot on a PR. Actions
+  // caches written on refs/pull/*/merge cannot seed main's state cache. Preserve
+  // this source's first-production six-hour floor using the committed successful
+  // capture; never use absent/wrong-URL bodies or invent a new confirmation.
+  // Other adapters keep their existing interval behavior.
+  const capturedCheck = meta?.lastConfirmedAt;
+  if (adapter.id === "zzz-steam-events-official" && state.lastCheckedAt === null &&
+    hasBody && typeof capturedCheck === "string" && Number.isFinite(Date.parse(capturedCheck)) &&
+    Date.parse(capturedCheck) <= now.getTime()) {
+    state = { ...state, lastCheckedAt: capturedCheck };
+  }
 
   const due = (meta !== null && !sameUrl) || store.isDue(state, now.getTime(), adapter.minIntervalMs);
   if (!due && !options.force) {

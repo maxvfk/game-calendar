@@ -20,6 +20,8 @@ was present. Source contract, counts, precision and failure behavior:
   including **eight 3.3 events**. Raw runner snapshot/metadata and durable proof
   are committed; no fixture-only production claim. Temporary validation workflow
   removed; production uses only the existing refresh workflow/schedule.
+  ZZZ-only bootstrap uses the committed capture timestamp if PR-scoped state
+  is absent on main, preserving the first six-hour floor without fake freshness.
 - **Merge/coverage:** 43 candidates, **19 exact-ID overlaps**, zero new conflicts;
   **54 ZZZ winners = all 30 unchanged reviewed + 24 automatic historical rows**.
   Before/after unexpired coverage is **14 → 14 (8 active + 6 upcoming)**; the
@@ -27,8 +29,8 @@ was present. Source contract, counts, precision and failure behavior:
   reviewed IDs/fields/URLs/provenance/timestamps and file bytes preserved; other
   game events and snapshots unchanged. New supported notices can populate the
   automatic feed without a reviewed/code edit.
-- **Checks:** frozen install/typecheck/full build PASS; **1309 tests pass,
-  3 existing age-dependent skips, 0 fail** (69 files). Twelve focused regressions
+- **Checks:** frozen install/typecheck/full build PASS; **1311 tests pass,
+  3 existing age-dependent skips, 0 fail** (69 files). Fourteen focused regressions
   cover discovery, dates/regions, duplicates/reviewed precedence, malformed/zero/
   drift/outage/robots/interval/304/sharp-drop/LKG and whole-feed isolation. Final
   PR CI/PG17 and post-merge CI/Pages links are recorded in PR #109.

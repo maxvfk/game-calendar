@@ -210,6 +210,37 @@ describe("ZZZ real adapter uses existing refresh safeguards", () => {
     });
   });
 
+  test("missing PR-scoped state cache cannot cause an early first main refresh", async () => {
+    await refreshHarness(async ({ cycle, store, requests }) => {
+      await cycle(raw, 200, 0);
+      await rm(store.statePath(adapter.id));
+      const count = requests.length;
+      const skipped = await cycle(raw, 200, 3_600_000);
+      expect(skipped.outcomes[0]?.result).toBe("skipped_interval");
+      expect(skipped.outcomes[0]?.note).toContain("2026-10-27T06:00:00.000Z");
+      expect(requests).toHaveLength(count);
+      // The persisted metadata is not relabelled as a fresh network confirmation.
+      expect((await store.readMeta(adapter.id))?.lastConfirmedAt).toBe(now);
+      expect((await store.readState(adapter.id)).lastCheckedAt).toBeNull();
+      expect((await cycle(raw)).outcomes[0]?.result).toBe("unchanged");
+    });
+  });
+
+  test("cache bootstrap does not mask a missing body or URL change", async () => {
+    await refreshHarness(async ({ cycle, store }) => {
+      await cycle(raw, 200, 0);
+      await rm(store.statePath(adapter.id));
+      await rm(store.bodyPath(adapter.id, "xml"));
+      expect((await cycle(raw, 200, 3_600_000)).outcomes[0]?.result).toBe("fetched");
+      await rm(store.statePath(adapter.id));
+      const meta = (await store.readMeta(adapter.id))!;
+      await Bun.write(store.metaPath(adapter.id), JSON.stringify({ ...meta, url: "https://example.test/old-source" }));
+      expect((await cycle(raw, 200, 3_600_000)).outcomes[0]?.result).toBe("unchanged");
+      expect((await store.readState(adapter.id)).lastConfirmedAt).toBe("2026-10-27T02:00:00.000Z");
+      expect((await store.readMeta(adapter.id))?.url).toBe(adapter.url);
+    });
+  });
+
   test("robots refusal never fetches source or fabricates a snapshot", async () => {
     await refreshHarness(async ({ cycle, requests, store }) => {
       expect((await cycle(raw)).outcomes[0]?.result).toBe("skipped_robots");
