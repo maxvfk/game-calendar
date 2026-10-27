@@ -1,3 +1,4 @@
+import { zzzBannerRssParser } from "./zzz-zenlessgg-banners.ts";
 import { zzzSteamRssParser } from "./zzz-steam-rss.ts";
 import { arknightsWikiParser } from "./akwiki.ts";
 import { aruStatsParser } from "./arustats.ts";
@@ -40,6 +41,7 @@ export const PARSERS: SourceParser[] = [
   wuwaKuroAtomParser,
   nteSteamNewsParser,
   zzzSteamRssParser,
+  zzzBannerRssParser,
   nteBuildBtrParser,
   prydwenCznParser,
 ];

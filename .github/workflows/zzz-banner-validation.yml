@@ -1,0 +1,50 @@
+name: ZZZ B1 production refresh validation
+# Temporary, same-repository PR only. Removed before merge. No access overrides.
+on:
+  pull_request:
+    types: [synchronize]
+permissions:
+  contents: read
+jobs:
+  refresh:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'work/zzz-banner-b1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.14'
+      - run: bun install --frozen-lockfile
+      - name: First real unattended source refresh
+        run: bun run refresh --only zzz-zenlessgg-banners --no-feed
+      - run: bun run build:feed
+      - name: Assert live capture and published identities
+        run: |
+          bun -e '
+            import assert from "node:assert/strict";
+            import { adapterById } from "./src/ingest/adapters/index.ts";
+            import { materializeReviewedBatch } from "./src/ingest/reviewed.ts";
+            const id="zzz-zenlessgg-banners";
+            const capture=await Bun.file(`snapshots/${id}.json`).json();
+            const meta=await Bun.file(`snapshots/${id}.meta.json`).json();
+            const state=await Bun.file(`snapshots/${id}.state.json`).json();
+            const feed=await Bun.file("public/data/events.v1.json").json();
+            const parsed=adapterById(id).parse(JSON.stringify(capture),{now:meta.contentChangedAt,sourceId:id,sourceUrl:meta.url,game:"zzz"});
+            assert.equal(state.lastStatus,200);assert.equal(state.consecutiveFailures,0);assert.ok(parsed.length>0);
+            assert.equal(new Set(feed.events.map(e=>e.id)).size,feed.events.length);
+            const reviewed=materializeReviewedBatch(await Bun.file("data/reviewed/zzz.json").json()).events;
+            for(const row of reviewed){const actual=feed.events.find(e=>e.id===row.id);assert.ok(actual);for(const [k,v]of Object.entries(row))assert.deepEqual(actual[k],v);}
+            const proof={runId:process.env.GITHUB_RUN_ID,commit:process.env.GITHUB_SHA,capturedAt:state.lastConfirmedAt,sourceId:id,sourceUrl:meta.url,sourceCapture:capture.capture,parsed:parsed.length,publishedAutomatic:feed.events.filter(e=>e.sourceId===id).length,publishedBanners:feed.events.filter(e=>e.game==="zzz"&&e.type==="banner").length,zzz:feed.events.filter(e=>e.game==="zzz").length,total:feed.events.length,allReviewedPreserved:reviewed.length,sourceHealth:feed.sources.find(s=>s.sourceId===id),ids:parsed.map(e=>e.id)};
+            await Bun.write("source-probes/zzz-b1-production.json",JSON.stringify(proof,null,2)+"\n");
+            console.log("B1_PRODUCTION "+JSON.stringify(proof));
+          '
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zzz-b1-production-refresh
+          path: |
+            snapshots/zzz-zenlessgg-banners.*
+            source-probes/zzz-b1-production.json
+            public/data/events.v1.json
+          retention-days: 7

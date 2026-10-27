@@ -3,6 +3,7 @@ import { TRACKED_GAME_SET } from "../../shared/project.ts";
 import { mergeEvents, type MergeResult } from "../merge.ts";
 import { parserById } from "../parsers/index.ts";
 import { sanitizeEvents } from "../sanitize.ts";
+import { ZZZ_BANNER_RSS_URL, ZZZ_BANNER_SOURCE_ID } from "../parsers/zzz-zenlessgg-banners.ts";
 import { ZZZ_STEAM_RSS_URL } from "../parsers/zzz-steam-rss.ts";
 import { NTE_STEAM_NEWS_URL } from "../steam-api.ts";
 import { GINews_URL, HSRNews_URL, WUWA_XML_URL } from "../github-contents-api.ts";
@@ -28,6 +29,10 @@ interface SourceSpec {
 }
 
 const SOURCES: SourceSpec[] = [
+  {
+    id: ZZZ_BANNER_SOURCE_ID, game: "zzz", url: ZZZ_BANNER_RSS_URL,
+    parserId: "zzz-zenlessgg-banners", contentKind: "xml", priority: 10,
+  },
   {
     id: "zzz-steam-events-official", game: "zzz", url: ZZZ_STEAM_RSS_URL,
     parserId: "zzz-steam-rss", contentKind: "xml", priority: 20,

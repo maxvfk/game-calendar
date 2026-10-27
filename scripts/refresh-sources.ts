@@ -55,6 +55,7 @@ import type { Adapter } from "../src/ingest/adapters/types.ts";
 import { RobotsCache, type FetchLike } from "../src/ingest/robots.ts";
 import { decodeBody, SnapshotStore } from "../src/ingest/snapshots.ts";
 import { ECHOES_EVENT_SOURCE_ID, ECHOES_SOURCE_ID, echoesSeasonUrl, selectEchoesSeason } from "../src/ingest/echoes-season.ts";
+import { captureZzzBannerFacts, ZZZ_BANNER_SOURCE_ID } from "../src/ingest/parsers/zzz-zenlessgg-banners.ts";
 import { parseWikiGgEventsPage } from "../src/ingest/parsers/wikigg.ts";
 
 const DEFAULT_CONTACT =
@@ -366,7 +367,7 @@ async function refreshOne(
   // capture; never use absent/wrong-URL bodies or invent a new confirmation.
   // Other adapters keep their existing interval behavior.
   const capturedCheck = meta?.lastConfirmedAt;
-  if (adapter.id === "zzz-steam-events-official" && state.lastCheckedAt === null &&
+  if ((adapter.id === "zzz-steam-events-official" || adapter.id === ZZZ_BANNER_SOURCE_ID) && state.lastCheckedAt === null &&
     hasBody && typeof capturedCheck === "string" && Number.isFinite(Date.parse(capturedCheck)) &&
     Date.parse(capturedCheck) <= now.getTime()) {
     state = { ...state, lastCheckedAt: capturedCheck };
@@ -469,6 +470,18 @@ async function refreshOne(
         eventCount: null,
       };
     }
+    if (adapter.id === ZZZ_BANNER_SOURCE_ID) {
+      try {
+        const cached = await store.read(adapter.id);
+        const events = adapter.parse(cached!.html, { now: nowIso, game: adapter.game, sourceId: adapter.id, sourceUrl: adapter.url });
+        if (!events.some(e => Object.values(e.regionEnds ?? {}).some(end => Date.parse(end!) >= now.getTime()))) {
+          throw new Error("banner feed only has expired phases; current coverage needs review");
+        }
+      } catch (error) {
+        await store.recordCheck(adapter.id, { at: nowIso, status: 304, ok: false });
+        return { sourceId: adapter.id, result: "rejected", note: `kept previous snapshot; ${String(error)}`, status: 304, eventCount: meta?.eventCount ?? null };
+      }
+    }
     await store.recordCheck(adapter.id, { at: nowIso, status: 304, ok: true });
     return {
       sourceId: adapter.id,
@@ -546,6 +559,10 @@ async function refreshOne(
       sourceId: adapter.id,
       game: adapter.game,
     });
+    if (adapter.id === ZZZ_BANNER_SOURCE_ID && parsed.length > 0 &&
+      !parsed.some(e => Object.values(e.regionEnds ?? {}).some(end => Date.parse(end!) >= now.getTime()))) {
+      throw new Error("banner feed contains only expired phases; current notice coverage needs review");
+    }
   } catch (error) {
     await store.recordCheck(adapter.id, {
       at: nowIso,
@@ -602,7 +619,7 @@ async function refreshOne(
 
   const dropped = !statesNoEvents && previousCount !== null &&
     previousCount > 0 && events < previousCount * DROP_WARNING_RATIO;
-  if (dropped) {
+  if (dropped || adapter.id === ZZZ_BANNER_SOURCE_ID) {
     const old = await store.read(adapter.id);
     if (old !== null) {
       // A page normally drops entries that have finished. Reject a steep drop
@@ -612,15 +629,16 @@ async function refreshOne(
       try {
         live = adapter.parse(old.html, {
           now: nowIso, sourceUrl: adapter.url, sourceId: adapter.id, game: adapter.game,
-        }).filter(e => e && (e.endsAt === null ||
-          Date.parse(e.endsAt) + (e.endPrecision === "day" ? 86_400_000 : 0) > now.getTime()));
+        }).filter(e => e && (adapter.id === ZZZ_BANNER_SOURCE_ID
+          ? Object.values(e.regionEnds ?? {}).some(end => Date.parse(end!) >= now.getTime())
+          : e.endsAt === null || Date.parse(e.endsAt) + (e.endPrecision === "day" ? 86_400_000 : 0) > now.getTime()));
       } catch {
         // The previous bytes cannot provide a trustworthy live baseline. The
         // new document still passed the normal structural and zero gates.
       }
       const nextIds = new Set(parsed.map(e => e.id));
       const missing = live.filter(e => !nextIds.has(e.id)).length;
-      if (live.length >= 3 && missing > live.length * DROP_WARNING_RATIO) {
+      if (adapter.id === ZZZ_BANNER_SOURCE_ID ? missing > 0 : live.length >= 3 && missing > live.length * DROP_WARNING_RATIO) {
         await store.recordCheck(adapter.id, { at: nowIso, status: response.status, ok: false });
         return {
           sourceId: adapter.id, result: "rejected",
@@ -631,11 +649,14 @@ async function refreshOne(
     }
   }
 
+  // This secondary RSS is archived as factual records + the original HTTP hash,
+  // not as a public mirror of article prose/assets. Validators remain upstream.
+  const bannerFacts = adapter.id === ZZZ_BANNER_SOURCE_ID ? captureZzzBannerFacts(bytes, parsed, nowIso, (await store.read(adapter.id))?.html) : null;
   const saved = await store.save(adapter.id, {
-    contentKind: adapter.contentKind ?? "html",
+    contentKind: bannerFacts === null ? adapter.contentKind ?? "html" : "json",
     url: adapter.url,
-    body: bytes,
-    charset,
+    body: bannerFacts === null ? bytes : new TextEncoder().encode(bannerFacts),
+    charset: bannerFacts === null ? charset : "utf-8",
     etag: response.headers.get("ETag"),
     lastModified: response.headers.get("Last-Modified"),
     at: nowIso,

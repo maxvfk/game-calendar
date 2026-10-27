@@ -1,5 +1,10 @@
 /**
- * The raw snapshot cache.
+ * The source snapshot cache.
+ *
+ * ZZZ secondary banners are a deliberate exception to raw-body storage:
+ * a factual JSON capture carries the original RSS hash/length and extracted
+ * records, avoiding article republication. Its metadata hashes the stored JSON;
+ * HTTP validators still refer to the upstream RSS. See the B1 source research.
  *
  * Every fetched page is stored verbatim on disk so that re-parsing — which is
  * the thing we actually iterate on — never costs the source another request
