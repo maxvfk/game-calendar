@@ -1,0 +1,595 @@
+{
+  "schemaVersion": "zzz-banner-factual-capture/v1",
+  "sourceUrl": "https://zenless.gg/news/updates/feed/",
+  "capture": {
+    "at": "2026-10-27T13:30:35.554Z",
+    "bytes": 199444,
+    "sha256": "401d46cd16d525b5b885dd1587b69928ab4320e9fdfb09f2fafdd99b9ec6e6e4"
+  },
+  "events": [
+    {
+      "id": "zzz:axiom-of-captivation:2026-09-09",
+      "game": "zzz",
+      "title": "Axiom of Captivation",
+      "recognitionSubjects": [
+        "Nangong Yu"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.2 Phase I, Agent channel. Featured: Nangong Yu. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-09-09T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-30T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-30T03:59:00.000Z",
+        "america": "2026-09-30T16:59:00.000Z",
+        "europe": "2026-09-30T10:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-2-limited-time-channels-phase-i/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:bloodmoon-rising:2026-09-09",
+      "game": "zzz",
+      "title": "Bloodmoon Rising",
+      "recognitionSubjects": [
+        "Claret"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.2 Phase I, Agent channel. Featured: Claret. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-09-09T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-30T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-30T03:59:00.000Z",
+        "america": "2026-09-30T16:59:00.000Z",
+        "europe": "2026-09-30T10:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-2-limited-time-channels-phase-i/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:chief-sidekick:2026-07-08",
+      "game": "zzz",
+      "title": "Chief Sidekick",
+      "recognitionSubjects": [
+        "Chief Sidekick"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.0 Phase II, W-Engine channel. Featured: Chief Sidekick. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-07-08T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-07-28T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-07-28T06:59:00.000Z",
+        "america": "2026-07-28T19:59:00.000Z",
+        "europe": "2026-07-28T13:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-0-limited-time-channels-phase-ii/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:cindernight-respite:2026-09-30",
+      "game": "zzz",
+      "title": "Cindernight Respite",
+      "recognitionSubjects": [
+        "Roxy"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.2 Phase II, Agent channel. Featured: Roxy. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-09-30T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-20T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-20T06:59:00.000Z",
+        "america": "2026-10-20T19:59:00.000Z",
+        "europe": "2026-10-20T13:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-2-limited-time-channels-phase-ii/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:cold-rain-wanes-in-the-night:2026-09-30",
+      "game": "zzz",
+      "title": "Cold Rain Wanes in the Night",
+      "recognitionSubjects": [
+        "Promeia"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.2 Phase II, Agent channel. Featured: Promeia. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-09-30T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-20T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-20T06:59:00.000Z",
+        "america": "2026-10-20T19:59:00.000Z",
+        "europe": "2026-10-20T13:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-2-limited-time-channels-phase-ii/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:crimson-moon-casket:2026-09-30",
+      "game": "zzz",
+      "title": "Crimson Moon Casket",
+      "recognitionSubjects": [
+        "Crimson Moon Casket"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.2 Phase II, W-Engine channel. Featured: Crimson Moon Casket. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-09-30T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-20T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-20T06:59:00.000Z",
+        "america": "2026-10-20T19:59:00.000Z",
+        "europe": "2026-10-20T13:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-2-limited-time-channels-phase-ii/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:crimson-thirst:2026-09-09",
+      "game": "zzz",
+      "title": "Crimson Thirst",
+      "recognitionSubjects": [
+        "Crimson Thirst"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.2 Phase I, W-Engine channel. Featured: Crimson Thirst. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-09-09T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-30T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-30T03:59:00.000Z",
+        "america": "2026-09-30T16:59:00.000Z",
+        "europe": "2026-09-30T10:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-2-limited-time-channels-phase-i/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:exclusive-rescreening:2026-08-19",
+      "game": "zzz",
+      "title": "Exclusive Rescreening",
+      "recognitionSubjects": [
+        "Dialyn",
+        "Ukinami Yuzuha",
+        "Asaba Harumasa"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.1 Phase II, Agent channel. Featured: Dialyn, Ukinami Yuzuha, Asaba Harumasa. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-08-19T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-08T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-08T06:59:00.000Z",
+        "america": "2026-09-08T19:59:00.000Z",
+        "europe": "2026-09-08T13:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-1-limited-time-channels-phase-ii/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:frostfall-sickle:2026-09-30",
+      "game": "zzz",
+      "title": "Frostfall Sickle",
+      "recognitionSubjects": [
+        "Frostfall Sickle"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.2 Phase II, W-Engine channel. Featured: Frostfall Sickle. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-09-30T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-20T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-20T06:59:00.000Z",
+        "america": "2026-10-20T19:59:00.000Z",
+        "europe": "2026-10-20T13:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-2-limited-time-channels-phase-ii/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:graceful-gale:2026-10-21",
+      "game": "zzz",
+      "title": "Graceful Gale",
+      "recognitionSubjects": [
+        "Velina"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.3 Phase I, Agent channel. Featured: Velina. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-11T03:59:00.000Z",
+        "america": "2026-11-11T16:59:00.000Z",
+        "europe": "2026-11-11T10:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-3-limited-time-channels-phase-i/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:into-the-flames-of-life:2026-10-21",
+      "game": "zzz",
+      "title": "Into the Flames of Life",
+      "recognitionSubjects": [
+        "Phoenix"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.3 Phase I, Agent channel. Featured: Phoenix. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-11T03:59:00.000Z",
+        "america": "2026-11-11T16:59:00.000Z",
+        "europe": "2026-11-11T10:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-3-limited-time-channels-phase-i/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:joyau-dore:2026-10-21",
+      "game": "zzz",
+      "title": "Joyau Dore",
+      "recognitionSubjects": [
+        "Joyau Dore"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.3 Phase I, W-Engine channel. Featured: Joyau Dore. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-11T03:59:00.000Z",
+        "america": "2026-11-11T16:59:00.000Z",
+        "europe": "2026-11-11T10:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-3-limited-time-channels-phase-i/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:knights-extolment:2026-08-19",
+      "game": "zzz",
+      "title": "Knight's Extolment",
+      "recognitionSubjects": [
+        "Knight's Extolment"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.1 Phase II, W-Engine channel. Featured: Knight's Extolment. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-08-19T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-08T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-08T06:59:00.000Z",
+        "america": "2026-09-08T19:59:00.000Z",
+        "europe": "2026-09-08T13:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-1-limited-time-channels-phase-ii/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:neon-fantasies:2026-09-09",
+      "game": "zzz",
+      "title": "Neon Fantasies",
+      "recognitionSubjects": [
+        "Neon Fantasies"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.2 Phase I, W-Engine channel. Featured: Neon Fantasies. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-09-09T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-30T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-30T03:59:00.000Z",
+        "america": "2026-09-30T16:59:00.000Z",
+        "europe": "2026-09-30T10:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-2-limited-time-channels-phase-i/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:outlier-of-prodigies:2026-07-08",
+      "game": "zzz",
+      "title": "Outlier of Prodigies",
+      "recognitionSubjects": [
+        "Norma"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.0 Phase II, Agent channel. Featured: Norma. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-07-08T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-07-28T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-07-28T06:59:00.000Z",
+        "america": "2026-07-28T19:59:00.000Z",
+        "europe": "2026-07-28T13:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-0-limited-time-channels-phase-ii/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:plume-of-rebirth:2026-10-21",
+      "game": "zzz",
+      "title": "Plume of Rebirth",
+      "recognitionSubjects": [
+        "Plume of Rebirth"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.3 Phase I, W-Engine channel. Featured: Plume of Rebirth. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-11T03:59:00.000Z",
+        "america": "2026-11-11T16:59:00.000Z",
+        "europe": "2026-11-11T10:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-3-limited-time-channels-phase-i/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:thoughtbop:2026-07-08",
+      "game": "zzz",
+      "title": "Thoughtbop",
+      "recognitionSubjects": [
+        "Thoughtbop"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.0 Phase II, W-Engine channel. Featured: Thoughtbop. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-07-08T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-07-28T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-07-28T06:59:00.000Z",
+        "america": "2026-07-28T19:59:00.000Z",
+        "europe": "2026-07-28T13:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-0-limited-time-channels-phase-ii/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:till-the-ends-of-the-sky:2026-08-19",
+      "game": "zzz",
+      "title": "'Till the Ends of the Sky",
+      "recognitionSubjects": [
+        "Sigrid"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.1 Phase II, Agent channel. Featured: Sigrid. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-08-19T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-08T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-08T06:59:00.000Z",
+        "america": "2026-09-08T19:59:00.000Z",
+        "europe": "2026-09-08T13:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-1-limited-time-channels-phase-ii/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:w-engine-reverberation:2026-08-19",
+      "game": "zzz",
+      "title": "W-Engine Reverberation",
+      "recognitionSubjects": [
+        "Yesterday Calls",
+        "Metanukimorphosis",
+        "Zanshin Herb Case"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.1 Phase II, W-Engine channel. Featured: Yesterday Calls, Metanukimorphosis, Zanshin Herb Case. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-08-19T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-09-08T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-09-08T06:59:00.000Z",
+        "america": "2026-09-08T19:59:00.000Z",
+        "europe": "2026-09-08T13:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-1-limited-time-channels-phase-ii/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    },
+    {
+      "id": "zzz:whimsy-in-triple-meter:2026-07-08",
+      "game": "zzz",
+      "title": "Whimsy in Triple Meter",
+      "recognitionSubjects": [
+        "Sunna"
+      ],
+      "type": "banner",
+      "summary": "Secondary reproduction by Zenless.gg; Version 3.0 Phase II, Agent channel. Featured: Sunna. Server-day start; no maintenance completion inferred.",
+      "startsAt": "2026-07-08T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-07-28T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-07-28T06:59:00.000Z",
+        "america": "2026-07-28T19:59:00.000Z",
+        "europe": "2026-07-28T13:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.gg/v3-0-limited-time-channels-phase-ii/",
+      "sourceId": "zzz-zenlessgg-banners",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "provenanceStatus": "estimated",
+      "version": 1,
+      "firstSeenAt": "2026-10-27T13:30:35.554Z",
+      "updatedAt": "2026-10-27T13:30:35.554Z"
+    }
+  ]
+}

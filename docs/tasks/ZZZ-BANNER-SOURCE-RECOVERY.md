@@ -1,10 +1,10 @@
 # ZZZ B1 — Recover unattended channel/banner coverage
 
-**Priority: P0 continuation, next after ZZZ E1 Steam events-only. State: RESEARCH/GATE-LED, NOT IMPLEMENTED.**
+**Priority: P0 continuation, next after ZZZ E1 Steam events-only. State: IMPLEMENTED via verified secondary RSS (#112).**
 
 ## Goal
 
-Complete the remaining Zenless Zone Zero source recovery: unattended discovery of each newly announced **limited Agent and W-Engine channel/banner** with its announced dates and region-local accuracy. The official reviewed rows from #105 are safe interim coverage, **not automation**. Keep this task ahead of Timeline v2/E2b summaries. E1's eventual events-only adapter must not be reverted or repeatedly reworked to satisfy this gate.
+Complete the remaining Zenless Zone Zero source recovery: unattended discovery of each newly announced **limited Agent and W-Engine channel/banner** with its announced dates and region-local accuracy. The official reviewed rows from #105 are safe interim coverage, **not automation**. Keep this task ahead of Timeline v2/E2b summaries. E1's completed events-only adapter must not be reverted or repeatedly reworked to satisfy this gate.
 
 ## Evidence baseline
 
@@ -33,3 +33,24 @@ Complete the remaining Zenless Zone Zero source recovery: unattended discovery o
 - Record **Next concrete step** if blocked. Do not silently declare the entire ZZZ recovery complete.
 
 **Out of scope:** Timeline M4/editorial v2/cutover, Event Context E2b–E4, unrelated games, Account/Sync, speculative Shiyu/Deadly recurring clocks, breaking publisher access controls.
+
+
+## B1 result — 2026-10-27
+
+Gate A PASS: actual Actions captures establish native Zenless.gg Updates RSS
+as a dynamically discovered, dated, secondary source. Gate B implemented in
+[PR #112](https://github.com/maxvfk/game-calendar/pull/112); research, permission
+boundary, rejected candidates and raw-response hashes:
+`docs/research/zzz-banner-source-recovery-b1.md`.
+
+Real unattended refresh 40512622186: 20 channel records from five I/II notices,
+20 final banner winners (8 unchanged reviewed + 12 new historical automatic),
+78 ZZZ / 241 total. All 229 previous winners and all 30 reviewed records/IDs
+preserved; machine-readable full-feed proof and production capture are under
+`docs/evidence/zzz-b1-*`. Actual source data has no 3.3 II notice; future phase
+inference and trial synthesis remain prohibited. Secondary provenance is never
+upgraded to official. Existing scheduler/guards apply; temporary PR workflows removed.
+
+Next concrete step is observation of the next actually published phase through
+the normal scheduler plus official/in-game verification. No automatic transition
+to summaries/Timeline/Account is authorized. STOP after B1.

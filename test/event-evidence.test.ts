@@ -223,10 +223,10 @@ test("offline builder uses same fixture/snapshot, creates only internal sidecar;
     // non-ZZZ feed bytes; the new full-output goldens below include those cycles.
     const withoutZzz = JSON.parse(before[0]!);
     withoutZzz.events = withoutZzz.events.filter((e: { game: string }) => e.game !== "zzz");
-    withoutZzz.sources = withoutZzz.sources.filter((s: { sourceId: string }) => s.sourceId !== "zzz-steam-events-official");
+    withoutZzz.sources = withoutZzz.sources.filter((s: { sourceId: string }) => s.sourceId !== "zzz-steam-events-official" && s.sourceId !== "zzz-zenlessgg-banners");
     expect(new Bun.CryptoHasher("sha256").update(JSON.stringify(withoutZzz, null, 2) + "\n").digest("hex"))
       .toBe("743eafd2bdc6503f1630f9204e5d7166b2f36f4e74af49ac26304556ee13304c");
-    const baselineHashes = ["ea55aa8453d914d22b6f1e927510940afefaefc89f2b86e8e454491cfe8cdb8a", "5666c8df89862cfc76373aa45ab35fd9ca995e6d31c8bbcbf4ba89c3bb1b8590", "af8752f38ef79f0ecfa574e22ab982a8e5fa4f9caacf4ed81b196350a4daf9ea"];
+    const baselineHashes = ["5a4a572f059346bdbd1d73c4c2c9bae199b00c079fea015dde2922f2fbedcd0f", "5666c8df89862cfc76373aa45ab35fd9ca995e6d31c8bbcbf4ba89c3bb1b8590", "af8752f38ef79f0ecfa574e22ab982a8e5fa4f9caacf4ed81b196350a4daf9ea"];
     expect(before.map(bytes => new Bun.CryptoHasher("sha256").update(bytes).digest("hex"))).toEqual(baselineHashes);
     let side = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
     expect(side.entries).toHaveLength(5); expect(side.entries[0]!.sources[0]!.capturedAt).toBeNull();

@@ -1,5 +1,66 @@
 # Game calendar implementation status
 
+## ZZZ B1 — unattended banner recovery: IMPLEMENTED, SECONDARY RSS (2026-10-27)
+
+Delivery: [PR #112](https://github.com/maxvfk/game-calendar/pull/112), from main
+`3585bbe` after #105/#107/#109/#111; no parallel B1 was present. Per-candidate
+permission/content gate, source limitations and sustainable reviewed fallback:
+`docs/research/zzz-banner-source-recovery-b1.md`. Raw runner response hashes and
+metadata: `docs/evidence/zzz-b1-{gate-a,rss-gate,production-refresh}-2026-10-27.json`.
+
+- **Gate A PASS for Zenless.gg Updates RSS**: advertised native syndication,
+  ordinary project UA/robots/terms, actual runner index + dated details + feed.
+  Official HoYoLAB HTML is an identical 7,213-byte shell; P0 desktop/mobile
+  failures were not rerun. Icy Veins is accessible but has date/countdown
+  contradictions; rng.moe/Poly Cal do not establish a complete dated regional
+  source contract or a documented usable public data feed/repository.
+- Dynamic RSS item discovery, no version/article-ID list. Five notices produce
+  separate Agent/W-Engine/new/rerun channels: **3.0 II, 3.1 II, 3.2 I/II, 3.3 I**.
+  Selectable rerun channels retain their actual identities and featured subjects.
+  Provenance is **estimated (0.8)** with the actual secondary notice URL, never
+  official by copying a publisher attribution. Referenced update day is explicit
+  in the same feed; starts stay day precision, no maintenance-duration addition.
+- Exact fixed Asia +8 / Europe +1 / America −5 ends. Current four #105 banners
+  end **2026-11-11 03:59Z / 10:59Z / 16:59Z** (11:59 server). 3.2 II explicitly
+  ends 14:59 server, not a customary 03:59. No 3.3 II or trials are inferred.
+- **Real unattended Actions refresh** [40512622186](https://github.com/maxvfk/game-calendar/actions/runs/40512622186),
+  **2026-10-27T13:30:35.554Z (16:30 Moscow)**: HTTP 200, **20 parsed**, **1/1
+  confirmed**, **0 warnings/broken**, no access/force overrides. Native RSS raw
+  hash matches the Gate A capture; persistent snapshot is a factual JSON capture
+  plus original HTTP hash/length, not a re-hosted article feed. Metadata hashes
+  the stored JSON; validators still belong to upstream RSS. Normal scheduler,
+  six-hour floor/initial-main bootstrap, conditional requests and LKG remain in use.
+- **Coverage:** 8 existing reviewed overlaps; **12 new automatic historical
+  winners**, **8→20 ZZZ banner records**, **66→78 ZZZ**, **229→241 total**,
+  241 unique IDs. Current coverage stays four Phase I banners; unexpired ZZZ
+  stays 26. No artificial future-coverage gain is claimed. All 30 reviewed rows,
+  all 229 prior full-feed winners, other source-health rows and the existing NTE
+  date conflict are unchanged in the fixed-clock actual replay:
+  `docs/evidence/zzz-b1-feed-replay-2026-10-27.json`. Steam's 43 parsed events and
+  all 12 Shiyu/Deadly projections survive unchanged; reviewed files untouched.
+- Reviewed wins independently of confidence/order; copied notices do not add a
+  corroboration bonus. Exact one-minute contradictions remain visible. Malformed,
+  zero, missing version anchor, partial channel set, lost live identities (even
+  hidden by many historic rows), newer update without channels and expired-only
+  200/304 responses fail closed with LKG and visible failed confirmation.
+- **Checks:** frozen install/typecheck/build PASS; full tests **1341 pass,
+  3 existing age-dependent skips, 0 fail** (71 files). 15 new offline cases
+  include real multi-version excerpts, discovery, regions, IDs, mirror/reviewed
+  conflicts, retention/304/bootstrap and full-feed isolation. Final totals and
+  final-head CI/post-merge CI/Pages/deployed-feed checks are recorded in PR #112.
+  Temporary research/validation PR workflows are removed; no new scheduler.
+
+**Limits:** publisher-independent mirror can lag or omit a notice. A successful
+HTTP check is not proof of complete publisher coverage. 3.3 II is absent from
+notices and deliberately unpublished; audition/trial automation remains outside
+this adapter. Official HTML recovery is still blocked, not silently fixed.
+
+**Next concrete step:** verify the first newly published phase notice through the
+normal scheduler and compare its four channel identities/regional deadlines with
+an official/in-game capture; use the documented reviewed fallback if the mirror
+lags. This does not start summaries, Timeline v2, Account/Sync or another milestone.
+**STOP after B1.**
+
 ## ZZZ Shiyu / Deadly Assault 2026 re-anchoring: IMPLEMENTED (2026-10-27)
 
 Delivery: [PR #111](https://github.com/maxvfk/game-calendar/pull/111).
@@ -116,7 +177,7 @@ milestone ordering, **not** an implementation claim.
    `docs/tasks/ZZZ-BANNER-SOURCE-RECOVERY.md`: find a truly usable compliant
    dynamic dated-phase source in the actual runner, then implement only if the
    gate succeeds; otherwise preserve reviewed updates and document the blocker.
-   Banner ingestion is NOT YET implemented.
+   Banner ingestion is implemented in B1 #112 via secondary RSS; official native HTML remains blocked.
 3. Resume editorial v2/E2b planning only after these bounded ZZZ recovery
    steps are assessed; do not misreport events-only as full ZZZ recovery.
 

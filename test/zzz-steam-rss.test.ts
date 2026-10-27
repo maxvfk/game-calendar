@@ -174,7 +174,7 @@ async function refreshHarness(run: (h: {
 
 describe("ZZZ real adapter uses existing refresh safeguards", () => {
   test("ordinary robots, six-hour floor, XML accept and conditional 304", async () => {
-    expect(ADAPTERS.filter(a => a.game === "zzz").map(a => a.id)).toEqual([ctx.sourceId]);
+    expect(ADAPTERS.filter(a => a.game === "zzz").map(a => a.id)).toEqual(["zzz-zenlessgg-banners", ctx.sourceId]);
     expect(ADAPTERS.some(a => a.id === "zzz-game8-events")).toBe(false);
     expect(usesDocumentedSteamApi(adapter)).toBe(false);
     await refreshHarness(async ({ cycle, store, requests }) => {

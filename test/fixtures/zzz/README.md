@@ -23,3 +23,15 @@ Authors in the actual publisher distribution: `Overtimeboo` (3.0/3.2/3.3),
 `shijie.hong` (3.1). These are attribution metadata, not a guessed identity:
 the app-specific publisher feed/link/guid contract supplies the source boundary.
 No direct HoYoverse article IDs are inferred from Steam IDs.
+
+B1: `banner-rss-excerpts-2026-10-27.xml` is a factual subset of the actual
+Zenless.gg Updates RSS capture in Actions 40509703766 / artifact 12735569765
+(SHA-256 `b617a5165c91d4df6293015c2ccdd676c4bbb859931921d35b7417bdcd744ddd`).
+Nine original publication envelopes, dated update headings, channel headings,
+featured S-rank factual clauses, period and channel declarations were retained;
+prose, assets, descriptions and unrelated posts omitted. Selectable rerun lists
+are retained as factual list excerpts. All 20 parsed records equal the full
+199,444-byte runner RSS output at the same injected clock. Synthetic future
+notices/mutations in tests are explicitly test-only, never production coverage.
+Persistent production snapshots use the documented factual-capture JSON schema;
+its hash/length identify the original raw HTTP response, not a fictional raw feed.

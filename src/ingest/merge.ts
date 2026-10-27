@@ -88,7 +88,9 @@ export function mergeEvents(
     // cycles override it even when their confidence is lower; keep their IDs/copy.
     const zzzProjectionPair = isZzzProjection(existing) !== isZzzProjection(incoming) &&
       existing.game === "zzz" && incoming.game === "zzz";
-    const preferIncoming = zzzProjectionPair ? isZzzProjection(existing)
+    const copiedBannerPair = (existing.sourceId === "zzz-zenlessgg-banners" && incoming.sourceId === "reviewed-zzz") ||
+      (incoming.sourceId === "zzz-zenlessgg-banners" && existing.sourceId === "reviewed-zzz");
+    const preferIncoming = copiedBannerPair ? incoming.sourceId === "reviewed-zzz" : zzzProjectionPair ? isZzzProjection(existing)
       : incoming.confidence > existing.confidence;
     const [winner, loser] =
       preferIncoming
@@ -107,7 +109,7 @@ export function mergeEvents(
     // Agreement from a different source is real evidence; from the same source
     // it is just the same row seen twice.
     const corroborated =
-      !zzzProjectionPair && winner.sourceId !== loser.sourceId
+      !zzzProjectionPair && !copiedBannerPair && winner.sourceId !== loser.sourceId
         ? { ...winner, confidence: Math.min(1, winner.confidence + bonus) }
         : winner;
 
@@ -196,7 +198,8 @@ function findConflict(
   // only the canonical Asia end; Europe/America can disagree while Asia agrees.
   const official = a.provenanceStatus === "official" || b.provenanceStatus === "official";
   // Estimated provenance cannot hide an exact one-minute recurrence contradiction.
-  const strictZzz = isZzzProjection(a) || isZzzProjection(b);
+  const strictZzz = isZzzProjection(a) || isZzzProjection(b) ||
+    [a, b].some(e => e.game === "zzz" && e.sourceId === "zzz-zenlessgg-banners");
   if (a.endPrecision === "exact" && b.endPrecision === "exact" && a.endsAt && b.endsAt) {
     for (const region of ["asia", "europe", "america"] as const) {
       const av = a.regionEnds?.[region] ?? a.endsAt;
