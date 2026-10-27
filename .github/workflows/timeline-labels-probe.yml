@@ -88,7 +88,7 @@ jobs:
       # the reviewed registry, so the report shows what automation would record.
       - name: Accept dry run
         if: always() && hashFiles('probe/proposals.json') != ''
-        run: bun scripts/timeline-labels.ts accept probe/proposals.json probe/registry-after.json probe/accept-report.json
+        run: bun scripts/timeline-labels.ts preview probe/proposals.json probe/registry-after.json probe/accept-report.json
 
       - name: Report
         if: always()
