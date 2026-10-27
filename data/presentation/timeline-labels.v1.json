@@ -347,6 +347,191 @@
       "decision": "label",
       "timelineTitle": "Yvonne RE-Factor Headhunting #1",
       "reason": "Summary names the featured character and banner."
+    },
+    {
+      "eventId": "zzz:graceful-gale:2026-10-21",
+      "fingerprint": "sha256:684eb2f114a170761dde6e2782b9f5da053ea024ae995a9ed6967469afbc34a8",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Velina",
+      "reason": "Featured agent replaces opaque banner name."
+    },
+    {
+      "eventId": "zzz:into-the-flames-of-life:2026-10-21",
+      "fingerprint": "sha256:1e1ab11a573359a4186801593c442e7831ddc7d3a6c41965e9377cc9eafaa87b",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Phoenix",
+      "reason": "Featured agent replaces opaque banner name."
+    },
+    {
+      "eventId": "zzz:joyau-dore:2026-10-21",
+      "fingerprint": "sha256:00e448981beb51663af24639a2ffc2687d359ba59601f934102d6205f904dc95",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Already the featured W-Engine name."
+    },
+    {
+      "eventId": "zzz:plume-of-rebirth:2026-10-21",
+      "fingerprint": "sha256:91f9157b380e511e9c37ea36a79cbf1129a130f714a53da950ed91b0b1408950",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Already the featured W-Engine name."
+    },
+    {
+      "eventId": "zzz:the-final-callback-audition-stage:2026-10-21",
+      "fingerprint": "sha256:5d12f14d1b49838cb8e3286bd87dd156270dd862dce105cf9aa32f38d7aff63d",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Audition Stage: Phoenix + Velina",
+      "reason": "Mode plus featured agents."
+    },
+    {
+      "eventId": "zzz:spooky-funhouse-tales:2026-10-22",
+      "fingerprint": "sha256:3df8a13104b99e3ebb22461259b64c3c66da7bef0472b1e447552a16ac386eed",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Recognizable as is."
+    },
+    {
+      "eventId": "zzz:all-new-program:2026-10-21",
+      "fingerprint": "sha256:2f581f6aef9f8212094481fef3b012b27f4ccf968793dc9fa9f49827dbfdff9e",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "auto-guard: name or number not in the event: Login; proposed \"Version 3.3 Login: Encrypted Master Tape ×10\""
+    },
+    {
+      "eventId": "genshin:missive-of-grace-a-thank-you-gift:2026-09-28",
+      "fingerprint": "sha256:f413853ae7e27d691c9d4baadee8beb3946deca7ee65d4d4b52e244894975ac1",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Thank-You Gift: Primogems ×1,600",
+      "reason": "Concrete reward from summary."
+    },
+    {
+      "eventId": "hsr:anomaly-arbitration-return-of-the-legion:2026-08-26",
+      "fingerprint": "sha256:ad4b95c2a153dbd9de60da530630f586f8af6ea9398d7f836d810bac55ea2db5",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode prefix already present."
+    },
+    {
+      "eventId": "hsr:fate-contract-renewal:2026-07-24",
+      "fingerprint": "sha256:d72718b8e33670dc6eaab9bf226c5cb6450e7d02550b0e661d3e8f34e770c696",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Login: Limited Collaboration Character",
+      "reason": "Summary describes the reward."
+    },
+    {
+      "eventId": "zzz:cyber-miracle-healer-on-duty:2026-10-28",
+      "fingerprint": "sha256:e488363396b111c690b2574aa0a27e49ec494f04f63916b9e85076cd3d4817ab",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Antivirus Log: Bangboo Repair",
+      "reason": "Describes the activity from summary."
+    },
+    {
+      "eventId": "wuwa:beyond-the-waves-land-of-xuanfang:2026-10-29",
+      "fingerprint": "sha256:1485d189e7e52b7d67cb115b014dc081cb3a40d36305c372d1324e21d3551a5c",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary to support a better label."
+    },
+    {
+      "eventId": "nte:puka-lucky-flip:2026-10-29",
+      "fingerprint": "sha256:7781a3ddd3311cabba4347ed6dc41a2b3c3a17b9936017406d26940b6e981b81",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary to support a better label."
+    },
+    {
+      "eventId": "endfield:arena-of-games:2026-10-29",
+      "fingerprint": "sha256:ac4499b2c420c6ab664da0838a0a0d3f15a925b15fc1ba875ac805f8a85afcb6",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Already clear."
+    },
+    {
+      "eventId": "endfield:new-era-for-the-myriad-souls:2026-10-31",
+      "fingerprint": "sha256:153ba21958849c2fef0421ae681b0a254823d251540a91b36784cac458816ed3",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No better supported alternative."
+    },
+    {
+      "eventId": "genshin:imaginarium-theater-november-2026-season:2026-11-01",
+      "fingerprint": "sha256:058086e1fafb042636c3fa828e70dc746feb831b70b732e99c269d8093e985cb",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Season identity preserved."
+    },
+    {
+      "eventId": "zzz:advanced-bounty-area-patrol:2026-11-04",
+      "fingerprint": "sha256:c17647a97378b5b93e810864c6459deacf96a9a649a0fe58a65d2b95d05ae5b4",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Already clear."
+    },
+    {
+      "eventId": "czn:tiana-rate-up-rescue:2026-11-03",
+      "fingerprint": "sha256:e2867474f5f155676d91b434dd4b3ec714eea365751eadbafe91dfbd56758c93",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Tiana",
+      "reason": "Featured name alone, per approved Alcea example."
+    },
+    {
+      "eventId": "czn:tiphera-rate-up-rescue:2026-11-03",
+      "fingerprint": "sha256:ebf404133a5f23585aba488da66b0a22bf94bade562c0a3d90adaac7fdb7ed5c",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Tiphera",
+      "reason": "Featured name alone, per approved Alcea example."
+    },
+    {
+      "eventId": "nte:beyond-the-rails-glinting-circle:2026-11-05",
+      "fingerprint": "sha256:3ca31244ed8f9e3a1898932a14be00c90c68a4165454d458fbed7c560ac11c62",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Rotation identity already clear."
+    },
+    {
+      "eventId": "wuwa:tower-of-adversity-hazard-zone:2026-11-09",
+      "fingerprint": "sha256:37335d23e4689cee9b5e35274034c42814a88354bada0ab04d12c8a9565e6b3a",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode prefix already present."
+    },
+    {
+      "eventId": "zzz:trails-of-the-hobbling-crow:2026-11-11",
+      "fingerprint": "sha256:c5ad62f4ad0c251ca308b94bcc9efe841a7cf4eddcd7a170ae0b85a6f59f196a",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Recognizable as is."
+    },
+    {
+      "eventId": "zzz:en-nah-into-your-lap:2026-11-11",
+      "fingerprint": "sha256:953764bf83c5e580447a64a1a16ceb35242dfe980511a7a109118cca9f27b9f2",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "auto-guard: name or number not in the event: Login; proposed \"Seven-Day Login: Boopon ×10\""
+    },
+    {
+      "eventId": "czn:blazebell-rate-up-rescue:2026-11-11",
+      "fingerprint": "sha256:4844eeb5ab24ba461f9455809abe5a2fefb8ab8c638126d7967e2a35aab56ab2",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Blazebell",
+      "reason": "Featured name alone, consistent with batch."
+    },
+    {
+      "eventId": "czn:vivian-rate-up-rescue:2026-11-11",
+      "fingerprint": "sha256:6bbe6e670d86a2fcbe6e38dd2bc7b1269b5579c72c4ed73d6030c8863b55bdf5",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Vivian",
+      "reason": "Featured name alone, consistent with batch."
     }
   ]
 }
