@@ -134,6 +134,8 @@ high-priority ZZZ direction; do not start it automatically.
 
 ## Implementation result — 2026-10-27
 
+Delivery: [PR #111](https://github.com/maxvfk/game-calendar/pull/111).
+
 Both per-mode evidence gates passed within their stated provenance limits;
 no blocked mode and no finite reviewed fallback was needed. Evidence and unknowns:
 `docs/research/zzz-endgame-reanchoring-2026.md`. Shiyu uses the official January 9

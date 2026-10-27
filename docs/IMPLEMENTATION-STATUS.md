@@ -2,6 +2,8 @@
 
 ## ZZZ Shiyu / Deadly Assault 2026 re-anchoring: IMPLEMENTED (2026-10-27)
 
+Delivery: [PR #111](https://github.com/maxvfk/game-calendar/pull/111).
+
 Bounded implementation from current main `103d746`, after #109/#110; no parallel
 re-anchoring PR was present. Task: `docs/tasks/ZZZ-ENDGAME-REANCHORING-2026.md`.
 Per-mode gate, dated sources, exceptions and retrieval limits:
