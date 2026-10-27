@@ -63,7 +63,8 @@ function updateDays(posts: Post[]): Map<string, string> {
     const headings = text.map((line, i) => /^(?:\[Update Start Time\]|\[Version Update Time\])$/.test(line) ? i : -1).filter(i => i >= 0);
     if (headings.length !== 1) throw Error("ZZZ banner update reference missing/ambiguous");
     const value = clock((text[headings[0]! + 1] ?? "").replace(/ : We estimate.*$/, ""));
-    if (value.zone !== "UTC+8" || !text.some(l => new RegExp(`Version ${m[1]!.replace(".", "\\.")}\\b`).test(l))) throw Error("ZZZ banner update version/zone mismatch");
+    const v = m[1]!.replace(".", "\\.");
+    if (value.zone !== "UTC+8" || !text.some(l => new RegExp(`^(?:Below is the updated content and compensation for Version ${v}\\b|Version ${v} is now available for pre-download\\.)`).test(l))) throw Error("ZZZ banner update version/zone mismatch");
     if (days.has(m[1]!) && days.get(m[1]!) !== value.day) throw Error("ZZZ banner contradictory update references");
     days.set(m[1]!, value.day);
   }
@@ -150,6 +151,12 @@ export function parseZzzBannerRss(raw: string, ctx: ParseContext): GachaEvent[] 
   const posts = raw.trimStart().startsWith("{") ? null : discoverZzzBannerPosts(raw);
   const days = posts ? updateDays(posts) : null;
   const events = posts ? posts.flatMap(p => parseNotice(p, days!, ctx)) : archiveEvents(raw, ctx);
+  if (posts && days) {
+    const activeUpdate = [...days].filter(([, day]) => day <= ctx.now).sort((a,b) => a[1].localeCompare(b[1]) || a[0].localeCompare(b[0], "en", { numeric: true })).at(-1);
+    if (activeUpdate && !posts.some(p => NOTICE.exec(p.title)?.[1] === activeUpdate[0])) {
+      throw Error("ZZZ banner new version update has no dated channel notice; coverage needs review");
+    }
+  }
   if (new Set(events.map(e => e.id)).size !== events.length) throw Error("ZZZ banner duplicate/contradictory channel notices");
   return events.sort((a,b) => a.id.localeCompare(b.id));
 }

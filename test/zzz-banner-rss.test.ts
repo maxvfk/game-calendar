@@ -182,3 +182,10 @@ test("full offline build preserves Steam E1, Shiyu/Deadly and every other prior 
     expect(after.sources.find((s:{sourceId:string})=>s.sourceId===ID)).toMatchObject({parsedCount:20,eventCount:20});
   } finally {await rm(dir,{recursive:true,force:true});}
 });
+
+
+test("a newer published version with no channel notice cannot confirm older still-live banners", () => {
+  const update = items.find(i => /<title>Version 3\.3 .* Update Announcement<\/title>/.test(i))!;
+  const next = update.replaceAll("Version 3.3", "Version 4.0").replaceAll("version-3-3", "version-4-0");
+  expect(() => parse(wrap([next,...items]))).toThrow(/no dated channel notice/);
+});

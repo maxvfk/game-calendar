@@ -123,5 +123,35 @@ and stable opening-day IDs. Preserve valid old rows and never project Phase II.
 Use feed health/expired coverage warnings to trigger that review; no new alert
 scheduler or message to a third party is authorized by this milestone.
 
-Gate B production refresh, counts, tests and delivery are recorded below after
-validation. **STOP after B1; no summaries or other milestone.**
+## Gate B production validation
+
+Implemented the single RSS source family through ADAPTERS / SourceParser / normal
+refresh. The first production refresh is a separately authorized one-time native
+HTTP validation of the completed adapter, not a repeated research round. No
+`--force`, assumed robots or API exception was used. Subsequent scheduled attempts
+use the existing six-hour floor, including the real committed capture timestamp
+when main cannot restore a PR-scoped state cache.
+
+[Actions 40512622186](https://github.com/maxvfk/game-calendar/actions/runs/40512622186),
+2026-10-27T13:30:35.554Z (16:30 Moscow): **20 parsed, 1/1 confirmed, no warnings or
+broken sources**. Artifact 12737223076 SHA-256
+`9b4aaf2127172add695c9f0b54de9d42d4dad40a00cb87871614a7c153daac29`.
+Original RSS is 199,444 bytes / SHA-256
+`401d46cd16d525b5b885dd1587b69928ab4320e9fdfb09f2fafdd99b9ec6e6e4`.
+The persistent factual capture is 22,257 bytes, its own SHA is metadata's
+`contentHash`; raw HTTP hash/length is inside `capture`. Distinguish these hashes.
+15 factual offline regressions use excerpts from the real source; excerpt/full
+runner RSS parse outputs are equal. Synthetic future/malformed rows are test-only.
+
+Actual fixed-clock full build against main `3585bbe`: **229→241 whole feed,
+66→78 ZZZ, 8→20 banner records**. All 229 old rows (including 30 reviewed, Steam
+winners and 12 recurring rows) are exactly unchanged. Existing source-health rows
+and date conflicts are equal. 8 overlaps keep reviewed winners; 12 additional
+automatic rows are historical, so unexpired coverage stays 26 and current banners
+stay four. This establishes unattended discovery/ingestion, not new speculative
+3.3 II coverage. Durable proof: `docs/evidence/zzz-b1-production-refresh-2026-10-27.json`
+and `docs/evidence/zzz-b1-feed-replay-2026-10-27.json`.
+
+All temporary PR probe/validation scripts/workflows are removed before merge;
+the source runs only through the normal scheduler. Exact delivery checks are
+recorded in [PR #112](https://github.com/maxvfk/game-calendar/pull/112). **STOP after B1; no summaries or other milestone.**
