@@ -1,6 +1,12 @@
 # ZZZ E1 — Official Steam events-only unattended recovery
 
-**Priority: P0 continuation. State: READY FOR IMPLEMENTATION; not started.**
+**Priority: P0 continuation. State: COMPLETE — events only (2026-10-27), PR #109.**
+
+Real integrated Actions refresh: [40426199820](https://github.com/maxvfk/game-calendar/actions/runs/40426199820).
+43 parsed candidates, 19 reviewed exact-ID overlaps, 54 unique ZZZ feed rows;
+all 30 reviewed records unchanged. Source/validation/delivery evidence:
+`docs/evidence/zzz-steam-events-recovery.md`. Banners remain a separate task.
+The implementation contract below is retained for audit.
 
 **Prerequisites:** merged ZZZ hotfix #105, P0 Gate A blocked-but-partial #107. Read `AGENTS.md`, `docs/IMPLEMENTATION-STATUS.md`, `docs/tasks/ZZZ-SOURCE-RECOVERY-P0.md`, `docs/research/zzz-source-recovery-p0.md`, `docs/NTE-STEAM.md`, relevant source health, merge, snapshots and test code on **current** `main`. Check that equivalent work was not merged in parallel.
 

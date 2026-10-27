@@ -1,3 +1,4 @@
+import { zzzSteamRssParser } from "./zzz-steam-rss.ts";
 import { arknightsWikiParser } from "./akwiki.ts";
 import { aruStatsParser } from "./arustats.ts";
 import { blueArchiveWikiParser } from "./bawiki.ts";
@@ -38,6 +39,7 @@ export const PARSERS: SourceParser[] = [
   kqmHsrNewsParser,
   wuwaKuroAtomParser,
   nteSteamNewsParser,
+  zzzSteamRssParser,
   nteBuildBtrParser,
   prydwenCznParser,
 ];

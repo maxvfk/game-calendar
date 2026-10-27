@@ -218,8 +218,13 @@ test("offline builder uses same fixture/snapshot, creates only internal sidecar;
     let run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);
     const publicPaths = ["events.v1.json", "timeline-label-queue.v1.json", "timeline-label-agent-input.v1.json"];
     const before = await Promise.all(publicPaths.map(p => Bun.file(join(dir, "public/data", p)).text()));
-    // Baseline generated offline from main 25ee442 with these exact fixtures/clock/empty registry.
-    const baselineHashes = ["743eafd2bdc6503f1630f9204e5d7166b2f36f4e74af49ac26304556ee13304c", "62994a083937db193acb26c5f4af500798c9eb08003ffdb675310f89a3dc94e2", "e275444c664777ac3c92298b71d255915f77057d6ef85ab2cea98110948940f9"];
+    // Original baseline: main 25ee442. ZZZ events-only registration adds one
+    // unavailable source-health row in this isolated WuWa fixture build; no events/copy change.
+    const withoutZzz = JSON.parse(before[0]!);
+    withoutZzz.sources = withoutZzz.sources.filter((s: { sourceId: string }) => s.sourceId !== "zzz-steam-events-official");
+    expect(new Bun.CryptoHasher("sha256").update(JSON.stringify(withoutZzz, null, 2) + "\n").digest("hex"))
+      .toBe("743eafd2bdc6503f1630f9204e5d7166b2f36f4e74af49ac26304556ee13304c");
+    const baselineHashes = ["c7e052bf97d33fc7940ab6a97360ceffa2a083f1f702cff8c760bb30c5a93c5a", "62994a083937db193acb26c5f4af500798c9eb08003ffdb675310f89a3dc94e2", "e275444c664777ac3c92298b71d255915f77057d6ef85ab2cea98110948940f9"];
     expect(before.map(bytes => new Bun.CryptoHasher("sha256").update(bytes).digest("hex"))).toEqual(baselineHashes);
     let side = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
     expect(side.entries).toHaveLength(5); expect(side.entries[0]!.sources[0]!.capturedAt).toBeNull();

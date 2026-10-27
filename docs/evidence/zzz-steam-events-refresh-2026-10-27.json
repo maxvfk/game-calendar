@@ -1,0 +1,86 @@
+{
+  "runId": "40426199820",
+  "commit": "dee73fb1b3ca78c0507d8e3af67469ac4e78f2eb",
+  "sourceId": "zzz-steam-events-official",
+  "sourceUrl": "https://steamcommunity.com/games/4162040/rss/",
+  "capturedAt": "2026-10-27T00:24:39.002Z",
+  "contentHash": "d6e0a47c616546449e8e630d1c83fc32e31fe2ca044f5147ea60f22965d18d1c",
+  "parsedCount": 43,
+  "overlapReviewed": 19,
+  "finalZzzRecords": 54,
+  "automaticWinners": 24,
+  "feedRecords": 217,
+  "sourceHealth": {
+    "sourceId": "zzz-steam-events-official",
+    "game": "zzz",
+    "url": "https://steamcommunity.com/games/4162040/rss/",
+    "lastSuccessAt": "2026-10-27T00:24:39.002Z",
+    "lastConfirmedAt": "2026-10-27T00:24:39.002Z",
+    "contentChangedAt": "2026-10-27T00:24:39.002Z",
+    "eventCount": 43,
+    "parsedCount": 43,
+    "statesNoEvents": false
+  },
+  "posts": [
+    {
+      "title": "Version 3.3 \"Journey to the Sky\" Update Announcement",
+      "url": "https://steamcommunity.com/games/4162040/announcements/detail/652616887841064662",
+      "author": "Overtimeboo",
+      "publishedAt": "2026-10-20T23:00:24.000Z"
+    },
+    {
+      "title": "Zenless Zone Zero Version 3.3 \"Journey to the Sky\" Special Program Announcement",
+      "url": "https://steamcommunity.com/games/4162040/announcements/detail/667252863011914641",
+      "author": "Overtimeboo",
+      "publishedAt": "2026-10-08T10:49:00.000Z"
+    },
+    {
+      "title": "Version 3.2 \"Their Secret Histories\" Update Announcement",
+      "url": "https://steamcommunity.com/games/4162040/announcements/detail/714537487845820570",
+      "author": "Overtimeboo",
+      "publishedAt": "2026-09-08T23:00:54.000Z"
+    },
+    {
+      "title": "Version 3.2 \"Their Secret Histories\" Special Program Announcement",
+      "url": "https://steamcommunity.com/games/4162040/announcements/detail/712284420447405348",
+      "author": "Overtimeboo",
+      "publishedAt": "2026-08-24T07:21:29.000Z"
+    },
+    {
+      "title": "🎨 New Zenless Zone Zero Items in the Steam Points Shop! 🎨",
+      "url": "https://steamcommunity.com/games/4162040/announcements/detail/711156617370927265",
+      "author": "Overtimeboo",
+      "publishedAt": "2026-07-29T09:00:17.000Z"
+    },
+    {
+      "title": "Version 3.1 \"The Long Goodbye\" Update Announcement",
+      "url": "https://steamcommunity.com/games/4162040/announcements/detail/706649847851123193",
+      "author": "shijie.hong",
+      "publishedAt": "2026-07-28T13:26:12.000Z"
+    },
+    {
+      "title": "Zenless Zone Zero Version 3.1 \"The Long Goodbye\" Special Program Announcement",
+      "url": "https://steamcommunity.com/games/4162040/announcements/detail/693140950130622536",
+      "author": "Overtimeboo",
+      "publishedAt": "2026-07-15T11:07:16.000Z"
+    },
+    {
+      "title": "How to Fix the Issue of Linking the Wrong HoYoverse Account",
+      "url": "https://steamcommunity.com/games/4162040/announcements/detail/702145613257509311",
+      "author": "Overtimeboo",
+      "publishedAt": "2026-06-18T05:04:34.000Z"
+    },
+    {
+      "title": "Version 3.0 \"A Sleepwalker's Confession\" Update Announcement",
+      "url": "https://steamcommunity.com/games/4162040/announcements/detail/704396868946233232",
+      "author": "Overtimeboo",
+      "publishedAt": "2026-06-16T23:00:15.000Z"
+    },
+    {
+      "title": "Zenless Zone Zero Steam Version Launches June 17",
+      "url": "https://steamcommunity.com/games/4162040/announcements/detail/704396868946232792",
+      "author": "Overtimeboo",
+      "publishedAt": "2026-06-16T02:30:40.000Z"
+    }
+  ]
+}

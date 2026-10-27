@@ -1,5 +1,45 @@
 # Game calendar implementation status
 
+## ZZZ E1 — Steam events-only unattended recovery: COMPLETE (2026-10-27)
+
+Implemented from current main `e32cd62` after #105/#107/#108; no parallel recovery
+was present. Source contract, counts, precision and failure behavior:
+`docs/evidence/zzz-steam-events-recovery.md`. Delivery: [PR #109](https://github.com/maxvfk/game-calendar/pull/109).
+
+- `zzz-steam-events-official` uses the verified official Steam Community RSS,
+  ordinary robots, six-hour floor, conditional requests and existing refresh
+  schedule/LKG/zero/drop/source-health guards. Game8 stays disabled; Steam API
+  exception is unchanged. Discovery reads feed items, with no per-version IDs.
+- Deterministic bounded version-update `New Events` sections; explicit date/year/
+  timezone/relative-version anchors only. Server-local starts stay day precision;
+  ends retain exact Asia/Europe/America instants. No maintenance-completion,
+  banner, trial or recurring-endgame periods inferred.
+- **Actual Actions refresh:** [40426199820](https://github.com/maxvfk/game-calendar/actions/runs/40426199820),
+  2026-10-27T00:24:39.002Z: **43 events**, **1/1 confirmed**, **0 warnings/broken**.
+  Ten publisher posts dynamically discovered; four supported updates (3.0–3.3),
+  including **eight 3.3 events**. Raw runner snapshot/metadata and durable proof
+  are committed; no fixture-only production claim. Temporary validation workflow
+  removed; production uses only the existing refresh workflow/schedule.
+  ZZZ-only bootstrap uses the committed capture timestamp if PR-scoped state
+  is absent on main, preserving the first six-hour floor without fake freshness.
+- **Merge/coverage:** 43 candidates, **19 exact-ID overlaps**, zero new conflicts;
+  **54 ZZZ winners = all 30 unchanged reviewed + 24 automatic historical rows**.
+  Before/after unexpired coverage is **14 → 14 (8 active + 6 upcoming)**; the
+  additional 24 rows have ended. Whole feed **193 → 217**, seven games. All 30
+  reviewed IDs/fields/URLs/provenance/timestamps and file bytes preserved; other
+  game events and snapshots unchanged. New supported notices can populate the
+  automatic feed without a reviewed/code edit.
+- **Checks:** frozen install/typecheck/full build PASS; **1311 tests pass,
+  3 existing age-dependent skips, 0 fail** (69 files). Fourteen focused regressions
+  cover discovery, dates/regions, duplicates/reviewed precedence, malformed/zero/
+  drift/outage/robots/interval/304/sharp-drop/LKG and whole-feed isolation. Final
+  PR CI/PG17 and post-merge CI/Pages links are recorded in PR #109.
+
+**Partial recovery only:** banners/trials remain reviewed-only. **Next concrete
+step:** separate `docs/tasks/ZZZ-BANNER-SOURCE-RECOVERY.md`, ahead of editorial
+v2/E2b summaries. No banner task, Timeline cutover, Account/Sync or recurrence
+work was started. **STOP after this milestone.**
+
 ## ZZZ recovery coordination — source restoration before editorial summaries (2026-10-27)
 
 Operator priority after the blocked full-source Gate A (#107): **finish ZZZ source
@@ -9,7 +49,7 @@ milestone ordering, **not** an implementation claim.
 1. First implementation-ready bounded task:
    `docs/tasks/ZZZ-STEAM-EVENTS-ONLY-RECOVERY.md`: official Steam publisher RSS,
    real runner ingestion of limited-time events, no invented banner periods,
-   reviewed records/IDs unchanged. Steam event extraction is NOT YET implemented.
+   reviewed records/IDs unchanged. Steam event extraction is COMPLETE in #109 (see E1 above).
 2. Then separately gated banner task:
    `docs/tasks/ZZZ-BANNER-SOURCE-RECOVERY.md`: find a truly usable compliant
    dynamic dated-phase source in the actual runner, then implement only if the
@@ -19,9 +59,10 @@ milestone ordering, **not** an implementation claim.
    steps are assessed; do not misreport events-only as full ZZZ recovery.
 
 Both task specifications were prepared after the #107 evidence; they do not
-change the #107 BLOCKED finding or current production source state.
+change the historical #107 full-scope BLOCKED finding. The later E1 section
+above records partial events-only implementation.
 
-## ZZZ source recovery P0 — Gate A BLOCKED; ingestion NOT restored (2026-10-27)
+## ZZZ full source recovery P0 — historical Gate A BLOCKED (2026-10-27)
 
 Current-main baseline `ffe2356` after #105/#106; no concurrent recovery PR
 was open. Actual GitHub-hosted Ubuntu 24.04 runner evidence:
@@ -69,7 +110,7 @@ v2/E2b remain separate and were not started. **STOP after this P0 verdict.**
 
 **Emergency restoration:** the only listed ZZZ automatic source,
 `zzz-game8-events`, has `scheduled: false` after Game8 CloudFront HTTP 202
-responses from GitHub Actions. No alternative live ZZZ source is configured.
+responses from GitHub Actions. At that emergency checkpoint no alternative live ZZZ source was configured.
 The previous reviewed batch had 17 historical records, with only
 `Angels Support Operation` still current by 2026-10-27; newer
 Version 3.3 events and banners were missing.
