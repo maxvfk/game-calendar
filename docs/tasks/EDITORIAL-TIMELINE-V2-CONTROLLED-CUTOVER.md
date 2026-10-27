@@ -1,7 +1,7 @@
 # E2a.1 — Controlled production cutover of Timeline editorial decisions v1 → v2
 
 **Priority:** next Editorial milestone after ZZZ source recovery.
-**Status:** READY FOR BOUNDED IMPLEMENTATION; **PRODUCTION CUTOVER NOT AUTHORIZED BY THIS TASK OR BY PR CREATION**.
+**Status:** IMPLEMENTATION PREPARED / NOT LIVE; evidence/runbook: `docs/evidence/timeline-v2-controlled-cutover.md`. **PRODUCTION CUTOVER NOT AUTHORIZED BY THIS TASK OR BY PR CREATION**.
 **Scope:** one versioned Timeline registry migration and single-writer M4 cutover. No `displaySummary`, unified model calls, or evidence-triggered production requeue.
 
 ## Baseline and sources of truth

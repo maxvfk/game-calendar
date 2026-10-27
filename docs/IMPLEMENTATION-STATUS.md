@@ -1,5 +1,46 @@
 # Game calendar implementation status
 
+## Timeline registry v2 — E2a.1 PREPARED / NOT LIVE (2026-10-27)
+
+**READY_FOR_CUTOVER (implementation/rehearsal only).** Production remains v1.
+No operator GO, merge, production writer activation or Actions-variable change.
+Task: `docs/tasks/EDITORIAL-TIMELINE-V2-CONTROLLED-CUTOVER.md`.
+Full report/operator freeze/publish/release/rollback runbook:
+`docs/evidence/timeline-v2-controlled-cutover.md`.
+
+- Fresh main `ed773a8` inventory: **75 decisions — 25 operator_approved,
+  50 automated, 0 legacy_unknown; 22 labels / 43 keep / 10 research**.
+  Includes post-E2a `46f1d2e` (25 additions). Historical E2a manifest unchanged;
+  separate cutover ledger pins main/blob/history/source and target hashes.
+- PR-only explicit storage selection chooses v2 with admission **frozen**.
+  Strict reader/queue projection, trusted v2 acceptance, sole ticket/epoch-bound
+  record path; bad/missing v2 or ledger never falls back to an obsolete v1 file.
+  L1 model proposals/guards, semantic fingerprint, 25-event cap, source/public
+  copy, cadence/model/kill switch and read-only propose/no-Claude record stay intact.
+- Old v1 runners/artifacts cannot use the active writer; local atomic lock,
+  fresh-main retries, FF-only M4 pushes and CAS/ancestry operator publication
+  guard races. Freeze prevents model calls as well as writes. No evidence-only
+  requeue. Separate release opens admission only after authorized cutover checks.
+- **Checks:** Bun 1.3.14 frozen install/typecheck/build PASS; full suite
+  **1,352 pass / 3 existing age-dependent skips / 0 fail** (72 files),
+  11 new cutover tests. Actual old/new record.sh, bare remote pre-push race,
+  queued/failed/cancelled controls, wrong metadata and rollback after a new v2
+  recording tested. All four fixed-input public JSON files byte-identical;
+  **241 events**, all **75 decisions/22 labels** retained.
+- Chromium 153: 15 smoke checks at 320/390/1440 px, approved/canonical titles
+  and Original title fallback, no errors; 390 px visually checked. Client code,
+  ZZZ/parsers/recurrence, Account/Sync and Daily Reset unchanged.
+- **Gate 0 limitation:** all 520 Actions runs were read (no active M4 at observation),
+  but connector variable access was rejected. Live switch value is **unknown**;
+  real admission/freeze/quiescence and GO remain **BLOCKED / not passed**.
+  Dated observations: `docs/evidence/timeline-v2-gate0-2026-10-27.json`.
+
+**Next concrete step:** review the prepared PR/CI, obtain separate explicit
+operator GO for a cutover window, verify actual controls, drain old writers and
+refresh/review the cutover inventory before publishing the frozen switch. PR stays
+unmerged without GO. No post-cutover CI/Pages or live v2 write is claimed.
+**STOP after E2a.1.** E2b/E3/E4 were not started.
+
 ## ZZZ B1 — unattended banner recovery: IMPLEMENTED, SECONDARY RSS (2026-10-27)
 
 Delivery: [PR #112](https://github.com/maxvfk/game-calendar/pull/112), from main

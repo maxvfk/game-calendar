@@ -204,3 +204,27 @@ can reopen decisions through the separate evidence helper.
 
 Actual counts, exact trust checks, regression/rollback results, limitations and
 future exclusive-writer cutover gates: `docs/evidence/editorial-provenance-e2a.md`.
+
+
+## E2a.1 controlled v2 cutover candidate — PREPARED / NOT LIVE
+
+The cutover PR adds an explicit `timeline-storage.v1.json` selection and a separate
+`timeline-v2-cutover.v1.json` source ledger. Its v2 registry is an auditable **PR
+candidate**, not current production authority; no merge is allowed without separate
+operator GO. The branch selects v2/frozen, so release is a separate step.
+
+The selected storage version is mandatory. V2 is validated and projected into the
+unchanged queue/label semantics; there is no implicit fallback to inactive v1.
+Only the selected path can be written with a matching open-admission epoch ticket.
+Model proposals keep the existing v1 shape and cannot claim origin/evidence data.
+Trusted recording assigns automated origin; existing matching metadata is retained.
+
+`accept` now requires an explicit writer ticket; `preview` writes only scratch
+outputs for the existing read-only probe. M4 carries its ticket outside public
+agent input. The existing evidence-only eligibility helper remains unwired.
+Historical E2a types/manifest are retained; their old rehearsal is not a cutover.
+
+Authenticated operator tools and exact GO/freeze/main/CI gates, safe refresh,
+atomic publish, separate release and rollback from the **latest** v2 archive:
+`docs/evidence/timeline-v2-controlled-cutover.md`. No production action was taken
+in E2a.1 preparation.
