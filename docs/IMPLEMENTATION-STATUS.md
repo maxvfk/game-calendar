@@ -1,9 +1,15 @@
 # Game calendar implementation status
 
-## HSR Version 4.6 Treasures Lightward: P0 IMPLEMENTED (2026-10-28)
+## HSR Version 4.6 Treasures Lightward: P0 COMPLETE / DEPLOYED (2026-10-28)
 
 Task: `docs/tasks/HSR-4-6-LIGHTWARD-COVERAGE-P0.md`; baseline main `9d112a6`.
-Bounded parser hotfix; delivery/CI/Pages verification will be recorded after merge.
+Delivery: [PR #119](https://github.com/maxvfk/game-calendar/pull/119), merged
+2026-10-27 23:41:18 UTC as `ece355d346861b552e68d726ff3c6d51492ea1f4`.
+[PR CI 40603634593](https://github.com/maxvfk/game-calendar/actions/runs/40603634593)
+and [post-merge main CI 40603821063](https://github.com/maxvfk/game-calendar/actions/runs/40603821063)
+both passed. Post-merge CI explicitly passed **Deploy to Pages**, site build,
+typecheck/test/feed and CZN PG17 recovery/concurrency. Detailed verified delivery
+record: `docs/evidence/hsr-46-lightward-delivery-2026-10-28.md`.
 
 - The actual defect is narrower than the initial task diagnosis: AS Dominance of
   Oblivion and PF Imagined Words already parsed through an unscoped mode search.
@@ -41,8 +47,9 @@ Bounded parser hotfix; delivery/CI/Pages verification will be recorded after mer
   contradictory schedules, absent/invalid clocks, wrong version, scope decoys,
   and 4.5 reviewed winner/ID preservation. No cadence generator or new workflow.
 - Validation: frozen install/typecheck/build PASS with Bun **1.3.14**; **1348 pass / 3 skip / 0 fail** (72 files). Self-review of parser boundaries,
-  time semantics, merge identities and the complete diff found no blocker; PR CI
-  and deployment verification remain pending. Local existing age-dependent
+  time semantics, merge identities and the complete diff found no blocker.
+  Exact-head PR CI and post-merge CI/Pages **succeeded**; full delivery evidence
+  and references are recorded above. Local existing age-dependent
   tests skip when the `age` executable is unavailable; dedicated CI recovery
   validation installs it. No unrelated game/client/Sync/Timeline changes.
 
@@ -54,9 +61,16 @@ reward families are not claimed complete; no new research or generalized audit
 was performed here. Historical reviewed AA remains unchanged. These require a
 separate coverage audit and source-grounded dates, never inferred version/cadence.
 
-**Next concrete step:** finish PR review/CI, merge and verify Pages/live feed;
-operator then compares the current MoC deadline against the in-game timer on
-phone/desktop. Afterwards, separately scope the remaining HSR 4.6 coverage audit.
+**Operator acceptance:** on 2026-10-28 the user reported that the calendar was
+correct in their browser. This is user-reported UI smoke, not independent live
+JSON retrieval or a recorded in-game/server timer comparison. GitHub Pages
+deployment itself is independently confirmed by the successful Actions job.
+
+**Next concrete step:** HSR P0 is closed; no need to resume the interrupted Work.
+Remaining HSR 4.6 coverage gaps are parked as a **separate** future audit.
+Next user-selected direction is resolving the two Astra High review findings
+in draft [PR #115](https://github.com/maxvfk/game-calendar/pull/115), subject
+to a separate follow-up; **NO GO** for any Timeline v2 cutover.
 **STOP after this HSR P0 fix.** PR #115, E2a.1 and Source Recovery are untouched.
 
 ## ZZZ B1 — unattended banner recovery: IMPLEMENTED, SECONDARY RSS (2026-10-27)
