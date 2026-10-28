@@ -75,9 +75,9 @@ test("14-day steps, bounded 70-day start horizon and year rollover preserve dist
   expect(year.some(e => e.id === "zzz:shiyu-defense-critical-node-jan-8:2027-01-08")).toBe(true);
 });
 
-test("all 30 existing reviewed fields/IDs survive; equal projections never inflate confidence", async () => {
+test("all 32 existing reviewed fields/IDs survive; equal projections never inflate confidence", async () => {
   const reviewed = materializeReviewedBatch(await Bun.file("data/reviewed/zzz.json").json()).events;
-  expect(reviewed).toHaveLength(30);
+  expect(reviewed).toHaveLength(32);
   for (const now of ["2026-09-24T12:00:00.000Z", NOW]) {
     const projections = zzz(now);
     for (const groups of [[reviewed, projections], [projections, reviewed]]) {

@@ -50,7 +50,7 @@ describe("ZZZ official Steam captured RSS", () => {
       e.firstSeenAt === now && e.updatedAt === now && posts.some(p => p.url === e.sourceUrl))).toBe(true);
   });
 
-  test("exact current IDs/periods merge to one reviewed winner each; all 30 reviewed rows survive verbatim", () => {
+  test("exact current IDs/periods merge to one reviewed winner each; all 32 reviewed rows survive verbatim", () => {
     const overlap = events.filter(e => reviewed.some(r => r.id === e.id));
     expect(overlap).toHaveLength(19);
     for (const e of overlap) {
@@ -62,11 +62,11 @@ describe("ZZZ official Steam captured RSS", () => {
     for (const groups of [[reviewed, events], [events, reviewed]]) {
       const merged = mergeEvents(groups);
       expect(merged.conflicts).toEqual([]);
-      expect(merged.events).toHaveLength(54);
+      expect(merged.events).toHaveLength(56);
       expect(merged.events.filter(e => e.sourceId === ctx.sourceId)).toHaveLength(24);
-      expect(new Set(merged.events.map(e => e.id)).size).toBe(54);
+      expect(new Set(merged.events.map(e => e.id)).size).toBe(56);
       for (const r of reviewed) expect(merged.events.find(e => e.id === r.id)).toEqual(r);
-      expect(merged.events.filter(e => e.endsAt! > now)).toHaveLength(14);
+      expect(merged.events.filter(e => e.endsAt! > now)).toHaveLength(16);
     }
   });
 

@@ -1,7 +1,7 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-ZZZ-REWARDS
-STAGE: CP0
+STAGE: CP1
 BASE_MAIN_SHA: bb365d104ac9eb9eb76b34c20c5546a27c9529be
 BRANCH: fix/zzz-rewards
 HEAD_SHA: resolve branch ref
@@ -16,3 +16,8 @@ NEXT_CONCRETE_STEP: append2 reviewed rows, preserve all30 oldrows, sources/estim
 IDs zzz:new-eridu-city-fund-version-3-3:2026-10-21 and zzz:version-3-3-issue-fix-compensation:2026-10-21.
 Sources https://zenless.hoyoverse.com/en-us/news/166944 and /166963.
 City endAsiaNov29 19:59Z/EuropeNov30 02:59Z/America08:59Z. CompensationNov20 15:59Z allregions. Do not combine server-update compensation/versionend or paidpurchase/discount/shop categories. Next afterCP4 Endfieldupcoming, thenCZNSeason5. OldFSOend/WuWanewclock remainnamedBLOCKED; noP2/R1–R3/Timeline/Auth/Sync.
+
+CP0_SHA:93ea24743634385f7b8649d98b931fc8fcea7946
+CP1 implemented2 reviewedrows;30oldrows unchanged. Existing fixture-count tests updated for2 newreviewed records; no parser/recurrence change. Fullchecks/release NOT RUN.
+
+Targeted first run33pass/1fail: existing unique-ID expectedcount54 missed new2; corrected56. New3 tests passed.
