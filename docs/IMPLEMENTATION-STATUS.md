@@ -1,5 +1,44 @@
 # Game calendar implementation status
 
+## WuWa 3.7 source/coverage audit — RESEARCH COMPLETE, NO IMPLEMENTATION (2026-10-28)
+
+Report: `docs/research/wuwa-source-coverage-audit-2026-10-28.md`.
+Existing `wuwa-kuro-mirror` GitHub Contents Atom source is healthy:
+the 20-article checked-in snapshot matches upstream, last confirmed
+`2026-10-27T21:23:35.772Z`, **7** events parsed. Twelve reviewed WuWa
+entries are all historical 3.6. Kuro patch notice `5571` includes more
+official dates than those seven candidates cover.
+
+- **P1 missing:** current Suoming / `Unspoken Rue` new 3.7 Phase II
+  banner channels: official 3.7 patch notes name both, but the indexed
+  dated Phase II notice `5668` covers only four reruns. Exact first-party
+  time verification needed before publishing the two missing channels.
+- **P1 parser bugs in already fetched text:** Version 3.7 patch-note
+  title is not recognized as maintenance-date anchor, dropping `Cubie Wars`,
+  `Dreams in the Capsule`, `Gifts of Waking Moon` and four now-historical
+  Phase I reruns. A nested `[Special Events] [Cubie Wars]` heading would
+  yield a WRONG `Special Events` ID if only the date-anchor regex were
+  fixed. `Gifts of Singing Drizzle` has `✦Duration:`, not handled by
+  current extraction. All have explicit deadline in official notice.
+- **Covered:** four Phase II rerun banners, `Artisan's Search`,
+  `Echo Erase`, `Beyond the Waves`; existing independent `estimated`
+  28-day ToA / Whimpering Wastes projections need no duplicated research.
+  **Partial:** current Version 3.7 Endstate Matrix phase; existing
+  reviewed 3.6 ended Sep 30. Its current exact phase end was not sourced.
+- **Product-scope decision:** `Waking Moon Fishing` ends Nov 1
+  09:59 UTC+8 and `Back to Solaris` Nov 11 23:59 UTC+8 (global clock),
+  both missing, if web reward events are intended for Calendar.
+  Separate new source/access proof is needed for absent banner notices.
+- No new source probe, independent live Pages JSON retrieval, runtime,
+  source changes, fixtures, reviewed rows, secrets or workflows in audit.
+
+**Next concrete step:** separately authorize bounded `W1` repair for the
+four current official patch-note events/login windows and scoped `W2`
+banner discovery for the missing two active new banners; or continue the
+next game's research-only audit. Do NOT modify Timeline v2 PR #115 or
+Source Recovery design PR #113 in this scope.
+
+
 ## Genshin 7.1 source/coverage audit — RESEARCH COMPLETE; NO FIX (2026-10-28)
 
 Report: `docs/research/genshin-source-coverage-audit-2026-10-28.md`. Current
