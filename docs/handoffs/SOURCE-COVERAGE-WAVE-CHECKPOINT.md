@@ -1,24 +1,17 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
-MILESTONE: SC-P1-CZN-SEASONS
-STAGE: CP2
-BASE_MAIN_SHA: 5bc643ed526801ba93f670e4bdc6648831eaafe5
-BRANCH: fix/czn-seasons
+MILESTONE: SC-P1-CZN-CARNIVAL
+STAGE: CP0
+BASE_MAIN_SHA: a97d64595d8083994e6b1f77680098211cf29aab
+BRANCH: fix/czn-carnival
 HEAD_SHA: resolve branch ref
 PR: NONE
-DONE: CURRENT main/AGENTS/status/wave/backlog/CZN audit/recurring research, actual banner parser/snapshot/reviewed30/tests read. Prior140 CP4 verified merge5bc643ed, CI/Pages40696548982 SUCCESS, public275 generated13:28:20.010Z both claims/source/browser verified.
-VERIFICATION: freshly indexed STOVE-authored CZN.gg09-30 and10-21 notices confirm FullScaleSep30aftermaintenance–Nov11beforemaintenance and BasinOct21aftermaintenance–Nov11beforemaintenance. Day precision only; no standing-maintenance guess. Public lacks both phases.
-REMAINING: two reviewed challenge rows; historical oldFullScale summary warning, stableID/firstSeen/provenance/endnull retained; full checks/release.
-BLOCKERS: CZN-OLD-FSO-END — old Aug19 row has no independently explicit closing period in checked source. NewSept30season proves supersession, not exact oldclosing date/hour; bounded source review/search found no direct oldterminal. Do not fabricate Sep30date or00Z. Label historical in summary and keep unknown boundary explicitly BLOCKED. CZN-OFFICIAL-EVENT-DISCOVERY auditC3 remains blocked.
-OUTCOME_A_DATA: PENDING currenttwo; oldclosing BLOCKED CZN-OLD-FSO-END
+DONE: CURRENT main/unchanged AGENTS/status/wave/backlog/CZN audit/parser/reviewed32/tests and publisher-authored10-21 notice read. PR141 CP4 verified mergea97d645, CI/Pages40705631930 SUCCESS, public277 generated14:25:36.898Z, both newseasons exact and FullScale date-only/TimeUnconfirmed browser verified. Earlier environment outage recovered; no duplicate implementation.
+VERIFICATION: STOVE-authored CZN.gg10-21 notice confirms Carnival and free70 Oct21aftermaintenance–Dec2beforemaintenance; AdditionalAether endsNov11beforemaintenance.10free/day for7 qualifying login days; accumulated attempts usable only during event. Currentfeed lacks both families.
+REMAINING: one Carnival parent with clear unused-attempt expiry warning (no duplicated70 parent), separate earlier Aether cutoff; day boundaries; tests/full validation/release.
+BLOCKERS: unattended official event discovery CZN auditC3 remains blocked; reviewed fallback. No new source or paid exchange reminder.
+OUTCOME_A_DATA: PENDING
 OUTCOME_B_PREVENTION: BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY
-NEXT_CONCRETE_STEP: append current BasinOct21 and FullScaleSep30, update oldrow summary with explicit historical/supersession warning only.
-IDs czn:basin-of-hyperspace-dimensional-twilight:2026-10-21 and czn:full-scale-offensive:2026-09-30.
-Old czn:full-scale-offensive-season-4:2026-08-19 stays; closing unknown, not falsely fixed. Sources https://czn.gg/10-21wed-update-notice/ and https://czn.gg/09-30-wed-update-notice/ (publisher-authored attributed mirrors/manual evidence, not unattended fetch). No DailyReset/Sync/source timestamps/P2 changes. Next afterCP4 CZN-CARNIVAL: parent free70 with separate AdditionalAetherNov11day.
-
-CP0_SHA:7939eada40d0d39de432da3ae5eb8aba6d4f6483
-CP1 implemented2 reviewed phases and oldrow historical warning only; firstSeenAt preservedSept24, originalsource/provenance/endnull retained. Closing normalization explicitlyBLOCKED. Tests for day precision/historical expiry/source incompleteness implemented; full checks NOT RUN.
-
-Validation history: install/typecheck/build/replay PASS; first test command exited0 but emitted no full-suite summary (NOT accepted as complete). Full test rerun in progress. Feed275->277 exactlytwo new phases plus onlyoldSeason4 summary/reviewtime warning; oldID/start/source/provenance/discovery/endnull unchanged; conflicts identical. No full-test PASS claim yet.
-
-CP2 FINAL PASS: frozen install/typecheck/build; finalfull1384pass/3existing age skips/0fail; replay275->277 exactly2 newphases plusonlyoldsummary/updatedAt, identity/discovery/source/provenance/endnull identical. Conflicts unchanged. Evidence docs/evidence/czn-seasons-feed-replay-2026-10-28.json. CP3 PRbody; CP4 NOT RUN. Oldend remainsBLOCKED.
+NEXT_CONCRETE_STEP: append2 reviewed rows, preserve all32 prior rows/metadata and DailyReset/Sync.
+IDs czn:nightmare-carnival:2026-10-21 and czn:nightmare-carnival-additional-aether:2026-10-21.
+Source https://czn.gg/10-21wed-update-notice/ (publisher-authored attributed mirror/manual evidence, not unattended fetch). Do not advertise paid-token selection rewards as free. No guessed maintenance clock, source timestamps or unrelated data changes. OldFSOclosing/WuWa-newclock remain documented blockers. Next remaining deadlineNov20 ZZZrewards, then Endfieldupcoming, then CZNSeason5 laterDec2/23 rewards.
