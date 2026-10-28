@@ -1,6 +1,6 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 MILESTONE: SC-P1-CZN-SEASON5
-STAGE: CP0
+STAGE: CP1
 BASE_MAIN_SHA: a671d7fb726d8437a66c60b0990d557fc0147d49
 BRANCH: fix/czn-season5
 HEAD_SHA: resolve branch ref
@@ -12,3 +12,5 @@ OUTCOME_A_DATA: PENDING
 OUTCOME_B_PREVENTION: BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY auditC3 access/discovery gate
 VERIFICATION_COMMANDS: install/typecheck/fulltests/build/feed NOT RUN for this milestone.
 NEXT_CONCRETE_STEP: append3 rows and day-precision/family/merge tests; pushCP1 then allrequiredchecks/PR/CI/merge/postCI/Pages/public. AfterCP4 durable wavecloseout only, then STOP. WUWA-NEW-BANNER-CLOCK and CZN-OLD-FSO-END remain explicit data blockers.
+
+CP0_SHA1770b1ad73d98aa4763c59fbb7fad695a0b84212. CP1 implemented3 reviewedrows and3 tests. First targeted schema rejected season summary>500chars; shortened within existing schema, no schema relaxation. Full checks NOT RUN.

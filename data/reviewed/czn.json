@@ -543,6 +543,57 @@
       "confidence": 1,
       "firstSeenAt": "2026-10-28T14:28:47.831Z",
       "reviewedAt": "2026-10-28T14:28:47.831Z"
+    },
+    {
+      "id": "czn:galactic-disaster-season-5-a-promise-upon-the-snow-main-content:2026-10-21",
+      "title": "Galactic Disaster Season 5: A Promise Upon the Snow — Main Content",
+      "type": "challenge",
+      "summary": "Chapter 1/Celestial Bulwark seasonal rewards: after October 21 maintenance to before December 23 maintenance. September 30 Chapter 0/preview is a separate opening. Unlocks: Viadeus after October 21 maintenance; Seraphion October 28 at 02:00 UTC; Enforcer Seraphion November 4 at 02:00 UTC. These are unlocks, not separate expirations. Includes the Supply Store using earned Relics of a Frozen Civilization. Exact maintenance times unconfirmed.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-23T00:00:00.000Z",
+      "endPrecision": "day",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://czn.gg/10-21wed-update-notice/",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T21:07:02.297Z",
+      "reviewedAt": "2026-10-28T21:07:02.297Z"
+    },
+    {
+      "id": "czn:nightmare-dream-park:2026-10-21",
+      "title": "Nightmare Dream Park",
+      "type": "other",
+      "summary": "Build and manage the theme park and earn its achievement rewards from after October 21 maintenance until before December 23 maintenance. Season-limited reward items are removed after Galactic Disaster Season 5 ends. Exact opening and closing times are unconfirmed.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-23T00:00:00.000Z",
+      "endPrecision": "day",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://czn.gg/10-21wed-update-notice/",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T21:07:02.297Z",
+      "reviewedAt": "2026-10-28T21:07:02.297Z"
+    },
+    {
+      "id": "czn:rossweisse-trauma-code-blade-poised-against-the-cycle:2026-10-21",
+      "title": "Rossweisse Trauma Code: Blade Poised Against the Cycle",
+      "type": "challenge",
+      "summary": "Limited-time Trauma Code achievements and event-battle rewards run from after October 21 maintenance until before December 2 maintenance. This is the limited reward window, not a claim that the underlying story disappears. Special Security Codes are required to unlock Trauma Codes even during this event. Exact opening and closing times are unconfirmed.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-02T00:00:00.000Z",
+      "endPrecision": "day",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://czn.gg/10-21wed-update-notice/",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T21:07:02.297Z",
+      "reviewedAt": "2026-10-28T21:07:02.297Z"
     }
   ]
 }
