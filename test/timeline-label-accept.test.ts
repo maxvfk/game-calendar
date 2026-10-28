@@ -81,6 +81,14 @@ describe("label guard", () => {
     expect(labelGuard(alcea, "Alcea", [])).toBeNull();
     expect(labelGuard(phased, "Alpha + Beta · Phase II", [])).toBeNull();
   });
+
+  // Guarded in scheduled run 40484407063: the summaries say "Log in", the labels "Login".
+  test("the reviewed vocabulary lets a Login label through, but not an invented reward", () => {
+    const login = event({ title: "\"En-Nah\" Into Your Lap", summary: "Log in for seven days to earn Boopon ×10." });
+    expect(labelGuard(login, "Seven-Day Login: Boopon ×10", [])).toMatch(/not in the event: Login/);
+    expect(labelGuard(login, "Seven-Day Login: Boopon ×10", vocabulary)).toBeNull();
+    expect(labelGuard(login, "Seven-Day Login: Polychrome ×10", vocabulary)).toMatch(/not in the event: Polychrome/);
+  });
 });
 
 describe("accept on a fresh feed", () => {

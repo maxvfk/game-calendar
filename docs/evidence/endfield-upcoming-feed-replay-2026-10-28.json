@@ -1,6 +1,6 @@
 {
   "milestone": "SC-P1-END-UPCOMING",
-  "baseMain": "103520f71a3dc61ecc7bb4aa5ff79857b77fc9fc",
+  "baseMain": "2a20dd6e2379c837d4981bfd5c9f0813547d3180",
   "sourceUrl": "https://endfield.gryphline.com/en-us/news/9560",
   "sourceCorrection": "Fresh primary: SecretSanctuary Dec2, Sanity startsNov18 (stale audit Dec3/Nov19 superseded).",
   "fixedReplayAt": "2026-10-28T09:40:00.000Z",
@@ -130,5 +130,6 @@
   "removedIds": [],
   "dateConflictsUnchanged": true,
   "reviewed12Unchanged": true,
-  "outcomeB": "BLOCKED END-OFFICIAL-DISCOVERY auditA3"
+  "outcomeB": "BLOCKED END-OFFICIAL-DISCOVERY auditA3",
+  "originalBaseMain": "103520f71a3dc61ecc7bb4aa5ff79857b77fc9fc"
 }
