@@ -110,6 +110,27 @@
       "sourceUrl": "https://x.com/AKEndfield/status/2109871758140711172",
       "provenanceStatus": "official",
       "confidence": 1
+    },
+    {
+      "id": "endfield:monumental-etching-forest-of-maras:2026-10-22",
+      "title": "Monumental Etching: Forest of Maras",
+      "type": "challenge",
+      "startsAt": "2026-10-22T04:00:00.000Z",
+      "startPrecision": "exact",
+      "firstSeenAt": "2026-10-28T10:48:37.273Z",
+      "summary": "Limited reward window for the permanent Murmurs of the Deep Forest stages. Official Sanctuary of Ink notice closes this event November 5 at 04:00 server time: Asia UTC+8, Americas/Europe UTC-5.",
+      "endsAt": "2026-11-04T20:00:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-04T20:00:00.000Z",
+        "america": "2026-11-05T09:00:00.000Z",
+        "europe": "2026-11-05T09:00:00.000Z"
+      },
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/9560",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "reviewedAt": "2026-10-28T10:52:49.986Z"
     }
   ]
 }
