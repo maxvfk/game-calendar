@@ -1,29 +1,15 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
-WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
-MILESTONE: SC-P1-ZZZ-REWARDS
-STAGE: CP2
-BASE_MAIN_SHA: bb365d104ac9eb9eb76b34c20c5546a27c9529be
-BRANCH: fix/zzz-rewards
+MILESTONE: SC-P1-END-UPCOMING
+STAGE: CP0
+BASE_MAIN_SHA: 103520f71a3dc61ecc7bb4aa5ff79857b77fc9fc
+BRANCH: fix/end-upcoming
 HEAD_SHA: resolve branch ref
 PR: NONE
-DONE: CURRENT main/AGENTS/status/wave/backlog/ZZZ audit, both actual parsers/snapshots, reviewed30 and relevanttests read. No duplicate latest fix. PR142 CP4 verifiedmergebb365d, CI/Pages40706852239 SUCCESS, public279 generated14:32:58.172Z both reviewedwinners and Carnivalunusedattemptwarning/browser verified.
-VERIFICATION: primary166944 indexed text confirms CityFund main after3.3update–Nov30 03:59server;02:59 paidpurchase is excluded. Primary166963 and capturedSteam3.3 confirm IssueFix300Polychrome eligibilityLv4 beforeOct21 06UTC+8; claimbeforeNov20 23:59UTC+8. Mail30days is relative lifetime, not exact issuance/deletion timestamp. Both absent in public/currentparser families.
-REMAINING:2 reviewed rows; CityFund3-region mainreward end, fixed-global compensation; dayOct21 openings, no inventedmaintenance/issuetime; testsourceincompleteness/priority/expiry and allrequiredchecks/release.
-BLOCKERS: registered Steam only NewEvents, secondary onlyChannels. Dedicated approved reward-family unattended extraction/discovery absent; no broadsource/adapter expansion here.
-OUTCOME_A_DATA: IMPLEMENTED; release pending
-OUTCOME_B_PREVENTION: BLOCKED ZZZ-REWARD-DISCOVERY (auditZC1/ZC4 family-selection follow-up; reviewed rescue)
-NEXT_CONCRETE_STEP: append2 reviewed rows, preserve all30 oldrows, sources/estimatedendgame/PhaseI and timestamps; update historical fixture-count assertions only as needed.
-IDs zzz:new-eridu-city-fund-version-3-3:2026-10-21 and zzz:version-3-3-issue-fix-compensation:2026-10-21.
-Sources https://zenless.hoyoverse.com/en-us/news/166944 and /166963.
-City endAsiaNov29 19:59Z/EuropeNov30 02:59Z/America08:59Z. CompensationNov20 15:59Z allregions. Do not combine server-update compensation/versionend or paidpurchase/discount/shop categories. Next afterCP4 Endfieldupcoming, thenCZNSeason5. OldFSOend/WuWanewclock remainnamedBLOCKED; noP2/R1–R3/Timeline/Auth/Sync.
-
-CP0_SHA:93ea24743634385f7b8649d98b931fc8fcea7946
-CP1 implemented2 reviewedrows;30oldrows unchanged. Existing fixture-count tests updated for2 newreviewed records; no parser/recurrence change. Fullchecks/release NOT RUN.
-
-Targeted first run33pass/1fail: existing unique-ID expectedcount54 missed new2; corrected56. New3 tests passed.
-
-First full run1388pass/3skip/1fail: existing banner merge count42 must include2new reviewed rows; corrected44. No new behavior test failed. Final full rerun pending.
-
-Second full run exited without suite summary; not accepted as validation. Full rerun started.
-
-CP2 PASS: bun install --frozen-lockfile; bun run typecheck; final bun test1389pass/3existing age skips/0fail with full summary; bun run build. Fixed-clock feed279->281 exactly2 additions, no changed/removed old winners/conflicts; reviewed30 unchanged. Targeted34pass. git diff --check PASS. Evidence docs/evidence/zzz-rewards-feed-replay-2026-10-28.json. Next create PR, exactheadCI, merge, postCI/Pages/public and browser. CP3/CP4 in delivery PR body supersede pending release text.
+DONE: CURRENT main/AGENTS/status/wave/backlog, Endfield audit, actual wiki parser/snapshot8, reviewed12 and tests checked. PR143 release verified merge103520f, CI/Pages40709150830 SUCCESS; public281 generated14:46:51.261Z exact2 ZZZ winners and browser verified.
+VERIFICATION: freshly read primary https://endfield.gryphline.com/en-us/news/9560 lines184–223. Five canonical families only: Stars/Fervor/Contract Nov5 12server–before next maintenance (endunknown); SecretSanctuary Nov5 12server–Dec2 04server; SanitySupply Nov18 04server–AsiaNov25 04/WestNov24 17. Frozen audit/backlog Dec3/Nov19 copied dates are stale and will be corrected, not followed.
+SCOPE: five new reviewed IDs endfield:echoes-of-war-season-of-fervor:2026-11-05; endfield:the-stars-are-with-me:2026-11-05; endfield:contingency-contract-indigo-experimental-operation:2026-11-05; endfield:secret-sanctuary:2026-11-05; endfield:sanity-supply-november-2026:2026-11-18.
+All day openings because regionStarts unavailable; preserve literal source clocks in summaries. AsiaUTC+8/WestUTC-5 fixed; Sanityexception endAsiaNov24 20Z/WestNov24 22Z. SecretendAsiaDec1 20Z/WestDec2 09Z. Never invent nextmaintenance end or Fervorcycles. Preserve all12 reviewed/IDs/timestamps/Phantasia/currentbanners and wiki inputs.
+OUTCOME_A_DATA: PENDING
+OUTCOME_B_PREVENTION: BLOCKED END-OFFICIAL-DISCOVERY auditA3 (no new unattended adapter/access probe)
+VERIFICATION_COMMANDS: install/typecheck/tests/build/feed NOT RUN for this milestone.
+NEXT_CONCRETE_STEP: append5 reviewed rows and boundary/unknownend/merge regression; pushCP1 before long checks. Then smallPR/CI/merge/postCI/Pages/public/browser. AfterCP4 CZNSeason5, then wavecloseout. NoP2/R1–R3/Timeline/Auth/Sync.
