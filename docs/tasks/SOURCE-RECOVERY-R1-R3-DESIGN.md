@@ -9,7 +9,9 @@
 
 Produce a safe way to recognize disappearing event coverage (including a source that
 still returns HTTP 200), gather evidence, and eventually let a Claude coding agent
-repair the corresponding parser/source with as little operator involvement as possible.
+restore confirmed missing or incorrect calendar data with as little operator
+involvement as possible. Repairing a parser is not always the right recovery:
+a verified one-off event may be restored through reviewed records instead.
 
 - **R1 — deterministic Coverage Health & incidents:** runs unattended, WITHOUT an LLM.
   Classify problems; open/update/close or explicitly resolve deduplicated GitHub
@@ -28,6 +30,11 @@ repair the corresponding parser/source with as little operator involvement as po
 - Source search, adapter implementation and provenance changes must never be
   interpreted as permission to invent future schedules, bypass robots, or use
   private endpoints.
+- Treat **A: restore actual current source-backed events/deadlines** and
+  **B: prevent/monitor recurrence** as separate outcomes. A reviewed-only
+  hotfix can satisfy A without pretending that automatic discovery is fixed.
+- D1 (version audit) and D2 (strategy selection) below are additions to the
+  existing D0 design, NOT independent implementation milestones.
 
 This document is a design decision draft, not an instruction to immediately
 install Claude/GitHub integrations, store new secrets, or start agent workflows.
@@ -119,6 +126,44 @@ R3 activation needs `confirmed` AND explicit reviewed eligibility conditions
 (e.g. lost currently active official deadline, repeated unavailable critical
 source, known new notice omitted) and a kill switch; NEVER just an old 200 page.
 
+## 2.1. D1 — version-coverage audit for unseen event families
+
+R1's deterministic known-family contracts cannot by themselves identify a
+one-off reward or **entirely new event family** absent from all ingested
+sources. Seven game-specific audits on October 28 exposed this gap
+(`docs/tasks/SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md`).
+Keep the existing R1 monitoring intact; complement it with a bounded
+**version-coverage audit**.
+
+1. **Trigger:** initially an explicitly launched read-only audit when a
+   genuine publisher version/major-update notice is available. Do not
+   invent version dates or infer unannounced Phase II periods. A periodic
+   or agent-automated trigger is a later separately authorized, measured
+   pilot; D1 does not introduce an LLM into R1 or activate new schedules.
+2. **Evidence and comparison:** use permitted official/attributed sources
+   plus existing snapshots, current `main`, reviewed records and actual
+   **merged published feed winners**. Compare each relevant dated announcement
+   to the feed per game × event/claim family × region; check distinct reward
+   claim windows, banners, gameplay/endgame and newly introduced modes.
+   Record publisher vs host, notice URL, publication/check times, precision,
+   source availability on the real Actions runner, and disagreements.
+3. **Classification:** output a compact version/family coverage matrix:
+   `covered`, `confirmed_missing`, `wrong_deadline`,
+   `watch_unannounced`, `blocked_source`, `out_of_scope`.
+   Missing a **known published** deadline can become a deduplicated R1
+   incident with linked evidence; an unannounced schedule is only WATCH.
+   Do not create a separate incident registry or automatically start R3
+   on a mere suspicion.
+4. **Economics and scope:** start from the seven existing audits and subsequent
+   remediation, examine only each *new version's delta*, and measure audit
+   effort and false alarms. This phase does not change source adapters,
+   reviewed files, registry, workflows or live feed; new product categories,
+   permission gates and future automated audits require explicit approval.
+
+**D1 delivery gate:** separate bounded read-only pilot task after D0 review;
+show an evidenced omission, an unannounced WATCH case, source limitations and
+an unchanged production feed. No repeat of the full seven-game research.
+
 ## 3. Incident as canonical state and single handoff
 
 Proposed GitHub Issue with versioned machine-readable payload persisted in a
@@ -134,6 +179,8 @@ trusted issue section or committed evidence file, plus readable Markdown:
     observedFailure, uncertainty, reproducible runner steps
     previousRelatedIncident, linkedBranch, linkedPR, validationRun
     attempts, nextAllowedAttemptAt, suggestedOperatorAction
+    proposedRecoveryStrategy (triage recommendation, not operator approval)
+    outcomeA (pending/verified_deployed), outcomeB (guarded/watch/blocked/pending)
 
 - Idempotent by deterministic `incidentKey`, not timestamp or a randomly
   changing issue title. Update an existing issue instead of creating alerts on
@@ -167,11 +214,13 @@ text. Standard workflow:
 3. Run approved live source probes on a GitHub runner (normal UA, permissions,
    robots, rate limits, no challenge or hidden API); preserve hashes, dates,
    method and conflicting evidence, not bulk republished articles.
-4. If evidence passes, code the smallest ingestion repair on a short branch
-   from CURRENT main. Preserve source IDs, event-ID/completion semantics,
-   reviewed precedence, status/region precision, LKG and source-health guards.
-   If not, produce `BLOCKED` with evidence and a reviewed fallback, no sham PR
-   purporting to restore data.
+4. If evidence passes, **select the D2 strategy** before editing anything:
+   `reviewed_only`, `parser_repair` or `new_family_integration`. Restore an
+   urgent verified deadline through reviewed data even if broad parser work
+   is not warranted or must follow separately. Preserve IDs/completion,
+   official/secondary provenance, exact region precision, reviewed priority,
+   LKG and source health. If evidence fails, return `BLOCKED` and an
+   operator-reviewed fallback; do not invent dates or claim unattended recovery.
 5. Execute frozen install / typecheck / full tests / build; where changed
    ingestion requires it, one real runner refresh and exact feed regression
    proof. No fixture-only production claims. Collect failures accurately.
@@ -185,12 +234,60 @@ text. Standard workflow:
 
 Exit statuses: `pr_ready`, `blocked_evidence`, `blocked_permission`,
 `limited`, `failed_tests`, `requires_operator`; NEVER claim a ready
-repair for a failing real runner or incomplete source coverage.
+repair for a failing real runner or incomplete source coverage. A reviewed-only
+PR must explicitly say that future automatic discovery remains unproven.
+
+## 4.1. D2 — choose the cheapest safe recovery, not always a parser fix
+
+For both R2 and R3, inspect the confirmed event, prior related incidents,
+publisher evidence, feasibility of stable unattended discovery, expected
+recurrence and operator/agent effort. Record one **proposed** strategy:
+
+| Strategy | Select when | Delivery and limits |
+|---|---|---|
+| `reviewed_only` | Unique anniversary, compensation, special gift/claim, irregular event or inaccessible/uneconomic machine source | Add only verified events/deadlines using the existing reviewed schema, event IDs, provenance and validation. Explicitly mark unresolved automated discovery as `WATCH`/`BLOCKED`. |
+| `parser_repair` | Repeat misses for a supported existing family, or a demonstrable deterministic extraction/filtering defect in an accessible source | Small source/parser correction; real-source future-version regression, runner/merge/feed validation. A separate reviewed rescue may go first if a player deadline is imminent. |
+| `new_family_integration` | Publisher introduces a **durable new endgame mode** or clearly recurring family not previously supported | Immediately assess a new family contract, source adapter or effective-dated recurrence; do not wait for two misses. If future dates/access are unproven, use verified reviewed periods now and gate automation. |
+
+Decision rules:
+
+- **Fix current player impact first.** Avoid delaying a known urgent deadline
+  solely to build an extensive automatic ingestion path.
+- **Use history, not a magic threshold.** A first unusual event may be
+  `reviewed_only`. Repeated related omissions trigger reassessment of parser
+  investment, but even two repeats do not *mandate* a parser rewrite.
+- **New durable endgame is different from a one-off.** Propose
+  `new_family_integration` at first confirmed appearance. Never infer a
+  future cycle or expiry from a familiar pattern without a sourced policy.
+- **Stop overfitting.** If the same parser needs changes for nearly every
+  patch, consider a reviewed-first contract. Re-evaluate after two or three
+  *observed* future patch cycles using measured coverage, manual/agent work,
+  lead time, incident recurrence and false positives; set no invented targets.
+- **Respect hard gates:** product-scope changes (e.g. paid-shop reminders),
+  permissions and source-access decisions become `requires_operator`.
+  Every route preserves `AGENTS.md` schema/IDs, source URL/check time,
+  regional precision, merge rules and fail-closed publication.
+
+**Independent acceptance outcomes:**
+
+- **A — data rescue:** source-backed event/expiry actually appears correctly
+  in merged/deployed feed, with post-merge CI/Pages verification. A Draft PR
+  alone is `pending`, not `verified_deployed`.
+- **B — recurrence:** an unattended parser/discovery guard is demonstrated
+  with regressions and actual runner evidence, OR a named `WATCH`/`BLOCKED`
+  limitation is retained for future audit. `reviewed_only` never silently
+  counts as solved automatic detection.
+
+R2/R3 may prepare the chosen bounded Draft PR and explain alternatives, but
+they **never merge, deploy or claim A complete** without independent release
+verification. No expansion to unrelated games or major redesign by inference.
 
 ## 5. R3: automatic, better-resourced recovery agent
 
-R3 reuses R2's exact evidence, code, validation and PR-only delivery contract,
-with a different **trusted trigger policy** and **bounded budget**:
+R3 reuses R2's exact evidence, **D2 selection** (including reviewed-only
+cases), validation and PR-only delivery contract, with a different **trusted
+trigger policy** and **bounded budget**. D1 `watch_unannounced` never qualifies
+by itself:
 
 - Runs only after R1 confirms an eligible P0/P1 failure and R3 is explicitly
   enabled by an operator-controlled GitHub repository variable.
@@ -252,6 +349,11 @@ Review existing patterns with the Claude agent that implemented the Timeline
 integration; amend this contract until review findings are resolved. No run,
 secret, GitHub variable, permission or runtime change in D0.
 
+**D1 audit pilot — optional, separately authorized.**
+Test one read-only new-version delta comparison against existing feed winners;
+measure misses, WATCH accuracy, access constraints and agent cost. Do not add
+an automatic LLM job or fold it into deterministic R1a without approval.
+
 **R1a — deterministic minimum viable detection/incident flow.**
 Start with a real ZZZ banner/events case and 1–2 other contrasting families.
 Document coverage contracts grounded in actual current data; wire read-only
@@ -267,9 +369,10 @@ Reuse the already-proven Pro OAuth secret, test a *tool-capable* session on a
 controlled synthetic source outage using an isolated branch and no production
 write credentials. Demonstrate scoped network, bounded usage and no exfil.
 
-**R2b — manual Incident → branch → Draft PR → CI → notification.**
-One real or controlled evidence-backed failure; independent acceptance and
-merge must be requested in another session. Update docs/status only with
+**R2b — manual Incident → D2 strategy → branch → Draft PR → CI → notification.**
+Pilot at least one `reviewed_only` outcome and one justified parser/family
+triage (including a valid decision not to rewrite a parser). Independent
+acceptance and merge must be requested in another session. Update docs/status only with
 verified results. No auto-merge or auto-publish.
 
 **R3 — automatic severe-incident escalation**, behind OFF-by-default
@@ -303,8 +406,14 @@ deferred. Reviewer must examine CURRENT code, not rely only on this prose:
    scheduled-run gaps and failures *inside the monitor* itself?
 7. Are proposed scopes and sequence minimal, preserving source precedence,
    stable IDs, exact per-region deadlines and fail-closed behavior?
-8. Identify confirmed defects, unproven assumptions, missing test cases and
-   a concrete narrow R1a next step; DO NOT implement R1a during design review.
+8. Can D1 detect a known missing announcement but classify genuinely
+   unannounced schedules as WATCH, without new incidents/LLM in R1? Can a
+   cheap read-only version-delta pilot prove usefulness?
+9. Does D2 correctly choose a one-off reviewed rescue, a repeat parser repair,
+   or new durable endgame integration? Does it keep A (published current data)
+   independent from B (prevention or explicitly tracked gap)?
+10. Identify confirmed defects, unproven assumptions, missing test cases and
+    a concrete narrow R1a next step; DO NOT implement R1a during design review.
 
 **Expected review output:** PASS / NEEDS_CHANGES with findings ranked by
 severity, exact code/doc references, minimal amendments and final R1a task scope.
