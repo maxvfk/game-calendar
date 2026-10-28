@@ -131,6 +131,13 @@ retained; historical/superseded summary warning only, unknownend not guessed.
 No direct oldterminal found in bounded evidence; old model status remains
 unresolved. B CZN-OFFICIAL-EVENT-DISCOVERY BLOCKED (auditC3). Next Carnival.
 
+**CZN-SEASONS currenttwo CP4 verified:** PR141 mergea97d64595d8083994e6b1f77680098211cf29aab;
+CI/Pages40705631930 SUCCESS, public277 generated14:25:36.898Z, both phases
+and historical warning verified. Oldterminal BLOCKED CZN-OLD-FSO-END; B C3blocked.
+**CZN-CARNIVAL implemented (release pending):** oneparent with free70 unused
+attempt warning throughDec2day; separate AetherNov11day, all32 oldrows unchanged.
+B BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY; no paid-reminder scope expansion.
+
 ### SC-P0-GEN-STARLIGHT execution status (2026-10-28)
 
 - **Outcome 1 — current-data restoration: implemented; delivery record in [PR #130](https://github.com/maxvfk/game-calendar/pull/130).**
@@ -208,7 +215,7 @@ Dates below are in publisher-defined game server clock unless explicitly `Z` / `
 | **SC-P1-NTE-14-SKIPPED · IMPLEMENTED (release pending)** | NTE: extend *verified release-notice selection*, restore `Circle Gifts`, `Terminal Depths`, `Pukaland Travelogue`, `Coal Lump's Treasure`, **1.4 Circle Bounty**. | Same first-party Steam API `gid 1844751498233952` skipped because title **`Log in`** not `login`; Circle Bounty expires **Nov 10 23:59 UTC+8 (Nov 10 15:59Z)**, others mostly Nov 11 **05:59 UTC+8 (Nov 10 21:59Z)**. | Do not remove fail-closed year requirement from standalone articles; use verified version notice context. Keep 1.3 Circle Bounty prior 24h source conflict and all 15 existing reviewed rows; prove candidates become published winners. |
 | **SC-P1-CZN-SEASONS · CURRENT IMPLEMENTED / OLD END BLOCKED** | CZN: current **Basin of Hyperspace** Oct21–Nov11 and **Full-Scale Offensive** Sept30–Nov11; reconcile stale old `Full-Scale Offensive — Season 4` `endsAt:null`. | Explicit STOVE Oct21/Sept30 version notices; ends **before Nov 11 maintenance**. | No speculative maintenance-completion time, no +21d cadence. Preserve old IDs and source-backed historical boundary; one logical phase per record. |
 | **SC-P1-HSR-CLAIMS · IMPLEMENTED (release pending)** | HSR: `Astral Trendible` availability + `Park Souvenir` claim expiration (two distinct mechanics). | Both **Nov 11 06:00 UTC+8**, directly in checked-in KQM 4.6 update under `Availability` / `Claim Period`. | Small extraction/regression or reviewed fallback; do not represent permanently accessible Park as expiring. |
-| **SC-P1-CZN-CARNIVAL** | CZN: **Nightmare Carnival** / **70 free Normal Rescues** expiring Dec 2 before maintenance; **Additional Aether** independently ends Nov 11 before maintenance. | STOVE publisher-announced anniversary periods. | Separate parent/subdeadline without double-counting; no guess about exact maintenance instant; favor explicit reminders for expiring free unused attempts. |
+| **SC-P1-CZN-CARNIVAL · IMPLEMENTED (release pending)** | CZN: **Nightmare Carnival** / **70 free Normal Rescues** expiring Dec 2 before maintenance; **Additional Aether** independently ends Nov 11 before maintenance. | STOVE publisher-announced anniversary periods. | Separate parent/subdeadline without double-counting; no guess about exact maintenance instant; favor explicit reminders for expiring free unused attempts. |
 | **SC-P1-CZN-SEASON5** | CZN: `Galactic Disaster Season 5: A Promise Upon the Snow`, Nightmare Dream Park, Rossweisse Trauma Code, Celestial Bulwark stage unlocks and season rewards. | Season/Dream Park through **Dec 23 before maintenance**, Trauma Code through Dec 2; **Seraphion Oct 28 02:00Z** and **Enforcer Seraphion Nov 4 02:00Z** unlock. | Pick compact nonduplicated family-level records; do not pretend a stage unlock is an expiry. Official parent vs phase must be precise. |
 | **SC-P1-END-UPCOMING** | Endfield: upcoming Fervor, `The Stars Are With Me`, Contingency Contract, Secret Sanctuary shop cutoff, region-exception Nov Sanity Supply. | Fervor starts **Nov 5 12:00 server**, Contract shop ends **Dec 3 04:00 server**; Nov Sanity windows have exceptional West cutoff. | Preserve unknown end for "until next maintenance". **Do not reopen repaired Phantasia Cycle I/II** or force invalid wiki season cycle start. |
 | **SC-P1-ZZZ-REWARDS** | ZZZ: issue-fix compensation claim and **New Eridu City Fund** main reward ending. | Compensation **Nov 20 23:59 UTC+8 = Nov 20 15:59Z**; City Fund **Nov 30 03:59 server**, paid purchase cutoff **02:59 server**. | Reward reminder is a gameplay scope candidate; **paid purchase cutoff is a separately approved product decision**. No need to rewrite official Steam+Zenless.gg event/Phase I ingestion. |
@@ -343,8 +350,9 @@ For each separately authorized item:
 
 ## 8. One next concrete step
 
-Finish CZN-SEASONS currenttwo CP2–CP4, retain CZN-OLD-FSO-END explicit blocker,
-then CZN-CARNIVAL free70/AdditionalAether. PR130/132–140 fully released. Remaining
-confirmed P1 only; WuWa newclock blocked; no P2/R1–R3/Timeline/Auth/Sync.
+Finish CZN-CARNIVAL CP2–CP4, then SC-P1-ZZZ-REWARDS (Nov20),
+SC-P1-END-UPCOMING (Nov24/25 and future official windows), and SC-P1-CZN-SEASON5
+(Dec2/23 rewards), each from CURRENT main. PR130/132–141 fully released;
+oldFSOterminal and WuWa newclock explicitly blocked. No P2/excluded work.
 
-CZN-SEASONS CP2 PASS: frozen install/typecheck/build/full1384pass/3existing age skips/0fail/feed275->277; only2 additions+oldhistorical summary/reviewtime warning. Old ID/discovery/source/provenance/endnull retained; conflicts unchanged. CZN-OLD-FSO-END remains BLOCKED. Delivery PR holds CP3/CP4 evidence.
+CZN-CARNIVAL CP2 PASS: frozen install/typecheck/full1386pass/3skip/0fail/build/feed277->279, only2 additions; allprior winners/conflicts and reviewed32 unchanged. Delivery PR owns observed CP3/CP4 evidence.

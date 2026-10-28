@@ -1,5 +1,27 @@
 # Game calendar implementation status
 
+## SC-P1-CZN-CARNIVAL — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+
+One NightmareCarnival parent carries the source-backed70free NormalRescues
+warning (10 per qualifying login day for7 days; unused accumulated attempts
+expire beforeDec2maintenance). No duplicate70-pull parent or paid-token reward
+advertised as free. Separate AdditionalAether benefit ends beforeNov11maintenance.
+Both open afterOct21maintenance with day precision; no invented closing clock.
+All32 prior reviewed rows, gifts/banner clocks/DailyReset/Sync and sources intact.
+A pending release; B BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY (auditC3 access gate).
+Source publisher-authored CZN.gg10-21 notice rechecked Oct28; manual attributed
+mirror evidence, not a new unattended source. Tests separate benefit/parent
+expiry days, preserve TimeUnconfirmed and merge exactlyonce.
+
+Previous141 CP4 verified: mergea97d64595d8083994e6b1f77680098211cf29aab;
+CI/Pages40705631930 SUCCESS; public277 generated14:25:36.898Z both current
+seasons exact, oldhistorical warning/firstSeenAt/endnull verified; browser
+FullScaleNov11 date-only/TimeUnconfirmed/source09-30. Oldclosing remains
+BLOCKED CZN-OLD-FSO-END; no false state-normalization claim.
+Next afterCarnival CP4: ZZZ-Nov20 rewards, Endfield-Nov24/25 upcoming,
+then CZNSeason5 Dec2/23 rewards. Confirmed P1 only; no P2/R1–R3/Timeline/Sync.
+
+
 ## SC-P1-CZN-SEASONS — CURRENT DATA IMPLEMENTED; OLD END BLOCKED (2026-10-28)
 
 Two reviewed current challenges: BasinOct21–Nov11 and FullScaleSep30–Nov11,
@@ -4221,3 +4243,5 @@ SC-P1-WUWA-37-PARSER CP2 PASS: frozen install/typecheck/full1378pass/3existing a
 SC-P1-HSR-CLAIMS CP2 PASS: frozen install/typecheck/finalfull1381pass/3existing age skips/0fail/build/feed273->275, two additions only; old winners/conflicts and reviewed17 unchanged. Parser8->10; delivery PR owns CP3/CP4 observed release evidence.
 
 CZN-SEASONS CP2 PASS: frozen install/typecheck/build/full1384pass/3existing age skips/0fail/feed275->277; only2 additions+oldhistorical summary/reviewtime warning. Old ID/discovery/source/provenance/endnull retained; conflicts unchanged. CZN-OLD-FSO-END remains BLOCKED. Delivery PR holds CP3/CP4 evidence.
+
+CZN-CARNIVAL CP2 PASS: frozen install/typecheck/full1386pass/3skip/0fail/build/feed277->279, only2 additions; allprior winners/conflicts and reviewed32 unchanged. Delivery PR owns observed CP3/CP4 evidence.
