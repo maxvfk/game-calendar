@@ -1,6 +1,13 @@
 # E2a.1 — Controlled Timeline registry v2 cutover preparation
 
-**READY_FOR_CUTOVER (implementation/rehearsal), PREPARED / NOT LIVE.**
+**ASTRA FINDINGS FIXED / AWAITING FOCUSED RE-REVIEW (2026-10-28). NO GO.**
+The original preparation below is historical evidence, not approval. The
+[verbatim Astra report](../reviews/ASTRA-PR115-E2A1-VERBATIM-2026-10-27.md)
+is authoritative; the reconstruction is supporting guidance only. Both confirmed
+findings were reproduced and corrected in the existing Draft PR #115. See the
+2026-10-28 addendum below. No production action or operator GO occurred.
+
+**Original 2026-10-27 preparation: PREPARED / NOT LIVE.**
 Production GO and live freeze gate remain **BLOCKED / not satisfied**.
 Prepared draft [PR #115](https://github.com/maxvfk/game-calendar/pull/115).
 Implementation-head [CI 40574284618](https://github.com/maxvfk/game-calendar/actions/runs/40574284618)
@@ -134,8 +141,9 @@ Offline evidence includes:
   candidate is added simply because its evidence key is null.
 - Actual old record.sh and new record.sh against a local bare remote: old writer
   rejected, frozen writer rejected, then a synthetic release permits a real v2-only
-  commit; repeated proposals produce no further commit. Only heavyweight check
-  commands in this harness are stubbed; Git, ticket checks and acceptance run for real.
+  commit; repeated proposals produce no further commit. This original harness
+  stubbed heavyweight checks; Astra correctly identified that limitation. It was
+  replaced by the real full-gate lifecycle drill described in the addendum.
 - Real bare-remote conflicts: bot update after inventory; two competing writers;
   update injected by a pre-push hook **between remote check and push**; compare-and-swap
   rejects the stale candidate and preserves the intervening commit. Rewinds fail.
@@ -305,3 +313,112 @@ production; local/bare-remote tests do not prove those credentials are available
 for a specific freeze/cutover window; verify controls and refresh inventory before
 publishing. Stop after E2a.1. No displaySummary/E2b, evidence-triggered requeue, E3
 or E4 work was started.
+
+
+## 2026-10-28 — fixes for independent Astra High review
+
+**Status: fixes implemented and locally validated; focused independent re-review
+still required. PR #115 remains Draft / NO GO.** There was no merge, live
+cutover/release, Actions-variable/workflow-state change or AI call. No operator
+GO has been granted. Evidence-triggered requeue remains unwired.
+
+Baseline: original reviewed head `794bda294d3f4e4e31a67b35035d66ace1dbb9d1`,
+updated with current main `06102a76c602d86e924432bcd612e1a0967cb467`.
+Only the status introduction needed merge reconciliation; independent HSR,
+snapshot and research changes are retained from main without editing their code.
+No parallel fixes were present. A fresh read-only full-history inventory at this
+main still reports **75 = 25 operator_approved + 50 automated + 0 legacy_unknown**,
+22 labels, the same source blob/hash and four registry-changing commits as above.
+The live cutover ledger remains a prepared boundary, not a renewed production
+GO; it must still be refreshed against the actual exclusive cutover window.
+
+### BLOCKER — immutable history versus mutable operational state
+
+Reproduced before correction in an isolated copy of the reviewed code: changing
+only admission to open failed 4 cutover tests; an accepted 76th decision failed
+5; projecting latest v2 to rollback v1 failed 6. These are local test failures,
+not production incidents. The cause was module-level loading of production
+registry/selector files as historical constants, followed by exact initial-state
+assertions. The original writer drill additionally substituted success for real
+`bun test`/`bun run` execution.
+
+Minimum correction:
+
+- `test/fixtures/editorial/cutover-2026-10-27/` stores exact reviewed v1/v2/ledger
+  bytes, with independently pinned SHA256 values and documented source head.
+  All historical 75-record/origin/label/migration assertions remain intact.
+  Frozen/open selectors are constructed explicitly, independently of live state.
+- `test/timeline-cutover.test.ts` validates the current selected storage schema,
+  projection and canonical bytes without pinning its count/admission/version.
+  PR #87 historical guard/model assertions in `timeline-label-accept.test.ts`
+  and `timeline-label-agent.test.ts` use the existing frozen E2a fixture too.
+- `test/timeline-cutover-lifecycle.test.ts` replaces the stubbed writer drill.
+  It copies actual current source into a disposable repository and local bare
+  remote, runs **real typecheck + entire suite + full build** in frozen/released/
+  post-write/rollback states. The post-write gates execute inside actual
+  `record.sh` before the local-only push. Bun/bunx are real executable symlinks.
+  Child suites skip only this recursive orchestrator through a private, uncommitted
+  `.git` marker; all other tests and build commands execute normally. No check
+  command is replaced or bypassed. Ordinary CI runs the orchestrator too.
+
+The real lifecycle proves release → new v2 write → rollback succeeds with all
+75 prior decisions/origins/fingerprints retained, a trusted automated/null 76th
+record, a registry-only write, idempotence, latest-state rollback and committed
+full metadata archive. Old v1 writer, frozen writer and stale v2 ticket after
+rollback are refused. The existing concurrent-write/CAS race tests remain intact.
+The drill runs without full history, network, model calls or production controls.
+
+### IMPORTANT — archive must be in the reviewed Git tree
+
+Reproduced before correction: committing only rollback selector/v1 while leaving
+the exact archive untracked allowed `validateCandidate()` to succeed. A new
+negative regression initially failed because the validator resolved successfully.
+`git diff HEAD` excludes untracked files; reading the archive via `Bun.file()`
+therefore did not prove it belonged to the candidate being published.
+
+`scripts/timeline-cutover-operator.ts` now reads the expected archive as a blob
+from `${candidate}:${archivePath}` with `git cat-file blob`, and compares **exact
+bytes** against `prepareRollback()` from latest v2 at expected main. Missing or
+mismatched blobs fail closed. A pre-existing identical committed archive need
+not have an artificial diff. No other operator/publication guard changed.
+
+Regressions reject untracked-only and committed whitespace-altered archives;
+the exact committed archive passes validation both in the original test repo
+and a clean clone. The archive includes post-write origin and a non-null test
+evidence hash. Risk assessment remains Astra's: this violated the separate
+archival guarantee; it did **not** immediately delete metadata from the previous
+v2 file or Git history.
+
+### Verification and parity
+
+Bun **1.3.14**: frozen install, typecheck, full test suite and full build pass.
+Final local full suite: **1,360 pass / 3 existing age-dependent skips / 0 fail**,
+74 files. Each child full-suite gate runs all non-recursive tests (1,359 pass;
+the extra child-only skip is the orchestrator). Exact-head PR CI, including PG17
+concurrency/encrypted recovery and Build site, is recorded in PR #115's delivery
+record/Checks; Pages is intentionally skipped for the unmerged PR.
+
+The regression now builds fixed-input v1, frozen v2, open v2, post-write v2 and
+rollback v1 views. Public events/labels remain identical; latest v2/rollback queue,
+agent-input and review bytes match. An additional actual full-feed replay with
+current main's snapshots at **2026-10-28T00:00:00.000Z** produces **243 events**,
+with byte-identical v1/frozen-v2/released-v2 outputs:
+
+| Public output | SHA256, identical across the three selections |
+| --- | --- |
+| events.v1.json | `f1592570dc3fd56840b220baafe506f4ee2633a3d9e312e22ce1cd7728038518` |
+| timeline-label-queue.v1.json | `88dc687dcef45f06b388b20577bb9722fda0752ce5e1f919a361eeeb2db80eeb` |
+| timeline-label-agent-input.v1.json | `4c3206bfbc6fd25f11462688a4e0506a6a023830715a24f83a23c7af91be0a6a` |
+| review.v1.json | `f90f4c9dcbf584f590669dac2a719219acaa7d5fdfd466b38e0e8d2c545f422d` |
+
+The event-count/hash difference from the original 241-event report comes from
+independent current-main data/HSR changes and the replay clock, not this fix.
+No fingerprint, label guard, proposal, queue, workflow, writer or client logic
+was modified by this follow-up; the sole runtime correction is archive validation.
+Earlier browser smoke is historical, not repeated or claimed as new evidence.
+
+**Next concrete step:** focused independent Astra High re-review of these two
+fixes and their regressions. Only after that review may the operator separately
+consider GO with fresh main/inventory, authenticated controls and writer
+quiescence. Missing variable access remains a live gate blocker; no freeze is
+inferred from a dated run listing. **STOP: no E2b/E3/E4.**

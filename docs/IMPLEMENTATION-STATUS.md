@@ -1,8 +1,28 @@
 # Game calendar implementation status
 
-## Timeline registry v2 — E2a.1 PREPARED / NOT LIVE (2026-10-27)
+## Timeline registry v2 — E2a.1 ASTRA FIXES / NOT LIVE (2026-10-28)
 
-**READY_FOR_CUTOVER (implementation/rehearsal only).** Production remains v1.
+**FIXES IMPLEMENTED / AWAITING FOCUSED ASTRA RE-REVIEW. NO GO.** Production remains v1.
+The authoritative independent review found two reproduced defects in the original
+preparation: tests pinned mutable production state; rollback accepted an untracked
+archive. Both are corrected in existing Draft PR #115. Historical 75-record
+assertions now use SHA256-pinned fixtures; a real non-stubbed full-suite/build
+lifecycle covers frozen → release → 76th v2 recording → rollback. Archive validation
+requires exact bytes from the candidate Git blob and passes clean-clone regression.
+Risk: the archive defect violated archival durability without immediately erasing
+metadata from Git history. Detailed reproductions/fixes/parity are in the report.
+
+Follow-up baseline main `06102a7`; fresh inventory remains 75 = 25 operator +
+50 automated, 0 unknown / 22 labels, with no new registry writes. Frozen install,
+typecheck, full build and tests PASS: **1,360 pass / 3 existing skips / 0 fail**
+(74 files); child suites skip only their recursive lifecycle orchestrator. All
+four fixed-input public JSON outputs match across v1/frozen/open v2 at 243 events;
+latest post-write/rollback parity, origins, fingerprints and stale/concurrent
+writer protections pass. Exact final-head CI/PG17 links live in PR #115 Checks
+and delivery record. Pages is skipped for the draft PR. No production controls,
+writer activation, evidence-triggered requeue or unrelated runtime changes.
+
+Original 2026-10-27 preparation evidence follows (historical counts/checks):
 No operator GO, merge, production writer activation or Actions-variable change.
 Prepared draft [PR #115](https://github.com/maxvfk/game-calendar/pull/115).
 Implementation-head [CI 40574284618](https://github.com/maxvfk/game-calendar/actions/runs/40574284618)
@@ -39,9 +59,9 @@ Full report/operator freeze/publish/release/rollback runbook:
   real admission/freeze/quiescence and GO remain **BLOCKED / not passed**.
   Dated observations: `docs/evidence/timeline-v2-gate0-2026-10-27.json`.
 
-**Next concrete step:** review the prepared PR/CI, obtain separate explicit
-operator GO for a cutover window, verify actual controls, drain old writers and
-refresh/review the cutover inventory before publishing the frozen switch. PR stays
+**Next concrete step:** focused independent Astra High re-review of the two fixes
+in Draft PR #115. Only then consider a separate explicit operator GO, actual
+control verification, drained writers and refreshed cutover inventory. PR stays
 unmerged without GO. No post-cutover CI/Pages or live v2 write is claimed.
 **STOP after E2a.1.** E2b/E3/E4 were not started.
 ## Genshin 7.1 source/coverage audit — RESEARCH COMPLETE; NO FIX (2026-10-28)
