@@ -1,6 +1,6 @@
 # Source Coverage — Current Data Recovery Wave
 
-**Status:** RUNNING — PR130/132–140 fully released and CP4 verified. Current bounded item: SC-P1-CZN-SEASONS currenttwo, branch `fix/czn-seasons`; historical closing blocked CZN-OLD-FSO-END. WuWa newbanner timing blocked WUWA-NEW-BANNER-CLOCK.
+**Status:** RUNNING — PR130/132–141 CP4 verified. Current SC-P1-CZN-CARNIVAL, `fix/czn-carnival`. Named blockers: CZN-OLD-FSO-END and WUWA-NEW-BANNER-CLOCK. Environment outage recovered manually; all work preserved.
 **Prepared:** 2026-10-28. **Baseline:** current main at launch (do not pin this document's preparation SHA).
 **Canonical backlog:** [SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md](SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md).
 **Operating rules:** `AGENTS.md`; `docs/IMPLEMENTATION-STATUS.md`.

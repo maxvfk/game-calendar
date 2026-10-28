@@ -1,7 +1,7 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-CZN-CARNIVAL
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: a97d64595d8083994e6b1f77680098211cf29aab
 BRANCH: fix/czn-carnival
 HEAD_SHA: resolve branch ref
@@ -18,3 +18,5 @@ Source https://czn.gg/10-21wed-update-notice/ (publisher-authored attributed mir
 
 CP0_SHA:e7cb93b245817f7c881a6c46b3b678e2f36ace12
 CP1:2 reviewed rows and test/czn-carnival.test.ts implemented;32 existingrows untouched. Full checks/release NOT RUN. Next mandatory commands and277->279 fixed replay.
+
+CP2 PASS: frozen install/typecheck/full1386pass/3existing age skips/0fail/build/feed277->279 only2 additions, allprior winners/conflicts identical, reviewed32 unchanged. Evidence docs/evidence/czn-carnival-feed-replay-2026-10-28.json. CP3 PRbody; CP4 NOT RUN.
