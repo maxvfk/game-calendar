@@ -1,5 +1,55 @@
 # Game calendar implementation status
 
+## SC-P0-GEN-STARLIGHT — IMPLEMENTED (2026-10-28)
+
+Bounded Genshin-only fix from current main `28cb6e735126cfb244abdd705257c07a37c89979`.
+Canonical backlog: `docs/tasks/SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md`.
+Delivery record: [PR #130](https://github.com/maxvfk/game-calendar/pull/130) (commit-specific PR/post-merge CI,
+Pages deployment and independently checked public event results).
+
+- **Current-data restoration implemented:** two distinct official reviewed
+  winners, backed by the in-game notice extracted at KQM `archive/21901.md`.
+  The archive was re-read on Oct 28 and agrees with the existing snapshot;
+  KQM is a third-party extraction surface, not a first-party publisher host.
+  Main event ends **Nov 2 03:59 server**; Quest Completion Period ends
+  **Oct 29 04:00 server**, independently of the main event.
+- **IDs:** `genshin:starlight-voyage-heart-unbound:2026-10-19` and
+  `genshin:quest-completion-period-starlight-voyage-heart-unbound:2026-10-19`.
+  Main regional ends: Asia **Nov 1 19:59Z**, Europe **Nov 2 02:59Z**,
+  America **Nov 2 08:59Z**. Quest: Asia **Oct 28 20:00Z**, Europe
+  **Oct 29 03:00Z**, America **Oct 29 09:00Z**. Fixed server offsets
+  +8/+1/−5 are preserved across civil DST changes. Both starts remain
+  **Oct 19, day precision**; the source's regional 10:00 starts cannot be
+  faithfully represented as one global exact start by the existing schema.
+- **Repeat-failure prevention implemented for this notice family:** narrowly
+  recognize its Participate-in heading and require both full-year `t_lc`
+  periods. Reject missing/global/yearless/invalid/duplicate/contradictory
+  periods; retain separate main/quest identities and reviewed precedence.
+  Real-source regression covers future dates/article IDs, duplicate notices,
+  all three regions at ±1ms, details/Timeline and historical expiry. Reviewed
+  fallback survives rolling-index removal. This does not implement broad
+  Genshin discovery or Source Recovery family monitoring.
+- **Evidence:** `docs/evidence/genshin-starlight-feed-replay-2026-10-28.json`.
+  Fixed-clock built feed **243 → 245**, Genshin **26 → 28**, automatic
+  candidates **10 → 12**. Every prior winner is byte-for-byte equal; no
+  removed IDs; the one pre-existing NTE date conflict is unchanged. Public
+  pre-fix feed generated **2026-10-28T09:33:05.126Z** had neither window.
+- **Local checks:** Bun 1.3.14 frozen install, typecheck, full test suite
+  **1353 pass / 3 existing age-dependent skips / 0 fail**, build and actual
+  feed comparison passed. Snapshot/source timestamps and all 19 existing
+  reviewed rows are unchanged; new per-row review/discovery times are real.
+- **Release acceptance:** PR CI, merge, post-merge CI/Pages and live feed/UI
+  checks are mandatory; their observed run URLs, merged SHA and public results
+  are maintained in the linked PR delivery record. Local replay alone is not
+  deployment proof. Passed regional quest cutoffs retain their exact historical
+  boundaries and are never moved forward or described as upcoming.
+
+**Next concrete step:** STOP after this fix's release gates in PR #130.
+Optional operator phone/PWA smoke: inspect both Genshin deadlines with your
+selected server. Other backlog tasks, Source Recovery #113 and Timeline #115
+remain outside this milestone.
+
+
 ## Seven-game source coverage — unified ranked remediation backlog READY (2026-10-28)
 
 Canonical task: `docs/tasks/SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md`.
