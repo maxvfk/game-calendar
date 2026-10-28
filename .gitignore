@@ -146,3 +146,7 @@ snapshots/*.tmp-*
 
 # Generated internal editorial evidence (never Pages assets).
 /tmp/editorial/
+
+# Atomic Timeline writer scratch (never committed).
+data/presentation/*.writer-lock
+data/presentation/*.tmp-writer-*

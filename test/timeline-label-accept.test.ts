@@ -11,7 +11,7 @@ import { TimelineLabelPreferences } from "../src/presentation/timeline-label-age
 const AT = "2026-10-25T00:00:00.000Z";
 const vocabulary = TimelineLabelPreferences.parse(
   await Bun.file("data/presentation/timeline-label-preferences.v1.json").json()).labelVocabulary ?? [];
-const reviewed = TimelineRegistry.parse(await Bun.file("data/presentation/timeline-labels.v1.json").json());
+const reviewed = TimelineRegistry.parse(await Bun.file("test/fixtures/editorial/timeline-labels-v1-2026-10-26.json").json());
 
 let n = 0;
 function event(over: Partial<Record<keyof GachaEvent, unknown>>): GachaEvent {
@@ -177,7 +177,7 @@ describe("accept on a fresh feed", () => {
   });
 
   test("the reviewed registry is already in canonical bytes", async () => {
-    expect(registryBytes(reviewed)).toBe(await Bun.file("data/presentation/timeline-labels.v1.json").text());
+    expect(registryBytes(reviewed)).toBe(await Bun.file("test/fixtures/editorial/timeline-labels-v1-2026-10-26.json").text());
   });
 
   test("a malformed response is an error, not an empty accept", () => {

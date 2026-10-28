@@ -68,7 +68,13 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p labels
+          admission="$(bun scripts/timeline-storage.ts ticket labels/writer-ticket.json)"
           cp public/data/timeline-label-agent-input.v1.json labels/agent-input.json
+          if [ "$admission" != open ]; then
+            echo "events=0" >> "$GITHUB_OUTPUT"
+            echo "Timeline storage writer is frozen; no model call or write."
+            exit 0
+          fi
           echo "events=$(jq '.events | length' labels/agent-input.json)" >> "$GITHUB_OUTPUT"
           jq -c '.counts' labels/agent-input.json
 
@@ -103,7 +109,7 @@ jobs:
         env:
           EVENTS: ${{ steps.queue.outputs.events }}
         run: |
-          if [ "$EVENTS" = 0 ]; then why="empty queue, no model call"
+          if [ "$EVENTS" = 0 ]; then why="empty queue or storage frozen, no model call"
           else why="Claude subscription limit reached or service busy; nothing written, the next run retries"; fi
           echo "## Timeline labels — skipped: $why" >> "$GITHUB_STEP_SUMMARY"
 
@@ -140,7 +146,7 @@ jobs:
 
       - name: Record on fresh main and push
         id: record
-        run: bash scripts/timeline-label-agent/record.sh "$RUNNER_TEMP/labels/proposals.json" "$TARGET_BRANCH" "$RUNNER_TEMP/reports"
+        run: bash scripts/timeline-label-agent/record.sh "$RUNNER_TEMP/labels/proposals.json" "$TARGET_BRANCH" "$RUNNER_TEMP/reports" "$RUNNER_TEMP/labels/writer-ticket.json"
 
       # A push with GITHUB_TOKEN starts no workflow, so CI is dispatched and awaited here.
       - name: Run CI on the recorded commit

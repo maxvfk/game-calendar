@@ -1,5 +1,70 @@
 # Game calendar implementation status
 
+## Timeline registry v2 — E2a.1 ASTRA FIXES / NOT LIVE (2026-10-28)
+
+**FIXES IMPLEMENTED / AWAITING FOCUSED ASTRA RE-REVIEW. NO GO.** Production remains v1.
+The authoritative independent review found two reproduced defects in the original
+preparation: tests pinned mutable production state; rollback accepted an untracked
+archive. Both are corrected in existing Draft PR #115. Historical 75-record
+assertions now use SHA256-pinned fixtures; a real non-stubbed full-suite/build
+lifecycle covers frozen → release → 76th v2 recording → rollback. Archive validation
+requires exact bytes from the candidate Git blob and passes clean-clone regression.
+Risk: the archive defect violated archival durability without immediately erasing
+metadata from Git history. Detailed reproductions/fixes/parity are in the report.
+
+Follow-up started at main `06102a7`; concurrent documentation-only `89d4ad9`
+was integrated before final CI. Fresh registry inventory remains 75 = 25 operator +
+50 automated, 0 unknown / 22 labels, with no new registry writes. Frozen install,
+typecheck, full build and tests PASS: **1,360 pass / 3 existing skips / 0 fail**
+(74 files); child suites skip only their recursive lifecycle orchestrator. All
+four fixed-input public JSON outputs match across v1/frozen/open v2 at 243 events;
+latest post-write/rollback parity, origins, fingerprints and stale/concurrent
+writer protections pass. Exact final-head CI/PG17 links live in PR #115 Checks
+and delivery record. Pages is skipped for the draft PR. No production controls,
+writer activation, evidence-triggered requeue or unrelated runtime changes.
+
+Original 2026-10-27 preparation evidence follows (historical counts/checks):
+No operator GO, merge, production writer activation or Actions-variable change.
+Prepared draft [PR #115](https://github.com/maxvfk/game-calendar/pull/115).
+Implementation-head [CI 40574284618](https://github.com/maxvfk/game-calendar/actions/runs/40574284618)
+passed on `f2d34a5` (all checks/build/PG17; PR Pages correctly skipped).
+Use the PR's latest exact-head CI for any later GO; no post-cutover evidence exists.
+Task: `docs/tasks/EDITORIAL-TIMELINE-V2-CONTROLLED-CUTOVER.md`.
+Full report/operator freeze/publish/release/rollback runbook:
+`docs/evidence/timeline-v2-controlled-cutover.md`.
+
+- Fresh main `ed773a8` inventory: **75 decisions — 25 operator_approved,
+  50 automated, 0 legacy_unknown; 22 labels / 43 keep / 10 research**.
+  Includes post-E2a `46f1d2e` (25 additions). Historical E2a manifest unchanged;
+  separate cutover ledger pins main/blob/history/source and target hashes.
+- PR-only explicit storage selection chooses v2 with admission **frozen**.
+  Strict reader/queue projection, trusted v2 acceptance, sole ticket/epoch-bound
+  record path; bad/missing v2 or ledger never falls back to an obsolete v1 file.
+  L1 model proposals/guards, semantic fingerprint, 25-event cap, source/public
+  copy, cadence/model/kill switch and read-only propose/no-Claude record stay intact.
+- Old v1 runners/artifacts cannot use the active writer; local atomic lock,
+  fresh-main retries, FF-only M4 pushes and CAS/ancestry operator publication
+  guard races. Freeze prevents model calls as well as writes. No evidence-only
+  requeue. Separate release opens admission only after authorized cutover checks.
+- **Checks:** Bun 1.3.14 frozen install/typecheck/build PASS; full suite
+  **1,352 pass / 3 existing age-dependent skips / 0 fail** (72 files),
+  11 new cutover tests. Actual old/new record.sh, bare remote pre-push race,
+  queued/failed/cancelled controls, wrong metadata and rollback after a new v2
+  recording tested. All four fixed-input public JSON files byte-identical;
+  **241 events**, all **75 decisions/22 labels** retained.
+- Chromium 153: 15 smoke checks at 320/390/1440 px, approved/canonical titles
+  and Original title fallback, no errors; 390 px visually checked. Client code,
+  ZZZ/parsers/recurrence, Account/Sync and Daily Reset unchanged.
+- **Gate 0 limitation:** all 520 Actions runs were read (no active M4 at observation),
+  but connector variable access was rejected. Live switch value is **unknown**;
+  real admission/freeze/quiescence and GO remain **BLOCKED / not passed**.
+  Dated observations: `docs/evidence/timeline-v2-gate0-2026-10-27.json`.
+
+**Next concrete step:** focused independent Astra High re-review of the two fixes
+in Draft PR #115. Only then consider a separate explicit operator GO, actual
+control verification, drained writers and refreshed cutover inventory. PR stays
+unmerged without GO. No post-cutover CI/Pages or live v2 write is claimed.
+**STOP after E2a.1.** E2b/E3/E4 were not started.
 ## WuWa 3.7 source/coverage audit — RESEARCH COMPLETE, NO IMPLEMENTATION (2026-10-28)
 
 Report: `docs/research/wuwa-source-coverage-audit-2026-10-28.md`.

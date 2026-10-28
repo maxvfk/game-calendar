@@ -282,6 +282,7 @@ test("actual offline build includes queue, rejects malformed registry, applies s
     mkdirSync(join(dir, "public/data"), { recursive: true });
     for (const path of ["fixtures", "snapshots", "data/reviewed", "data/presentation/timeline-label-preferences.v1.json"]) symlinkSync(join(root, path), join(dir, path));
     const path = join(dir, "data/presentation/timeline-labels.v1.json");
+    await Bun.write(join(dir, "data/presentation/timeline-storage.v1.json"), JSON.stringify({ schemaVersion: 1, activeVersion: 1, epoch: "timeline-v1-" + "0".repeat(64), admission: "frozen" }));
     const build = () => Bun.spawnSync([process.execPath, join(root, "scripts/build-feed.ts")], { cwd: dir });
     await Bun.write(path, JSON.stringify(empty));
     let run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);

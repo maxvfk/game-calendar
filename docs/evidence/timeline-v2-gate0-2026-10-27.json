@@ -1,0 +1,37 @@
+{
+  "observedAt": "2026-10-27T19:46:47.352Z",
+  "repository": "maxvfk/game-calendar",
+  "main": "ed773a8d0a324edcbf36914f973ee35fe0091b49",
+  "api": "repository Actions runs collection, all 6 pages",
+  "complete": true,
+  "total": 520,
+  "timeline": [
+    {
+      "id": 40484407063,
+      "status": "completed",
+      "conclusion": "success",
+      "event": "schedule",
+      "sha": "ec64090343f14345bf9b832d54c65be8d7d2161e",
+      "url": "https://github.com/maxvfk/game-calendar/actions/runs/40484407063"
+    },
+    {
+      "id": 40353294714,
+      "status": "completed",
+      "conclusion": "success",
+      "event": "workflow_dispatch",
+      "sha": "1e1e95013d276a4ed1e16e8f98c60b8967906087",
+      "url": "https://github.com/maxvfk/game-calendar/actions/runs/40353294714"
+    },
+    {
+      "id": 40346051669,
+      "status": "completed",
+      "conclusion": "success",
+      "event": "workflow_dispatch",
+      "sha": "9e8d9feda0faa9c96ed8edec28abf3cead526a46",
+      "url": "https://github.com/maxvfk/game-calendar/actions/runs/40346051669"
+    }
+  ],
+  "variableAccess": "BLOCKED: connector rejected repository Actions variable endpoint (HTTP 400 INVALID_ARGUMENT); value not inferred",
+  "operatorGO": false,
+  "productionGate": "BLOCKED until separate GO, live variable/workflow verification and fresh quiescence proof"
+}

@@ -9,6 +9,7 @@
  *
  *   bun run build:feed
  */
+import { loadTimelineStorage } from "../src/editorial/timeline-storage.ts";
 import { ADAPTERS } from "../src/ingest/adapters/index.ts";
 import { sourceHealth } from "../src/ingest/health.ts";
 import { mergeEvents, type MergeResult } from "../src/ingest/merge.ts";
@@ -23,7 +24,7 @@ import { missingLightwardPhase } from "../src/ingest/lightward-monitor.ts";
 import { ECHOES_EVENT_SOURCE_ID, ECHOES_SOURCE_ID, echoesSeasonUrl, selectEchoesSeason } from "../src/ingest/echoes-season.ts";
 import { EventFeed, SCHEMA_VERSION, type SourceHealth } from "../src/shared/feed.ts";
 import { Region, type GachaEvent, type GameId } from "../src/shared/schema.ts";
-import { applyTimelineLabels, buildTimelineQueue, labelDiagnostics, queueBytes, TimelineRegistry } from "../src/presentation/timeline-labels.ts";
+import { applyTimelineLabels, buildTimelineQueue, labelDiagnostics, queueBytes } from "../src/presentation/timeline-labels.ts";
 import { bundleTimelineLabelAgentInput } from "../src/presentation/timeline-label-agent-input.ts";
 
 import { safelyBuildEvidenceSidecar, type Extraction } from "../src/editorial/event-evidence.ts";
@@ -269,7 +270,7 @@ for (const [, groups] of byGame) {
 events.sort((a, b) => a.startsAt.localeCompare(b.startsAt) || a.id.localeCompare(b.id));
 
 // Copy approvals apply only to final winners, never parser/reviewed/recurring IDs.
-const registry = TimelineRegistry.parse(await Bun.file("data/presentation/timeline-labels.v1.json").json());
+const registry = (await loadTimelineStorage()).projection;
 const feed = EventFeed.parse({
   schemaVersion: SCHEMA_VERSION,
   generatedAt: now,

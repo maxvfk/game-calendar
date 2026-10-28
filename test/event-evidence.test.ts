@@ -214,6 +214,7 @@ test("offline builder uses same fixture/snapshot, creates only internal sidecar;
     symlinkSync(join(root, "data/presentation/timeline-label-preferences.v1.json"), join(dir, "data/presentation/timeline-label-preferences.v1.json"));
     const preload = join(dir, "clock.ts");
     await Bun.write(preload, `const Original = Date; globalThis.Date = class extends Original { constructor(v?: string | number) { super(v ?? ${JSON.stringify(ctx.now)}); } static now() { return Original.parse(${JSON.stringify(ctx.now)}); } } as DateConstructor;`);
+    await Bun.write(join(dir, "data/presentation/timeline-storage.v1.json"), JSON.stringify({ schemaVersion: 1, activeVersion: 1, epoch: "timeline-v1-" + "0".repeat(64), admission: "frozen" }));
     const build = () => Bun.spawnSync([process.execPath, "--preload", preload, join(root, "scripts/build-feed.ts")], { cwd: dir });
     let run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);
     const publicPaths = ["events.v1.json", "timeline-label-queue.v1.json", "timeline-label-agent-input.v1.json"];

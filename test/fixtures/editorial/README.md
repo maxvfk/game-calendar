@@ -21,3 +21,40 @@ history and re-inventories every registry commit up to a fresh explicit local re
 It rejects a stale manifest. Updating an audit boundary later requires reviewed
 regeneration of its historical fixtures too; a passing historical test is never
 a freshness gate or production-cutover authorization.
+
+
+`record-v1-before-cutover.sh` is the exact production v1 M4 runner at E2a.1
+baseline `ed773a8` (unchanged since the E2a audit). Its SHA256 is independently
+checked against the frozen E2a metadata. The local-remote stale-runner drill runs
+these actual bytes without requiring historical objects in shallow CI. This is
+a test fixture, never an installed writer. Real operator cutover inventory still
+requires complete history and fresh remote checks.
+
+## Frozen E2a.1 audit baseline (not mutable production state)
+
+`cutover-2026-10-27/` freezes the exact v1 registry, initial v2 registry and
+cutover ledger from reviewed PR #115 head
+`794bda294d3f4e4e31a67b35035d66ace1dbb9d1`, source main `ed773a8`.
+SHA256 values are pinned independently in `test/timeline-cutover.test.ts`:
+
+- v1: `90fb14edccf546e96a2403bcb929ece3542259da50d8bfa20350bdd0c9200a3a`;
+- v2: `472bc5b2351f202086b70d61b16b68243e2d984493c410e302e571621ffb9b70`;
+- ledger: `6b67fc1a298fe085580d4d7a1cf42a30ad9f1fb7b4623e23b8a3bd294f64a423`.
+
+The 75-record / 25 operator / 50 automated / 22-label assertions apply to this
+historical audit only. Tests construct frozen/open selectors explicitly. The
+production-state regression validates the selected contract and canonical bytes,
+without requiring a specific count, initial v1↔v2 equality or frozen admission.
+The earlier PR #87 label/model-schema tests also use the immutable E2a fixture.
+Neither fixture directory is a runtime input or a production freshness gate.
+
+`test/timeline-cutover-lifecycle.test.ts` copies the current source into a disposable
+Git repository with a local bare remote. It executes real typecheck, the entire
+suite and full build at frozen, released, post-write and rollback states. The
+post-write gates execute inside the actual `record.sh`, before its local-only push.
+Bun/bunx are real executable symlinks; no successful test/build stubs remain.
+A private `.git/timeline-lifecycle-child` marker skips **only the recursive
+orchestrator itself** inside child suites, preventing infinite recursion. It is
+never committed, published or used by M4. All other tests run normally in each
+child suite. This drill needs no Git history or network, works in shallow CI,
+and never touches a production remote, variable, workflow or writer.
