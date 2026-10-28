@@ -1,6 +1,6 @@
 # Seven-game Source Coverage — Ranked Remediation Backlog
 
-**Status:** SC-P0-GEN-STARLIGHT implemented; release evidence: [PR #130](https://github.com/maxvfk/game-calendar/pull/130). All other items remain planning only, with no implementation authorized.
+**Status:** SC-P0-GEN-STARLIGHT implemented; release evidence: [PR #130](https://github.com/maxvfk/game-calendar/pull/130). Remaining confirmed P0/P1 recovery is now explicitly user-authorized by the active recovery wave; P2/excluded work remains unapproved.
 **Checked:** 2026-10-28. **Main baseline:** `0f8042d1b86c09210b46573b42058dcc128ddb3b`.
 **Owner workflow:** one short-lived branch / one bounded game-specific milestone / real CI / PR / controlled merge / post-merge Pages and player-visible check. Re-read CURRENT main before every milestone.
 **Wave execution / pause-resume task:** [SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md](SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md). One user-launched Work may complete multiple small verified PRs; the task includes quota-blind CP0–CP4 checkpoint rules and manual resume. **The file itself does not start or authorize a Work.**
@@ -15,9 +15,21 @@ The seven **separate current-version research audits are complete and merged**. 
 
 The calendar's core promise is "what ends soon and what must I finish?" Thus prioritize **real imminent expiring rewards and wrong confident deadlines** over nice-to-have UI, historical completeness, large ingestion redesign, or speculative predictions. A missing event is better than a fabricated timestamp.
 
-**The original backlog synthesis was docs-only:** no gameplay data, source adapters, snapshots, workflows, secrets, Account Sync, CZN Daily Reset, editorial Timeline registry or production deployment changes were made by that research milestone. Only SC-P0-GEN-STARLIGHT has since received separate implementation authorization. The backlog itself is NOT approval to implement any item. Existing unrelated **Timeline PR #115 remains NO GO** and **Source Recovery R1–R3 design PR #113 remains pending independent review**; do not merge either by side effect.
+**The original backlog synthesis was docs-only:** no gameplay data, source adapters, snapshots, workflows, secrets, Account Sync, CZN Daily Reset, editorial Timeline registry or production deployment changes were made by that research milestone. SC-P0-GEN-STARLIGHT was separately completed; the remaining confirmed P0/P1 items are now authorized only within the user-launched recovery wave. The backlog itself is NOT approval to implement any item. Existing unrelated **Timeline PR #115 remains NO GO** and **Source Recovery R1–R3 design PR #113 remains pending independent review**; do not merge either by side effect.
 
 This is a frozen, **as-of-2026-10-28** prioritization using prior audits and source snapshots (mostly last confirmed Oct 27). Before each implementation, re-check live official notices, the feed winner, current main and post-audit merges. Do not convert stale research into a later "current event" claim.
+
+### Recovery wave execution (2026-10-28)
+
+User explicitly launched the linked wave task. CP0–CP4 checkpoints are mandatory.
+**SC-P0-CZN-GIFTS implemented:** [PR #132](https://github.com/maxvfk/game-calendar/pull/132)
+contains release gates and observed delivery evidence. A: eight fixed-UTC claim
+windows (ordinary06:00→next05:59; two exceptions Nov30 14:59), tested feed245→253,
+old winners unchanged. B: **BLOCKED CZN-OFFICIAL-MAIL-DISCOVERY** (CZN audit C3
+unattended publisher access/terms/runner gate); reviewed rescue is not automatic
+discovery. Local frozen install/typecheck/full tests/build/feed PASS
+(1356pass/3existing age skips/0fail). Next: **SC-P0-END-MARAS**, only after
+PR132 exact-head CI/merge/post-merge CI/Pages/live verification is recorded.
 
 ### SC-P0-GEN-STARLIGHT execution status (2026-10-28)
 
@@ -76,7 +88,7 @@ Within a class, prioritize **earlier true deadline**, **free/rare reward value**
 | Order / ID | Bounded scope | Evidence / boundary | Acceptance and stop |
 |---|---|---|---|
 | **1 · SC-P0-GEN-STARLIGHT · IMPLEMENTED** | **Genshin**: restore `Starlight Voyage: Heart Unbound` main event and **distinct early quest cutoff**, using **already checked-in** GINews `archive/21901.md`. | Quest ends **2026-10-29 04:00 game-server clock**; event itself ends Nov 2 03:59 server. **Asia server clock:** early cutoff is **Oct 28 20:00Z**; Europe fixed UTC+1 **Oct 29 03:00Z**; America fixed UTC−5 **Oct 29 09:00Z**. | Publish both (or single event + explicit subdeadline if supported), correct per-region time and start precision; no new event-ID collision. Since deadline is imminent, **first**. Recheck whether it has already elapsed by release; do not knowingly ship an expired reminder as "upcoming". |
-| **2 · SC-P0-CZN-GIFTS** | **CZN**: reviewed-source-backed 1st Anniversary **daily mail gifts** and distinguish *ordinary 24-hour claims* vs Oct 21 / Oct 28 long-lived exception items. Do **NOT** change Daily Reset. | Mail delivery **06:00Z**; ordinary claim window 24h, final Nov 3 gift claim ends **Nov 4 05:59Z**; Oct 21 sticker / Oct 28 background claim ends **Nov 30 14:59Z**. | Make each advertised deadline visible without multiplied/duplicate gifts; verify source wording and minutely precise exception; tests must distinguish 06:00Z mail and standing 18:00Z daily reset. Scope stays rewards, not Sync. |
+| **2 · SC-P0-CZN-GIFTS · IMPLEMENTED (PR #132)** | **CZN**: reviewed-source-backed 1st Anniversary **daily mail gifts** and distinguish *ordinary 24-hour claims* vs Oct 21 / Oct 28 long-lived exception items. Do **NOT** change Daily Reset. | Mail delivery **06:00Z**; ordinary claim window 24h, final Nov 3 gift claim ends **Nov 4 05:59Z**; Oct 21 sticker / Oct 28 background claim ends **Nov 30 14:59Z**. | Make each advertised deadline visible without multiplied/duplicate gifts; verify source wording and minutely precise exception; tests must distinguish 06:00Z mail and standing 18:00Z daily reset. Scope stays rewards, not Sync. |
 | **3 · SC-P0-END-MARAS** | **Endfield**: reconcile *existing* `Monumental Etching: Forest of Maras` winner with official **Sanctuary of Ink** notice `/9560`; **same stable ID**, no global timezone patch. | Official **2026-11-05 04:00 server** ⇒ Asia **Nov 4 20:00Z**, western (Americas/Europe) **Nov 5 09:00Z**. Wiki snapshot wrongly claims **Nov 4 22:00Z / Nov 5 22:00Z** (+2h / +13h). | Verify wrong wiki row actually wins current feed; fix only impacted source-reconciled reviewed winner; preserve source provenance and exact regionEnds; no new merge conflict/duplicate; 3-region before/at/after cutoff tests and post-merge Pages check. |
 
 If work can proceed in parallel, keep **three separate PRs and game scopes**, each rebased against current main; never hide one game's failed validation inside another's PR. It is acceptable to complete the deterministic Maras fix before CZN gifts if execution capacity or evidence blockers dictate; keep the Genshin Oct 29 deadline first.
@@ -231,8 +243,7 @@ For each separately authorized item:
 
 ## 8. One next concrete step
 
-**SC-P0-GEN-STARLIGHT is complete** through [PR #130](https://github.com/maxvfk/game-calendar/pull/130); do not restart it. Optional operator phone/PWA smoke remains separate. Passed region cutoffs stay historical.
-
-**Ready for explicit user launch (not yet running):** the [Current Data Recovery Wave](SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md) task covers **remaining** confirmed P0/P1 milestones as separate verified PRs, with durable CP0–CP4 GitHub checkpoints, branch-level pauses inside a game, and **manual** Work continuation. No fabricated Work quota percentage, no automatic R1/R2/R3, no P2 or Timeline changes.
-
-**Next concrete step:** the user launches that task in Work using a short reference prompt. If interrupted, the user starts a new Work pointed at the same task; resume from GitHub checkpoint and current main rather than replaying completed work.
+Complete and verify **SC-P0-CZN-GIFTS / PR #132**, then continue with
+**SC-P0-END-MARAS** using CURRENT main and the wave's CP0–CP4 protocol.
+Continue only confirmed authorized P0/P1. Preserve historical cutoffs; do not
+start P2, Source Recovery R1–R3, Timeline v2, Sync or unapproved categories.
