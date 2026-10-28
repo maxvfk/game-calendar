@@ -110,6 +110,78 @@ Dates below are in publisher-defined game server clock unless explicitly `Z` / `
 
 ## 7. Uniform implementation acceptance contract
 
+### Approved coordination rule: two distinct remediation outcomes (2026-10-28)
+
+Every missing-event or incorrect-deadline incident must track **two separate
+outcomes**, with independently checkable evidence. Completing one must never
+silently mark the other complete.
+
+1. **Current-data restoration (ship now):** restore or correct the actual
+   source-backed current feed winner, including an earlier claim/quest deadline
+   where applicable. Preserve published event IDs/completion keys, provenance,
+   region clocks and reviewed precedence; test the built feed and post-merge
+   Pages/operator-visible result. A minimal reviewed hotfix is an acceptable
+   urgent delivery when unattended extraction is not yet safe.
+2. **Repeat-failure prevention (follow-up):** identify the precise lost link
+   (article discovery / notice selection / parsing / merged winner / publication
+   / conflicting deadline). Then repair the deterministic source contract,
+   add a regression or monitored per-family expectation, and prove a future
+   equivalent notice cannot silently disappear with green transport health.
+   Where source discovery is genuinely missing or access blocked, record a
+   **named BLOCKED/WATCH follow-up** with evidence and a safe fallback; do not
+   claim automatic prevention was delivered.
+
+A narrow parser fix may satisfy **both** outcomes when its real-source
+regression and merged-feed coverage prove it; a reviewed-only rescue typically
+satisfies the first outcome **only**. Log both outcomes in the milestone PR,
+backlog and IMPLEMENTATION-STATUS, with a concrete linked follow-up for anything
+still open. Do not force both into the same urgent PR or delay a P0 rescue
+waiting for future R1/R2/R3 architecture.
+
+### Approved coordination rule: completeness by game × event family, not raw counts
+
+Treat `HTTP 200/304`, `lastConfirmedAt`, nonzero `eventCount`, total parsed
+candidates, and a green build as **transport/processing evidence only**, never
+proof of calendar completeness. Track separate coverage checks for the
+families actually relevant to a game's current version, such as character
+banners, weapon/issue/Light Cone channels, limited events, endgame phases,
+free login/gifts, and distinct reward/claim cutoffs.
+
+For each confirmed **in-scope, explicitly published** deadline or channel,
+keep a checkable chain:
+
+`published evidence (notice ID/URL + dated claim)`
+→ `notice discovered in source/index (or documented manual reviewed fallback)`
+→ `recognized parser/reviewed candidate`
+→ `stable, correctly timed merge winner`
+→ `built feed/Pages-visible record`.
+
+Record which link fails, not just a total difference. Count **unique
+phase/channel identities and claim boundaries**, with duplicate/overlap guards;
+never sum raw source and reviewed counts into a presumed published total.
+Compare supported current families against *known dated notices* and existing
+approved categories, not an arbitrary constant number of events per game.
+
+**Positive signal:** a specific first-party dated notice/channel is known and
+an approved, expected event is missing from the materialized feed → coverage
+incident (severity by imminent expiry, claim loss or wrong timestamp).
+
+**Negative guard:** future phase is expected only by cadence, publisher has
+not posted an explicit date, notice is outside tracked product scope, or a
+source is access-blocked without evidence → WATCH / BLOCKED / DECISION,
+**not an invented event, invented exact time, or false P0**.
+
+A separate conflict check should flag a current feed winner whose *confident*
+published deadline disagrees with stronger verified first-party evidence
+(e.g. Endfield Forest of Maras). Protect official vs estimated provenance and
+do not change global time-zone rules to hide one wrong source row.
+
+These are **acceptance / monitoring requirements for subsequent bounded
+milestones and future R1 Coverage Health design review**, not implemented
+monitoring code. Existing [Source Recovery R1–R3 design PR #113](https://github.com/maxvfk/game-calendar/pull/113)
+remains an independent design under review. No new scheduled job, AI action,
+source adapter, publishing gate, or permission is authorized here.
+
 For each separately authorized item:
 
 1. Fetch **CURRENT main**, `AGENTS.md`, `docs/IMPLEMENTATION-STATUS.md`, this backlog, *only its game's* research report, actual checked source and affected code/tests. Check recently merged fixes to avoid duplication. Revalidate exact official date and article before publishing.
