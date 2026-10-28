@@ -1,5 +1,37 @@
 # Game calendar implementation status
 
+## SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE — READY / NOT STARTED (2026-10-28)
+
+Canonical **user-invoked** Work task:
+`docs/tasks/SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md`. It references
+`docs/tasks/SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md`, current source
+audits and the approved two-outcome A/B coverage acceptance contract. This
+documentation change does **not** start recovery or authorize unrelated work.
+
+- Work **cannot reliably read account five-hour/weekly usage allowance**:
+  there is no 15% auto-stop feature, no invented remaining percentage and
+  no automatic restart after reset. User manually starts/resumes Work.
+- One explicitly launched Work may process the **remaining confirmed P0/P1**
+  as small independent game-specific branches/PRs. **Starlight is already
+  complete** via PR #130 and must not be repeated.
+- **CP0** verified evidence/source and early pushed branch;
+  **CP1** implementation WIP committed (unmerged);
+  **CP2** tests/feed PASS/FAIL/NOT RUN;
+  **CP3** PR + exact CI run and blockers;
+  **CP4** fully verified merge/post-merge CI/Pages plus backlog/status.
+  Checkpoints are allowed **inside a game**, not just between PRs.
+- While a PR/branch is unfinished, persist branch-local
+  `docs/handoffs/SOURCE-COVERAGE-WAVE-CHECKPOINT.md` with base/main/head SHA,
+  PR, verification and exact next command. After complete merge, normal PR,
+  backlog and status form durable history. A sudden hard cutoff may prevent
+  saving, so a checkpoint is reliable **only if actually pushed**.
+- Resume begins by checking CURRENT main and real existing PR/branch/CI,
+  never inferring success for an interrupted command. Do not merge incomplete
+  changes or start R1/R2/R3, #113, #115, Auth/Sync, CZN Daily Reset or P2.
+- **Next concrete step:** user opens Work and references the new task file;
+  this docs-only PR itself performs no recovery.
+
+
 ## SC-P0-GEN-STARLIGHT — IMPLEMENTED (2026-10-28)
 
 Bounded Genshin-only fix from current main `28cb6e735126cfb244abdd705257c07a37c89979`.

@@ -3,6 +3,7 @@
 **Status:** SC-P0-GEN-STARLIGHT implemented; release evidence: [PR #130](https://github.com/maxvfk/game-calendar/pull/130). All other items remain planning only, with no implementation authorized.
 **Checked:** 2026-10-28. **Main baseline:** `0f8042d1b86c09210b46573b42058dcc128ddb3b`.
 **Owner workflow:** one short-lived branch / one bounded game-specific milestone / real CI / PR / controlled merge / post-merge Pages and player-visible check. Re-read CURRENT main before every milestone.
+**Wave execution / pause-resume task:** [SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md](SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md). One user-launched Work may complete multiple small verified PRs; the task includes quota-blind CP0–CP4 checkpoint rules and manual resume. **The file itself does not start or authorize a Work.**
 
 ## 0. Decision and scope
 
@@ -209,6 +210,15 @@ monitoring code. Existing [Source Recovery R1–R3 design PR #113](https://githu
 remains an independent design under review. No new scheduled job, AI action,
 source adapter, publishing gate, or permission is authorized here.
 
+**Multi-PR Work exception:** When the user explicitly launches the linked
+[Current Data Recovery Wave](SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md),
+its checkpoints and permission to advance *only after fully released/verified
+P0/P1 PRs* apply in addition to the contract below. Work cannot reliably see
+remaining five-hour/weekly allowance; no percentage threshold or automatic
+quota reset/resume is promised. Pauses may occur **inside one game** using
+committed unmerged branches and a durable GitHub handoff. A sudden hard stop
+may prevent a final save; only actually pushed commits are recoverable.
+
 For each separately authorized item:
 
 1. Fetch **CURRENT main**, `AGENTS.md`, `docs/IMPLEMENTATION-STATUS.md`, this backlog, *only its game's* research report, actual checked source and affected code/tests. Check recently merged fixes to avoid duplication. Revalidate exact official date and article before publishing.
@@ -221,6 +231,8 @@ For each separately authorized item:
 
 ## 8. One next concrete step
 
-**STOP after the SC-P0-GEN-STARLIGHT release gates recorded in [PR #130](https://github.com/maxvfk/game-calendar/pull/130).** Optional operator phone/PWA smoke: inspect the separate main and quest entries for the selected server. Preserve passed regional cutoffs as history. Do not implement any other P0/P1 item in this Work.
+**SC-P0-GEN-STARLIGHT is complete** through [PR #130](https://github.com/maxvfk/game-calendar/pull/130); do not restart it. Optional operator phone/PWA smoke remains separate. Passed region cutoffs stay historical.
 
-**STOP after that single hotfix.** A separately authorized future Work may choose CZN anniversary gift claims or Endfield Maras precision correction based on which verified deadline can still be usefully corrected. All remaining backlog items are **planning only**.
+**Ready for explicit user launch (not yet running):** the [Current Data Recovery Wave](SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md) task covers **remaining** confirmed P0/P1 milestones as separate verified PRs, with durable CP0–CP4 GitHub checkpoints, branch-level pauses inside a game, and **manual** Work continuation. No fabricated Work quota percentage, no automatic R1/R2/R3, no P2 or Timeline changes.
+
+**Next concrete step:** the user launches that task in Work using a short reference prompt. If interrupted, the user starts a new Work pointed at the same task; resume from GitHub checkpoint and current main rather than replaying completed work.
