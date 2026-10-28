@@ -62,7 +62,41 @@ function updateDays(archive: Article[]): Map<string, string> {
   return result;
 }
 
+const PATCH_EVENTS = new Set(["Cubie Wars", "Dreams in the Capsule", "Gifts of Waking Moon", "Gifts of Singing Drizzle"]);
+const PATCH_TITLE = /^Patch Notes for Wuthering Waves Version (\d+\.\d+): .+$/i;
+
+/** New patch-title contract is scoped to approved current event families.
+ * Do not activate historical banner backfill through a global anchor change. */
+function patchOpening(article: Article): string {
+  const rows = article.evidenceLines.filter(line => /^✦?Maintenance Time:/.test(line));
+  const line = rows[0] ?? "";
+  const times = [...line.matchAll(DATE)];
+  const clock = "20\\d{2}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}";
+  const shape = new RegExp(`^✦?Maintenance Time: ${clock}\\s*[-–—]\\s*${clock} \\(UTC\\+8\\)$`);
+  if (!shape.test(line) || rows.length !== 1 || times.length !== 2 || !/\(UTC\+8\)$/.test(line) ||
+    serverTime(times[1]!, 8) <= serverTime(times[0]!, 8)) {
+    throw new Error("WuWa patch maintenance calendar anchor missing or invalid");
+  }
+  return day(times[0]!); // calendar anchor only, never maintenance completion
+}
+
+function patchDuration(article: Article, near: string[], version: string) {
+  const rows = near.filter(line => /^✦?Duration:/.test(line));
+  const line = (rows[0] ?? "").replace(/^✦/, "");
+  const clock = "20\\d{2}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}";
+  const relative = `Version ${version.replace(".", "\\.")} Update`;
+  const shape = new RegExp(`^Duration: (?:${relative}|${clock})\\s*[-–—]\\s*${clock} \\(server time\\)$`);
+  if (rows.length !== 1 || !shape.test(line)) throw new Error("WuWa patch event duration missing or invalid");
+  const updates = new Map([[version, patchOpening(article)]]);
+  return { line, updates };
+}
+
 function identity(line: string): { title: string; type: EventType } | null {
+  // Category brackets are not an event identity. Reject other nested layouts
+  // rather than publishing the category itself as a new completion key.
+  const nested = /^\[Special Events\]\s+(\[[^\]]+\]\s+.+)$/.exec(line);
+  if (nested) line = nested[1]!;
+  if (/^\[[^\]]+\]\s+\[/.test(line)) return null;
   const m = /^\[([^\]]+)\]\s+(.+)$/.exec(line);
   if (!m) return null;
   const label = m[2]!;
@@ -106,6 +140,7 @@ export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhites
   const archive = articles(raw);
   if (!archive.length) throw new Error("WuWa Atom entries missing");
   const updates = updateDays(archive);
+  const scopedPatchDays = new Map<string, string>();
   const result: Array<{ event: GachaEvent; heading: string; lines: string[]; content: string; headings: string[]; repeatedHeading: boolean }> = [];
   for (const article of archive) {
     const standalone = /\[([^\]]+)\]\s+(?:Combat Event|Featured (?:Resonator|Weapon) Convene)/i.exec(article.title)?.[1];
@@ -120,10 +155,19 @@ export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhites
         if (identity(line)) break;
         near.push(line);
       }
-      const duration = near.find(s => /\(server time\)/i.test(s) &&
+      const patchVersion = PATCH_TITLE.exec(article.title)?.[1];
+      const scoped = patchVersion && PATCH_EVENTS.has(item.title)
+        ? patchDuration(article, near, patchVersion) : null;
+      if (scoped && patchVersion) {
+        const date = scoped.updates.get(patchVersion)!;
+        const old = scopedPatchDays.get(patchVersion);
+        if (old && old !== date) throw new Error(`WuWa conflicting Version ${patchVersion} patch calendar anchor`);
+        scopedPatchDays.set(patchVersion, date);
+      }
+      const duration = scoped?.line ?? near.find(s => /\(server time\)/i.test(s) &&
         (/^Duration:/i.test(s) || /^20\d{2}-/.test(s) || /^Version \d+\.\d+ [Uu]pdate/i.test(s)));
       if (duration) {
-        const event = candidate(article, item.title, item.type, duration, updates, ctx);
+        const event = candidate(article, item.title, item.type, duration, scoped?.updates ?? updates, ctx);
         if (event) {
           const following = candidates.slice(i + 1);
           const next = following.findIndex(line => identity(line) !== null);

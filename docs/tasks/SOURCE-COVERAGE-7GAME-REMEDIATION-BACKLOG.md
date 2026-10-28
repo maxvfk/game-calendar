@@ -96,6 +96,20 @@ same-version conflicts still fail. All15 reviewed/old24h conflict preserved.
 B narrow existing-notice parser/regression implemented; release validation
 tracked in delivery PR. Next after CP4: SC-P1-WUWA-37-PARSER.
 
+**SC-P1-NTE-14-SKIPPED CP4 verified:** PR138 mergeed74b738c96bac47b9ad550d26885e3a8eae354e;
+CI/Pages40694158519 SUCCESS; public269 generated13:12:20.577Z all5 semantic
+winners and unchanged old conflict; Bounty15:59Z browser/source verified. A/B DONE.
+
+**SC-P1-WUWA-37-PARSER implemented (release pending):** four-family actual
+patch-title/calendar/duration/nested-identity repair; no historical banner
+activation. A release pending; B deterministic contract/tests implemented.
+**SC-P1-WUWA-NEW-BANNERS BLOCKED WUWA-NEW-BANNER-CLOCK:** Oct28 fresh mirror
+blob b409efe121a6a2757101bb1eebaaf093d196b762 still has names in5571 but no
+exact new-channel period;5668 dates only4 reruns. Bounded official-domain search
+found no independent dated first-party notice. No false claim of absence; exact
+clock remains unverified. W2 follow-up needs specific publisher/in-game period,
+no borrowing rerun clocks or broad integration. Both A/B blocked pending evidence.
+
 ### SC-P0-GEN-STARLIGHT execution status (2026-10-28)
 
 - **Outcome 1 — current-data restoration: implemented; delivery record in [PR #130](https://github.com/maxvfk/game-calendar/pull/130).**
@@ -167,8 +181,8 @@ Dates below are in publisher-defined game server clock unless explicitly `Z` / `
 | **SC-P1-GEN-EXPIRIES · IMPLEMENTED (PR134)** | Genshin: `Overflowing Favor` double artifact drops, Phase II `Epitome Invocation` weapon channel, and `Carefree Snowball Fight` currently day-only precision. | Overflowing Favor **Nov 2 03:59 server** (`archive/21053.md`); weapon **Nov 3 14:59 server** (`archive/21890.md`); Carefree **Nov 2 03:59** (`archive/21891.md`). | Already in KQM snapshot. Keep existing reviewed IDs and one phase-distinct weapon banner channel; avoid blindly changing day-precision without clock proof. May split drops and weapon if smaller. |
 | **SC-P1-END-CURRENT · IMPLEMENTED (PR136)** | Endfield: officially announced **Si** + **Tangtang** character banners, separately their issues `Seal of Jade` and `Tender Sprig`, plus **Contingency Readiness**. | Si end **Nov 5 11:59 server**, Tangtang starts **Oct 29 12:00** and ends Nov 19 11:59; Contingency Readiness **Oct 29 04:00 → Nov 5 04:00** server, official `/9560`. | Use reviewed first-party evidence; `Seal of Jade` ends after three Chartered banners ⇒ **unknown exact end**, not Si's end. Preserve region mapping Asia +8 / West −5, distinct character vs arsenal IDs. Split if needed. |
 | **SC-P1-CZN-OVERDRIVE · IMPLEMENTED (PR135)** | CZN: `Overdrive: Simulation` double growth period. | **Nov 3 18:00Z** exact, Oct 21 STOVE 1.5/anniversary patch content. | One small reviewed record; no Daily Reset edit. |
-| **SC-P1-WUWA-37-PARSER** | WuWa: deterministic 3.7 patch title/date anchor + decorated `✦Duration` + nested identity; restore `Cubie Wars`, `Dreams in the Capsule`, `Gifts of Waking Moon`, `Gifts of Singing Drizzle`. | Source `Kuro Atom article 5571` already captured; deadlines **Nov 11 03:59/11:59 server**. | Wrong identity `[Special Events] [Cubie Wars]` can create `Special Events` ID if only anchor fixed. Guard scope, preserve after-update day start and three-region ends; regression real snapshot. |
-| **SC-P1-WUWA-NEW-BANNERS** | WuWa: new Suoming `Nine Deaths, One Unbent Heart` and `Unspoken Rue` current Phase II, missing despite four reruns working. | Kuro patch `5571` names them; `5668` only lists four reruns, not individually dated new banner windows. | **VERIFY exact first-party announcement/clock** first; if not established, mark BLOCKED and retain expected-family incident, never borrow rerun clocks silently. Separate W2 source discovery gate. |
+| **SC-P1-WUWA-37-PARSER · IMPLEMENTED (release pending)** | WuWa: deterministic 3.7 patch title/date anchor + decorated `✦Duration` + nested identity; restore `Cubie Wars`, `Dreams in the Capsule`, `Gifts of Waking Moon`, `Gifts of Singing Drizzle`. | Source `Kuro Atom article 5571` already captured; deadlines **Nov 11 03:59/11:59 server**. | Wrong identity `[Special Events] [Cubie Wars]` can create `Special Events` ID if only anchor fixed. Guard scope, preserve after-update day start and three-region ends; regression real snapshot. |
+| **SC-P1-WUWA-NEW-BANNERS · BLOCKED WUWA-NEW-BANNER-CLOCK** | WuWa: new Suoming `Nine Deaths, One Unbent Heart` and `Unspoken Rue` current Phase II, missing despite four reruns working. | Kuro patch `5571` names them; `5668` only lists four reruns, not individually dated new banner windows. | **VERIFY exact first-party announcement/clock** first; if not established, mark BLOCKED and retain expected-family incident, never borrow rerun clocks silently. Separate W2 source discovery gate. |
 | **SC-P1-HSR-BANNERS · IMPLEMENTED (release pending)** | HSR: four active Version 4.6 Warp channels: Pearl + `Colors for Tomorrow`, Mortenax Blade + `Reforged in Hellfire`. | All end **Nov 10 15:00 server**; Phase II source official HoYoLAB `article/47142215`. | Two character and two Light Cone channel IDs; Pearl continuous across phases **once**, not duplicate Phase I/II; explicit three-region ends. Restore through reviewed hotfix before broader publisher discovery. |
 | **SC-P1-NTE-14-SKIPPED · IMPLEMENTED (release pending)** | NTE: extend *verified release-notice selection*, restore `Circle Gifts`, `Terminal Depths`, `Pukaland Travelogue`, `Coal Lump's Treasure`, **1.4 Circle Bounty**. | Same first-party Steam API `gid 1844751498233952` skipped because title **`Log in`** not `login`; Circle Bounty expires **Nov 10 23:59 UTC+8 (Nov 10 15:59Z)**, others mostly Nov 11 **05:59 UTC+8 (Nov 10 21:59Z)**. | Do not remove fail-closed year requirement from standalone articles; use verified version notice context. Keep 1.3 Circle Bounty prior 24h source conflict and all 15 existing reviewed rows; prove candidates become published winners. |
 | **SC-P1-CZN-SEASONS** | CZN: current **Basin of Hyperspace** Oct21–Nov11 and **Full-Scale Offensive** Sept30–Nov11; reconcile stale old `Full-Scale Offensive — Season 4` `endsAt:null`. | Explicit STOVE Oct21/Sept30 version notices; ends **before Nov 11 maintenance**. | No speculative maintenance-completion time, no +21d cadence. Preserve old IDs and source-backed historical boundary; one logical phase per record. |
@@ -308,8 +322,9 @@ For each separately authorized item:
 
 ## 8. One next concrete step
 
-Finish **SC-P1-NTE-14-SKIPPED** CP2–CP4, then **SC-P1-WUWA-37-PARSER** from
-CURRENT main (earliestAsiaNov10 19:59Z). PR130/132–137 fully released.
+Finish **SC-P1-WUWA-37-PARSER** CP2–CP4, then **SC-P1-HSR-CLAIMS** from CURRENT
+main (Nov10 22:00Z), then CZN Nov11 day rewards/seasons. PR130/132–138 fully
+released. WuWa new-banner exact-clock gate remains explicitly BLOCKED, not fixed.
 Confirmed P0/P1 only; no P2/R1–R3/Timeline/Auth/Sync.
 
-SC-P1-NTE-14-SKIPPED CP2 PASS: frozen install/typecheck/full1375pass/3existing age skips/0fail/build/feed264->269. Five additions only; old winners/conflicts/reviewed15 unchanged, parser49->54. Delivery PR owns observed CP3/CP4 evidence.
+SC-P1-WUWA-37-PARSER CP2 PASS: frozen install/typecheck/full1378pass/3existing age skips/0fail/build/feed269->273; four additions only, no changed/removed old winner/conflict; parser7->11, reviewed12 unchanged. Delivery PR holds observed CP3/CP4 release evidence.
