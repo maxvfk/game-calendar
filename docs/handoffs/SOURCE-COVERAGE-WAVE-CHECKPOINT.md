@@ -2,18 +2,19 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-GEN-EXPIRIES
-STAGE: CP0
+STAGE: CP1
 BASE_MAIN_SHA: 97b407c838e8c2cbaf9ec14199f3814835cd978d
 BRANCH: fix/gen-expiries
 HEAD_SHA: this pushed commit (resolve branch ref)
 PR: NONE
 DONE: current main/AGENTS/status/backlog/Genshin audit, parser, reviewed data/tests and source21901 completed work verified; no Starlight reimplementation. PR132/133 CP4 complete. Source21053/21890/21891 freshly fetched via KQM GitHub connector and agrees with actual stored notices.
-VERIFICATION: published feed253 records; Overflowing Favor already exists at day precision (audit's missing classification is stale); Carefree exists reviewed/day; PhaseII weapon absent. Implementation/tests/CI NOT RUN.
+VERIFICATION: published feed253 records; Overflowing Favor already exists at day precision (audit's missing classification is stale); Carefree exists reviewed/day; PhaseII weapon absent. Implementation committed: narrow exact-period parser for three source contracts; reviewed fallback for all3; existing Carefree/Overflowing identities and firstSeenAt retained. Targeted/full validation and CI NOT RUN.
 REMAINING: narrowly extract exact server ends for two named duration-heading notices and one explicit dated weapon table; preserve existing2 IDs and reviewed precedence; add one distinct weapon-channel ID, no version/phase inference from cadence; reviewed fallback; full validation/release gates.
 BLOCKERS: NONE for checked notices. Broad new weapon-name/version/phase discovery remains outside this bounded fix.
 OUTCOME_A_DATA: PENDING
 OUTCOME_B_PREVENTION: PENDING known duration/table deterministic parser + real-source regressions
-NEXT_CONCRETE_STEP: implement exact t_lc period extraction only for Overflowing Favor, Carefree and the Azurelight/Symphonist weapon notice, plus reviewed winners and tests.
+CP0_SHA: 2132111381501cd691f929757d497ba28cfb0d62
+NEXT_CONCRETE_STEP: finish source-fixture expiry/merge/identity regressions, then frozen install/typecheck/full tests/build/feed diff; do not merge WIP.
 
 ## Exact scope
 

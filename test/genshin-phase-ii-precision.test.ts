@@ -34,9 +34,8 @@ test("only two existing character identities gain official exact regional ends a
     expect(merged.events.find(p => p.id === e.id)).toEqual(e);
     expect(effectiveEnd(e, "unsupported" as Region)).toBe(ends.asia);
   }
-  // Generic tag parser and unrelated Carefree date precision remain conservative.
+  // Unrelated generic character-wish extraction retains day precision.
   expect(automatic.filter(e => ids.includes(e.id)).every(e => e.endPrecision === "day")).toBe(true);
-  expect(reviewed.find(e => e.title === "Carefree Snowball Fight")?.endPrecision).toBe("day");
   expect(corrected.some(e => e.title.includes("Epitome"))).toBe(false);
 });
 
