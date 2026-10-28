@@ -79,7 +79,8 @@ written to the repository.
 - `src/presentation/timeline-label-accept.ts`: `acceptTimelineProposals(proposals, feed, registry,
   vocabulary, asOf)` and `labelGuard`. Pure and deterministic; the caller passes the freshest
   feed and registry, which is the fresh-main re-check. Rules are in `data/presentation/README.md`.
-- `labelVocabulary` in the preferences file (reviewed in Git; today only `invitation`). The
+- `labelVocabulary` in the preferences file (reviewed in Git; `invitation`, and `login` since
+  scheduled run 40484407063 guarded two labels whose summaries say "Log in"). The
   preferences also tell the model that other words make a label `needs_research`.
 - `scripts/timeline-labels.ts accept` writes only the output paths it is given.
 - `scripts/timeline-label-agent/run-model.sh`: the single model call, now shared by the probe
