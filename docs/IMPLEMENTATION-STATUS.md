@@ -1,5 +1,33 @@
 # Game calendar implementation status
 
+## Genshin 7.1 source/coverage audit — RESEARCH COMPLETE; NO FIX (2026-10-28)
+
+Report: `docs/research/genshin-source-coverage-audit-2026-10-28.md`. Current
+`genshin-kqm-ginews` is accessible and recently confirmed; its live `readme.md`
+and checked-in snapshot both contain **36 indexed notices** but only **10 parsed
+events** at the last source refresh. `data/reviewed/genshin.json` has **19**
+reviewed entries; these numbers are not unique published-feed totals.
+
+**Confirmed current missing/partial coverage:** Phase II `Epitome Invocation`
+weapon banner (Azurelight + Symphonist of Scents, until Nov 3); `Overflowing
+Favor` (Oct 26–Nov 2); `Starlight Voyage: Heart Unbound` (Oct 19–Nov 2)
+and its distinct **Oct 29 04:00** quest cutoff; `Carefree Snowball Fight`
+exists but has only a day-precision reviewed Nov 2 end despite a more detailed
+notice. Additional dated Miliastra/web rewards (`Starlit Gala`, `Raiment
+Collection`, `Moonlit Season`), cosmetic odes and sub-deadlines need explicit
+scope/precision gates. Existing Spiral Abyss and Imaginarium Theater monthly
+recurrence is already implemented and should not be re-opened without a defect.
+Version 7.2 is announced; its currently absent exact individual phase notices
+are `watch`, not permission to extrapolate future dates.
+
+Source transport success/nonzero extraction must NOT be interpreted as
+per-family coverage. The audit made no runtime/source/reviewed/secret/workflow
+changes, no runner probe of new hosts and no independent deployed JSON fetch.
+**Next concrete step:** operator decides between urgent bounded `G1`
+current-deadline repair and next game's research-only audit (**WuWa**).
+Keep Editorial v2 PR #115 and Source Recovery design PR #113 independent.
+
+
 ## HSR 4.6 source/coverage audit — RESEARCH COMPLETE; IMPLEMENTATION NOT STARTED (2026-10-28)
 
 Research report: `docs/research/hsr-source-coverage-audit-2026-10-28.md`.
