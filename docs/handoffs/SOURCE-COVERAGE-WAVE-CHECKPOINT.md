@@ -2,7 +2,7 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-NTE-14-SKIPPED
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: cc325bf6597d83225ff51009bc8682869b7cf2f7
 BRANCH: fix/nte-rewards
 HEAD_SHA: resolve this branch ref
@@ -25,3 +25,5 @@ Afterupdate starts remain daySep30; CoalLump exactOct8 02Z from10:00UTC+8. Commo
 
 CP0_SHA:4e31b4de24436331bca1964ec36eebaf73d34499
 CP1 implemented: bounded reward-title+version/year/context admission, five-section extraction, explicit CircleBounty version discriminator only; generic same-version/unknown conflict checks and year guards unchanged. New actual-snapshot malformed/future/merge/expiry regressions. Initial targeted test used unsorted source priority, corrected to production reviewed-first order; final local validation pending. Next full mandatory checks and264->269 replay.
+
+CP2 FINAL PASS: frozen install/typecheck/full1375pass/3existing age skips/0fail/build/feed264->269, exactlyfive additions, allold winners/conflicts identical; reviewed15 byte-identical. Actual parser49->54 onlyfive named reward candidates. Evidence docs/evidence/nte-rewards-feed-replay-2026-10-28.json. CP3 delivery PR body will hold exacthead/run; CP4 NOT RUN. Next create PR then exact-head CI.

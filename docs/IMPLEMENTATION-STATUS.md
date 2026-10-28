@@ -1,5 +1,34 @@
 # Game calendar implementation status
 
+## SC-P1-NTE-14-SKIPPED — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+
+The existing approved Steam snapshot contains the Version1.4 publisher release
+whose actual `Log in` title was rejected. The new bounded lane requires that
+specific reward-release template plus same-notice version/year/update/guide
+context, and admits only CircleGifts, TerminalDepths, PukalandTravelogue,
+CoalLump'sTreasure and CircleBounty. No generic Log-in expansion, P2 historical
+banner, paid/Porsche box, web event or permanent unlock is added. Standalone
+yearless notices remain rejected. Source snapshots/timestamps and15 reviewed
+rows are unchanged.
+
+A pending release. B deterministic existing-notice selection/extraction plus
+real-source malformed/unknown-template/future-year/duplicate-period and expiry
+regressions. Explicit CircleBounty guide versions distinguish old1.3 vsnew1.4
+when the day start overlaps the disputed old Steam end; same/unknown versions
+retain normal exact conflict checks. Production reviewed priority preserves
+old1.3 stableID/earlier PerfectWorld winner and existing24h conflict.
+
+Source: Steam gid1844751498233952; official264409 freshly confirms periods.
+Common endNov10 21:59Z, BountyNov10 15:59Z; afterupdate daySep30, CoalLump exact
+Oct8 02:00Z. Global clocks do not shift with selected region.
+
+**PR137 CP4 verified:** mergecc325bf6597d83225ff51009bc8682869b7cf2f7,
+[CI/Pages40692792892](https://github.com/maxvfk/game-calendar/actions/runs/40692792892)
+SUCCESS; public264 generated13:03:05.098Z, all4 HSR exact winners and Pearl
+single continuous window/Europe14Z/source47142215 browser verified. A DONE;
+B HSR-WARP-DISCOVERY remains BLOCKED. Next after NTE CP4: SC-P1-WUWA-37-PARSER.
+
+
 ## SC-P1-HSR-BANNERS — IMPLEMENTED; WAVE RUNNING (2026-10-28)
 
 Four reviewed official/manual Warp channels from rechecked publisher
@@ -4101,3 +4130,5 @@ DST from summer wall time, or repeat the completed seven-game audit.
 SC-P1-END-CURRENT CP2 PASS: frozen install/typecheck/full tests/build/feed;1369pass/3existing age skips/0fail;255->260 exactlyfive additions, no changed/removed prior winner or dateConflict. Evidence: docs/evidence/endfield-current-feed-replay-2026-10-28.json. CP3/CP4 evidence: [PR136](https://github.com/maxvfk/game-calendar/pull/136).
 
 SC-P1-HSR-BANNERS CP2 PASS: frozen install/typecheck/final full1372pass/3existing age skips/0fail/build/feed260->264. Onlyfour new channels; old winners, reviewed13 and conflicts unchanged. Delivery PR owns CP3/CP4 observed release evidence; no release inferred from implementation.
+
+SC-P1-NTE-14-SKIPPED CP2 PASS: frozen install/typecheck/full1375pass/3existing age skips/0fail/build/feed264->269. Five additions only; old winners/conflicts/reviewed15 unchanged, parser49->54. Delivery PR owns observed CP3/CP4 evidence.
