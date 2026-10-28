@@ -2,7 +2,7 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-HSR-BANNERS
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: 7550118dbdaa69458ae9ca9dcc07aefb2ffd1feb
 BRANCH: fix/hsr-warps
 HEAD_SHA: resolve this branch ref
@@ -26,3 +26,5 @@ CP0_SHA:04f83b513f72a94dfbf40ff0796699abca19b20c
 CP1: four reviewed channels and test/hsr-current-warps.test.ts implemented. Validation/release NOT RUN. Next full local checks and feed260->264, onlyfour additions.
 
 Validation history: frozen install/typecheck PASS. First full test command exited1 without summary (NOT complete). Isolated three new tests exposed a day-precision pre-opening assertion near an Asia day boundary; moved pre-opening check to an unambiguously earlier day. Targeted HSR+recognition25PASS/0FAIL; manual feed build264 PASS. Final full tests/typecheck/build/fixed replay are RUNNING, not yet certified. No production clock/schema changed.
+
+CP2 FINAL PASS: bun install --frozen-lockfile; typecheck; full1372pass/3existing age skips/0fail; build; fixedfeed260->264 onlyfour intended additions, every prior winner/conflict unchanged. Original13 reviewed rows/batch metadata unchanged. Evidence docs/evidence/hsr-warps-feed-replay-2026-10-28.json. CP3 will be persisted in delivery PR body; CP4 NOT RUN. Next open PR and inspect exact-head CI.

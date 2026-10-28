@@ -1,0 +1,132 @@
+{
+  "milestone": "SC-P1-HSR-BANNERS",
+  "baseMain": "7550118dbdaa69458ae9ca9dcc07aefb2ffd1feb",
+  "sourceUrl": "https://www.hoyolab.com/article/47142215",
+  "evidence": "Publisher text freshly indexed/rechecked Oct28; explicit continuous Sep28 Pearl/Colors window, Oct21 rerun opening and Nov10 15:00 server ends. No unattended fetch claimed.",
+  "fixedReplayAt": "2026-10-28T09:40:00.000Z",
+  "beforeCount": 260,
+  "afterCount": 264,
+  "addedWinners": [
+    {
+      "id": "hsr:an-ocean-in-a-pearl:2026-09-28",
+      "game": "hsr",
+      "title": "An Ocean in a Pearl",
+      "recognitionSubjects": [
+        "Pearl"
+      ],
+      "type": "banner",
+      "summary": "Pearl Event Warp. Continuous after the September 28 Version 4.6 update across both phases; no separate Phase II restart. Ends November 10 at 15:00 server time (Asia UTC+8; Europe UTC+1; America UTC-5).",
+      "startsAt": "2026-09-28T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-10T07:00:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-10T07:00:00.000Z",
+        "europe": "2026-11-10T14:00:00.000Z",
+        "america": "2026-11-10T20:00:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/47142215",
+      "sourceId": "reviewed-hsr",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T12:57:41.022Z",
+      "updatedAt": "2026-10-28T12:57:41.022Z"
+    },
+    {
+      "id": "hsr:brilliant-fixation-colors-for-tomorrow:2026-09-28",
+      "game": "hsr",
+      "title": "Brilliant Fixation: Colors for Tomorrow",
+      "recognitionSubjects": [
+        "Colors for Tomorrow"
+      ],
+      "type": "banner",
+      "summary": "Colors for Tomorrow Event Warp. Continuous after the September 28 Version 4.6 update across both phases; no separate Phase II restart. Ends November 10 at 15:00 server time (Asia UTC+8; Europe UTC+1; America UTC-5).",
+      "startsAt": "2026-09-28T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-10T07:00:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-10T07:00:00.000Z",
+        "europe": "2026-11-10T14:00:00.000Z",
+        "america": "2026-11-10T20:00:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/47142215",
+      "sourceId": "reviewed-hsr",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T12:57:41.022Z",
+      "updatedAt": "2026-10-28T12:57:41.022Z"
+    },
+    {
+      "id": "hsr:bygone-reminiscence-reforged-in-hellfire:2026-10-21",
+      "game": "hsr",
+      "title": "Bygone Reminiscence: Reforged in Hellfire",
+      "recognitionSubjects": [
+        "Reforged in Hellfire"
+      ],
+      "type": "banner",
+      "summary": "Reforged in Hellfire Event Warp. Opens October 21 at 12:00 server time; opening is shown as a calendar day across regions. Ends November 10 at 15:00 server time (Asia UTC+8; Europe UTC+1; America UTC-5).",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-10T07:00:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-10T07:00:00.000Z",
+        "europe": "2026-11-10T14:00:00.000Z",
+        "america": "2026-11-10T20:00:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/47142215",
+      "sourceId": "reviewed-hsr",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T12:57:41.022Z",
+      "updatedAt": "2026-10-28T12:57:41.022Z"
+    },
+    {
+      "id": "hsr:now-i-am-become-blade:2026-10-21",
+      "game": "hsr",
+      "title": "Now I Am Become Blade",
+      "recognitionSubjects": [
+        "Mortenax Blade"
+      ],
+      "type": "banner",
+      "summary": "Mortenax Blade Event Warp. Opens October 21 at 12:00 server time; opening is shown as a calendar day across regions. Ends November 10 at 15:00 server time (Asia UTC+8; Europe UTC+1; America UTC-5).",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-10T07:00:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-10T07:00:00.000Z",
+        "europe": "2026-11-10T14:00:00.000Z",
+        "america": "2026-11-10T20:00:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/47142215",
+      "sourceId": "reviewed-hsr",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T12:57:41.022Z",
+      "updatedAt": "2026-10-28T12:57:41.022Z"
+    }
+  ],
+  "removedIds": [],
+  "changedPriorWinnerIds": [],
+  "dateConflictsUnchanged": true,
+  "prior13ReviewedAndMetadataUnchanged": true,
+  "outcomeB": "BLOCKED HSR-WARP-DISCOVERY (audit H2 compliant index/access/runner gate)"
+}

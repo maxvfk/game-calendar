@@ -299,3 +299,5 @@ For each separately authorized item:
 Finish **SC-P1-HSR-BANNERS** CP2–CP4, then **SC-P1-NTE-14-SKIPPED** from CURRENT
 main (Nov10 15:59Z Bounty before other Nov10/11 rewards). PR130/132–136 are
 fully released. Continue confirmed P0/P1 only; no P2/R1–R3/Timeline/Auth/Sync.
+
+SC-P1-HSR-BANNERS CP2 PASS: frozen install/typecheck/final full1372pass/3existing age skips/0fail/build/feed260->264. Onlyfour new channels; old winners, reviewed13 and conflicts unchanged. Delivery PR owns CP3/CP4 observed release evidence; no release inferred from implementation.
