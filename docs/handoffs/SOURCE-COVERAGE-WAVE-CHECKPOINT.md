@@ -22,3 +22,5 @@ GlobalUTC+8 means sameNov10 22Z in all selected regions; no viewerDST shifting. 
 
 CP0_SHA:ecc1a850c41e7c870d352e2b1e330924c2c8b1dd
 CP1: two exact-heading/field contracts implemented inside NewEvents only; temporary reward summaries distinguish permanent Park. Actual-source/future/malformed/merge/expiry targeted14PASS. Full validation/release NOT RUN. Next mandatory checks and273->275 replay, old winners/conflicts identical.
+
+Validation history: first full1380pass/3skip/1fail because prior HSRwarp regression pinned whole automatic output at8, now legitimately10. Scope its old-eight assertion excluding the two new temporaryPark contracts; no production behavior change. Final full rerun required.
