@@ -29,7 +29,18 @@ old winners unchanged. B: **BLOCKED CZN-OFFICIAL-MAIL-DISCOVERY** (CZN audit C3
 unattended publisher access/terms/runner gate); reviewed rescue is not automatic
 discovery. Local frozen install/typecheck/full tests/build/feed PASS
 (1356pass/3existing age skips/0fail). Next: **SC-P0-END-MARAS**, only after
-PR132 exact-head CI/merge/post-merge CI/Pages/live verification is recorded.
+PR132 CP4 is verified: merge473729f, post-merge CI/Pages40674871392 SUCCESS,
+public253 events/all8 winners and browser verified.
+
+**SC-P0-END-MARAS implemented:** [PR133](https://github.com/maxvfk/game-calendar/pull/133).
+A: same-ID official Nov5 04:00 server winner (AsiaNov4 20:00Z/WestNov5 09:00Z),
+original start/firstSeenAt retained. B: exact-known-source-disagreement acknowledgement
+with strict unknown-discrepancy regressions; no blanket conflict suppression.
+Local frozen install/typecheck/tests/build/feed PASS(1359/3skips/0fail);
+253→253, only Maras changed, no added/removed IDs or unresolved conflicts.
+PR133 carries exact-head CI and CP4 production evidence. Next after release:
+**SC-P1-GEN-EXPIRIES**. Later Endfield upcoming dates must be rechecked: fresh9560
+has Secret Sanctuary Dec2 and Sanity Supply Nov18 onward, unlike frozen research.
 
 ### SC-P0-GEN-STARLIGHT execution status (2026-10-28)
 
@@ -89,7 +100,7 @@ Within a class, prioritize **earlier true deadline**, **free/rare reward value**
 |---|---|---|---|
 | **1 · SC-P0-GEN-STARLIGHT · IMPLEMENTED** | **Genshin**: restore `Starlight Voyage: Heart Unbound` main event and **distinct early quest cutoff**, using **already checked-in** GINews `archive/21901.md`. | Quest ends **2026-10-29 04:00 game-server clock**; event itself ends Nov 2 03:59 server. **Asia server clock:** early cutoff is **Oct 28 20:00Z**; Europe fixed UTC+1 **Oct 29 03:00Z**; America fixed UTC−5 **Oct 29 09:00Z**. | Publish both (or single event + explicit subdeadline if supported), correct per-region time and start precision; no new event-ID collision. Since deadline is imminent, **first**. Recheck whether it has already elapsed by release; do not knowingly ship an expired reminder as "upcoming". |
 | **2 · SC-P0-CZN-GIFTS · IMPLEMENTED (PR #132)** | **CZN**: reviewed-source-backed 1st Anniversary **daily mail gifts** and distinguish *ordinary 24-hour claims* vs Oct 21 / Oct 28 long-lived exception items. Do **NOT** change Daily Reset. | Mail delivery **06:00Z**; ordinary claim window 24h, final Nov 3 gift claim ends **Nov 4 05:59Z**; Oct 21 sticker / Oct 28 background claim ends **Nov 30 14:59Z**. | Make each advertised deadline visible without multiplied/duplicate gifts; verify source wording and minutely precise exception; tests must distinguish 06:00Z mail and standing 18:00Z daily reset. Scope stays rewards, not Sync. |
-| **3 · SC-P0-END-MARAS** | **Endfield**: reconcile *existing* `Monumental Etching: Forest of Maras` winner with official **Sanctuary of Ink** notice `/9560`; **same stable ID**, no global timezone patch. | Official **2026-11-05 04:00 server** ⇒ Asia **Nov 4 20:00Z**, western (Americas/Europe) **Nov 5 09:00Z**. Wiki snapshot wrongly claims **Nov 4 22:00Z / Nov 5 22:00Z** (+2h / +13h). | Verify wrong wiki row actually wins current feed; fix only impacted source-reconciled reviewed winner; preserve source provenance and exact regionEnds; no new merge conflict/duplicate; 3-region before/at/after cutoff tests and post-merge Pages check. |
+| **3 · SC-P0-END-MARAS · IMPLEMENTED (PR #133)** | **Endfield**: reconcile *existing* `Monumental Etching: Forest of Maras` winner with official **Sanctuary of Ink** notice `/9560`; **same stable ID**, no global timezone patch. | Official **2026-11-05 04:00 server** ⇒ Asia **Nov 4 20:00Z**, western (Americas/Europe) **Nov 5 09:00Z**. Wiki snapshot wrongly claims **Nov 4 22:00Z / Nov 5 22:00Z** (+2h / +13h). | Verify wrong wiki row actually wins current feed; fix only impacted source-reconciled reviewed winner; preserve source provenance and exact regionEnds; no new merge conflict/duplicate; 3-region before/at/after cutoff tests and post-merge Pages check. |
 
 If work can proceed in parallel, keep **three separate PRs and game scopes**, each rebased against current main; never hide one game's failed validation inside another's PR. It is acceptable to complete the deterministic Maras fix before CZN gifts if execution capacity or evidence blockers dictate; keep the Genshin Oct 29 deadline first.
 
@@ -243,7 +254,7 @@ For each separately authorized item:
 
 ## 8. One next concrete step
 
-Complete and verify **SC-P0-CZN-GIFTS / PR #132**, then continue with
-**SC-P0-END-MARAS** using CURRENT main and the wave's CP0–CP4 protocol.
-Continue only confirmed authorized P0/P1. Preserve historical cutoffs; do not
-start P2, Source Recovery R1–R3, Timeline v2, Sync or unapproved categories.
+Finish **SC-P0-END-MARAS /PR133** release gates, then continue with
+**SC-P1-GEN-EXPIRIES** using CURRENT main and CP0–CP4. PR130 and PR132 are
+already fully released. Continue only confirmed authorized P0/P1; no P2,
+Source Recovery R1–R3, Timeline v2, Sync or unapproved categories.

@@ -1,0 +1,67 @@
+{
+  "milestone": "SC-P0-END-MARAS",
+  "baseMain": "473729f70ec0d879a1604424676112bdfef92058",
+  "sourceUrl": "https://endfield.gryphline.com/en-us/news/9560",
+  "sourceClaim": "Oct22,2026 12:00 to Nov5,2026 04:00(server time). Asia UTC+8, Americas/Europe UTC-5.",
+  "fixedReplayAt": "2026-10-28T09:40:00.000Z",
+  "beforeCount": 253,
+  "afterCount": 253,
+  "removedIds": [],
+  "addedIds": [],
+  "changedIds": [
+    "endfield:monumental-etching-forest-of-maras:2026-10-22"
+  ],
+  "priorWinner": {
+    "id": "endfield:monumental-etching-forest-of-maras:2026-10-22",
+    "game": "endfield",
+    "title": "Monumental Etching: Forest of Maras",
+    "type": "challenge",
+    "summary": "Challenge Event",
+    "startsAt": "2026-10-22T04:00:00.000Z",
+    "startPrecision": "exact",
+    "endsAt": "2026-11-04T22:00:00.000Z",
+    "endPrecision": "exact",
+    "regionScoped": true,
+    "regionEnds": {
+      "asia": "2026-11-04T22:00:00.000Z",
+      "america": "2026-11-05T22:00:00.000Z",
+      "europe": "2026-11-05T22:00:00.000Z"
+    },
+    "sourceUrl": "https://endfield.wiki.gg/wiki/Monumental_Etching:_Forest_of_Maras",
+    "sourceId": "endfield-wikigg-events",
+    "status": "published",
+    "confidence": 0.95,
+    "extractionMethod": "parser",
+    "version": 1,
+    "firstSeenAt": "2026-10-28T09:40:00.000Z",
+    "updatedAt": "2026-10-28T09:40:00.000Z"
+  },
+  "correctedWinner": {
+    "id": "endfield:monumental-etching-forest-of-maras:2026-10-22",
+    "game": "endfield",
+    "title": "Monumental Etching: Forest of Maras",
+    "type": "challenge",
+    "summary": "Limited reward window for the permanent Murmurs of the Deep Forest stages. Official Sanctuary of Ink notice closes this event November 5 at 04:00 server time: Asia UTC+8, Americas/Europe UTC-5.",
+    "startsAt": "2026-10-22T04:00:00.000Z",
+    "startPrecision": "exact",
+    "endsAt": "2026-11-04T20:00:00.000Z",
+    "endPrecision": "exact",
+    "regionScoped": true,
+    "regionEnds": {
+      "asia": "2026-11-04T20:00:00.000Z",
+      "america": "2026-11-05T09:00:00.000Z",
+      "europe": "2026-11-05T09:00:00.000Z"
+    },
+    "sourceUrl": "https://endfield.gryphline.com/en-us/news/9560",
+    "sourceId": "reviewed-endfield",
+    "status": "published",
+    "confidence": 1,
+    "extractionMethod": "manual",
+    "provenanceStatus": "official",
+    "version": 1,
+    "firstSeenAt": "2026-10-28T10:48:37.273Z",
+    "updatedAt": "2026-10-28T10:52:49.986Z"
+  },
+  "dateConflictsUnchanged": true,
+  "acknowledgedConflict": "Exactly the captured wiki ends AsiaNov4 22:00Z/WestNov5 22:00Z versus officialAsiaNov4 20:00Z/WestNov5 09:00Z, pinned by identity/sourceURLs/start/regionclocks. All unknown discrepancies retain normal conflict handling."
+}

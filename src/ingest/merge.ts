@@ -188,11 +188,32 @@ function isZzzProjection(event: GachaEvent): boolean {
   return event.game === "zzz" && /^recurring-zzz-(?:shiyu-critical-node|deadly-assault)$/.test(event.sourceId);
 }
 
+/** A manually reconciled, evidence-pinned disagreement, not a tolerance change.
+ * Official9560 overrides only this captured Maras wiki error. Keep raw source
+ * bytes, and surface every unrecognised correction/disagreement as before.
+ */
+function isReviewedMarasCorrection(a: GachaEvent, b: GachaEvent): boolean {
+  const [reviewed, wiki] = a.sourceId === "reviewed-endfield" ? [a, b] : [b, a];
+  const id = "endfield:monumental-etching-forest-of-maras:2026-10-22";
+  if (reviewed.id !== id || wiki.id !== id || reviewed.game !== "endfield" || wiki.game !== "endfield" ||
+    reviewed.sourceId !== "reviewed-endfield" || wiki.sourceId !== "endfield-wikigg-events" ||
+    reviewed.provenanceStatus !== "official" || reviewed.extractionMethod !== "manual" || wiki.extractionMethod !== "parser" ||
+    reviewed.sourceUrl !== "https://endfield.gryphline.com/en-us/news/9560" ||
+    wiki.sourceUrl !== "https://endfield.wiki.gg/wiki/Monumental_Etching:_Forest_of_Maras" ||
+    [reviewed, wiki].some(e => e.startsAt !== "2026-10-22T04:00:00.000Z" || e.startPrecision !== "exact" ||
+      e.endPrecision !== "exact" || !e.regionScoped || e.regionEnds === null)) return false;
+  const official = { asia: "2026-11-04T20:00:00.000Z", america: "2026-11-05T09:00:00.000Z", europe: "2026-11-05T09:00:00.000Z" };
+  const captured = { asia: "2026-11-04T22:00:00.000Z", america: "2026-11-05T22:00:00.000Z", europe: "2026-11-05T22:00:00.000Z" };
+  return reviewed.endsAt === official.asia && wiki.endsAt === captured.asia &&
+    (["asia", "america", "europe"] as const).every(r => reviewed.regionEnds![r] === official[r] && wiki.regionEnds![r] === captured[r]);
+}
+
 function findConflict(
   a: GachaEvent,
   b: GachaEvent,
   toleranceHours: number,
 ): { field: "endsAt" | "startsAt"; deltaHours: number; region?: Region } | null {
+  if (isReviewedMarasCorrection(a, b)) return null;
   // An official reviewed instant and an exact mirror/wiki instant deserve
   // review even at a one-minute gap. Compare every server region rather than
   // only the canonical Asia end; Europe/America can disagree while Asia agrees.

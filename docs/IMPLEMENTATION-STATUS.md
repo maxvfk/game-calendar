@@ -1,5 +1,42 @@
 # Game calendar implementation status
 
+## SC-P0-END-MARAS — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+
+Delivery record: [PR #133](https://github.com/maxvfk/game-calendar/pull/133).
+Official Gryphline notice `/9560` was re-read and confirms **Nov5 04:00 server**.
+Actual pre-fix public winner was **2h late Asia /13h late Americas+Europe**.
+
+- **A:** same published ID `endfield:monumental-etching-forest-of-maras:2026-10-22`,
+  original exact start and observed firstSeenAt preserved. Official regional
+  ends **Nov4 20:00Z Asia /Nov5 09:00Z America+Europe**; confidence1/manual/
+  official provenance points to9560. No new event, maintenance inference or
+  global timezone correction; all other reviewed/source data unchanged.
+- **B:** evidence-specific merge acknowledgement of only the known captured
+  wiki disagreement, pinned by both IDs/source IDs/source URLs/start and all
+  exact regional clocks. Unknown future discrepancies still surface as
+  conflicts; a source correction agreeing with official data merges normally.
+  This protects this reconciled winner, not broad official-news discovery.
+- **CP2 PASS:** frozen install/typecheck/full tests/build/feed. **1359pass /
+  3existing age skips /0fail**. Feed **253→253**; exactly Maras changed, no
+  added/removed IDs or new unresolved conflict. Three-region±1ms historical
+  expiry, merge order/priority and one-minute discrepancy regressions pass.
+  Evidence: `docs/evidence/endfield-maras-feed-replay-2026-10-28.json`.
+- PR exact-head CI, merge, post-merge CI/Pages and public verification remain
+  mandatory. Observed SHAs/run URLs/public boundaries are recorded in PR133.
+
+**Previous CP4:** CZN gifts [PR132](https://github.com/maxvfk/game-calendar/pull/132)
+merged `473729f70ec0d879a1604424676112bdfef92058`; post-merge CI/Pages
+[40674871392](https://github.com/maxvfk/game-calendar/actions/runs/40674871392)
+SUCCESS; public253 events and all8 gift winners independently verified, browser
+confirmed both active exceptions and six future mail windows. A DONE; B BLOCKED
+CZN-OFFICIAL-MAIL-DISCOVERY.
+
+**Next concrete step:** complete PR133 CP4, then **SC-P1-GEN-EXPIRIES** from
+CURRENT main. For later Endfield upcoming work, freshly read9560 differs from
+frozen audit dates (Secret Sanctuary Dec2; Sanity Supply Nov18 onward): re-read
+source, never copy the old table as authority. No P2 or excluded work.
+
+
 ## SC-P0-CZN-GIFTS — IMPLEMENTED; WAVE RUNNING (2026-10-28)
 
 Delivery and CP3/CP4 release evidence: [PR #132](https://github.com/maxvfk/game-calendar/pull/132).
