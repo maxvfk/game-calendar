@@ -8,6 +8,18 @@ bad published deadlines and near-immediate missing rewards before unattended
 source architecture. **Docs-only planning; no fixes or additional source
 research were performed in this milestone.**
 
+**Coordination policy approved 2026-10-28 (documentation only):**
+every coverage remediation tracks two independent outcomes — (1) actual
+source-backed current event/deadline restored in merged, deployed feed and
+(2) recurrence-prevention parser/discovery/coverage guard with regression or
+a named BLOCKED/WATCH follow-up. A reviewed-only emergency fix can close
+(1) without claiming (2). Measure completeness per game × relevant
+event/claim family against verified published notices and actual merge
+winners, not HTTP health or raw parsed-event counts. Future R1 must distinguish
+known missing dated notices (incidents) from unannounced schedules (WATCH);
+no inferred dates, new R1 job or PR #113 scope expansion is authorized.
+The precise acceptance contract is in the canonical backlog section 7.
+
 - **P0 first / three independent Work milestones:** Genshin
   `SC-P0-GEN-STARLIGHT` (quest cutoff **Oct 29 04:00 game-server**
   = Oct 28 20:00Z Asia); CZN anniversary ordinary **24h** gift
