@@ -1,0 +1,38 @@
+{
+  "milestone": "SC-P1-CZN-OVERDRIVE",
+  "baseMain": "d95e852f3cd9c79739dfd1a41192a2270a9a9a04",
+  "sourceUrl": "https://czn.gg/10-21wed-update-notice/",
+  "sourceClaim": "10/21/2026 after the maintenance – 11/03/2026 18:00 (UTC)",
+  "hostProvenance": "STOVE-authored publisher text reproduced by secondary CZN.gg host; manually rechecked via indexed notice Oct28. Not an unattended publisher fetch.",
+  "fixedReplayAt": "2026-10-28T09:40:00.000Z",
+  "beforeCount": 254,
+  "afterCount": 255,
+  "addedWinners": [
+    {
+      "id": "czn:overdrive-simulation:2026-10-21",
+      "game": "czn",
+      "title": "Overdrive: Simulation",
+      "type": "other",
+      "summary": "Double simulation Growth Currency rewards up to six times per day. Opportunities reset at 18:00 UTC; the event ends November 3 at 18:00 UTC.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-03T18:00:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://czn.gg/10-21wed-update-notice/",
+      "sourceId": "reviewed-czn",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T11:19:08.233Z",
+      "updatedAt": "2026-10-28T11:19:08.233Z"
+    }
+  ],
+  "removedIds": [],
+  "changedPriorWinnerIds": [],
+  "dateConflictsUnchanged": true,
+  "outcomeB": "BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY, CZN audit C3 access/terms/runner gate"
+}
