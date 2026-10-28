@@ -74,6 +74,16 @@ unknown after3 Chartered banners. Original7 rows unchanged. B **BLOCKED
 END-OFFICIAL-DISCOVERY** (auditA3). Validation and CP3/CP4 recorded in delivery
 PR/checkpoint. Next after release SC-P1-HSR-BANNERS (Nov10).
 
+**SC-P1-END-CURRENT CP4 verified:** PR136 merge7550118dbdaa69458ae9ca9dcc07aefb2ffd1feb;
+CI/Pages40691665610 SUCCESS; public260 generated12:55:11.814Z, all5 exact
+winners plus SiWest browser/source verified. A DONE; B END-OFFICIAL-DISCOVERY
+BLOCKED. No source timestamps or prior records changed.
+
+**SC-P1-HSR-BANNERS implemented (release pending):** four source-backed live
+Warp/LC channels toNov10 15:00server, Pearl/LC continuous Sep28 once, reruns
+Oct21 day. Original13 rows unchanged. B **BLOCKED HSR-WARP-DISCOVERY** (auditH2).
+Validation/release gates are tracked in delivery PR/checkpoint.
+
 ### SC-P0-GEN-STARLIGHT execution status (2026-10-28)
 
 - **Outcome 1 — current-data restoration: implemented; delivery record in [PR #130](https://github.com/maxvfk/game-calendar/pull/130).**
@@ -147,7 +157,7 @@ Dates below are in publisher-defined game server clock unless explicitly `Z` / `
 | **SC-P1-CZN-OVERDRIVE · IMPLEMENTED (PR135)** | CZN: `Overdrive: Simulation` double growth period. | **Nov 3 18:00Z** exact, Oct 21 STOVE 1.5/anniversary patch content. | One small reviewed record; no Daily Reset edit. |
 | **SC-P1-WUWA-37-PARSER** | WuWa: deterministic 3.7 patch title/date anchor + decorated `✦Duration` + nested identity; restore `Cubie Wars`, `Dreams in the Capsule`, `Gifts of Waking Moon`, `Gifts of Singing Drizzle`. | Source `Kuro Atom article 5571` already captured; deadlines **Nov 11 03:59/11:59 server**. | Wrong identity `[Special Events] [Cubie Wars]` can create `Special Events` ID if only anchor fixed. Guard scope, preserve after-update day start and three-region ends; regression real snapshot. |
 | **SC-P1-WUWA-NEW-BANNERS** | WuWa: new Suoming `Nine Deaths, One Unbent Heart` and `Unspoken Rue` current Phase II, missing despite four reruns working. | Kuro patch `5571` names them; `5668` only lists four reruns, not individually dated new banner windows. | **VERIFY exact first-party announcement/clock** first; if not established, mark BLOCKED and retain expected-family incident, never borrow rerun clocks silently. Separate W2 source discovery gate. |
-| **SC-P1-HSR-BANNERS** | HSR: four active Version 4.6 Warp channels: Pearl + `Colors for Tomorrow`, Mortenax Blade + `Reforged in Hellfire`. | All end **Nov 10 15:00 server**; Phase II source official HoYoLAB `article/47142215`. | Two character and two Light Cone channel IDs; Pearl continuous across phases **once**, not duplicate Phase I/II; explicit three-region ends. Restore through reviewed hotfix before broader publisher discovery. |
+| **SC-P1-HSR-BANNERS · IMPLEMENTED (release pending)** | HSR: four active Version 4.6 Warp channels: Pearl + `Colors for Tomorrow`, Mortenax Blade + `Reforged in Hellfire`. | All end **Nov 10 15:00 server**; Phase II source official HoYoLAB `article/47142215`. | Two character and two Light Cone channel IDs; Pearl continuous across phases **once**, not duplicate Phase I/II; explicit three-region ends. Restore through reviewed hotfix before broader publisher discovery. |
 | **SC-P1-NTE-14-SKIPPED** | NTE: extend *verified release-notice selection*, restore `Circle Gifts`, `Terminal Depths`, `Pukaland Travelogue`, `Coal Lump's Treasure`, **1.4 Circle Bounty**. | Same first-party Steam API `gid 1844751498233952` skipped because title **`Log in`** not `login`; Circle Bounty expires **Nov 10 23:59 UTC+8 (Nov 10 15:59Z)**, others mostly Nov 11 **05:59 UTC+8 (Nov 10 21:59Z)**. | Do not remove fail-closed year requirement from standalone articles; use verified version notice context. Keep 1.3 Circle Bounty prior 24h source conflict and all 15 existing reviewed rows; prove candidates become published winners. |
 | **SC-P1-CZN-SEASONS** | CZN: current **Basin of Hyperspace** Oct21–Nov11 and **Full-Scale Offensive** Sept30–Nov11; reconcile stale old `Full-Scale Offensive — Season 4` `endsAt:null`. | Explicit STOVE Oct21/Sept30 version notices; ends **before Nov 11 maintenance**. | No speculative maintenance-completion time, no +21d cadence. Preserve old IDs and source-backed historical boundary; one logical phase per record. |
 | **SC-P1-HSR-CLAIMS** | HSR: `Astral Trendible` availability + `Park Souvenir` claim expiration (two distinct mechanics). | Both **Nov 11 06:00 UTC+8**, directly in checked-in KQM 4.6 update under `Availability` / `Claim Period`. | Small extraction/regression or reviewed fallback; do not represent permanently accessible Park as expiring. |
@@ -286,9 +296,8 @@ For each separately authorized item:
 
 ## 8. One next concrete step
 
-Finish **SC-P1-END-CURRENT** CP2–CP4, then **SC-P1-HSR-BANNERS** from CURRENT
-main (earliest remaining Nov10 deadline). PR130/132/133/134/135 are fully
-released. Continue confirmed authorized P0/P1 only; no P2, R1–R3, Timeline,
-Sync or unapproved categories.
+Finish **SC-P1-HSR-BANNERS** CP2–CP4, then **SC-P1-NTE-14-SKIPPED** from CURRENT
+main (Nov10 15:59Z Bounty before other Nov10/11 rewards). PR130/132–136 are
+fully released. Continue confirmed P0/P1 only; no P2/R1–R3/Timeline/Auth/Sync.
 
-SC-P1-END-CURRENT CP2 PASS: frozen install/typecheck/full tests/build/feed;1369pass/3existing age skips/0fail;255->260 exactlyfive additions, no changed/removed prior winner or dateConflict. Evidence: docs/evidence/endfield-current-feed-replay-2026-10-28.json. CP3/CP4 evidence: [PR136](https://github.com/maxvfk/game-calendar/pull/136).
+SC-P1-HSR-BANNERS CP2 PASS: frozen install/typecheck/final full1372pass/3existing age skips/0fail/build/feed260->264. Onlyfour new channels; old winners, reviewed13 and conflicts unchanged. Delivery PR owns CP3/CP4 observed release evidence; no release inferred from implementation.

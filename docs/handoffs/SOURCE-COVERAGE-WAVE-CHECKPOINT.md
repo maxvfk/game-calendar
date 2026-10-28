@@ -1,35 +1,30 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
-MILESTONE: SC-P1-END-CURRENT
-STAGE: CP3
-BASE_MAIN_SHA: 21f07733994483f579986a2fd86fe1f1c00ff200
-BRANCH: fix/end-current
-HEAD_SHA: resolve branch ref (this checkpoint commit)
-PR: https://github.com/maxvfk/game-calendar/pull/136
-CP0_SHA: e0de994a58dc597d71f10601f4040cd95d4bd6bd
-DONE: CURRENT main, AGENTS, status/wave/backlog, Endfield audit, wiki parser, reviewed batch and tests read; latest PR list checked (no duplicate fix). PR135 CP4 verified: merge21f0773, CI/Pages40690620800 SUCCESS, public255 generated12:47:28.664Z, exact Overdrive and browser confirmed.
-VERIFICATION: official9560 and4489 freshly read2026-10-28. Five intended IDs absent from actual public/feed. Source Si Nov5 11:59server; Tangtang/TenderSprig Oct29 12:00–Nov19 11:59server; Readiness Oct29 04:00–Nov5 04:00server; SealofJade relative three Chartered banners only. New local validation NOT RUN.
-REMAINING: append five reviewed rows; day starts, exact two-server-group ends or unknown relative end; meaningful expiry/merge regression; full checks/feed/PR/CI/merge/Pages/public gates.
-BLOCKERS: unattended official discovery not registered; A3 publisher access/terms/runner gate is separate, no new broad integration here.
+MILESTONE: SC-P1-HSR-BANNERS
+STAGE: CP2
+BASE_MAIN_SHA: 7550118dbdaa69458ae9ca9dcc07aefb2ffd1feb
+BRANCH: fix/hsr-warps
+HEAD_SHA: resolve this branch ref
+PR: NONE
+DONE: CURRENT main, unchanged AGENTS, status/wave/backlog, HSR audit, actual KQM parser/snapshot, reviewed13 rows and HSR tests read. Latest PRs checked: no existing warp fix. Prior136 CP4 verified: merge7550118, CI/Pages40691665610 SUCCESS, public260 generated12:55:11.814Z all5 exact winners and SiWest browser verified.
+VERIFICATION: official HoYoLAB47142215 freshly indexed/rechecked with both search engines Oct28. Four channels all endNov10 15:00server. Pearl/Colors continuous Sep28 afterupdate; Mortenax/Reforged Oct21 12:00server. None exists in published260/currentKQM8 output. Local new checks NOT RUN.
+REMAINING: four reviewed official/manual banners; day openings, exact3-region ends; tests ensure Pearl not duplicated by phase, preserve all13 rows and8 parsed winners; full validation/release gates.
+BLOCKERS: unattended individual Warp discovery missing in KQM; HSR auditH2 compliant index/access/runner gate, no new broad integration.
 OUTCOME_A_DATA: PENDING
-OUTCOME_B_PREVENTION: BLOCKED END-OFFICIAL-DISCOVERY (Endfield audit A3; reviewed fallback, not automatic discovery)
-NEXT_CONCRETE_STEP: append five distinct reviewed rows to data/reviewed/endfield.json, preserving all7 prior rows and batch metadata.
+OUTCOME_B_PREVENTION: BLOCKED HSR-WARP-DISCOVERY (auditH2; reviewed fallback only)
+NEXT_CONCRETE_STEP: append four distinct reviewed rows in data/reviewed/hsr.json and add expiry/merge/source-incompleteness regressions.
 
-## Exact intended identities and evidence
+Source https://www.hoyolab.com/article/47142215. Identities:
+- hsr:an-ocean-in-a-pearl:2026-09-28 (Pearl)
+- hsr:brilliant-fixation-colors-for-tomorrow:2026-09-28 (ColorsforTomorrow)
+- hsr:now-i-am-become-blade:2026-10-21 (MortenaxBlade)
+- hsr:bygone-reminiscence-reforged-in-hellfire:2026-10-21 (ReforgedinHellfire)
+All endAsiaNov10 07:00Z /Europe14:00Z /America20:00Z. Fixed game clocks+8/+1/-5; no viewerDST. One Pearl/LC continuous window each; no historicalEvanescia/trial backfill. No source timestamps changed; exact publication time not inferred from search metadata. Next afterCP4: NTE1.4 five deadlines (earliestNov10 15:59Z).
 
-- endfield:rejuvenation:2026-10-15 — Si; source https://endfield.gryphline.com/en-us/news/4489; endsAsiaNov5 03:59Z, WestNov5 16:59Z.
-- endfield:seal-of-jade-issue:2026-10-15 — JadeVessel; source9560; endnull/unknown (after3 Chartered banners, not Si cutoff).
-- endfield:ancestral-spring-flows-anew:2026-10-29 — Tangtang; source9560; endsAsiaNov19 03:59Z, WestNov19 16:59Z.
-- endfield:tender-sprig-issue:2026-10-29 — Brigand'sCalling; separate arsenal channel, same explicit period asTangtang.
-- endfield:contingency-readiness:2026-10-29 — daily limited missions; endsAsiaNov4 20:00Z, WestNov5 09:00Z.
+CP0_SHA:04f83b513f72a94dfbf40ff0796699abca19b20c
+CP1: four reviewed channels and test/hsr-current-warps.test.ts implemented. Validation/release NOT RUN. Next full local checks and feed260->264, onlyfour additions.
 
-All openings use source calendar day, not guessed maintenance completion or shared exact regional opening (schema has no regionStarts). Endfield AsiaUTC+8, Americas/EuropeUTC-5, no viewerDST conversion. Preserve Maras and Phantasia; no CycleIII duplicate, no futureupcoming batch yet, no P2/R1–R3/Timeline/Auth/Sync. Next afterCP4: nearest remaining confirmed P1 (HSR banners Nov10).
+Validation history: frozen install/typecheck PASS. First full test command exited1 without summary (NOT complete). Isolated three new tests exposed a day-precision pre-opening assertion near an Asia day boundary; moved pre-opening check to an unambiguously earlier day. Targeted HSR+recognition25PASS/0FAIL; manual feed build264 PASS. Final full tests/typecheck/build/fixed replay are RUNNING, not yet certified. No production clock/schema changed.
 
-CP1: five reviewed rows and test/endfield-current.test.ts implemented. Full validation/feed gates NOT RUN. Next run all required local commands and compare fixed feed255->260, no prior winners/conflicts changed.
-
-Validation history: first typecheck caught test tuple optionality; corrected test table to readonly tuples before rerunning. No production/schema change.
-
-CP2 PASS: bun install --frozen-lockfile; bun run typecheck; bun test1369pass/3existing age skips/0fail; bun run build; fixed feed255->260 exactlyfive intended IDs, every prior winner/conflict identical. Original7 Endfield rows and batch metadata byte-semantic equal. Evidence docs/evidence/endfield-current-feed-replay-2026-10-28.json. CP3/CP4 NOT RUN; next open PR and require exact-head CI.
-
-CP3: PR136 opened. Final-head CI pending; merge/post-merge CI/Pages/public NOT RUN. Next inspect CI for this pushed commit, then expected-head merge only after SUCCESS.
+CP2 FINAL PASS: bun install --frozen-lockfile; typecheck; full1372pass/3existing age skips/0fail; build; fixedfeed260->264 onlyfour intended additions, every prior winner/conflict unchanged. Original13 reviewed rows/batch metadata unchanged. Evidence docs/evidence/hsr-warps-feed-replay-2026-10-28.json. CP3 will be persisted in delivery PR body; CP4 NOT RUN. Next open PR and inspect exact-head CI.

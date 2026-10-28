@@ -1,5 +1,32 @@
 # Game calendar implementation status
 
+## SC-P1-HSR-BANNERS — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+
+Four reviewed official/manual Warp channels from rechecked publisher
+[47142215](https://www.hoyolab.com/article/47142215): Pearl/AnOceaninaPearl,
+ColorsforTomorrow/BrilliantFixation, MortenaxBlade/NowIAmBecomeBlade,
+ReforgedinHellfire/BygoneReminiscence. Pearl/LC continuous Sep28 afterupdate
+across phases, one record each; reruns Oct21 12:00server with day opening.
+All end Nov10 15:00server: Asia07:00Z /Europe14:00Z /America20:00Z. Distinct
+character/LC IDs and subjects; all13 prior reviewed rows, KQM/Lightward and
+source timestamps unchanged. No historical PhaseI/trial backfill.
+
+A pending verified release. B **BLOCKED HSR-WARP-DISCOVERY** (auditH2 compliant
+individual-notice index/access/runner gate). Current healthy KQM8 output has no
+banner family; reviewed rescue does not claim automatic discovery. Tests cover
+continuous identity, distinct channels,3-region±1ms expiry and actual-source
+incompleteness/merge priority. Exact validation/release results in delivery PR.
+
+**PR136 CP4 verified:** merge7550118dbdaa69458ae9ca9dcc07aefb2ffd1feb,
+[CI/Pages40691665610](https://github.com/maxvfk/game-calendar/actions/runs/40691665610)
+SUCCESS. Public260 generated12:55:11.814Z; all5 Endfield records exactly match
+reviewed data including unknown SealofJade end and regional ends; browser Si
+WestNov5 16:59Z/source4489 verified. A DONE; B END-OFFICIAL-DISCOVERY BLOCKED.
+
+Next after HSR CP4: **SC-P1-NTE-14-SKIPPED**, earliest Nov10 15:59Z reward.
+Continue authorized P0/P1 only; no P2/R1–R3/Timeline/Auth/Sync.
+
+
 ## SC-P1-END-CURRENT — IMPLEMENTED (PR136); WAVE RUNNING (2026-10-28)
 
 Source: official Gryphline9560 and4489 re-read Oct28. Five reviewed channels:
@@ -4072,3 +4099,5 @@ DST from summer wall time, or repeat the completed seven-game audit.
   decision and the operator's final mobile/PC smoke results.
 
 SC-P1-END-CURRENT CP2 PASS: frozen install/typecheck/full tests/build/feed;1369pass/3existing age skips/0fail;255->260 exactlyfive additions, no changed/removed prior winner or dateConflict. Evidence: docs/evidence/endfield-current-feed-replay-2026-10-28.json. CP3/CP4 evidence: [PR136](https://github.com/maxvfk/game-calendar/pull/136).
+
+SC-P1-HSR-BANNERS CP2 PASS: frozen install/typecheck/final full1372pass/3existing age skips/0fail/build/feed260->264. Onlyfour new channels; old winners, reviewed13 and conflicts unchanged. Delivery PR owns CP3/CP4 observed release evidence; no release inferred from implementation.
