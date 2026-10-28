@@ -346,3 +346,5 @@ For each separately authorized item:
 Finish CZN-SEASONS currenttwo CP2–CP4, retain CZN-OLD-FSO-END explicit blocker,
 then CZN-CARNIVAL free70/AdditionalAether. PR130/132–140 fully released. Remaining
 confirmed P1 only; WuWa newclock blocked; no P2/R1–R3/Timeline/Auth/Sync.
+
+CZN-SEASONS CP2 PASS: frozen install/typecheck/build/full1384pass/3existing age skips/0fail/feed275->277; only2 additions+oldhistorical summary/reviewtime warning. Old ID/discovery/source/provenance/endnull retained; conflicts unchanged. CZN-OLD-FSO-END remains BLOCKED. Delivery PR holds CP3/CP4 evidence.

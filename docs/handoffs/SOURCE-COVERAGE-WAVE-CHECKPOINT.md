@@ -1,7 +1,7 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-CZN-SEASONS
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: 5bc643ed526801ba93f670e4bdc6648831eaafe5
 BRANCH: fix/czn-seasons
 HEAD_SHA: resolve branch ref
@@ -20,3 +20,5 @@ CP0_SHA:7939eada40d0d39de432da3ae5eb8aba6d4f6483
 CP1 implemented2 reviewed phases and oldrow historical warning only; firstSeenAt preservedSept24, originalsource/provenance/endnull retained. Closing normalization explicitlyBLOCKED. Tests for day precision/historical expiry/source incompleteness implemented; full checks NOT RUN.
 
 Validation history: install/typecheck/build/replay PASS; first test command exited0 but emitted no full-suite summary (NOT accepted as complete). Full test rerun in progress. Feed275->277 exactlytwo new phases plus onlyoldSeason4 summary/reviewtime warning; oldID/start/source/provenance/discovery/endnull unchanged; conflicts identical. No full-test PASS claim yet.
+
+CP2 FINAL PASS: frozen install/typecheck/build; finalfull1384pass/3existing age skips/0fail; replay275->277 exactly2 newphases plusonlyoldsummary/updatedAt, identity/discovery/source/provenance/endnull identical. Conflicts unchanged. Evidence docs/evidence/czn-seasons-feed-replay-2026-10-28.json. CP3 PRbody; CP4 NOT RUN. Oldend remainsBLOCKED.

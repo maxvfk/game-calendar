@@ -1,0 +1,69 @@
+{
+  "milestone": "SC-P1-CZN-SEASONS",
+  "baseMain": "5bc643ed526801ba93f670e4bdc6648831eaafe5",
+  "sourceUrls": [
+    "https://czn.gg/09-30-wed-update-notice/",
+    "https://czn.gg/10-21wed-update-notice/"
+  ],
+  "fixedReplayAt": "2026-10-28T09:40:00.000Z",
+  "beforeCount": 275,
+  "afterCount": 277,
+  "addedWinners": [
+    {
+      "id": "czn:basin-of-hyperspace-dimensional-twilight:2026-10-21",
+      "game": "czn",
+      "title": "Basin of Hyperspace: Dimensional Twilight",
+      "type": "challenge",
+      "summary": "Current phase: after October 21 maintenance until before November 11 maintenance. The closing day is announced; the exact maintenance boundary is not confirmed. No fixed recurrence or completion time is inferred.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T00:00:00.000Z",
+      "endPrecision": "day",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://czn.gg/10-21wed-update-notice/",
+      "sourceId": "reviewed-czn",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T13:31:30.486Z",
+      "updatedAt": "2026-10-28T13:31:30.486Z"
+    },
+    {
+      "id": "czn:full-scale-offensive:2026-09-30",
+      "game": "czn",
+      "title": "Full-Scale Offensive",
+      "type": "challenge",
+      "summary": "Current phase: after September 30 maintenance until before November 11 maintenance. The closing day is announced; the exact maintenance boundary is not confirmed. No fixed recurrence or completion time is inferred.",
+      "startsAt": "2026-09-30T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T00:00:00.000Z",
+      "endPrecision": "day",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://czn.gg/09-30-wed-update-notice/",
+      "sourceId": "reviewed-czn",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T13:31:30.486Z",
+      "updatedAt": "2026-10-28T13:31:30.486Z"
+    }
+  ],
+  "changedPriorWinnerIds": [
+    "czn:full-scale-offensive-season-4:2026-08-19"
+  ],
+  "changedPriorFields": [
+    "summary",
+    "updatedAt"
+  ],
+  "oldDiscoveryIdentitySourceProvenanceAndUnknownEndPreserved": true,
+  "removedIds": [],
+  "dateConflictsUnchanged": true,
+  "oldBoundary": "BLOCKED CZN-OLD-FSO-END; historical warning is not terminal/state repair",
+  "outcomeB": "BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY (audit C3)"
+}
