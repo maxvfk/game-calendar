@@ -18,3 +18,5 @@ Old czn:full-scale-offensive-season-4:2026-08-19 stays; closing unknown, not fal
 
 CP0_SHA:7939eada40d0d39de432da3ae5eb8aba6d4f6483
 CP1 implemented2 reviewed phases and oldrow historical warning only; firstSeenAt preservedSept24, originalsource/provenance/endnull retained. Closing normalization explicitlyBLOCKED. Tests for day precision/historical expiry/source incompleteness implemented; full checks NOT RUN.
+
+Validation history: install/typecheck/build/replay PASS; first test command exited0 but emitted no full-suite summary (NOT accepted as complete). Full test rerun in progress. Feed275->277 exactlytwo new phases plus onlyoldSeason4 summary/reviewtime warning; oldID/start/source/provenance/discovery/endnull unchanged; conflicts identical. No full-test PASS claim yet.
