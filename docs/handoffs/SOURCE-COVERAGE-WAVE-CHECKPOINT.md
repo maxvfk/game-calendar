@@ -1,22 +1,18 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
-MILESTONE: SC-P1-CZN-CARNIVAL
-STAGE: CP2
-BASE_MAIN_SHA: a97d64595d8083994e6b1f77680098211cf29aab
-BRANCH: fix/czn-carnival
+MILESTONE: SC-P1-ZZZ-REWARDS
+STAGE: CP0
+BASE_MAIN_SHA: bb365d104ac9eb9eb76b34c20c5546a27c9529be
+BRANCH: fix/zzz-rewards
 HEAD_SHA: resolve branch ref
 PR: NONE
-DONE: CURRENT main/unchanged AGENTS/status/wave/backlog/CZN audit/parser/reviewed32/tests and publisher-authored10-21 notice read. PR141 CP4 verified mergea97d645, CI/Pages40705631930 SUCCESS, public277 generated14:25:36.898Z, both newseasons exact and FullScale date-only/TimeUnconfirmed browser verified. Earlier environment outage recovered; no duplicate implementation.
-VERIFICATION: STOVE-authored CZN.gg10-21 notice confirms Carnival and free70 Oct21aftermaintenance–Dec2beforemaintenance; AdditionalAether endsNov11beforemaintenance.10free/day for7 qualifying login days; accumulated attempts usable only during event. Currentfeed lacks both families.
-REMAINING: one Carnival parent with clear unused-attempt expiry warning (no duplicated70 parent), separate earlier Aether cutoff; day boundaries; tests/full validation/release.
-BLOCKERS: unattended official event discovery CZN auditC3 remains blocked; reviewed fallback. No new source or paid exchange reminder.
+DONE: CURRENT main/AGENTS/status/wave/backlog/ZZZ audit, both actual parsers/snapshots, reviewed30 and relevanttests read. No duplicate latest fix. PR142 CP4 verifiedmergebb365d, CI/Pages40706852239 SUCCESS, public279 generated14:32:58.172Z both reviewedwinners and Carnivalunusedattemptwarning/browser verified.
+VERIFICATION: primary166944 indexed text confirms CityFund main after3.3update–Nov30 03:59server;02:59 paidpurchase is excluded. Primary166963 and capturedSteam3.3 confirm IssueFix300Polychrome eligibilityLv4 beforeOct21 06UTC+8; claimbeforeNov20 23:59UTC+8. Mail30days is relative lifetime, not exact issuance/deletion timestamp. Both absent in public/currentparser families.
+REMAINING:2 reviewed rows; CityFund3-region mainreward end, fixed-global compensation; dayOct21 openings, no inventedmaintenance/issuetime; testsourceincompleteness/priority/expiry and allrequiredchecks/release.
+BLOCKERS: registered Steam only NewEvents, secondary onlyChannels. Dedicated approved reward-family unattended extraction/discovery absent; no broadsource/adapter expansion here.
 OUTCOME_A_DATA: PENDING
-OUTCOME_B_PREVENTION: BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY
-NEXT_CONCRETE_STEP: append2 reviewed rows, preserve all32 prior rows/metadata and DailyReset/Sync.
-IDs czn:nightmare-carnival:2026-10-21 and czn:nightmare-carnival-additional-aether:2026-10-21.
-Source https://czn.gg/10-21wed-update-notice/ (publisher-authored attributed mirror/manual evidence, not unattended fetch). Do not advertise paid-token selection rewards as free. No guessed maintenance clock, source timestamps or unrelated data changes. OldFSOclosing/WuWa-newclock remain documented blockers. Next remaining deadlineNov20 ZZZrewards, then Endfieldupcoming, then CZNSeason5 laterDec2/23 rewards.
-
-CP0_SHA:e7cb93b245817f7c881a6c46b3b678e2f36ace12
-CP1:2 reviewed rows and test/czn-carnival.test.ts implemented;32 existingrows untouched. Full checks/release NOT RUN. Next mandatory commands and277->279 fixed replay.
-
-CP2 PASS: frozen install/typecheck/full1386pass/3existing age skips/0fail/build/feed277->279 only2 additions, allprior winners/conflicts identical, reviewed32 unchanged. Evidence docs/evidence/czn-carnival-feed-replay-2026-10-28.json. CP3 PRbody; CP4 NOT RUN.
+OUTCOME_B_PREVENTION: BLOCKED ZZZ-REWARD-DISCOVERY (auditZC1/ZC4 family-selection follow-up; reviewed rescue)
+NEXT_CONCRETE_STEP: append2 reviewed rows, preserve all30 oldrows, sources/estimatedendgame/PhaseI and timestamps; update historical fixture-count assertions only as needed.
+IDs zzz:new-eridu-city-fund-version-3-3:2026-10-21 and zzz:version-3-3-issue-fix-compensation:2026-10-21.
+Sources https://zenless.hoyoverse.com/en-us/news/166944 and /166963.
+City endAsiaNov29 19:59Z/EuropeNov30 02:59Z/America08:59Z. CompensationNov20 15:59Z allregions. Do not combine server-update compensation/versionend or paidpurchase/discount/shop categories. Next afterCP4 Endfieldupcoming, thenCZNSeason5. OldFSOend/WuWanewclock remainnamedBLOCKED; noP2/R1–R3/Timeline/Auth/Sync.
