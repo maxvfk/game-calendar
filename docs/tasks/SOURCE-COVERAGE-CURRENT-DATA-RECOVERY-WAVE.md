@@ -1,6 +1,6 @@
 # Source Coverage — Current Data Recovery Wave
 
-**Status:** READY FOR AN EXPLICIT USER-LAUNCHED WORK; **NOT RUNNING**.
+**Status:** RUNNING — explicitly launched by user 2026-10-28. Current bounded item: SC-P0-CZN-GIFTS / [PR #132](https://github.com/maxvfk/game-calendar/pull/132).
 **Prepared:** 2026-10-28. **Baseline:** current main at launch (do not pin this document's preparation SHA).
 **Canonical backlog:** [SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md](SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md).
 **Operating rules:** `AGENTS.md`; `docs/IMPLEMENTATION-STATUS.md`.

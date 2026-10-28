@@ -2,11 +2,11 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P0-CZN-GIFTS
-STAGE: CP2
+STAGE: CP3
 BASE_MAIN_SHA: 67144c229b80e58057b9ebfc761498f0f0e9dfdf
 BRANCH: fix/czn-gifts
 HEAD_SHA: this pushed checkpoint commit (resolve the branch ref)
-PR: NONE
+PR: https://github.com/maxvfk/game-calendar/pull/132
 LAST_VERIFIED_CP0_SHA: 6ea8a952299572f5c47c5d0656a07dfb8cef6ce0
 DONE: Current main/AGENTS/status/wave/backlog/CZN audit, reviewed data, banner-only parser/tests read. PR130 verified merged/released; no duplicate recovery PR found among recent PRs.
 VERIFICATION: source notice rechecked in indexed publisher-authored STOVE mirror; current public feed download and fixed-clock baseline build started. CP1 implementation pushed fb036cd8389f5201409600035ab7cb7605bff764. bun install --frozen-lockfile PASS; bun run typecheck PASS; bun test PASS (1356 pass,3 existing age skips,0 fail); bun run build PASS. Fixed-clock actual feed245->253, exactly8 additions, all prior winners and date conflicts unchanged. PR CI/post-merge/Pages/public checks NOT RUN. Initial targeted test used generic dayStartMs incorrectly; fixed assertion to existing dedicated cznDayStart; full suite now passes.
@@ -14,7 +14,8 @@ REMAINING: add eight reviewed mail claim windows and source-backed expiry/merge 
 BLOCKERS: direct CZN.gg fetch returned403; search index exposes complete announced date table and Source: STOVE attribution. No compliant unattended STOVE adapter is established; no new access probe is authorized.
 OUTCOME_A_DATA: PENDING
 OUTCOME_B_PREVENTION: BLOCKED CZN-OFFICIAL-MAIL-DISCOVERY (CZN audit C3: publisher index/terms/runner gate; reviewed fallback now)
-NEXT_CONCRETE_STEP: create the bounded CZN gift PR, add its URL to status/backlog/checkpoint, require green exact-head CI before merge.
+CP2_HEAD_SHA: 11389e640096f867c47a8ecc078e94d12cd6f9c9
+NEXT_CONCRETE_STEP: inspect exact-head PR132 CI after this checkpoint push; require all CI green, squash merge with expected head, verify post-merge CI/Pages/public eight records. Only then advance to SC-P0-END-MARAS.
 
 ## Source and exact scope
 

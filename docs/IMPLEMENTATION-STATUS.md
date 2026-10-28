@@ -1,6 +1,38 @@
 # Game calendar implementation status
 
-## SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE — READY / NOT STARTED (2026-10-28)
+## SC-P0-CZN-GIFTS — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+
+Delivery and CP3/CP4 release evidence: [PR #132](https://github.com/maxvfk/game-calendar/pull/132).
+Source: STOVE-authored daily-mail notice, manually rechecked in attributed
+CZN.gg mirror (direct fetch403; complete indexed announcement table available).
+
+- **A — current-data restoration:** eight reviewed fixed-UTC claim windows:
+  Oct21 sticker/Oct28 background to **Nov30 14:59Z**; six future ordinary
+  Oct29-Nov3 mails from **06:00Z** to next-day **05:59Z**, final **Nov4 05:59Z**.
+  Distinct IDs `czn:anniversary-mail-gift:<delivery-day>`,
+  `czn:anniversary-sticker-gift:2026-10-21`,
+  `czn:anniversary-background-gift:2026-10-28`. No duplicate parent or
+  expired ordinary-mail historical backfill. Existing21 reviewed rows and
+  batch metadata, Daily Reset18:00Z, Sync and source timestamps unchanged.
+- **B — BLOCKED CZN-OFFICIAL-MAIL-DISCOVERY:** no unattended official event
+  index/adapter; banner-only Prydwen cannot discover mail. Separate CZN audit
+  C3 terms/access/runner gate remains required. Reviewed-only rescue does
+  not claim parser/discovery prevention. Current schedule/healthy-incomplete
+  source regression protects the reviewed winners, including expiry±1ms.
+- **CP2 PASS:** frozen Bun1.3.14 install/typecheck/full tests/build and actual
+  feed replay: **1356 pass /3 existing age skips /0 fail**, **245→253** events,
+  exactly8 additions, no changed/removed prior winners, same1 NTE conflict.
+  Evidence: `docs/evidence/czn-anniversary-gifts-feed-replay-2026-10-28.json`.
+- PR exact-head CI, controlled merge, post-merge CI/Pages and independent
+  published-feed checks are mandatory; observed SHAs/run URLs/results are
+  maintained in PR #132. Do not infer publication from local replay.
+
+**Next concrete step:** complete PR #132 release gates, then continue the
+user-authorized wave with **SC-P0-END-MARAS** from CURRENT main. PR130 is
+already complete. No P2, R1–R3, Timeline v2 or Auth/Sync work.
+
+
+## SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE — LAUNCHED (prior preparation record) (2026-10-28)
 
 Canonical **user-invoked** Work task:
 `docs/tasks/SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md`. It references
