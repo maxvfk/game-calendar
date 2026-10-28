@@ -1,6 +1,6 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 MILESTONE: SC-P1-END-UPCOMING
-STAGE: CP0
+STAGE: CP1
 BASE_MAIN_SHA: 103520f71a3dc61ecc7bb4aa5ff79857b77fc9fc
 BRANCH: fix/end-upcoming
 HEAD_SHA: resolve branch ref
@@ -13,3 +13,5 @@ OUTCOME_A_DATA: PENDING
 OUTCOME_B_PREVENTION: BLOCKED END-OFFICIAL-DISCOVERY auditA3 (no new unattended adapter/access probe)
 VERIFICATION_COMMANDS: install/typecheck/tests/build/feed NOT RUN for this milestone.
 NEXT_CONCRETE_STEP: append5 reviewed rows and boundary/unknownend/merge regression; pushCP1 before long checks. Then smallPR/CI/merge/postCI/Pages/public/browser. AfterCP4 CZNSeason5, then wavecloseout. NoP2/R1–R3/Timeline/Auth/Sync.
+
+CP0_SHA8b9b8f97427242c34c5d0f3f0517956423199183. CP1 implemented5 reviewedrows and3 meaningful regression tests. Initial targeted label expectation corrected to existing UI literal unknown; data/boundary/merge tests passed. Full required checks NOT RUN.
