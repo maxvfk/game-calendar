@@ -2,7 +2,7 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-WUWA-37-PARSER
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: ed74b738c96bac47b9ad550d26885e3a8eae354e
 BRANCH: fix/wuwa-events
 HEAD_SHA: resolve branch ref
@@ -24,3 +24,5 @@ Day openings; no guessed maintenance completion. No SpecialEvents falseID, no4 P
 
 CP0_SHA:83b40aa678153012425612ad43215d0b94301ce9
 CP1 implemented scoped four-family patch title/calendar/duration contract, nested identity and strict period/anchor checks with actual snapshot/future/malformed/merge/expiry tests. Historical banner anchors remain outside this lane. Initial targeted assertion compared traversal vs sorted parser ordering; corrected test comparison sorting. Full validation NOT RUN; next mandatory commands and269->273 feed.
+
+CP2 FINAL PASS: frozen install/typecheck/full1378pass/3existing age skips/0fail/build/feed269->273. Onlyfour intended additions, allprior winners/conflicts identical; reviewed12 byte-identical, parser7->11. Evidence docs/evidence/wuwa-events-feed-replay-2026-10-28.json. CP3 in delivery PR body; CP4 NOT RUN. Next PR/exact-head CI.

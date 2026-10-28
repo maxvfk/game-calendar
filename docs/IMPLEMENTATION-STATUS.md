@@ -1,5 +1,37 @@
 # Game calendar implementation status
 
+## SC-P1-WUWA-37-PARSER — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+
+Actual Kuro5571 patch title/calendar anchor, nested `[Special Events] [Cubie
+Wars]` identity and decorated `✦Duration` now restore CubieWars, DreamsintheCapsule,
+GiftsofWakingMoon and GiftsofSingingDrizzle. The new anchor contract is limited
+to these four approved families; it does not activate historical5546 banners.
+Three-region exact ends and day openings are source-backed; no maintenance
+completion is inferred. Strict single-period/version/calendar/duplicate-anchor
+checks fail closed. All7 prior candidates,12 reviewed and snapshots unchanged.
+
+A release pending. B bounded deterministic parser + actual-source future-year,
+malformed/duplicate/version/scope/merge/±1ms expiry regressions implemented.
+Fresh upstream mirror blob `b409efe121a6a2757101bb1eebaaf093d196b762` matches
+stored bytes. Official5571 HTML retrieval returned no text; evidence remains
+the actual Kuro article mirror, no new direct-domain or runner fetch claimed.
+
+**SC-P1-WUWA-NEW-BANNERS BLOCKED WUWA-NEW-BANNER-CLOCK:** confirmed names
+Suoming/NineDeathsOneUnbentHeart and UnspokenRue exist in5571; actual20-entry
+mirror has no exact dated new-channel period, and5668 explicitly dates only
+four reruns. A bounded current official-domain exact-name/date search returned
+no independent notice establishing new-channel clock. This is unverified timing,
+not a claim no notice exists. Do not borrow rerun hours. Follow-up W2 requires
+specific first-party period/clock evidence or in-game source; no broad discovery
+implementation in this wave. A PENDING/B BLOCKED for these two channels.
+
+**PR138 CP4 verified:** mergeed74b738c96bac47b9ad550d26885e3a8eae354e,
+[CI/Pages40694158519](https://github.com/maxvfk/game-calendar/actions/runs/40694158519)
+SUCCESS; public269 generated13:12:20.577Z all5 new NTE semantic winners and
+existing1 conflict preserved, browserBounty15:59Z/otherthree/source confirmed.
+A/B DONE for bounded NTE repair. Next after WuWa CP4: SC-P1-HSR-CLAIMS.
+
+
 ## SC-P1-NTE-14-SKIPPED — IMPLEMENTED; WAVE RUNNING (2026-10-28)
 
 The existing approved Steam snapshot contains the Version1.4 publisher release
@@ -4132,3 +4164,5 @@ SC-P1-END-CURRENT CP2 PASS: frozen install/typecheck/full tests/build/feed;1369p
 SC-P1-HSR-BANNERS CP2 PASS: frozen install/typecheck/final full1372pass/3existing age skips/0fail/build/feed260->264. Onlyfour new channels; old winners, reviewed13 and conflicts unchanged. Delivery PR owns CP3/CP4 observed release evidence; no release inferred from implementation.
 
 SC-P1-NTE-14-SKIPPED CP2 PASS: frozen install/typecheck/full1375pass/3existing age skips/0fail/build/feed264->269. Five additions only; old winners/conflicts/reviewed15 unchanged, parser49->54. Delivery PR owns observed CP3/CP4 evidence.
+
+SC-P1-WUWA-37-PARSER CP2 PASS: frozen install/typecheck/full1378pass/3existing age skips/0fail/build/feed269->273; four additions only, no changed/removed old winner/conflict; parser7->11, reviewed12 unchanged. Delivery PR holds observed CP3/CP4 release evidence.
