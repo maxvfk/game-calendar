@@ -1,5 +1,36 @@
 # Game calendar implementation status
 
+## HSR 4.6 source/coverage audit — RESEARCH COMPLETE; IMPLEMENTATION NOT STARTED (2026-10-28)
+
+Research report: `docs/research/hsr-source-coverage-audit-2026-10-28.md`.
+Post-#119 Lightward is correct (**21 HSR rows = 13 reviewed + 8 KQM parser**);
+remaining source coverage is **incomplete**, despite healthy `hsr-kqm-hsrnews`
+transport and current 4.6 in-game notice.
+
+- KQM current `readme.md` includes **9** notices but excludes separate publisher
+  Phase I/II Warp notices and Oct 12 Planar Fissure dispatch. **Four currently
+  active, officially timed banner/Light Cone channels** (Pearl + signature,
+  Mortenax Blade rerun + signature) are missing, along with two expired Phase I
+  rerun channels. Trial notices also not ingested.
+- The current captured update includes dated `Astral Trendible` availability,
+  `Park Souvenir` claim, two outfit-discount deadlines; parser extracts none.
+- The old 4.5 Anomaly Arbitration with `endsAt:null` remains reviewed even
+  though current 4.6 `Return to Roots` is announced without a direct exact
+  end; `Fate Contract: Renewal` also lacks a version-linked cutoff. Currency
+  Wars reset/rewards and Gift of Odyssey need separate evidence/precision policy.
+- Distinguish **source index gaps**, **parser coverage gaps**, **stale reviewed
+  version phases**, **product-scope decisions** and **unverified future dates**.
+  No new runner probe or live JSON download is claimed. Old reviewed/snapshots,
+  source adapters, workflows, runtime and published data remain unchanged.
+
+**Next concrete step (operator decision):** narrowly restore the four current
+official HSR banner channels and dated claims through reviewed data, then a
+separate source-discovery gate for sustainable publisher announcements; or
+commission that source gate first. Do NOT merge open Editorial PR #115 or
+Source Recovery PR #113 as a side effect. No HSR fix has been implemented by
+this research milestone.
+
+
 ## HSR Version 4.6 Treasures Lightward: P0 COMPLETE / DEPLOYED (2026-10-28)
 
 Task: `docs/tasks/HSR-4-6-LIGHTWARD-COVERAGE-P0.md`; baseline main `9d112a6`.
