@@ -5,6 +5,8 @@ import type { SourceParser } from "./types.ts";
 const ARTICLE = /^# \[([^\n]+)\]\(archive\/(\d+)\.md\)\s*$/gm;
 const CLOCK = /(20\d{2})\/(\d{2})\/(\d{2})\s+(\d{2}):(\d{2}):(\d{2})\s*\((server|global)\)/gi;
 const AFTER_UPDATE = /After the Version (\d+\.\d+) update/i;
+const LIGHTWARD_MODE = /^- (Memory of Chaos: [^\n]+|Apocalyptic Shadow: [^\n]+|Pure Fiction: [^\n]+)$/;
+const LIGHTWARD_PERIOD = new RegExp(`^(?:${AFTER_UPDATE.source}|${CLOCK.source})\\s*[-–—]\\s*${CLOCK.source}$`, "i");
 
 interface Article { heading: string; id: string; body: string }
 interface Clock { day: string; utc8: string; zone: "server" | "global" }
@@ -104,12 +106,48 @@ export function parseKqmHsrNews(raw: string, ctx: ParseContext): GachaEvent[] {
     }
     if (/Version \d+\.\d+ .*Update Details/i.test(article.heading)) {
       let inEvents = false;
+      let inOthers = false;
+      let inGameplay = false;
+      let inLightward = false;
+      // Older factual excerpts omit the Gameplay/Lightward introduction.
+      // Full notices must keep mode matches inside the announced block.
+      const hasLightward = rows.some(row => /^"Treasures Lightward":/.test(row));
       for (let i = 0; i < rows.length; i++) {
         if (/^6\. New Events$/.test(rows[i]!)) { inEvents = true; continue; }
-        if (/^7\. Others$/.test(rows[i]!)) inEvents = false;
+        if (/^\d+\. /.test(rows[i]!)) {
+          inEvents = false;
+          inOthers = rows[i] === "7. Others";
+          inGameplay = false;
+          inLightward = false;
+        }
+        if (/^■ /.test(rows[i]!)) {
+          inGameplay = inOthers && rows[i] === "■ Gameplay";
+          inLightward = false;
+        }
+        if (inGameplay && /^"Treasures Lightward":/.test(rows[i]!)) inLightward = true;
         const event = inEvents ? /^\*\*■ ([^*]+)\*\*$/.exec(rows[i]!) : null;
-        const mode = /^- (Apocalyptic Shadow: [^\n]+|Pure Fiction: [^\n]+)$/.exec(rows[i]!);
+        const mode = hasLightward
+          ? inLightward ? LIGHTWARD_MODE.exec(rows[i]!) : null
+          : inOthers ? /^- (Apocalyptic Shadow: [^\n]+|Pure Fiction: [^\n]+)$/.exec(rows[i]!) : null;
         if (!event && !mode) continue;
+        if (mode && hasLightward) {
+          // The first nonempty line is the period, never a clock in buff prose
+          // or in the next phase. Reject incomplete/changed/extra boundaries.
+          const following = rows.slice(i + 1);
+          const boundary = following.findIndex(row => /^(?:■ |\d+\. |\*\*■ |- (?:Memory of Chaos:|Apocalyptic Shadow:|Pure Fiction:))/.test(row));
+          const block = boundary < 0 ? following : following.slice(0, boundary);
+          const line = block.find(Boolean) ?? "";
+          const relative = AFTER_UPDATE.exec(line)?.[1];
+          const version = /Version (\d+\.\d+)/.exec(article.heading)?.[1];
+          const value = LIGHTWARD_PERIOD.test(line) && (!relative || relative === version)
+            ? item(article, mode[1]!, "challenge", line, updates, ctx) : null;
+          if (!value || block.filter(row => LIGHTWARD_PERIOD.test(row)).length !== 1 ||
+            Date.parse(value.endsAt!) <= Date.parse(value.startsAt)) {
+            throw new Error(`KQM HSRNews Lightward period missing or invalid: ${mode[1]}`);
+          }
+          add(value);
+          continue;
+        }
         const near: string[] = [];
         for (const next of rows.slice(i + 1, i + 12)) {
           if (/^(?:\*\*■ |\d+\. |[-] (?:Apocalyptic Shadow:|Pure Fiction:))/.test(next)) break;

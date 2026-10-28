@@ -1,0 +1,146 @@
+{
+  "baselineMain": "9d112a6a1185fbe76e82ce495b1278df3bdc101d",
+  "snapshotSha256": "0002a2fa60fc8484b6f1000b8870417a9db53dbd4f7fdbe7d2ac76e491855900",
+  "reviewedHsrSha256": "d54b9dbf4a1032691c1264b5198c9f71f82380695e42eb097a897c073a4282ec",
+  "parsedCandidatesBefore": 6,
+  "parsedCandidatesAfter": 8,
+  "existingASandPFAlreadyPublished": true,
+  "replays": [
+    {
+      "now": "2026-10-28T00:00:00.000Z",
+      "totalBefore": 241,
+      "totalAfter": 243,
+      "hsrBefore": 19,
+      "hsrAfter": 21,
+      "newIds": [
+        "hsr:memory-of-chaos-crossing-the-afterlife:2026-09-28",
+        "hsr:memory-of-chaos-survival-of-the-fittest:2026-11-02"
+      ],
+      "allExistingWinnersByteEquivalent": true,
+      "otherSourceHealthUnchanged": true,
+      "dateConflictsUnchanged": true,
+      "lightward": [
+        {
+          "id": "hsr:memory-of-chaos-crossing-the-afterlife:2026-09-28",
+          "title": "Memory of Chaos: Crossing the Afterlife",
+          "startsAt": "2026-09-28T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-11-01T19:59:00.000Z",
+          "regionEnds": {
+            "asia": "2026-11-01T19:59:00.000Z",
+            "europe": "2026-11-02T02:59:00.000Z",
+            "america": "2026-11-02T08:59:00.000Z"
+          },
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1437.md"
+        },
+        {
+          "id": "hsr:apocalyptic-shadow-dominance-of-oblivion:2026-10-05",
+          "title": "Apocalyptic Shadow: Dominance of Oblivion",
+          "startsAt": "2026-10-05T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-11-15T19:59:00.000Z",
+          "regionEnds": {
+            "asia": "2026-11-15T19:59:00.000Z",
+            "europe": "2026-11-16T02:59:00.000Z",
+            "america": "2026-11-16T08:59:00.000Z"
+          },
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1437.md"
+        },
+        {
+          "id": "hsr:pure-fiction-imagined-words:2026-10-19",
+          "title": "Pure Fiction: Imagined Words",
+          "startsAt": "2026-10-19T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-11-29T19:59:00.000Z",
+          "regionEnds": {
+            "asia": "2026-11-29T19:59:00.000Z",
+            "europe": "2026-11-30T02:59:00.000Z",
+            "america": "2026-11-30T08:59:00.000Z"
+          },
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1437.md"
+        },
+        {
+          "id": "hsr:memory-of-chaos-survival-of-the-fittest:2026-11-02",
+          "title": "Memory of Chaos: Survival of the Fittest",
+          "startsAt": "2026-11-02T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-12-13T19:59:00.000Z",
+          "regionEnds": {
+            "asia": "2026-12-13T19:59:00.000Z",
+            "europe": "2026-12-14T02:59:00.000Z",
+            "america": "2026-12-14T08:59:00.000Z"
+          },
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1437.md"
+        }
+      ]
+    },
+    {
+      "now": "2026-11-02T12:00:00.000Z",
+      "totalBefore": 240,
+      "totalAfter": 242,
+      "hsrBefore": 19,
+      "hsrAfter": 21,
+      "newIds": [
+        "hsr:memory-of-chaos-crossing-the-afterlife:2026-09-28",
+        "hsr:memory-of-chaos-survival-of-the-fittest:2026-11-02"
+      ],
+      "allExistingWinnersByteEquivalent": true,
+      "otherSourceHealthUnchanged": true,
+      "dateConflictsUnchanged": true,
+      "lightward": [
+        {
+          "id": "hsr:memory-of-chaos-crossing-the-afterlife:2026-09-28",
+          "title": "Memory of Chaos: Crossing the Afterlife",
+          "startsAt": "2026-09-28T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-11-01T19:59:00.000Z",
+          "regionEnds": {
+            "asia": "2026-11-01T19:59:00.000Z",
+            "europe": "2026-11-02T02:59:00.000Z",
+            "america": "2026-11-02T08:59:00.000Z"
+          },
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1437.md"
+        },
+        {
+          "id": "hsr:apocalyptic-shadow-dominance-of-oblivion:2026-10-05",
+          "title": "Apocalyptic Shadow: Dominance of Oblivion",
+          "startsAt": "2026-10-05T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-11-15T19:59:00.000Z",
+          "regionEnds": {
+            "asia": "2026-11-15T19:59:00.000Z",
+            "europe": "2026-11-16T02:59:00.000Z",
+            "america": "2026-11-16T08:59:00.000Z"
+          },
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1437.md"
+        },
+        {
+          "id": "hsr:pure-fiction-imagined-words:2026-10-19",
+          "title": "Pure Fiction: Imagined Words",
+          "startsAt": "2026-10-19T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-11-29T19:59:00.000Z",
+          "regionEnds": {
+            "asia": "2026-11-29T19:59:00.000Z",
+            "europe": "2026-11-30T02:59:00.000Z",
+            "america": "2026-11-30T08:59:00.000Z"
+          },
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1437.md"
+        },
+        {
+          "id": "hsr:memory-of-chaos-survival-of-the-fittest:2026-11-02",
+          "title": "Memory of Chaos: Survival of the Fittest",
+          "startsAt": "2026-11-02T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-12-13T19:59:00.000Z",
+          "regionEnds": {
+            "asia": "2026-12-13T19:59:00.000Z",
+            "europe": "2026-12-14T02:59:00.000Z",
+            "america": "2026-12-14T08:59:00.000Z"
+          },
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1437.md"
+        }
+      ]
+    }
+  ]
+}

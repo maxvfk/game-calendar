@@ -44,6 +44,137 @@ operator GO for a cutover window, verify actual controls, drain old writers and
 refresh/review the cutover inventory before publishing the frozen switch. PR stays
 unmerged without GO. No post-cutover CI/Pages or live v2 write is claimed.
 **STOP after E2a.1.** E2b/E3/E4 were not started.
+## Genshin 7.1 source/coverage audit — RESEARCH COMPLETE; NO FIX (2026-10-28)
+
+Report: `docs/research/genshin-source-coverage-audit-2026-10-28.md`. Current
+`genshin-kqm-ginews` is accessible and recently confirmed; its live `readme.md`
+and checked-in snapshot both contain **36 indexed notices** but only **10 parsed
+events** at the last source refresh. `data/reviewed/genshin.json` has **19**
+reviewed entries; these numbers are not unique published-feed totals.
+
+**Confirmed current missing/partial coverage:** Phase II `Epitome Invocation`
+weapon banner (Azurelight + Symphonist of Scents, until Nov 3); `Overflowing
+Favor` (Oct 26–Nov 2); `Starlight Voyage: Heart Unbound` (Oct 19–Nov 2)
+and its distinct **Oct 29 04:00** quest cutoff; `Carefree Snowball Fight`
+exists but has only a day-precision reviewed Nov 2 end despite a more detailed
+notice. Additional dated Miliastra/web rewards (`Starlit Gala`, `Raiment
+Collection`, `Moonlit Season`), cosmetic odes and sub-deadlines need explicit
+scope/precision gates. Existing Spiral Abyss and Imaginarium Theater monthly
+recurrence is already implemented and should not be re-opened without a defect.
+Version 7.2 is announced; its currently absent exact individual phase notices
+are `watch`, not permission to extrapolate future dates.
+
+Source transport success/nonzero extraction must NOT be interpreted as
+per-family coverage. The audit made no runtime/source/reviewed/secret/workflow
+changes, no runner probe of new hosts and no independent deployed JSON fetch.
+**Next concrete step:** operator decides between urgent bounded `G1`
+current-deadline repair and next game's research-only audit (**WuWa**).
+Keep Editorial v2 PR #115 and Source Recovery design PR #113 independent.
+
+
+## HSR 4.6 source/coverage audit — RESEARCH COMPLETE; IMPLEMENTATION NOT STARTED (2026-10-28)
+
+Research report: `docs/research/hsr-source-coverage-audit-2026-10-28.md`.
+Post-#119 Lightward is correct (**21 HSR rows = 13 reviewed + 8 KQM parser**);
+remaining source coverage is **incomplete**, despite healthy `hsr-kqm-hsrnews`
+transport and current 4.6 in-game notice.
+
+- KQM current `readme.md` includes **9** notices but excludes separate publisher
+  Phase I/II Warp notices and Oct 12 Planar Fissure dispatch. **Four currently
+  active, officially timed banner/Light Cone channels** (Pearl + signature,
+  Mortenax Blade rerun + signature) are missing, along with two expired Phase I
+  rerun channels. Trial notices also not ingested.
+- The current captured update includes dated `Astral Trendible` availability,
+  `Park Souvenir` claim, two outfit-discount deadlines; parser extracts none.
+- The old 4.5 Anomaly Arbitration with `endsAt:null` remains reviewed even
+  though current 4.6 `Return to Roots` is announced without a direct exact
+  end; `Fate Contract: Renewal` also lacks a version-linked cutoff. Currency
+  Wars reset/rewards and Gift of Odyssey need separate evidence/precision policy.
+- Distinguish **source index gaps**, **parser coverage gaps**, **stale reviewed
+  version phases**, **product-scope decisions** and **unverified future dates**.
+  No new runner probe or live JSON download is claimed. Old reviewed/snapshots,
+  source adapters, workflows, runtime and published data remain unchanged.
+
+**Next concrete step (operator decision):** narrowly restore the four current
+official HSR banner channels and dated claims through reviewed data, then a
+separate source-discovery gate for sustainable publisher announcements; or
+commission that source gate first. Do NOT merge open Editorial PR #115 or
+Source Recovery PR #113 as a side effect. No HSR fix has been implemented by
+this research milestone.
+
+
+## HSR Version 4.6 Treasures Lightward: P0 COMPLETE / DEPLOYED (2026-10-28)
+
+Task: `docs/tasks/HSR-4-6-LIGHTWARD-COVERAGE-P0.md`; baseline main `9d112a6`.
+Delivery: [PR #119](https://github.com/maxvfk/game-calendar/pull/119), merged
+2026-10-27 23:41:18 UTC as `ece355d346861b552e68d726ff3c6d51492ea1f4`.
+[PR CI 40603634593](https://github.com/maxvfk/game-calendar/actions/runs/40603634593)
+and [post-merge main CI 40603821063](https://github.com/maxvfk/game-calendar/actions/runs/40603821063)
+both passed. Post-merge CI explicitly passed **Deploy to Pages**, site build,
+typecheck/test/feed and CZN PG17 recovery/concurrency. Detailed verified delivery
+record: `docs/evidence/hsr-46-lightward-delivery-2026-10-28.md`.
+
+- The actual defect is narrower than the initial task diagnosis: AS Dominance of
+  Oblivion and PF Imagined Words already parsed through an unscoped mode search.
+  Both **Memory of Chaos** phases were missing. The full notice now reads modes
+  only under `7. Others → Gameplay → "Treasures Lightward"`, stopping at the next
+  section. The older 4.5 factual excerpt remains supported without changing IDs.
+- Actual checked-in `snapshots/hsr-kqm-hsrnews.md`, `archive/1437.md`, SHA256
+  `0002a2fa60fc8484b6f1000b8870417a9db53dbd4f7fdbe7d2ac76e491855900`,
+  confirmed `2026-10-27T21:23:33.629Z`: **6→8 parser candidates**, **four explicit
+  Lightward windows**. Snapshot bytes/meta and all 13 reviewed HSR records remain
+  untouched. Source ID and extraction URL remain KQM/HSRNews; independent publisher
+  verification is the official https://hsr.hoyoverse.com/en-us/news/166468 notice.
+  No first-party extraction/provenance claim is fabricated for the mirror.
+- First MoC starts **2026-09-28, day precision** (after update, no guessed
+  completion clock). Subsequent server-clock starts remain day precision under
+  the existing schema. Server/global boundaries are handled independently;
+  exact regional ends below are fixed server offsets, independent of viewer DST.
+
+| Phase | Server end, 03:59 | Asia UTC | Europe UTC | America UTC |
+|---|---|---|---|---|
+| MoC Crossing the Afterlife | Nov 2 | Nov 1 19:59Z | Nov 2 02:59Z | Nov 2 08:59Z |
+| AS Dominance of Oblivion | Nov 16 | Nov 15 19:59Z | Nov 16 02:59Z | Nov 16 08:59Z |
+| PF Imagined Words | Nov 30 | Nov 29 19:59Z | Nov 30 02:59Z | Nov 30 08:59Z |
+| MoC Survival of the Fittest | Dec 14 | Dec 13 19:59Z | Dec 14 02:59Z | Dec 14 08:59Z |
+
+- Fixed-clock actual full-feed replay at **Oct 28 00:00Z: 241→243 total,
+  19→21 HSR**; at **Nov 2 12:00Z: 240→242 total, 19→21 HSR**. Exactly **two newly
+  published IDs** (the two MoCs); existing AS/PF remain unchanged. Every prior
+  winner is byte-equivalent, other source health and the existing single NTE
+  date conflict remain unchanged. Four Lightward rows survive merge exactly once.
+  Evidence: `docs/evidence/hsr-46-lightward-feed-replay-2026-10-28.json`.
+- Seven new regression tests use a bounded factual excerpt of the actual 4.6
+  snapshot: exact three-region windows, day-only update start, all region clocks
+  immediately before/after MoC expiry, global/server independence, duplicate and
+  contradictory schedules, absent/invalid clocks, wrong version, scope decoys,
+  and 4.5 reviewed winner/ID preservation. No cadence generator or new workflow.
+- Validation: frozen install/typecheck/build PASS with Bun **1.3.14**; **1348 pass / 3 skip / 0 fail** (72 files). Self-review of parser boundaries,
+  time semantics, merge identities and the complete diff found no blocker.
+  Exact-head PR CI and post-merge CI/Pages **succeeded**; full delivery evidence
+  and references are recorded above. Local existing age-dependent
+  tests skip when the `age` executable is unavailable; dedicated CI recovery
+  validation installs it. No unrelated game/client/Sync/Timeline changes.
+
+**Remaining gaps outside P0:** the snapshot names 4.6 Astral Trendible / Park
+Souvenir (Availability/Claim Period), Astral Slammers Squad (no explicit end),
+and Anomaly Arbitration: Return to Roots (no explicit phase period). Those 4.6
+rows are absent from the current feed. Current Warp/banner coverage and other
+reward families are not claimed complete; no new research or generalized audit
+was performed here. Historical reviewed AA remains unchanged. These require a
+separate coverage audit and source-grounded dates, never inferred version/cadence.
+
+**Operator acceptance:** on 2026-10-28 the user reported that the calendar was
+correct in their browser. This is user-reported UI smoke, not independent live
+JSON retrieval or a recorded in-game/server timer comparison. GitHub Pages
+deployment itself is independently confirmed by the successful Actions job.
+
+**Next concrete step:** HSR P0 is closed; no need to resume the interrupted Work.
+Remaining HSR 4.6 coverage gaps are parked as a **separate** future audit.
+Next user-selected direction is resolving the two Astra High review findings
+in draft [PR #115](https://github.com/maxvfk/game-calendar/pull/115), subject
+to a separate follow-up; **NO GO** for any Timeline v2 cutover.
+**STOP after this HSR P0 fix.** PR #115, E2a.1 and Source Recovery are untouched.
 
 ## ZZZ B1 — unattended banner recovery: IMPLEMENTED, SECONDARY RSS (2026-10-27)
 
