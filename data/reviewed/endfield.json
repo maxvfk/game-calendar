@@ -131,6 +131,119 @@
       "provenanceStatus": "official",
       "confidence": 1,
       "reviewedAt": "2026-10-28T10:52:49.986Z"
+    },
+    {
+      "id": "endfield:rejuvenation:2026-10-15",
+      "title": "Rejuvenation",
+      "recognitionSubjects": [
+        "Si"
+      ],
+      "type": "banner",
+      "summary": "Si Chartered Headhunting. Opens after the Sanctuary of Ink update; closes November 5 at 11:59 server time (Asia UTC+8; Americas/Europe UTC-5).",
+      "startsAt": "2026-10-15T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-05T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-05T03:59:00.000Z",
+        "america": "2026-11-05T16:59:00.000Z",
+        "europe": "2026-11-05T16:59:00.000Z"
+      },
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/4489",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T12:49:47.925Z",
+      "reviewedAt": "2026-10-28T12:49:47.925Z"
+    },
+    {
+      "id": "endfield:seal-of-jade-issue:2026-10-15",
+      "title": "Seal of Jade Issue",
+      "recognitionSubjects": [
+        "Jade Vessel"
+      ],
+      "type": "banner",
+      "summary": "Jade Vessel Arsenal Issue. Opens after the Sanctuary of Ink update and ends after three Chartered Headhunting banners starting with Rejuvenation; no calendar cutoff is announced.",
+      "startsAt": "2026-10-15T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": null,
+      "endPrecision": "unknown",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/9560",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T12:49:47.925Z",
+      "reviewedAt": "2026-10-28T12:49:47.925Z"
+    },
+    {
+      "id": "endfield:ancestral-spring-flows-anew:2026-10-29",
+      "title": "Ancestral Spring Flows Anew",
+      "recognitionSubjects": [
+        "Tangtang"
+      ],
+      "type": "banner",
+      "summary": "Tangtang RE-Factor Headhunting #1. October 29 at 12:00 to November 19 at 11:59 server time; opening is shown as a calendar day across regions.",
+      "startsAt": "2026-10-29T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-19T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-19T03:59:00.000Z",
+        "america": "2026-11-19T16:59:00.000Z",
+        "europe": "2026-11-19T16:59:00.000Z"
+      },
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/9560",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T12:49:47.925Z",
+      "reviewedAt": "2026-10-28T12:49:47.925Z"
+    },
+    {
+      "id": "endfield:tender-sprig-issue:2026-10-29",
+      "title": "Tender Sprig Issue",
+      "recognitionSubjects": [
+        "Brigand's Calling"
+      ],
+      "type": "banner",
+      "summary": "Brigand's Calling RE-Factor Issue #1. Separate weapon channel, October 29 at 12:00 to November 19 at 11:59 server time; opening is shown as a calendar day across regions.",
+      "startsAt": "2026-10-29T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-19T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-19T03:59:00.000Z",
+        "america": "2026-11-19T16:59:00.000Z",
+        "europe": "2026-11-19T16:59:00.000Z"
+      },
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/9560",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T12:49:47.925Z",
+      "reviewedAt": "2026-10-28T12:49:47.925Z"
+    },
+    {
+      "id": "endfield:contingency-readiness:2026-10-29",
+      "title": "Contingency Readiness",
+      "type": "other",
+      "summary": "Complete daily missions for limited-time supplies. October 29 at 04:00 to November 5 at 04:00 server time (Asia UTC+8; Americas/Europe UTC-5); opening is shown as a calendar day across regions.",
+      "startsAt": "2026-10-29T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-04T20:00:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-04T20:00:00.000Z",
+        "america": "2026-11-05T09:00:00.000Z",
+        "europe": "2026-11-05T09:00:00.000Z"
+      },
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/9560",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T12:49:47.925Z",
+      "reviewedAt": "2026-10-28T12:49:47.925Z"
     }
   ]
 }

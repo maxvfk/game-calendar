@@ -1,6 +1,6 @@
 # Source Coverage — Current Data Recovery Wave
 
-**Status:** RUNNING — manually resumed by user 2026-10-28; PR135 CP3 on refreshed CURRENT main. CZN gifts released via PR132 (CP4 verified). Maras released via PR133 (CP4 verified). Genshin expiries released via PR134 (CP4 verified). Current bounded item: SC-P1-CZN-OVERDRIVE / [PR #135](https://github.com/maxvfk/game-calendar/pull/135).
+**Status:** RUNNING — manually resumed2026-10-28. PR130/132/133/134/135 fully released and CP4 verified. Current bounded item: SC-P1-END-CURRENT, [PR136](https://github.com/maxvfk/game-calendar/pull/136) (CP3).
 **Prepared:** 2026-10-28. **Baseline:** current main at launch (do not pin this document's preparation SHA).
 **Canonical backlog:** [SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md](SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md).
 **Operating rules:** `AGENTS.md`; `docs/IMPLEMENTATION-STATUS.md`.

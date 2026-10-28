@@ -1,29 +1,35 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
-MILESTONE: SC-P1-CZN-OVERDRIVE
-STAGE: CP3 (manually resumed; refreshed baseline validation pending)
-BASE_MAIN_SHA: d95e852f3cd9c79739dfd1a41192a2270a9a9a04
-BRANCH: fix/czn-overdrive
-HEAD_SHA: this PAUSED checkpoint commit (resolve fix/czn-overdrive); prior validated implementation/checkpoint head9945b6c7fffb7579ffcdf0749e28ff560a729fb8
-PR: https://github.com/maxvfk/game-calendar/pull/135
-DONE: Current main/AGENTS/status/backlog/CZN audit, actual banner-only parser/reviewed data/tests read. PR134 CP4 CI/Pages40678433259 SUCCESS; public254 exact3 winners and browser verified. No existing Overdrive fix PR found.
-VERIFICATION: fresh indexed publisher-authored10/21 notice confirms Overdrive Simulation: afterOct21 maintenance toNov3 18:00 UTC, six doubled simulation rewards/day, opportunity reset18:00 UTC. Current public feed has no matching event. One source-backed reviewed Overdrive record and UTC/merge regression tests implemented. Frozen Bun1.3.14 install PASS; typecheck PASS; full tests PASS1366/3existing age skips/0fail; build PASS; feed254->255, one new Overdrive only, no removed/changed old winners or date conflicts. PR/post-merge/Pages/public gates NOT RUN.
-REMAINING: validate refreshed baseline, final-head CI, merge and post-merge CI/Pages/public verification.
-BLOCKERS: unattended official-event discovery absent (existing source Prydwen is banner-only); do not add a new broad integration/runner probe in this fix.
+MILESTONE: SC-P1-END-CURRENT
+STAGE: CP3
+BASE_MAIN_SHA: 21f07733994483f579986a2fd86fe1f1c00ff200
+BRANCH: fix/end-current
+HEAD_SHA: resolve branch ref (this checkpoint commit)
+PR: https://github.com/maxvfk/game-calendar/pull/136
+CP0_SHA: e0de994a58dc597d71f10601f4040cd95d4bd6bd
+DONE: CURRENT main, AGENTS, status/wave/backlog, Endfield audit, wiki parser, reviewed batch and tests read; latest PR list checked (no duplicate fix). PR135 CP4 verified: merge21f0773, CI/Pages40690620800 SUCCESS, public255 generated12:47:28.664Z, exact Overdrive and browser confirmed.
+VERIFICATION: official9560 and4489 freshly read2026-10-28. Five intended IDs absent from actual public/feed. Source Si Nov5 11:59server; Tangtang/TenderSprig Oct29 12:00–Nov19 11:59server; Readiness Oct29 04:00–Nov5 04:00server; SealofJade relative three Chartered banners only. New local validation NOT RUN.
+REMAINING: append five reviewed rows; day starts, exact two-server-group ends or unknown relative end; meaningful expiry/merge regression; full checks/feed/PR/CI/merge/Pages/public gates.
+BLOCKERS: unattended official discovery not registered; A3 publisher access/terms/runner gate is separate, no new broad integration here.
 OUTCOME_A_DATA: PENDING
-OUTCOME_B_PREVENTION: BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY (CZN audit C3 access/terms/runner gate; reviewed fallback now)
-CP0_SHA: 476e76e30fb19bde9ca30e3eb25a5415309d3d6c
-CP1_SHA: 302ebc6bdb96ccb78d667eb5a524098403e6ccab
-CP2_HEAD_SHA: a20de97a722158b89c9bb183f10966c4ff83806a
-NEXT_CONCRETE_STEP: manually resume by fetching CURRENT main and PR135 head; inspect CI for the final PAUSED checkpoint head (supersedes prior40679410185 if replaced). Merge only after exact-head CI is SUCCESS and main/source baseline remains valid; then require post-merge CI/Pages/public Overdrive255th winner and record CP4. Only afterward start SC-P1-END-CURRENT.
+OUTCOME_B_PREVENTION: BLOCKED END-OFFICIAL-DISCOVERY (Endfield audit A3; reviewed fallback, not automatic discovery)
+NEXT_CONCRETE_STEP: append five distinct reviewed rows to data/reviewed/endfield.json, preserving all7 prior rows and batch metadata.
 
-Evidence: https://czn.gg/10-21wed-update-notice/ (STOVE-authored publisher text, attributed secondary host; manual indexed recheck Oct28). Exact source schedule: 10/21/2026 after the maintenance – 11/03/2026 18:00 (UTC). Do not guess an exact maintenance completion timestamp or equate mail06:00 UTC with this18:00 cutoff/reset.
-StartsAt2026-10-21T00:00:00.000Z/day, endsAt2026-11-03T18:00:00.000Z/exact, global (regionScopedfalse). Real new discovery/review time only. Preserve all29 existing CZN reviewed rows, gifts and Daily Reset/Sync.
-Previous released: PR130 Starlight;132 CZN gifts;133 Maras;134 Genshin expiries. Next after CP4: SC-P1-END-CURRENT.
+## Exact intended identities and evidence
 
-## Manual resume 2026-10-28
+- endfield:rejuvenation:2026-10-15 — Si; source https://endfield.gryphline.com/en-us/news/4489; endsAsiaNov5 03:59Z, WestNov5 16:59Z.
+- endfield:seal-of-jade-issue:2026-10-15 — JadeVessel; source9560; endnull/unknown (after3 Chartered banners, not Si cutoff).
+- endfield:ancestral-spring-flows-anew:2026-10-29 — Tangtang; source9560; endsAsiaNov19 03:59Z, WestNov19 16:59Z.
+- endfield:tender-sprig-issue:2026-10-29 — Brigand'sCalling; separate arsenal channel, same explicit period asTangtang.
+- endfield:contingency-readiness:2026-10-29 — daily limited missions; endsAsiaNov4 20:00Z, WestNov5 09:00Z.
 
-User explicitly resumed the wave. CURRENT main f92e3733c434b99e544f636df39548f759f15a51 contains only automated snapshot refresh since d95. All refreshed files retained. Prior final-head CI40679572945 SUCCESS (all required jobs). New combined-head validation/CI required after baseline refresh; CP4 NOT RUN. Prior local CP2 remains evidence for original inputs, not a claim for refreshed inputs. Next: validate combined tree, exact-head CI, merge and verify Pages/public Overdrive.
+All openings use source calendar day, not guessed maintenance completion or shared exact regional opening (schema has no regionStarts). Endfield AsiaUTC+8, Americas/EuropeUTC-5, no viewerDST conversion. Preserve Maras and Phantasia; no CycleIII duplicate, no futureupcoming batch yet, no P2/R1–R3/Timeline/Auth/Sync. Next afterCP4: nearest remaining confirmed P1 (HSR banners Nov10).
 
-Refreshed-baseline CP2 PASS: frozen install, typecheck, full1366pass/3skip/0fail, build; fixed-clock feed254->255 only Overdrive addition, every old winner and dateConflict identical. Final combined-head CI pending.
+CP1: five reviewed rows and test/endfield-current.test.ts implemented. Full validation/feed gates NOT RUN. Next run all required local commands and compare fixed feed255->260, no prior winners/conflicts changed.
+
+Validation history: first typecheck caught test tuple optionality; corrected test table to readonly tuples before rerunning. No production/schema change.
+
+CP2 PASS: bun install --frozen-lockfile; bun run typecheck; bun test1369pass/3existing age skips/0fail; bun run build; fixed feed255->260 exactlyfive intended IDs, every prior winner/conflict identical. Original7 Endfield rows and batch metadata byte-semantic equal. Evidence docs/evidence/endfield-current-feed-replay-2026-10-28.json. CP3/CP4 NOT RUN; next open PR and require exact-head CI.
+
+CP3: PR136 opened. Final-head CI pending; merge/post-merge CI/Pages/public NOT RUN. Next inspect CI for this pushed commit, then expected-head merge only after SUCCESS.

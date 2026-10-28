@@ -64,6 +64,16 @@ PR135 records exact-head CI and CP4. Previous GEN PR134 CP4 is verified:
 mergedd95e852, CI/Pages40678433259 SUCCESS, public254/all3 exact winners and UI.
 Next after release: **SC-P1-END-CURRENT**.
 
+**PR135 CP4 verified:** merge21f07733994483f579986a2fd86fe1f1c00ff200;
+CI/Pages40690620800 SUCCESS; public255 generated12:47:28.664Z, exact Overdrive
+winner and browser source/deadline verified. A DONE, B still named BLOCKED.
+
+**SC-P1-END-CURRENT implemented ([PR136](https://github.com/maxvfk/game-calendar/pull/136)):** five official reviewed
+channels, exact Si/Tangtang/TenderSprig/Readiness regional ends; SealofJade end
+unknown after3 Chartered banners. Original7 rows unchanged. B **BLOCKED
+END-OFFICIAL-DISCOVERY** (auditA3). Validation and CP3/CP4 recorded in delivery
+PR/checkpoint. Next after release SC-P1-HSR-BANNERS (Nov10).
+
 ### SC-P0-GEN-STARLIGHT execution status (2026-10-28)
 
 - **Outcome 1 — current-data restoration: implemented; delivery record in [PR #130](https://github.com/maxvfk/game-calendar/pull/130).**
@@ -133,7 +143,7 @@ Dates below are in publisher-defined game server clock unless explicitly `Z` / `
 | ID / nominal order | Game · bounded goal | Known deadline / source basis | Precondition / critical safety |
 |---|---|---|---|
 | **SC-P1-GEN-EXPIRIES · IMPLEMENTED (PR134)** | Genshin: `Overflowing Favor` double artifact drops, Phase II `Epitome Invocation` weapon channel, and `Carefree Snowball Fight` currently day-only precision. | Overflowing Favor **Nov 2 03:59 server** (`archive/21053.md`); weapon **Nov 3 14:59 server** (`archive/21890.md`); Carefree **Nov 2 03:59** (`archive/21891.md`). | Already in KQM snapshot. Keep existing reviewed IDs and one phase-distinct weapon banner channel; avoid blindly changing day-precision without clock proof. May split drops and weapon if smaller. |
-| **SC-P1-END-CURRENT** | Endfield: officially announced **Si** + **Tangtang** character banners, separately their issues `Seal of Jade` and `Tender Sprig`, plus **Contingency Readiness**. | Si end **Nov 5 11:59 server**, Tangtang starts **Oct 29 12:00** and ends Nov 19 11:59; Contingency Readiness **Oct 29 04:00 → Nov 5 04:00** server, official `/9560`. | Use reviewed first-party evidence; `Seal of Jade` ends after three Chartered banners ⇒ **unknown exact end**, not Si's end. Preserve region mapping Asia +8 / West −5, distinct character vs arsenal IDs. Split if needed. |
+| **SC-P1-END-CURRENT · IMPLEMENTED (PR136)** | Endfield: officially announced **Si** + **Tangtang** character banners, separately their issues `Seal of Jade` and `Tender Sprig`, plus **Contingency Readiness**. | Si end **Nov 5 11:59 server**, Tangtang starts **Oct 29 12:00** and ends Nov 19 11:59; Contingency Readiness **Oct 29 04:00 → Nov 5 04:00** server, official `/9560`. | Use reviewed first-party evidence; `Seal of Jade` ends after three Chartered banners ⇒ **unknown exact end**, not Si's end. Preserve region mapping Asia +8 / West −5, distinct character vs arsenal IDs. Split if needed. |
 | **SC-P1-CZN-OVERDRIVE · IMPLEMENTED (PR135)** | CZN: `Overdrive: Simulation` double growth period. | **Nov 3 18:00Z** exact, Oct 21 STOVE 1.5/anniversary patch content. | One small reviewed record; no Daily Reset edit. |
 | **SC-P1-WUWA-37-PARSER** | WuWa: deterministic 3.7 patch title/date anchor + decorated `✦Duration` + nested identity; restore `Cubie Wars`, `Dreams in the Capsule`, `Gifts of Waking Moon`, `Gifts of Singing Drizzle`. | Source `Kuro Atom article 5571` already captured; deadlines **Nov 11 03:59/11:59 server**. | Wrong identity `[Special Events] [Cubie Wars]` can create `Special Events` ID if only anchor fixed. Guard scope, preserve after-update day start and three-region ends; regression real snapshot. |
 | **SC-P1-WUWA-NEW-BANNERS** | WuWa: new Suoming `Nine Deaths, One Unbent Heart` and `Unspoken Rue` current Phase II, missing despite four reruns working. | Kuro patch `5571` names them; `5668` only lists four reruns, not individually dated new banner windows. | **VERIFY exact first-party announcement/clock** first; if not established, mark BLOCKED and retain expected-family incident, never borrow rerun clocks silently. Separate W2 source discovery gate. |
@@ -276,7 +286,9 @@ For each separately authorized item:
 
 ## 8. One next concrete step
 
-Finish **SC-P1-CZN-OVERDRIVE /PR135** release gates, then continue with
-**SC-P1-END-CURRENT** using CURRENT main and CP0–CP4. PR130/132/133/134 are
-already fully released. Continue only confirmed authorized P0/P1; no P2,
-Source Recovery R1–R3, Timeline v2, Sync or unapproved categories.
+Finish **SC-P1-END-CURRENT** CP2–CP4, then **SC-P1-HSR-BANNERS** from CURRENT
+main (earliest remaining Nov10 deadline). PR130/132/133/134/135 are fully
+released. Continue confirmed authorized P0/P1 only; no P2, R1–R3, Timeline,
+Sync or unapproved categories.
+
+SC-P1-END-CURRENT CP2 PASS: frozen install/typecheck/full tests/build/feed;1369pass/3existing age skips/0fail;255->260 exactlyfive additions, no changed/removed prior winner or dateConflict. Evidence: docs/evidence/endfield-current-feed-replay-2026-10-28.json. CP3/CP4 evidence: [PR136](https://github.com/maxvfk/game-calendar/pull/136).

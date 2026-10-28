@@ -1,5 +1,30 @@
 # Game calendar implementation status
 
+## SC-P1-END-CURRENT — IMPLEMENTED (PR136); WAVE RUNNING (2026-10-28)
+
+Source: official Gryphline9560 and4489 re-read Oct28. Five reviewed channels:
+Si/Rejuvenation, JadeVessel/SealofJadeIssue, Tangtang/AncestralSpringFlowsAnew,
+Brigand'sCalling/TenderSprigIssue, ContingencyReadiness. Distinct stableIDs,
+day-only openings (no guessed maintenance/region opening), exact fixed
+AsiaUTC+8 /Americas+EuropeUTC-5 expiry where announced. SealofJade ends after
+three Chartered banners: endnull/unknown, not Si's date. Original7 reviewed
+rows and batch metadata, Maras/Phantasia and all snapshots remain unchanged.
+
+A pending verified release. B **BLOCKED END-OFFICIAL-DISCOVERY**, Endfield audit
+A3 unattended access/terms/runner gate; healthy wiki8-event source omits these
+families, reviewed rescue does not claim automatic discovery. New tests verify
+actual snapshot incompleteness, merge priority/no other winner changes, unknown
+issue end and exact±1ms expiry across all3 regions. Validation/release results
+will be recorded in the delivery PR and checkpoint before merge.
+
+Previous **PR135 CP4 DONE**: merge21f07733994483f579986a2fd86fe1f1c00ff200,
+[CI/Pages40690620800](https://github.com/maxvfk/game-calendar/actions/runs/40690620800)
+SUCCESS; public255 generated2026-10-28T12:47:28.664Z, exact Overdrive winner
+and browser source/Nov3 18:00Z verified. A DONE, B CZN discovery still BLOCKED.
+PR130/132/133/134 already released. Next after this CP4: SC-P1-HSR-BANNERS
+(Nov10 deadline); continue only confirmed P0/P1, no P2/R1–R3/Timeline/Sync.
+
+
 ## SC-P1-CZN-OVERDRIVE — IMPLEMENTED; WAVE RUNNING (2026-10-28)
 
 Delivery and CP3–CP4 evidence: [PR135](https://github.com/maxvfk/game-calendar/pull/135).
@@ -4045,3 +4070,5 @@ DST from summer wall time, or repeat the completed seven-game audit.
 - **Next concrete step:** launch one Work using this orchestration task;
   review which production corrections actually deployed, the step 4 safety
   decision and the operator's final mobile/PC smoke results.
+
+SC-P1-END-CURRENT CP2 PASS: frozen install/typecheck/full tests/build/feed;1369pass/3existing age skips/0fail;255->260 exactlyfive additions, no changed/removed prior winner or dateConflict. Evidence: docs/evidence/endfield-current-feed-replay-2026-10-28.json. CP3/CP4 evidence: [PR136](https://github.com/maxvfk/game-calendar/pull/136).
