@@ -85,16 +85,31 @@ function entity(heading: string, section: string): Entity | null {
   return null;
 }
 
-type Candidate = { event: GachaEvent; date: number; standalone: boolean };
+// A publisher reward-release template already present in the approved feed.
+// Keep this lane limited to the confirmed gameplay rewards; admitting the whole
+// release would also backfill historical banners, paid boxes and web events.
+const REWARD_RELEASE_TITLE = /^Log in to NTE's new version for Solid Dice x20, a limited frame, and more!$/i;
+const REWARD_RELEASE_ITEMS = new Set(["Circle Gifts", "Terminal Depths", "Pukaland Travelogue", "Coal Lump's Treasure", "Circle Bounty"]);
+
+type Candidate = { event: GachaEvent; date: number; standalone: boolean; bountyVersion: string | null };
 function candidates(post: Post, ctx: ParseContext): Candidate[] {
   if (post.feedname !== "steam_community_announcements") return [];
   if (/preview|special program|livestream|trailer|\bPV\b|giveaway|discord|artwork|points shop/i.test(post.title)) return [];
-  if (!/maintenance notice|patch notes|update(?: details)?|limited board|limited arc|arc research|limited-time event|login|check-in|gameplay guide/i.test(post.title)) return [];
+  const rewardRelease = REWARD_RELEASE_TITLE.test(post.title);
+  if (!rewardRelease && !/maintenance notice|patch notes|update(?: details)?|limited board|limited arc|arc research|limited-time event|login|check-in|gameplay guide/i.test(post.title)) return [];
   const text = lines(post.contents);
   // A year must be literally present in this publication, never inferred from
   // the current clock or another post. Yearless standalone guides are skipped.
   const years = [...new Set(`${post.title}\n${text.join("\n")}`.match(/\b20\d{2}\b/g) ?? [])];
   const year = years.length === 1 ? Number(years[0]) : undefined;
+  if (rewardRelease) {
+    const version = /\ball-new Version (\d+\.\d+) "[^"]+" will go live!/.exec(text.find(line => /^NTE will undergo maintenance on /.test(line)) ?? "")?.[1];
+    if (!version || year === undefined ||
+      !text.some(line => /^\\?\[Update Details\]$/.test(line)) ||
+      !text.includes(`● Version ${version} "Circle Bounty" Guide`)) {
+      throw new Error("NTE reward release version/year context missing or ambiguous");
+    }
+  }
   const sections: Array<{ heading: string; body: string[] }> = [];
   let current = { heading: post.title, body: [] as string[] };
   sections.push(current);
@@ -110,16 +125,23 @@ function candidates(post: Post, ctx: ParseContext): Candidate[] {
     const item = maintenance
       ? { title: post.title, type: "maintenance" as const }
       : entity(section.heading, section.body.join("\n"));
-    if (!item) continue;
+    if (!item || (rewardRelease && !REWARD_RELEASE_ITEMS.has(item.title))) continue;
+    if (rewardRelease && section.body.filter(s => /^(?:●\s*)?(?:Event )?(?:Available|Duration|Period)\b/i.test(s)).length !== 1) {
+      throw new Error(`NTE reward release period missing or duplicated: ${item.title}`);
+    }
     const i = section.body.findIndex((s) => /^(?:●\s*)?(?:Event )?(?:Available|Duration|Period)\b/i.test(s));
     if (i < 0) continue;
     const line = section.body[i]!.replace(/^(?:●\s*)?(?:Event )?(?:Available|Duration|Period)\s*:?\s*/i, "");
     const period = parseNtePeriod(line || section.body[i + 1] || "", year);
+    if (rewardRelease && (!period?.end || period.end.precision !== "exact")) {
+      throw new Error(`NTE reward release period missing or invalid: ${item.title}`);
+    }
     if (!period) continue;
     // Permanent unlocks never became entities above. A genuine limited item
     // with an announced start but missing end may retain an unknown end.
     const event = GachaEvent.parse({
       id: eventId("nte", item.title, period.start.at), game: "nte", ...item,
+      ...(rewardRelease && item.title === "Terminal Depths" ? { type: "challenge" } : {}),
       summary: maintenance ? "Scheduled maintenance; actual completion may vary." : null,
       startsAt: period.start.at, startPrecision: period.start.precision,
       endsAt: period.end?.at ?? null, endPrecision: period.end?.precision ?? "unknown",
@@ -128,7 +150,12 @@ function candidates(post: Post, ctx: ParseContext): Candidate[] {
       status: "published", confidence: 1, extractionMethod: "parser", provenanceStatus: "official",
       version: 1, firstSeenAt: ctx.now, updatedAt: ctx.now,
     });
-    result.push({ event, date: post.date, standalone: !/patch notes|maintenance|update/i.test(post.title) });
+    result.push({ event, date: post.date, standalone: !rewardRelease && !/patch notes|maintenance|update/i.test(post.title),
+      bountyVersion: item.title === "Circle Bounty"
+        ? /^Version (\d+\.\d+) "Circle Bounty" Guide$/.exec(section.heading)?.[1] ?? null : null });
+  }
+  if (rewardRelease && new Set(result.map(c => c.event.title)).size !== REWARD_RELEASE_ITEMS.size) {
+    throw new Error("NTE reward release expected gameplay reward sections missing");
   }
   return result;
 }
@@ -150,7 +177,14 @@ export function parseNteSteamNews(raw: string, ctx: ParseContext): GachaEvent[] 
   const feed = Feed.parse(JSON.parse(raw));
   const kept: Candidate[] = [];
   for (const next of feed.appnews.newsitems.flatMap((p) => candidates(p, ctx))) {
-    const i = kept.findIndex((c) => sameCycle(c.event, next.event));
+    const i = kept.findIndex((c) => {
+      // Explicitly labelled version seasons are distinct even when a day-only
+      // after-update start overlaps the previous notice's disputed exact end.
+      // Same IDs or same/unknown versions retain the normal conflict checks.
+      if (c.event.id !== next.event.id && c.bountyVersion && next.bountyVersion &&
+        c.bountyVersion !== next.bountyVersion) return false;
+      return sameCycle(c.event, next.event);
+    });
     if (i < 0) { kept.push(next); continue; }
     const old = kept[i]!;
     for (const [field, precision] of [["startsAt", "startPrecision"], ["endsAt", "endPrecision"]] as const) {

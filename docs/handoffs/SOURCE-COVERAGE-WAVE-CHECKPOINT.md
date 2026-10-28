@@ -2,7 +2,7 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-NTE-14-SKIPPED
-STAGE: CP0
+STAGE: CP1
 BASE_MAIN_SHA: cc325bf6597d83225ff51009bc8682869b7cf2f7
 BRANCH: fix/nte-rewards
 HEAD_SHA: resolve this branch ref
@@ -22,3 +22,6 @@ Ids: nte:circle-gifts:2026-09-30, nte:terminal-depths:2026-09-30,
  nte:pukaland-travelogue:2026-09-30, nte:coal-lumps-treasure:2026-10-08,
  nte:circle-bounty:2026-09-30.
 Afterupdate starts remain daySep30; CoalLump exactOct8 02Z from10:00UTC+8. Common endNov10 21:59Z; Bounty earlierNov10 15:59Z. GlobalUTC+8, no regional shifting. Preserve15 reviewed and existing known24h CircleBounty1.3 conflict, currentAkane/BTR winners, all snapshots/source timestamps. No broad Log in allowlist, no guessed year/maintenance finish, no P2 PhaseI/history/permanent/Porsche/web entries. Next afterCP4: WuWa3.7 current event/parser (earliestAsiaNov10 19:59Z).
+
+CP0_SHA:4e31b4de24436331bca1964ec36eebaf73d34499
+CP1 implemented: bounded reward-title+version/year/context admission, five-section extraction, explicit CircleBounty version discriminator only; generic same-version/unknown conflict checks and year guards unchanged. New actual-snapshot malformed/future/merge/expiry regressions. Initial targeted test used unsorted source priority, corrected to production reviewed-first order; final local validation pending. Next full mandatory checks and264->269 replay.
