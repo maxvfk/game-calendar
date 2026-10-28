@@ -115,3 +115,5 @@ finish its CP2–CP4 release gates. Do not repeat PR130/132–144/148.
 After the closeout PR is merged, its body records exact merge/post-CI/Pages/public
 results and supersedes pending closeout-delivery text. Any new blocker research
 or simple-scheme implementation needs a separate operator-started task.
+
+Closeout CP2 PASS: frozen install/typecheck/full1396pass/3existing age skips/0fail/build, fixed replay289→289 with no changed/added/removed winners or conflicts;16 canonical rows and relative links checked. Closeout PR owns final CP3/CP4 delivery evidence.

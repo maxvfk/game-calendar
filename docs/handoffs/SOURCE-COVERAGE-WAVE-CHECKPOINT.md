@@ -1,6 +1,6 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 MILESTONE: WAVE-CLOSEOUT (documentation only)
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: 1cb00dc77afe64d1c1649b0d780ae636d9f39467
 BRANCH: docs/wave-close
 HEAD_SHA: resolve branch ref
@@ -13,3 +13,5 @@ VERIFICATION: closeout checks NOT RUN. Existing datarelease1396pass/3existing ag
 NEXT_CONCRETE_STEP: write closeout and update canonical statuses; pushCP1, then validate/release docs only. Do not implement P2/simple-scheme/R1–R3/Timeline/Auth/Sync.
 
 CP0_SHA246b084f2f8a3051142e68d74a459f6055fee415. CP1 wrote authoritative closeout,16-row A/B/release table,2data+5discoveryblockers, final public proof/historical state, canonical status/backlog/wave stopping point. Docs only; validation/release pending. Next requiredchecks and no-data-change replay, then PR gates and STOP.
+
+CP1_SHAba2316db8e8aa15d90d6e1877da8c8003b47be3d. CP2 PASS: bun install --frozen-lockfile; bun run typecheck; full bun test1396pass/3existing age skips/0fail; bun run build; fixedfeed289->289 no added/removed/changed winner/conflict.16 canonical closeout rows and relative links validated, git diff --check PASS. Docs-only diff; no data/parser/source/client/workflow changes. Next finalPR exactheadCI/merge/postCI/Pages/fullpublic verification then STOP. CP3/CP4 recorded in finalPR body supersede pending text.
