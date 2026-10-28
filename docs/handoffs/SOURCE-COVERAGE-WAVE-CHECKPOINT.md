@@ -1,28 +1,28 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
-MILESTONE: SC-P1-WUWA-37-PARSER
+MILESTONE: SC-P1-HSR-CLAIMS
 STAGE: CP2
-BASE_MAIN_SHA: ed74b738c96bac47b9ad550d26885e3a8eae354e
-BRANCH: fix/wuwa-events
+BASE_MAIN_SHA: 1e229c66e7b28883a6cef35ca04569a56f96a380
+BRANCH: fix/hsr-claims
 HEAD_SHA: resolve branch ref
 PR: NONE
-DONE: CURRENT main/unchanged AGENTS/status/wave/backlog/WuWa audit/parser/reviewed12 rows/tests and actual5571/5546/5668 read. Prior138 CP4 verified: mergeed74b738, CI/Pages40694158519 SUCCESS, public269 generated13:12:20.577Z all5 NTE semantic winners and Bounty browser verified.
-VERIFICATION: fresh GitHub mirror blob b409efe121a6a2757101bb1eebaaf093d196b762 exactly matches stored snapshot. Official5571 public HTML retrieval empty; use actual publisher-article mirror, no claim new direct fetch/runner. Current parser7 candidates, four confirmed patch events absent.
-REMAINING: narrowly recognize actual patch heading/maintenance calendar anchor for four approved event families only, correct nested Cubie identity and decorated Duration, strict scoped period validation; preserve seven prior parser candidates and12 reviewed, no historical banner backfill. Full checks/release gates.
-BLOCKERS: NONE for four existing-snapshot periods. Separately SC-P1-WUWA-NEW-BANNERS BLOCKED WUWA-NEW-BANNER-CLOCK: actual20-entry mirror names Suoming/UnspokenRue in5571 but no explicit phase clock;5668 dates onlyfour reruns; official-domain bounded exact-name/date search found no independently dated first-party notice. This is unverified timing, not proof no notice exists. Do not borrow rerun clocks or implement broader W2 discovery.
+DONE: CURRENT main/unchanged AGENTS/status/wave/backlog/HSR audit, actual KQM parser/snapshot, reviewed17 and tests read; no duplicate recent fix. Prior139 CP4 verified: merge1e229c66, CI/Pages40695357581 SUCCESS, public273 generated13:20:27.523Z all4 WuWa semantic winners and Cubie browser/source/Europe10:59Z verified.
+VERIFICATION: fresh KQM1437 blob5da18559ddcb48a92a353234d6eccadb52986811 matches reconstructed stored article exactly. Availability for AstralTrendible and ClaimPeriod for ParkSouvenir both afterVersion4.6update–2026/11/11 06:00(global). Parent Park remains permanent; no generic availability scan.
+REMAINING: bounded two exact-heading/field contracts, daySep28start, globalNov10 22Z end, tests for malformed/context/duplicate/year/merge/expiry, full validation/release gates.
+BLOCKERS: NONE for existing supported KQM notice.
 OUTCOME_A_DATA: PENDING
-OUTCOME_B_PREVENTION: PENDING deterministic scoped parser/regressions
-NEXT_CONCRETE_STEP: implement four-family patch duration contract in wuwa-kuro-atom.ts, not a general historical banner anchor expansion.
+OUTCOME_B_PREVENTION: PENDING deterministic known availability/claim period contracts
+NEXT_CONCRETE_STEP: implement two known claim families inside version NewEvents only, preserve all8 existing candidates and17 reviewed rows.
 
-IDs wuwa:cubie-wars:2026-09-30, wuwa:dreams-in-the-capsule:2026-09-30,
-wuwa:gifts-of-waking-moon:2026-09-30, wuwa:gifts-of-singing-drizzle:2026-10-22.
-Source https://wutheringwaves.kurogames.com/en/main/news/detail/5571
-CubieNov11 11:59server ->AsiaNov11 03:59Z/Europe10:59Z/America16:59Z.
-OtherthreeNov11 03:59server ->AsiaNov10 19:59Z/EuropeNov11 02:59Z/America08:59Z.
-Day openings; no guessed maintenance completion. No SpecialEvents falseID, no4 PhaseI reruns/web/permanent entries; source timestamps unchanged. Next afterCP4: HSRclaimsNov10 22Z, then CZNseasons/AdditionalAetherNov11 day.
+IDs hsr:astral-imagea-park-astral-trendible:2026-09-28 and
+hsr:astral-imagea-park-park-souvenir:2026-09-28.
+Source https://github.com/KQM-git/HSRNews/blob/master/archive/1437.md
+GlobalUTC+8 means sameNov10 22Z in all selected regions; no viewerDST shifting. Day opening afterupdate; no maintenance completion inferred. Do not expire permanentPark, add discounts/permanentSlammers/GiftOdyssey or change unrelated Lightward/Warps/stale P2 states. No source timestamps changed. WuWa new-banner clock remains namedBLOCKED. Next afterCP4: CZNseasons/AdditionalAetherNov11day.
 
-CP0_SHA:83b40aa678153012425612ad43215d0b94301ce9
-CP1 implemented scoped four-family patch title/calendar/duration contract, nested identity and strict period/anchor checks with actual snapshot/future/malformed/merge/expiry tests. Historical banner anchors remain outside this lane. Initial targeted assertion compared traversal vs sorted parser ordering; corrected test comparison sorting. Full validation NOT RUN; next mandatory commands and269->273 feed.
+CP0_SHA:ecc1a850c41e7c870d352e2b1e330924c2c8b1dd
+CP1: two exact-heading/field contracts implemented inside NewEvents only; temporary reward summaries distinguish permanent Park. Actual-source/future/malformed/merge/expiry targeted14PASS. Full validation/release NOT RUN. Next mandatory checks and273->275 replay, old winners/conflicts identical.
 
-CP2 FINAL PASS: frozen install/typecheck/full1378pass/3existing age skips/0fail/build/feed269->273. Onlyfour intended additions, allprior winners/conflicts identical; reviewed12 byte-identical, parser7->11. Evidence docs/evidence/wuwa-events-feed-replay-2026-10-28.json. CP3 in delivery PR body; CP4 NOT RUN. Next PR/exact-head CI.
+Validation history: first full1380pass/3skip/1fail because prior HSRwarp regression pinned whole automatic output at8, now legitimately10. Scope its old-eight assertion excluding the two new temporaryPark contracts; no production behavior change. Final full rerun required.
+
+CP2 FINAL PASS: frozen install/typecheck/full1381pass/3existing age skips/0fail/build/feed273->275. Exactlytwo new temporary claims, oldwinners/conflicts identical; reviewed17 byte-identical, parser8->10. Evidence docs/evidence/hsr-claims-feed-replay-2026-10-28.json. CP3 in delivery PR body; CP4 NOT RUN. Next PR/exacthead CI.

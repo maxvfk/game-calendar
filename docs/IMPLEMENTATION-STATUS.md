@@ -1,5 +1,31 @@
 # Game calendar implementation status
 
+## SC-P1-HSR-CLAIMS — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+
+Two known KQM version-NewEvents contracts now read AstralTrendible Availability
+and ParkSouvenir ClaimPeriod. Both daySep28 afterupdate to globalNov10 22:00Z
+(officialNov11 06:00UTC+8); distinct temporary reward IDs, not the permanent
+AstralImageaPark itself. Exact heading/field/version/calendar/global-clock and
+single-period checks reject missing/ambiguous evidence; no arbitrary Availability
+or Claim scan, no discounts/permanentSlammers/unscheduledGiftOdyssey expansion.
+Preserve8 prior parser candidates,17 reviewed/Warps/Lightward, source timestamps.
+
+A pending release. B deterministic scoped parser + actual-source/future-year,
+malformed/duplicate/zone/version/merge and3-region±1ms regressions implemented.
+Fresh KQM1437 blob5da18559ddcb48a92a353234d6eccadb52986811 matches reconstructed
+snapshot article exactly; no new source transport or invented publication clock.
+
+**PR139 CP4 verified:** merge1e229c66e7b28883a6cef35ca04569a56f96a380,
+[CI/Pages40695357581](https://github.com/maxvfk/game-calendar/actions/runs/40695357581)
+SUCCESS; public273 generated13:20:27.523Z all4 new WuWa semantic winners,
+existing1 conflict unchanged; browserCubie propertitle/Europe10:59Z/source5571
+and4 distinct events verified. A/B DONE for scoped parser. New WuWa banner
+clocks remain BLOCKED WUWA-NEW-BANNER-CLOCK, not part of successful restoration.
+
+Next after HSRclaims CP4: CZN current seasons and AdditionalAether Nov11day.
+No P2/R1–R3/Timeline/Auth/Sync or broad source recovery.
+
+
 ## SC-P1-WUWA-37-PARSER — IMPLEMENTED; WAVE RUNNING (2026-10-28)
 
 Actual Kuro5571 patch title/calendar anchor, nested `[Special Events] [Cubie
@@ -4166,3 +4192,5 @@ SC-P1-HSR-BANNERS CP2 PASS: frozen install/typecheck/final full1372pass/3existin
 SC-P1-NTE-14-SKIPPED CP2 PASS: frozen install/typecheck/full1375pass/3existing age skips/0fail/build/feed264->269. Five additions only; old winners/conflicts/reviewed15 unchanged, parser49->54. Delivery PR owns observed CP3/CP4 evidence.
 
 SC-P1-WUWA-37-PARSER CP2 PASS: frozen install/typecheck/full1378pass/3existing age skips/0fail/build/feed269->273; four additions only, no changed/removed old winner/conflict; parser7->11, reviewed12 unchanged. Delivery PR holds observed CP3/CP4 release evidence.
+
+SC-P1-HSR-CLAIMS CP2 PASS: frozen install/typecheck/finalfull1381pass/3existing age skips/0fail/build/feed273->275, two additions only; old winners/conflicts and reviewed17 unchanged. Parser8->10; delivery PR owns CP3/CP4 observed release evidence.

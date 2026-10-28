@@ -40,10 +40,10 @@ test("fixed HSR server expiry differs by region and never remains upcoming after
   }
 });
 
-test("healthy eight-event KQM index lacks Warps; reviewed priority retains them once without other changes", async () => {
+test("healthy KQM index lacks Warps; reviewed priority retains them once without other changes", async () => {
   const auto = parseKqmHsrNews(await Bun.file("snapshots/hsr-kqm-hsrnews.md").text(), {
     now: "2026-10-28T12:00:00.000Z", game: "hsr", sourceId: "hsr-kqm-hsrnews", sourceUrl: "https://api.github.com/repos/KQM-git/HSRNews/contents/readme.md" });
-  expect(auto).toHaveLength(8);
+  expect(auto.filter(e => !e.title.startsWith("Astral Imagea Park: "))).toHaveLength(8);
   expect(auto.some(e => e.type === "banner")).toBe(false);
   const ids = new Set(warps.map(e => e.id));
   const baseline = mergeEvents([auto, reviewed.filter(e => !ids.has(e.id))]);

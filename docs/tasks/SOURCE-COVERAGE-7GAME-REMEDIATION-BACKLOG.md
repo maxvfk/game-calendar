@@ -110,6 +110,16 @@ found no independent dated first-party notice. No false claim of absence; exact
 clock remains unverified. W2 follow-up needs specific publisher/in-game period,
 no borrowing rerun clocks or broad integration. Both A/B blocked pending evidence.
 
+**SC-P1-WUWA-37-PARSER CP4 verified:** PR139 merge1e229c66e7b28883a6cef35ca04569a56f96a380;
+CI/Pages40695357581 SUCCESS; public273 generated13:20:27.523Z all4 semantic
+winners and browserCubie source/Europe10:59Z verified. A/B DONE. WuWa new-channel
+clock remains independently BLOCKED WUWA-NEW-BANNER-CLOCK, no borrowed clocks.
+
+**SC-P1-HSR-CLAIMS implemented (release pending):** two scoped actual-source
+heading/Availability/ClaimPeriod contracts, both globalNov10 22Z, day openings.
+No permanentPark expiry;8 old parser candidates/17 reviewed unchanged. A release
+pending, B deterministic parser/regressions implemented. Next CZNNov11day tasks.
+
 ### SC-P0-GEN-STARLIGHT execution status (2026-10-28)
 
 - **Outcome 1 — current-data restoration: implemented; delivery record in [PR #130](https://github.com/maxvfk/game-calendar/pull/130).**
@@ -186,7 +196,7 @@ Dates below are in publisher-defined game server clock unless explicitly `Z` / `
 | **SC-P1-HSR-BANNERS · IMPLEMENTED (release pending)** | HSR: four active Version 4.6 Warp channels: Pearl + `Colors for Tomorrow`, Mortenax Blade + `Reforged in Hellfire`. | All end **Nov 10 15:00 server**; Phase II source official HoYoLAB `article/47142215`. | Two character and two Light Cone channel IDs; Pearl continuous across phases **once**, not duplicate Phase I/II; explicit three-region ends. Restore through reviewed hotfix before broader publisher discovery. |
 | **SC-P1-NTE-14-SKIPPED · IMPLEMENTED (release pending)** | NTE: extend *verified release-notice selection*, restore `Circle Gifts`, `Terminal Depths`, `Pukaland Travelogue`, `Coal Lump's Treasure`, **1.4 Circle Bounty**. | Same first-party Steam API `gid 1844751498233952` skipped because title **`Log in`** not `login`; Circle Bounty expires **Nov 10 23:59 UTC+8 (Nov 10 15:59Z)**, others mostly Nov 11 **05:59 UTC+8 (Nov 10 21:59Z)**. | Do not remove fail-closed year requirement from standalone articles; use verified version notice context. Keep 1.3 Circle Bounty prior 24h source conflict and all 15 existing reviewed rows; prove candidates become published winners. |
 | **SC-P1-CZN-SEASONS** | CZN: current **Basin of Hyperspace** Oct21–Nov11 and **Full-Scale Offensive** Sept30–Nov11; reconcile stale old `Full-Scale Offensive — Season 4` `endsAt:null`. | Explicit STOVE Oct21/Sept30 version notices; ends **before Nov 11 maintenance**. | No speculative maintenance-completion time, no +21d cadence. Preserve old IDs and source-backed historical boundary; one logical phase per record. |
-| **SC-P1-HSR-CLAIMS** | HSR: `Astral Trendible` availability + `Park Souvenir` claim expiration (two distinct mechanics). | Both **Nov 11 06:00 UTC+8**, directly in checked-in KQM 4.6 update under `Availability` / `Claim Period`. | Small extraction/regression or reviewed fallback; do not represent permanently accessible Park as expiring. |
+| **SC-P1-HSR-CLAIMS · IMPLEMENTED (release pending)** | HSR: `Astral Trendible` availability + `Park Souvenir` claim expiration (two distinct mechanics). | Both **Nov 11 06:00 UTC+8**, directly in checked-in KQM 4.6 update under `Availability` / `Claim Period`. | Small extraction/regression or reviewed fallback; do not represent permanently accessible Park as expiring. |
 | **SC-P1-CZN-CARNIVAL** | CZN: **Nightmare Carnival** / **70 free Normal Rescues** expiring Dec 2 before maintenance; **Additional Aether** independently ends Nov 11 before maintenance. | STOVE publisher-announced anniversary periods. | Separate parent/subdeadline without double-counting; no guess about exact maintenance instant; favor explicit reminders for expiring free unused attempts. |
 | **SC-P1-CZN-SEASON5** | CZN: `Galactic Disaster Season 5: A Promise Upon the Snow`, Nightmare Dream Park, Rossweisse Trauma Code, Celestial Bulwark stage unlocks and season rewards. | Season/Dream Park through **Dec 23 before maintenance**, Trauma Code through Dec 2; **Seraphion Oct 28 02:00Z** and **Enforcer Seraphion Nov 4 02:00Z** unlock. | Pick compact nonduplicated family-level records; do not pretend a stage unlock is an expiry. Official parent vs phase must be precise. |
 | **SC-P1-END-UPCOMING** | Endfield: upcoming Fervor, `The Stars Are With Me`, Contingency Contract, Secret Sanctuary shop cutoff, region-exception Nov Sanity Supply. | Fervor starts **Nov 5 12:00 server**, Contract shop ends **Dec 3 04:00 server**; Nov Sanity windows have exceptional West cutoff. | Preserve unknown end for "until next maintenance". **Do not reopen repaired Phantasia Cycle I/II** or force invalid wiki season cycle start. |
@@ -322,9 +332,9 @@ For each separately authorized item:
 
 ## 8. One next concrete step
 
-Finish **SC-P1-WUWA-37-PARSER** CP2–CP4, then **SC-P1-HSR-CLAIMS** from CURRENT
-main (Nov10 22:00Z), then CZN Nov11 day rewards/seasons. PR130/132–138 fully
-released. WuWa new-banner exact-clock gate remains explicitly BLOCKED, not fixed.
-Confirmed P0/P1 only; no P2/R1–R3/Timeline/Auth/Sync.
+Finish **SC-P1-HSR-CLAIMS** CP2–CP4, then **SC-P1-CZN-SEASONS** and the
+independent AdditionalAether cutoff under **SC-P1-CZN-CARNIVAL** (Nov11day),
+using small related CZN PRs from CURRENT main. PR130/132–139 fully released;
+WuWa new-banner exact-clock gate explicitly BLOCKED. Confirmed P0/P1 only.
 
-SC-P1-WUWA-37-PARSER CP2 PASS: frozen install/typecheck/full1378pass/3existing age skips/0fail/build/feed269->273; four additions only, no changed/removed old winner/conflict; parser7->11, reviewed12 unchanged. Delivery PR holds observed CP3/CP4 release evidence.
+SC-P1-HSR-CLAIMS CP2 PASS: frozen install/typecheck/finalfull1381pass/3existing age skips/0fail/build/feed273->275, two additions only; old winners/conflicts and reviewed17 unchanged. Parser8->10; delivery PR owns CP3/CP4 observed release evidence.

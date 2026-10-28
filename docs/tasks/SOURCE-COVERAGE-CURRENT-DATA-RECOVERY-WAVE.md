@@ -1,6 +1,6 @@
 # Source Coverage — Current Data Recovery Wave
 
-**Status:** RUNNING — PR130/132–138 fully released and CP4 verified. Current bounded item: SC-P1-WUWA-37-PARSER, branch `fix/wuwa-events`. SC-P1-WUWA-NEW-BANNERS explicitly BLOCKED WUWA-NEW-BANNER-CLOCK pending first-party exact timing.
+**Status:** RUNNING — PR130/132–139 fully released and CP4 verified. Current bounded item: SC-P1-HSR-CLAIMS, branch `fix/hsr-claims`. SC-P1-WUWA-NEW-BANNERS explicitly BLOCKED WUWA-NEW-BANNER-CLOCK pending first-party exact timing.
 **Prepared:** 2026-10-28. **Baseline:** current main at launch (do not pin this document's preparation SHA).
 **Canonical backlog:** [SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md](SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md).
 **Operating rules:** `AGENTS.md`; `docs/IMPLEMENTATION-STATUS.md`.
