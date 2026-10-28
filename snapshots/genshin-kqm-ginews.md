@@ -52,144 +52,6 @@ Complete more event tasks to claim Geodes of Replication, the Manekin Action "V 
 
 -----
 
-# ["Overflowing Favor" Event: Double Drops With Artifacts](archive/21053.md)
-## Overflowing Favor
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/71613bec4ef9f79808a3d8659a3de7e3_4543893924710096263.jpg)
-
-During the event, successfully challenge "Domain of Blessing" and consume "Original Resin" to double your rewards.
-
-〓Event Duration〓
-
-<t class="t_lc" contenteditable="false">2026/10/26 04:00</t> - <t class="t_lc" contenteditable="false">2026/11/02 03:59</t>
-
-〓Eligibility〓
-
-Adventure Rank 20 or above
-
-and after activating the corresponding "Domain of Blessing"
-
-〓Event Details〓
-
-● During the "Overflowing Favor" event, successfully challenge "Domain of Blessing" and consume "Original Resin" to double your rewards. You can double your rewards up to 3 times a day!
-
------
-
-# ["Carefree Snowball Fight" Event: Fun Throwing Challenge](archive/21891.md)
-## Carefree Snowball Fight
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/684d82e66f2ddec8c156b9f13f5dc991_4296667567912849878_transformed.jpg)
-
-〓Event Rewards〓
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/08/21/c369da49c6d1d95455e84e9d1c564f8e_2780252075207902140_transformed.png)
-
-〓Event Duration〓
-
-<t class="t_lc" contenteditable="false">2026/10/21 10:00</t> – <t class="t_lc" contenteditable="false">2026/11/02 03:59</t>
-
-〓Eligibility〓
-
-Adventure Rank 20 or above
-
-Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
-
-Complete the "Gunfire in the Silent Lands" quest of the Archon Quest Chapter VII: Act I "Everwinter Without Mercy."
-
-〓Event Details〓
-
-● After the event starts, Travelers will need to enter the challenge in Co-Op Mode and throw snowballs to knock down as many Oddowls as possible within the time limit. As the snowball fight progresses, Wonderbeets will also join the fray. Stand near them to cheer them on, and gain extra buffs once cheering is complete.
-
-● Complete various stage challenges to earn Snowball Cheer. Accumulate Snowball Cheer and reach the specified amounts to claim the corresponding rewards.
-
-● Starting from the first day of this event, Snowball Cheer score is capped at 2,000 points. The cap will rise on Day 3 and again on Day 5, reaching a maximum of 6,000 points.
-
------
-
-# [Participate in "Starlight Voyage: Heart Unbound" to obtain Prismatic Crystals, the token for the Colorful Surprise Box](archive/21901.md)
-## Starlight Voyage: Heart Unbound
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/17/35629b6c92a60f02d0042907e72c372d_2750764721117474070_transformed.jpg)
-
-〓Event Duration〓
-
-Event Duration: <t class="t_lc" contenteditable="false">2026/10/19 10:00</t> ~ <t class="t_lc" contenteditable="false">2026/11/02 03:59</t>
-
-Quest Completion Period: <t class="t_lc" contenteditable="false">2026/10/19 10:00</t> ~ <t class="t_lc" contenteditable="false">2026/10/29 04:00</t>
-
-〓Event Rewards〓
-
-Prismatic Crystals
-
-〓Eligibility〓
-
-After awakening your Miliastra Wonderland Manekin
-
-〓Event Details〓
-
-During the quest completion period, Travelers can obtain "Sightseeing Experiences" by completing Starlight Voyage event stages.
-
-● After the event begins, the available stages in Starlight Voyage and the maximum obtainable Sightseeing Experiences will gradually increase over time. On Day 1, the cap is 800, and it will increase by 400 every two days thereafter, up to a maximum of 1,600.
-
-● During the event, Travelers can obtain the corresponding event reward, "Prismatic Crystals," by completing quests and accumulating Sightseeing Experiences.
-
-*"Prismatic Crystals" obtained from event rewards can only be used for a limited time. Don't forget to spend them before they expire.
-
------
-
-# [Event Wish "Void Star's Advent" - Boosted Drop Rate for "Void Star" Skirk (Cryo)!](archive/21888.md)
-## Event Wish "Void Star's Advent"
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/8668a2e84580c1426c290a447320bcd9_5708783295049261864_transformed.jpg)
-
-Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
-
-〓Event Wish Details〓
-
-Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
---- | --- | ---
-<t class="t_lc" contenteditable="false">2026/10/13 18:00</t> –  <t class="t_lc" contenteditable="false">2026/11/03 14:59</t> | "Void Star" Skirk (Cryo) | "Ode and Oblation" Dahlia (Hydro)
-^ | ^ | "Golden Vow" Candace (Hydro)
-^ | ^ | "Coordinates of Clear Frost" Mika (Cryo)
-
-● During this event wish, the event-exclusive 5-star character "Void Star" Skirk (Cryo) will receive a huge drop-rate boost!
-
-● During this event wish, the 4-star characters "Ode and Oblation" Dahlia (Hydro), "Golden Vow" Candace (Hydro), and "Coordinates of Clear Frost" Mika (Cryo) will receive a huge drop-rate boost!
-
-※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
-
-※ This is for "Character Event Wish." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
-
-※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
-
-※ For more information, go to the Wish screen and select Details in the bottom-left corner.
-
------
-
-# [Event Wish "La Chanson Cerise" - Boosted Drop Rate for "Tasteful Excellence" Escoffier (Cryo)!](archive/21889.md)
-## Event Wish "La Chanson Cerise"
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/e77eb5aab52127e55989bb8162d671d8_5676769242945454268_transformed.jpg)
-
-Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
-
-〓Event Wish Details〓
-
-Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
---- | --- | ---
-<t class="t_lc" contenteditable="false">2026/10/13 18:00</t> –  <t class="t_lc" contenteditable="false">2026/11/03 14:59</t> | "Tasteful Excellence" Escoffier (Cryo) | "Ode and Oblation" Dahlia (Hydro)
-^ | ^ | "Golden Vow" Candace (Hydro)
-^ | ^ | "Coordinates of Clear Frost" Mika (Cryo)
-
-● During this event wish, the event-exclusive 5-star character "Tasteful Excellence" Escoffier (Cryo) will receive a huge drop-rate boost!
-
-● During this event wish, the 4-star characters "Ode and Oblation" Dahlia (Hydro), "Golden Vow" Candace (Hydro), and "Coordinates of Clear Frost" Mika (Cryo) will receive a huge drop-rate boost!
-
-※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
-
-※ This is for "Character Event Wish-2." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
-
-※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
-
-※ For more information, go to the Wish screen and select Details in the bottom-left corner.
-
------
-
 # [New Content Overview](archive/21947.md)
 ## Version 7.1 Now Available
 
@@ -892,6 +754,144 @@ Fixes an issue whereby the icon for the weapon "Prospector's Drill" was incorrec
 *This is a work of fiction and is not related to any actual people, events, groups, or organizations.
 
 "PlayStation", "PS5", "DualSense", "DUALSHOCK" are registered trademarks or trademarks of Sony Interactive Entertainment Inc.
+
+-----
+
+# ["Overflowing Favor" Event: Double Drops With Artifacts](archive/21053.md)
+## Overflowing Favor
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/71613bec4ef9f79808a3d8659a3de7e3_4543893924710096263.jpg)
+
+During the event, successfully challenge "Domain of Blessing" and consume "Original Resin" to double your rewards.
+
+〓Event Duration〓
+
+<t class="t_lc" contenteditable="false">2026/10/26 04:00</t> - <t class="t_lc" contenteditable="false">2026/11/02 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 20 or above
+
+and after activating the corresponding "Domain of Blessing"
+
+〓Event Details〓
+
+● During the "Overflowing Favor" event, successfully challenge "Domain of Blessing" and consume "Original Resin" to double your rewards. You can double your rewards up to 3 times a day!
+
+-----
+
+# ["Carefree Snowball Fight" Event: Fun Throwing Challenge](archive/21891.md)
+## Carefree Snowball Fight
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/684d82e66f2ddec8c156b9f13f5dc991_4296667567912849878_transformed.jpg)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/08/21/c369da49c6d1d95455e84e9d1c564f8e_2780252075207902140_transformed.png)
+
+〓Event Duration〓
+
+<t class="t_lc" contenteditable="false">2026/10/21 10:00</t> – <t class="t_lc" contenteditable="false">2026/11/02 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 20 or above
+
+Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
+
+Complete the "Gunfire in the Silent Lands" quest of the Archon Quest Chapter VII: Act I "Everwinter Without Mercy."
+
+〓Event Details〓
+
+● After the event starts, Travelers will need to enter the challenge in Co-Op Mode and throw snowballs to knock down as many Oddowls as possible within the time limit. As the snowball fight progresses, Wonderbeets will also join the fray. Stand near them to cheer them on, and gain extra buffs once cheering is complete.
+
+● Complete various stage challenges to earn Snowball Cheer. Accumulate Snowball Cheer and reach the specified amounts to claim the corresponding rewards.
+
+● Starting from the first day of this event, Snowball Cheer score is capped at 2,000 points. The cap will rise on Day 3 and again on Day 5, reaching a maximum of 6,000 points.
+
+-----
+
+# [Participate in "Starlight Voyage: Heart Unbound" to obtain Prismatic Crystals, the token for the Colorful Surprise Box](archive/21901.md)
+## Starlight Voyage: Heart Unbound
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/17/35629b6c92a60f02d0042907e72c372d_2750764721117474070_transformed.jpg)
+
+〓Event Duration〓
+
+Event Duration: <t class="t_lc" contenteditable="false">2026/10/19 10:00</t> ~ <t class="t_lc" contenteditable="false">2026/11/02 03:59</t>
+
+Quest Completion Period: <t class="t_lc" contenteditable="false">2026/10/19 10:00</t> ~ <t class="t_lc" contenteditable="false">2026/10/29 04:00</t>
+
+〓Event Rewards〓
+
+Prismatic Crystals
+
+〓Eligibility〓
+
+After awakening your Miliastra Wonderland Manekin
+
+〓Event Details〓
+
+During the quest completion period, Travelers can obtain "Sightseeing Experiences" by completing Starlight Voyage event stages.
+
+● After the event begins, the available stages in Starlight Voyage and the maximum obtainable Sightseeing Experiences will gradually increase over time. On Day 1, the cap is 800, and it will increase by 400 every two days thereafter, up to a maximum of 1,600.
+
+● During the event, Travelers can obtain the corresponding event reward, "Prismatic Crystals," by completing quests and accumulating Sightseeing Experiences.
+
+*"Prismatic Crystals" obtained from event rewards can only be used for a limited time. Don't forget to spend them before they expire.
+
+-----
+
+# [Event Wish "Void Star's Advent" - Boosted Drop Rate for "Void Star" Skirk (Cryo)!](archive/21888.md)
+## Event Wish "Void Star's Advent"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/8668a2e84580c1426c290a447320bcd9_5708783295049261864_transformed.jpg)
+
+Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
+
+〓Event Wish Details〓
+
+Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
+--- | --- | ---
+<t class="t_lc" contenteditable="false">2026/10/13 18:00</t> –  <t class="t_lc" contenteditable="false">2026/11/03 14:59</t> | "Void Star" Skirk (Cryo) | "Ode and Oblation" Dahlia (Hydro)
+^ | ^ | "Golden Vow" Candace (Hydro)
+^ | ^ | "Coordinates of Clear Frost" Mika (Cryo)
+
+● During this event wish, the event-exclusive 5-star character "Void Star" Skirk (Cryo) will receive a huge drop-rate boost!
+
+● During this event wish, the 4-star characters "Ode and Oblation" Dahlia (Hydro), "Golden Vow" Candace (Hydro), and "Coordinates of Clear Frost" Mika (Cryo) will receive a huge drop-rate boost!
+
+※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
+
+※ This is for "Character Event Wish." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
+
+※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
+
+※ For more information, go to the Wish screen and select Details in the bottom-left corner.
+
+-----
+
+# [Event Wish "La Chanson Cerise" - Boosted Drop Rate for "Tasteful Excellence" Escoffier (Cryo)!](archive/21889.md)
+## Event Wish "La Chanson Cerise"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/e77eb5aab52127e55989bb8162d671d8_5676769242945454268_transformed.jpg)
+
+Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
+
+〓Event Wish Details〓
+
+Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
+--- | --- | ---
+<t class="t_lc" contenteditable="false">2026/10/13 18:00</t> –  <t class="t_lc" contenteditable="false">2026/11/03 14:59</t> | "Tasteful Excellence" Escoffier (Cryo) | "Ode and Oblation" Dahlia (Hydro)
+^ | ^ | "Golden Vow" Candace (Hydro)
+^ | ^ | "Coordinates of Clear Frost" Mika (Cryo)
+
+● During this event wish, the event-exclusive 5-star character "Tasteful Excellence" Escoffier (Cryo) will receive a huge drop-rate boost!
+
+● During this event wish, the 4-star characters "Ode and Oblation" Dahlia (Hydro), "Golden Vow" Candace (Hydro), and "Coordinates of Clear Frost" Mika (Cryo) will receive a huge drop-rate boost!
+
+※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
+
+※ This is for "Character Event Wish-2." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
+
+※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
+
+※ For more information, go to the Wish screen and select Details in the bottom-left corner.
 
 -----
 
