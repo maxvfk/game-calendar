@@ -2,11 +2,11 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-GEN-EXPIRIES
-STAGE: CP2
+STAGE: CP3
 BASE_MAIN_SHA: 97b407c838e8c2cbaf9ec14199f3814835cd978d
 BRANCH: fix/gen-expiries
 HEAD_SHA: this pushed commit (resolve branch ref)
-PR: NONE
+PR: https://github.com/maxvfk/game-calendar/pull/134
 DONE: current main/AGENTS/status/backlog/Genshin audit, parser, reviewed data/tests and source21901 completed work verified; no Starlight reimplementation. PR132/133 CP4 complete. Source21053/21890/21891 freshly fetched via KQM GitHub connector and agrees with actual stored notices.
 VERIFICATION: frozen Bun1.3.14 install PASS; typecheck PASS; final full suite PASS(1363pass/3existing age skips/0fail); build PASS. Actual fixed-clock feed253->254, exactly1 new weapon ID, only2 existing precision updates, no removed IDs/changed other winners/date conflicts. Source3 blob SHAs match live. PR/post-merge/Pages/public checks NOT RUN.
 REMAINING: narrowly extract exact server ends for two named duration-heading notices and one explicit dated weapon table; preserve existing2 IDs and reviewed precedence; add one distinct weapon-channel ID, no version/phase inference from cadence; reviewed fallback; full validation/release gates.
@@ -16,7 +16,8 @@ OUTCOME_B_PREVENTION: PENDING known duration/table deterministic parser + real-s
 CP0_SHA: 2132111381501cd691f929757d497ba28cfb0d62
 CP1_SHA: 1d368b8b10ad23e152a7e29c46b0f5568cb4566f
 VALIDATION_HISTORY: intermediate CP2 15082ca946556048511e176407a859c91a80d26a recorded full-suite failures; recognition expected subjects updated for new channel; isolated recognition/model-runner rerun50PASS and final full suite1363PASS. No Timeline code changed.
-NEXT_CONCRETE_STEP: create bounded GEN-EXPIRIES PR, then final-head CI/merge/post-merge CI/Pages/public verification.
+CP2_HEAD_SHA: bcc29efe2ffe6a76f56a2ee1ed8f570a484c01e0
+NEXT_CONCRETE_STEP: inspect final-head PR134 CI; require green before expected-head squash merge, then post-merge CI/Pages/public3 winners. Continue CZN-OVERDRIVE only after CP4.
 
 ## Exact scope
 
