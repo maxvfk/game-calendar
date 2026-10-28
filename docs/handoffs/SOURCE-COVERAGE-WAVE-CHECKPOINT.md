@@ -2,7 +2,7 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-END-CURRENT
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: 21f07733994483f579986a2fd86fe1f1c00ff200
 BRANCH: fix/end-current
 HEAD_SHA: resolve branch ref (this checkpoint commit)
@@ -27,3 +27,7 @@ NEXT_CONCRETE_STEP: append five distinct reviewed rows to data/reviewed/endfield
 All openings use source calendar day, not guessed maintenance completion or shared exact regional opening (schema has no regionStarts). Endfield AsiaUTC+8, Americas/EuropeUTC-5, no viewerDST conversion. Preserve Maras and Phantasia; no CycleIII duplicate, no futureupcoming batch yet, no P2/R1–R3/Timeline/Auth/Sync. Next afterCP4: nearest remaining confirmed P1 (HSR banners Nov10).
 
 CP1: five reviewed rows and test/endfield-current.test.ts implemented. Full validation/feed gates NOT RUN. Next run all required local commands and compare fixed feed255->260, no prior winners/conflicts changed.
+
+Validation history: first typecheck caught test tuple optionality; corrected test table to readonly tuples before rerunning. No production/schema change.
+
+CP2 PASS: bun install --frozen-lockfile; bun run typecheck; bun test1369pass/3existing age skips/0fail; bun run build; fixed feed255->260 exactlyfive intended IDs, every prior winner/conflict identical. Original7 Endfield rows and batch metadata byte-semantic equal. Evidence docs/evidence/endfield-current-feed-replay-2026-10-28.json. CP3/CP4 NOT RUN; next open PR and require exact-head CI.

@@ -36,8 +36,8 @@ test("Endfield western server clocks stay UTC-5 across DST; exact expiry is hist
     ["ancestral-spring-flows-anew", "2026-11-19T03:59:00.000Z", "2026-11-19T16:59:00.000Z"],
     ["tender-sprig-issue", "2026-11-19T03:59:00.000Z", "2026-11-19T16:59:00.000Z"],
     ["contingency-readiness", "2026-11-04T20:00:00.000Z", "2026-11-05T09:00:00.000Z"],
-  ]) {
-    const e = find(slug!);
+  ] as const) {
+    const e = find(slug);
     expect(e.regionEnds).toEqual({ asia, europe: west, america: west });
     for (const region of Region.options) assertExactBoundary(e, region, region === "asia" ? asia! : west!);
     const now = Date.parse(asia!) + 1;
