@@ -1,6 +1,6 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 MILESTONE: SC-P1-END-UPCOMING
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: 103520f71a3dc61ecc7bb4aa5ff79857b77fc9fc
 BRANCH: fix/end-upcoming
 HEAD_SHA: resolve branch ref
@@ -15,3 +15,5 @@ VERIFICATION_COMMANDS: install/typecheck/tests/build/feed NOT RUN for this miles
 NEXT_CONCRETE_STEP: append5 reviewed rows and boundary/unknownend/merge regression; pushCP1 before long checks. Then smallPR/CI/merge/postCI/Pages/public/browser. AfterCP4 CZNSeason5, then wavecloseout. NoP2/R1–R3/Timeline/Auth/Sync.
 
 CP0_SHA8b9b8f97427242c34c5d0f3f0517956423199183. CP1 implemented5 reviewedrows and3 meaningful regression tests. Initial targeted label expectation corrected to existing UI literal unknown; data/boundary/merge tests passed. Full required checks NOT RUN.
+
+CP1_SHA4f7ecdacffcfb5df7a5b8c2383d5d4a2913a88ef. CP2 PASS: bun install --frozen-lockfile; bun run typecheck; bun test1392pass/3existing age skips/0fail full summary; bun run build; fixed-feed281->286 five additions only, allprior winners/conflicts and reviewed12 unchanged. Targeted3pass, git diff --check PASS. Evidence docs/evidence/endfield-upcoming-feed-replay-2026-10-28.json. Next PR exactheadCI thenmerge/postCI/Pages/public/browser; CP3/CP4 PR body supersedes pending text.
