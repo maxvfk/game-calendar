@@ -1,29 +1,23 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
-MILESTONE: SC-P1-NTE-14-SKIPPED
-STAGE: CP2
-BASE_MAIN_SHA: cc325bf6597d83225ff51009bc8682869b7cf2f7
-BRANCH: fix/nte-rewards
-HEAD_SHA: resolve this branch ref
+MILESTONE: SC-P1-WUWA-37-PARSER
+STAGE: CP0
+BASE_MAIN_SHA: ed74b738c96bac47b9ad550d26885e3a8eae354e
+BRANCH: fix/wuwa-events
+HEAD_SHA: resolve branch ref
 PR: NONE
-DONE: CURRENT main, unchanged AGENTS, status/wave/backlog, NTE audit/NTE-STEAM, actual registered parser/snapshot, all15 reviewed rows and tests read. No existing fix in latest PRs. Prior137 CP4 verified: mergecc325bf, CI/Pages40692792892 SUCCESS, public264 generated13:03:05.098Z all4 HSR winners exact/browserPearl verified.
-VERIFICATION: source snapshot includes publisher Steam gid1844751498233952, skipped actual Log in title. Official264409 freshly opened agrees with allfive periods. Explicit2026 context in SAME notice; standalone yearless announcements still must skip. Public/current feed lacks allfive new current IDs.
-REMAINING: narrowly admit verified reward release title+version payload; scope selection to five reward sections only (no P2 history/web/shop); actual-source malformed/future/merge/boundary tests; full validation/release gates.
-BLOCKERS: NONE for existing approved Steam transport. No new adapter/runner/source research.
+DONE: CURRENT main/unchanged AGENTS/status/wave/backlog/WuWa audit/parser/reviewed12 rows/tests and actual5571/5546/5668 read. Prior138 CP4 verified: mergeed74b738, CI/Pages40694158519 SUCCESS, public269 generated13:12:20.577Z all5 NTE semantic winners and Bounty browser verified.
+VERIFICATION: fresh GitHub mirror blob b409efe121a6a2757101bb1eebaaf093d196b762 exactly matches stored snapshot. Official5571 public HTML retrieval empty; use actual publisher-article mirror, no claim new direct fetch/runner. Current parser7 candidates, four confirmed patch events absent.
+REMAINING: narrowly recognize actual patch heading/maintenance calendar anchor for four approved event families only, correct nested Cubie identity and decorated Duration, strict scoped period validation; preserve seven prior parser candidates and12 reviewed, no historical banner backfill. Full checks/release gates.
+BLOCKERS: NONE for four existing-snapshot periods. Separately SC-P1-WUWA-NEW-BANNERS BLOCKED WUWA-NEW-BANNER-CLOCK: actual20-entry mirror names Suoming/UnspokenRue in5571 but no explicit phase clock;5668 dates onlyfour reruns; official-domain bounded exact-name/date search found no independently dated first-party notice. This is unverified timing, not proof no notice exists. Do not borrow rerun clocks or implement broader W2 discovery.
 OUTCOME_A_DATA: PENDING
-OUTCOME_B_PREVENTION: PENDING deterministic bounded notice selection/extraction and regression
-NEXT_CONCRETE_STEP: implement narrow verified reward-release path in src/ingest/parsers/nte-steamnews.ts, preserving generic title and year guards.
+OUTCOME_B_PREVENTION: PENDING deterministic scoped parser/regressions
+NEXT_CONCRETE_STEP: implement four-family patch duration contract in wuwa-kuro-atom.ts, not a general historical banner anchor expansion.
 
-Actual notice title: Log in to NTE's new version for Solid Dice x20, a limited frame, and more!
-Source https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1844751498233952
-Corroboration https://nte.perfectworld.com/en/article/news/gamenews/20260929/264409.html
-Ids: nte:circle-gifts:2026-09-30, nte:terminal-depths:2026-09-30,
- nte:pukaland-travelogue:2026-09-30, nte:coal-lumps-treasure:2026-10-08,
- nte:circle-bounty:2026-09-30.
-Afterupdate starts remain daySep30; CoalLump exactOct8 02Z from10:00UTC+8. Common endNov10 21:59Z; Bounty earlierNov10 15:59Z. GlobalUTC+8, no regional shifting. Preserve15 reviewed and existing known24h CircleBounty1.3 conflict, currentAkane/BTR winners, all snapshots/source timestamps. No broad Log in allowlist, no guessed year/maintenance finish, no P2 PhaseI/history/permanent/Porsche/web entries. Next afterCP4: WuWa3.7 current event/parser (earliestAsiaNov10 19:59Z).
-
-CP0_SHA:4e31b4de24436331bca1964ec36eebaf73d34499
-CP1 implemented: bounded reward-title+version/year/context admission, five-section extraction, explicit CircleBounty version discriminator only; generic same-version/unknown conflict checks and year guards unchanged. New actual-snapshot malformed/future/merge/expiry regressions. Initial targeted test used unsorted source priority, corrected to production reviewed-first order; final local validation pending. Next full mandatory checks and264->269 replay.
-
-CP2 FINAL PASS: frozen install/typecheck/full1375pass/3existing age skips/0fail/build/feed264->269, exactlyfive additions, allold winners/conflicts identical; reviewed15 byte-identical. Actual parser49->54 onlyfive named reward candidates. Evidence docs/evidence/nte-rewards-feed-replay-2026-10-28.json. CP3 delivery PR body will hold exacthead/run; CP4 NOT RUN. Next create PR then exact-head CI.
+IDs wuwa:cubie-wars:2026-09-30, wuwa:dreams-in-the-capsule:2026-09-30,
+wuwa:gifts-of-waking-moon:2026-09-30, wuwa:gifts-of-singing-drizzle:2026-10-22.
+Source https://wutheringwaves.kurogames.com/en/main/news/detail/5571
+CubieNov11 11:59server ->AsiaNov11 03:59Z/Europe10:59Z/America16:59Z.
+OtherthreeNov11 03:59server ->AsiaNov10 19:59Z/EuropeNov11 02:59Z/America08:59Z.
+Day openings; no guessed maintenance completion. No SpecialEvents falseID, no4 PhaseI reruns/web/permanent entries; source timestamps unchanged. Next afterCP4: HSRclaimsNov10 22Z, then CZNseasons/AdditionalAetherNov11 day.
