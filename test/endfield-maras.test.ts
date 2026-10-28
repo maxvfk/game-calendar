@@ -42,7 +42,7 @@ test("known resolution does not silence new exact disagreements or accept anothe
     { ...official, sourceUrl: "https://endfield.gryphline.com/en-us/news/other" },
     { ...official, provenanceStatus: "estimated" as const },
     { ...official, startsAt: "2026-10-22T04:01:00.000Z" },
-  ]) expect(mergeEvents([[changed], [captured]]).conflicts).toHaveLength(1);
+  ]) expect(mergeEvents([[changed], [captured]], { toleranceHours: 0 }).conflicts).toHaveLength(1);
   const correctedWiki = { ...captured, endsAt: ends.asia, regionEnds: ends };
   expect(mergeEvents([[correctedWiki], [official]]).conflicts).toEqual([]);
   expect(mergeEvents([[correctedWiki], [official]]).events).toEqual([official]);

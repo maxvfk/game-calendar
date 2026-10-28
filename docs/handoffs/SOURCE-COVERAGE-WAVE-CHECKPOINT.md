@@ -2,19 +2,21 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P0-END-MARAS
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: 473729f70ec0d879a1604424676112bdfef92058
 BRANCH: fix/end-maras
 HEAD_SHA: this pushed checkpoint commit (resolve branch ref)
 PR: NONE
 DONE: Current main/AGENTS/status/wave/backlog/Endfield audit, actual wiki snapshot/parser, reviewed data and merge/tests read. PR130 and PR132 fully released; PR132 CP4 CI40674871392/public253 events verified. No existing Maras fix PR found.
-VERIFICATION: actual published winner has wiki ends Nov4 22:00Z Asia /Nov5 22:00Z West; official9560 re-read Oct28 states Nov5 04:00 server. Implementation committed: same-ID official reviewed winner plus only-the-known-clock-pair reconciliation in merge.ts; regression tests added. Full validation/CI NOT RUN.
+VERIFICATION: actual published winner has wiki ends Nov4 22:00Z Asia /Nov5 22:00Z West; official9560 re-read Oct28 states Nov5 04:00 server. Implementation committed: same-ID official reviewed winner plus only-the-known-clock-pair reconciliation in merge.ts; regression tests added. Frozen Bun1.3.14 install PASS; typecheck PASS; full tests PASS(1359pass/3existing age skips/0fail); build PASS. Fixed-clock feed253->253; same IDs; exactly Maras winner changed; prior other winners/date conflicts unchanged. PR/post-merge/Pages/public gates NOT RUN.
 REMAINING: add same-ID official reviewed correction; narrowly reconcile only the known wiki disagreement without disabling future conflict detection; test boundaries/IDs/precedence; all local and release gates.
 BLOCKERS: NONE for current correction. General official unattended discovery remains separate Endfield audit A3 gate.
 OUTCOME_A_DATA: PENDING
 OUTCOME_B_PREVENTION: PENDING narrow evidence-specific reconciliation + strict unknown-disagreement regression; no broad official adapter claimed.
 CP0_SHA: 449975192715b0e3803bd3de0c6af8b4f17192d5
-NEXT_CONCRETE_STEP: run frozen install/typecheck/full tests/build and actual feed comparison; known discrepancy must not add an unresolved conflict, unknown one-minute discrepancies must still conflict.
+CP1_SHA: 620c7475a5f0e26629c91b12f8e740c7efc8419c
+NEXT_CONCRETE_STEP: create bounded Maras PR; update checkpoint/status/backlog with its URL; require exact-head green CI before merge.
+TEST_NOTE: initial provenance-negative test assumed official strictness for an estimated row; use existing toleranceHours0 in that negative test without altering generic merge semantics. All final tests PASS.
 
 ## Exact evidence and intended identity
 
@@ -27,3 +29,5 @@ Accept only this reviewed-official/source-ID/URL/identity/clock pair. Any new ti
 
 Previous CP4: https://github.com/maxvfk/game-calendar/pull/132
 Next eligible after this release: SC-P1-GEN-EXPIRIES, current main/source recheck required.
+
+Future Endfield handoff warning: freshly read9560 has Secret Sanctuary ending Dec2 04:00, and Sanity Supply Nov18-Nov25 Asia /Nov18-Nov24 17:00 West, differing from audit/backlog. Out of this Maras fix; re-read live official notice for SC-P1-END-UPCOMING rather than copying frozen research.
