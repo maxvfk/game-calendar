@@ -5,7 +5,7 @@ const schema = await Bun.file("scripts/timeline-label-agent/decisions.schema.jso
 const prompt = await Bun.file("scripts/timeline-label-agent/system-prompt.md").text();
 const probe = await Bun.file(".github/workflows/timeline-labels-probe.yml").text();
 const runner = await Bun.file("scripts/timeline-label-agent/run-model.sh").text();
-const registry = TimelineRegistry.parse(await Bun.file("data/presentation/timeline-labels.v1.json").json());
+const registry = TimelineRegistry.parse(await Bun.file("test/fixtures/editorial/timeline-labels-v1-2026-10-26.json").json());
 
 /** Minimal structural check of one decision against the draft-07 model output schema. */
 function fitsSchema(decision: Record<string, unknown>): boolean {

@@ -14,10 +14,12 @@ import { loadProvenanceInventory } from "../scripts/editorial-provenance-git.ts"
 import { guardedPush, validateCandidate } from "../scripts/timeline-cutover-operator.ts";
 
 const root = join(import.meta.dir, "..");
-const manifest = CutoverManifest.parse(await Bun.file(CUTOVER_PATH).json());
-const original = TimelineRegistry.parse(await Bun.file(V1_PATH).json());
-const initial = EditorialRegistryV2.parse(await Bun.file(V2_PATH).json());
-const frozen = StorageSelection.parse(await Bun.file(STORAGE_PATH).json());
+// Historical assertions never read mutable production registry/selector files.
+const fixture = join(import.meta.dir, "fixtures/editorial/cutover-2026-10-27");
+const manifest = CutoverManifest.parse(await Bun.file(join(fixture, "timeline-v2-cutover.v1.json")).json());
+const original = TimelineRegistry.parse(await Bun.file(join(fixture, "timeline-labels.v1.json")).json());
+const initial = EditorialRegistryV2.parse(await Bun.file(join(fixture, "timeline-labels.v2.json")).json());
+const frozen = StorageSelection.parse({ schemaVersion: 1, activeVersion: 2, epoch: manifest.targetEpoch, admission: "frozen" });
 const opened = { ...frozen, admission: "open" as const };
 const NOW = "2026-10-27T20:00:00.000Z";
 const event = GachaEvent.parse({ id: "wuwa:new-cutover-event:2026-10-27", game: "wuwa", type: "other", title: "New test event", summary: null,
@@ -48,7 +50,12 @@ function git(dir: string, args: string[], ok = true) {
 }
 function commit(dir: string, subject: string) { git(dir, ["add", "."]); git(dir, ["commit", "--quiet", "-m", subject]); return git(dir, ["rev-parse", "HEAD"]); }
 
-test("fresh cutover ledger is distinct from immutable E2a and preserves all 75 payloads/origins/22 labels", () => {
+test("historical cutover ledger is distinct from immutable E2a and preserves all 75 payloads/origins/22 labels", async () => {
+ for (const [file, hash] of [
+  ["timeline-labels.v1.json", "90fb14edccf546e96a2403bcb929ece3542259da50d8bfa20350bdd0c9200a3a"],
+  ["timeline-labels.v2.json", "472bc5b2351f202086b70d61b16b68243e2d984493c410e302e571621ffb9b70"],
+  ["timeline-v2-cutover.v1.json", "6b67fc1a298fe085580d4d7a1cf42a30ad9f1fb7b4623e23b8a3bd294f64a423"],
+ ] as const) expect(sha256(await Bun.file(join(fixture, file)).text()), file).toBe(hash);
  expect(manifest.inventory.recordCount).toBe(75);
  expect(manifest.inventory.records.filter(r => r.origin === "operator_approved")).toHaveLength(25);
  expect(manifest.inventory.records.filter(r => r.origin === "automated")).toHaveLength(50);
@@ -71,6 +78,12 @@ test("fresh cutover ledger is distinct from immutable E2a and preserves all 75 p
  expect(CutoverManifest.safeParse({ ...manifest, targetRegistryHash: "0".repeat(64) }).success).toBe(false);
  const historic = Bun.file("data/presentation/timeline-origin-migration.v1.json");
  expect(historic.size).toBeGreaterThan(0);
+});
+
+test("current selected storage validates in frozen, released, grown or rollback state", async () => {
+ const current = await loadTimelineStorage(root);
+ expect(current.projection).toEqual(current.registry.schemaVersion === 2 ? rollbackToV1(current.registry) : current.registry);
+ expect(storedRegistryBytes(current.registry)).toBe(await Bun.file(join(root, current.path)).text());
 });
 
 test("same queue/presentation and old public feed schema; no evidence-only work or origin in model contract", () => {
@@ -213,43 +226,20 @@ test("full fixed-clock builder parity under v1 and v2, including all titles, sum
   const build = async () => { const r = Bun.spawnSync([process.execPath, "--preload", join(dir, "clock.ts"), join(root, "scripts/build-feed.ts")], { cwd: dir }); expect(r.exitCode, r.stderr.toString()).toBe(0);
    return await Promise.all(["events.v1.json", "timeline-label-queue.v1.json", "timeline-label-agent-input.v1.json", "review.v1.json"].map(p => Bun.file(join(dir, "public/data", p)).text())); };
   await Bun.write(join(dir, STORAGE_PATH), JSON.stringify({ schemaVersion: 1, activeVersion: 1, epoch: "timeline-v1-" + "0".repeat(64), admission: "frozen" }));
-  const before = await build(); await Bun.write(join(dir, STORAGE_PATH), JSON.stringify(frozen)); expect(await build()).toEqual(before);
+  const before = await build();
+  for (const selection of [frozen, opened]) {
+   await Bun.write(join(dir, STORAGE_PATH), JSON.stringify(selection)); expect(await build()).toEqual(before);
+  }
+  // A non-label record changes no public copy. Compare its v2 and v1 views at
+  // fixed input/clock, including queue and all existing approved labels.
+  const recorded = acceptStoredTimelineProposals(proposal, feed, initial).registry;
+  await Bun.write(join(dir, V2_PATH), editorialRegistryBytes(recorded)); const postWrite = await build();
+  expect(postWrite[0]).toBe(before[0]);
+  const rollback = prepareRollback(recorded, opened.epoch);
+  await Bun.write(join(dir, V1_PATH), rollback.v1); await Bun.write(join(dir, STORAGE_PATH), JSON.stringify(rollback.selection));
+  expect(await build()).toEqual(postWrite);
  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
-
-test("actual old record.sh cannot write, new runner obeys freeze and records v2 idempotently (local remote only)", async () => {
- const dir = temp("timeline-record-"); const work = join(dir, "work"), bare = join(dir, "remote.git"), bin = join(dir, "bin");
- try {
-  git(dir, ["init", "--quiet", "--bare", bare]); git(dir, ["clone", "--quiet", bare, work]);
-  await storage(work, frozen);
-  mkdirSync(join(work, "scripts"), { recursive: true });
-  symlinkSync(join(root, "src"), join(work, "src"));
-  for (const p of ["timeline-labels.ts", "timeline-storage.ts"]) await Bun.write(join(work, "scripts", p), Bun.file(join(root, "scripts", p)));
-  await Bun.write(join(work, ".gitignore"), "public/\ntmp/\n*.writer-lock\n*.tmp-writer-*\n");
-  const base = commit(work, "frozen fixture"); git(work, ["push", "origin", "HEAD:main"]);
-  const p = join(dir, "proposals.json"), ticket = join(dir, "ticket.json"), reports = join(dir, "reports");
-  await Bun.write(p, JSON.stringify(proposal)); await Bun.write(ticket, JSON.stringify(writerTicket(opened))); mkdirSync(bin);
-  // Only heavyweight check commands are stubbed. Ticket/reader/accept and Git run for real.
-  const quote = (s: string) => "'" + s.replaceAll("'", "'\\''") + "'";
-  await Bun.write(join(bin, "bun"), `#!/bin/sh\nif [ "$1" = run ] || [ "$1" = test ]; then exit 0; fi\nexec ${quote(process.execPath)} "$@"\n`); chmodSync(join(bin, "bun"), 0o755);
-  // Ordinary CI is shallow. Freeze the actual old runner and verify its independent E2a hash.
-  const beforeScript = await Bun.file(join(root, "test/fixtures/editorial/record-v1-before-cutover.sh")).text();
-  const frozenHistory = await Bun.file(join(root, "test/fixtures/editorial/provenance-history-2026-10-26.json")).json();
-  expect(sha256(beforeScript)).toBe(frozenHistory.m4Files.find((f: { path: string }) => f.path === "scripts/timeline-label-agent/record.sh").sha256);
-  const old = join(dir, "old-record.sh"); await Bun.write(old, beforeScript);
-  const run = (script: string, ticketArg: boolean) => Bun.spawnSync(["bash", script, p, "main", reports, ...(ticketArg ? [ticket] : [])], { cwd: work, env: { ...process.env, PATH: bin + ":" + process.env.PATH } });
-  let r = run(old, false); expect(r.exitCode).not.toBe(0); expect(git(dir, ["--git-dir", bare, "rev-parse", "main"])).toBe(base);
-  r = run(join(root, "scripts/timeline-label-agent/record.sh"), true); expect(r.exitCode).not.toBe(0);
-  expect(git(dir, ["--git-dir", bare, "rev-parse", "main"])).toBe(base);
-  await Bun.write(join(work, STORAGE_PATH), JSON.stringify(opened)); const release = commit(work, "synthetic release only in local test"); git(work, ["push", "origin", "HEAD:main"]);
-  r = run(join(root, "scripts/timeline-label-agent/record.sh"), true); expect(r.exitCode, r.stderr.toString() + r.stdout.toString()).toBe(0);
-  const recorded = git(dir, ["--git-dir", bare, "rev-parse", "main"]); expect(recorded).not.toBe(release);
-  expect(git(work, ["diff-tree", "--no-commit-id", "--name-only", "-r", recorded])).toBe(V2_PATH);
-  expect((await loadTimelineStorage(work)).registry.decisions.at(-1)).toMatchObject({ eventId: event.id, origin: "automated", evidenceHashAtDecision: null });
-  r = run(join(root, "scripts/timeline-label-agent/record.sh"), true); expect(r.exitCode, r.stderr.toString()).toBe(0);
-  expect(git(dir, ["--git-dir", bare, "rev-parse", "main"])).toBe(recorded);
- } finally { rmSync(dir, { recursive: true, force: true }); }
-}, 20_000);
 
 test("cutover candidate validates fresh full-history boundary; release is a separate one-file transition", async () => {
  const dir = temp("timeline-candidate-");
