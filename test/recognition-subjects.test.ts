@@ -108,6 +108,7 @@ test("current offline feed build retains representative reviewed subjects and al
       .toEqual([
         ["When Warm Winds Cavort", ["Vesna"]],
         ["Epitome Invocation — Version 7.1 Phase I", ["Beyond the Chrysalis", "Hymn of the Maelstrom"]],
+        ["Epitome Invocation — Azurelight and Symphonist of Scents", ["Azurelight", "Symphonist of Scents"]],
       ]);
     for (const [index, event] of after.entries()) {
       const { recognitionSubjects: subjects, ...rest } = event;
