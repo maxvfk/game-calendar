@@ -24,3 +24,5 @@ All endAsiaNov10 07:00Z /Europe14:00Z /America20:00Z. Fixed game clocks+8/+1/-5;
 
 CP0_SHA:04f83b513f72a94dfbf40ff0796699abca19b20c
 CP1: four reviewed channels and test/hsr-current-warps.test.ts implemented. Validation/release NOT RUN. Next full local checks and feed260->264, onlyfour additions.
+
+Validation history: frozen install/typecheck PASS. First full test command exited1 without summary (NOT complete). Isolated three new tests exposed a day-precision pre-opening assertion near an Asia day boundary; moved pre-opening check to an unambiguously earlier day. Targeted HSR+recognition25PASS/0FAIL; manual feed build264 PASS. Final full tests/typecheck/build/fixed replay are RUNNING, not yet certified. No production clock/schema changed.

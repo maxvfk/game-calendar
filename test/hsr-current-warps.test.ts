@@ -24,7 +24,7 @@ test("four live Warp identities keep Pearl/Colors continuous across phases and L
       regionScoped: true, regionEnds: ends, sourceId: "reviewed-hsr", provenanceStatus: "official", extractionMethod: "manual" });
     expect(e.firstSeenAt).toBe(e.updatedAt);
     expect(e.updatedAt > batch.reviewedAt).toBe(true);
-    expect(clockFor(e, "asia", Date.parse("2026-10-20T23:59:00Z")).upcoming).toBe(e.startsAt.startsWith("2026-10-21"));
+    expect(clockFor(e, "asia", Date.parse("2026-10-19T12:00:00Z")).upcoming).toBe(e.startsAt.startsWith("2026-10-21"));
   }
   for (const subject of ["Pearl", "Colors for Tomorrow"]) expect(reviewed.filter(e => e.recognitionSubjects?.includes(subject))).toHaveLength(1);
 });
