@@ -1,28 +1,20 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
-MILESTONE: SC-P1-GEN-EXPIRIES
-STAGE: CP3
-BASE_MAIN_SHA: 97b407c838e8c2cbaf9ec14199f3814835cd978d
-BRANCH: fix/gen-expiries
+MILESTONE: SC-P1-CZN-OVERDRIVE
+STAGE: CP0
+BASE_MAIN_SHA: d95e852f3cd9c79739dfd1a41192a2270a9a9a04
+BRANCH: fix/czn-overdrive
 HEAD_SHA: this pushed commit (resolve branch ref)
-PR: https://github.com/maxvfk/game-calendar/pull/134
-DONE: current main/AGENTS/status/backlog/Genshin audit, parser, reviewed data/tests and source21901 completed work verified; no Starlight reimplementation. PR132/133 CP4 complete. Source21053/21890/21891 freshly fetched via KQM GitHub connector and agrees with actual stored notices.
-VERIFICATION: frozen Bun1.3.14 install PASS; typecheck PASS; final full suite PASS(1363pass/3existing age skips/0fail); build PASS. Actual fixed-clock feed253->254, exactly1 new weapon ID, only2 existing precision updates, no removed IDs/changed other winners/date conflicts. Source3 blob SHAs match live. PR/post-merge/Pages/public checks NOT RUN.
-REMAINING: narrowly extract exact server ends for two named duration-heading notices and one explicit dated weapon table; preserve existing2 IDs and reviewed precedence; add one distinct weapon-channel ID, no version/phase inference from cadence; reviewed fallback; full validation/release gates.
-BLOCKERS: NONE for checked notices. Broad new weapon-name/version/phase discovery remains outside this bounded fix.
+PR: NONE
+DONE: Current main/AGENTS/status/backlog/CZN audit, actual banner-only parser/reviewed data/tests read. PR134 CP4 CI/Pages40678433259 SUCCESS; public254 exact3 winners and browser verified. No existing Overdrive fix PR found.
+VERIFICATION: fresh indexed publisher-authored10/21 notice confirms Overdrive Simulation: afterOct21 maintenance toNov3 18:00 UTC, six doubled simulation rewards/day, opportunity reset18:00 UTC. Current public feed has no matching event. Implementation/tests/build/CI NOT RUN.
+REMAINING: add one reviewed source-backed current event with day-only opening and exact global end; test expiry all regions, source incompleteness and no other changes; full local/release gates.
+BLOCKERS: unattended official-event discovery absent (existing source Prydwen is banner-only); do not add a new broad integration/runner probe in this fix.
 OUTCOME_A_DATA: PENDING
-OUTCOME_B_PREVENTION: PENDING known duration/table deterministic parser + real-source regressions
-CP0_SHA: 2132111381501cd691f929757d497ba28cfb0d62
-CP1_SHA: 1d368b8b10ad23e152a7e29c46b0f5568cb4566f
-VALIDATION_HISTORY: intermediate CP2 15082ca946556048511e176407a859c91a80d26a recorded full-suite failures; recognition expected subjects updated for new channel; isolated recognition/model-runner rerun50PASS and final full suite1363PASS. No Timeline code changed.
-CP2_HEAD_SHA: bcc29efe2ffe6a76f56a2ee1ed8f570a484c01e0
-NEXT_CONCRETE_STEP: inspect final-head PR134 CI; require green before expected-head squash merge, then post-merge CI/Pages/public3 winners. Continue CZN-OVERDRIVE only after CP4.
+OUTCOME_B_PREVENTION: BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY (CZN audit C3 access/terms/runner gate; reviewed fallback now)
+NEXT_CONCRETE_STEP: append czn:overdrive-simulation:2026-10-21 to data/reviewed/czn.json and add source-backed UTC expiry/merge tests.
 
-## Exact scope
-
-- genshin:overflowing-favor:2026-10-26 and genshin:carefree-snowball-fight:2026-10-21: Nov2 03:59 server -> AsiaNov1 19:59Z /EuropeNov2 02:59Z /AmericaNov2 08:59Z. Preserve day starts and firstSeenAt (Overflowing from actual public winner2026-10-28T10:59:09.977Z; Carefree2026-09-23T00:08:13.000Z).
-- New single weapon title/ID derives from explicitly named featured weapons, not an absent article version/phase field: Epitome Invocation — Azurelight and Symphonist of Scents; startsOct13 day; endsNov3 14:59 server -> Asia06:59Z /Europe13:59Z /America19:59Z. Preserve existing PhaseI ID/title/record.
-- SourceURLs https://github.com/KQM-git/GINews/blob/master/archive/{21053,21890,21891}.md. Live blobs74dc17f2e4ef69d58dc0e610e93920567be88cba /3c1e92414c0c2112c8e304545317db4475444123 /f9b1738c1f4e55e285abb5fea2aafeacd52c49db respectively.
-- No snapshot/source timestamps changed, no arbitrary tag promotion, no maintenance time guessed. Retain all Starlight and character-wish winners.
-- Previous CP4: PR133 merge97b407c, CI/Pages40676242165 SUCCESS; public253 exactMaras and UIWest/Asia verified.
+Evidence: https://czn.gg/10-21wed-update-notice/ (STOVE-authored publisher text, attributed secondary host; manual indexed recheck Oct28). Exact source schedule: 10/21/2026 after the maintenance – 11/03/2026 18:00 (UTC). Do not guess an exact maintenance completion timestamp or equate mail06:00 UTC with this18:00 cutoff/reset.
+StartsAt2026-10-21T00:00:00.000Z/day, endsAt2026-11-03T18:00:00.000Z/exact, global (regionScopedfalse). Real new discovery/review time only. Preserve all29 existing CZN reviewed rows, gifts and Daily Reset/Sync.
+Previous released: PR130 Starlight;132 CZN gifts;133 Maras;134 Genshin expiries. Next after CP4: SC-P1-END-CURRENT.
