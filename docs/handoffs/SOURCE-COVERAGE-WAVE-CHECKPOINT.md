@@ -1,30 +1,28 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
-MILESTONE: SC-P0-CZN-GIFTS
-STAGE: CP3
-BASE_MAIN_SHA: 67144c229b80e58057b9ebfc761498f0f0e9dfdf
-BRANCH: fix/czn-gifts
-HEAD_SHA: this pushed checkpoint commit (resolve the branch ref)
-PR: https://github.com/maxvfk/game-calendar/pull/132
-LAST_VERIFIED_CP0_SHA: 6ea8a952299572f5c47c5d0656a07dfb8cef6ce0
-DONE: Current main/AGENTS/status/wave/backlog/CZN audit, reviewed data, banner-only parser/tests read. PR130 verified merged/released; no duplicate recovery PR found among recent PRs.
-VERIFICATION: source notice rechecked in indexed publisher-authored STOVE mirror; current public feed download and fixed-clock baseline build started. CP1 implementation pushed fb036cd8389f5201409600035ab7cb7605bff764. bun install --frozen-lockfile PASS; bun run typecheck PASS; bun test PASS (1356 pass,3 existing age skips,0 fail); bun run build PASS. Fixed-clock actual feed245->253, exactly8 additions, all prior winners and date conflicts unchanged. PR CI/post-merge/Pages/public checks NOT RUN. Initial targeted test used generic dayStartMs incorrectly; fixed assertion to existing dedicated cznDayStart; full suite now passes.
-REMAINING: add eight reviewed mail claim windows and source-backed expiry/merge tests, then frozen install/typecheck/full tests/build/feed comparison, PR/CI/merge/Pages/public validation.
-BLOCKERS: direct CZN.gg fetch returned403; search index exposes complete announced date table and Source: STOVE attribution. No compliant unattended STOVE adapter is established; no new access probe is authorized.
+MILESTONE: SC-P0-END-MARAS
+STAGE: CP0
+BASE_MAIN_SHA: 473729f70ec0d879a1604424676112bdfef92058
+BRANCH: fix/end-maras
+HEAD_SHA: this pushed checkpoint commit (resolve branch ref)
+PR: NONE
+DONE: Current main/AGENTS/status/wave/backlog/Endfield audit, actual wiki snapshot/parser, reviewed data and merge/tests read. PR130 and PR132 fully released; PR132 CP4 CI40674871392/public253 events verified. No existing Maras fix PR found.
+VERIFICATION: actual published winner has wiki ends Nov4 22:00Z Asia /Nov5 22:00Z West; official9560 re-read Oct28 states Nov5 04:00 server. Implementation/tests/CI NOT RUN.
+REMAINING: add same-ID official reviewed correction; narrowly reconcile only the known wiki disagreement without disabling future conflict detection; test boundaries/IDs/precedence; all local and release gates.
+BLOCKERS: NONE for current correction. General official unattended discovery remains separate Endfield audit A3 gate.
 OUTCOME_A_DATA: PENDING
-OUTCOME_B_PREVENTION: BLOCKED CZN-OFFICIAL-MAIL-DISCOVERY (CZN audit C3: publisher index/terms/runner gate; reviewed fallback now)
-CP2_HEAD_SHA: 11389e640096f867c47a8ecc078e94d12cd6f9c9
-NEXT_CONCRETE_STEP: inspect exact-head PR132 CI after this checkpoint push; require all CI green, squash merge with expected head, verify post-merge CI/Pages/public eight records. Only then advance to SC-P0-END-MARAS.
+OUTCOME_B_PREVENTION: PENDING narrow evidence-specific reconciliation + strict unknown-disagreement regression; no broad official adapter claimed.
+NEXT_CONCRETE_STEP: append official Maras reviewed row preserving observed ID/start/firstSeenAt, then introduce the exact-known-conflict acknowledgement in merge.ts and tests.
 
-## Source and exact scope
+## Exact evidence and intended identity
 
-Notice: https://czn.gg/event-1st-anniversary-celebration-daily-login-rewards-event/
-Publisher-authored text attributed to STOVE; Updated Oct21,2026. Full table independently re-read via web search Oct28. This is manual secondary-host evidence, not an official-domain fetch or unattended discovery proof. No source publication/confirmation timestamp will be invented.
+Official source https://endfield.gryphline.com/en-us/news/9560, Umbral Monument section: Oct22,2026 12:00 to Nov5,2026 04:00(server time). Source defines Asia UTC+8, Americas/Europe UTC-5.
+ID: endfield:monumental-etching-forest-of-maras:2026-10-22
+Preserve observed startsAt2026-10-22T04:00:00.000Z/exact and firstSeenAt2026-10-28T10:48:37.273Z from the independently downloaded pre-fix production feed.
+Correct regional ends: Asia2026-11-04T20:00:00.000Z; Americas/Europe2026-11-05T09:00:00.000Z.
+Known rejected wiki ends: Asia2026-11-04T22:00:00.000Z; Americas/Europe2026-11-05T22:00:00.000Z.
+Accept only this reviewed-official/source-ID/URL/identity/clock pair. Any new timestamp discrepancy must remain a conflict; preserve raw wiki bytes and no global timezone patch.
 
-- Delivery daily06:00 UTC, Oct21-Nov3. Each ordinary claim table ends next day05:59 UTC.
-- Oct21 Rossweisse's Celebration sticker and Oct28 Night Palace background: Nov30 14:59 UTC.
-- Include two still-claimable exceptions and six dated ordinary windows Oct29-Nov3; no extra parent or duplicate Oct28 ordinary gift.
-- Intended IDs: czn:anniversary-mail-gift:2026-10-29 through :2026-11-03; czn:anniversary-sticker-gift:2026-10-21; czn:anniversary-background-gift:2026-10-28.
-- All clocks global UTC; standing18:00 UTC Daily Reset and Sync untouched. New firstSeenAt/reviewedAt use actual review time, never delivery dates.
-- Earlier ordinary Oct22-Oct27 mail claims already expired at launch and are excluded as historical backfill.
+Previous CP4: https://github.com/maxvfk/game-calendar/pull/132
+Next eligible after this release: SC-P1-GEN-EXPIRIES, current main/source recheck required.
