@@ -1,21 +1,14 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
-MILESTONE: SC-P1-END-UPCOMING
-STAGE: CP2
-BASE_MAIN_SHA: 103520f71a3dc61ecc7bb4aa5ff79857b77fc9fc
-BRANCH: fix/end-upcoming
+MILESTONE: SC-P1-CZN-SEASON5
+STAGE: CP0
+BASE_MAIN_SHA: a671d7fb726d8437a66c60b0990d557fc0147d49
+BRANCH: fix/czn-season5
 HEAD_SHA: resolve branch ref
 PR: NONE
-DONE: CURRENT main/AGENTS/status/wave/backlog, Endfield audit, actual wiki parser/snapshot8, reviewed12 and tests checked. PR143 release verified merge103520f, CI/Pages40709150830 SUCCESS; public281 generated14:46:51.261Z exact2 ZZZ winners and browser verified.
-VERIFICATION: freshly read primary https://endfield.gryphline.com/en-us/news/9560 lines184–223. Five canonical families only: Stars/Fervor/Contract Nov5 12server–before next maintenance (endunknown); SecretSanctuary Nov5 12server–Dec2 04server; SanitySupply Nov18 04server–AsiaNov25 04/WestNov24 17. Frozen audit/backlog Dec3/Nov19 copied dates are stale and will be corrected, not followed.
-SCOPE: five new reviewed IDs endfield:echoes-of-war-season-of-fervor:2026-11-05; endfield:the-stars-are-with-me:2026-11-05; endfield:contingency-contract-indigo-experimental-operation:2026-11-05; endfield:secret-sanctuary:2026-11-05; endfield:sanity-supply-november-2026:2026-11-18.
-All day openings because regionStarts unavailable; preserve literal source clocks in summaries. AsiaUTC+8/WestUTC-5 fixed; Sanityexception endAsiaNov24 20Z/WestNov24 22Z. SecretendAsiaDec1 20Z/WestDec2 09Z. Never invent nextmaintenance end or Fervorcycles. Preserve all12 reviewed/IDs/timestamps/Phantasia/currentbanners and wiki inputs.
+DONE: CURRENT main/AGENTS/status/wave/backlog, CZN audit, actual Prydwen banner-only parser/snapshot10, reviewed34 and relevant current-seasons/Carnival/precision tests checked. PR144 CP4 verified mergea671d7f postCI/Pages40768798302 SUCCESS; public286 generated21:05:13.920Z all5 new Endfield winners exact. Browser unavailable in current tools; publishedJSON and SSR/Timeline3region boundary regressions PASS.
+VERIFICATION: publisher-authored STOVE attributed https://czn.gg/10-21wed-update-notice/ manually reverifiedOct28 via indexednotice; no new unattended fetch/access claim. Season5 main Chapter1/CelestialBulwark Viadeus opens afterOct21maintenance throughDec23beforemaintenance; earlier Sep30 Chapter0/preview is separate, not redefined. Seraphion unlockOct28 02UTC (already passed at execution), EnforcerSeraphionNov4 02UTC are unlocks, not expiry cards. DreamPark Oct21–Dec23; RossweisseTraumaCode limited achievements/battle rewards Oct21–Dec2; do not assert permanent story disappears.
+SCOPE:3 compact reviewed IDs czn:galactic-disaster-season-5-a-promise-upon-the-snow-main-content:2026-10-21; czn:nightmare-dream-park:2026-10-21; czn:rossweisse-trauma-code-blade-poised-against-the-cycle:2026-10-21. Main season card summarizes3 CelestialBulwark unlocks/rewards; no duplicate countdowns. All boundaries day precision for maintenance; no guessed00/05Z. Preserve all34 old rows/IDs/firstSeenAt/provenance/banner priority, gifts/DailyReset/Sync; no trials/paid/web/P2 or GreatRift cadence.
 OUTCOME_A_DATA: PENDING
-OUTCOME_B_PREVENTION: BLOCKED END-OFFICIAL-DISCOVERY auditA3 (no new unattended adapter/access probe)
-VERIFICATION_COMMANDS: install/typecheck/tests/build/feed NOT RUN for this milestone.
-NEXT_CONCRETE_STEP: append5 reviewed rows and boundary/unknownend/merge regression; pushCP1 before long checks. Then smallPR/CI/merge/postCI/Pages/public/browser. AfterCP4 CZNSeason5, then wavecloseout. NoP2/R1–R3/Timeline/Auth/Sync.
-
-CP0_SHA8b9b8f97427242c34c5d0f3f0517956423199183. CP1 implemented5 reviewedrows and3 meaningful regression tests. Initial targeted label expectation corrected to existing UI literal unknown; data/boundary/merge tests passed. Full required checks NOT RUN.
-
-CP1_SHA4f7ecdacffcfb5df7a5b8c2383d5d4a2913a88ef. CP2 PASS: bun install --frozen-lockfile; bun run typecheck; bun test1392pass/3existing age skips/0fail full summary; bun run build; fixed-feed281->286 five additions only, allprior winners/conflicts and reviewed12 unchanged. Targeted3pass, git diff --check PASS. Evidence docs/evidence/endfield-upcoming-feed-replay-2026-10-28.json. Next PR exactheadCI thenmerge/postCI/Pages/public/browser; CP3/CP4 PR body supersedes pending text.
-
-RESUME: main advanced through unrelated PR146 simple-scheme design and PR145 label vocabulary to2a20dd6e2379c837d4981bfd5c9f0813547d3180. Both retained by clean merge, no overlapping scope; exactheadCI40709965305 success is oldhead validation only. Re-running required checks/replay and CI on combined head; do not merge until green. Initial CP0 base retained above as history.
+OUTCOME_B_PREVENTION: BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY auditC3 access/discovery gate
+VERIFICATION_COMMANDS: install/typecheck/fulltests/build/feed NOT RUN for this milestone.
+NEXT_CONCRETE_STEP: append3 rows and day-precision/family/merge tests; pushCP1 then allrequiredchecks/PR/CI/merge/postCI/Pages/public. AfterCP4 durable wavecloseout only, then STOP. WUWA-NEW-BANNER-CLOCK and CZN-OLD-FSO-END remain explicit data blockers.
