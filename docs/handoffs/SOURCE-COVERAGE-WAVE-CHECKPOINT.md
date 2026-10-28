@@ -1,6 +1,6 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 MILESTONE: WAVE-CLOSEOUT (documentation only)
-STAGE: CP0
+STAGE: CP1
 BASE_MAIN_SHA: 1cb00dc77afe64d1c1649b0d780ae636d9f39467
 BRANCH: docs/wave-close
 HEAD_SHA: resolve branch ref
@@ -11,3 +11,5 @@ OUTCOME_B_PREVENTION: bounded deterministic fixes DONE; named reviewed-source di
 REMAINING: authoritative closeout A/B/release table, blockers/evidence/nextgate, canonical status/backlog/wave update; docs-only frozen install/typecheck/fulltests/build/feed unchanged; smallPR/CI/merge/postCI/Pages/public verification, then STOP.
 VERIFICATION: closeout checks NOT RUN. Existing datarelease1396pass/3existing age skips/0fail, allgates PASS as linked deliveryPRs.
 NEXT_CONCRETE_STEP: write closeout and update canonical statuses; pushCP1, then validate/release docs only. Do not implement P2/simple-scheme/R1–R3/Timeline/Auth/Sync.
+
+CP0_SHA246b084f2f8a3051142e68d74a459f6055fee415. CP1 wrote authoritative closeout,16-row A/B/release table,2data+5discoveryblockers, final public proof/historical state, canonical status/backlog/wave stopping point. Docs only; validation/release pending. Next requiredchecks and no-data-change replay, then PR gates and STOP.

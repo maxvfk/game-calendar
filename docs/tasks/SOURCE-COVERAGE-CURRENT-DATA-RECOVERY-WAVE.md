@@ -1,6 +1,6 @@
 # Source Coverage — Current Data Recovery Wave
 
-**Status:** RUNNING — PR130/132–144 CP4 verified. Current SC-P1-CZN-SEASON5, `fix/czn-season5`. Named blockers: CZN-OLD-FSO-END and WUWA-NEW-BANNER-CLOCK. Environment outage recovered manually; all work preserved.
+**Status:** COMPLETE WITH NAMED BLOCKERS — all canonical confirmed P0/P1 are released or evidence-blocked. [Verified closeout / A-B table / exact handoff](../handoffs/SOURCE-COVERAGE-WAVE-CLOSEOUT-2026-10-28.md). Final data PR148 CP4 verified; only documentation closeout delivery remains. STOP after its release; no next implementation.
 **Prepared:** 2026-10-28. **Baseline:** current main at launch (do not pin this document's preparation SHA).
 **Canonical backlog:** [SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md](SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md).
 **Operating rules:** `AGENTS.md`; `docs/IMPLEMENTATION-STATUS.md`.

@@ -1,6 +1,6 @@
 # Seven-game Source Coverage — Ranked Remediation Backlog
 
-**Status:** SC-P0-GEN-STARLIGHT implemented; release evidence: [PR #130](https://github.com/maxvfk/game-calendar/pull/130). Remaining confirmed P0/P1 recovery is now explicitly user-authorized by the active recovery wave; P2/excluded work remains unapproved.
+**Status:** RECOVERY WAVE COMPLETE WITH NAMED BLOCKERS. All canonical confirmed P0/P1 released or explicitly evidence-blocked; [authoritative closeout with A/B and release evidence](../handoffs/SOURCE-COVERAGE-WAVE-CLOSEOUT-2026-10-28.md). No P2 or new implementation authorized; STOP.
 **Checked:** 2026-10-28. **Main baseline:** `0f8042d1b86c09210b46573b42058dcc128ddb3b`.
 **Owner workflow:** one short-lived branch / one bounded game-specific milestone / real CI / PR / controlled merge / post-merge Pages and player-visible check. Re-read CURRENT main before every milestone.
 **Wave execution / pause-resume task:** [SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md](SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md). One user-launched Work may complete multiple small verified PRs; the task includes quota-blind CP0–CP4 checkpoint rules and manual resume. **The file itself does not start or authorize a Work.**
@@ -19,7 +19,9 @@ The calendar's core promise is "what ends soon and what must I finish?" Thus pri
 
 This is a frozen, **as-of-2026-10-28** prioritization using prior audits and source snapshots (mostly last confirmed Oct 27). Before each implementation, re-check live official notices, the feed winner, current main and post-audit merges. Do not convert stale research into a later "current event" claim.
 
-### Recovery wave execution (2026-10-28)
+### Recovery wave execution history (2026-10-28)
+
+Historical checkpoints below preserve original pre-release states. The linked closeout and final delivery PR CP4 supersede pending/next instructions.
 
 User explicitly launched the linked wave task. CP0–CP4 checkpoints are mandatory.
 **SC-P0-CZN-GIFTS implemented:** [PR #132](https://github.com/maxvfk/game-calendar/pull/132)
@@ -202,23 +204,23 @@ If work can proceed in parallel, keep **three separate PRs and game scopes**, ea
 
 ## 4. P1 — time-bounded remediation queue
 
-Dates below are in publisher-defined game server clock unless explicitly `Z` / `UTC+8`. Include published exact clocks, not inferred release cadence. All tasks are **OPEN** as of audit; recheck current main before execution.
+Dates below are in publisher-defined game server clock unless explicitly `Z` / `UTC+8`. Include published exact clocks, not inferred release cadence. The original audit marked these OPEN; current delivery/blocker status is shown per row and in the authoritative closeout.
 
 | ID / nominal order | Game · bounded goal | Known deadline / source basis | Precondition / critical safety |
 |---|---|---|---|
 | **SC-P1-GEN-EXPIRIES · IMPLEMENTED (PR134)** | Genshin: `Overflowing Favor` double artifact drops, Phase II `Epitome Invocation` weapon channel, and `Carefree Snowball Fight` currently day-only precision. | Overflowing Favor **Nov 2 03:59 server** (`archive/21053.md`); weapon **Nov 3 14:59 server** (`archive/21890.md`); Carefree **Nov 2 03:59** (`archive/21891.md`). | Already in KQM snapshot. Keep existing reviewed IDs and one phase-distinct weapon banner channel; avoid blindly changing day-precision without clock proof. May split drops and weapon if smaller. |
 | **SC-P1-END-CURRENT · IMPLEMENTED (PR136)** | Endfield: officially announced **Si** + **Tangtang** character banners, separately their issues `Seal of Jade` and `Tender Sprig`, plus **Contingency Readiness**. | Si end **Nov 5 11:59 server**, Tangtang starts **Oct 29 12:00** and ends Nov 19 11:59; Contingency Readiness **Oct 29 04:00 → Nov 5 04:00** server, official `/9560`. | Use reviewed first-party evidence; `Seal of Jade` ends after three Chartered banners ⇒ **unknown exact end**, not Si's end. Preserve region mapping Asia +8 / West −5, distinct character vs arsenal IDs. Split if needed. |
 | **SC-P1-CZN-OVERDRIVE · IMPLEMENTED (PR135)** | CZN: `Overdrive: Simulation` double growth period. | **Nov 3 18:00Z** exact, Oct 21 STOVE 1.5/anniversary patch content. | One small reviewed record; no Daily Reset edit. |
-| **SC-P1-WUWA-37-PARSER · IMPLEMENTED (release pending)** | WuWa: deterministic 3.7 patch title/date anchor + decorated `✦Duration` + nested identity; restore `Cubie Wars`, `Dreams in the Capsule`, `Gifts of Waking Moon`, `Gifts of Singing Drizzle`. | Source `Kuro Atom article 5571` already captured; deadlines **Nov 11 03:59/11:59 server**. | Wrong identity `[Special Events] [Cubie Wars]` can create `Special Events` ID if only anchor fixed. Guard scope, preserve after-update day start and three-region ends; regression real snapshot. |
+| **SC-P1-WUWA-37-PARSER · RELEASED (PR139)** | WuWa: deterministic 3.7 patch title/date anchor + decorated `✦Duration` + nested identity; restore `Cubie Wars`, `Dreams in the Capsule`, `Gifts of Waking Moon`, `Gifts of Singing Drizzle`. | Source `Kuro Atom article 5571` already captured; deadlines **Nov 11 03:59/11:59 server**. | Wrong identity `[Special Events] [Cubie Wars]` can create `Special Events` ID if only anchor fixed. Guard scope, preserve after-update day start and three-region ends; regression real snapshot. |
 | **SC-P1-WUWA-NEW-BANNERS · BLOCKED WUWA-NEW-BANNER-CLOCK** | WuWa: new Suoming `Nine Deaths, One Unbent Heart` and `Unspoken Rue` current Phase II, missing despite four reruns working. | Kuro patch `5571` names them; `5668` only lists four reruns, not individually dated new banner windows. | **VERIFY exact first-party announcement/clock** first; if not established, mark BLOCKED and retain expected-family incident, never borrow rerun clocks silently. Separate W2 source discovery gate. |
-| **SC-P1-HSR-BANNERS · IMPLEMENTED (release pending)** | HSR: four active Version 4.6 Warp channels: Pearl + `Colors for Tomorrow`, Mortenax Blade + `Reforged in Hellfire`. | All end **Nov 10 15:00 server**; Phase II source official HoYoLAB `article/47142215`. | Two character and two Light Cone channel IDs; Pearl continuous across phases **once**, not duplicate Phase I/II; explicit three-region ends. Restore through reviewed hotfix before broader publisher discovery. |
-| **SC-P1-NTE-14-SKIPPED · IMPLEMENTED (release pending)** | NTE: extend *verified release-notice selection*, restore `Circle Gifts`, `Terminal Depths`, `Pukaland Travelogue`, `Coal Lump's Treasure`, **1.4 Circle Bounty**. | Same first-party Steam API `gid 1844751498233952` skipped because title **`Log in`** not `login`; Circle Bounty expires **Nov 10 23:59 UTC+8 (Nov 10 15:59Z)**, others mostly Nov 11 **05:59 UTC+8 (Nov 10 21:59Z)**. | Do not remove fail-closed year requirement from standalone articles; use verified version notice context. Keep 1.3 Circle Bounty prior 24h source conflict and all 15 existing reviewed rows; prove candidates become published winners. |
-| **SC-P1-CZN-SEASONS · CURRENT IMPLEMENTED / OLD END BLOCKED** | CZN: current **Basin of Hyperspace** Oct21–Nov11 and **Full-Scale Offensive** Sept30–Nov11; reconcile stale old `Full-Scale Offensive — Season 4` `endsAt:null`. | Explicit STOVE Oct21/Sept30 version notices; ends **before Nov 11 maintenance**. | No speculative maintenance-completion time, no +21d cadence. Preserve old IDs and source-backed historical boundary; one logical phase per record. |
-| **SC-P1-HSR-CLAIMS · IMPLEMENTED (release pending)** | HSR: `Astral Trendible` availability + `Park Souvenir` claim expiration (two distinct mechanics). | Both **Nov 11 06:00 UTC+8**, directly in checked-in KQM 4.6 update under `Availability` / `Claim Period`. | Small extraction/regression or reviewed fallback; do not represent permanently accessible Park as expiring. |
-| **SC-P1-CZN-CARNIVAL · IMPLEMENTED (release pending)** | CZN: **Nightmare Carnival** / **70 free Normal Rescues** expiring Dec 2 before maintenance; **Additional Aether** independently ends Nov 11 before maintenance. | STOVE publisher-announced anniversary periods. | Separate parent/subdeadline without double-counting; no guess about exact maintenance instant; favor explicit reminders for expiring free unused attempts. |
-| **SC-P1-CZN-SEASON5 · IMPLEMENTED (release pending)** | CZN: `Galactic Disaster Season 5: A Promise Upon the Snow`, Nightmare Dream Park, Rossweisse Trauma Code, Celestial Bulwark stage unlocks and season rewards. | Season/Dream Park through **Dec 23 before maintenance**, Trauma Code through Dec 2; **Seraphion Oct 28 02:00Z** and **Enforcer Seraphion Nov 4 02:00Z** unlock. | Pick compact nonduplicated family-level records; do not pretend a stage unlock is an expiry. Official parent vs phase must be precise. |
-| **SC-P1-END-UPCOMING · IMPLEMENTED (release pending)** | Endfield: upcoming Fervor, `The Stars Are With Me`, Contingency Contract, Secret Sanctuary shop cutoff, region-exception Nov Sanity Supply. | Fervor starts **Nov 5 12:00 server**, Contract shop ends **Dec 2 04:00 server**; Sanity starts **Nov18 04:00**, ends Asia **Nov25 04:00**, West **Nov24 17:00**. Fresh primary9560 supersedes copied audit dates. | Preserve unknown end for "until next maintenance". **Do not reopen repaired Phantasia Cycle I/II** or force invalid wiki season cycle start. |
-| **SC-P1-ZZZ-REWARDS · IMPLEMENTED (release pending)** | ZZZ: issue-fix compensation claim and **New Eridu City Fund** main reward ending. | Compensation **Nov 20 23:59 UTC+8 = Nov 20 15:59Z**; City Fund **Nov 30 03:59 server**, paid purchase cutoff **02:59 server**. | Reward reminder is a gameplay scope candidate; **paid purchase cutoff is a separately approved product decision**. No need to rewrite official Steam+Zenless.gg event/Phase I ingestion. |
+| **SC-P1-HSR-BANNERS · RELEASED (PR137)** | HSR: four active Version 4.6 Warp channels: Pearl + `Colors for Tomorrow`, Mortenax Blade + `Reforged in Hellfire`. | All end **Nov 10 15:00 server**; Phase II source official HoYoLAB `article/47142215`. | Two character and two Light Cone channel IDs; Pearl continuous across phases **once**, not duplicate Phase I/II; explicit three-region ends. Restore through reviewed hotfix before broader publisher discovery. |
+| **SC-P1-NTE-14-SKIPPED · RELEASED (PR138)** | NTE: extend *verified release-notice selection*, restore `Circle Gifts`, `Terminal Depths`, `Pukaland Travelogue`, `Coal Lump's Treasure`, **1.4 Circle Bounty**. | Same first-party Steam API `gid 1844751498233952` skipped because title **`Log in`** not `login`; Circle Bounty expires **Nov 10 23:59 UTC+8 (Nov 10 15:59Z)**, others mostly Nov 11 **05:59 UTC+8 (Nov 10 21:59Z)**. | Do not remove fail-closed year requirement from standalone articles; use verified version notice context. Keep 1.3 Circle Bounty prior 24h source conflict and all 15 existing reviewed rows; prove candidates become published winners. |
+| **SC-P1-CZN-SEASONS · CURRENT RELEASED (PR141) / OLD END BLOCKED** | CZN: current **Basin of Hyperspace** Oct21–Nov11 and **Full-Scale Offensive** Sept30–Nov11; reconcile stale old `Full-Scale Offensive — Season 4` `endsAt:null`. | Explicit STOVE Oct21/Sept30 version notices; ends **before Nov 11 maintenance**. | No speculative maintenance-completion time, no +21d cadence. Preserve old IDs and source-backed historical boundary; one logical phase per record. |
+| **SC-P1-HSR-CLAIMS · RELEASED (PR140)** | HSR: `Astral Trendible` availability + `Park Souvenir` claim expiration (two distinct mechanics). | Both **Nov 11 06:00 UTC+8**, directly in checked-in KQM 4.6 update under `Availability` / `Claim Period`. | Small extraction/regression or reviewed fallback; do not represent permanently accessible Park as expiring. |
+| **SC-P1-CZN-CARNIVAL · RELEASED (PR142)** | CZN: **Nightmare Carnival** / **70 free Normal Rescues** expiring Dec 2 before maintenance; **Additional Aether** independently ends Nov 11 before maintenance. | STOVE publisher-announced anniversary periods. | Separate parent/subdeadline without double-counting; no guess about exact maintenance instant; favor explicit reminders for expiring free unused attempts. |
+| **SC-P1-CZN-SEASON5 · RELEASED (PR148)** | CZN: `Galactic Disaster Season 5: A Promise Upon the Snow`, Nightmare Dream Park, Rossweisse Trauma Code, Celestial Bulwark stage unlocks and season rewards. | Season/Dream Park through **Dec 23 before maintenance**, Trauma Code through Dec 2; **Seraphion Oct 28 02:00Z** and **Enforcer Seraphion Nov 4 02:00Z** unlock. | Pick compact nonduplicated family-level records; do not pretend a stage unlock is an expiry. Official parent vs phase must be precise. |
+| **SC-P1-END-UPCOMING · RELEASED (PR144)** | Endfield: upcoming Fervor, `The Stars Are With Me`, Contingency Contract, Secret Sanctuary shop cutoff, region-exception Nov Sanity Supply. | Fervor starts **Nov 5 12:00 server**, Contract shop ends **Dec 2 04:00 server**; Sanity starts **Nov18 04:00**, ends Asia **Nov25 04:00**, West **Nov24 17:00**. Fresh primary9560 supersedes copied audit dates. | Preserve unknown end for "until next maintenance". **Do not reopen repaired Phantasia Cycle I/II** or force invalid wiki season cycle start. |
+| **SC-P1-ZZZ-REWARDS · RELEASED (PR143)** | ZZZ: issue-fix compensation claim and **New Eridu City Fund** main reward ending. | Compensation **Nov 20 23:59 UTC+8 = Nov 20 15:59Z**; City Fund **Nov 30 03:59 server**, paid purchase cutoff **02:59 server**. | Reward reminder is a gameplay scope candidate; **paid purchase cutoff is a separately approved product decision**. No need to rewrite official Steam+Zenless.gg event/Phase I ingestion. |
 
 **Sequencing:** These are risk-ranked candidates, not automatic source-of-truth for today's date. Some P1 windows end before earlier rows in this table; move them ahead if source re-check shows the clock is nearer. PRs stay **game-specific** and **small**. Free rewards and incorrect expiry notices outrank historical backfill.
 
@@ -348,26 +350,19 @@ For each separately authorized item:
 6. Update `docs/IMPLEMENTATION-STATUS.md`: done/blocked, source evidence, exact IDs/boundaries, tests, CI/Pages, unverified risks and one **Next concrete step**. Keep the backlog status in sync for each completed item. No broad audit redo.
 7. STOP when the bounded game-specific milestone is done. Do not automatically proceed to the next item, Source Recovery, Timeline editorial, Sync or Daily Reset.
 
-## 8. One next concrete step
+## 8. Stopping point and durable handoff
 
-Finish CZN-CARNIVAL CP2–CP4, then SC-P1-ZZZ-REWARDS (Nov20),
-SC-P1-END-UPCOMING (Nov24/25 and future official windows), and SC-P1-CZN-SEASON5
-(Dec2/23 rewards), each from CURRENT main. PR130/132–141 fully released;
-oldFSOterminal and WuWa newclock explicitly blocked. No P2/excluded work.
+**STOP — authorized recovery wave COMPLETE WITH NAMED BLOCKERS.**
+[Closeout](../handoffs/SOURCE-COVERAGE-WAVE-CLOSEOUT-2026-10-28.md) records all16
+canonical rows, delivered A/B outcomes, exact PR/merge/postCI/Pages evidence,
+final public289 winner verification and the two data / five discovery blockers.
+PR148 CP4: merge1cb00dc77afe64d1c1649b0d780ae636d9f39467,
+CI/Pages40769622431 SUCCESS; public289 generated2026-10-28T21:10:51.896Z.
+Three final CZN rows exact; all34 prior reviewed unchanged. Endfield PR144
+CP4 verified mergea671d7fb, CI/Pages40768798302 SUCCESS, public286 all5 winners.
 
-CZN-CARNIVAL CP2 PASS: frozen install/typecheck/full1386pass/3skip/0fail/build/feed277->279, only2 additions; allprior winners/conflicts and reviewed32 unchanged. Delivery PR owns observed CP3/CP4 evidence.
-
-**PR142 CP4 verified:** mergebb365d104ac9eb9eb76b34c20c5546a27c9529be; post CI/Pages40706852239 SUCCESS; public279 and both Carnival winners/browser warning verified.
-**ZZZ-REWARDS implemented:** City Fund Nov30 03:59server and issue-fix Nov20 15:59Z; no paid-purchase card. All30 old rows preserved. A release pending; B BLOCKED ZZZ-REWARD-DISCOVERY (ZC1/ZC4 family-selection/discovery). Next Endfield upcoming, then CZN Season5.
-
-ZZZ-REWARDS CP2 PASS: frozen install/typecheck/finalfull1389pass/3skip/0fail/build/feed279->281; only2 additions, no changed/removed old winners/conflicts, reviewed30 unchanged. Earlier legacy count failures corrected; incomplete-summary rerun not accepted. Delivery PR holds CP3/CP4.
-
-**PR143 CP4 verified:** merge103520f71a3dc61ecc7bb4aa5ff79857b77fc9fc; CI/Pages40709150830 SUCCESS; public281 generated14:46:51.261Z both ZZZ winners full exact and browser verified. A DONE/B ZZZ-REWARD-DISCOVERY BLOCKED.
-**END-UPCOMING implemented:** five canonical families; source9560 freshly confirms Dec2 shop / Nov18 Sanity start (old audit copies are stale), exact exceptional ends preserved; three relative endings remain null. Reviewed12 unchanged. A release pending/B END-OFFICIAL-DISCOVERY BLOCKED (A3). Next CZN Season5, then wave closeout.
-
-END-UPCOMING CP2 PASS: frozen install/typecheck/full1392pass/3existing age skips/0fail/build/feed281->286; five additions only, oldwinners/conflicts and reviewed12 unchanged. Evidence docs/evidence/endfield-upcoming-feed-replay-2026-10-28.json; delivery PR holds CP3/CP4.
-
-**PR144 CP4 verified:** mergea671d7fb726d8437a66c60b0990d557fc0147d49, postCI/Pages40768798302 SUCCESS, public286 generated21:05:13.920Z all5 Endfield winners full exact. A DONE/B END-OFFICIAL-DISCOVERY BLOCKED. Published Starlight quest at21:04Z correctly ended in Asia and remains live in West.
-**CZN-SEASON5 implemented:** main-content season/CelestialBulwark unlocks grouped, DreamPark separate (bothDec23day), limited Trauma rewards Dec2day. No guessed maintenance or duplicate stage expiry; all34 oldrows unchanged. A release pending/B CZN-OFFICIAL-EVENT-DISCOVERY BLOCKED. Next finalwavecloseout then STOP.
-
-CZN-SEASON5 CP2 PASS: frozen install/typecheck/full1396pass/3existing age skips/0fail/build/feed286->289; exactly3 additions, allprior winners/conflicts and reviewed34 unchanged. Evidence docs/evidence/czn-season5-feed-replay-2026-10-28.json. Delivery PR holds CP3/CP4.
+No confirmed P0/P1 remains silently pending. WUWA-NEW-BANNER-CLOCK and
+CZN-OLD-FSO-END retain explicit evidence gates; reviewed source discovery is
+not claimed recovered. No additional task starts automatically. If docs delivery
+is interrupted, resume only `docs/wave-close` and its living checkpoint/PR; after
+CP4 stop. P2/simple-scheme/R1–R3/Timeline/Auth/Sync remain excluded.

@@ -1,5 +1,32 @@
 # Game calendar implementation status
 
+## Recovery wave — COMPLETE WITH NAMED BLOCKERS (2026-10-28 UTC)
+
+**Authoritative closeout:** [released A/B table, CI/Pages evidence and exact blocker handoff](handoffs/SOURCE-COVERAGE-WAVE-CLOSEOUT-2026-10-28.md).
+All canonical confirmed P0/P1 items are published or explicitly evidence-blocked.
+No claim of complete seven-game coverage or unattended source discovery.
+PR130 was verified and never repeated; this wave released PR132–144/148.
+Final data main1cb00dc77afe64d1c1649b0d780ae636d9f39467; CI/Pages40769622431
+SUCCESS; public289 generated21:10:51.896Z, all289 winners verified against replay
+(reviewed full exact; automatic build clocks excluded), existing NTE conflict intact.
+Last full1396pass/3existing age skips/0fail plus all required gates PASS.
+
+Remaining data blockers: **WUWA-NEW-BANNER-CLOCK** and **CZN-OLD-FSO-END**.
+Old CZN ID/endnull retained with historical warning; model-state reconciliation
+is not claimed complete. Named B blockers: CZN official mail/event discovery,
+Endfield official discovery, HSR Warp discovery, ZZZ reward discovery. Reviewed
+rescue does not make these unattended. Fresh Endfield shopDec2/SanityNov18 dates
+supersede copied audit dates; CZN maintenance ends remain day precision.
+Starlight Asia quest correctly ended atOct28 20Z; western cutoffs unchanged.
+Browser throughPR143 verified; PR144/148 browser NOT RUN after tool loss,
+publishedJSON and SSR/Timeline allregion regressions PASS. No user state changed.
+
+**Next concrete step: STOP.** Only deliver this docs closeout through its own
+CI/merge/postCI/Pages/public checks; no additional data or backlog implementation.
+P2, simple-scheme implementation, R1–R3, Timelinev2, Auth/Sync remain outside scope.
+Historical per-PR notes below retain original checkpoints; this closeout and
+final delivery PR CP4 supersede their pending/restart instructions.
+
 ## SC-P1-CZN-SEASON5 — IMPLEMENTED; WAVE RUNNING (2026-10-28)
 
 Three compact official reviewed cards from the STOVE-authored CZN.gg Oct21
