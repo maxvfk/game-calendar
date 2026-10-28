@@ -7,6 +7,17 @@ const CLOCK = /(20\d{2})\/(\d{2})\/(\d{2})\s+(\d{2}):(\d{2}):(\d{2})\s*\((server
 const AFTER_UPDATE = /After the Version (\d+\.\d+) update/i;
 const LIGHTWARD_MODE = /^- (Memory of Chaos: [^\n]+|Apocalyptic Shadow: [^\n]+|Pure Fiction: [^\n]+)$/;
 const LIGHTWARD_PERIOD = new RegExp(`^(?:${AFTER_UPDATE.source}|${CLOCK.source})\\s*[-–—]\\s*${CLOCK.source}$`, "i");
+const PARK_REWARDS: Record<string, { field: string; type: EventType; summary: string }> = {
+  "Astral Imagea Park: Astral Trendible": {
+    field: "Availability", type: "other",
+    summary: "Limited Astral Trendible draw availability for this Imagea pool; the Astral Imagea Park itself remains accessible.",
+  },
+  "Astral Imagea Park: Park Souvenir": {
+    field: "Claim Period", type: "login",
+    summary: "Log in to claim six Trendible Vouchers before this reward claim period closes; the Astral Imagea Park itself remains accessible.",
+  },
+};
+const PARK_PERIOD = new RegExp(`^${AFTER_UPDATE.source}\\s*[-–—]\\s*${CLOCK.source}$`, "i");
 
 interface Article { heading: string; id: string; body: string }
 interface Clock { day: string; utc8: string; zone: "server" | "global" }
@@ -130,6 +141,23 @@ export function parseKqmHsrNews(raw: string, ctx: ParseContext): GachaEvent[] {
           ? inLightward ? LIGHTWARD_MODE.exec(rows[i]!) : null
           : inOthers ? /^- (Apocalyptic Shadow: [^\n]+|Pure Fiction: [^\n]+)$/.exec(rows[i]!) : null;
         if (!event && !mode) continue;
+        const reward = event ? PARK_REWARDS[event[1]!] : undefined;
+        if (reward && event) {
+          const following = rows.slice(i + 1);
+          const boundary = following.findIndex(row => /^(?:\*\*■ |\d+\. |■ )/.test(row));
+          const block = boundary < 0 ? following : following.slice(0, boundary);
+          const fields = block.filter(row => /^- (?:Availability|Claim Period):/.test(row));
+          const prefix = `- ${reward.field}: `;
+          const line = (fields[0] ?? "").startsWith(prefix) ? fields[0]!.slice(prefix.length) : "";
+          const version = /Version (\d+\.\d+)/.exec(article.heading)?.[1];
+          const dates = PARK_PERIOD.test(line) ? clocks(line) : [];
+          const value = fields.length === 1 && AFTER_UPDATE.exec(line)?.[1] === version &&
+            dates.length === 1 && dates[0]!.zone === "global"
+            ? item(article, event[1]!, reward.type, line, updates, ctx) : null;
+          if (!value) throw new Error(`KQM HSRNews Park reward period missing or invalid: ${event[1]}`);
+          add({ ...value, summary: reward.summary });
+          continue;
+        }
         if (mode && hasLightward) {
           // The first nonempty line is the period, never a clock in buff prose
           // or in the next phase. Reject incomplete/changed/extra boundaries.

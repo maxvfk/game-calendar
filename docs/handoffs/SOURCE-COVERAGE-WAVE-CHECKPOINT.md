@@ -2,7 +2,7 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-HSR-CLAIMS
-STAGE: CP0
+STAGE: CP1
 BASE_MAIN_SHA: 1e229c66e7b28883a6cef35ca04569a56f96a380
 BRANCH: fix/hsr-claims
 HEAD_SHA: resolve branch ref
@@ -19,3 +19,6 @@ IDs hsr:astral-imagea-park-astral-trendible:2026-09-28 and
 hsr:astral-imagea-park-park-souvenir:2026-09-28.
 Source https://github.com/KQM-git/HSRNews/blob/master/archive/1437.md
 GlobalUTC+8 means sameNov10 22Z in all selected regions; no viewerDST shifting. Day opening afterupdate; no maintenance completion inferred. Do not expire permanentPark, add discounts/permanentSlammers/GiftOdyssey or change unrelated Lightward/Warps/stale P2 states. No source timestamps changed. WuWa new-banner clock remains namedBLOCKED. Next afterCP4: CZNseasons/AdditionalAetherNov11day.
+
+CP0_SHA:ecc1a850c41e7c870d352e2b1e330924c2c8b1dd
+CP1: two exact-heading/field contracts implemented inside NewEvents only; temporary reward summaries distinguish permanent Park. Actual-source/future/malformed/merge/expiry targeted14PASS. Full validation/release NOT RUN. Next mandatory checks and273->275 replay, old winners/conflicts identical.
