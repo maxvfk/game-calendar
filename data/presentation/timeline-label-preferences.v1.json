@@ -53,5 +53,5 @@
     "No extra events, no code, pull requests, external research, or modifications to canonical facts. If input cannot be read, report the access error instead of fabricating events.",
     "If the events array is empty, output {\"schemaVersion\":1,\"decisions\":[]}. Return raw JSON only, without Markdown or commentary."
   ],
-  "labelVocabulary": ["invitation"]
+  "labelVocabulary": ["invitation", "login"]
 }
