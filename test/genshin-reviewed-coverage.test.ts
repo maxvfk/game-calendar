@@ -3,9 +3,11 @@ import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 
 test("Genshin 7.1 coverage uses calendar dates without inventing server instants", async () => {
   const { events } = materializeReviewedBatch(await Bun.file("data/reviewed/genshin.json").json());
-  // Original coverage subset; current Phase II precision has its own merge test.
+  // Original coverage subset; Phase II precision and Starlight have separate merge tests.
   expect(events.filter(e => !["genshin:void-stars-advent:2026-10-13",
-    "genshin:la-chanson-cerise:2026-10-13"].includes(e.id))).toHaveLength(17);
+    "genshin:la-chanson-cerise:2026-10-13",
+    "genshin:starlight-voyage-heart-unbound:2026-10-19",
+    "genshin:quest-completion-period-starlight-voyage-heart-unbound:2026-10-19"].includes(e.id))).toHaveLength(17);
   expect(events.find(e => e.title === "Stygian Onslaught — Disturbance Outbreak (Version 7.1)"))
     .toMatchObject({ type: "challenge", endPrecision: "exact", regionScoped: true });
   for (const [title, start, end] of [

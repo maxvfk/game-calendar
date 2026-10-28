@@ -1,0 +1,84 @@
+{
+  "milestone": "SC-P0-GEN-STARLIGHT",
+  "baselineCommit": "28cb6e735126cfb244abdd705257c07a37c89979",
+  "replayAt": "2026-10-28T09:40:00.000Z",
+  "source": {
+    "path": "snapshots/genshin-kqm-ginews.md",
+    "sha256": "82b024a2340da583e8072ba4f5a363a586c9537df02cebb4d609268e651f4216",
+    "lastConfirmedAt": "2026-10-27T21:23:33.332Z",
+    "notice": "archive/21901.md",
+    "liveNoticeBlobSha": "e93e050bc901a05e952ee8541df2ed247db125f7"
+  },
+  "publishedBefore": {
+    "url": "https://maxvfk.github.io/game-calendar/data/events.v1.json",
+    "generatedAt": "2026-10-28T09:33:05.126Z",
+    "events": 243,
+    "starlightEvents": 0
+  },
+  "counts": {
+    "before": 243,
+    "after": 245,
+    "genshinBefore": 26,
+    "genshinAfter": 28,
+    "sourceCandidatesBefore": 10,
+    "sourceCandidatesAfter": 12,
+    "dateConflictsBefore": 1,
+    "dateConflictsAfter": 1
+  },
+  "removedIds": [],
+  "changedPriorWinnerIds": [],
+  "addedWinners": [
+    {
+      "id": "genshin:quest-completion-period-starlight-voyage-heart-unbound:2026-10-19",
+      "game": "genshin",
+      "title": "Quest Completion Period — Starlight Voyage: Heart Unbound",
+      "type": "other",
+      "summary": "Complete Starlight Voyage stages to earn Sightseeing Experiences before this cutoff. The main event continues afterward; this is the earlier quest deadline.",
+      "startsAt": "2026-10-19T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-28T20:00:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-28T20:00:00.000Z",
+        "europe": "2026-10-29T03:00:00.000Z",
+        "america": "2026-10-29T09:00:00.000Z"
+      },
+      "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21901.md",
+      "sourceId": "reviewed-genshin",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T09:36:45.972Z",
+      "updatedAt": "2026-10-28T09:36:45.972Z"
+    },
+    {
+      "id": "genshin:starlight-voyage-heart-unbound:2026-10-19",
+      "game": "genshin",
+      "title": "Starlight Voyage: Heart Unbound",
+      "type": "other",
+      "summary": "Main event period for Prismatic Crystal rewards. Earning Sightseeing Experiences through event stages has a separate, earlier Quest Completion Period.",
+      "startsAt": "2026-10-19T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-01T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-01T19:59:00.000Z",
+        "europe": "2026-11-02T02:59:00.000Z",
+        "america": "2026-11-02T08:59:00.000Z"
+      },
+      "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21901.md",
+      "sourceId": "reviewed-genshin",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T09:36:45.972Z",
+      "updatedAt": "2026-10-28T09:36:45.972Z"
+    }
+  ]
+}

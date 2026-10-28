@@ -106,6 +106,56 @@ function candidate(article: Article, item: { title: string; type: EventType }, u
   });
 }
 
+// This reviewed notice family uses server-local t_lc clocks for two distinct
+// windows. Do not promote arbitrary t_gl/t_lc notices to regional exact times.
+const STARLIGHT = "Starlight Voyage: Heart Unbound";
+const SERVER_TAG = '<t class="t_lc"[^>]*>(20\\d{2})/(\\d{2})/(\\d{2}) (\\d{2}):(\\d{2})</t>';
+const SERVER_PERIOD = new RegExp(`^${SERVER_TAG}\\s*~\\s*${SERVER_TAG}$`);
+
+function starlightEvents(article: Article, ctx: ParseContext): GachaEvent[] {
+  const read = (label: string) => {
+    const rows = article.body.split("\n").map(row => row.trim()).filter(row => row.startsWith(`${label}:`));
+    const match = rows.length === 1 ? SERVER_PERIOD.exec(rows[0]!.slice(label.length + 1).trim()) : null;
+    if (!match) throw new Error(`KQM GINews Starlight ${label} missing or invalid: ${article.id}`);
+    const clock = (offset: number) => {
+      const [year, month, date, hour, minute] = match.slice(offset, offset + 5);
+      const iso = `${year}-${month}-${date}T${hour}:${minute}:00.000Z`;
+      const value = new Date(iso);
+      if (!Number.isFinite(value.valueOf()) || value.toISOString() !== iso) {
+        throw new Error(`KQM GINews Starlight invalid server clock: ${article.id}`);
+      }
+      return value.valueOf();
+    };
+    const start = clock(1), end = clock(6);
+    if (end <= start) throw new Error(`KQM GINews Starlight reversed period: ${article.id}`);
+    return { start, end };
+  };
+  const main = read("Event Duration"), quest = read("Quest Completion Period");
+  if (quest.start !== main.start || quest.end > main.end) {
+    throw new Error(`KQM GINews Starlight quest outside event: ${article.id}`);
+  }
+  return [
+    { title: STARLIGHT, window: main,
+      summary: "Main event period for Prismatic Crystal rewards. Earning Sightseeing Experiences through event stages has a separate, earlier Quest Completion Period." },
+    // Put the mechanic first: a suffix would look like a duplicate of the main
+    // event to cross-source title-prefix reconciliation.
+    { title: `Quest Completion Period — ${STARLIGHT}`, window: quest,
+      summary: "Complete Starlight Voyage stages to earn Sightseeing Experiences before this cutoff. The main event continues afterward; this is the earlier quest deadline." },
+  ].map(({ title, window, summary }) => {
+    const startsAt = new Date(window.start).toISOString().slice(0, 10) + "T00:00:00.000Z";
+    const endAt = (hours: number) => new Date(window.end - hours * 3_600_000).toISOString();
+    return GachaEvent.parse({
+      id: eventId("genshin", title, startsAt), game: "genshin", title, type: "other", summary,
+      // Region-specific starts are not represented by the current schema.
+      startsAt, startPrecision: "day", endsAt: endAt(8), endPrecision: "exact",
+      regionScoped: true, regionEnds: { asia: endAt(8), europe: endAt(1), america: endAt(-5) },
+      sourceUrl: `https://github.com/KQM-git/GINews/blob/master/archive/${article.id}.md`,
+      sourceId: ctx.sourceId, status: "published", confidence: 0.8,
+      extractionMethod: "parser", version: 1, firstSeenAt: ctx.now, updatedAt: ctx.now,
+    });
+  });
+}
+
 export function parseKqmGinNews(raw: string, ctx: ParseContext): GachaEvent[] {
   const archive = articles(raw);
   if (!archive.length) throw new Error("KQM GINews archive headings missing");
@@ -114,12 +164,17 @@ export function parseKqmGinNews(raw: string, ctx: ParseContext): GachaEvent[] {
   const add = (event: GachaEvent | null) => {
     if (!event) return;
     const old = seen.get(event.id);
-    if (old && (old.endsAt !== event.endsAt || old.startsAt !== event.startsAt)) {
+    if (old && (old.endsAt !== event.endsAt || old.startsAt !== event.startsAt ||
+      JSON.stringify(old.regionEnds) !== JSON.stringify(event.regionEnds))) {
       throw new Error(`KQM GINews conflicting duplicate: ${event.id}`);
     }
     seen.set(event.id, event);
   };
   for (const article of archive) {
+    if (/^Participate in "Starlight Voyage: Heart Unbound" to obtain Prismatic Crystals\b/.test(article.heading)) {
+      for (const event of starlightEvents(article, ctx)) add(event);
+      continue;
+    }
     if (/^"Rainbow's End: Resplendent Starlight" Event/i.test(article.heading)) {
       const missive = /〓Missive of Grace: A Thank-You Gift〓([\s\S]*?)(?=〓|$)/.exec(article.body)?.[1];
       const starlight = /〓Resplendent Starlight - Daily Login Event〓([\s\S]*?)(?=〓|$)/.exec(article.body)?.[1];

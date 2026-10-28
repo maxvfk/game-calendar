@@ -342,6 +342,48 @@
       "sourceUrl": "https://www.hoyolab.com/article/47010361",
       "provenanceStatus": "official",
       "confidence": 1
+    },
+    {
+      "id": "genshin:quest-completion-period-starlight-voyage-heart-unbound:2026-10-19",
+      "title": "Quest Completion Period — Starlight Voyage: Heart Unbound",
+      "type": "other",
+      "summary": "Complete Starlight Voyage stages to earn Sightseeing Experiences before this cutoff. The main event continues afterward; this is the earlier quest deadline.",
+      "startsAt": "2026-10-19T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-10-28T20:00:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-10-28T20:00:00.000Z",
+        "europe": "2026-10-29T03:00:00.000Z",
+        "america": "2026-10-29T09:00:00.000Z"
+      },
+      "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21901.md",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T09:36:45.972Z",
+      "reviewedAt": "2026-10-28T09:36:45.972Z",
+      "provenanceStatus": "official"
+    },
+    {
+      "id": "genshin:starlight-voyage-heart-unbound:2026-10-19",
+      "title": "Starlight Voyage: Heart Unbound",
+      "type": "other",
+      "summary": "Main event period for Prismatic Crystal rewards. Earning Sightseeing Experiences through event stages has a separate, earlier Quest Completion Period.",
+      "startsAt": "2026-10-19T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-01T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-01T19:59:00.000Z",
+        "europe": "2026-11-02T02:59:00.000Z",
+        "america": "2026-11-02T08:59:00.000Z"
+      },
+      "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21901.md",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T09:36:45.972Z",
+      "reviewedAt": "2026-10-28T09:36:45.972Z",
+      "provenanceStatus": "official"
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Seven-game Source Coverage — Ranked Remediation Backlog
 
-**Status:** PLANNED / RESEARCH SYNTHESIS ONLY, **NO IMPLEMENTATION AUTHORIZED**.
+**Status:** SC-P0-GEN-STARLIGHT implementation authorized and implemented; release validation pending. All other items remain planning only, with no implementation authorized.
 **Checked:** 2026-10-28. **Main baseline:** `0f8042d1b86c09210b46573b42058dcc128ddb3b`.
 **Owner workflow:** one short-lived branch / one bounded game-specific milestone / real CI / PR / controlled merge / post-merge Pages and player-visible check. Re-read CURRENT main before every milestone.
 
@@ -17,6 +17,32 @@ The calendar's core promise is "what ends soon and what must I finish?" Thus pri
 **No gameplay data, source adapters, snapshots, workflows, secrets, Account Sync, CZN Daily Reset, editorial Timeline registry or production deployment changes in this milestone.** The backlog itself is NOT approval to implement any item. Existing unrelated **Timeline PR #115 remains NO GO** and **Source Recovery R1–R3 design PR #113 remains pending independent review**; do not merge either by side effect.
 
 This is a frozen, **as-of-2026-10-28** prioritization using prior audits and source snapshots (mostly last confirmed Oct 27). Before each implementation, re-check live official notices, the feed winner, current main and post-audit merges. Do not convert stale research into a later "current event" claim.
+
+### SC-P0-GEN-STARLIGHT execution status (2026-10-28)
+
+- **Outcome 1 — current-data restoration: implemented; release acceptance pending.**
+  Main + separate Quest Completion Period are now exact regional reviewed
+  winners, with Oct 19 day starts. IDs:
+  `genshin:starlight-voyage-heart-unbound:2026-10-19` and
+  `genshin:quest-completion-period-starlight-voyage-heart-unbound:2026-10-19`.
+  Main ends Asia Nov 1 19:59Z / Europe Nov 2 02:59Z / America Nov 2 08:59Z;
+  quest ends Asia Oct 28 20:00Z / Europe Oct 29 03:00Z / America Oct 29 09:00Z.
+  Full fixed-clock feed replay: 243 → 245, all prior winners unchanged,
+  no added conflicts; public pre-fix JSON confirmed both missing.
+- **Outcome 2 — repeat-failure prevention: implemented for the existing notice contract.**
+  Narrow Participate-in Starlight parser requires both explicit server-local
+  periods; real-source regression tests future dates/notice IDs, malformed
+  periods, cross-source duplicate/priority rules and historical expiry in
+  all regions. Reviewed fallback protects rotation out of the KQM index.
+  General discovery/renamed-template monitoring remains the independently
+  deferred G2/G4 work in the [Genshin audit](../research/genshin-source-coverage-audit-2026-10-28.md#suggested-bounded-milestones-independent-do-not-implement-in-this-audit),
+  not a claim of all-family completeness or a new Source Recovery task.
+- **Validation:** frozen install/typecheck/tests/build/feed passed locally;
+  1353 pass, 3 existing age-dependent skips, 0 fail. Evidence:
+  [feed replay](../evidence/genshin-starlight-feed-replay-2026-10-28.json).
+  PR CI, post-merge CI/Pages and deployed event verification pending.
+  No source/snapshot timestamp, old reviewed row, maintenance date or
+  unrelated game data changed. Keep passed regional cutoffs historical.
 
 ## 1. Canonical evidence — seven per-game audits
 
@@ -194,6 +220,6 @@ For each separately authorized item:
 
 ## 8. One next concrete step
 
-**Create/authorize only `SC-P0-GEN-STARLIGHT` (Genshin's missing Oct 29 early cutoff) as the first short Work.** Ground it in `archive/21901.md`, preserve 7.1 reviewed precedence/IDs and per-region server clock, and require end-to-end feed/Pages verification. Time is critical: Asia's quest cutoff corresponds to **Oct 28 20:00Z**, less than a day after this synthesis. Do not implement the other P0/P1 items in that Work.
+**Finish release validation for the already-authorized `SC-P0-GEN-STARLIGHT` only.** Ground it in `archive/21901.md`, preserve 7.1 reviewed precedence/IDs and per-region server clock, and require end-to-end feed/Pages verification. Time is critical: Asia's quest cutoff corresponds to **Oct 28 20:00Z**, less than a day after this synthesis. Do not implement the other P0/P1 items in that Work.
 
-**After that single hotfix**, choose a new short Work for CZN anniversary gift claims or Endfield Maras precision correction based on which verified deadline can still be usefully corrected. This backlog is **planning only**.
+**STOP after that single hotfix.** A separately authorized future Work may choose for CZN anniversary gift claims or Endfield Maras precision correction based on which verified deadline can still be usefully corrected. This backlog is **planning only**.

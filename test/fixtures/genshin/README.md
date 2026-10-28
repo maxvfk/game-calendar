@@ -8,3 +8,11 @@ Mirror source: https://github.com/KQM-git/GINews/tree/master/archive ,
 notices 21888/21889. No artwork/prose is reproduced or source content invented.
 These pins keep historical precision regressions independent from the rolling
 production snapshot; they are never a production fallback.
+
+`starlight-voyage-2026-10-28.md` is the complete `archive/21901.md` block
+from the checked-in `snapshots/genshin-kqm-ginews.md` (source confirmation
+2026-10-27T21:23:33.332Z, unchanged). The live KQM archive was re-read
+2026-10-28; no new capture/confirmation timestamp is assigned to the snapshot.
+It preserves the distinct Event Duration and Quest Completion Period, both
+`t_lc` game-server clocks. Genshin uses fixed UTC+8 / UTC+1 / UTC−5
+for Asia / Europe / America, including across western civil DST changes.
