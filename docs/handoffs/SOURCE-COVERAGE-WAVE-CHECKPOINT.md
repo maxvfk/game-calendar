@@ -1,6 +1,6 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 MILESTONE: SC-P1-CZN-SEASON5
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: a671d7fb726d8437a66c60b0990d557fc0147d49
 BRANCH: fix/czn-season5
 HEAD_SHA: resolve branch ref
@@ -14,3 +14,5 @@ VERIFICATION_COMMANDS: install/typecheck/fulltests/build/feed NOT RUN for this m
 NEXT_CONCRETE_STEP: append3 rows and day-precision/family/merge tests; pushCP1 then allrequiredchecks/PR/CI/merge/postCI/Pages/public. AfterCP4 durable wavecloseout only, then STOP. WUWA-NEW-BANNER-CLOCK and CZN-OLD-FSO-END remain explicit data blockers.
 
 CP0_SHA1770b1ad73d98aa4763c59fbb7fad695a0b84212. CP1 implemented3 reviewedrows and3 tests. First targeted schema rejected season summary>500chars; shortened within existing schema, no schema relaxation. Full checks NOT RUN.
+
+CP1_SHA446e0e7d1da825e05f167d19f2efe166f38fd461. CP2 PASS: bun install --frozen-lockfile; bun run typecheck; bun test1396pass/3existing age skips/0fail full summary; bun run build; fixedfeed286->289 exactly3 additions, allprior winners/conflicts/reviewed34 unchanged. Targeted3pass, git diff --check PASS. Evidence docs/evidence/czn-season5-feed-replay-2026-10-28.json. Next smallPR exactheadCI/merge/postCI/Pages/public. CP3/CP4 in deliveryPR supersede pending release text. AfterCP4 finalcloseout then STOP.
