@@ -1,5 +1,50 @@
 # Game calendar implementation status
 
+## ZZZ 3.3 source/coverage audit — RESEARCH COMPLETE; NO IMPLEMENTATION (2026-10-28)
+
+Report: `docs/research/zzz-source-coverage-audit-2026-10-28.md`.
+After completed PRs #105/#107/#109/#111/#112, **core Version 3.3 coverage
+is substantially complete**: all **8** official `New Events`, all **4**
+Phase I Agent/W-Engine channels and the official Audition Stage are
+covered, together with carried-over `Angels Support Operation`.
+Shiyu / Deadly Assault use their established, non-official **estimated**
+14-day rules; do not repeat source or endgame-recovery research.
+
+- `zzz-steam-events-official`: 43 official events across four patch
+  updates (8 for 3.3), last confirmed 2026-10-27T21:23:33Z.
+  `zzz-zenlessgg-banners`: 20 historical/current secondary banner
+  candidates, including the four 3.3 Phase I channels, last confirmed
+  2026-10-27T21:23:32Z. All 30 reviewed rows retain ID precedence.
+  **78** total ZZZ winners were documented by previous Oct 27 recovery;
+  a fresh current live JSON/refresh replay was NOT done in this audit.
+- **Confirmed missing deadline family:** official 3.3
+  `New Eridu City Fund` ends Nov 30 **03:59 server**, with a separate
+  optional paid-purchase cutoff at **02:59 server**, one hour earlier.
+  Original publisher notice `/166944` is a separate announcement:
+  the Steam adapter intentionally supports only `New Events`, while
+  Zenless.gg banner adapter intentionally supports only channel notices.
+- **Confirmed missing reward expiry:** separate official issue-fix
+  compensation claim **Nov 20 23:59 UTC+8** (= Nov 20 15:59Z);
+  update compensation has its own version-end cutoff
+  Dec 2 06:00 UTC+8. These are not regular `New Events` rows.
+- **Product decision / optional:** Limited Spookies exchange during
+  version 3.3 and store-only outfit/bundle discounts ending Dec 2
+  05:59 UTC+8. Do not claim permanently sold outfits themselves vanish.
+- **3.3 Phase II WATCH, not a confirmed bug:** publisher preview names
+  new Agent Severian but the verified Oct 27 RSS contains no distinct
+  dated Phase II channel notice. Do not infer starts, ends or channels
+  from generic patch-half cadence or Icy Veins projections. Check upon
+  official notice publication and demand complete Agent/W-Engine groups.
+- No new runner host probe, current deployed JSON check, Oct 28 scheduled
+  refresh proof, local Bun tests, game-data changes or production workflow
+  changes in this audit.
+
+**Next concrete step:** continue research-only audits for NTE and CZN,
+then prepare a cross-game severity backlog; or separately authorize narrow
+`ZC1` reward-deadline reviewed-data repair. Keep Source Recovery
+PR #113 and Timeline PR #115 independent.
+
+
 ## Endfield Sanctuary of Ink source/coverage audit — RESEARCH COMPLETE, NO FIX (2026-10-28)
 
 Report: `docs/research/endfield-source-coverage-audit-2026-10-28.md`.
