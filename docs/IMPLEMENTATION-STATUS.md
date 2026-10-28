@@ -1,6 +1,6 @@
 # Game calendar implementation status
 
-## SC-P1-END-CURRENT — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+## SC-P1-END-CURRENT — IMPLEMENTED (PR136); WAVE RUNNING (2026-10-28)
 
 Source: official Gryphline9560 and4489 re-read Oct28. Five reviewed channels:
 Si/Rejuvenation, JadeVessel/SealofJadeIssue, Tangtang/AncestralSpringFlowsAnew,
@@ -4071,4 +4071,4 @@ DST from summer wall time, or repeat the completed seven-game audit.
   review which production corrections actually deployed, the step 4 safety
   decision and the operator's final mobile/PC smoke results.
 
-SC-P1-END-CURRENT CP2 PASS: frozen install/typecheck/full tests/build/feed;1369pass/3existing age skips/0fail;255->260 exactlyfive additions, no changed/removed prior winner or dateConflict. Evidence: docs/evidence/endfield-current-feed-replay-2026-10-28.json. CP3/CP4 pending delivery PR.
+SC-P1-END-CURRENT CP2 PASS: frozen install/typecheck/full tests/build/feed;1369pass/3existing age skips/0fail;255->260 exactlyfive additions, no changed/removed prior winner or dateConflict. Evidence: docs/evidence/endfield-current-feed-replay-2026-10-28.json. CP3/CP4 evidence: [PR136](https://github.com/maxvfk/game-calendar/pull/136).

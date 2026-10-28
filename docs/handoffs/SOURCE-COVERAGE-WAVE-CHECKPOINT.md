@@ -2,11 +2,11 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-END-CURRENT
-STAGE: CP2
+STAGE: CP3
 BASE_MAIN_SHA: 21f07733994483f579986a2fd86fe1f1c00ff200
 BRANCH: fix/end-current
 HEAD_SHA: resolve branch ref (this checkpoint commit)
-PR: NONE
+PR: https://github.com/maxvfk/game-calendar/pull/136
 CP0_SHA: e0de994a58dc597d71f10601f4040cd95d4bd6bd
 DONE: CURRENT main, AGENTS, status/wave/backlog, Endfield audit, wiki parser, reviewed batch and tests read; latest PR list checked (no duplicate fix). PR135 CP4 verified: merge21f0773, CI/Pages40690620800 SUCCESS, public255 generated12:47:28.664Z, exact Overdrive and browser confirmed.
 VERIFICATION: official9560 and4489 freshly read2026-10-28. Five intended IDs absent from actual public/feed. Source Si Nov5 11:59server; Tangtang/TenderSprig Oct29 12:00–Nov19 11:59server; Readiness Oct29 04:00–Nov5 04:00server; SealofJade relative three Chartered banners only. New local validation NOT RUN.
@@ -31,3 +31,5 @@ CP1: five reviewed rows and test/endfield-current.test.ts implemented. Full vali
 Validation history: first typecheck caught test tuple optionality; corrected test table to readonly tuples before rerunning. No production/schema change.
 
 CP2 PASS: bun install --frozen-lockfile; bun run typecheck; bun test1369pass/3existing age skips/0fail; bun run build; fixed feed255->260 exactlyfive intended IDs, every prior winner/conflict identical. Original7 Endfield rows and batch metadata byte-semantic equal. Evidence docs/evidence/endfield-current-feed-replay-2026-10-28.json. CP3/CP4 NOT RUN; next open PR and require exact-head CI.
+
+CP3: PR136 opened. Final-head CI pending; merge/post-merge CI/Pages/public NOT RUN. Next inspect CI for this pushed commit, then expected-head merge only after SUCCESS.

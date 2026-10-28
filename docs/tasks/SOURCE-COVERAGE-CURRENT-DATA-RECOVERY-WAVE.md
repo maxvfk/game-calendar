@@ -1,6 +1,6 @@
 # Source Coverage — Current Data Recovery Wave
 
-**Status:** RUNNING — manually resumed2026-10-28. PR130/132/133/134/135 fully released and CP4 verified. Current bounded item: SC-P1-END-CURRENT, branch `fix/end-current` (CP0).
+**Status:** RUNNING — manually resumed2026-10-28. PR130/132/133/134/135 fully released and CP4 verified. Current bounded item: SC-P1-END-CURRENT, [PR136](https://github.com/maxvfk/game-calendar/pull/136) (CP3).
 **Prepared:** 2026-10-28. **Baseline:** current main at launch (do not pin this document's preparation SHA).
 **Canonical backlog:** [SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md](SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md).
 **Operating rules:** `AGENTS.md`; `docs/IMPLEMENTATION-STATUS.md`.
