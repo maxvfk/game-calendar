@@ -1,6 +1,7 @@
 # Source Recovery R1–R3 — monitoring, assisted and autonomous repair
 
-**State:** DESIGN DRAFT FOR INDEPENDENT REVIEW; implementation NOT authorized.
+**State:** DESIGN REVISED AFTER INDEPENDENT NEEDS_CHANGES REVIEW (2026-10-28); implementation NOT authorized.
+**Review evidence:** [Claude PR #113 comment](https://github.com/maxvfk/game-calendar/pull/113#issuecomment-6472175155). Mitigations below are proposed gates, **not implemented runtime controls**.
 **Owner decision:** operator, 2026-10-27. **Base main:** `1d35a95`.
 **Scope:** seven-game source coverage, ingestion recovery and its GitHub orchestration.
 **Primary constraint:** missing or confidently wrong deadlines are worse than an empty calendar.
@@ -24,9 +25,12 @@ a verified one-off event may be restored through reviewed records instead.
   can start a longer/better-resourced coding agent automatically. Same terminal
   contract: **PR + notification, then STOP**.
 - **Neither R2 nor R3 may merge, write to main, enable auto-merge, bypass branch
-  protection, publish production data, or deploy.** An **independent** ChatGPT
-  Work or Claude review is a distinct operator-requested task, which may produce
-  corrections and merge only after its own explicit authorization.
+  protection, publish production data, or deploy.** This is a **target invariant**,
+  not an existing permission boundary: Oct 28 GitHub REST reports
+  `branches/main.protected=false` and `rulesets=[]`. A deterministic writer and
+  operator-approved main-branch policy are required before R2b activation.
+  An **independent** ChatGPT Work or Claude review remains separate, with merge
+  only after its own explicit authorization.
 - Source search, adapter implementation and provenance changes must never be
   interpreted as permission to invent future schedules, bypass robots, or use
   private endpoints.
@@ -95,6 +99,11 @@ Candidate inputs (inspect actual schema and select only grounded inputs):
 - A limited GitHub Actions watchdog for scheduled runs themselves: skipped or
   delayed refreshes must be distinguishable from source freshness failures.
   Do not infer that a scheduled job ran solely from its cron definition.
+- R1 must persist independent monitor state (bot-authored incident block or
+  committed monitored file); current `snapshots/*.state.json` comes from
+  best-effort Actions cache. Cache miss means `unknown`, never `healthy`.
+  Base liveness on **last successful completion** with tolerance for multi-hour
+  schedule delays, including inactive/disabled schedules and monitor silence.
 
 Suggested contract fields: `schemaVersion`, `game`, `family`, optional
 `mode`, region policy, monitored source IDs, evidence basis, explicit known
@@ -181,10 +190,13 @@ trusted issue section or committed evidence file, plus readable Markdown:
     attempts, nextAllowedAttemptAt, suggestedOperatorAction
     proposedRecoveryStrategy (triage recommendation, not operator approval)
     outcomeA (pending/verified_deployed), outcomeB (guarded/watch/blocked/pending)
+    monitorHeartbeat, observedWorkflowCompletion, stateContinuity (known/unknown)
 
 - Idempotent by deterministic `incidentKey`, not timestamp or a randomly
   changing issue title. Update an existing issue instead of creating alerts on
   every schedule or every 304. Preserve operator discussion and old evidence.
+  Canonical state is ONLY a validated, bot-authored issue-body block or trusted
+  committed file; public comments are neither state nor authorization.
 - Never treat issue title/body, event summary, RSS/HTML, README from a candidate
   host or tool output as executable instructions. Only schema-validated,
   repository-reviewed policy determines agent scope or permissions.
@@ -201,9 +213,11 @@ trusted issue section or committed evidence file, plus readable Markdown:
 
 ## 4. R2: on-demand recovery agent
 
-Trigger is an explicit manual `workflow_dispatch` or trusted repository Issue
-action referencing an existing **confirmed** incident ID; not arbitrary issue
-text. Standard workflow:
+Initially permit ONLY owner-authorized `workflow_dispatch` with explicit
+`github.actor` allowlist and an existing validated **confirmed** incident ID.
+An owner-applied label may be evaluated later behind its own actor gate.
+Never trigger from public `issue_comment` or `issues: opened`; issue text is
+untrusted input even when it references a genuine incident. Standard workflow:
 
 1. Independently re-fetch CURRENT main + Issue evidence and validate age,
    severity, incidentKey, scope and existing linked PR/runs. Refuse stale,
@@ -211,9 +225,11 @@ text. Standard workflow:
 2. A bounded read-only triage checks existing working sources and prior research,
    then admissible alternative official/secondary sources without repeating
    known blocked access experiments.
-3. Run approved live source probes on a GitHub runner (normal UA, permissions,
-   robots, rate limits, no challenge or hidden API); preserve hashes, dates,
-   method and conflicting evidence, not bulk republished articles.
+3. Run approved live source probes **separately from token-bearing model work**
+   on a GitHub runner (normal UA, permissions, robots, rate limits; no challenge
+   or hidden API). Record allowed URL, publication/check time, SHA-256,
+   publisher/host identity and bounded verbatim date/time evidence spans,
+   not bulk republished articles. Treat each span as data, not instruction.
 4. If evidence passes, **select the D2 strategy** before editing anything:
    `reviewed_only`, `parser_repair` or `new_family_integration`. Restore an
    urgent verified deadline through reviewed data even if broad parser work
@@ -224,10 +240,12 @@ text. Standard workflow:
 5. Execute frozen install / typecheck / full tests / build; where changed
    ingestion requires it, one real runner refresh and exact feed regression
    proof. No fixture-only production claims. Collect failures accurately.
-6. A **separate write-capable job without Claude subscription credentials**
-   may commit only policy-allowed paths and create/update a DRAFT PR; carry
-   changes as reviewed artifacts from sandbox, not by granting the LLM
-   direct write access to protected `main`.
+6. A **separate deterministic write job without Claude credentials** must
+   validate model artifacts against captured evidence and approved paths,
+   and push ONLY to a sanitized `recovery/<incidentKey>` branch. The token
+   must never give the model GitHub write rights. Since `main` is currently
+   unprotected, this branch restriction must have explicit negative tests
+   and an operator-controlled repository-policy gate before R2b.
 7. Notify by GitHub Issue comment + PR body/status. Agent STOPS. No merge or
    deployment; independent operator-selected ChatGPT Work/Claude handles
    review/fixes/merge as a new explicitly authorized task.
@@ -292,12 +310,17 @@ by itself:
 - Runs only after R1 confirms an eligible P0/P1 failure and R3 is explicitly
   enabled by an operator-controlled GitHub repository variable.
 - Independent deterministic dispatcher checks kill switch, recent retries,
-  duplicate incidentKey / existing PR / active job / subscription availability,
-  and event-impact classification. Never follow instructions in source HTML.
+  duplicate incidentKey / existing PR / active job and impact. There is NO
+  reliable subscription-usage preflight: start only within measured budgets,
+  then classify `limited` (including 429/529) and auth failures as the existing
+  Timeline job does. Never follow instructions in source HTML.
 - Higher agent budget and iterative research/repair/tests, but an explicit
   timeout, max tool calls/turns, allowed domains, network request caps, and
   per-day/per-week run ceilings. Avoid starving Timeline labels' shared
-  Claude Pro usage. Precise budgets are a later measured pilot decision.
+  Claude Pro usage. R2a must measure tool-agent costs; configure an R3
+  exclusion window around Timeline scheduled runs (currently Tue/Sat
+  04:23 UTC), accounting for observed multi-hour Actions delays. Precise
+  ceilings and windows are later measured pilot decisions.
 - Lock per incident and a global concurrency group; no runaway nested
   Actions/PR triggers; cooldown and exponential/backoff retry only for
   agent jobs (source HTTP still obeys the original no-retry/six-hour rules).
@@ -342,6 +365,106 @@ run arbitrary agent commands. Before enabling R2/R3:
 - No agent-supplied source URL or issue comment may escalate allowed GitHub
   scopes, install plugins, bypass robots, create secrets or publish data.
 
+### Independent review amendments — required design gates
+
+The 2026-10-28 [D0 Claude review](https://github.com/maxvfk/game-calendar/pull/113#issuecomment-6472175155)
+found **3 High, 5 Medium and 2 Low groups**. The R1/R2/R3 and D1/D2
+architecture is retained. The following are **future implementation gates**,
+not claims that runtime protections already exist.
+
+**H1: GitHub branch security.** On Oct 28 `main` was unprotected and
+`rulesets=[]` (confirmed by REST). The writer's `contents: write` token
+could in principle push `main`; a prompt-level no-merge policy is NOT
+protection. The secret-free writer must compute its target from a trusted
+canonical `incidentKey` into `recovery/<incidentKey>`, reject all externally
+supplied ref/path overrides and all targets named `main`, and pin the
+base/head SHA. Negative tests must prove it cannot request a push to
+`main` or another non-recovery ref. A ruleset that blocks force-push and
+branch deletion is valuable but **does not block an ordinary fast-forward
+push**. Before R2b, the operator must explicitly assess appropriate GitHub
+branch-update restrictions and compatibility with current fast-forward
+refresh/Timeline bots. No rulesets/permissions are changed in this PR; until
+the real enforcement exists, **do not claim main is protected**.
+
+**H2: Claude token exposure in tool-enabled mode.** Existing Timeline
+`claude -p --tools ""` proves only a no-tools invocation. R2a must test
+whether Bash/WebFetch and child processes inherit/can read
+`CLAUDE_CODE_OAUTH_TOKEN`. Prefer a token-bearing Claude job with no
+direct source fetch (sources captured by a separate unprivileged probe),
+isolated tools, and effective runner/container egress restrictions.
+Determine the **actual required** Claude API/auth hosts in a controlled
+pilot rather than hardcode an unverified `api.anthropic.com`-only assumption;
+block arbitrary outbound domains, network-capable Bash and non-allowlisted
+WebFetch at the enforceable runner/tool layer, not only by prompt.
+Red-team with a source fixture instructing environment/token exfiltration.
+A trusted token-holding step scans every outgoing artifact for secret values
+and refuses upload on a match, but a scan is only defense-in-depth and cannot
+compensate for a model subprocess able to access secrets or unrestricted
+network. **Fail closed / NO GO** if credential isolation or egress cannot
+be enforced. The write job NEVER receives the Claude secret.
+
+**H3: `reviewed_only` date integrity.** A probe deterministically pins each
+date/time **source claim** to allowed URL, check time, content SHA-256,
+publisher/host attribution and bounded verbatim span. The independent writer
+must validate every output temporal field through a reviewed deterministic
+extraction/conversion contract using those spans, plus explicit contextual
+year (where justified), server/region UTC offset, precision and source
+provenance. The *resulting UTC ISO timestamp need not appear literally*
+in the original publisher text: e.g. `04:00 game-server time` requires
+a proven timezone conversion. Conversely, the model's explanation or a
+similar unrelated date is NEVER evidence. If the mapping is ambiguous,
+return `blocked_evidence`/`requires_operator`, not a guessed date.
+Preserve IDs, history, merges and the same `AGENTS.md` sanity checks.
+Diff validation also rejects deletion or disabling of tests, introduction
+of `.skip`/`.only`, weakened security gates, and unexpected changes to
+workflows/auth/permissions. Test-quality semantics still require review.
+
+**M4–M5: durable R1 state and schedule delays.** Current failure streak
+bookkeeping comes from ignored `snapshots/*.state.json` restored from
+Actions cache, which is not a durable source of truth. R1 stores its own
+trusted state and differentiates `unknown` cache loss from a healthy run.
+An observed Timeline run started ~5.5 hours late on Oct 27. For the
+12-hour refresh cadence, test an initial *over-24-hour last-completed*
+threshold as a candidate, not as universal truth. Check liveness of both
+refresh and monitor; if both scheduled jobs stop, mutual checks alone
+cannot notify anyone. A separate operator-visible/out-of-band liveness
+strategy is a gate. Account for GitHub schedule disablement after
+repository inactivity.
+
+**M6: usage limits.** Subscription Pro allowance cannot be read before a
+run; classify observed limit/auth responses and stop without partial PR.
+The reviewed Timeline run used roughly 17k tokens, which is **not**
+a valid estimate for tool-enabled R2/R3. Measure real costs at R2a,
+set budgets and a blackout window around Tue/Sat Timeline, and avoid
+overlapping expensive coding sessions.
+
+**M7: public triggers and incident trust.** Start R2 only from an owner
+`workflow_dispatch` initially; authenticated actor, incident state and
+branch are checked in deterministic trusted code. Ignore issue comments as
+machine-readable state. R3 may originate ONLY from the trusted R1
+dispatcher and explicitly enabled kill switch, never public issue activity.
+
+**M8: explicit bot PR CI.** Reuse proven Timeline pattern:
+`gh workflow run ci.yml --ref <trusted recovery branch>` following
+`GITHUB_TOKEN`-authored push. Match and await the **exact head SHA**,
+record checks/results, then Draft PR + notify + STOP; green checks do
+not authorize merge. This D0 PR itself also needs CI before merge.
+
+**L9–L10: evidence boundaries and negative tests.** A working no-tools
+OAuth call does not establish file edits, tool subprocess safety, WebFetch,
+multi-turn coding or `claude-code-action` feasibility. Add scoped negative
+tests in the appropriate pilot for malicious source prompts, secret in
+artifact, unauthorized network/branch, missing date spans, normalized
+timezone mistakes, deleted/skipped tests, lost cache, multi-hour cron
+delay/disabled schedule, and concurrent triggers for the same incident.
+
+**Acceptance / operator actions:** this design change does NOT enable
+R1/R2/R3, set secrets, install rulesets, run new schedules or alter
+production data. After independent re-review, R1a may be separately
+authorized. R2a requires isolation and cost proof; R2b requires both
+the writer's branch/date/CI guards and an explicit operator decision
+on effective main-branch policy. R3 stays OFF until reviewed R2 runs.
+
 ## 7. Rollout: separate bounded implementation milestones
 
 **D0 (this document): design + independent critical review, docs-only.**
@@ -357,27 +480,31 @@ an automatic LLM job or fold it into deterministic R1a without approval.
 **R1a — deterministic minimum viable detection/incident flow.**
 Start with a real ZZZ banner/events case and 1–2 other contrasting families.
 Document coverage contracts grounded in actual current data; wire read-only
-monitor + dedup/upsert Issues; replay successful/failed/HTTP-200-stale,
-no-notice, expired-only and missed-run cases. No Claude call.
+monitor + persisted-issue-state dedup/upsert. Replay successful/failed/
+HTTP-200-stale, no-notice, expired-only, state-cache-loss-as-unknown,
+5+ hour cron delay, disabled schedules, and monitor-heartbeat gaps. No Claude call.
 
 **R1b (only if useful) — extend game/family contracts.**
 Bring in remaining supported games from real coverage docs without blanket
 recurrences or repeated source research; noisy families remain `watch`.
 
 **R2a — headless coding-agent sandbox pilot.**
-Reuse the already-proven Pro OAuth secret, test a *tool-capable* session on a
-controlled synthetic source outage using an isolated branch and no production
-write credentials. Demonstrate scoped network, bounded usage and no exfil.
+Reuse the existing Pro OAuth arrangement only in a hardened read-only job.
+Test child-process token inheritance, runner/tool egress enforcement, malicious
+source instructions, artifact secret scanning and token-free tools; measure
+real usage. Isolation failure is NO GO; no production write credentials.
 
 **R2b — manual Incident → D2 strategy → branch → Draft PR → CI → notification.**
-Pilot at least one `reviewed_only` outcome and one justified parser/family
-triage (including a valid decision not to rewrite a parser). Independent
-acceptance and merge must be requested in another session. Update docs/status only with
+Pilot at least one `reviewed_only` outcome with literal source date spans
+and deterministic timezone conversions, plus one parser/family triage.
+Test unsupported date, branch-main push attempt, test deletion/skip,
+concurrent incident and exact-head CI dispatch. Independent acceptance
+and merge must be requested in another session. Update docs/status only with
 verified results. No auto-merge or auto-publish.
 
 **R3 — automatic severe-incident escalation**, behind OFF-by-default
-kill switch, only after stable incident classifications and two or more
-reviewed R2 recoveries. Strong agent, measured time/usage budget, incident
+kill switch, only after stable incident classifications, proven branch/
+credential isolation, measured usage, and two or more reviewed R2 recoveries. Strong agent, measured time/usage budget, incident
 dedup, monitored completion; PR-only terminal condition.
 
 Do not start R1/R2/R3 implementation because D0 is approved or merged.
@@ -424,3 +551,10 @@ merge. A PR's creation, green CI or agent self-report is not authorization.
 **Next concrete step:** independent review of this D0 design by the Claude
 agent familiar with the Timeline OAuth integration. STOP after review; do not
 bootstrap recovery workflows until R1a is separately authorized.
+
+**D0 review handoff (2026-10-28):** Amendments above are DESIGN ONLY;
+[Claude's NEEDS_CHANGES review](https://github.com/maxvfk/game-calendar/pull/113#issuecomment-6472175155)
+requires focused re-review before D0 acceptance. This open PR is currently
+reported `mergeable_state: dirty` against advancing main; reconcile on a
+separate verified step and run exact-head CI before merging. Do not treat
+a changed document as evidence that operational risk is fixed.
