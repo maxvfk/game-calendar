@@ -1,5 +1,28 @@
 # Game calendar implementation status
 
+## SC-P1-CZN-SEASON5 — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+
+Three compact official reviewed cards from the STOVE-authored CZN.gg Oct21
+notice, manually reverified Oct28: main Chapter1/CelestialBulwark season rewards
+and Nightmare Dream Park to Dec23 before maintenance; Rossweisse Trauma Code
+limited achievements/battle rewards to Dec2 before maintenance. Day precision
+retains Time unconfirmed; no invented maintenance instant. Main-content title
+and summary distinguish Sep30 Chapter0/preview. CelestialBulwark Viadeus,
+Seraphion Oct28 02UTC (already unlocked) and EnforcerSeraphion Nov4 02UTC
+are summarized as unlocks in one seasonal card, not duplicate expiry cards.
+No claim that the underlying Trauma story disappears. All34 old reviewed rows,
+banner IDs/clocks/provenance/firstSeenAt, gifts, DailyReset/Sync unchanged.
+A release pending; B BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY (audit C3).
+
+Previous PR144 CP4: mergea671d7fb726d8437a66c60b0990d557fc0147d49;
+post CI/Pages40768798302 SUCCESS; public286 generated21:05:13.920Z,
+all5 Endfield reviewed winners exact including exceptional regional supply ends
+and unknown maintenance endings. Retained unrelated PR145/146 from currentmain.
+Browser plugin unavailable; publicJSON plus SSR/Timeline regressions verified.
+Starlight quest at21:04:39Z: Asia historical/ended, Europe/America still live.
+Next after CZN CP4: close out this wave with released A/B table and named
+blockers, then STOP. No P2/new simple-scheme implementation/R1–R3/Timeline/Sync.
+
 ## SC-P1-END-UPCOMING — IMPLEMENTED; WAVE RUNNING (2026-10-28)
 
 Five official reviewed families: Fervor, The Stars Are With Me, Contingency
@@ -4288,3 +4311,5 @@ CZN-CARNIVAL CP2 PASS: frozen install/typecheck/full1386pass/3skip/0fail/build/f
 ZZZ-REWARDS CP2 PASS: frozen install/typecheck/finalfull1389pass/3skip/0fail/build/feed279->281; only2 additions, no changed/removed old winners/conflicts, reviewed30 unchanged. Earlier legacy count failures corrected; incomplete-summary rerun not accepted. Delivery PR holds CP3/CP4.
 
 END-UPCOMING CP2 PASS: frozen install/typecheck/full1392pass/3existing age skips/0fail/build/feed281->286; five additions only, oldwinners/conflicts and reviewed12 unchanged. Evidence docs/evidence/endfield-upcoming-feed-replay-2026-10-28.json; delivery PR holds CP3/CP4.
+
+CZN-SEASON5 CP2 PASS: frozen install/typecheck/full1396pass/3existing age skips/0fail/build/feed286->289; exactly3 additions, allprior winners/conflicts and reviewed34 unchanged. Evidence docs/evidence/czn-season5-feed-replay-2026-10-28.json. Delivery PR holds CP3/CP4.
