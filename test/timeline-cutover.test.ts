@@ -180,8 +180,21 @@ test("rollback after a new v2 recording preserves latest data AND archives origi
   const rollback = prepareRollback(recorded, opened.epoch);
   await Bun.write(join(dir, `data/presentation/cutover-archives/${rollback.archiveHash}/registry-v2.json`), rollback.archive);
   await Bun.write(join(dir, V1_PATH), rollback.v1); await Bun.write(join(dir, STORAGE_PATH), JSON.stringify(rollback.selection));
-  const after = commit(dir, "rollback latest v2");
+  // An exact archive left only on disk must not satisfy the reviewed Git candidate.
+  git(dir, ["add", STORAGE_PATH, V1_PATH]); git(dir, ["commit", "--quiet", "-m", "rollback missing archive"]);
+  const missing = git(dir, ["rev-parse", "HEAD"]);
+  await expect(validateCandidate(dir, go(before, missing, "rollback"))).rejects.toThrow("committed rollback archive");
+  const after = commit(dir, "commit latest v2 rollback archive");
   await validateCandidate(dir, go(before, after, "rollback"));
+  const clean = join(dir, "clean");
+  git(dir, ["clone", "--quiet", "--no-hardlinks", dir, clean]);
+  await validateCandidate(clean, go(before, after, "rollback"));
+  expect(await Bun.file(join(clean, `data/presentation/cutover-archives/${rollback.archiveHash}/registry-v2.json`)).text()).toBe(rollback.archive);
+  rmSync(clean, { recursive: true, force: true });
+  // A tracked archive with the wrong bytes is also rejected, even if parseable.
+  await Bun.write(join(dir, `data/presentation/cutover-archives/${rollback.archiveHash}/registry-v2.json`), rollback.archive + " \n");
+  const corrupt = commit(dir, "wrong committed archive");
+  await expect(validateCandidate(dir, go(before, corrupt, "rollback"))).rejects.toThrow("committed rollback archive");
   expect((await loadTimelineStorage(dir)).projection.decisions).toHaveLength(76);
   expect(rollbackToV1(recorded).decisions.at(-1)).toMatchObject({ eventId: event.id, decision: "keep_original" });
   expect(JSON.parse(rollback.archive).decisions.find((d: { evidenceHashAtDecision?: string }) => d.evidenceHashAtDecision === "b".repeat(64))).toBeDefined();

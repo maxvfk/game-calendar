@@ -63,10 +63,16 @@ export async function validateCandidate(root: string, goInput: unknown) {
     if (prior.activeVersion !== 2) throw new Error("rollback source is not v2");
     const latest = JSON.parse(readGit(root, ["show", `${go.expectedMain}:${V2_PATH}`]));
     const rollback = prepareRollback(latest, prior.epoch);
-    if (JSON.stringify(rollback.selection) !== JSON.stringify(s.selection) || await Bun.file(resolve(root, V1_PATH)).text() !== rollback.v1 ||
-      await Bun.file(resolve(root, `data/presentation/cutover-archives/${rollback.archiveHash}/registry-v2.json`)).text() !== rollback.archive) throw new Error("rollback does not preserve the latest v2 data/archive");
+    const archivePath = `data/presentation/cutover-archives/${rollback.archiveHash}/registry-v2.json`;
+    // Untracked files are not part of the reviewed/published candidate. Require its
+    // exact blob, including whitespace/newline bytes, even if the archive pre-exists.
+    let archive: string;
+    try { archive = readGit(root, ["cat-file", "blob", `${go.candidate}:${archivePath}`]); }
+    catch { throw new Error("committed rollback archive missing from candidate tree"); }
+    if (archive !== rollback.archive) throw new Error("committed rollback archive differs from latest v2 data");
+    if (JSON.stringify(rollback.selection) !== JSON.stringify(s.selection) || await Bun.file(resolve(root, V1_PATH)).text() !== rollback.v1) throw new Error("rollback does not preserve the latest v2 data/archive");
     const changed = readGit(root, ["diff", "--name-only", go.expectedMain, go.candidate]).trim().split("\n").sort();
-    const permitted = [STORAGE_PATH, V1_PATH, `data/presentation/cutover-archives/${rollback.archiveHash}/registry-v2.json`].sort();
+    const permitted = [STORAGE_PATH, V1_PATH, archivePath].sort();
     if (!changed.includes(STORAGE_PATH) || changed.some(p => !permitted.includes(p))) throw new Error("rollback must only project/archive latest data and freeze storage");
   }
 }
