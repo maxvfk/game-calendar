@@ -2,20 +2,21 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-GEN-EXPIRIES
-STAGE: CP2 (PARTIAL / WIP)
+STAGE: CP2
 BASE_MAIN_SHA: 97b407c838e8c2cbaf9ec14199f3814835cd978d
 BRANCH: fix/gen-expiries
 HEAD_SHA: this pushed commit (resolve branch ref)
 PR: NONE
 DONE: current main/AGENTS/status/backlog/Genshin audit, parser, reviewed data/tests and source21901 completed work verified; no Starlight reimplementation. PR132/133 CP4 complete. Source21053/21890/21891 freshly fetched via KQM GitHub connector and agrees with actual stored notices.
-VERIFICATION: published feed253 records; Overflowing Favor already exists at day precision (audit's missing classification is stale); Carefree exists reviewed/day; PhaseII weapon absent. Implementation committed: narrow exact-period parser for three source contracts; reviewed fallback for all3; existing Carefree/Overflowing identities and firstSeenAt retained. Targeted5 files PASS(19tests); frozen install PASS; typecheck PASS; full suite FAIL(1361pass/3skips/2fail): recognition-subjects expected only two old subject-bearing records and now needs the new weapon pair; updated. An unrelated stubbed model-runner token-rejection test failed once (no Timeline code changed); isolated rerun pending. Build NOT RUN due fail-closed shell. Feed comparison PASS253->254; only2 existing precision updates and1 new weapon, no changed conflicts/removed IDs. Source fixture3 blob SHAs match live KQM.
+VERIFICATION: frozen Bun1.3.14 install PASS; typecheck PASS; final full suite PASS(1363pass/3existing age skips/0fail); build PASS. Actual fixed-clock feed253->254, exactly1 new weapon ID, only2 existing precision updates, no removed IDs/changed other winners/date conflicts. Source3 blob SHAs match live. PR/post-merge/Pages/public checks NOT RUN.
 REMAINING: narrowly extract exact server ends for two named duration-heading notices and one explicit dated weapon table; preserve existing2 IDs and reviewed precedence; add one distinct weapon-channel ID, no version/phase inference from cadence; reviewed fallback; full validation/release gates.
 BLOCKERS: NONE for checked notices. Broad new weapon-name/version/phase discovery remains outside this bounded fix.
 OUTCOME_A_DATA: PENDING
 OUTCOME_B_PREVENTION: PENDING known duration/table deterministic parser + real-source regressions
 CP0_SHA: 2132111381501cd691f929757d497ba28cfb0d62
 CP1_SHA: 1d368b8b10ad23e152a7e29c46b0f5568cb4566f
-NEXT_CONCRETE_STEP: run isolated recognition/model-runner tests, then rerun full validation after expected-subject update. Do not alter excluded Timeline code or merge until all required gates PASS.
+VALIDATION_HISTORY: intermediate CP2 15082ca946556048511e176407a859c91a80d26a recorded full-suite failures; recognition expected subjects updated for new channel; isolated recognition/model-runner rerun50PASS and final full suite1363PASS. No Timeline code changed.
+NEXT_CONCRETE_STEP: create bounded GEN-EXPIRIES PR, then final-head CI/merge/post-merge CI/Pages/public verification.
 
 ## Exact scope
 
