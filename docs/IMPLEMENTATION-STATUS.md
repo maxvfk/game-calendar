@@ -1,5 +1,37 @@
 # Game calendar implementation status
 
+## SC-P1-CZN-OVERDRIVE — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+
+Delivery and CP3–CP4 evidence: [PR135](https://github.com/maxvfk/game-calendar/pull/135).
+STOVE-authored10/21 update text manually rechecked at attributed CZN.gg mirror.
+
+- **A:** one `czn:overdrive-simulation:2026-10-21` reviewed official/manual
+  event; exact global end **Nov3 18:00 UTC**, day-only Oct21 after-maintenance
+  opening. No guessed maintenance completion, duplicate parent or regional
+  reinterpretation. Original29 CZN rows/gifts and standing Daily Reset/Sync
+  unchanged; real per-row discovery/review time, no new source timestamp.
+- **B BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY:** CZN audit C3 publisher
+  index/terms/runner gate remains uncleared. Prydwen's healthy banner feed
+  cannot discover events; reviewed rescue does not claim unattended prevention.
+- **CP2 PASS:** frozen Bun1.3.14 install/typecheck/full tests/build/feed;
+  **1366pass/3existing age skips/0fail**. Feed **254→255**, exactly one new
+  event and no changed/removed prior winners or new conflict. Global expiry
+  ±1ms/three regions, merge/source incompleteness and independent mail06:00 /
+  claim05:59 /standing daily18:00 clocks verified.
+  Evidence: `docs/evidence/czn-overdrive-feed-replay-2026-10-28.json`.
+- PR exact-head CI/merge/post-merge CI/Pages/public results remain mandatory;
+  observed SHAs/run URLs and actual public winner are recorded in PR135.
+
+**Previous CP4:** Genshin PR134 merged `d95e852f3cd9c79739dfd1a41192a2270a9a9a04`;
+[CI/Pages40678433259](https://github.com/maxvfk/game-calendar/actions/runs/40678433259)
+SUCCESS; public254 and all3 exact reviewed winners verified. Browser Asia
+confirmed two Nov1 19:59Z events and one Nov3 06:59Z weapon channel. A/B DONE
+for the supported contracts. PR130/132/133 remain fully released.
+
+**Next concrete step:** complete PR135 CP4, then **SC-P1-END-CURRENT** from
+CURRENT main. Continue the explicit P0/P1 wave; no P2 or excluded work.
+
+
 ## SC-P1-GEN-EXPIRIES — IMPLEMENTED; WAVE RUNNING (2026-10-28)
 
 Delivery/CP3–CP4 evidence: [PR134](https://github.com/maxvfk/game-calendar/pull/134).

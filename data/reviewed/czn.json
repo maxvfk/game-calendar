@@ -457,6 +457,23 @@
       "confidence": 1,
       "firstSeenAt": "2026-10-28T10:41:35.948Z",
       "reviewedAt": "2026-10-28T10:41:35.948Z"
+    },
+    {
+      "id": "czn:overdrive-simulation:2026-10-21",
+      "title": "Overdrive: Simulation",
+      "type": "other",
+      "summary": "Double simulation Growth Currency rewards up to six times per day. Opportunities reset at 18:00 UTC; the event ends November 3 at 18:00 UTC.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-03T18:00:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://czn.gg/10-21wed-update-notice/",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T11:19:08.233Z",
+      "reviewedAt": "2026-10-28T11:19:08.233Z"
     }
   ]
 }
