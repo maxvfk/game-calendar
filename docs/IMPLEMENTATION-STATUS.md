@@ -1,5 +1,59 @@
 # Game calendar implementation status
 
+## CZN Season 5 + 1st Anniversary source/coverage audit — RESEARCH COMPLETE; NO FIX (2026-10-28)
+
+Report: `docs/research/czn-source-coverage-audit-2026-10-28.md`.
+This is **7/7 research-only game source-coverage audits complete**. Current
+`czn-prydwen-banners` snapshot: **10** current/upcoming banner cards,
+last confirmed **2026-10-27T21:23:38Z**, parser deliberately banner-only
+and `estimated` day-precision. Reviewed CZN has **21** rows, including
+**six** already verified current/upcoming exact official paired
+character/partner banner periods. No official event-notices adapter is
+scheduled; Game8 remains disabled. Thus green Source Health is NOT broad
+event/season/claim coverage.
+
+- **P1 missing official gameplay deadlines:** `Overdrive: Simulation`
+  double rewards ends **2026-11-03T18:00Z**, `Basin of Hyperspace:
+  Dimensional Twilight` Oct 21–Nov 11 before maintenance,
+  `Full-Scale Offensive` new Sept30–Nov11 season. Previously reviewed
+  `Full-Scale Offensive — Season 4` has `endsAt:null` and may mislead
+  when an explicit newer season is active. No future season cadence is
+  inferred. Great Rift's weekly generator is already implemented, but
+  there is no independently verified new current Great Rift phase in
+  reviewed data; preserve its evidence gate.
+- **P1 missing anniversary:** Oct21–Dec2 `Nightmare Carnival`,
+  unused **70 free Normal Rescues** that expire at the Carnival end;
+  separate additional Aether benefit until Nov11, Rossweisse limited
+  Trauma Code & trials, `Nightmare Dream Park` Oct21–Dec23, Season 5
+  `A Promise Upon the Snow` & `Celestial Bulwark` Oct21–Dec23,
+  with Seraphion Oct28 02:00Z and Enforcer Seraphion Nov4 02:00Z
+  openings. These are STOVE-authored schedules mirrored at CZN.gg.
+- **Time-sensitive claim:** anniversary gifts are issued daily at
+  **06:00 UTC**, ordinary claims expire after 24 hours; Oct21 sticker
+  and Oct28 background instead expire **Nov30 14:59Z**. A separate
+  Oct23 surprise support gift ends Nov10 23:59 in its notice, with
+  timezone **not established in the excerpt**. Neither clock should
+  be replaced with the standing **18:00 UTC CZN Daily Reset**.
+- **Potentially misclassified historical row:** CZN × Epic Seven
+  crossover with Oct29 03:00Z CZN reviewed expiry uses a Smilegate
+  announcement describing an **Epic Seven** event. Needs independent
+  game-identity/product-scope review before removal/ID migration.
+- **Previously completed, preserve:** 6 official current banner
+  corrections (PR #59/#61), Daily Reset 18:00 UTC production cutover,
+  event ID/Sync data, conditional Great Rift weekly-reset helper.
+  December 2 maintenance end for Rossweisse/Sig remains day precision;
+  other future Prydwen banners are `estimated` pending own evidence.
+- No new runner external source/robots test, actual public JSON smoke,
+  Bun runtime tests, source/reviewed/snapshot/Sync/UI/workflow changes
+  or event publication was performed here.
+
+**Next concrete step:** prepare a separate **7-game P0/P1 remediation
+backlog** using the seven audited reports. Prioritize **incorrect
+published deadlines** and **imminent omitted free-reward windows** before
+starting broader unattended ingestion. This docs-only research does
+NOT authorize any implementation, Timeline #115 or Source Recovery #113.
+
+
 ## NTE 1.4 source/coverage audit — RESEARCH COMPLETE; NO IMPLEMENTATION (2026-10-28)
 
 Report: `docs/research/nte-source-coverage-audit-2026-10-28.md`.
