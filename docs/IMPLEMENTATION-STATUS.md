@@ -1,5 +1,49 @@
 # Game calendar implementation status
 
+## Endfield Sanctuary of Ink source/coverage audit — RESEARCH COMPLETE, NO FIX (2026-10-28)
+
+Report: `docs/research/endfield-source-coverage-audit-2026-10-28.md`.
+Current wiki.gg Event snapshot contains **8** auto-parsed Endfield events,
+last confirmed **2026-10-27T21:23:40Z**, and reviewed contains **6** rows
+(legacy 1.5 and the already repaired Phantasia Cycle I/II). Healthy event
+transport **does NOT imply banner/event coverage**.
+
+- **P1 exact-date discrepancy:** `Monumental Etching: Forest of Maras` wiki
+  `data-end` is `2026-11-04T22:00Z` Asia and `2026-11-05T22:00Z`
+  Americas/Europe. Official Sanctuary of Ink update (news/9560) specifies
+  **Nov 5 at 04:00 server**, i.e. `Nov 4 20:00Z` Asia / `Nov 5 09:00Z`
+  west. Wiki mistakenly extends the deadline by **2h / 13h**. This is a
+  source-row conflict, NOT a global timezone-mapping error.
+- **P1 missing entire banner family:** active `Rejuvenation` (Si),
+  upcoming `Ancestral Spring Flows Anew` (Tangtang), and weapon issues
+  `Seal of Jade` / `Tender Sprig`; official 9560 also announces
+  future Argent Flow / Moongleam but supplies relative rather than exact
+  ends for two Arsenal Issues. Current wiki event parser does NOT ingest
+  banners, and no official Gryphline adapter is scheduled.
+- **P1 event gaps:** `Contingency Readiness` Oct 29–Nov 5,
+  upcoming Season of Fervor, `The Stars Are With Me`, `Contingency Contract`
+  plus **Secret Sanctuary Dec 3 04:00 exchange cutoff**, and Nov Sanity
+  Supply region-specific window are absent from 8-event wiki snapshot.
+  `Yuanyuan's Blazing Stoves` wiki publishes an exact November expiry
+  not independently specified in official notice ('before next version').
+- **Previously solved, do not repeat:** Phantasia Cycle I/II reviewed PR
+  #58 with exact region endpoints, while automatic wiki Echoes current
+  season remains blocked by contradictory first-cycle regional start;
+  current season's final end is covered by Events wiki row.
+  Legacy 1.5 `Resplendent Spectrum` remains reviewed with `endsAt:null`
+  even though its version-linked phase has concluded; independent
+  historical precision repair is needed without ID churn.
+- No Bun tests, new host/robots Actions probe, independent live JSON fetch,
+  parser/reviewed/snapshot/source/secret/workflow/deployment change
+  was performed by this research audit.
+
+**Next concrete step:** separately authorize **A1** Maras exact-regional
+deadline reconciliation (most urgent) and **A2** narrow current 1.6
+banner/Contingency Readiness reviewed repair, or proceed with the next
+game's research-only audit. Do not modify Source Recovery PR #113 or
+Timeline PR #115 as part of Endfield coverage work.
+
+
 ## WuWa 3.7 source/coverage audit — RESEARCH COMPLETE, NO IMPLEMENTATION (2026-10-28)
 
 Report: `docs/research/wuwa-source-coverage-audit-2026-10-28.md`.
