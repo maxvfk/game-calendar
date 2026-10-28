@@ -1,5 +1,24 @@
 # Game calendar implementation status
 
+## SC-P1-END-UPCOMING — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+
+Five official reviewed families: Fervor, The Stars Are With Me, Contingency
+Contract (Nov5 12:00 server openings, unknown next-maintenance endings),
+Secret Sanctuary exchange (Dec2 04:00 server), and November Sanity Supply.
+Fresh primary9560 corrects frozen audit/backlog Dec3 shop / Nov19 supply copies:
+shop AsiaDec1 20Z, WestDec2 09Z; supply starts Nov18 04server, ends Asia
+Nov25 04server=Nov24 20Z, WestNov24 17server=Nov24 22Z. West stays UTC-5.
+Day openings honestly represent unsupported regional start instants; literal
+source clocks remain in summaries. No invented cycle/maintenance ending.
+All12 prior reviewed rows/IDs/discovery/source/provenance and Phantasia unchanged.
+A release pending. B BLOCKED END-OFFICIAL-DISCOVERY (audit A3 access/runner gate).
+
+Previous PR143 CP4: merge103520f71a3dc61ecc7bb4aa5ff79857b77fc9fc;
+post CI/Pages40709150830 SUCCESS; public281 generated14:46:51.261Z,
+both full ZZZ reviewed winners and browser regional/global reward display verified.
+ZZZ B remains BLOCKED ZZZ-REWARD-DISCOVERY. Next after Endfield CP4:
+CZN Season5 compact family records, then final wave closeout; no excluded work.
+
 ## SC-P1-ZZZ-REWARDS — IMPLEMENTED; WAVE RUNNING (2026-10-28)
 
 Two official reviewed reward reminders: New Eridu City Fund main tasks/claim
@@ -4267,3 +4286,5 @@ CZN-SEASONS CP2 PASS: frozen install/typecheck/build/full1384pass/3existing age 
 CZN-CARNIVAL CP2 PASS: frozen install/typecheck/full1386pass/3skip/0fail/build/feed277->279, only2 additions; allprior winners/conflicts and reviewed32 unchanged. Delivery PR owns observed CP3/CP4 evidence.
 
 ZZZ-REWARDS CP2 PASS: frozen install/typecheck/finalfull1389pass/3skip/0fail/build/feed279->281; only2 additions, no changed/removed old winners/conflicts, reviewed30 unchanged. Earlier legacy count failures corrected; incomplete-summary rerun not accepted. Delivery PR holds CP3/CP4.
+
+END-UPCOMING CP2 PASS: frozen install/typecheck/full1392pass/3existing age skips/0fail/build/feed281->286; five additions only, oldwinners/conflicts and reviewed12 unchanged. Evidence docs/evidence/endfield-upcoming-feed-replay-2026-10-28.json; delivery PR holds CP3/CP4.

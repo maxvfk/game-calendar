@@ -1,6 +1,6 @@
 # Source Coverage — Current Data Recovery Wave
 
-**Status:** RUNNING — PR130/132–142 CP4 verified. Current SC-P1-ZZZ-REWARDS, `fix/zzz-rewards`. Named blockers: CZN-OLD-FSO-END and WUWA-NEW-BANNER-CLOCK. Environment outage recovered manually; all work preserved.
+**Status:** RUNNING — PR130/132–143 CP4 verified. Current SC-P1-END-UPCOMING, `fix/end-upcoming`. Named blockers: CZN-OLD-FSO-END and WUWA-NEW-BANNER-CLOCK. Environment outage recovered manually; all work preserved.
 **Prepared:** 2026-10-28. **Baseline:** current main at launch (do not pin this document's preparation SHA).
 **Canonical backlog:** [SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md](SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md).
 **Operating rules:** `AGENTS.md`; `docs/IMPLEMENTATION-STATUS.md`.
