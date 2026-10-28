@@ -1,5 +1,55 @@
 # Game calendar implementation status
 
+## NTE 1.4 source/coverage audit — RESEARCH COMPLETE; NO IMPLEMENTATION (2026-10-28)
+
+Report: `docs/research/nte-source-coverage-audit-2026-10-28.md`.
+Live registered `nte-steamnews-official` is a **working documented Steam API**
+source: actual current snapshot **29 publisher posts**, last confirmed
+`2026-10-27T21:23:39Z`, `eventCount=49` across versions. Reviewed NTE
+contains **15 legacy (all pre-1.4) records**. Successful source transport/
+nonzero event count DOES NOT imply current-version coverage.
+
+**Confirmed P1 root cause:** the **complete official Version 1.4 launch
+and event schedule** is already present in the Steam snapshot under publication
+`1844751498233952`, heading `Log in to NTE's new version for Solid Dice x20,
+a limited frame, and more!`. `src/ingest/parsers/nte-steamnews.ts` uses a
+restricted title regexp that does not match `Log in` (only `login`) and
+silently skips **the whole Sept 29 publisher post**. Standalone dated
+Pukaland/Coal notices omit literal years, so intentional parser year
+fail-closed rules cannot rescue them. No new source needed for 1.4.
+
+- **P1 current missing:** `Circle Gifts` login (10 Solid Dice),
+  `Terminal Depths`, `Pukaland Travelogue`, `Coal Lump's Treasure`,
+  and **Version 1.4 Circle Bounty ending Nov 10 23:59 UTC+8** —
+  **six hours earlier** than the common Nov 11 05:59 UTC+8 version
+  activity cutoff. Web `Blackbird's Invitation`, Porsche collab
+  mystery boxes and outfit discount windows have exact official source
+  dates but depend on explicit calendar category/scope decisions.
+- **Currently covered by Steam parser:** `Dazzling Star` (Akane Rin),
+  `Far Side of the Moon` Arc, `Snap! Golden Crackshot`,
+  `Puka Lucky Flip` and `Gold Clash` from separately supported
+  Oct 21 maintenance article; the last two use deliberately day-only
+  precision because the publisher says `server time`, not UTC+8.
+- **Previously complete, preserve:** NTEBuild current `Lucent Circle`
+  (Oct 22–Nov 5) and future `Glinting Circle` (Nov 5–19)
+  Beyond the Rails 14-day/05:00 UTC+8 precise cycles; prior 1.3
+  Perfect World vs Steam `Circle Bounty` 24-hour conflict already
+  documented and must not be silently overridden.
+- **Historical 1.4 gaps:** Lacrimosa `Fading Reverie` and two Phase I
+  Arcs (`Crime and Punishment`, `The Last Rose`), double
+  `Stamina Recharge` / `Pixel Surge`. An announced 1.5
+  livestream is not proof of a dated 1.5 banner schedule.
+- No programmatic deployed JSON retrieval, fresh Bun tests, new
+  runner fetch, production code/reviewed/snapshot/workflow modification
+  or deployment in this documentation milestone.
+
+**Next concrete step:** separately authorize a narrow **N1** verified
+source-parser (or reviewed fallback) fix for the five active official 1.4
+deadlines, then **N2** historical channels; or complete last game **CZN**
+research-only audit before a cross-game priority backlog. Do not merge
+Source Recovery PR #113 or Timeline PR #115 incidentally.
+
+
 ## ZZZ 3.3 source/coverage audit — RESEARCH COMPLETE; NO IMPLEMENTATION (2026-10-28)
 
 Report: `docs/research/zzz-source-coverage-audit-2026-10-28.md`.
