@@ -1,7 +1,7 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-CZN-SEASONS
-STAGE: CP0
+STAGE: CP1
 BASE_MAIN_SHA: 5bc643ed526801ba93f670e4bdc6648831eaafe5
 BRANCH: fix/czn-seasons
 HEAD_SHA: resolve branch ref
@@ -15,3 +15,6 @@ OUTCOME_B_PREVENTION: BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY
 NEXT_CONCRETE_STEP: append current BasinOct21 and FullScaleSep30, update oldrow summary with explicit historical/supersession warning only.
 IDs czn:basin-of-hyperspace-dimensional-twilight:2026-10-21 and czn:full-scale-offensive:2026-09-30.
 Old czn:full-scale-offensive-season-4:2026-08-19 stays; closing unknown, not falsely fixed. Sources https://czn.gg/10-21wed-update-notice/ and https://czn.gg/09-30-wed-update-notice/ (publisher-authored attributed mirrors/manual evidence, not unattended fetch). No DailyReset/Sync/source timestamps/P2 changes. Next afterCP4 CZN-CARNIVAL: parent free70 with separate AdditionalAetherNov11day.
+
+CP0_SHA:7939eada40d0d39de432da3ae5eb8aba6d4f6483
+CP1 implemented2 reviewed phases and oldrow historical warning only; firstSeenAt preservedSept24, originalsource/provenance/endnull retained. Closing normalization explicitlyBLOCKED. Tests for day precision/historical expiry/source incompleteness implemented; full checks NOT RUN.
