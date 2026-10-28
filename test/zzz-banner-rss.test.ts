@@ -36,7 +36,7 @@ test("real multi-version capture discovers 20 distinct channels; all eight revie
   expect(events.every(e => e.type === "banner" && e.provenanceStatus === "estimated" && e.confidence === 0.8 && e.extractionMethod === "parser" && e.sourceUrl.startsWith("https://zenless.gg/"))).toBe(true);
   for (const groups of [[reviewed, events], [events, reviewed]]) {
     const merged = mergeEvents(groups);
-    expect(merged.conflicts).toEqual([]);expect(merged.events).toHaveLength(42);
+    expect(merged.conflicts).toEqual([]);expect(merged.events).toHaveLength(44);
     for (const row of reviewed) expect(merged.events.find(e => e.id === row.id)).toEqual(row);
   }
 });

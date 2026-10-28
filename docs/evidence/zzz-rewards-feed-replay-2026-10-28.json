@@ -1,0 +1,62 @@
+{
+  "milestone": "SC-P1-ZZZ-REWARDS",
+  "baseMain": "bb365d104ac9eb9eb76b34c20c5546a27c9529be",
+  "fixedReplayAt": "2026-10-28T09:40:00.000Z",
+  "beforeCount": 279,
+  "afterCount": 281,
+  "addedWinners": [
+    {
+      "id": "zzz:new-eridu-city-fund-version-3-3:2026-10-21",
+      "game": "zzz",
+      "title": "New Eridu City Fund \u2014 Version 3.3",
+      "type": "other",
+      "summary": "Main reward period: complete tasks and claim City Fund rewards until November 30 at 03:59 server time. Opens after the Version 3.3 update; no maintenance completion time is inferred.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-29T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-29T19:59:00.000Z",
+        "europe": "2026-11-30T02:59:00.000Z",
+        "america": "2026-11-30T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166944",
+      "sourceId": "reviewed-zzz",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T14:36:54.461Z",
+      "updatedAt": "2026-10-28T14:36:54.461Z"
+    },
+    {
+      "id": "zzz:version-3-3-issue-fix-compensation:2026-10-21",
+      "game": "zzz",
+      "title": "Version 3.3 Issue Fix Compensation",
+      "type": "login",
+      "summary": "Claim 300 Polychrome before November 20 at 23:59 UTC+8. Eligibility: Inter-Knot Lv. 4 before October 21 at 06:00 UTC+8. Individual mail expires 30 days after issue; check its timer. No individual issue/deletion timestamp is inferred.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-20T15:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166963",
+      "sourceId": "reviewed-zzz",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T14:36:54.461Z",
+      "updatedAt": "2026-10-28T14:36:54.461Z"
+    }
+  ],
+  "changedPriorWinnerIds": [],
+  "removedIds": [],
+  "dateConflictsUnchanged": true,
+  "reviewed30Unchanged": true,
+  "outcomeB": "BLOCKED ZZZ-REWARD-DISCOVERY audit ZC1/ZC4; restricted source families omit rewards, no broad integration"
+}
