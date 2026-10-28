@@ -323,7 +323,9 @@ cutover/release, Actions-variable/workflow-state change or AI call. No operator
 GO has been granted. Evidence-triggered requeue remains unwired.
 
 Baseline: original reviewed head `794bda294d3f4e4e31a67b35035d66ace1dbb9d1`,
-updated with current main `06102a76c602d86e924432bcd612e1a0967cb467`.
+updated from main `06102a76c602d86e924432bcd612e1a0967cb467`.
+Concurrent documentation-only main `89d4ad917990978e97ba7433508bb5e04c35a27e`
+was also integrated before final CI; no registry/runtime changes occurred.
 Only the status introduction needed merge reconciliation; independent HSR,
 snapshot and research changes are retained from main without editing their code.
 No parallel fixes were present. A fresh read-only full-history inventory at this
