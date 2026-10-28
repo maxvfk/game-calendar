@@ -1,7 +1,7 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-CZN-CARNIVAL
-STAGE: CP0
+STAGE: CP1
 BASE_MAIN_SHA: a97d64595d8083994e6b1f77680098211cf29aab
 BRANCH: fix/czn-carnival
 HEAD_SHA: resolve branch ref
@@ -15,3 +15,6 @@ OUTCOME_B_PREVENTION: BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY
 NEXT_CONCRETE_STEP: append2 reviewed rows, preserve all32 prior rows/metadata and DailyReset/Sync.
 IDs czn:nightmare-carnival:2026-10-21 and czn:nightmare-carnival-additional-aether:2026-10-21.
 Source https://czn.gg/10-21wed-update-notice/ (publisher-authored attributed mirror/manual evidence, not unattended fetch). Do not advertise paid-token selection rewards as free. No guessed maintenance clock, source timestamps or unrelated data changes. OldFSOclosing/WuWa-newclock remain documented blockers. Next remaining deadlineNov20 ZZZrewards, then Endfieldupcoming, then CZNSeason5 laterDec2/23 rewards.
+
+CP0_SHA:e7cb93b245817f7c881a6c46b3b678e2f36ace12
+CP1:2 reviewed rows and test/czn-carnival.test.ts implemented;32 existingrows untouched. Full checks/release NOT RUN. Next mandatory commands and277->279 fixed replay.
