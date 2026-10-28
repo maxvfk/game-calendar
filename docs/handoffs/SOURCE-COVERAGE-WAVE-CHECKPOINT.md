@@ -2,7 +2,7 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-WUWA-37-PARSER
-STAGE: CP0
+STAGE: CP1
 BASE_MAIN_SHA: ed74b738c96bac47b9ad550d26885e3a8eae354e
 BRANCH: fix/wuwa-events
 HEAD_SHA: resolve branch ref
@@ -21,3 +21,6 @@ Source https://wutheringwaves.kurogames.com/en/main/news/detail/5571
 CubieNov11 11:59server ->AsiaNov11 03:59Z/Europe10:59Z/America16:59Z.
 OtherthreeNov11 03:59server ->AsiaNov10 19:59Z/EuropeNov11 02:59Z/America08:59Z.
 Day openings; no guessed maintenance completion. No SpecialEvents falseID, no4 PhaseI reruns/web/permanent entries; source timestamps unchanged. Next afterCP4: HSRclaimsNov10 22Z, then CZNseasons/AdditionalAetherNov11 day.
+
+CP0_SHA:83b40aa678153012425612ad43215d0b94301ce9
+CP1 implemented scoped four-family patch title/calendar/duration contract, nested identity and strict period/anchor checks with actual snapshot/future/malformed/merge/expiry tests. Historical banner anchors remain outside this lane. Initial targeted assertion compared traversal vs sorted parser ordering; corrected test comparison sorting. Full validation NOT RUN; next mandatory commands and269->273 feed.
