@@ -120,6 +120,17 @@ heading/Availability/ClaimPeriod contracts, both globalNov10 22Z, day openings.
 No permanentPark expiry;8 old parser candidates/17 reviewed unchanged. A release
 pending, B deterministic parser/regressions implemented. Next CZNNov11day tasks.
 
+**HSR-CLAIMS CP4 verified:** PR140 merge5bc643ed526801ba93f670e4bdc6648831eaafe5;
+CI/Pages40696548982 SUCCESS; public275 generated13:28:20.010Z both semantic
+winners and browser22Z/source/permanentPark clarification verified. A/B DONE.
+
+**CZN-SEASONS currenttwo implemented (release pending); oldend BLOCKED
+CZN-OLD-FSO-END:** source confirms current BasinOct21/FullScaleSep30 toNov11
+beforemaintenance, day precision. OldSeason4 ID/source/provenance/firstSeenAt
+retained; historical/superseded summary warning only, unknownend not guessed.
+No direct oldterminal found in bounded evidence; old model status remains
+unresolved. B CZN-OFFICIAL-EVENT-DISCOVERY BLOCKED (auditC3). Next Carnival.
+
 ### SC-P0-GEN-STARLIGHT execution status (2026-10-28)
 
 - **Outcome 1 — current-data restoration: implemented; delivery record in [PR #130](https://github.com/maxvfk/game-calendar/pull/130).**
@@ -195,7 +206,7 @@ Dates below are in publisher-defined game server clock unless explicitly `Z` / `
 | **SC-P1-WUWA-NEW-BANNERS · BLOCKED WUWA-NEW-BANNER-CLOCK** | WuWa: new Suoming `Nine Deaths, One Unbent Heart` and `Unspoken Rue` current Phase II, missing despite four reruns working. | Kuro patch `5571` names them; `5668` only lists four reruns, not individually dated new banner windows. | **VERIFY exact first-party announcement/clock** first; if not established, mark BLOCKED and retain expected-family incident, never borrow rerun clocks silently. Separate W2 source discovery gate. |
 | **SC-P1-HSR-BANNERS · IMPLEMENTED (release pending)** | HSR: four active Version 4.6 Warp channels: Pearl + `Colors for Tomorrow`, Mortenax Blade + `Reforged in Hellfire`. | All end **Nov 10 15:00 server**; Phase II source official HoYoLAB `article/47142215`. | Two character and two Light Cone channel IDs; Pearl continuous across phases **once**, not duplicate Phase I/II; explicit three-region ends. Restore through reviewed hotfix before broader publisher discovery. |
 | **SC-P1-NTE-14-SKIPPED · IMPLEMENTED (release pending)** | NTE: extend *verified release-notice selection*, restore `Circle Gifts`, `Terminal Depths`, `Pukaland Travelogue`, `Coal Lump's Treasure`, **1.4 Circle Bounty**. | Same first-party Steam API `gid 1844751498233952` skipped because title **`Log in`** not `login`; Circle Bounty expires **Nov 10 23:59 UTC+8 (Nov 10 15:59Z)**, others mostly Nov 11 **05:59 UTC+8 (Nov 10 21:59Z)**. | Do not remove fail-closed year requirement from standalone articles; use verified version notice context. Keep 1.3 Circle Bounty prior 24h source conflict and all 15 existing reviewed rows; prove candidates become published winners. |
-| **SC-P1-CZN-SEASONS** | CZN: current **Basin of Hyperspace** Oct21–Nov11 and **Full-Scale Offensive** Sept30–Nov11; reconcile stale old `Full-Scale Offensive — Season 4` `endsAt:null`. | Explicit STOVE Oct21/Sept30 version notices; ends **before Nov 11 maintenance**. | No speculative maintenance-completion time, no +21d cadence. Preserve old IDs and source-backed historical boundary; one logical phase per record. |
+| **SC-P1-CZN-SEASONS · CURRENT IMPLEMENTED / OLD END BLOCKED** | CZN: current **Basin of Hyperspace** Oct21–Nov11 and **Full-Scale Offensive** Sept30–Nov11; reconcile stale old `Full-Scale Offensive — Season 4` `endsAt:null`. | Explicit STOVE Oct21/Sept30 version notices; ends **before Nov 11 maintenance**. | No speculative maintenance-completion time, no +21d cadence. Preserve old IDs and source-backed historical boundary; one logical phase per record. |
 | **SC-P1-HSR-CLAIMS · IMPLEMENTED (release pending)** | HSR: `Astral Trendible` availability + `Park Souvenir` claim expiration (two distinct mechanics). | Both **Nov 11 06:00 UTC+8**, directly in checked-in KQM 4.6 update under `Availability` / `Claim Period`. | Small extraction/regression or reviewed fallback; do not represent permanently accessible Park as expiring. |
 | **SC-P1-CZN-CARNIVAL** | CZN: **Nightmare Carnival** / **70 free Normal Rescues** expiring Dec 2 before maintenance; **Additional Aether** independently ends Nov 11 before maintenance. | STOVE publisher-announced anniversary periods. | Separate parent/subdeadline without double-counting; no guess about exact maintenance instant; favor explicit reminders for expiring free unused attempts. |
 | **SC-P1-CZN-SEASON5** | CZN: `Galactic Disaster Season 5: A Promise Upon the Snow`, Nightmare Dream Park, Rossweisse Trauma Code, Celestial Bulwark stage unlocks and season rewards. | Season/Dream Park through **Dec 23 before maintenance**, Trauma Code through Dec 2; **Seraphion Oct 28 02:00Z** and **Enforcer Seraphion Nov 4 02:00Z** unlock. | Pick compact nonduplicated family-level records; do not pretend a stage unlock is an expiry. Official parent vs phase must be precise. |
@@ -332,9 +343,8 @@ For each separately authorized item:
 
 ## 8. One next concrete step
 
-Finish **SC-P1-HSR-CLAIMS** CP2–CP4, then **SC-P1-CZN-SEASONS** and the
-independent AdditionalAether cutoff under **SC-P1-CZN-CARNIVAL** (Nov11day),
-using small related CZN PRs from CURRENT main. PR130/132–139 fully released;
-WuWa new-banner exact-clock gate explicitly BLOCKED. Confirmed P0/P1 only.
+Finish CZN-SEASONS currenttwo CP2–CP4, retain CZN-OLD-FSO-END explicit blocker,
+then CZN-CARNIVAL free70/AdditionalAether. PR130/132–140 fully released. Remaining
+confirmed P1 only; WuWa newclock blocked; no P2/R1–R3/Timeline/Auth/Sync.
 
-SC-P1-HSR-CLAIMS CP2 PASS: frozen install/typecheck/finalfull1381pass/3existing age skips/0fail/build/feed273->275, two additions only; old winners/conflicts and reviewed17 unchanged. Parser8->10; delivery PR owns CP3/CP4 observed release evidence.
+CZN-SEASONS CP2 PASS: frozen install/typecheck/build/full1384pass/3existing age skips/0fail/feed275->277; only2 additions+oldhistorical summary/reviewtime warning. Old ID/discovery/source/provenance/endnull retained; conflicts unchanged. CZN-OLD-FSO-END remains BLOCKED. Delivery PR holds CP3/CP4 evidence.

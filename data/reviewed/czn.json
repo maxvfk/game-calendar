@@ -208,7 +208,7 @@
     {
       "title": "Full-Scale Offensive — Season 4",
       "type": "challenge",
-      "summary": "New Full-Scale Offensive season confirmed with the August 19 Season 4 Chapter 2 update; end date has not been published.",
+      "summary": "Historical Season 4 phase introduced August 19. A new Full-Scale Offensive season is announced from September 30; use its separate record for current planning. The old closing boundary remains unverified, so no date/hour is guessed. Transition source: https://czn.gg/09-30-wed-update-notice/",
       "startsAt": "2026-08-19T00:00:00.000Z",
       "startPrecision": "day",
       "endsAt": null,
@@ -218,7 +218,8 @@
       "sourceUrl": "https://newsroom.smilegate.com/en/bbs/board.php?bo_table=eng&wr_id=506",
       "provenanceStatus": "official",
       "confidence": 1,
-      "reviewedAt": "2026-09-24T14:47:06.000Z"
+      "reviewedAt": "2026-10-28T13:31:30.486Z",
+      "firstSeenAt": "2026-09-24T14:47:06.000Z"
     },
     {
       "id": "czn:nine-rate-up-rescue:2026-10-13",
@@ -474,6 +475,40 @@
       "confidence": 1,
       "firstSeenAt": "2026-10-28T11:19:08.233Z",
       "reviewedAt": "2026-10-28T11:19:08.233Z"
+    },
+    {
+      "id": "czn:basin-of-hyperspace-dimensional-twilight:2026-10-21",
+      "title": "Basin of Hyperspace: Dimensional Twilight",
+      "type": "challenge",
+      "summary": "Current phase: after October 21 maintenance until before November 11 maintenance. The closing day is announced; the exact maintenance boundary is not confirmed. No fixed recurrence or completion time is inferred.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T00:00:00.000Z",
+      "endPrecision": "day",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://czn.gg/10-21wed-update-notice/",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T13:31:30.486Z",
+      "reviewedAt": "2026-10-28T13:31:30.486Z"
+    },
+    {
+      "id": "czn:full-scale-offensive:2026-09-30",
+      "title": "Full-Scale Offensive",
+      "type": "challenge",
+      "summary": "Current phase: after September 30 maintenance until before November 11 maintenance. The closing day is announced; the exact maintenance boundary is not confirmed. No fixed recurrence or completion time is inferred.",
+      "startsAt": "2026-09-30T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T00:00:00.000Z",
+      "endPrecision": "day",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://czn.gg/09-30-wed-update-notice/",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-10-28T13:31:30.486Z",
+      "reviewedAt": "2026-10-28T13:31:30.486Z"
     }
   ]
 }

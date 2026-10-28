@@ -1,28 +1,24 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
-
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
-MILESTONE: SC-P1-HSR-CLAIMS
+MILESTONE: SC-P1-CZN-SEASONS
 STAGE: CP2
-BASE_MAIN_SHA: 1e229c66e7b28883a6cef35ca04569a56f96a380
-BRANCH: fix/hsr-claims
+BASE_MAIN_SHA: 5bc643ed526801ba93f670e4bdc6648831eaafe5
+BRANCH: fix/czn-seasons
 HEAD_SHA: resolve branch ref
 PR: NONE
-DONE: CURRENT main/unchanged AGENTS/status/wave/backlog/HSR audit, actual KQM parser/snapshot, reviewed17 and tests read; no duplicate recent fix. Prior139 CP4 verified: merge1e229c66, CI/Pages40695357581 SUCCESS, public273 generated13:20:27.523Z all4 WuWa semantic winners and Cubie browser/source/Europe10:59Z verified.
-VERIFICATION: fresh KQM1437 blob5da18559ddcb48a92a353234d6eccadb52986811 matches reconstructed stored article exactly. Availability for AstralTrendible and ClaimPeriod for ParkSouvenir both afterVersion4.6update–2026/11/11 06:00(global). Parent Park remains permanent; no generic availability scan.
-REMAINING: bounded two exact-heading/field contracts, daySep28start, globalNov10 22Z end, tests for malformed/context/duplicate/year/merge/expiry, full validation/release gates.
-BLOCKERS: NONE for existing supported KQM notice.
-OUTCOME_A_DATA: PENDING
-OUTCOME_B_PREVENTION: PENDING deterministic known availability/claim period contracts
-NEXT_CONCRETE_STEP: implement two known claim families inside version NewEvents only, preserve all8 existing candidates and17 reviewed rows.
+DONE: CURRENT main/AGENTS/status/wave/backlog/CZN audit/recurring research, actual banner parser/snapshot/reviewed30/tests read. Prior140 CP4 verified merge5bc643ed, CI/Pages40696548982 SUCCESS, public275 generated13:28:20.010Z both claims/source/browser verified.
+VERIFICATION: freshly indexed STOVE-authored CZN.gg09-30 and10-21 notices confirm FullScaleSep30aftermaintenance–Nov11beforemaintenance and BasinOct21aftermaintenance–Nov11beforemaintenance. Day precision only; no standing-maintenance guess. Public lacks both phases.
+REMAINING: two reviewed challenge rows; historical oldFullScale summary warning, stableID/firstSeen/provenance/endnull retained; full checks/release.
+BLOCKERS: CZN-OLD-FSO-END — old Aug19 row has no independently explicit closing period in checked source. NewSept30season proves supersession, not exact oldclosing date/hour; bounded source review/search found no direct oldterminal. Do not fabricate Sep30date or00Z. Label historical in summary and keep unknown boundary explicitly BLOCKED. CZN-OFFICIAL-EVENT-DISCOVERY auditC3 remains blocked.
+OUTCOME_A_DATA: PENDING currenttwo; oldclosing BLOCKED CZN-OLD-FSO-END
+OUTCOME_B_PREVENTION: BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY
+NEXT_CONCRETE_STEP: append current BasinOct21 and FullScaleSep30, update oldrow summary with explicit historical/supersession warning only.
+IDs czn:basin-of-hyperspace-dimensional-twilight:2026-10-21 and czn:full-scale-offensive:2026-09-30.
+Old czn:full-scale-offensive-season-4:2026-08-19 stays; closing unknown, not falsely fixed. Sources https://czn.gg/10-21wed-update-notice/ and https://czn.gg/09-30-wed-update-notice/ (publisher-authored attributed mirrors/manual evidence, not unattended fetch). No DailyReset/Sync/source timestamps/P2 changes. Next afterCP4 CZN-CARNIVAL: parent free70 with separate AdditionalAetherNov11day.
 
-IDs hsr:astral-imagea-park-astral-trendible:2026-09-28 and
-hsr:astral-imagea-park-park-souvenir:2026-09-28.
-Source https://github.com/KQM-git/HSRNews/blob/master/archive/1437.md
-GlobalUTC+8 means sameNov10 22Z in all selected regions; no viewerDST shifting. Day opening afterupdate; no maintenance completion inferred. Do not expire permanentPark, add discounts/permanentSlammers/GiftOdyssey or change unrelated Lightward/Warps/stale P2 states. No source timestamps changed. WuWa new-banner clock remains namedBLOCKED. Next afterCP4: CZNseasons/AdditionalAetherNov11day.
+CP0_SHA:7939eada40d0d39de432da3ae5eb8aba6d4f6483
+CP1 implemented2 reviewed phases and oldrow historical warning only; firstSeenAt preservedSept24, originalsource/provenance/endnull retained. Closing normalization explicitlyBLOCKED. Tests for day precision/historical expiry/source incompleteness implemented; full checks NOT RUN.
 
-CP0_SHA:ecc1a850c41e7c870d352e2b1e330924c2c8b1dd
-CP1: two exact-heading/field contracts implemented inside NewEvents only; temporary reward summaries distinguish permanent Park. Actual-source/future/malformed/merge/expiry targeted14PASS. Full validation/release NOT RUN. Next mandatory checks and273->275 replay, old winners/conflicts identical.
+Validation history: install/typecheck/build/replay PASS; first test command exited0 but emitted no full-suite summary (NOT accepted as complete). Full test rerun in progress. Feed275->277 exactlytwo new phases plus onlyoldSeason4 summary/reviewtime warning; oldID/start/source/provenance/discovery/endnull unchanged; conflicts identical. No full-test PASS claim yet.
 
-Validation history: first full1380pass/3skip/1fail because prior HSRwarp regression pinned whole automatic output at8, now legitimately10. Scope its old-eight assertion excluding the two new temporaryPark contracts; no production behavior change. Final full rerun required.
-
-CP2 FINAL PASS: frozen install/typecheck/full1381pass/3existing age skips/0fail/build/feed273->275. Exactlytwo new temporary claims, oldwinners/conflicts identical; reviewed17 byte-identical, parser8->10. Evidence docs/evidence/hsr-claims-feed-replay-2026-10-28.json. CP3 in delivery PR body; CP4 NOT RUN. Next PR/exacthead CI.
+CP2 FINAL PASS: frozen install/typecheck/build; finalfull1384pass/3existing age skips/0fail; replay275->277 exactly2 newphases plusonlyoldsummary/updatedAt, identity/discovery/source/provenance/endnull identical. Conflicts unchanged. Evidence docs/evidence/czn-seasons-feed-replay-2026-10-28.json. CP3 PRbody; CP4 NOT RUN. Oldend remainsBLOCKED.

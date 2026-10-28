@@ -1,5 +1,30 @@
 # Game calendar implementation status
 
+## SC-P1-CZN-SEASONS — CURRENT DATA IMPLEMENTED; OLD END BLOCKED (2026-10-28)
+
+Two reviewed current challenges: BasinOct21–Nov11 and FullScaleSep30–Nov11,
+from STOVE-authored CZN.gg10-21/09-30 notices rechecked Oct28. Both boundaries
+remain day precision for after/before maintenance; no speculative00:00/05:00
+or recurrence derivation. Existing banners/gifts/Overdrive/DailyReset/Sync intact.
+
+Old `czn:full-scale-offensive-season-4:2026-08-19` retains ID, source/provenance,
+firstSeenAtSept24 and endnull. Its summary now clearly says historical/superseded
+and points to the newSept30season. **CZN-OLD-FSO-END BLOCKED:** no independently
+explicit oldterminal established; the new season does not prove a precise old
+closing date/hour. No fabricated boundary or unsafe deletion. The old record
+still has unknown-end model status; summary warning is not a full state repair.
+
+A currenttwo pending release; oldclosing reconciliation BLOCKED as above.
+B **BLOCKED CZN-OFFICIAL-EVENT-DISCOVERY** (auditC3 access/terms/runner gate).
+Tests verify source-day precision/TimeUnconfirmed, distinct phases, historical
+warning and preserved old discovery/provenance, known incomplete source/merge.
+
+Prior140 CP4 verified: merge5bc643ed526801ba93f670e4bdc6648831eaafe5,
+CI/Pages40696548982 SUCCESS; public275 generated13:28:20.010Z both HSRclaims
+semantic winners, browserParkSouvenir22Z/source1437/permanentPark wording.
+Next after currenttwoCP4: SC-P1-CZN-CARNIVAL parent/free70 plus AdditionalAether.
+
+
 ## SC-P1-HSR-CLAIMS — IMPLEMENTED; WAVE RUNNING (2026-10-28)
 
 Two known KQM version-NewEvents contracts now read AstralTrendible Availability
@@ -4194,3 +4219,5 @@ SC-P1-NTE-14-SKIPPED CP2 PASS: frozen install/typecheck/full1375pass/3existing a
 SC-P1-WUWA-37-PARSER CP2 PASS: frozen install/typecheck/full1378pass/3existing age skips/0fail/build/feed269->273; four additions only, no changed/removed old winner/conflict; parser7->11, reviewed12 unchanged. Delivery PR holds observed CP3/CP4 release evidence.
 
 SC-P1-HSR-CLAIMS CP2 PASS: frozen install/typecheck/finalfull1381pass/3existing age skips/0fail/build/feed273->275, two additions only; old winners/conflicts and reviewed17 unchanged. Parser8->10; delivery PR owns CP3/CP4 observed release evidence.
+
+CZN-SEASONS CP2 PASS: frozen install/typecheck/build/full1384pass/3existing age skips/0fail/feed275->277; only2 additions+oldhistorical summary/reviewtime warning. Old ID/discovery/source/provenance/endnull retained; conflicts unchanged. CZN-OLD-FSO-END remains BLOCKED. Delivery PR holds CP3/CP4 evidence.
