@@ -1,6 +1,6 @@
 # Source Coverage — Current Data Recovery Wave
 
-**Status:** RUNNING — PR130/132–136 fully released and CP4 verified. Current bounded item: SC-P1-HSR-BANNERS, branch `fix/hsr-warps`.
+**Status:** RUNNING — PR130/132–137 fully released and CP4 verified. Current bounded item: SC-P1-NTE-14-SKIPPED, branch `fix/nte-rewards`.
 **Prepared:** 2026-10-28. **Baseline:** current main at launch (do not pin this document's preparation SHA).
 **Canonical backlog:** [SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md](SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md).
 **Operating rules:** `AGENTS.md`; `docs/IMPLEMENTATION-STATUS.md`.

@@ -1,30 +1,29 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
-MILESTONE: SC-P1-HSR-BANNERS
+MILESTONE: SC-P1-NTE-14-SKIPPED
 STAGE: CP2
-BASE_MAIN_SHA: 7550118dbdaa69458ae9ca9dcc07aefb2ffd1feb
-BRANCH: fix/hsr-warps
+BASE_MAIN_SHA: cc325bf6597d83225ff51009bc8682869b7cf2f7
+BRANCH: fix/nte-rewards
 HEAD_SHA: resolve this branch ref
 PR: NONE
-DONE: CURRENT main, unchanged AGENTS, status/wave/backlog, HSR audit, actual KQM parser/snapshot, reviewed13 rows and HSR tests read. Latest PRs checked: no existing warp fix. Prior136 CP4 verified: merge7550118, CI/Pages40691665610 SUCCESS, public260 generated12:55:11.814Z all5 exact winners and SiWest browser verified.
-VERIFICATION: official HoYoLAB47142215 freshly indexed/rechecked with both search engines Oct28. Four channels all endNov10 15:00server. Pearl/Colors continuous Sep28 afterupdate; Mortenax/Reforged Oct21 12:00server. None exists in published260/currentKQM8 output. Local new checks NOT RUN.
-REMAINING: four reviewed official/manual banners; day openings, exact3-region ends; tests ensure Pearl not duplicated by phase, preserve all13 rows and8 parsed winners; full validation/release gates.
-BLOCKERS: unattended individual Warp discovery missing in KQM; HSR auditH2 compliant index/access/runner gate, no new broad integration.
+DONE: CURRENT main, unchanged AGENTS, status/wave/backlog, NTE audit/NTE-STEAM, actual registered parser/snapshot, all15 reviewed rows and tests read. No existing fix in latest PRs. Prior137 CP4 verified: mergecc325bf, CI/Pages40692792892 SUCCESS, public264 generated13:03:05.098Z all4 HSR winners exact/browserPearl verified.
+VERIFICATION: source snapshot includes publisher Steam gid1844751498233952, skipped actual Log in title. Official264409 freshly opened agrees with allfive periods. Explicit2026 context in SAME notice; standalone yearless announcements still must skip. Public/current feed lacks allfive new current IDs.
+REMAINING: narrowly admit verified reward release title+version payload; scope selection to five reward sections only (no P2 history/web/shop); actual-source malformed/future/merge/boundary tests; full validation/release gates.
+BLOCKERS: NONE for existing approved Steam transport. No new adapter/runner/source research.
 OUTCOME_A_DATA: PENDING
-OUTCOME_B_PREVENTION: BLOCKED HSR-WARP-DISCOVERY (auditH2; reviewed fallback only)
-NEXT_CONCRETE_STEP: append four distinct reviewed rows in data/reviewed/hsr.json and add expiry/merge/source-incompleteness regressions.
+OUTCOME_B_PREVENTION: PENDING deterministic bounded notice selection/extraction and regression
+NEXT_CONCRETE_STEP: implement narrow verified reward-release path in src/ingest/parsers/nte-steamnews.ts, preserving generic title and year guards.
 
-Source https://www.hoyolab.com/article/47142215. Identities:
-- hsr:an-ocean-in-a-pearl:2026-09-28 (Pearl)
-- hsr:brilliant-fixation-colors-for-tomorrow:2026-09-28 (ColorsforTomorrow)
-- hsr:now-i-am-become-blade:2026-10-21 (MortenaxBlade)
-- hsr:bygone-reminiscence-reforged-in-hellfire:2026-10-21 (ReforgedinHellfire)
-All endAsiaNov10 07:00Z /Europe14:00Z /America20:00Z. Fixed game clocks+8/+1/-5; no viewerDST. One Pearl/LC continuous window each; no historicalEvanescia/trial backfill. No source timestamps changed; exact publication time not inferred from search metadata. Next afterCP4: NTE1.4 five deadlines (earliestNov10 15:59Z).
+Actual notice title: Log in to NTE's new version for Solid Dice x20, a limited frame, and more!
+Source https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1844751498233952
+Corroboration https://nte.perfectworld.com/en/article/news/gamenews/20260929/264409.html
+Ids: nte:circle-gifts:2026-09-30, nte:terminal-depths:2026-09-30,
+ nte:pukaland-travelogue:2026-09-30, nte:coal-lumps-treasure:2026-10-08,
+ nte:circle-bounty:2026-09-30.
+Afterupdate starts remain daySep30; CoalLump exactOct8 02Z from10:00UTC+8. Common endNov10 21:59Z; Bounty earlierNov10 15:59Z. GlobalUTC+8, no regional shifting. Preserve15 reviewed and existing known24h CircleBounty1.3 conflict, currentAkane/BTR winners, all snapshots/source timestamps. No broad Log in allowlist, no guessed year/maintenance finish, no P2 PhaseI/history/permanent/Porsche/web entries. Next afterCP4: WuWa3.7 current event/parser (earliestAsiaNov10 19:59Z).
 
-CP0_SHA:04f83b513f72a94dfbf40ff0796699abca19b20c
-CP1: four reviewed channels and test/hsr-current-warps.test.ts implemented. Validation/release NOT RUN. Next full local checks and feed260->264, onlyfour additions.
+CP0_SHA:4e31b4de24436331bca1964ec36eebaf73d34499
+CP1 implemented: bounded reward-title+version/year/context admission, five-section extraction, explicit CircleBounty version discriminator only; generic same-version/unknown conflict checks and year guards unchanged. New actual-snapshot malformed/future/merge/expiry regressions. Initial targeted test used unsorted source priority, corrected to production reviewed-first order; final local validation pending. Next full mandatory checks and264->269 replay.
 
-Validation history: frozen install/typecheck PASS. First full test command exited1 without summary (NOT complete). Isolated three new tests exposed a day-precision pre-opening assertion near an Asia day boundary; moved pre-opening check to an unambiguously earlier day. Targeted HSR+recognition25PASS/0FAIL; manual feed build264 PASS. Final full tests/typecheck/build/fixed replay are RUNNING, not yet certified. No production clock/schema changed.
-
-CP2 FINAL PASS: bun install --frozen-lockfile; typecheck; full1372pass/3existing age skips/0fail; build; fixedfeed260->264 onlyfour intended additions, every prior winner/conflict unchanged. Original13 reviewed rows/batch metadata unchanged. Evidence docs/evidence/hsr-warps-feed-replay-2026-10-28.json. CP3 will be persisted in delivery PR body; CP4 NOT RUN. Next open PR and inspect exact-head CI.
+CP2 FINAL PASS: frozen install/typecheck/full1375pass/3existing age skips/0fail/build/feed264->269, exactlyfive additions, allold winners/conflicts identical; reviewed15 byte-identical. Actual parser49->54 onlyfive named reward candidates. Evidence docs/evidence/nte-rewards-feed-replay-2026-10-28.json. CP3 delivery PR body will hold exacthead/run; CP4 NOT RUN. Next create PR then exact-head CI.
