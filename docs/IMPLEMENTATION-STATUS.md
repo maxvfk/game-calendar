@@ -1,5 +1,44 @@
 # Game calendar implementation status
 
+## Seven-game source coverage — unified ranked remediation backlog READY (2026-10-28)
+
+Canonical task: `docs/tasks/SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md`.
+All **7/7 individual audits** are merged; the backlog prioritizes confirmed
+bad published deadlines and near-immediate missing rewards before unattended
+source architecture. **Docs-only planning; no fixes or additional source
+research were performed in this milestone.**
+
+- **P0 first / three independent Work milestones:** Genshin
+  `SC-P0-GEN-STARLIGHT` (quest cutoff **Oct 29 04:00 game-server**
+  = Oct 28 20:00Z Asia); CZN anniversary ordinary **24h** gift
+  claims vs special Nov 30 exception (**06:00Z delivery**, not the
+  18:00Z Daily Reset); Endfield `Monumental Etching: Forest of Maras`
+  wiki end is **2h Asia / 13h West too late** vs verified
+  **Nov 5 04:00 server** official finish. Preserve stable IDs,
+  source/review precedence, exact regional times and independent PRs.
+- **P1 subsequent:** Genshin Overflowing Favor/Phase II weapon; Endfield
+  Si/Tangtang banners + Contingency Readiness; CZN Overdrive and Season 5;
+  WuWa 3.7 missing patch events/new banner discovery; HSR four live Warp
+  channels and Park claims; NTE skipped official Version 1.4 release
+  notice/five reward deadlines; ZZZ compensation/City Fund claims.
+  Each gets a bounded game-specific PR, not one mass merge.
+- **P2 / WATCH:** stale historical phases, uncertain maintenance cutoff,
+  unannounced Phase II schedules, web/shop/paid product-scope choices.
+  Never promote unsourced deadlines or turn an estimated cycle official.
+- **Sustainable recovery later:** individual parser faults, missing news
+  families, official/secondary conflicts and future R1 family-level
+  incidents are recorded as independent gates. Open Source Recovery
+  design PR #113 and NO-GO Timeline cutover PR #115 are unchanged.
+- **Test/ship contract:** current main and source re-check; IDs, provenance,
+  three-region clocks; frozen Bun install, typecheck, tests, build, feed
+  verification, PR/post-merge CI and Pages, operator phone check where needed.
+  Audit input counts do not prove live feed winners.
+
+**Next concrete step:** separately authorize only **SC-P0-GEN-STARLIGHT**
+as the first short implementation Work; no other fix is launched by
+publishing this backlog.
+
+
 ## CZN Season 5 + 1st Anniversary source/coverage audit — RESEARCH COMPLETE; NO FIX (2026-10-28)
 
 Report: `docs/research/czn-source-coverage-audit-2026-10-28.md`.
