@@ -1,0 +1,150 @@
+{
+  "milestone": "SC-P1-GEN-EXPIRIES",
+  "baseMain": "97b407c838e8c2cbaf9ec14199f3814835cd978d",
+  "fixedReplayAt": "2026-10-28T09:40:00.000Z",
+  "beforeCount": 253,
+  "afterCount": 254,
+  "addedIds": [
+    "genshin:epitome-invocation-azurelight-and-symphonist-of-scents:2026-10-13"
+  ],
+  "changedIds": [
+    "genshin:carefree-snowball-fight:2026-10-21",
+    "genshin:overflowing-favor:2026-10-26"
+  ],
+  "removedIds": [],
+  "dateConflictsUnchanged": true,
+  "priorWinners": [
+    {
+      "id": "genshin:carefree-snowball-fight:2026-10-21",
+      "game": "genshin",
+      "title": "Carefree Snowball Fight",
+      "type": "other",
+      "summary": "Limited-time event listed in the official Version 7.1 calendar for October 21 through November 2 (UTC+8 dates).",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-02T00:00:00.000Z",
+      "endPrecision": "day",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://www.hoyolab.com/article/46673425",
+      "sourceId": "reviewed-genshin",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-09-23T00:08:13.000Z",
+      "updatedAt": "2026-09-23T00:08:13.000Z"
+    },
+    {
+      "id": "genshin:overflowing-favor:2026-10-26",
+      "game": "genshin",
+      "title": "Overflowing Favor",
+      "type": "other",
+      "summary": null,
+      "startsAt": "2026-10-26T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-02T00:00:00.000Z",
+      "endPrecision": "day",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21053.md",
+      "sourceId": "genshin-kqm-ginews",
+      "status": "published",
+      "confidence": 0.8,
+      "extractionMethod": "parser",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T09:40:00.000Z",
+      "updatedAt": "2026-10-28T09:40:00.000Z"
+    }
+  ],
+  "currentWinners": [
+    {
+      "id": "genshin:carefree-snowball-fight:2026-10-21",
+      "game": "genshin",
+      "title": "Carefree Snowball Fight",
+      "type": "other",
+      "summary": "Co-Op snowball challenge. The checked in-game notice ends November 2 at 03:59 server time; the regional deadline is exact and the opening remains date-only.",
+      "startsAt": "2026-10-21T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-01T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-01T19:59:00.000Z",
+        "europe": "2026-11-02T02:59:00.000Z",
+        "america": "2026-11-02T08:59:00.000Z"
+      },
+      "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21891.md",
+      "sourceId": "reviewed-genshin",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-09-23T00:08:13.000Z",
+      "updatedAt": "2026-10-28T11:05:59.239Z"
+    },
+    {
+      "id": "genshin:overflowing-favor:2026-10-26",
+      "game": "genshin",
+      "title": "Overflowing Favor",
+      "type": "other",
+      "summary": "Double artifact drops from Domains of Blessing using Original Resin. Ends November 2 at 03:59 server time; up to three doubled reward claims per day.",
+      "startsAt": "2026-10-26T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-01T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-01T19:59:00.000Z",
+        "europe": "2026-11-02T02:59:00.000Z",
+        "america": "2026-11-02T08:59:00.000Z"
+      },
+      "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21053.md",
+      "sourceId": "reviewed-genshin",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T10:59:09.977Z",
+      "updatedAt": "2026-10-28T11:05:59.239Z"
+    },
+    {
+      "id": "genshin:epitome-invocation-azurelight-and-symphonist-of-scents:2026-10-13",
+      "game": "genshin",
+      "title": "Epitome Invocation — Azurelight and Symphonist of Scents",
+      "recognitionSubjects": [
+        "Azurelight",
+        "Symphonist of Scents"
+      ],
+      "type": "banner",
+      "summary": "One weapon Event Wish channel featuring Azurelight and Symphonist of Scents.",
+      "startsAt": "2026-10-13T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-03T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-03T06:59:00.000Z",
+        "europe": "2026-11-03T13:59:00.000Z",
+        "america": "2026-11-03T19:59:00.000Z"
+      },
+      "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21890.md",
+      "sourceId": "reviewed-genshin",
+      "status": "published",
+      "confidence": 1,
+      "extractionMethod": "manual",
+      "provenanceStatus": "official",
+      "version": 1,
+      "firstSeenAt": "2026-10-28T11:04:40.015Z",
+      "updatedAt": "2026-10-28T11:05:59.239Z"
+    }
+  ],
+  "sourceBlobs": {
+    "21053": "74dc17f2e4ef69d58dc0e610e93920567be88cba",
+    "21890": "3c1e92414c0c2112c8e304545317db4475444123",
+    "21891": "f9b1738c1f4e55e285abb5fea2aafeacd52c49db"
+  }
+}

@@ -40,7 +40,7 @@ test("stored Starlight notice emits exactly two server-local deadlines without a
 test("main and quest identities remain distinct across source order, duplicates and reviewed precedence", () => {
   expect(restored).toHaveLength(2);
   const fromSnapshot = parseKqmGinNews(snapshot, ctx);
-  expect(fromSnapshot).toHaveLength(12);
+  expect(fromSnapshot).toHaveLength(13);
   expect(fromSnapshot.filter(e => ids.includes(e.id))).toEqual(automatic);
   const before = mergeEvents([reviewed.filter(e => !ids.includes(e.id)),
     fromSnapshot.filter(e => !ids.includes(e.id))]);
@@ -111,6 +111,7 @@ test("known family fails closed for missing, global, yearless, invalid, duplicat
   const unrelated = raw.replaceAll("Starlight Voyage: Heart Unbound", "Unapproved Wonderland Event");
   expect(() => parseKqmGinNews(unrelated, ctx)).toThrow("no dated calendar notices");
   const old = parseKqmGinNews(snapshot.replace(raw.trim(), ""), ctx);
-  expect(old).toHaveLength(10);
-  expect(old.every(e => e.endPrecision !== "exact")).toBe(true);
+  expect(old).toHaveLength(11);
+  expect(old.filter(e => !/archive\/(21053|21890|21891)\.md$/.test(e.sourceUrl))
+    .every(e => e.endPrecision !== "exact")).toBe(true);
 });

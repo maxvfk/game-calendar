@@ -156,6 +156,49 @@ function starlightEvents(article: Article, ctx: ParseContext): GachaEvent[] {
   });
 }
 
+// Bounded, reviewed server-clock contracts; unrelated generic notices retain
+// their existing day precision. Weapon identity is the explicit channel pair,
+// never a phase/version guessed from the date or the nearest update notice.
+function expiryNotice(article: Article, ctx: ParseContext): GachaEvent | null {
+  const weaponHeading = 'Event Wish "Epitome Invocation" - Boosted Drop Rates for Azurelight (Sword) and Symphonist of Scents (Polearm)!';
+  const eventTitle = /^"(Overflowing Favor|Carefree Snowball Fight)" Event:/.exec(article.heading)?.[1];
+  const weapon = article.heading === weaponHeading;
+  if (!eventTitle && !weapon) return null;
+  const rows = article.body.split("\n").map(row => row.trim());
+  const heading = weapon ? "Event Wish Duration | Promotional Weapons (5-Star) | Featured Weapons (4-Star)" : "〓Event Duration〓";
+  if (rows.filter(row => row === heading).length !== 1) throw new Error(`KQM GINews expiry heading missing: ${article.id}`);
+  const index = rows.indexOf(heading);
+  const line = rows.slice(index + 1).find(row => row && !row.startsWith("---")) ?? "";
+  const cells = line.split("|").map(cell => cell.trim());
+  if (weapon && cells[1]?.replace(/\s+/g, " ") !== "Azurelight (Sword) Symphonist of Scents (Polearm)") {
+    throw new Error(`KQM GINews weapon channel mismatch: ${article.id}`);
+  }
+  const match = new RegExp(`^${SERVER_TAG}\\s*[~–—-]\\s*${SERVER_TAG}$`).exec(cells[0]!);
+  if (!match) throw new Error(`KQM GINews expiry period missing or invalid: ${article.id}`);
+  const clock = (offset: number) => {
+    const [year, month, date, hour, minute] = match.slice(offset, offset + 5);
+    const iso = `${year}-${month}-${date}T${hour}:${minute}:00.000Z`;
+    const value = new Date(iso);
+    if (!Number.isFinite(value.valueOf()) || value.toISOString() !== iso) throw new Error(`KQM GINews expiry invalid clock: ${article.id}`);
+    return value.valueOf();
+  };
+  const start = clock(1), end = clock(6);
+  if (end <= start) throw new Error(`KQM GINews expiry reversed period: ${article.id}`);
+  const title = weapon ? "Epitome Invocation — Azurelight and Symphonist of Scents" : eventTitle!;
+  const startsAt = new Date(start).toISOString().slice(0, 10) + "T00:00:00.000Z";
+  const endAt = (hours: number) => new Date(end - hours * 3600000).toISOString();
+  return GachaEvent.parse({
+    id: eventId("genshin", title, startsAt), game: "genshin", title, type: weapon ? "banner" : "other",
+    ...(weapon ? { recognitionSubjects: ["Azurelight", "Symphonist of Scents"] } : {}),
+    summary: weapon ? "One weapon Event Wish channel featuring Azurelight and Symphonist of Scents." : null,
+    startsAt, startPrecision: "day", endsAt: endAt(8), endPrecision: "exact",
+    regionScoped: true, regionEnds: { asia: endAt(8), europe: endAt(1), america: endAt(-5) },
+    sourceUrl: `https://github.com/KQM-git/GINews/blob/master/archive/${article.id}.md`,
+    sourceId: ctx.sourceId, status: "published", confidence: 0.8,
+    extractionMethod: "parser", version: 1, firstSeenAt: ctx.now, updatedAt: ctx.now,
+  });
+}
+
 export function parseKqmGinNews(raw: string, ctx: ParseContext): GachaEvent[] {
   const archive = articles(raw);
   if (!archive.length) throw new Error("KQM GINews archive headings missing");
@@ -171,6 +214,8 @@ export function parseKqmGinNews(raw: string, ctx: ParseContext): GachaEvent[] {
     seen.set(event.id, event);
   };
   for (const article of archive) {
+    const expiry = expiryNotice(article, ctx);
+    if (expiry) { add(expiry); continue; }
     if (/^Participate in "Starlight Voyage: Heart Unbound" to obtain Prismatic Crystals\b/.test(article.heading)) {
       for (const event of starlightEvents(article, ctx)) add(event);
       continue;

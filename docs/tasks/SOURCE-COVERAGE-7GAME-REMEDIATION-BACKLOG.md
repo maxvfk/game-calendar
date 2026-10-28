@@ -42,6 +42,18 @@ PR133 carries exact-head CI and CP4 production evidence. Next after release:
 **SC-P1-GEN-EXPIRIES**. Later Endfield upcoming dates must be rechecked: fresh9560
 has Secret Sanctuary Dec2 and Sanity Supply Nov18 onward, unlike frozen research.
 
+**SC-P1-GEN-EXPIRIES implemented:** [PR134](https://github.com/maxvfk/game-calendar/pull/134).
+A: existing Overflowing/Carefree IDs refined to Nov2 03:59 server; one missing
+Azurelight+Symphonist weapon channel to Nov3 14:59 server. Preserve old starts,
+firstSeenAt, PhaseI and Starlight. Current feed proved Overflowing was already
+present day-only, correcting the stale audit finding. B: bounded deterministic
+local-clock duration/table contracts plus real-source/merge/expiry regressions.
+CP2 frozen install/typecheck/tests/build/feed PASS1363/3skips/0fail;
+253→254, only1 addition+2 corrections, no other winner/conflict changes.
+PR134 records final-head CI/CP4. Previous Maras CP4 verified97b407c,
+CI/Pages40676242165 SUCCESS, public253 and browser corrected boundaries.
+Next after release: **SC-P1-CZN-OVERDRIVE**.
+
 ### SC-P0-GEN-STARLIGHT execution status (2026-10-28)
 
 - **Outcome 1 — current-data restoration: implemented; delivery record in [PR #130](https://github.com/maxvfk/game-calendar/pull/130).**
@@ -110,7 +122,7 @@ Dates below are in publisher-defined game server clock unless explicitly `Z` / `
 
 | ID / nominal order | Game · bounded goal | Known deadline / source basis | Precondition / critical safety |
 |---|---|---|---|
-| **SC-P1-GEN-EXPIRIES** | Genshin: `Overflowing Favor` double artifact drops, Phase II `Epitome Invocation` weapon channel, and `Carefree Snowball Fight` currently day-only precision. | Overflowing Favor **Nov 2 03:59 server** (`archive/21053.md`); weapon **Nov 3 14:59 server** (`archive/21890.md`); Carefree **Nov 2 03:59** (`archive/21891.md`). | Already in KQM snapshot. Keep existing reviewed IDs and one phase-distinct weapon banner channel; avoid blindly changing day-precision without clock proof. May split drops and weapon if smaller. |
+| **SC-P1-GEN-EXPIRIES · IMPLEMENTED (PR134)** | Genshin: `Overflowing Favor` double artifact drops, Phase II `Epitome Invocation` weapon channel, and `Carefree Snowball Fight` currently day-only precision. | Overflowing Favor **Nov 2 03:59 server** (`archive/21053.md`); weapon **Nov 3 14:59 server** (`archive/21890.md`); Carefree **Nov 2 03:59** (`archive/21891.md`). | Already in KQM snapshot. Keep existing reviewed IDs and one phase-distinct weapon banner channel; avoid blindly changing day-precision without clock proof. May split drops and weapon if smaller. |
 | **SC-P1-END-CURRENT** | Endfield: officially announced **Si** + **Tangtang** character banners, separately their issues `Seal of Jade` and `Tender Sprig`, plus **Contingency Readiness**. | Si end **Nov 5 11:59 server**, Tangtang starts **Oct 29 12:00** and ends Nov 19 11:59; Contingency Readiness **Oct 29 04:00 → Nov 5 04:00** server, official `/9560`. | Use reviewed first-party evidence; `Seal of Jade` ends after three Chartered banners ⇒ **unknown exact end**, not Si's end. Preserve region mapping Asia +8 / West −5, distinct character vs arsenal IDs. Split if needed. |
 | **SC-P1-CZN-OVERDRIVE** | CZN: `Overdrive: Simulation` double growth period. | **Nov 3 18:00Z** exact, Oct 21 STOVE 1.5/anniversary patch content. | One small reviewed record; no Daily Reset edit. |
 | **SC-P1-WUWA-37-PARSER** | WuWa: deterministic 3.7 patch title/date anchor + decorated `✦Duration` + nested identity; restore `Cubie Wars`, `Dreams in the Capsule`, `Gifts of Waking Moon`, `Gifts of Singing Drizzle`. | Source `Kuro Atom article 5571` already captured; deadlines **Nov 11 03:59/11:59 server**. | Wrong identity `[Special Events] [Cubie Wars]` can create `Special Events` ID if only anchor fixed. Guard scope, preserve after-update day start and three-region ends; regression real snapshot. |
@@ -254,7 +266,7 @@ For each separately authorized item:
 
 ## 8. One next concrete step
 
-Finish **SC-P0-END-MARAS /PR133** release gates, then continue with
-**SC-P1-GEN-EXPIRIES** using CURRENT main and CP0–CP4. PR130 and PR132 are
+Finish **SC-P1-GEN-EXPIRIES /PR134** release gates, then continue with
+**SC-P1-CZN-OVERDRIVE** using CURRENT main and CP0–CP4. PR130/132/133 are
 already fully released. Continue only confirmed authorized P0/P1; no P2,
 Source Recovery R1–R3, Timeline v2, Sync or unapproved categories.

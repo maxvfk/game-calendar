@@ -1,6 +1,6 @@
 # Source Coverage — Current Data Recovery Wave
 
-**Status:** RUNNING — explicitly launched by user 2026-10-28. CZN gifts released via PR132 (CP4 verified). Current bounded item: SC-P0-END-MARAS / [PR #133](https://github.com/maxvfk/game-calendar/pull/133).
+**Status:** RUNNING — explicitly launched by user 2026-10-28. CZN gifts released via PR132 (CP4 verified). Maras released via PR133 (CP4 verified). Current bounded item: SC-P1-GEN-EXPIRIES / [PR #134](https://github.com/maxvfk/game-calendar/pull/134).
 **Prepared:** 2026-10-28. **Baseline:** current main at launch (do not pin this document's preparation SHA).
 **Canonical backlog:** [SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md](SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md).
 **Operating rules:** `AGENTS.md`; `docs/IMPLEMENTATION-STATUS.md`.

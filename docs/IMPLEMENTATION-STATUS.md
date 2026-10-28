@@ -1,5 +1,45 @@
 # Game calendar implementation status
 
+## SC-P1-GEN-EXPIRIES — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+
+Delivery/CP3–CP4 evidence: [PR134](https://github.com/maxvfk/game-calendar/pull/134).
+Re-read KQM archive21053/21891/21890; full stored fixture matches live blob SHAs.
+KQM remains an attributed in-game notice extraction host, not publisher-domain
+fetching. Snapshot timestamps unchanged.
+
+- **A:** Overflowing Favor was already published day-only; existing
+  `genshin:overflowing-favor:2026-10-26` and
+  `genshin:carefree-snowball-fight:2026-10-21` now end exactly **Nov2 03:59 server**
+  (AsiaNov1 19:59Z /EuropeNov2 02:59Z /AmericaNov2 08:59Z). Original IDs,
+  day starts and firstSeenAt preserved. One new weapon-channel identity:
+  `genshin:epitome-invocation-azurelight-and-symphonist-of-scents:2026-10-13`,
+  ends **Nov3 14:59 server** (Asia06:59Z/Europe13:59Z/America19:59Z).
+  The title uses both explicitly published weapons; no absent version/phase
+  field is inferred. PhaseI and all PR130 Starlight/character winners unchanged.
+- **B:** narrow deterministic duration-heading/table contracts with strict
+  explicit-year `t_lc` parsing; reviewed fallback survives rolling removal.
+  Real-source/future-date/malformed/source-incompleteness/merge-order and
+  three-region±1ms historical expiry regressions. No arbitrary tag promotion
+  or broad weapon/notice discovery claim; unrelated generic parser stays day-only.
+- **CP2 PASS:** frozen Bun1.3.14 install/typecheck/full suite/build/feed;
+  **1363pass/3existing age skips/0fail**. Fixed feed **253→254**, one new ID,
+  only two old precision corrections; no other winner changes/removed IDs/new
+  conflicts. Evidence: `docs/evidence/genshin-expiries-feed-replay-2026-10-28.json`.
+  Intermediate expected-subject assertion updated for new weapon; isolated
+  stub-runner rerun50PASS and final full suite PASS. No Timeline code changed.
+- PR exact-head CI/merge/post-merge CI/Pages/public results are mandatory
+  release gates and recorded with observed SHAs/URLs in PR134.
+
+**Previous CP4:** Maras PR133 merged `97b407c838e8c2cbaf9ec14199f3814835cd978d`;
+[CI/Pages40676242165](https://github.com/maxvfk/game-calendar/actions/runs/40676242165)
+SUCCESS. Public253 exact official winner verified; browser Europe09:00Z and
+Asia20:00Z boundaries confirmed, single event/source9560. A/B DONE for scoped
+reconciliation. CZN gifts PR132 remains released, B discovery separately BLOCKED.
+
+**Next concrete step:** finish PR134 CP4, then **SC-P1-CZN-OVERDRIVE** from
+CURRENT main, continuing the authorized wave without P2 or excluded work.
+
+
 ## SC-P0-END-MARAS — IMPLEMENTED; WAVE RUNNING (2026-10-28)
 
 Delivery record: [PR #133](https://github.com/maxvfk/game-calendar/pull/133).
