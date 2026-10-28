@@ -336,3 +336,5 @@ Finish **SC-P1-HSR-CLAIMS** CP2–CP4, then **SC-P1-CZN-SEASONS** and the
 independent AdditionalAether cutoff under **SC-P1-CZN-CARNIVAL** (Nov11day),
 using small related CZN PRs from CURRENT main. PR130/132–139 fully released;
 WuWa new-banner exact-clock gate explicitly BLOCKED. Confirmed P0/P1 only.
+
+SC-P1-HSR-CLAIMS CP2 PASS: frozen install/typecheck/finalfull1381pass/3existing age skips/0fail/build/feed273->275, two additions only; old winners/conflicts and reviewed17 unchanged. Parser8->10; delivery PR owns CP3/CP4 observed release evidence.

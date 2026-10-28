@@ -2,7 +2,7 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-HSR-CLAIMS
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: 1e229c66e7b28883a6cef35ca04569a56f96a380
 BRANCH: fix/hsr-claims
 HEAD_SHA: resolve branch ref
@@ -24,3 +24,5 @@ CP0_SHA:ecc1a850c41e7c870d352e2b1e330924c2c8b1dd
 CP1: two exact-heading/field contracts implemented inside NewEvents only; temporary reward summaries distinguish permanent Park. Actual-source/future/malformed/merge/expiry targeted14PASS. Full validation/release NOT RUN. Next mandatory checks and273->275 replay, old winners/conflicts identical.
 
 Validation history: first full1380pass/3skip/1fail because prior HSRwarp regression pinned whole automatic output at8, now legitimately10. Scope its old-eight assertion excluding the two new temporaryPark contracts; no production behavior change. Final full rerun required.
+
+CP2 FINAL PASS: frozen install/typecheck/full1381pass/3existing age skips/0fail/build/feed273->275. Exactlytwo new temporary claims, oldwinners/conflicts identical; reviewed17 byte-identical, parser8->10. Evidence docs/evidence/hsr-claims-feed-replay-2026-10-28.json. CP3 in delivery PR body; CP4 NOT RUN. Next PR/exacthead CI.
