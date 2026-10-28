@@ -1,7 +1,7 @@
 # SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE checkpoint
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-ZZZ-REWARDS
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: bb365d104ac9eb9eb76b34c20c5546a27c9529be
 BRANCH: fix/zzz-rewards
 HEAD_SHA: resolve branch ref
@@ -10,7 +10,7 @@ DONE: CURRENT main/AGENTS/status/wave/backlog/ZZZ audit, both actual parsers/sna
 VERIFICATION: primary166944 indexed text confirms CityFund main after3.3update–Nov30 03:59server;02:59 paidpurchase is excluded. Primary166963 and capturedSteam3.3 confirm IssueFix300Polychrome eligibilityLv4 beforeOct21 06UTC+8; claimbeforeNov20 23:59UTC+8. Mail30days is relative lifetime, not exact issuance/deletion timestamp. Both absent in public/currentparser families.
 REMAINING:2 reviewed rows; CityFund3-region mainreward end, fixed-global compensation; dayOct21 openings, no inventedmaintenance/issuetime; testsourceincompleteness/priority/expiry and allrequiredchecks/release.
 BLOCKERS: registered Steam only NewEvents, secondary onlyChannels. Dedicated approved reward-family unattended extraction/discovery absent; no broadsource/adapter expansion here.
-OUTCOME_A_DATA: PENDING
+OUTCOME_A_DATA: IMPLEMENTED; release pending
 OUTCOME_B_PREVENTION: BLOCKED ZZZ-REWARD-DISCOVERY (auditZC1/ZC4 family-selection follow-up; reviewed rescue)
 NEXT_CONCRETE_STEP: append2 reviewed rows, preserve all30 oldrows, sources/estimatedendgame/PhaseI and timestamps; update historical fixture-count assertions only as needed.
 IDs zzz:new-eridu-city-fund-version-3-3:2026-10-21 and zzz:version-3-3-issue-fix-compensation:2026-10-21.
@@ -21,3 +21,9 @@ CP0_SHA:93ea24743634385f7b8649d98b931fc8fcea7946
 CP1 implemented2 reviewedrows;30oldrows unchanged. Existing fixture-count tests updated for2 newreviewed records; no parser/recurrence change. Fullchecks/release NOT RUN.
 
 Targeted first run33pass/1fail: existing unique-ID expectedcount54 missed new2; corrected56. New3 tests passed.
+
+First full run1388pass/3skip/1fail: existing banner merge count42 must include2new reviewed rows; corrected44. No new behavior test failed. Final full rerun pending.
+
+Second full run exited without suite summary; not accepted as validation. Full rerun started.
+
+CP2 PASS: bun install --frozen-lockfile; bun run typecheck; final bun test1389pass/3existing age skips/0fail with full summary; bun run build. Fixed-clock feed279->281 exactly2 additions, no changed/removed old winners/conflicts; reviewed30 unchanged. Targeted34pass. git diff --check PASS. Evidence docs/evidence/zzz-rewards-feed-replay-2026-10-28.json. Next create PR, exactheadCI, merge, postCI/Pages/public and browser. CP3/CP4 in delivery PR body supersede pending release text.

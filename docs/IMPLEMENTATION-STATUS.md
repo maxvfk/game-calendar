@@ -1,5 +1,25 @@
 # Game calendar implementation status
 
+## SC-P1-ZZZ-REWARDS — IMPLEMENTED; WAVE RUNNING (2026-10-28)
+
+Two official reviewed reward reminders: New Eridu City Fund main tasks/claim
+end Nov30 03:59 server (Asia Nov29 19:59Z / Europe Nov30 02:59Z /
+America Nov30 08:59Z), and 300-Polychrome issue-fix compensation claim
+ends Nov20 15:59Z globally. Day Oct21 openings; no guessed maintenance or
+individual mail issuance/deletion timestamps. Eligibility and 30-day mail
+lifetime remain explicit. Paid purchase 02:59 cutoff is excluded.
+Official sources /166944 and /166963 rechecked Oct28. All30 old reviewed rows,
+IDs, firstSeenAt, precedence and conflicts preserved. A release pending.
+B BLOCKED ZZZ-REWARD-DISCOVERY (audit ZC1/ZC4): Steam New Events and
+secondary Channel families are healthy but do not emit these rewards;
+compensation raw text exists, City Fund is absent from the admitted facts.
+Dedicated reward extraction/discovery is a named follow-up, not implemented.
+
+Previous PR142 CP4 verified: mergebb365d104ac9eb9eb76b34c20c5546a27c9529be,
+post CI/Pages40706852239 SUCCESS, public279 generated14:32:58.172Z;
+both reviewed winners and browser Carnival expiry/unused-attempt warning verified.
+Next after ZZZ CP4: Endfield upcoming, then CZN Season5. No excluded work.
+
 ## SC-P1-CZN-CARNIVAL — IMPLEMENTED; WAVE RUNNING (2026-10-28)
 
 One NightmareCarnival parent carries the source-backed70free NormalRescues
@@ -4245,3 +4265,5 @@ SC-P1-HSR-CLAIMS CP2 PASS: frozen install/typecheck/finalfull1381pass/3existing 
 CZN-SEASONS CP2 PASS: frozen install/typecheck/build/full1384pass/3existing age skips/0fail/feed275->277; only2 additions+oldhistorical summary/reviewtime warning. Old ID/discovery/source/provenance/endnull retained; conflicts unchanged. CZN-OLD-FSO-END remains BLOCKED. Delivery PR holds CP3/CP4 evidence.
 
 CZN-CARNIVAL CP2 PASS: frozen install/typecheck/full1386pass/3skip/0fail/build/feed277->279, only2 additions; allprior winners/conflicts and reviewed32 unchanged. Delivery PR owns observed CP3/CP4 evidence.
+
+ZZZ-REWARDS CP2 PASS: frozen install/typecheck/finalfull1389pass/3skip/0fail/build/feed279->281; only2 additions, no changed/removed old winners/conflicts, reviewed30 unchanged. Earlier legacy count failures corrected; incomplete-summary rerun not accepted. Delivery PR holds CP3/CP4.
