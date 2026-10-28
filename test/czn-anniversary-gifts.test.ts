@@ -3,7 +3,8 @@ import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 import { parsePrydwenCzn } from "../src/ingest/parsers/prydwen-czn.ts";
 import { mergeEvents } from "../src/ingest/merge.ts";
 import { Region } from "../src/shared/schema.ts";
-import { clockFor, dayStartMs } from "../src/shared/time.ts";
+import { clockFor } from "../src/shared/time.ts";
+import { cznDayStart } from "../src/shared/cznDaily.ts";
 import { assertExactBoundary } from "./helpers/verified-records.tsx";
 
 const evidence = await Bun.file("test/fixtures/czn/anniversary-mail-2026-10-28.json").json() as {
@@ -34,7 +35,7 @@ test("six future ordinary gifts and two still-claimable exceptions use the publi
 test("every claim expires globally at its source minute, independent of the 18:00 daily reset", () => {
   for (const e of gifts) for (const region of Region.options) {
     assertExactBoundary(e, region, e.endsAt!);
-    expect(new Date(dayStartMs("2026-10-29", region, "czn")).toISOString()).toBe("2026-10-29T18:00:00.000Z");
+    expect(new Date(cznDayStart("2026-10-29")).toISOString()).toBe("2026-10-29T18:00:00.000Z");
   }
   const last = gifts.find(e => e.id.endsWith(":2026-11-03"))!;
   expect(last.endsAt).toBe("2026-11-04T05:59:00.000Z");

@@ -2,19 +2,19 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P0-CZN-GIFTS
-STAGE: CP1
+STAGE: CP2
 BASE_MAIN_SHA: 67144c229b80e58057b9ebfc761498f0f0e9dfdf
 BRANCH: fix/czn-gifts
 HEAD_SHA: this pushed checkpoint commit (resolve the branch ref)
 PR: NONE
 LAST_VERIFIED_CP0_SHA: 6ea8a952299572f5c47c5d0656a07dfb8cef6ce0
 DONE: Current main/AGENTS/status/wave/backlog/CZN audit, reviewed data, banner-only parser/tests read. PR130 verified merged/released; no duplicate recovery PR found among recent PRs.
-VERIFICATION: source notice rechecked in indexed publisher-authored STOVE mirror; current public feed download and fixed-clock baseline build started. Implementation of eight reviewed records and source schedule fixture complete; validation/CI = NOT RUN.
+VERIFICATION: source notice rechecked in indexed publisher-authored STOVE mirror; current public feed download and fixed-clock baseline build started. CP1 implementation pushed fb036cd8389f5201409600035ab7cb7605bff764. bun install --frozen-lockfile PASS; bun run typecheck PASS; bun test PASS (1356 pass,3 existing age skips,0 fail); bun run build PASS. Fixed-clock actual feed245->253, exactly8 additions, all prior winners and date conflicts unchanged. PR CI/post-merge/Pages/public checks NOT RUN. Initial targeted test used generic dayStartMs incorrectly; fixed assertion to existing dedicated cznDayStart; full suite now passes.
 REMAINING: add eight reviewed mail claim windows and source-backed expiry/merge tests, then frozen install/typecheck/full tests/build/feed comparison, PR/CI/merge/Pages/public validation.
 BLOCKERS: direct CZN.gg fetch returned403; search index exposes complete announced date table and Source: STOVE attribution. No compliant unattended STOVE adapter is established; no new access probe is authorized.
 OUTCOME_A_DATA: PENDING
 OUTCOME_B_PREVENTION: BLOCKED CZN-OFFICIAL-MAIL-DISCOVERY (CZN audit C3: publisher index/terms/runner gate; reviewed fallback now)
-NEXT_CONCRETE_STEP: finish expiry/merge/source-incompleteness regression tests, run frozen install/typecheck/full suite/build and compare feed against wave-base.json.
+NEXT_CONCRETE_STEP: create the bounded CZN gift PR, add its URL to status/backlog/checkpoint, require green exact-head CI before merge.
 
 ## Source and exact scope
 
