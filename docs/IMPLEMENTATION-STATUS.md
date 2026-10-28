@@ -1,9 +1,11 @@
 # Game calendar implementation status
 
-## SC-P0-GEN-STARLIGHT — IMPLEMENTED, RELEASE VALIDATION PENDING (2026-10-28)
+## SC-P0-GEN-STARLIGHT — IMPLEMENTED (2026-10-28)
 
 Bounded Genshin-only fix from current main `28cb6e735126cfb244abdd705257c07a37c89979`.
 Canonical backlog: `docs/tasks/SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md`.
+Delivery record: [PR #130](https://github.com/maxvfk/game-calendar/pull/130) (commit-specific PR/post-merge CI,
+Pages deployment and independently checked public event results).
 
 - **Current-data restoration implemented:** two distinct official reviewed
   winners, backed by the in-game notice extracted at KQM `archive/21901.md`.
@@ -37,13 +39,15 @@ Canonical backlog: `docs/tasks/SOURCE-COVERAGE-7GAME-REMEDIATION-BACKLOG.md`.
   feed comparison passed. Snapshot/source timestamps and all 19 existing
   reviewed rows are unchanged; new per-row review/discovery times are real.
 - **Release acceptance:** PR CI, merge, post-merge CI/Pages and live feed/UI
-  check are pending and must be recorded before this milestone is closed.
-  If a regional quest cutoff passes during delivery, retain the exact expired
-  boundary; never move it forward or describe it as upcoming.
+  checks are mandatory; their observed run URLs, merged SHA and public results
+  are maintained in the linked PR delivery record. Local replay alone is not
+  deployment proof. Passed regional quest cutoffs retain their exact historical
+  boundaries and are never moved forward or described as upcoming.
 
-**Next concrete step:** finish this fix's PR/CI/Pages release checks, then
-STOP. Other backlog tasks, Source Recovery #113 and Timeline #115 remain
-outside this milestone.
+**Next concrete step:** STOP after this fix's release gates in PR #130.
+Optional operator phone/PWA smoke: inspect both Genshin deadlines with your
+selected server. Other backlog tasks, Source Recovery #113 and Timeline #115
+remain outside this milestone.
 
 
 ## Seven-game source coverage — unified ranked remediation backlog READY (2026-10-28)
