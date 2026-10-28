@@ -2,7 +2,7 @@
 
 WAVE: SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE
 MILESTONE: SC-P1-HSR-BANNERS
-STAGE: CP0
+STAGE: CP1
 BASE_MAIN_SHA: 7550118dbdaa69458ae9ca9dcc07aefb2ffd1feb
 BRANCH: fix/hsr-warps
 HEAD_SHA: resolve this branch ref
@@ -21,3 +21,6 @@ Source https://www.hoyolab.com/article/47142215. Identities:
 - hsr:now-i-am-become-blade:2026-10-21 (MortenaxBlade)
 - hsr:bygone-reminiscence-reforged-in-hellfire:2026-10-21 (ReforgedinHellfire)
 All endAsiaNov10 07:00Z /Europe14:00Z /America20:00Z. Fixed game clocks+8/+1/-5; no viewerDST. One Pearl/LC continuous window each; no historicalEvanescia/trial backfill. No source timestamps changed; exact publication time not inferred from search metadata. Next afterCP4: NTE1.4 five deadlines (earliestNov10 15:59Z).
+
+CP0_SHA:04f83b513f72a94dfbf40ff0796699abca19b20c
+CP1: four reviewed channels and test/hsr-current-warps.test.ts implemented. Validation/release NOT RUN. Next full local checks and feed260->264, onlyfour additions.
