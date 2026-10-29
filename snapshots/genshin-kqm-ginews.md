@@ -1,3 +1,17 @@
+# [New Content Overview](archive/21947.md)
+## Version 7.1 Now Available
+
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/09/22/af02f43546f660337583ca2eca1f14af_6126363490201495187_transformed.jpg)
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/09/22/cdf52f73d1e7ecf95a7544e11f7de6c3_1428701545229707476_transformed.jpg)
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/09/22/591393f7fafb22e961db672360c59894_1141827441502975847_transformed.jpg)
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/09/22/af8a4cf990ad188aefc718430d5f50dd_6995115695880001838_transformed.jpg)
+
+-----
+
 # [Visit the Starlit Gala Web Event to Unlock Your Wonderland Year in Review Report!](archive/21908.md)
 ## Starlit Gala: Genshin Impact Miliastra Wonderland Web Event Update!
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/15/17ce4718f54a3a21719e7d07731a1b21_1092535759659879610_transformed.jpg)
@@ -49,20 +63,6 @@ Complete more event tasks to claim Geodes of Replication, the Manekin Action "V 
 3. The in-game rewards will be distributed via in-game mail. The mail will expire after 30 days, so don't forget to claim the rewards in time.
 
 4. This web event is provided purely for entertainment. The content of the event does not represent any actual story or settings in the game. It is not indicative of any related gameplay features in Genshin Impact.
-
------
-
-# [New Content Overview](archive/21947.md)
-## Version 7.1 Now Available
-
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/09/22/af02f43546f660337583ca2eca1f14af_6126363490201495187_transformed.jpg)
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/09/22/cdf52f73d1e7ecf95a7544e11f7de6c3_1428701545229707476_transformed.jpg)
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/09/22/591393f7fafb22e961db672360c59894_1141827441502975847_transformed.jpg)
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/09/22/af8a4cf990ad188aefc718430d5f50dd_6995115695880001838_transformed.jpg)
 
 -----
 
@@ -779,36 +779,6 @@ and after activating the corresponding "Domain of Blessing"
 
 -----
 
-# ["Carefree Snowball Fight" Event: Fun Throwing Challenge](archive/21891.md)
-## Carefree Snowball Fight
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/684d82e66f2ddec8c156b9f13f5dc991_4296667567912849878_transformed.jpg)
-
-〓Event Rewards〓
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/08/21/c369da49c6d1d95455e84e9d1c564f8e_2780252075207902140_transformed.png)
-
-〓Event Duration〓
-
-<t class="t_lc" contenteditable="false">2026/10/21 10:00</t> – <t class="t_lc" contenteditable="false">2026/11/02 03:59</t>
-
-〓Eligibility〓
-
-Adventure Rank 20 or above
-
-Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
-
-Complete the "Gunfire in the Silent Lands" quest of the Archon Quest Chapter VII: Act I "Everwinter Without Mercy."
-
-〓Event Details〓
-
-● After the event starts, Travelers will need to enter the challenge in Co-Op Mode and throw snowballs to knock down as many Oddowls as possible within the time limit. As the snowball fight progresses, Wonderbeets will also join the fray. Stand near them to cheer them on, and gain extra buffs once cheering is complete.
-
-● Complete various stage challenges to earn Snowball Cheer. Accumulate Snowball Cheer and reach the specified amounts to claim the corresponding rewards.
-
-● Starting from the first day of this event, Snowball Cheer score is capped at 2,000 points. The cap will rise on Day 3 and again on Day 5, reaching a maximum of 6,000 points.
-
------
-
 # [Participate in "Starlight Voyage: Heart Unbound" to obtain Prismatic Crystals, the token for the Colorful Surprise Box](archive/21901.md)
 ## Starlight Voyage: Heart Unbound
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/17/35629b6c92a60f02d0042907e72c372d_2750764721117474070_transformed.jpg)
@@ -836,6 +806,36 @@ During the quest completion period, Travelers can obtain "Sightseeing Experience
 ● During the event, Travelers can obtain the corresponding event reward, "Prismatic Crystals," by completing quests and accumulating Sightseeing Experiences.
 
 *"Prismatic Crystals" obtained from event rewards can only be used for a limited time. Don't forget to spend them before they expire.
+
+-----
+
+# ["Carefree Snowball Fight" Event: Fun Throwing Challenge](archive/21891.md)
+## Carefree Snowball Fight
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/684d82e66f2ddec8c156b9f13f5dc991_4296667567912849878_transformed.jpg)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/08/21/c369da49c6d1d95455e84e9d1c564f8e_2780252075207902140_transformed.png)
+
+〓Event Duration〓
+
+<t class="t_lc" contenteditable="false">2026/10/21 10:00</t> – <t class="t_lc" contenteditable="false">2026/11/02 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 20 or above
+
+Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
+
+Complete the "Gunfire in the Silent Lands" quest of the Archon Quest Chapter VII: Act I "Everwinter Without Mercy."
+
+〓Event Details〓
+
+● After the event starts, Travelers will need to enter the challenge in Co-Op Mode and throw snowballs to knock down as many Oddowls as possible within the time limit. As the snowball fight progresses, Wonderbeets will also join the fray. Stand near them to cheer them on, and gain extra buffs once cheering is complete.
+
+● Complete various stage challenges to earn Snowball Cheer. Accumulate Snowball Cheer and reach the specified amounts to claim the corresponding rewards.
+
+● Starting from the first day of this event, Snowball Cheer score is capped at 2,000 points. The cap will rise on Day 3 and again on Day 5, reaching a maximum of 6,000 points.
 
 -----
 
@@ -867,31 +867,27 @@ Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-St
 
 -----
 
-# [Event Wish "La Chanson Cerise" - Boosted Drop Rate for "Tasteful Excellence" Escoffier (Cryo)!](archive/21889.md)
-## Event Wish "La Chanson Cerise"
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/e77eb5aab52127e55989bb8162d671d8_5676769242945454268_transformed.jpg)
+# [Beware of Phishing Websites: Keep Your Account Secure](archive/22008.md)
+## Beware of Phishing Websites: Keep Your Account Secure
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/29/a05b77dc19895db836ffa20ada9cc006_4235804805962751199_transformed.png)
 
-Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
+Dear Traveler,
 
-〓Event Wish Details〓
+We have recently identified cases of Travelers' accounts being stolen through phishing websites in certain regions.
 
-Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
---- | --- | ---
-<t class="t_lc" contenteditable="false">2026/10/13 18:00</t> –  <t class="t_lc" contenteditable="false">2026/11/03 14:59</t> | "Tasteful Excellence" Escoffier (Cryo) | "Ode and Oblation" Dahlia (Hydro)
-^ | ^ | "Golden Vow" Candace (Hydro)
-^ | ^ | "Coordinates of Clear Frost" Mika (Cryo)
+To keep Travelers' accounts secure, we will continue to strengthen our security measures and take further legal action as appropriate. We would also like to remind all Travelers of the following:
 
-● During this event wish, the event-exclusive 5-star character "Tasteful Excellence" Escoffier (Cryo) will receive a huge drop-rate boost!
+Always use official channels to log in and manage your account.
 
-● During this event wish, the 4-star characters "Ode and Oblation" Dahlia (Hydro), "Golden Vow" Candace (Hydro), and "Coordinates of Clear Frost" Mika (Cryo) will receive a huge drop-rate boost!
+• Please use only the official Genshin Impact client and website to log in, view, or update your account information.
 
-※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
+• Do not click links from unknown sources or enter your login details, password, or verification codes on unofficial pages. Phishing websites often lure visitors with promises of free rewards, prize draws and cashback offers, or warnings of unusual account activity. Please stay alert.
 
-※ This is for "Character Event Wish-2." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
+• Regularly check that you still have control of the email address and phone number linked to your account. Reduce the risk of account theft by changing your password regularly, using a strong password, and strengthening your email account's security.
 
-※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
+• If you discover that the email address linked to your account has been changed to an unfamiliar one, or receive notifications of logins or changes to linked account information that you did not initiate, change your password through official channels or contact official Customer Service immediately for assistance.
 
-※ For more information, go to the Wish screen and select Details in the bottom-left corner.
+We are committed to keeping Travelers' accounts secure. We sincerely hope to work together with all Travelers to build and maintain a fair and welcoming gaming environment.
 
 -----
 
@@ -943,29 +939,29 @@ Fixes an issue whereby after the Ice Coffin of the opponents "Glaciomancer" and 
 
 -----
 
-# [Event Wish "Epitome Invocation" - Boosted Drop Rates for Azurelight (Sword) and Symphonist of Scents (Polearm)!](archive/21890.md)
-## Event Wish "Epitome Invocation"
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/ccc187c09296b4a1990c8cf98dcadb46_5421147638874447905_transformed.jpg)
+# [Event Wish "La Chanson Cerise" - Boosted Drop Rate for "Tasteful Excellence" Escoffier (Cryo)!](archive/21889.md)
+## Event Wish "La Chanson Cerise"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/e77eb5aab52127e55989bb8162d671d8_5676769242945454268_transformed.jpg)
 
-Travelers, stock up on weapons and characters in "Epitome Invocation" to make your party stronger in combat!
+Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
 
 〓Event Wish Details〓
 
-Event Wish Duration | Promotional Weapons (5-Star) | Featured Weapons (4-Star)
+Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
 --- | --- | ---
-<t class="t_lc" contenteditable="false">2026/10/13 18:00</t> –  <t class="t_lc" contenteditable="false">2026/11/03 14:59</t> | Azurelight (Sword)  Symphonist of Scents (Polearm) | Sturdy Bone (Sword)
-^ | ^ | Sacrificial Greatsword (Claymore)
-^ | ^ | Favonius Lance (Polearm)
-^ | ^ | The Widsith (Catalyst)
-^ | ^ | Sacrificial Bow (Bow)
+<t class="t_lc" contenteditable="false">2026/10/13 18:00</t> –  <t class="t_lc" contenteditable="false">2026/11/03 14:59</t> | "Tasteful Excellence" Escoffier (Cryo) | "Ode and Oblation" Dahlia (Hydro)
+^ | ^ | "Golden Vow" Candace (Hydro)
+^ | ^ | "Coordinates of Clear Frost" Mika (Cryo)
 
-● During this event wish, the event-exclusive 5-star weapons Azurelight (Sword) and Symphonist of Scents (Polearm) will receive a huge drop-rate boost!
+● During this event wish, the event-exclusive 5-star character "Tasteful Excellence" Escoffier (Cryo) will receive a huge drop-rate boost!
 
-● During the event, the event-exclusive 4-star weapon Sturdy Bone (Sword), as well as the 4-star weapons Sacrificial Greatsword (Claymore), Favonius Lance (Polearm), The Widsith (Catalyst), and Sacrificial Bow (Bow) will receive a huge drop rate boost!
+● During this event wish, the 4-star characters "Ode and Oblation" Dahlia (Hydro), "Golden Vow" Candace (Hydro), and "Coordinates of Clear Frost" Mika (Cryo) will receive a huge drop-rate boost!
 
-● During this event wish, use Epitomized Path to chart a course towards a promotional 5-star weapon, such as Azurelight (Sword) or Symphonist of Scents (Polearm). For more information on Epitomized Path, go to the Wish screen and select Details in the bottom-left corner.
+※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
 
-※ Of the above weapons, the event-exclusive weapons will not be available in the standard wish "Wanderlust Invocation."
+※ This is for "Character Event Wish-2." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
+
+※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
 
 ※ For more information, go to the Wish screen and select Details in the bottom-left corner.
 
@@ -1205,6 +1201,34 @@ Manekina Cosmetic "Rose's Lament" | ^
 
 -----
 
+# [Event Wish "Epitome Invocation" - Boosted Drop Rates for Azurelight (Sword) and Symphonist of Scents (Polearm)!](archive/21890.md)
+## Event Wish "Epitome Invocation"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/ccc187c09296b4a1990c8cf98dcadb46_5421147638874447905_transformed.jpg)
+
+Travelers, stock up on weapons and characters in "Epitome Invocation" to make your party stronger in combat!
+
+〓Event Wish Details〓
+
+Event Wish Duration | Promotional Weapons (5-Star) | Featured Weapons (4-Star)
+--- | --- | ---
+<t class="t_lc" contenteditable="false">2026/10/13 18:00</t> –  <t class="t_lc" contenteditable="false">2026/11/03 14:59</t> | Azurelight (Sword)  Symphonist of Scents (Polearm) | Sturdy Bone (Sword)
+^ | ^ | Sacrificial Greatsword (Claymore)
+^ | ^ | Favonius Lance (Polearm)
+^ | ^ | The Widsith (Catalyst)
+^ | ^ | Sacrificial Bow (Bow)
+
+● During this event wish, the event-exclusive 5-star weapons Azurelight (Sword) and Symphonist of Scents (Polearm) will receive a huge drop-rate boost!
+
+● During the event, the event-exclusive 4-star weapon Sturdy Bone (Sword), as well as the 4-star weapons Sacrificial Greatsword (Claymore), Favonius Lance (Polearm), The Widsith (Catalyst), and Sacrificial Bow (Bow) will receive a huge drop rate boost!
+
+● During this event wish, use Epitomized Path to chart a course towards a promotional 5-star weapon, such as Azurelight (Sword) or Symphonist of Scents (Polearm). For more information on Epitomized Path, go to the Wish screen and select Details in the bottom-left corner.
+
+※ Of the above weapons, the event-exclusive weapons will not be available in the standard wish "Wanderlust Invocation."
+
+※ For more information, go to the Wish screen and select Details in the bottom-left corner.
+
+-----
+
 # [Stygian Onslaught Event: Disturbance-affected Ley Line challenges](archive/21168.md)
 ## Stygian Onslaught
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2025/10/23/40da7ab1ce17afd008e7a10c6ee6e67b_3372052251159312794_transformed.jpg)
@@ -1384,6 +1408,24 @@ Epilogue Availability: After Version 7.1 Update – <t class="t_lc" contentedita
 
 -----
 
+# [HoYoLAB Community "Daily Check-In" Feature](archive/21986.md)
+## Daily Check-In Feature
+![Banner](https://sdk.hoyoverse.com/upload/ann/2022/12/06/d15f6c61e1d3d62d5e269360aaef7285_3515093605882829658.png)
+
+Dear Travelers,
+
+The HoYoLAB Community "Daily Check-In" feature is now available!
+
+Go to HoYoLAB > Tools > Genshin Impact > Check-in, and check in daily to obtain Primogems, Mora, Hero's Wit, and other in-game rewards.
+
+You will receive 100 Primogems and 10,000 Mora for your first check-in!
+
+〓Event Duration〓
+
+Permanent
+
+-----
+
 # ["Swords and Secrets" World Quest Overview](archive/21881.md)
 ## Swords and Secrets
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/ef63a98d969e6393c062b09a371debd4_7968206810973486747_transformed.jpg)
@@ -1405,50 +1447,6 @@ Permanently available after the Version 7.1 update
 Adventure Rank 18 or above
 
 Complete Archon Quests: Chapter VII: Act III "White Night, Like a Dream Upon Waking"
-
------
-
-# [HoYoLAB Community "Daily Check-In" Feature](archive/21986.md)
-## Daily Check-In Feature
-![Banner](https://sdk.hoyoverse.com/upload/ann/2022/12/06/d15f6c61e1d3d62d5e269360aaef7285_3515093605882829658.png)
-
-Dear Travelers,
-
-The HoYoLAB Community "Daily Check-In" feature is now available!
-
-Go to HoYoLAB > Tools > Genshin Impact > Check-in, and check in daily to obtain Primogems, Mora, Hero's Wit, and other in-game rewards.
-
-You will receive 100 Primogems and 10,000 Mora for your first check-in!
-
-〓Event Duration〓
-
-Permanent
-
------
-
-# ["Upstream Variations" World Quest Overview](archive/21882.md)
-## Upstream Variations
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/ebd7c34e4e6e82a5f6b907fd8a65a85b_739333715900579401_transformed.jpg)
-
-Travelers who reach the required Adventure Rank and complete the prerequisite quests will automatically accept the World Quest "Upstream Variations."
-
-Complete "Upstream Variations" to obtain a special quest reward: "Happy-Quacky Phonograph Ducky".
-
-※ Using "Happy-Quacky Phonograph Ducky" will grant Vodyanitsa a brand-new decorative appearance.
-
-〓Quest Start Time〓
-
-Permanently available after the Version 7.1 update
-
-It will take 7 calendar days to complete all quests in "Upstream Variations." Travelers, please plan your time accordingly.
-
-〓Quest Unlock Criteria〓
-
-Adventure Rank 18 or above
-
-Complete Archon Quest Chapter VII: Act II "Wraith's Nocturne"
-
-Unlock "Meeting Point: Tidesong Cavern" and upgrade the Meeting Point to Level 2
 
 -----
 
@@ -1481,6 +1479,32 @@ Travelers can also open the link via Paimon Menu > Mail > Game Survey > Survey L
 Survey answers cannot be changed after submission, so please fill it out carefully.
 
 We thank all Travelers for your invaluable feedback!
+
+-----
+
+# ["Upstream Variations" World Quest Overview](archive/21882.md)
+## Upstream Variations
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/11/ebd7c34e4e6e82a5f6b907fd8a65a85b_739333715900579401_transformed.jpg)
+
+Travelers who reach the required Adventure Rank and complete the prerequisite quests will automatically accept the World Quest "Upstream Variations."
+
+Complete "Upstream Variations" to obtain a special quest reward: "Happy-Quacky Phonograph Ducky".
+
+※ Using "Happy-Quacky Phonograph Ducky" will grant Vodyanitsa a brand-new decorative appearance.
+
+〓Quest Start Time〓
+
+Permanently available after the Version 7.1 update
+
+It will take 7 calendar days to complete all quests in "Upstream Variations." Travelers, please plan your time accordingly.
+
+〓Quest Unlock Criteria〓
+
+Adventure Rank 18 or above
+
+Complete Archon Quest Chapter VII: Act II "Wraith's Nocturne"
+
+Unlock "Meeting Point: Tidesong Cavern" and upgrade the Meeting Point to Level 2
 
 -----
 
