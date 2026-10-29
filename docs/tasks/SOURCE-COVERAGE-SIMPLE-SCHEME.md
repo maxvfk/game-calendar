@@ -156,17 +156,32 @@ confirm in the probe. Run it on the evening refresh, away from the Timeline runs
 
 ## Order
 
+Work starts after the current recovery wave
+(`SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md`) is finished; the wave runs under its own
+rules and this scheme does not change it. Agreed with the operator on 2026-10-28.
+
 | Step | Scope | Done when |
 | --- | --- | --- |
-| C1 | Part 1: statuses, ignore list, baseline, inbox issue | Replayed on today's snapshots, it lists the gaps the 2026-10-28 audits found before #130–#143 |
+| C0 | Event Context E1 evidence extraction for the article sources: KQM GINews and HSRNews, ZZZ and NTE Steam news | Every emitted event from these sources maps to its item, or fails closed with a diagnostic; public feed files stay byte-identical |
+| C1 | Part 1: statuses, ignore list, baseline, inbox issue, built on the C0 mapping | Replayed on today's snapshots, it lists the gaps the 2026-10-28 audits found before #130–#143 |
 | C2 | Part 3: `evidence` field, date reader, CI check, legacy list | Fixes #130–#143 rewritten as test cases pass; a wrong date in a quote fails |
 | C3 | Part 2: audit prompt, audit log, due computation | One real audit run end to end for one game |
 | C4 | Part 4: dead man's switch | A deliberately skipped ping produces mail |
 | C5 | Part 5, stages 1–3, each a separate operator decision | Probe report compared with the reviewed records |
 
-C1 to C4 involve no AI. The current recovery wave
-(`SOURCE-COVERAGE-CURRENT-DATA-RECOVERY-WAVE.md`) finishes under its own rules; this scheme
-does not change it.
+C0 to C4 involve no AI.
+
+**Why C0 comes first.** The E1 extractor already associates source text with the final merged
+event exactly, failing closed on ambiguity, but only for WuWa
+(`docs/evidence/event-context-wuwa-e1.md`). Extending it to the article sources is one
+deterministic piece that three later steps use: the item-to-event mapping in part 1, the date
+quotes in parts 3 and 5, and the source excerpts for summaries.
+
+**Summaries come after C4.** They improve wording, not correctness: a missing event breaks the
+calendar's main question ("what ends first"), a plain description does not. Before Event Context
+E2b, review whether `displaySummary` needs the Timeline registry v2 cutover prepared in
+[PR #115](https://github.com/maxvfk/game-calendar/pull/115), or can be added in a simpler way. C5
+and summaries are both model calls over the same evidence and may later share one call.
 
 ## Not doing
 
