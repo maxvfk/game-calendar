@@ -3,18 +3,23 @@
 **Status:** DESIGN. Direction chosen by the operator on 2026-10-28. Each step below is built
 only when the operator starts it.
 **Replaces:** the Source Recovery R1–R3 design in
-[PR #113](https://github.com/maxvfk/game-calendar/pull/113), to be closed unmerged once this
-document is accepted; its review findings are kept where they still apply.
+[PR #113](https://github.com/maxvfk/game-calendar/pull/113), closed unmerged on 2026-10-29;
+its review findings are kept where they still apply.
+**Design review:** operator comments on
+[PR #147](https://github.com/maxvfk/game-calendar/pull/147) (2026-10-29), folded in below.
 **Rule that does not change:** a confidently wrong date is worse than a missing one (`AGENTS.md`).
 
 ## Why a different scheme
 
 The data gaps found so far had two causes:
 
-1. **A dated notice is already in our snapshot, but no event was made from it.** The Genshin
-   audit of 2026-10-28 found Overflowing Favor, Starlight Voyage and the Phase II weapon wish
-   all inside `snapshots/genshin-kqm-ginews.md`; the parser did not recognise their layout.
-2. **The event is in no source we read.** Example: HSR 4.6 Lightward (#119).
+1. **A dated notice is already in our snapshot, but no event, or not every event or deadline,
+   was made from it.** The Genshin audit of 2026-10-28 found Overflowing Favor, Starlight Voyage
+   and the Phase II weapon wish all inside `snapshots/genshin-kqm-ginews.md`; the parser did not
+   recognise their layout. HSR 4.6 Lightward (#119) is the same kind: all four windows were in
+   the KQM HSRNews snapshot, but the parser skipped the `7. Others → Gameplay` section.
+2. **The event is in no source we read.** Example: the four HSR 4.6 Warp and Light Cone channels
+   (#137), announced on HoYoLAB but absent from the KQM index.
 
 Fixes #130–#143 (the 2026-10-28 recovery wave) all came from per-game coverage audits, and most
 changed only `data/reviewed`. Outages happen too (ZZZ banners, #112), but they already turn the
@@ -33,21 +38,36 @@ it would not have caught most of the gaps above.
 | 2 | Coverage audit per game, due when a new banner phase starts | An operator-started session |
 | 3 | Fix rules and a date-evidence check for reviewed records | None |
 | 4 | Liveness check of the refresh schedule | None |
-| 5 | Model extraction for part 1, introduced in stages | Like Timeline labels: no tools |
+| 5 | Model extraction for part 1 (target stage, introduced in steps) | Like Timeline labels: no tools |
 
 ### Part 1 — unprocessed notices
 
 For sources that publish separate articles (KQM GINews and HSRNews, ZZZ and NTE Steam news,
-the WuWa Kuro mirror), every item in the snapshot gets one status:
+the WuWa Kuro mirror), **every** item in the snapshot is listed with its source and item ID,
+including items that produced nothing. Each gets one status:
 
-- **produced an event**: the merged feed has an event from this item;
+- **processed**: every dated span in the item matches a start or end of an event produced from
+  it (in the merged feed, or a reviewed row that cites the item);
+- **partially processed**: the item produced events, but at least one dated span matches none
+  of them. Example: Starlight Voyage, where the event end was taken but the earlier
+  quest-completion cutoff in the same notice was not. Without this status the list would report
+  "processed" on exactly our typical misses;
 - **ignored**: listed in a Git-reviewed file `data/coverage/ignored-notices.v1.json` with the
   source, item ID and a reason category (maintenance, shop, web event out of scope, and so on);
-- **unprocessed**: the text contains a date, but neither of the above applies.
+  an ignore entry may name single dated spans instead of the whole item;
+- **unprocessed**: the item contains a dated span, but produced no event and is not ignored.
 
 Date detection is deterministic: month-name and numeric dates, with or without time and offset.
-Items present when the list is switched on are recorded once in a baseline, so only new items
-need a decision. Each new unprocessed item needs one decision: ignore it or fix the data.
+It finds dated spans; it does not try to say what each span means. Each new unprocessed or
+partial item needs one decision: ignore it (or the span) or fix the data.
+
+**Baseline.** Items present when the list is switched on are recorded once in a baseline. The
+baseline only keeps them out of notifications at launch; it does not mark them as checked. The
+report can still be replayed over them, and over historical snapshots.
+
+**Priority.** Items whose dated span falls within the next 7 days are listed first and marked
+urgent in the notification, without waiting for the next audit. This is ordering and a marker
+only, for manual triage; nothing is started automatically.
 
 Table-like pages (Prydwen, wiki.gg, ntebuild, the ZZZ banner JSON) have no separate items;
 part 2 covers them.
@@ -58,8 +78,7 @@ gets a GitHub notification. The issue is output only: the state lives in Git (ig
 baseline, audit log), never in issue text or comments. This step must not turn the refresh
 run red.
 
-**To verify first:** how an emitted event maps back to its item (source URL, or an item ID
-kept by the parser).
+**Built on C0**, which provides the item list and the event-to-item mapping.
 
 ### Part 2 — coverage audit
 
@@ -91,18 +110,32 @@ enough to finish or redo.
 
 ### Part 3 — fix rules and date evidence
 
-- **Urgent gaps go into `data/reviewed` first.** A parser is changed only when the same notice
-  layout is missed a second time; the earlier reviewed record and the notice become its test
-  fixture.
+- **Urgent gaps go into `data/reviewed` first.** After that, choose the cheaper lasting fix, with
+  no fixed threshold:
+  - a one-off reward or event: the reviewed row is enough;
+  - a proven repeating defect in a family we already parse: a narrow parser or source fix, with
+    the notice and the reviewed row as its test fixture;
+  - a new permanent mode (for example a new endgame cycle): assess a lasting integration right
+    away instead of waiting for it to be missed again;
+  - no reliable source or rule for the future: restore only the confirmed windows as reviewed
+    rows; do not predict future cycles.
+
+  Part 5, once running, is meant to fill layout misses without a parser change each time.
 - All `AGENTS.md` data rules apply: stable IDs, `firstSeenAt`, no guessed year, time or end,
   no mixing of provenance.
-- **Evidence on reviewed records.** Add an optional `evidence: { url, quote, checkedAt }` to
-  `ReviewedEvent`. It becomes required for every row added or changed after the cut-over; rows
-  present at the cut-over are listed once as legacy. CI parses the dates in `quote` with the
-  same deterministic date reader as parts 1 and 5 and requires them to match `startsAt`,
-  `endsAt` and `regionEnds` after time-zone conversion. A server-time quote ("04:00 server
-  time") needs a reviewed per-game table of server offsets; without one the row stays at day
-  precision. An unreadable quote fails CI; the fix is to extend the reader, not to bypass it.
+- **Evidence on reviewed records.** Add an optional `evidence` to `ReviewedEvent`: one source
+  `url` and `checkedAt`, and a short list of `{ fields, quote }`. Each entry names the date
+  fields it supports (`startsAt`, `endsAt`, or a `regionEnds` key), because a start, an end and
+  per-region ends are often in different lines of one article. Evidence becomes required for
+  every row added or changed after the cut-over; rows present at the cut-over are listed once
+  as legacy.
+- **CI check.** Every dated field of such a row must be covered by one entry. CI reads the date
+  in each quote with the same deterministic date reader as parts 1 and 5 and requires it to
+  match the named field after time-zone conversion, at the stated precision. A server-time
+  quote ("04:00 server time") needs a reviewed per-game table of server offsets; without one the
+  field stays at day precision. The reader covers the date formats our sources use, not every
+  possible format. An unreadable or ambiguous quote fails CI: the row goes to `unknown` or day
+  precision, or the reader is extended. It is never bypassed with a guessed exact time.
 
 ### Part 4 — liveness
 
@@ -115,8 +148,12 @@ the operator's; the ping URL is stored as a secret.
 
 ### Part 5 — model extraction for unprocessed notices
 
-The parser stays the primary path. The model only handles items that part 1 lists as
-unprocessed, using the same pattern as the Timeline labels:
+This is a target stage of the scheme, not an optional experiment: sources often already
+contain an event, its type or a separate deadline that the parser does not recognise, and part 5
+is how those gaps get filled without changing a parser each time. The parser stays the primary
+path. The model only handles items that part 1 lists as **unprocessed or partially processed**
+(for a partial item it also gets the events already made from it), using the same pattern as the
+Timeline labels:
 
 - **Input**, built in the job from the snapshot with no network access: the notice text, the
   game's current events and a Git-reviewed scope policy (what counts as an event).
@@ -140,14 +177,28 @@ unprocessed, using the same pattern as the Timeline labels:
 
 Stages:
 
-1. **Probe** (read-only, like Timeline M3). Run on the notices behind fixes #130–#143 and compare
-   with the reviewed records made by hand. This decides whether Sonnet is enough or Haiku is.
+1. **Probe** (read-only, like Timeline M3). Run on the notices behind fixes #119 and #130–#143,
+   including notices with several deadlines (Starlight Voyage), and compare with the reviewed
+   records made by hand. This also decides whether Sonnet is enough or Haiku is.
 2. **Proposals.** Runs after refresh. Results go to the inbox issue as proposed reviewed rows,
    with evidence; the operator applies them by hand.
-3. **Automatic recording**, only after the operator sees one to two weeks of correct proposals.
-   Behind a kill switch (`vars.COVERAGE_EXTRACT_AUTO`), into a separate file, with its own
-   `extractionMethod` value so the records can be told apart and reverted. Write job without
-   the Claude secret, fast-forward push and CI dispatch, as in `record.sh`.
+3. **Automatic recording** is the intended end state, enabled only by a separate operator GO on
+   measured criteria, not on time without visible errors. On the known misses and on the
+   proposals so far:
+   - detection: the known gaps are found;
+   - attribution: each date is attached to the right event (the quest cutoff versus the event
+     end);
+   - no duplicates of existing events;
+   - regional clocks are correct;
+   - ambiguous cases fail closed;
+   - rollback is shown to work.
+
+   Even then, only classes shown to be safe are recorded automatically; suspicious or
+   ambiguous items stay in the inbox. Behind a kill switch (`vars.COVERAGE_EXTRACT_AUTO`), into
+   a separate file, with its own `extractionMethod` value so the records can be told apart and
+   reverted. Write job without the Claude secret, fast-forward push and CI dispatch, as in
+   `record.sh`. Model output is a proposal, never the source of truth; dates are always
+   converted by code.
 
 Usage: an empty inbox makes no call. A notice is roughly 1–3k tokens, so the expected load is
 tens of thousands of tokens a week, comparable to Timeline labels; this is an estimate to
@@ -162,12 +213,12 @@ rules and this scheme does not change it. Agreed with the operator on 2026-10-28
 
 | Step | Scope | Done when |
 | --- | --- | --- |
-| C0 | Event Context E1 evidence extraction for the article sources: KQM GINews and HSRNews, ZZZ and NTE Steam news | Every emitted event from these sources maps to its item, or fails closed with a diagnostic; public feed files stay byte-identical |
-| C1 | Part 1: statuses, ignore list, baseline, inbox issue, built on the C0 mapping | Replayed on today's snapshots, it lists the gaps the 2026-10-28 audits found before #130–#143 |
-| C2 | Part 3: `evidence` field, date reader, CI check, legacy list | Fixes #130–#143 rewritten as test cases pass; a wrong date in a quote fails |
+| C0 | Event Context E1 evidence extraction for the article sources: KQM GINews and HSRNews, ZZZ and NTE Steam news | Two checks hold: (a) every item in the current snapshot is listed with its source and item ID, including items with no event; (b) every emitted event maps to its item, or fails closed with a diagnostic. Public feed files stay byte-identical |
+| C1 | Part 1: statuses including partial, ignore list, baseline, priority, inbox issue, built on C0 | Replayed on the snapshots before the fixes, it lists the gaps behind #119 and #130–#143, including the Starlight Voyage quest cutoff as partial |
+| C2 | Part 3: per-field `evidence`, date reader, CI check, legacy list | Fixes #130–#143 rewritten as test cases pass; a wrong date, or a field without a quote, fails |
 | C3 | Part 2: audit prompt, audit log, due computation | One real audit run end to end for one game |
 | C4 | Part 4: dead man's switch | A deliberately skipped ping produces mail |
-| C5 | Part 5, stages 1–3, each a separate operator decision | Probe report compared with the reviewed records |
+| C5 | Part 5, stages 1–3, each a separate operator decision | Stage 1: probe report compared with the reviewed records. Stage 3: the measured criteria above are met |
 
 C0 to C4 involve no AI.
 
