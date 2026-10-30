@@ -83,7 +83,11 @@ test("current Endfield snapshot merges without conflicts or duplicate IDs and re
   expect(wiki.length).toBeGreaterThan(0);
   const merged = mergeEvents([wiki, reviewed]);
   expect(merged.conflicts).toHaveLength(0);
-  const expected = new Map([...wiki, ...reviewed].map(e => [e.id, e]));
+  // The wiki can add an already reviewed event under a UTC-day ID. Those
+  // aliases must resolve to the existing reviewed identity, not join its ID set.
+  const wikiOnly = wiki.filter(e => !reviewed.some(r => r.id === e.id ||
+    (r.title === e.title && Math.abs(Date.parse(r.startsAt) - Date.parse(e.startsAt)) <= 24 * 3_600_000)));
+  const expected = new Map([...wikiOnly, ...reviewed].map(e => [e.id, e]));
   expect(merged.events.map(e => e.id).sort()).toEqual([...expected.keys()].sort());
   for (const event of merged.events) expect(event).toEqual(expected.get(event.id)!);
 });

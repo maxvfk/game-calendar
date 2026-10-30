@@ -48,7 +48,7 @@ test("Endfield western server clocks stay UTC-5 across DST; exact expiry is hist
 });
 
 test("healthy event-only wiki cannot discover banners; reviewed rescue preserves all existing winners and priority", async () => {
-  const wiki = parseWikiGgEventsPage(await Bun.file("snapshots/endfield-wikigg-events.html").text(), {
+  const wiki = parseWikiGgEventsPage(await Bun.file("test/fixtures/endfield/events-2026-10-28.html").text(), {
     game: "endfield", sourceId: "endfield-wikigg-events", sourceUrl: "https://endfield.wiki.gg/wiki/Event", now: "2026-10-28T12:00:00.000Z" });
   expect(wiki).toHaveLength(8);
   expect(wiki.some(e => ids.includes(e.id))).toBe(false);

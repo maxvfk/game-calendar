@@ -34,3 +34,23 @@ cannot replace an Illusion fixture with Phantasia and invalidate its assertions.
 Official Shadow Marked verification is documented in
 `docs/research/endfield-recurring-endgame.md`, section 16. Official article HTML
 is not republished here.
+
+## October recovery and source turnover
+
+`events-2026-10-28.html` pins the eight `mp-event` blocks of this repository's
+snapshot at `fc2e7f83abc8f7f1fa7a2f8c276a90cbd2036698`, last confirmed Oct 28.
+Full body SHA-256: `95a768868632191ee012b1a5399b7e8db607123e1a37344f2a89cd43a7306b3a`.
+Extraction retains each block through its closing timer `</ul>`, removes only
+`<img>` tags and closes its outer `<div>`; all names, links and timer attributes
+are preserved. Extract SHA-256:
+`78f464084cf532aad0a5b8f6401fc0f2ab9d2f574bc21893e80dcd54a5eb898f`.
+Historical rescue tests must use this fixed input, not the changing live snapshot.
+
+`contingency-readiness-2026-10-29.html` uses the same extraction for the newly
+added Contingency Readiness block at `d4cfba000fe19f2ee74b183ddd463494e578f477`.
+Full body SHA-256: `1ddebe941623110fe1e258cf48d5053e08bef9543e4f9f5254197b890a802d37`.
+Extract SHA-256: `247a01c2113dc7e625517963cd4c8e06473f02e9fd3d8ad2409d05dfdb0da814`.
+Its earliest opening is Oct 28 20:00 UTC, while the existing reviewed identity
+uses the Oct 29 server-calendar day. The turnover regression proves these merge
+into the existing reviewed ID with unchanged regional ends and other winners.
+Same original Event URL and attribution as above; no new request or source edit.
