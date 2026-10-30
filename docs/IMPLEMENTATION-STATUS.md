@@ -1,35 +1,61 @@
 # Game calendar implementation status
 
-## C0 — article source evidence extraction — IMPLEMENTED; REVIEW PENDING (2026-10-30)
+## C0 — article source evidence corrections — READY FOR FOCUSED RE-REVIEW (2026-10-30)
 
-Baseline CURRENT main `e2cebbef490178cd615af859168be071104b7edd`, with green
-CI41072214522 including PostgreSQL17. Implements C0 only under
-`docs/tasks/SOURCE-COVERAGE-SIMPLE-SCHEME.md`; recovery wave/#151 not repeated.
+Continues PR [#152](https://github.com/maxvfk/game-calendar/pull/152) from CURRENT
+main `e2cebbef490178cd615af859168be071104b7edd` and reviewed head `11d0869`.
+All three independent review comments were read; no findings were already fixed.
+Code correction checkpoint: `f16dea1adbd7ed5ecb1afe225f79efb79a0b92d8`.
 
-Existing E1 internal sidecar now enumerates all KQM GINews/HSRNews and ZZZ/NTE
-Steam notice items independently of event output, retaining actual source/item
-IDs, full untrusted bodies, hashes and capture metadata. Every emitted event
-has its exact source-item link or fail-closed diagnostic. Final-winner links
-reuse E1's exact-reference/conflict gate; no fuzzy reviewed-source transfer.
-No article text is promoted wholesale to eligible event-local model excerpts.
-Full text and separate event windows remain available for C1 partial replay;
-no C1 statuses/inbox, C2–C5, summaries/E2b, model calls or Actions changes.
+Completed corrections: optional KQM inventory validation independently checks
+archive-heading references at every heading level and changed top-level linked
+destinations against canonical discovery; partial drift fails the whole source's
+evidence with explicit diagnostics. Body cross-references are not counted as
+notices. Empty ZZZ/NTE inventories fail closed. Reports always list all four
+expected sources with availability; source failures carry sourceId and concise
+build warnings. Reference refusals now also expose independent period/type/merge
+conflicts and final source references, without relaxing winner matching.
+Regional comparison ignores object key order. Invalid article assembly preserves
+independently valid WuWa E1 entries; no eligible article text is created.
 
-Fixed-clock production replay:89 notices including61 zero-output;121/121 emitted
-events mapped to their notices.80 exact final links;41 different reviewed-source
-references explicitly unconfirmed. All10 public files byte-identical to main;
-290 winners unchanged (0 added/removed/changed), existing1 NTE conflict retained.
-Production sources/data, IDs, labels/queue, reviewed priority and calendar intact.
-Evidence/limitations: [C0 report](evidence/article-source-c0.md) and
-[hashed replay](evidence/article-source-c0-replay-2026-10-30.json).
+Regression oracles use frozen notice identities, zero-output identities, full
+source items and separately frozen baseline-main final winners. Historical tests
+have no module-level rolling snapshot parsing. Complete HSR archive1437 retains
+20 clock occurrences /12 distinct clocks, including November11/mail/discount
+boundaries; pre-#119 parser-function replay reproduced only2/4 Lightward windows
+(5 total outputs). Pre-#130 isolated Starlight parsing throws; zero/main-only
+retention cases are explicitly synthetic. Event end and earlier quest cutoff
+remain separate. Frozen builder policy removes the live-policy dependency.
 
-Bun1.3.14 frozen install/typecheck/full build PASS;1410pass/3existing optional
-age skips/0fail (1413tests/89files). Network capability required for localhost
-socket tests; unchanged rerun passed. Delivery PR owns observed exact-head CI
-and mandatory hosted PostgreSQL17 results. Self-review is not independent approval.
+Executed on Bun1.3.14: frozen install, typecheck, full build PASS;
+**1418 pass /3 existing optional age skips /0 fail** (1421tests/89files).
+Focused article/E1/provenance: **71pass/0fail**. Fixed-clock replay at
+`2026-10-30T12:00:00.000Z`: all10 public files byte-identical to currentmain,
+290 winners identical, zero added/removed/changed, existing NTE conflict intact.
+Snapshot measurements remain89 notices/121 emitted mappings/80 confirmed/41
+refused; these are snapshot evidence, never permanent rolling invariants.
+Refusals:29 URL-only,4 also type,8 also period;1 also existing merge conflict.
+Hosted code-checkpoint [CI41125822872](https://github.com/maxvfk/game-calendar/actions/runs/41125822872)
+is SUCCESS, including PostgreSQL17/age recovery; Pages skipped.
+Final exact-head CI/run URL is recorded in PR152's delivery comment;
+focused re-review readiness requires that run to be green, not assumed here.
 
-**Next concrete step: independent focused review of C0.** Stop after PR validation;
-do not merge/deploy, resume recovery, modify PR115/cutover or start C1–C5/E2b.
+Evidence: [correction report and limitations](evidence/article-source-c0.md),
+[public hashes and per-event refusal audit](evidence/article-source-c0-review-corrections-2026-10-30.json),
+[frozen inputs and historical replay procedure](../test/fixtures/editorial/c0/README.md).
+Production snapshots/data, public outputs, IDs, precedence, provenance, labels
+and queue behavior are unchanged. Exact builder checksum pin remains strict.
+
+Remaining limitations: C0 retains evidence, not date semantics or coverage
+statuses. NTE superseded intermediate candidates are not emitted attributions;
+both actual maintenance/standalone cases are pinned. Arbitrary future source
+formats still require maintenance. Hashes check content consistency, not source
+authenticity. Future Timeline consumer treatment of unavailable article sources
+is deferred; PR115 is untouched. Global assembly failure still fails closed.
+
+**Next concrete step:** focused independent re-review of the C0 corrections on
+PR152's exact green head. STOP: do not merge/deploy, change PR115/cutover, resume
+recovery or begin C1–C5/E2b.
 
 ## HSR/Endfield snapshot-turnover CI repair — IMPLEMENTED (2026-10-30)
 
