@@ -13,7 +13,7 @@ import { mergeEvents } from "../src/ingest/merge.ts";
 
 const now = "2026-10-30T12:00:00.000Z";
 const capture: Capture = { capturedAt: null, lastConfirmedAt: null, fixtureCaptureDay: "2026-10-28" };
-// All C0 oracles below use frozen inputs; no rolling snapshot is parsed at import.
+// Frozen C0 oracles are parsed inside tests; current-snapshot smoke checks are separate.
 const frozen = "test/fixtures/editorial/c0/";
 const cases = [
   ["genshin-kqm-ginews", [frozen + "ginews.md"]],
@@ -209,7 +209,14 @@ test("offline builder retains baseline-main public bytes with all four article s
       ["test/fixtures/zzz/steam-rss-excerpts-2026-10-27.xml", "fixtures/zzz/steam-events-official-2026-10-27.xml"],
       ["fixtures/nte/steamnews-official-2026-09-22.json", "fixtures/nte/steamnews-official-2026-09-22.json"],
     ];
-    for (const [from, to] of fixtures) await Bun.write(join(dir, to!), await Bun.file(join(root, from!)).text());
+    for (const [from, to] of fixtures) {
+      let raw = await Bun.file(join(root, from!)).text();
+      // This old excerpt has test-only provenance notes formatted as level-one
+      // headings. Stage only its article portion in the supported KQM format;
+      // canonical parser output and the pre-C0 public goldens stay unchanged.
+      if (from === fixtures[0]![0]) raw = raw.slice(raw.indexOf("# ["));
+      await Bun.write(join(dir, to!), raw);
+    }
     for (const path of ["data/presentation", "data/reviewed", "snapshots"]) mkdirSync(join(dir, path), { recursive: true });
     await Bun.write(join(dir, "data/presentation/timeline-labels.v1.json"), JSON.stringify({ schemaVersion: 1, decisions: [] }));
     await Bun.write(join(dir, "data/presentation/timeline-label-preferences.v1.json"), await Bun.file(frozen + "label-preferences.json").text());
@@ -271,9 +278,22 @@ for (const i of [0, 1]) test(`${cases[i]![0]}: partial heading drift fails the i
     }
   }
   // Body cross-references, including standalone links, are not notice boundaries.
-  const referenced = raw.replace("\n", "\nSee [related notice](archive/99999.md).\n\n[Details](archive/88888.md)\n");
+  const referenced = raw.replace("\n", "\n## Event details\n### Eligibility\nSee [related notice](archive/99999.md).\n\n[Details](archive/88888.md)\n");
   expect(extractArticleEvidence(referenced, ctx, capture, events).notices!.map(n => n.noticeId))
     .toEqual(i === 0 ? ["21947", "21901", "21888"] : ["1422", "1437"]);
+});
+
+for (const [i, path] of [
+  [0, "snapshots/genshin-kqm-ginews.md"],
+  [1, "snapshots/hsr-kqm-hsrnews.md"],
+] as const) test(`${cases[i]![0]}: current valid snapshot passes the boundary guard`, async () => {
+  // Smoke check only; stable identities and drift outcomes use frozen inputs above.
+  const raw = await Bun.file(path).text();
+  const extraction = extractArticleEvidence(raw, context(i), capture, []);
+  expect(extraction.notices!.length).toBeGreaterThan(0);
+  expect(extraction.diagnostics).toEqual([]);
+  expect(extraction.notices!.length).toBe(raw.split("\n").filter(line => line.startsWith("# ")).length);
+  expect(new Set(extraction.notices!.map(n => n.noticeId)).size).toBe(extraction.notices!.length);
 });
 
 for (const i of [2, 3]) test(`${cases[i]![0]}: unexpected empty inventory is explicitly unavailable`, async () => {
@@ -284,6 +304,29 @@ for (const i of [2, 3]) test(`${cases[i]![0]}: unexpected empty inventory is exp
   const report = articleSourceReport(safelyBuildEvidenceSidecar(failed, await frozenFinals()));
   expect(report).toHaveLength(4);
   expect(report.find(s => s.sourceId === ctx.sourceId)).toMatchObject({ available: false, noticeCount: 0, attributedEvents: 0, confirmedFinalAssociations: 0 });
+});
+
+for (const [i, noticeId, kind] of [
+  [0, "21901", "event-producing"],
+  [0, "21947", "zero-output"],
+  [1, "1437", "event-producing"],
+  [1, "1422", "zero-output"],
+] as const) test(`${cases[i]![0]}: ${kind} notice ${noticeId} loses its archive link`, async () => {
+  const { ctx, raw, events } = await input(i);
+  const heading = raw.split("\n").find(line => line.endsWith(`](archive/${noticeId}.md)`))!;
+  const unlinked = heading.replace(/^# \[(.*)\]\(archive\/\d+\.md\)$/, "# $1");
+  expect(unlinked).not.toBe(heading);
+  expect(events.some(event => event.sourceUrl.endsWith(`/archive/${noticeId}.md`))).toBe(kind === "event-producing");
+  for (const replacement of [unlinked, `${unlinked}\n\n[Original notice](archive/${noticeId}.md)`]) {
+    const failed = safelyExtractArticleEvidence(raw.replace(heading, replacement), ctx, capture, events);
+    expect(codes(failed)).toEqual(["article_extraction_failed", "article_inventory_incomplete"]);
+    expect(failed.diagnostics.every(d => d.sourceId === ctx.sourceId)).toBe(true);
+    const side = safelyBuildEvidenceSidecar(failed, await frozenFinals());
+    expect(side.notices).toEqual([]);
+    expect(side.articleAttributions).toHaveLength(events.length);
+    expect(side.articleAttributions.every(a => a.noticeId === null && a.noticePosition === null && a.finalEventId === null)).toBe(true);
+    expect(articleSourceReport(side).find(source => source.sourceId === ctx.sourceId)?.available).toBe(false);
+  }
 });
 
 test("reference refusal also exposes independent period/type/conflict reasons and final references", async () => {

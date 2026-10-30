@@ -1,6 +1,40 @@
 # Game calendar implementation status
 
-## C0 — article source evidence corrections — READY FOR FOCUSED RE-REVIEW (2026-10-30)
+## C0 — final bounded correction — READY FOR FINAL FOCUSED REVIEW (2026-10-31)
+
+PR [#152](https://github.com/maxvfk/game-calendar/pull/152), continuing reviewed
+head `b716d94`. Fetched and merged CURRENT main
+`39021f406bca753efc7385b9f889089c76de07aa`; no source refresh initiated here.
+Confirmed an unlinked level-one KQM heading could disappear from both discovery
+and guard. Every level-one ATX heading is now a potential boundary; an unknown
+boundary makes the optional source inventory unavailable with explicit diagnostics.
+Canonical parsers, final-winner matching and other C0 behavior are unchanged.
+
+Four frozen event-producing/zero-output GINews/HSRNews regressions failed before
+the fix and pass afterwards, for removed or body-moved links. Valid current
+snapshots, ordinary lower headings and supported body cross-references pass too.
+Clarified historical versus corrected replay diagnostics and valid but incomplete
+ZZZ/NTE feed limitations. Historical records already contain both exact `revision`
+values; no duplicate fields added. Corrected the rollback/checksum comment without
+changing its guard or immutable fixture.
+
+Executed on Bun1.3.14: frozen install, typecheck, full build PASS;
+**1424pass/3 existing optional age skips/0fail** (1427tests/89files).
+Focused article/E1/provenance **77pass/0fail**; new four cases **4pass/0fail**.
+Fixed-clock `2026-10-31T00:00:00.000Z` against main39021f4: all10 public files
+byte-identical, all290 winners and existing1 conflict unchanged. WuWa E1 entries
+and unattached records identical; baseline diagnostics retained. Final exact-head
+GitHub CI is recorded in PR152 checks and the delivery comment before handoff.
+Evidence: [final correction and limits](evidence/article-source-c0.md),
+[hashes and validation](evidence/article-source-c0-final-2026-10-31.json).
+
+Remaining limits: valid nonempty ZZZ/NTE subsets cannot always be detected;
+arbitrary future layouts, historical full-snapshot replay expansion and accepted
+minor concerns remain deferred. No C1–C5, dedup redesign, PR115 changes, merge or
+deployment. **Next concrete step:** final focused independent review of this
+bounded delta at the exact green PR head; STOP afterwards.
+
+## C0 — article source evidence corrections — historical checkpoint (2026-10-30)
 
 Continues PR [#152](https://github.com/maxvfk/game-calendar/pull/152) from CURRENT
 main `e2cebbef490178cd615af859168be071104b7edd` and reviewed head `11d0869`.

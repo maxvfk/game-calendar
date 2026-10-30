@@ -1,4 +1,6 @@
 {
+  "diagnosticStage": "Historical pre-correction diagnostics at PR head 11d08694703010544712ff7287bf2381b6882ffc",
+  "currentRefusalAudit": "article-source-c0-review-corrections-2026-10-30.json",
   "baselineMain": "e2cebbef490178cd615af859168be071104b7edd",
   "clock": "2026-10-30T12:00:00.000Z",
   "networkRefresh": false,

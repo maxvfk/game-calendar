@@ -26,9 +26,9 @@ class InventoryError extends Error {
 }
 
 /** Independent heading structure check, deliberately broader than canonical discovery.
- * Archive links in prose are cross-references, not article boundaries. Linked
- * archive headings at ANY level, and changed level-one linked destinations,
- * must all be consumed by discovery. Unknown layouts fail only optional evidence.
+ * Every level-one ATX heading is a potential article boundary, even without a
+ * link. Archive references in lower headings also require discovery; ordinary
+ * lower headings and body links do not. Unknown layouts fail optional evidence.
  */
 function checkKqmInventory(raw: string, items: Array<{ id: string; heading: string }>) {
   const boundaries: Array<{ id: string | undefined; heading: string }> = [];
@@ -36,7 +36,7 @@ function checkKqmInventory(raw: string, items: Array<{ id: string; heading: stri
     const heading = /^ {0,3}(#{1,6})[\t ]+(.+?)[\t ]*$/.exec(line);
     if (!heading) continue;
     const link = /^\[([^\n]+)\]\(([^\n]+)\)(?:[\t ]+#+)?$/.exec(heading[2]!);
-    if (!/archive\//i.test(heading[2]!) && !(heading[1] === "#" && link)) continue;
+    if (heading[1] !== "#" && !/archive\//i.test(heading[2]!)) continue;
     boundaries.push({ id: link ? /^archive\/(\d+)\.md$/.exec(link[2]!)?.[1] : undefined,
       heading: link?.[1] ?? heading[2]! });
   }

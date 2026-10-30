@@ -1,0 +1,65 @@
+{
+  "reviewedHead": "b716d94669dd19ba43559231ae7e0652f09a4325",
+  "baselineMain": "39021f406bca753efc7385b9f889089c76de07aa",
+  "clock": "2026-10-31T00:00:00.000Z",
+  "publicFilesByteIdentical": true,
+  "publicSha256": {
+    "data/events.v1.json": "796e59d206fc54832fc4d0886721e1abbb95b04f2de1e3b38df0b2460d8a8300",
+    "data/review.v1.json": "a2feab112e8d66452b2fe8f616d38e5a89ad5fd3e1cc21d667a34e4a61706e17",
+    "data/timeline-label-agent-input.v1.json": "ada8c7a373167b2f463f0325a641c5cb3b3d74cac8084d13dcdb31f6fdf788db",
+    "data/timeline-label-queue.v1.json": "db7078933204213db14b5168feb8be708adaf020fbd1a5bf8124d20e086e031d",
+    "icon.svg": "b9e5e0ec070e5e22e60077d58070d04f370ea4233188de2bde76ad0a8e09fabe",
+    "index.html": "b922904e23311a8c345fd0ae90883b49b2fc457c587e47a5ded4aa92d9e7b00a",
+    "main.js": "6100f4d370ff77ab42165e3f4d2d26db08e8586cbfaec0080501bb32cadfdd12",
+    "manifest.webmanifest": "2e69846cb68cd49d361dda5b663a05b5900df8814a8ec871d76b09e586b0dd8e",
+    "styles.css": "c560cdb9276f9135871c29438b083505cef14b337ceb4fc9cd8a819605bc01be",
+    "sw.js": "2166393d8308ca751523bcc60e72b67c6304d14d4ce4822a9b375f90a642384e"
+  },
+  "feedEvents": 290,
+  "winnerArraysIdentical": true,
+  "existingConflicts": 1,
+  "articleSources": [
+    {
+      "sourceId": "genshin-kqm-ginews",
+      "noticeCount": 38,
+      "available": true
+    },
+    {
+      "sourceId": "hsr-kqm-hsrnews",
+      "noticeCount": 13,
+      "available": true
+    },
+    {
+      "sourceId": "nte-steamnews-official",
+      "noticeCount": 30,
+      "available": true
+    },
+    {
+      "sourceId": "zzz-steam-events-official",
+      "noticeCount": 10,
+      "available": true
+    }
+  ],
+  "wuwaE1EntriesIdentical": true,
+  "wuwaE1UnattachedIdentical": true,
+  "wuwaBaselineDiagnosticsPreserved": true,
+  "networkRefresh": false,
+  "validation": {
+    "bun": "1.3.14",
+    "frozenInstall": "PASS",
+    "typecheck": "PASS",
+    "newRegressionsBeforeFix": "0 pass / 4 fail (confirmed defect)",
+    "newRegressionsAfterFix": "4 pass / 0 fail",
+    "focused": "77 pass / 0 fail; article/E1/provenance",
+    "fullSuite": "1424 pass / 3 existing optional age skips / 0 fail; 1427 tests in 89 files",
+    "build": "PASS",
+    "hostedCi": "Observed final exact-head result is recorded in PR152 checks and delivery comment."
+  },
+  "historicalRevisionFieldsVerified": true,
+  "snapshotSha256": {
+    "snapshots/genshin-kqm-ginews.md": "44e2616a987950d4b7d9fe86c27f62f44792e8e607df7b328768d9a9f9029272",
+    "snapshots/hsr-kqm-hsrnews.md": "69ac6de045571958a02604199a5c37b69b4ad20d9994330312e977b97883be54",
+    "snapshots/zzz-steam-events-official.xml": "a86aefdfc3df7dfb448ad50050ef0fcc0c8f86229bde6a3874f744ec0bac0278",
+    "snapshots/nte-steamnews-official.json": "f9445d23c3eae28dd3f28225e533e967c0d24e1aed4f7cb35964ed4357c8d0e8"
+  }
+}

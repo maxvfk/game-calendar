@@ -1,25 +1,71 @@
 # C0 — article source evidence extraction
 
-Implemented against current main `e2cebbef490178cd615af859168be071104b7edd`
+Initial implementation baseline: main `e2cebbef490178cd615af859168be071104b7edd`
 (2026-10-30). Baseline [CI 41072214522](https://github.com/maxvfk/game-calendar/actions/runs/41072214522)
 passed, including PostgreSQL 17. Scope and acceptance:
 [canonical scheme](../tasks/SOURCE-COVERAGE-SIMPLE-SCHEME.md), C0 only;
 [#147 review](https://github.com/maxvfk/game-calendar/pull/147#issuecomment-6493608417).
 
-## Review corrections (2026-10-30)
+## Final bounded correction (2026-10-31)
+
+Continues the existing PR152 branch after both supplied re-reviews of `b716d94`.
+CURRENT main `39021f406bca753efc7385b9f889089c76de07aa` was fetched and merged;
+its source refresh is preserved. The new defect was reproduced before changing
+code: all four new frozen regressions failed against the old guard.
+
+For supported KQM Markdown, **every level-one ATX heading** is now a potential
+article boundary, including `# Title` after removal of its archive link. An
+unrecognized boundary fails the whole source's optional inventory with
+`article_inventory_incomplete` and `article_extraction_failed`. Canonical parsers
+and final-winner matching are unchanged. Four regressions cover event-producing
+and zero-output notices in both GINews and HSRNews, with each archive link either
+removed or moved into the body. All four now pass. Separate smoke checks accept
+current valid snapshots; supported lower headings and body cross-references
+remain accepted. The isolated builder test omits old fixture-only provenance
+headings when staging its supported source input; its original public goldens
+remain unchanged, and no production input is rewritten.
+
+Documentation separates the original pre-correction diagnostics from the
+corrections manifest's refusal audit. The valid-subset ZZZ/NTE limitation is
+explicit below. Verified that `historical-results.json` already has populated
+`revision` fields: HSR `9d112a6a1185fbe76e82ce495b1278df3bdc101d`, Genshin
+`28cb6e735126cfb244abdd705257c07a37c89979`; no duplicate parserRevision/parserCommit
+fields or new historical replay fixtures were added. The checksum comment now
+correctly distinguishes baseline-main goldens from before/after rollback parity;
+the checksum pin and immutable historical fixture are unchanged.
+
+Executed on Bun1.3.14: frozen install, typecheck, full test and build PASS;
+**1424 pass /3 existing optional age skips /0 fail** (1427tests/89files).
+Focused article/E1/provenance: **77pass/0fail**; the four new regressions:
+**4pass/0fail**. Fresh full builds plus fixed-clock feed replay against main39021f4
+at `2026-10-31T00:00:00.000Z`: **all10 public files byte-identical**, all290
+winners identical, existing1 NTE conflict intact. WuWa E1 entries and unattached
+records match main; all baseline diagnostics survive. Current KQM inventories
+are38 GINews and13 HSRNews notices, with no extraction failures; these remain
+snapshot measurements rather than permanent counts.
+[Final parity/validation record](article-source-c0-final-2026-10-31.json).
+Final hosted exact-head results belong to PR152 checks and its delivery comment;
+local checks do not substitute for GitHub CI.
+
+No C1–C5, dedup redesign, attribution/diagnostic-policy expansion, PR115 work,
+merge or deployment. Historical full-snapshot replay expansion and the already
+accepted minor concerns remain deferred. Next: final focused review at PR152's
+verified green head, then stop.
+
+## Review corrections (2026-10-30; historical checkpoint)
 
 The following corrections supersede the original reviewed head `11d0869`.
 All three [review1](https://github.com/maxvfk/game-calendar/pull/152#issuecomment-6531357114),
 [review2](https://github.com/maxvfk/game-calendar/pull/152#issuecomment-6531494029),
 and [review3](https://github.com/maxvfk/game-calendar/pull/152#issuecomment-6531598928)
-findings were checked before changes. Main remains `e2cebbe`; the existing PR
+findings were checked before changes. Main at that checkpoint was `e2cebbe`; the existing PR
 branch continues, without recreating C0.
 
 - **A / inventory guard:** optional extraction checks the raw Markdown heading
   structure independently of strict canonical discovery. Archive references in
   headings at any ATX level, plus linked top-level headings whose destination
-  changed, must match discovered identities and order. A partially changed
-  heading cannot silently become another notice's evidence. Ordinary body
+  changed, must match discovered identities and order. The later final correction
+  below also treats unlinked top-level headings as potential boundaries. Ordinary body
   links, including standalone archive cross-references, are not boundaries.
   Discrepancies emit `article_inventory_incomplete` plus
   `article_extraction_failed`; the source inventory and all associations fail
@@ -104,11 +150,14 @@ window. One emitted event is never interpreted here as proof of a fully handled
 notice. No statuses, date reader, ignore list, notification baseline, inbox,
 reviewed evidence schema, model extraction, summaries or Actions changes.
 
-## Confirmed replay evidence
+## Replay evidence for the pinned 2026-10-30 snapshot
 
 Clock: `2026-10-30T12:00:00.000Z`. Inputs are existing checked-in captures only.
-[Replay manifest](article-source-c0-replay-2026-10-30.json) records snapshot and
-public-file hashes, counts and diagnostics.
+[Original replay manifest](article-source-c0-replay-2026-10-30.json) records snapshot
+and public-file hashes, counts, and **pre-correction diagnostics** at `11d0869`.
+Its diagnostic totals are historical. The [corrections manifest](article-source-c0-review-corrections-2026-10-30.json)
+contains the current refusal breakdown for those pinned inputs; the final follow-up
+records a fresh parity check against the newer main separately.
 
 | Source | Notices | Zero-output notices | Emitted events | Source-item links | Confirmed final links |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -119,10 +168,10 @@ public-file hashes, counts and diagnostics.
 | Total | 89 | 61 | 121 | 121 | 80 |
 
 All 121 emitted events have an unambiguous source item on these snapshots.
-The 41 unconfirmed **final** links all have `winner_reference_conflict`.
-The corrected audit independently reproduces29 URL-only refusals,4 with type
-differences,8 with period/precision/regional differences;1 also has the existing
-NTE Circle Bounty merge conflict. No refused link was relaxed or confirmed. Existing WuWa diagnostics remain two
+All41 unconfirmed **final** links carry `winner_reference_conflict`;12 also carry
+independent type or period reasons. The corrections manifest records29 URL-only
+refusals,4 with type differences,8 with period/precision/regional differences;
+1 of those also has the existing NTE Circle Bounty merge conflict. No refused link was relaxed or confirmed. Existing WuWa diagnostics remain two
 `no_useful_context` and one `ambiguous_section_boundary`. These counts are not
 coverage statuses and do not certify completeness of any notice's dates.
 
@@ -137,7 +186,7 @@ existing NTE conflict is unchanged. Feed SHA-256:
 `00b75584f16c82de9ddb22a1e9db234e2e0db61798c0df7276b1a753e9daa2f5`.
 No production snapshot, state, reviewed record or presentation registry changed.
 
-## Checks and limitations
+## Historical checkpoint checks and remaining limitations
 
 Bun1.3.14: frozen install, typecheck and full build PASS. Full suite:
 **1418 pass /3 existing optional age skips /0 fail**,1421tests in89files.
@@ -173,6 +222,9 @@ Intentionally deferred limitations:
 - The structural guard covers the known archive-heading surface and tested
   drift. Completely new serialization/heading conventions still need maintenance;
   no general Markdown boundary or arbitrary-layout completeness proof is claimed.
+- Syntactically valid but incomplete ZZZ/NTE feeds can pass structural checks.
+  C0 cannot always distinguish a nonempty valid subset from the complete feed;
+  it has no independent upstream total or inventory completeness contract.
 - Invalid article assembly conservatively omits all article evidence for the run
   while preserving valid WuWa E1. A failure in the remaining sidecar lane still
   invokes the existing global fail-closed fallback. Future Timeline v2 handling
