@@ -118,7 +118,7 @@ for (const configured of ADAPTERS) {
     adapter.game,
   );
   if (document === null) {
-    if (adapter.id === "wuwa-kuro-mirror" || isArticleSource(adapter.id)) evidence.diagnostics.push({ code: "source_unavailable", sourceEventId: null, sourceUrl: adapter.url, detail: "No snapshot or allowed fixture; no material evidence update" });
+    if (adapter.id === "wuwa-kuro-mirror" || isArticleSource(adapter.id)) evidence.diagnostics.push({ code: "source_unavailable", sourceId: adapter.id, sourceEventId: null, sourceUrl: adapter.url, detail: "No snapshot or allowed fixture; no material evidence update" });
     sources.push({
       sourceId: adapter.id,
       game: adapter.game,
@@ -197,6 +197,9 @@ for (const configured of ADAPTERS) {
   if (isArticleSource(adapter.id)) {
     const extracted = safelyExtractArticleEvidence(html,
       { now, sourceUrl: document.url ?? adapter.url, sourceId: adapter.id, game: adapter.game }, document.capture, events);
+    if (extracted.diagnostics.some(d => d.code === "article_extraction_failed")) {
+      console.warn(`  ! optional article evidence ${adapter.id}: article_extraction_failed; canonical feed parsing succeeded`);
+    }
     evidence.notices!.push(...(extracted.notices ?? []));
     evidence.articleAttributions!.push(...(extracted.articleAttributions ?? []));
     evidence.diagnostics.push(...extracted.diagnostics);
@@ -316,5 +319,8 @@ console.log(
 const sidecar = safelyBuildEvidenceSidecar(evidence, events, reviewConflicts);
 if (sidecar.diagnostics.some(d => d.code === "sidecar_assembly_failed")) {
   console.warn("  ! optional event evidence assembly failed; no evidence will be used");
+}
+if (sidecar.diagnostics.some(d => d.code === "article_assembly_failed")) {
+  console.warn("  ! optional article evidence: article_assembly_failed; article associations unavailable");
 }
 await Bun.write("tmp/editorial/event-evidence.v1.json", `${JSON.stringify(sidecar, null, 2)}\n`);

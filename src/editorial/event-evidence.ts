@@ -1,7 +1,7 @@
 /** Internal, untrusted source evidence. Never import from shared feed/client code. */
 import { z } from "zod";
 import { createHash } from "node:crypto";
-import { GachaEvent } from "../shared/schema.ts";
+import { GachaEvent, Region } from "../shared/schema.ts";
 import type { MergeResult } from "../ingest/merge.ts";
 
 export const HASH_CONTRACT = "event-evidence-sha256-v1";
@@ -47,7 +47,7 @@ const Entry = z.object({ eventId: id, game: z.literal("wuwa"), sources: z.array(
       ctx.addIssue({ code: "custom", message: "invalid evidence bounds/hash" });
   });
 export type EvidenceEntry = z.infer<typeof Entry>;
-export const Diagnostic = z.object({ code: bounded(80), sourceEventId: id.nullable(), sourceUrl: url.nullable(), detail: bounded(300), sourceId: id.optional(), noticeId: id.nullable().optional() }).strict();
+export const Diagnostic = z.object({ code: bounded(80), sourceEventId: id.nullable(), sourceUrl: url.nullable(), detail: bounded(300), sourceId: id.optional(), noticeId: id.nullable().optional(), finalSourceId: id.optional(), finalSourceUrl: url.optional() }).strict();
 export type Diagnostic = z.infer<typeof Diagnostic>;
 /** Full untrusted notice data for offline coverage replay; NEVER eligible model excerpts. */
 export const ArticleNotice = z.object({
@@ -173,10 +173,15 @@ export function buildEvidenceSidecar(extraction: Extraction, finalEvents: GachaE
   const articleRows = extraction.articleAttributions ?? [];
   const articleAttributions = articleRows.map(raw => {
     const row = { ...ArticleAttribution.parse(raw), finalEventId: null as string | null };
+    const sameId = finalEvents.filter(e => e.id === row.event.id);
+    const final = sameId.length === 1 ? sameId[0]! : null;
     const fail = (code: string) => diagnostics.push({ code, sourceEventId: row.event.id, sourceUrl: row.event.sourceUrl,
-      sourceId: row.event.sourceId, noticeId: row.noticeId, detail: "Article evidence omitted from confirmed final associations" });
+      sourceId: row.event.sourceId, noticeId: row.noticeId,
+      ...(final ? { finalSourceId: final.sourceId, finalSourceUrl: final.sourceUrl } : {}),
+      detail: "Article evidence omitted from confirmed final associations" });
     if (row.noticeId === null) {
-      if (!diagnostics.some(d => d.sourceId === row.event.sourceId && d.sourceEventId === row.event.id))
+      if (!diagnostics.some(d => d.sourceEventId === row.event.id && d.sourceUrl === row.event.sourceUrl &&
+        ["candidate_reference_conflict", "unmatched_notice_attribution", "ambiguous_notice_attribution"].includes(d.code)))
         fail("unmatched_notice_attribution");
       return row;
     }
@@ -190,12 +195,19 @@ export function buildEvidenceSidecar(extraction: Extraction, finalEvents: GachaE
       fail("duplicate_candidate"); return row;
     }
     const target = exactWinner(row.event, finalEvents, conflicts);
-    if (typeof target === "string") { fail(target); return row; }
+    let refused = typeof target === "string";
+    if (typeof target === "string") fail(target);
+    // Keep every independently observed refusal, even behind a URL mismatch.
+    if (final && final.type !== row.event.type) { fail("winner_type_conflict"); refused = true; }
+    if (final && typeof target === "string" && target !== "merge_source_conflict" &&
+      conflicts.some(c => [c.kept, c.rejected].some(e => e.id === row.event.id))) fail("merge_source_conflict");
     // A reviewed refinement is not proof of identical source dates/precision.
-    if (["startsAt", "endsAt", "startPrecision", "endPrecision", "regionScoped", "regionEnds"].some(k =>
-      JSON.stringify(row.event[k as keyof GachaEvent]) !== JSON.stringify(target[k as keyof GachaEvent]))) {
-      fail("winner_period_conflict"); return row;
+    if (final && ((["startsAt", "endsAt", "startPrecision", "endPrecision", "regionScoped"] as const).some(k =>
+      row.event[k] !== final[k]) || Region.options.some(region =>
+      row.event.regionEnds?.[region] !== final.regionEnds?.[region]))) {
+      fail("winner_period_conflict"); refused = true;
     }
+    if (refused || typeof target === "string") return row;
     return { ...row, finalEventId: target.id };
   });
   return EvidenceSidecar.parse({ schemaVersion: 1, extractorVersion: extraction.notices ? "article-notices-v1" : "wuwa-event-local-v1",
@@ -205,7 +217,7 @@ export function buildEvidenceSidecar(extraction: Extraction, finalEvents: GachaE
 /**
  * An invalid auxiliary candidate (or future extractor regression) must not
  * invalidate a successfully validated canonical feed. Fail closed for ALL
- * evidence in this run, preserving a machine-readable diagnostic.
+ * evidence in the failed lane, preserving a machine-readable diagnostic.
  */
 export function safelyBuildEvidenceSidecar(
   extraction: Extraction,
@@ -216,13 +228,25 @@ export function safelyBuildEvidenceSidecar(
   try {
     return buildEvidenceSidecar(extraction, finalEvents, conflicts, mappings);
   } catch {
+    // Invalid article data must not discard independently valid WuWa E1 entries.
+    if (extraction.notices?.length || extraction.articleAttributions?.length) {
+      const sources = new Map((extraction.notices ?? []).map(n => [n.sourceId, n.sourceUrl]));
+      const failure = { code: "article_assembly_failed", sourceEventId: null,
+        detail: "Optional article validation failed; article inventory and associations omitted" };
+      try {
+        return buildEvidenceSidecar({ ...extraction, notices: [], articleAttributions: [],
+          diagnostics: [...extraction.diagnostics, ...(sources.size ? [...sources].map(([sourceId, sourceUrl]) => ({
+            ...failure, sourceId, sourceUrl,
+          })) : [{ ...failure, sourceUrl: null }])] }, finalEvents, conflicts, mappings);
+      } catch { /* The independent E1 lane also failed; omit all evidence below. */ }
+    }
     return EvidenceSidecar.parse({
       schemaVersion: 1,
       extractorVersion: "wuwa-event-local-v1",
       hashContract: HASH_CONTRACT,
       entries: [],
       unattached: [],
-      diagnostics: [{
+      diagnostics: [...extraction.diagnostics.filter(d => Diagnostic.safeParse(d).success), {
         code: "sidecar_assembly_failed",
         sourceEventId: null,
         sourceUrl: null,

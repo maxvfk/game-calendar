@@ -207,7 +207,7 @@ test("existing M4 still queues/accepts v1 only; v2 rollback leaves presentation 
   // inventory immutable and pin this authorized builder revision separately.
   // article-evidence.test.ts also checks all four public files against pre-C0
   // main; the actual rollback rehearsal below still checks public byte parity.
-  const c0BuilderHash = "193b3d4e7d3f17d3dc80bb75f68af6994fe99ad101a90911f804a5c32b6cc87e";
+  const c0BuilderHash = "e2ffd5da20e4479b738ae0047e354e31523a19541c15d8ef56adee5c2cc886ce";
   for (const f of historyFixture.m4Files) expect(sha256(await Bun.file(f.path).text()), f.path)
     .toBe(f.path === "scripts/build-feed.ts" ? c0BuilderHash : f.sha256);
   const v2 = migrateToV2(audit.registry, manifest);

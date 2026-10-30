@@ -1,0 +1,546 @@
+[
+  {
+    "sourceId": "genshin-kqm-ginews",
+    "noticeIds": [
+      "21947",
+      "21901",
+      "21888"
+    ],
+    "zeroOutputNoticeIds": [
+      "21947"
+    ],
+    "attributions": [
+      {
+        "id": "genshin:quest-completion-period-starlight-voyage-heart-unbound:2026-10-19",
+        "noticeId": "21901",
+        "finalEventId": "genshin:quest-completion-period-starlight-voyage-heart-unbound:2026-10-19",
+        "refusals": []
+      },
+      {
+        "id": "genshin:starlight-voyage-heart-unbound:2026-10-19",
+        "noticeId": "21901",
+        "finalEventId": "genshin:starlight-voyage-heart-unbound:2026-10-19",
+        "refusals": []
+      },
+      {
+        "id": "genshin:void-stars-advent:2026-10-13",
+        "noticeId": "21888",
+        "finalEventId": null,
+        "refusals": [
+          "winner_period_conflict",
+          "winner_reference_conflict"
+        ]
+      }
+    ]
+  },
+  {
+    "sourceId": "hsr-kqm-hsrnews",
+    "noticeIds": [
+      "1422",
+      "1437"
+    ],
+    "zeroOutputNoticeIds": [
+      "1422"
+    ],
+    "attributions": [
+      {
+        "id": "hsr:apocalyptic-shadow-dominance-of-oblivion:2026-10-05",
+        "noticeId": "1437",
+        "finalEventId": "hsr:apocalyptic-shadow-dominance-of-oblivion:2026-10-05",
+        "refusals": []
+      },
+      {
+        "id": "hsr:astral-imagea-park-astral-trendible:2026-09-28",
+        "noticeId": "1437",
+        "finalEventId": "hsr:astral-imagea-park-astral-trendible:2026-09-28",
+        "refusals": []
+      },
+      {
+        "id": "hsr:astral-imagea-park-park-souvenir:2026-09-28",
+        "noticeId": "1437",
+        "finalEventId": "hsr:astral-imagea-park-park-souvenir:2026-09-28",
+        "refusals": []
+      },
+      {
+        "id": "hsr:interastral-peace-gala-one-take:2026-10-21",
+        "noticeId": "1437",
+        "finalEventId": "hsr:interastral-peace-gala-one-take:2026-10-21",
+        "refusals": []
+      },
+      {
+        "id": "hsr:love-ghosts-robots:2026-09-28",
+        "noticeId": "1437",
+        "finalEventId": "hsr:love-ghosts-robots:2026-09-28",
+        "refusals": []
+      },
+      {
+        "id": "hsr:memory-of-chaos-crossing-the-afterlife:2026-09-28",
+        "noticeId": "1437",
+        "finalEventId": "hsr:memory-of-chaos-crossing-the-afterlife:2026-09-28",
+        "refusals": []
+      },
+      {
+        "id": "hsr:memory-of-chaos-survival-of-the-fittest:2026-11-02",
+        "noticeId": "1437",
+        "finalEventId": "hsr:memory-of-chaos-survival-of-the-fittest:2026-11-02",
+        "refusals": []
+      },
+      {
+        "id": "hsr:pure-fiction-imagined-words:2026-10-19",
+        "noticeId": "1437",
+        "finalEventId": "hsr:pure-fiction-imagined-words:2026-10-19",
+        "refusals": []
+      },
+      {
+        "id": "hsr:wishpower-up-down-with-voracity:2026-09-28",
+        "noticeId": "1437",
+        "finalEventId": "hsr:wishpower-up-down-with-voracity:2026-09-28",
+        "refusals": []
+      }
+    ]
+  },
+  {
+    "sourceId": "zzz-steam-events-official",
+    "noticeIds": [
+      "652616887841064662",
+      "667252863011914641",
+      "714537487845820570",
+      "712284420447405348",
+      "711156617370927265",
+      "706649847851123193",
+      "693140950130622536",
+      "702145613257509311",
+      "704396868946233232",
+      "704396868946232792"
+    ],
+    "zeroOutputNoticeIds": [
+      "667252863011914641",
+      "712284420447405348",
+      "711156617370927265",
+      "693140950130622536",
+      "702145613257509311",
+      "704396868946232792"
+    ],
+    "attributions": [
+      {
+        "id": "zzz:advanced-bounty-area-patrol:2026-07-02",
+        "noticeId": "704396868946233232",
+        "finalEventId": "zzz:advanced-bounty-area-patrol:2026-07-02",
+        "refusals": []
+      },
+      {
+        "id": "zzz:advanced-bounty-area-patrol:2026-09-23",
+        "noticeId": "714537487845820570",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:advanced-bounty-area-patrol:2026-11-04",
+        "noticeId": "652616887841064662",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:all-new-program:2026-06-17",
+        "noticeId": "704396868946233232",
+        "finalEventId": "zzz:all-new-program:2026-06-17",
+        "refusals": []
+      },
+      {
+        "id": "zzz:all-new-program:2026-09-09",
+        "noticeId": "714537487845820570",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:all-new-program:2026-10-21",
+        "noticeId": "652616887841064662",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:angels-support-operation:2026-09-09",
+        "noticeId": "714537487845820570",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:art-is-bangboo:2026-07-08",
+        "noticeId": "704396868946233232",
+        "finalEventId": "zzz:art-is-bangboo:2026-07-08",
+        "refusals": []
+      },
+      {
+        "id": "zzz:assemble-mock-exam-comeback-plan:2026-06-26",
+        "noticeId": "704396868946233232",
+        "finalEventId": "zzz:assemble-mock-exam-comeback-plan:2026-06-26",
+        "refusals": []
+      },
+      {
+        "id": "zzz:bangbang-the-genius-and-the-miracle-chip:2026-06-17",
+        "noticeId": "704396868946233232",
+        "finalEventId": "zzz:bangbang-the-genius-and-the-miracle-chip:2026-06-17",
+        "refusals": []
+      },
+      {
+        "id": "zzz:celestial-nexus-intelligence-dossier:2026-06-17",
+        "noticeId": "704396868946233232",
+        "finalEventId": "zzz:celestial-nexus-intelligence-dossier:2026-06-17",
+        "refusals": []
+      },
+      {
+        "id": "zzz:chronicles-of-the-hobbling-crow:2026-10-03",
+        "noticeId": "714537487845820570",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict",
+          "winner_type_conflict"
+        ]
+      },
+      {
+        "id": "zzz:clink-clank-pinball-knight:2026-09-10",
+        "noticeId": "714537487845820570",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:combat-training-triple-bounty:2026-09-02",
+        "noticeId": "706649847851123193",
+        "finalEventId": "zzz:combat-training-triple-bounty:2026-09-02",
+        "refusals": []
+      },
+      {
+        "id": "zzz:commemorative-gift:2026-06-17",
+        "noticeId": "704396868946233232",
+        "finalEventId": "zzz:commemorative-gift:2026-06-17",
+        "refusals": []
+      },
+      {
+        "id": "zzz:crispy-meal-deployment-plan:2026-08-19",
+        "noticeId": "706649847851123193",
+        "finalEventId": "zzz:crispy-meal-deployment-plan:2026-08-19",
+        "refusals": []
+      },
+      {
+        "id": "zzz:cyber-miracle-healer-on-duty:2026-10-28",
+        "noticeId": "652616887841064662",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:dangerous-fugitives-leisurely-vacation:2026-08-24",
+        "noticeId": "706649847851123193",
+        "finalEventId": "zzz:dangerous-fugitives-leisurely-vacation:2026-08-24",
+        "refusals": []
+      },
+      {
+        "id": "zzz:data-bounty-combat-simulation:2026-07-22",
+        "noticeId": "704396868946233232",
+        "finalEventId": "zzz:data-bounty-combat-simulation:2026-07-22",
+        "refusals": []
+      },
+      {
+        "id": "zzz:data-bounty-combat-simulation:2026-10-14",
+        "noticeId": "714537487845820570",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:data-bounty-combat-simulation:2026-11-25",
+        "noticeId": "652616887841064662",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:diary-of-an-orbie-parent:2026-09-30",
+        "noticeId": "714537487845820570",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:ding-dong-delivery-training-in-progress:2026-08-28",
+        "noticeId": "706649847851123193",
+        "finalEventId": "zzz:ding-dong-delivery-training-in-progress:2026-08-28",
+        "refusals": []
+      },
+      {
+        "id": "zzz:en-nah-into-your-lap:2026-07-08",
+        "noticeId": "704396868946233232",
+        "finalEventId": "zzz:en-nah-into-your-lap:2026-07-08",
+        "refusals": []
+      },
+      {
+        "id": "zzz:en-nah-into-your-lap:2026-09-30",
+        "noticeId": "714537487845820570",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:en-nah-into-your-lap:2026-11-11",
+        "noticeId": "652616887841064662",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:extensive-patrol-triple-bounty:2026-08-12",
+        "noticeId": "706649847851123193",
+        "finalEventId": "zzz:extensive-patrol-triple-bounty:2026-08-12",
+        "refusals": []
+      },
+      {
+        "id": "zzz:first-generation-void-hunter-returns:2026-07-17",
+        "noticeId": "704396868946233232",
+        "finalEventId": "zzz:first-generation-void-hunter-returns:2026-07-17",
+        "refusals": []
+      },
+      {
+        "id": "zzz:gift-from-the-clouds:2026-07-29",
+        "noticeId": "706649847851123193",
+        "finalEventId": "zzz:gift-from-the-clouds:2026-07-29",
+        "refusals": []
+      },
+      {
+        "id": "zzz:gleaming-shadow-team-battle:2026-06-19",
+        "noticeId": "704396868946233232",
+        "finalEventId": "zzz:gleaming-shadow-team-battle:2026-06-19",
+        "refusals": []
+      },
+      {
+        "id": "zzz:marcel-anniversary-gift:2026-07-29",
+        "noticeId": "706649847851123193",
+        "finalEventId": "zzz:marcel-anniversary-gift:2026-07-29",
+        "refusals": []
+      },
+      {
+        "id": "zzz:phaethons-grand-reveal-of-the-year:2026-07-29",
+        "noticeId": "706649847851123193",
+        "finalEventId": "zzz:phaethons-grand-reveal-of-the-year:2026-07-29",
+        "refusals": []
+      },
+      {
+        "id": "zzz:potential-hypothesis-hunting-game:2026-07-29",
+        "noticeId": "706649847851123193",
+        "finalEventId": "zzz:potential-hypothesis-hunting-game:2026-07-29",
+        "refusals": []
+      },
+      {
+        "id": "zzz:potential-hypothesis-reforged-in-fire:2026-09-09",
+        "noticeId": "714537487845820570",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:repair-drifting-art:2026-11-16",
+        "noticeId": "652616887841064662",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:shadow-chase-showdown:2026-09-16",
+        "noticeId": "714537487845820570",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict",
+          "winner_type_conflict"
+        ]
+      },
+      {
+        "id": "zzz:snap-focus-showdown:2026-08-07",
+        "noticeId": "706649847851123193",
+        "finalEventId": "zzz:snap-focus-showdown:2026-08-07",
+        "refusals": []
+      },
+      {
+        "id": "zzz:spooky-funhouse-tales:2026-10-22",
+        "noticeId": "652616887841064662",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "zzz:summer-waves-roll-in:2026-07-29",
+        "noticeId": "706649847851123193",
+        "finalEventId": "zzz:summer-waves-roll-in:2026-07-29",
+        "refusals": []
+      },
+      {
+        "id": "zzz:surprise-screening-plan:2026-09-23",
+        "noticeId": "714537487845820570",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict",
+          "winner_type_conflict"
+        ]
+      },
+      {
+        "id": "zzz:tales-of-the-hobbling-crow:2026-07-03",
+        "noticeId": "704396868946233232",
+        "finalEventId": "zzz:tales-of-the-hobbling-crow:2026-07-03",
+        "refusals": []
+      },
+      {
+        "id": "zzz:the-great-en-nah-giveaway:2026-08-19",
+        "noticeId": "706649847851123193",
+        "finalEventId": "zzz:the-great-en-nah-giveaway:2026-08-19",
+        "refusals": []
+      },
+      {
+        "id": "zzz:trails-of-the-hobbling-crow:2026-11-11",
+        "noticeId": "652616887841064662",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict",
+          "winner_type_conflict"
+        ]
+      }
+    ]
+  },
+  {
+    "sourceId": "nte-steamnews-official",
+    "noticeIds": [
+      "1847920302233942",
+      "1847286114027833",
+      "1846651706693892",
+      "1843481262688322",
+      "1842846814455151"
+    ],
+    "zeroOutputNoticeIds": [
+      "1847920302233942"
+    ],
+    "attributions": [
+      {
+        "id": "nte:breezy-tour:2026-09-17",
+        "noticeId": "1842846814455151",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "nte:dazzling-star:2026-10-21",
+        "noticeId": "1847286114027833",
+        "finalEventId": "nte:dazzling-star:2026-10-21",
+        "refusals": []
+      },
+      {
+        "id": "nte:far-side-of-the-moon:2026-10-21",
+        "noticeId": "1846651706693892",
+        "finalEventId": "nte:far-side-of-the-moon:2026-10-21",
+        "refusals": []
+      },
+      {
+        "id": "nte:fons-rush:2026-09-21",
+        "noticeId": "1842846814455151",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "nte:gold-clash:2026-10-26",
+        "noticeId": "1846651706693892",
+        "finalEventId": "nte:gold-clash:2026-10-26",
+        "refusals": []
+      },
+      {
+        "id": "nte:marching-beyond-time:2026-09-09",
+        "noticeId": "1842846814455151",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "nte:misty-tipsy-style:2026-09-09",
+        "noticeId": "1842846814455151",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "nte:pixel-surge:2026-09-14",
+        "noticeId": "1842846814455151",
+        "finalEventId": "nte:pixel-surge:2026-09-14",
+        "refusals": []
+      },
+      {
+        "id": "nte:puka-lucky-flip:2026-10-29",
+        "noticeId": "1846651706693892",
+        "finalEventId": "nte:puka-lucky-flip:2026-10-29",
+        "refusals": []
+      },
+      {
+        "id": "nte:runaway-echoes:2026-09-09",
+        "noticeId": "1842846814455151",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "nte:server-maintenance-notice-2026-09-09:2026-09-08",
+        "noticeId": "1842846814455151",
+        "finalEventId": "nte:server-maintenance-notice-2026-09-09:2026-09-08",
+        "refusals": []
+      },
+      {
+        "id": "nte:server-maintenance-notice-october-21:2026-10-20",
+        "noticeId": "1846651706693892",
+        "finalEventId": "nte:server-maintenance-notice-october-21:2026-10-20",
+        "refusals": []
+      },
+      {
+        "id": "nte:snap-golden-crackshot:2026-10-21",
+        "noticeId": "1846651706693892",
+        "finalEventId": "nte:snap-golden-crackshot:2026-10-21",
+        "refusals": []
+      },
+      {
+        "id": "nte:surfing-all-channels:2026-09-09",
+        "noticeId": "1843481262688322",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      },
+      {
+        "id": "nte:voice-of-the-voyager:2026-09-09",
+        "noticeId": "1842846814455151",
+        "finalEventId": null,
+        "refusals": [
+          "winner_reference_conflict"
+        ]
+      }
+    ]
+  }
+]
