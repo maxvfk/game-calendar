@@ -1,5 +1,37 @@
 # Game calendar implementation status
 
+## HSR/Endfield snapshot-turnover CI repair — IMPLEMENTED (2026-10-30)
+
+Baseline `d4cfba000fe19f2ee74b183ddd463494e578f477`; bounded follow-up to
+the recovery-wave closeout. Seven red tests were stale historical assertions,
+not parser or merge defects: HSR discovered Garden of Plenty (archive1424),
+and Endfield discovered Contingency Readiness under its earliest UTC-day ID.
+The existing merge already preserves the official reviewed Oct29 identity,
+day opening and regional deadlines, without publishing the wiki Oct28 alias.
+
+Historical HSR claims/Warps and Endfield rescue/Maras checks now use pinned
+test-only captures with source commits and hashes. Current Endfield merge smoke
+allows same-title near-day corroboration instead of assuming the union of raw
+IDs. Two new fixed-input turnover regressions assert Garden's global exact end,
+one added HSR winner, and zero changed Endfield winners across source order and
+repeat ingestion. No runtime/parser/merge, production snapshot, reviewed record,
+event ID, source-health policy, workflow, Timeline or user-state change.
+
+Validation (Bun1.3.14): frozen install, typecheck and full build PASS;
+**1398 pass / 3 existing optional age skips / 0 fail** (1401 tests / 88 files).
+One initial local PGlite setup timeout cleared on the unchanged full-suite rerun;
+no timeout/skip/test configuration was weakened. Full feed:290 events/7 games,
+290 unique IDs, one existing NTE Circle Bounty conflict. Garden and reviewed
+Contingency Readiness each publish once. Baseline-vs-branch feed replay at fixed
+`2026-10-30T12:00:00.000Z` is byte-identical, SHA-256
+`00b75584f16c82de9ddb22a1e9db234e2e0db61798c0df7276b1a753e9daa2f5`.
+Hosted CI/release status belongs to this repair's PR; no deployment inferred here.
+
+**Next concrete step:** complete this repair's hosted checks and delivery, then
+STOP. C0 evidence extraction is the next separately launched milestone under
+`docs/tasks/SOURCE-COVERAGE-SIMPLE-SCHEME.md`; do not resume the closed wave,
+R1–R3 or Timeline v2 cutover automatically.
+
 ## Recovery wave — COMPLETE WITH NAMED BLOCKERS (2026-10-28 UTC)
 
 **Authoritative closeout:** [released A/B table, CI/Pages evidence and exact blocker handoff](handoffs/SOURCE-COVERAGE-WAVE-CLOSEOUT-2026-10-28.md).

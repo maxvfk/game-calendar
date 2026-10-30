@@ -9,7 +9,7 @@ import { assertExactBoundary } from "./helpers/verified-records.tsx";
 const id = "endfield:monumental-etching-forest-of-maras:2026-10-22";
 const reviewed = materializeReviewedBatch(await Bun.file("data/reviewed/endfield.json").json()).events;
 const official = reviewed.find(e => e.id === id)!;
-const wiki = parseWikiGgEventsPage(await Bun.file("snapshots/endfield-wikigg-events.html").text(), {
+const wiki = parseWikiGgEventsPage(await Bun.file("test/fixtures/endfield/events-2026-10-28.html").text(), {
   game: "endfield", sourceId: "endfield-wikigg-events", sourceUrl: "https://endfield.wiki.gg/wiki/Event", now: "2026-10-28T12:00:00.000Z" });
 const captured = wiki.find(e => e.id === id)!;
 const ends = { asia: "2026-11-04T20:00:00.000Z", america: "2026-11-05T09:00:00.000Z", europe: "2026-11-05T09:00:00.000Z" };

@@ -5,7 +5,7 @@ import { mergeEvents } from "../src/ingest/merge.ts";
 import { Region } from "../src/shared/schema.ts";
 import { assertExactBoundary } from "./helpers/verified-records.tsx";
 
-const raw = await Bun.file("snapshots/hsr-kqm-hsrnews.md").text();
+const raw = await Bun.file("test/fixtures/hsr/recovery-2026-10-28.md").text();
 const ctx = { game: "hsr" as const, sourceId: "hsr-kqm-hsrnews", sourceUrl: "https://api.github.com/repos/KQM-git/HSRNews/contents/readme.md", now: "2026-10-28T12:00:00.000Z" };
 const parse = (s = raw) => parseKqmHsrNews(s, ctx);
 const names = ["Astral Imagea Park: Astral Trendible", "Astral Imagea Park: Park Souvenir"];
