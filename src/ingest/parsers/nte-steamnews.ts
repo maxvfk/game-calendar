@@ -11,7 +11,11 @@ const Feed = z.object({ appnews: z.object({
     appid: z.literal(4508340), feedname: z.string(), date: z.number().int(),
   })),
 }) });
-type Post = z.infer<typeof Feed>["appnews"]["newsitems"][number];
+export type Post = z.infer<typeof Feed>["appnews"]["newsitems"][number];
+
+export function discoverNteSteamPosts(raw: string): Post[] {
+  return Feed.parse(JSON.parse(raw)).appnews.newsitems;
+}
 
 // Paragraph boundaries, not a global date scan. Unknown BBCode is left alone.
 function lines(raw: string): string[] {
@@ -174,9 +178,9 @@ function sameCycle(a: GachaEvent, b: GachaEvent) {
 }
 
 export function parseNteSteamNews(raw: string, ctx: ParseContext): GachaEvent[] {
-  const feed = Feed.parse(JSON.parse(raw));
+  const posts = discoverNteSteamPosts(raw);
   const kept: Candidate[] = [];
-  for (const next of feed.appnews.newsitems.flatMap((p) => candidates(p, ctx))) {
+  for (const next of posts.flatMap((p) => candidates(p, ctx))) {
     const i = kept.findIndex((c) => {
       // Explicitly labelled version seasons are distinct even when a day-only
       // after-update start overlaps the previous notice's disputed exact end.

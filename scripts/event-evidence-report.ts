@@ -1,5 +1,6 @@
 /** Offline measurements; no model/tokenizer/API calls. */
 import { codePoints, EvidenceSidecar } from "../src/editorial/event-evidence.ts";
+import { articleSourceReport } from "../src/editorial/article-evidence.ts";
 
 const sidecar = EvidenceSidecar.parse(await Bun.file(process.argv[2] ?? "tmp/editorial/event-evidence.v1.json").json());
 const events = sidecar.entries.map(e => ({
@@ -10,6 +11,12 @@ const events = sidecar.entries.map(e => ({
 const lengths = events.flatMap(e => e.fragmentLengths).sort((a, b) => a - b);
 const total = events.reduce((n, e) => n + e.codePoints, 0);
 console.log(JSON.stringify({
+  // Inventory/attribution only: these counts are NOT coverage statuses.
+  articleSources: articleSourceReport(sidecar),
+  articleRefusals: sidecar.articleAttributions.filter(a => a.finalEventId === null).map(a => ({
+    sourceId: a.event.sourceId, emittedId: a.event.id, noticeId: a.noticeId,
+    diagnostics: sidecar.diagnostics.filter(d => d.sourceEventId === a.event.id && d.sourceId === a.event.sourceId),
+  })),
   eventsWithEvidence: events.length, fragments: lengths.length, events,
   fragmentLengths: { min: lengths[0] ?? 0, median: lengths.length ? (lengths[Math.floor((lengths.length - 1) / 2)]! + lengths[Math.floor(lengths.length / 2)]!) / 2 : 0, max: lengths.at(-1) ?? 0 },
   totalCodePoints: total,

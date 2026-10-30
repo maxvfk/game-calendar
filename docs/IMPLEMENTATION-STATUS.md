@@ -1,5 +1,96 @@
 # Game calendar implementation status
 
+## C0 — final bounded correction — READY FOR FINAL FOCUSED REVIEW (2026-10-31)
+
+PR [#152](https://github.com/maxvfk/game-calendar/pull/152), continuing reviewed
+head `b716d94`. Fetched and merged CURRENT main
+`39021f406bca753efc7385b9f889089c76de07aa`; no source refresh initiated here.
+Confirmed an unlinked level-one KQM heading could disappear from both discovery
+and guard. Every level-one ATX heading is now a potential boundary; an unknown
+boundary makes the optional source inventory unavailable with explicit diagnostics.
+Canonical parsers, final-winner matching and other C0 behavior are unchanged.
+
+Four frozen event-producing/zero-output GINews/HSRNews regressions failed before
+the fix and pass afterwards, for removed or body-moved links. Valid current
+snapshots, ordinary lower headings and supported body cross-references pass too.
+Clarified historical versus corrected replay diagnostics and valid but incomplete
+ZZZ/NTE feed limitations. Historical records already contain both exact `revision`
+values; no duplicate fields added. Corrected the rollback/checksum comment without
+changing its guard or immutable fixture.
+
+Executed on Bun1.3.14: frozen install, typecheck, full build PASS;
+**1424pass/3 existing optional age skips/0fail** (1427tests/89files).
+Focused article/E1/provenance **77pass/0fail**; new four cases **4pass/0fail**.
+Fixed-clock `2026-10-31T00:00:00.000Z` against main39021f4: all10 public files
+byte-identical, all290 winners and existing1 conflict unchanged. WuWa E1 entries
+and unattached records identical; baseline diagnostics retained. Final exact-head
+GitHub CI is recorded in PR152 checks and the delivery comment before handoff.
+Evidence: [final correction and limits](evidence/article-source-c0.md),
+[hashes and validation](evidence/article-source-c0-final-2026-10-31.json).
+
+Remaining limits: valid nonempty ZZZ/NTE subsets cannot always be detected;
+arbitrary future layouts, historical full-snapshot replay expansion and accepted
+minor concerns remain deferred. No C1–C5, dedup redesign, PR115 changes, merge or
+deployment. **Next concrete step:** final focused independent review of this
+bounded delta at the exact green PR head; STOP afterwards.
+
+## C0 — article source evidence corrections — historical checkpoint (2026-10-30)
+
+Continues PR [#152](https://github.com/maxvfk/game-calendar/pull/152) from CURRENT
+main `e2cebbef490178cd615af859168be071104b7edd` and reviewed head `11d0869`.
+All three independent review comments were read; no findings were already fixed.
+Code correction checkpoint: `f16dea1adbd7ed5ecb1afe225f79efb79a0b92d8`.
+
+Completed corrections: optional KQM inventory validation independently checks
+archive-heading references at every heading level and changed top-level linked
+destinations against canonical discovery; partial drift fails the whole source's
+evidence with explicit diagnostics. Body cross-references are not counted as
+notices. Empty ZZZ/NTE inventories fail closed. Reports always list all four
+expected sources with availability; source failures carry sourceId and concise
+build warnings. Reference refusals now also expose independent period/type/merge
+conflicts and final source references, without relaxing winner matching.
+Regional comparison ignores object key order. Invalid article assembly preserves
+independently valid WuWa E1 entries; no eligible article text is created.
+
+Regression oracles use frozen notice identities, zero-output identities, full
+source items and separately frozen baseline-main final winners. Historical tests
+have no module-level rolling snapshot parsing. Complete HSR archive1437 retains
+20 clock occurrences /12 distinct clocks, including November11/mail/discount
+boundaries; pre-#119 parser-function replay reproduced only2/4 Lightward windows
+(5 total outputs). Pre-#130 isolated Starlight parsing throws; zero/main-only
+retention cases are explicitly synthetic. Event end and earlier quest cutoff
+remain separate. Frozen builder policy removes the live-policy dependency.
+
+Executed on Bun1.3.14: frozen install, typecheck, full build PASS;
+**1418 pass /3 existing optional age skips /0 fail** (1421tests/89files).
+Focused article/E1/provenance: **71pass/0fail**. Fixed-clock replay at
+`2026-10-30T12:00:00.000Z`: all10 public files byte-identical to currentmain,
+290 winners identical, zero added/removed/changed, existing NTE conflict intact.
+Snapshot measurements remain89 notices/121 emitted mappings/80 confirmed/41
+refused; these are snapshot evidence, never permanent rolling invariants.
+Refusals:29 URL-only,4 also type,8 also period;1 also existing merge conflict.
+Hosted code-checkpoint [CI41125822872](https://github.com/maxvfk/game-calendar/actions/runs/41125822872)
+is SUCCESS, including PostgreSQL17/age recovery; Pages skipped.
+Final exact-head CI/run URL is recorded in PR152's delivery comment;
+focused re-review readiness requires that run to be green, not assumed here.
+
+Evidence: [correction report and limitations](evidence/article-source-c0.md),
+[public hashes and per-event refusal audit](evidence/article-source-c0-review-corrections-2026-10-30.json),
+[frozen inputs and historical replay procedure](../test/fixtures/editorial/c0/README.md).
+Production snapshots/data, public outputs, IDs, precedence, provenance, labels
+and queue behavior are unchanged. Exact builder checksum pin remains strict.
+
+Remaining limitations: C0 retains evidence, not date semantics or coverage
+statuses. NTE superseded intermediate candidates are not emitted attributions;
+both actual maintenance/standalone cases are pinned. Arbitrary future source
+formats still require maintenance. Hashes check content consistency, not source
+authenticity. Future Timeline consumer treatment of unavailable article sources
+is deferred; PR115 is untouched. Global assembly failure still fails closed.
+
+**Next concrete step:** focused independent re-review of the C0 corrections on
+PR152's exact green head. STOP: do not merge/deploy, change PR115/cutover, resume
+recovery or begin C1–C5/E2b.
+
 ## HSR/Endfield snapshot-turnover CI repair — IMPLEMENTED (2026-10-30)
 
 Baseline `d4cfba000fe19f2ee74b183ddd463494e578f477`; bounded follow-up to
