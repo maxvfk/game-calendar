@@ -203,7 +203,13 @@ describe("origin manifest and exact migration", () => {
 });
 
 test("existing M4 still queues/accepts v1 only; v2 rollback leaves presentation and queue unchanged", async () => {
-  for (const f of historyFixture.m4Files) expect(sha256(await Bun.file(f.path).text()), f.path).toBe(f.sha256);
+  // C0 adds only internal article evidence to the builder. Keep the historical
+  // inventory immutable and pin this authorized builder revision separately.
+  // article-evidence.test.ts also checks all four public files against pre-C0
+  // main; the actual rollback rehearsal below still checks public byte parity.
+  const c0BuilderHash = "193b3d4e7d3f17d3dc80bb75f68af6994fe99ad101a90911f804a5c32b6cc87e";
+  for (const f of historyFixture.m4Files) expect(sha256(await Bun.file(f.path).text()), f.path)
+    .toBe(f.path === "scripts/build-feed.ts" ? c0BuilderHash : f.sha256);
   const v2 = migrateToV2(audit.registry, manifest);
   const feed = EventFeed.parse({ schemaVersion: 1, generatedAt: ctx.now, events: extracted.candidates.map(r => r.event), sources: [] });
   const rollback = rollbackToV1(v2);

@@ -10,7 +10,7 @@ const AFTER_UPDATE = /After (?:the )?Version (\d+\.\d+) [Uu]pdate/i;
 
 interface Article { heading: string; id: string; body: string }
 
-function articles(raw: string): Article[] {
+export function discoverKqmGinArticles(raw: string): Article[] {
   const matches = [...raw.matchAll(ARTICLE)];
   return matches.map((match, i) => ({
     heading: match[1]!, id: match[2]!,
@@ -200,7 +200,7 @@ function expiryNotice(article: Article, ctx: ParseContext): GachaEvent | null {
 }
 
 export function parseKqmGinNews(raw: string, ctx: ParseContext): GachaEvent[] {
-  const archive = articles(raw);
+  const archive = discoverKqmGinArticles(raw);
   if (!archive.length) throw new Error("KQM GINews archive headings missing");
   const update = updateDays(archive);
   const seen = new Map<string, GachaEvent>();
@@ -240,6 +240,6 @@ export function parseKqmGinNews(raw: string, ctx: ParseContext): GachaEvent[] {
 
 export const kqmGinNewsParser: SourceParser = {
   id: "kqm-ginews", label: "KQM GINews factual notice dates",
-  canParse(raw) { return articles(raw).length > 0; },
+  canParse(raw) { return discoverKqmGinArticles(raw).length > 0; },
   parse: parseKqmGinNews,
 };

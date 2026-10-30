@@ -1,5 +1,36 @@
 # Game calendar implementation status
 
+## C0 — article source evidence extraction — IMPLEMENTED; REVIEW PENDING (2026-10-30)
+
+Baseline CURRENT main `e2cebbef490178cd615af859168be071104b7edd`, with green
+CI41072214522 including PostgreSQL17. Implements C0 only under
+`docs/tasks/SOURCE-COVERAGE-SIMPLE-SCHEME.md`; recovery wave/#151 not repeated.
+
+Existing E1 internal sidecar now enumerates all KQM GINews/HSRNews and ZZZ/NTE
+Steam notice items independently of event output, retaining actual source/item
+IDs, full untrusted bodies, hashes and capture metadata. Every emitted event
+has its exact source-item link or fail-closed diagnostic. Final-winner links
+reuse E1's exact-reference/conflict gate; no fuzzy reviewed-source transfer.
+No article text is promoted wholesale to eligible event-local model excerpts.
+Full text and separate event windows remain available for C1 partial replay;
+no C1 statuses/inbox, C2–C5, summaries/E2b, model calls or Actions changes.
+
+Fixed-clock production replay:89 notices including61 zero-output;121/121 emitted
+events mapped to their notices.80 exact final links;41 different reviewed-source
+references explicitly unconfirmed. All10 public files byte-identical to main;
+290 winners unchanged (0 added/removed/changed), existing1 NTE conflict retained.
+Production sources/data, IDs, labels/queue, reviewed priority and calendar intact.
+Evidence/limitations: [C0 report](evidence/article-source-c0.md) and
+[hashed replay](evidence/article-source-c0-replay-2026-10-30.json).
+
+Bun1.3.14 frozen install/typecheck/full build PASS;1410pass/3existing optional
+age skips/0fail (1413tests/89files). Network capability required for localhost
+socket tests; unchanged rerun passed. Delivery PR owns observed exact-head CI
+and mandatory hosted PostgreSQL17 results. Self-review is not independent approval.
+
+**Next concrete step: independent focused review of C0.** Stop after PR validation;
+do not merge/deploy, resume recovery, modify PR115/cutover or start C1–C5/E2b.
+
 ## HSR/Endfield snapshot-turnover CI repair — IMPLEMENTED (2026-10-30)
 
 Baseline `d4cfba000fe19f2ee74b183ddd463494e578f477`; bounded follow-up to

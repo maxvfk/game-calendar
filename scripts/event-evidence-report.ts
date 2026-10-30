@@ -10,6 +10,16 @@ const events = sidecar.entries.map(e => ({
 const lengths = events.flatMap(e => e.fragmentLengths).sort((a, b) => a - b);
 const total = events.reduce((n, e) => n + e.codePoints, 0);
 console.log(JSON.stringify({
+  // Inventory/attribution only: these counts are NOT coverage statuses.
+  articleSources: [...new Set(sidecar.notices.map(n => n.sourceId))].sort().map(sourceId => {
+    const notices = sidecar.notices.filter(n => n.sourceId === sourceId);
+    const rows = sidecar.articleAttributions.filter(a => a.event.sourceId === sourceId);
+    return { sourceId, noticeCount: notices.length, emittedEvents: rows.length,
+      attributedEvents: rows.filter(a => a.noticeId !== null).length,
+      confirmedFinalAssociations: rows.filter(a => a.finalEventId !== null).length,
+      notices: notices.map(n => ({ noticeId: n.noticeId, position: n.position, sourceUrl: n.sourceUrl, contentHash: n.contentHash,
+        eventIds: rows.filter(a => a.noticePosition === n.position).map(a => a.event.id) })) };
+  }),
   eventsWithEvidence: events.length, fragments: lengths.length, events,
   fragmentLengths: { min: lengths[0] ?? 0, median: lengths.length ? (lengths[Math.floor((lengths.length - 1) / 2)]! + lengths[Math.floor(lengths.length / 2)]!) / 2 : 0, max: lengths.at(-1) ?? 0 },
   totalCodePoints: total,

@@ -1,0 +1,72 @@
+{
+  "baselineMain": "e2cebbef490178cd615af859168be071104b7edd",
+  "clock": "2026-10-30T12:00:00.000Z",
+  "networkRefresh": false,
+  "feedEvents": 290,
+  "addedWinners": 0,
+  "removedWinners": 0,
+  "changedWinners": 0,
+  "existingConflicts": 1,
+  "publicFilesByteIdentical": true,
+  "publicSha256": {
+    "data/events.v1.json": "00b75584f16c82de9ddb22a1e9db234e2e0db61798c0df7276b1a753e9daa2f5",
+    "data/review.v1.json": "bb9f8094f3951870662ab65a468d521821f73108a9bcde0158125a638c3b9697",
+    "data/timeline-label-agent-input.v1.json": "9733630963009f43ff3b41d8b7a17115ff009dbfc6611e8e98c3828dcf5e7ccf",
+    "data/timeline-label-queue.v1.json": "dfb77f9e468b642684f770c91cc1d0583a1ab01c9c9c2fa87c46d2bc3dd4537f",
+    "icon.svg": "b9e5e0ec070e5e22e60077d58070d04f370ea4233188de2bde76ad0a8e09fabe",
+    "index.html": "b922904e23311a8c345fd0ae90883b49b2fc457c587e47a5ded4aa92d9e7b00a",
+    "main.js": "6100f4d370ff77ab42165e3f4d2d26db08e8586cbfaec0080501bb32cadfdd12",
+    "manifest.webmanifest": "2e69846cb68cd49d361dda5b663a05b5900df8814a8ec871d76b09e586b0dd8e",
+    "styles.css": "c560cdb9276f9135871c29438b083505cef14b337ceb4fc9cd8a819605bc01be",
+    "sw.js": "2166393d8308ca751523bcc60e72b67c6304d14d4ce4822a9b375f90a642384e"
+  },
+  "articleSources": [
+    {
+      "sourceId": "genshin-kqm-ginews",
+      "snapshot": "snapshots/genshin-kqm-ginews.md",
+      "snapshotSha256": "44e2616a987950d4b7d9fe86c27f62f44792e8e607df7b328768d9a9f9029272",
+      "noticeCount": 38,
+      "zeroOutputNotices": 27,
+      "emittedEvents": 13,
+      "attributedEvents": 13,
+      "confirmedFinalAssociations": 5
+    },
+    {
+      "sourceId": "hsr-kqm-hsrnews",
+      "snapshot": "snapshots/hsr-kqm-hsrnews.md",
+      "snapshotSha256": "e81a2d3cc9ac9a477387445edca7d32d9093d6ce9030f056645f89a04def5292",
+      "noticeCount": 11,
+      "zeroOutputNotices": 8,
+      "emittedEvents": 11,
+      "attributedEvents": 11,
+      "confirmedFinalAssociations": 11
+    },
+    {
+      "sourceId": "nte-steamnews-official",
+      "snapshot": "snapshots/nte-steamnews-official.json",
+      "snapshotSha256": "f9445d23c3eae28dd3f28225e533e967c0d24e1aed4f7cb35964ed4357c8d0e8",
+      "noticeCount": 30,
+      "zeroOutputNotices": 20,
+      "emittedEvents": 54,
+      "attributedEvents": 54,
+      "confirmedFinalAssociations": 40
+    },
+    {
+      "sourceId": "zzz-steam-events-official",
+      "snapshot": "snapshots/zzz-steam-events-official.xml",
+      "snapshotSha256": "7870cd0e3e2e0f5dad8b7e1bbf73ce21c66547c2867719bae95a96a1201f1e40",
+      "noticeCount": 10,
+      "zeroOutputNotices": 6,
+      "emittedEvents": 43,
+      "attributedEvents": 43,
+      "confirmedFinalAssociations": 24
+    }
+  ],
+  "sourceAttributionFailures": 0,
+  "unconfirmedFinalAssociations": 41,
+  "diagnosticsByCode": {
+    "ambiguous_section_boundary": 1,
+    "no_useful_context": 2,
+    "winner_reference_conflict": 41
+  }
+}

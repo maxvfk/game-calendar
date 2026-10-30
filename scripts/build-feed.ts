@@ -28,8 +28,9 @@ import { bundleTimelineLabelAgentInput } from "../src/presentation/timeline-labe
 
 import { safelyBuildEvidenceSidecar, type Extraction } from "../src/editorial/event-evidence.ts";
 import { safelyExtractWuwaEvidence } from "../src/editorial/wuwa-evidence.ts";
+import { isArticleSource, safelyExtractArticleEvidence } from "../src/editorial/article-evidence.ts";
 
-const evidence: Extraction = { candidates: [], diagnostics: [] };
+const evidence: Extraction = { candidates: [], diagnostics: [], notices: [], articleAttributions: [] };
 const OUT = "public/data/events.v1.json";
 const snapshots = new SnapshotStore(process.env["SNAPSHOT_DIR"] ?? "snapshots");
 
@@ -117,7 +118,7 @@ for (const configured of ADAPTERS) {
     adapter.game,
   );
   if (document === null) {
-    if (adapter.id === "wuwa-kuro-mirror") evidence.diagnostics.push({ code: "source_unavailable", sourceEventId: null, sourceUrl: adapter.url, detail: "No snapshot or allowed fixture; no material evidence update" });
+    if (adapter.id === "wuwa-kuro-mirror" || isArticleSource(adapter.id)) evidence.diagnostics.push({ code: "source_unavailable", sourceEventId: null, sourceUrl: adapter.url, detail: "No snapshot or allowed fixture; no material evidence update" });
     sources.push({
       sourceId: adapter.id,
       game: adapter.game,
@@ -190,6 +191,14 @@ for (const configured of ADAPTERS) {
       if (eligible.has(row.event.id)) evidence.candidates.push(row);
       else evidence.diagnostics.push({ code: "filtered_source_candidate", sourceEventId: row.event.id, sourceUrl: row.source.sourceUrl, detail: "Source adapter did not publish this exact candidate ID" });
     }
+    evidence.diagnostics.push(...extracted.diagnostics);
+  }
+
+  if (isArticleSource(adapter.id)) {
+    const extracted = safelyExtractArticleEvidence(html,
+      { now, sourceUrl: document.url ?? adapter.url, sourceId: adapter.id, game: adapter.game }, document.capture, events);
+    evidence.notices!.push(...(extracted.notices ?? []));
+    evidence.articleAttributions!.push(...(extracted.articleAttributions ?? []));
     evidence.diagnostics.push(...extracted.diagnostics);
   }
 

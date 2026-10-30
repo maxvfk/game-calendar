@@ -22,7 +22,7 @@ const PARK_PERIOD = new RegExp(`^${AFTER_UPDATE.source}\\s*[-–—]\\s*${CLOCK.
 interface Article { heading: string; id: string; body: string }
 interface Clock { day: string; utc8: string; zone: "server" | "global" }
 
-function articles(raw: string): Article[] {
+export function discoverKqmHsrArticles(raw: string): Article[] {
   const matches = [...raw.matchAll(ARTICLE)];
   return matches.map((match, i) => ({
     heading: match[1]!, id: match[2]!,
@@ -94,7 +94,7 @@ function item(article: Article, title: string, type: EventType, line: string, up
 }
 
 export function parseKqmHsrNews(raw: string, ctx: ParseContext): GachaEvent[] {
-  const archive = articles(raw);
+  const archive = discoverKqmHsrArticles(raw);
   if (!archive.length) throw new Error("KQM HSRNews archive headings missing");
   const updates = updateDays(archive);
   const seen = new Map<string, GachaEvent>();
@@ -201,6 +201,6 @@ export function parseKqmHsrNews(raw: string, ctx: ParseContext): GachaEvent[] {
 
 export const kqmHsrNewsParser: SourceParser = {
   id: "kqm-hsrnews", label: "KQM HSRNews factual notice dates",
-  canParse(raw) { return articles(raw).length > 0; },
+  canParse(raw) { return discoverKqmHsrArticles(raw).length > 0; },
   parse: parseKqmHsrNews,
 };
