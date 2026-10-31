@@ -10,9 +10,15 @@ event IDs, registry, label guards, kill switch, current schedule or Pages path.
 
 Offline provider tests cover JSON mapping, identity/order/length and truncated
 response handling, workflow selection and credential isolation.
-**Verification:** exact-head GitHub CI pending; live DeepSeek call not possible until
-the operator adds the repository Actions secret DEEPSEEK_API_KEY. No live
-rehearsal or main deployment is claimed. See
+**Validation:** hosted GitHub [CI 41196117037](https://github.com/maxvfk/game-calendar/actions/runs/41196117037)
+on implementation commit `27eead93`: frozen install, TypeScript, tests,
+site build and mandatory PG17/recovery checks PASS; **1432 passed,
+3 existing skipped, 0 failures** (1435 tests / 90 files).
+Pages correctly skipped on PR. This documentation-only checkpoint
+requires a fresh exact-head CI before delivery.
+The live DeepSeek call is not yet possible until the operator adds the
+repository Actions secret DEEPSEEK_API_KEY. No live probe, rehearsal,
+Claude authentication or main deployment is claimed. See
 [provider routing operating notes](tasks/TIMELINE-LABEL-PROVIDER-ROUTING.md).
 
 **Next concrete step:** verify exact-head CI on PR #155, configure the
