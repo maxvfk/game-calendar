@@ -10,20 +10,29 @@ event IDs, registry, label guards, kill switch, current schedule or Pages path.
 
 Offline provider tests cover JSON mapping, identity/order/length and truncated
 response handling, workflow selection and credential isolation.
+**Live probe #41198532156 (2026-10-31):** failed before any API call:
+the original DeepSeek adapter incorrectly required event-level `rulesVersion`,
+while `buildTimelineQueue` places that value at the root. The GitHub secret was
+injected, but remote authentication and model output remain unverified.
+Corrected the adapter to read the canonical top-level field and added a
+regression test using `buildTimelineQueue` and `bundleTimelineLabelAgentInput`.
+Validation of the corrected branch is pending exact-head CI and a new live probe.
+
 **Validation:** hosted GitHub [CI 41196117037](https://github.com/maxvfk/game-calendar/actions/runs/41196117037)
 on implementation commit `27eead93`: frozen install, TypeScript, tests,
 site build and mandatory PG17/recovery checks PASS; **1432 passed,
 3 existing skipped, 0 failures** (1435 tests / 90 files).
 Pages correctly skipped on PR. This documentation-only checkpoint
 requires a fresh exact-head CI before delivery.
-The live DeepSeek call is not yet possible until the operator adds the
-repository Actions secret DEEPSEEK_API_KEY. No live probe, rehearsal,
-Claude authentication or main deployment is claimed. See
+The operator has added the DeepSeek Actions secret. The first live read-only
+probe failed in local input validation before the HTTP request; the corrected
+adapter requires a new probe after successful exact-head CI. No successful
+DeepSeek call, rehearsal, Claude authentication or main deployment is claimed. See
 [provider routing operating notes](tasks/TIMELINE-LABEL-PROVIDER-ROUTING.md).
 
-**Next concrete step:** verify exact-head CI on PR #155, configure the
-DEEPSEEK_API_KEY secret, run the read-only DeepSeek probe and then a
-rehearsal. Do not enable production writes automatically.
+**Next concrete step:** pass exact-head CI on corrected PR #155, rerun the
+read-only DeepSeek probe and inspect results before any rehearsal.
+Do not enable production writes automatically.
 
 ---
 

@@ -3,8 +3,9 @@ import { readFile } from "node:fs/promises";
 
 const ENDPOINT = "https://api.deepseek.com/chat/completions";
 const MODEL = "deepseek-flash";
-type Identity = { eventId: string; fingerprint: string; rulesVersion: string };
-type AgentInput = { events: Identity[]; [key: string]: unknown };
+type Identity = { eventId: string; fingerprint: string };
+// The canonical queue holds rulesVersion once at the root, not on each event.
+type AgentInput = { rulesVersion: string; events: Identity[]; [key: string]: unknown };
 type Proposals = { schemaVersion: 1; decisions: Record<string, unknown>[] };
 
 function object(value: unknown): Record<string, unknown> {
@@ -16,12 +17,15 @@ function object(value: unknown): Record<string, unknown> {
 
 function agentInput(value: unknown): AgentInput {
   const input = object(value);
+  if (typeof input.rulesVersion !== "string" || !input.rulesVersion) {
+    throw new Error("Agent input has missing root rulesVersion");
+  }
   if (!Array.isArray(input.events) || input.events.length > 100) {
     throw new Error("Agent input must contain at most 100 events");
   }
   for (const raw of input.events) {
     const event = object(raw);
-    for (const field of ["eventId", "fingerprint", "rulesVersion"]) {
+    for (const field of ["eventId", "fingerprint"]) {
       if (typeof event[field] !== "string" || !(event[field] as string)) {
         throw new Error("Agent input has missing event identity fields");
       }
@@ -37,7 +41,9 @@ export function apiSystemPrompt(claudePrompt: string, schema: unknown): string {
   if (at < 0) throw new Error("Claude output instruction changed; review the API prompt mapping");
   return claudePrompt.slice(0, at) +
     "\n6. Return ONLY a JSON object, not Markdown, containing schemaVersion 1 and exactly one " +
-    "decision per input event. Do not use tools. The output MUST conform to this JSON Schema:\n" +
+    "decision per input event. Copy rulesVersion from the TOP-LEVEL input field " +
+    "(it is not present on individual events). Do not use tools. " +
+    "The output MUST conform to this JSON Schema:\n" +
     JSON.stringify(schema) +
     '\nFor no events return {"schemaVersion":1,"decisions":[]}.';
 }
@@ -78,7 +84,7 @@ export function deepSeekProposals(rawResponse: unknown, rawInput: unknown): Prop
     const decision = object(raw);
     const event = input.events[i]!;
     if (decision.eventId !== event.eventId || decision.fingerprint !== event.fingerprint ||
-        decision.rulesVersion !== event.rulesVersion) {
+        decision.rulesVersion !== input.rulesVersion) {
       throw new Error("DeepSeek changed or reordered an event identity");
     }
     if (!["label", "keep_original", "needs_research"].includes(String(decision.decision))) {

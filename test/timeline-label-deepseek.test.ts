@@ -1,11 +1,15 @@
 import { describe, expect, test } from "bun:test";
 import { apiSystemPrompt, deepSeekProposals, deepSeekRequest } from "../scripts/timeline-label-agent/run-deepseek.ts";
+import { buildTimelineQueue } from "../src/presentation/timeline-labels.ts";
+import { bundleTimelineLabelAgentInput } from "../src/presentation/timeline-label-agent-input.ts";
+import { GachaEvent } from "../src/shared/schema.ts";
+import { EventFeed } from "../src/shared/feed.ts";
 
 const prompt = await Bun.file("scripts/timeline-label-agent/system-prompt.md").text();
 const schema = await Bun.file("scripts/timeline-label-agent/decisions.schema.json").json();
-const id = { eventId: "hsr:test:2026-10-31", fingerprint: "sha256:" + "a".repeat(64), rulesVersion: "v1" };
-const input = { editorialPreferences: { namingRule: "Use existing facts only" }, events: [id] };
-const decision = { ...id, decision: "keep_original" };
+const id = { eventId: "hsr:test:2026-10-31", fingerprint: "sha256:" + "a".repeat(64) };
+const input = { rulesVersion: "v1", editorialPreferences: { namingRule: "Use existing facts only" }, events: [id] };
+const decision = { ...id, rulesVersion: input.rulesVersion, decision: "keep_original" };
 const response = (content: string, finish_reason = "stop") =>
   ({ choices: [{ finish_reason, message: { content } }] });
 
@@ -18,6 +22,7 @@ describe("DeepSeek timeline-label provider (offline)", () => {
     expect(neutral).toContain("Never invent characters, rewards, dates or certainty");
     expect(neutral).toContain('"schemaVersion"');
     expect(neutral).toContain('"decisions"');
+    expect(neutral).toContain("TOP-LEVEL input field");
   });
   test("uses non-thinking JSON output, the same input, and no tools", () => {
     const req = deepSeekRequest(input, prompt, schema);
@@ -32,8 +37,34 @@ describe("DeepSeek timeline-label provider (offline)", () => {
   test("accepts a complete or empty batch", () => {
     expect(deepSeekProposals(response(JSON.stringify({ schemaVersion: 1, decisions: [decision] })), input))
       .toEqual({ schemaVersion: 1, decisions: [decision] });
-    expect(deepSeekProposals(response('{"schemaVersion":1,"decisions":[]}'), { events: [] }))
+    expect(deepSeekProposals(response('{"schemaVersion":1,"decisions":[]}'), { rulesVersion: "v1", events: [] }))
       .toEqual({ schemaVersion: 1, decisions: [] });
+  });
+  test("accepts the real buildTimelineQueue/bundled agent-input shape", async () => {
+    const at = "2026-10-31T00:00:00.000Z";
+    const event = GachaEvent.parse({
+      id: id.eventId, game: "hsr", title: "Example Event", type: "other", summary: null,
+      startsAt: at, startPrecision: "exact", endsAt: "2026-11-30T00:00:00.000Z",
+      endPrecision: "exact", regionScoped: false, regionEnds: null,
+      sourceUrl: "https://example.test/event", sourceId: "test", status: "published",
+      confidence: 1, extractionMethod: "parser", provenanceStatus: "official",
+      version: 1, firstSeenAt: at, updatedAt: at,
+    });
+    const feed = EventFeed.parse({ schemaVersion: 1, generatedAt: at, events: [event], sources: [] });
+    const queue = buildTimelineQueue(feed, { schemaVersion: 1, decisions: [] }, at);
+    const preferences = await Bun.file("data/presentation/timeline-label-preferences.v1.json").json();
+    const actual = bundleTimelineLabelAgentInput(queue, preferences);
+    expect(actual.events).toHaveLength(1);
+    expect(actual.events[0]).not.toHaveProperty("rulesVersion");
+    expect(actual.rulesVersion).toBeTruthy();
+    const outgoing = deepSeekRequest(actual, prompt, schema);
+    expect(outgoing.model).toBe("deepseek-flash");
+    const actualDecision = { eventId: actual.events[0]!.eventId,
+      fingerprint: actual.events[0]!.fingerprint, rulesVersion: actual.rulesVersion,
+      decision: "keep_original" };
+    expect(deepSeekProposals(response(JSON.stringify({
+      schemaVersion: 1, decisions: [actualDecision],
+    })), actual).decisions).toEqual([actualDecision]);
   });
   test("rejects missing, changed, or invented decisions", () => {
     for (const bad of [
@@ -52,8 +83,9 @@ describe("DeepSeek timeline-label provider (offline)", () => {
     }
   });
   test("rejects invalid input before issuing a request", () => {
-    expect(() => deepSeekRequest({ events: [{ ...id, eventId: "" }] }, prompt, schema)).toThrow();
-    expect(() => deepSeekRequest({ events: "wrong" }, prompt, schema)).toThrow();
+    expect(() => deepSeekRequest({ ...input, events: [{ ...id, eventId: "" }] }, prompt, schema)).toThrow();
+    expect(() => deepSeekRequest({ ...input, events: "wrong" }, prompt, schema)).toThrow();
+    expect(() => deepSeekRequest({ events: [id] }, prompt, schema)).toThrow("root rulesVersion");
   });
 });
 

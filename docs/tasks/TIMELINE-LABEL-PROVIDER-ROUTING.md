@@ -40,3 +40,12 @@ Offline tests and GitHub hosted CI must pass before merge. Live DeepSeek probe
 and rehearsal need the new Actions secret. Since Claude auth is unavailable,
 do not claim its live runner passed. The existing Timeline label architecture
 and future dual-output editorial work are separate milestones.
+
+## Live probe correction (2026-10-31)
+
+Probe [41198532156](https://github.com/maxvfk/game-calendar/actions/runs/41198532156)
+failed before HTTP because the first DeepSeek adapter treated `rulesVersion` as
+an event property. Canonical `buildTimelineQueue` stores `rulesVersion` once
+at the root. Adapter and regression tests now use the real bundled input shape.
+Re-run the read-only probe after exact-head CI; no successful live provider call
+was established by the failed run.
