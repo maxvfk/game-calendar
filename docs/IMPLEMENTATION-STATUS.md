@@ -1,3 +1,50 @@
+## Timeline labels — DeepSeek P1–P4 production rollout CLOSED (2026-11-01)
+
+**Production verification completed** following merged [PR #155](https://github.com/maxvfk/game-calendar/pull/155)
+and documentation [PR #156](https://github.com/maxvfk/game-calendar/pull/156).
+The operator explicitly changed `TIMELINE_LABELS_AUTO=on` and dispatched
+`Timeline labels` manually on `main` with `model=deepseek-flash`,
+`target=main`. Exact [workflow #41241111380](https://github.com/maxvfk/game-calendar/actions/runs/41241111380)
+completed **SUCCESS** (October 31, 2026, 20:54:58 UTC start).
+
+The actual `propose` step called the official DeepSeek endpoint with
+`reasoning_effort=max` and produced **25 decisions in 36.6 seconds**,
+8,622 input tokens / 8,434 output tokens (including 6,045 reasoning tokens).
+The fresh-main `record` step accepted **25**, guarded **0**, rejected
+**0**, warnings **0**, and wrote only the canonical
+`data/presentation/timeline-labels.v1.json` registry to `main` via
+commit [`d5f6434`](https://github.com/maxvfk/game-calendar/commit/d5f64347bdfd7838980677844bfc4e566cfca397).
+Registry has 97 decisions afterward. Of the 25 new decisions, 22 were
+`keep_original` and three were source-grounded `label` decisions:
+
+- Genshin: `Overflowing Favor: Double Artifact Drops`
+- CZN: `Overdrive: Simulation (Double Growth Currency)`
+- Endfield: `Contingency Readiness: Daily Missions`
+
+The model input summaries substantiate all three names; no editorial
+red flags were found in this batch. The triggered
+[CI #41241246891](https://github.com/maxvfk/game-calendar/actions/runs/41241246891)
+completed **SUCCESS**: frozen dependency installation, typecheck,
+**1440 passed / 3 existing skipped / 0 failed** (1443 tests in 90 files),
+site build, PostgreSQL17 concurrency/recovery checks, and **GitHub Pages
+deployment**. No unrelated files were committed by the label runner.
+
+**Closure:** DeepSeek API provider, manual Claude Sonnet/Opus routing,
+effort selection `max`, read-only comparison/probe, rehearsal, independent
+safety review/corrections, and full production write/deploy are complete.
+The regular Tuesday/Saturday 04:23 UTC schedule is enabled through the
+operator-reported `TIMELINE_LABELS_AUTO=on`. The connector cannot directly
+read the repository variable, but the successful manual production run
+proves the `on` gate was satisfied at execution. No additional manual
+variable changes are needed; `TIMELINE_LABEL_MODEL` is optional, with
+`deepseek-flash` as the fallback.
+
+**Next concrete step:** no further work required for this milestone.
+Prompt/editorial optimization is explicitly deferred as an independent
+future task and must not be treated as a blocker to P1–P4 closure.
+
+---
+
 ## Timeline labels — DeepSeek provider rollout code MERGED (2026-10-31)
 
 **PR [#155](https://github.com/maxvfk/game-calendar/pull/155) merged via squash**
