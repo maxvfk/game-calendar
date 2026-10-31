@@ -1,51 +1,52 @@
-## Timeline label provider routing — IMPLEMENTED IN DRAFT PR #155 (2026-10-31)
+## Timeline label provider routing — TECHNICALLY VERIFIED, DRAFT PR #155 (2026-10-31)
 
-Draft PR [#155](https://github.com/maxvfk/game-calendar/pull/155) adds
-DeepSeek Flash JSON-mode transport to the established label proposal path.
-The original Claude Code CLI runner, OAuth secret and Sonnet/Opus choices are
-preserved unchanged, but live Claude auth is currently unavailable.
-Manual and scheduled provider selection default to DeepSeek; provider credentials
-are scoped to separate read-only steps. No change to the deterministic accept,
-event IDs, registry, label guards, kill switch, current schedule or Pages path.
+[PR #155](https://github.com/maxvfk/game-calendar/pull/155) adds DeepSeek Flash as
+the default provider for Timeline labels while retaining the unchanged Claude
+Code CLI runner (Sonnet/Opus), its separate credential path and manual selection.
+The existing event/fingerprint contract, editorial preferences, v1 registry,
+L1 guards, `record.sh`, current schedule, kill switch and Pages path remain intact.
 
-Offline provider tests cover JSON mapping, identity/order/length and truncated
-response handling, workflow selection and credential isolation.
-**Live probe #41198532156 (2026-10-31):** failed before any API call:
-the original DeepSeek adapter incorrectly required event-level `rulesVersion`,
-while `buildTimelineQueue` places that value at the root. The GitHub secret was
-injected, but remote authentication and model output remain unverified.
-Corrected the adapter to read the canonical top-level field and added a
-regression test using `buildTimelineQueue` and `bundleTimelineLabelAgentInput`.
-Validation of the corrected branch is pending exact-head CI and a new live probe.
+### Verification
 
-**Read-only live probe #41198860725:** DeepSeek successfully returned 25 decisions
-(8,597 input / 2,284 output tokens); validator and accept dry run succeeded,
-but all 25 decisions were `keep_original` (0 newly proposed labels).
-This verifies transport, not yet adequate editorial value for production.
-**Manual rehearsal #41200052369:** failed before API because `propose` still
-checked out `main`, where the branch-only DeepSeek runner did not exist.
-No proposals were recorded. Fixed workflow to keep the current-main feed
-while separately checking out the selected manual branch runner under
-`.timeline-provider-preview`. Scheduled/main runs continue to use the
-normal main checkout. A regression test asserts this isolation.
+- Original DeepSeek probe [#41198532156](https://github.com/maxvfk/game-calendar/actions/runs/41198532156)
+  exposed an incorrect per-event `rulesVersion` assumption; corrected with a
+  regression against the real `buildTimelineQueue` and `bundleTimelineLabelAgentInput`.
+- Subsequent live read-only [probe #41198860725](https://github.com/maxvfk/game-calendar/actions/runs/41198860725)
+  succeeded: 25 decisions; 0 validator errors, 25 accepted in dry run.
+- Original manual rehearsal [#41200052369](https://github.com/maxvfk/game-calendar/actions/runs/41200052369)
+  exposed a checkout mismatch: the branch's new runner was missing from the
+  `main` checkout. Corrected by using a separate checkout of the selected
+  manual commit for provider transport only; the feed and record job continue
+  using fresh `main`.
+- Corrected PR head `c3fbf699`: [CI #41200244965](https://github.com/maxvfk/game-calendar/actions/runs/41200244965)
+  PASS (frozen install, typecheck, 1434 passed / 3 existing skips / 0 failures,
+  build, PG17/recovery checks).
+- Full manual [rehearsal #41206800507](https://github.com/maxvfk/game-calendar/actions/runs/41206800507)
+  SUCCESS. DeepSeek returned 25 decisions (8,597 input / 2,249 output tokens).
+  The fresh-main accept step accepted all 25; 0 guarded, 0 rejected, 0 warnings.
+  Commit [`6afa6bd`](https://github.com/maxvfk/game-calendar/commit/6afa6bd007b294610206b20266299c1a8298f916)
+  changed **only** `data/presentation/timeline-labels.v1.json` on
+  `timeline-labels/rehearsal`. The separately dispatched
+  [CI #41206891636](https://github.com/maxvfk/game-calendar/actions/runs/41206891636)
+  is green; Pages did not deploy. `main` remained unchanged.
 
-**Validation:** hosted GitHub [CI 41196117037](https://github.com/maxvfk/game-calendar/actions/runs/41196117037)
-on implementation commit `27eead93`: frozen install, TypeScript, tests,
-site build and mandatory PG17/recovery checks PASS; **1432 passed,
-3 existing skipped, 0 failures** (1435 tests / 90 files).
-Pages correctly skipped on PR. This documentation-only checkpoint
-requires a fresh exact-head CI before delivery.
-The operator has added the DeepSeek Actions secret. The second live read-only
-probe succeeded, but the subsequent manual rehearsal failed before calling
-DeepSeek due to the runner missing from main. The checkout routing is corrected
-in this branch and awaits a new CI and rehearsal. No recorded rehearsal,
-Claude authentication or main deployment is claimed. See
-[provider routing operating notes](tasks/TIMELINE-LABEL-PROVIDER-ROUTING.md).
+### Editorial gate and next concrete step
 
-**Next concrete step:** pass exact-head CI on PR #155 and rerun
-`Timeline labels` on the PR branch with `model=deepseek-flash` and
-`target=rehearsal`; inspect write CI and the all-keep editorial distribution
-before ever enabling production main writes.
+Both successful live DeepSeek batches (probe and rehearsal) returned
+**25/25 `keep_original`** and **0 `label` / 0 `needs_research`**.
+The 25 events are mostly already recognizable, but `Overflowing Favor`
+with a supported double-artifact-drops summary and `Astral Imagea Park: Park
+Souvenir` with a voucher-claim summary are examples worth editorial review.
+Thus the operational transport, secret isolation, validation and recording path
+are verified, **but production editorial behavior has not been approved**:
+recorded `keep_original` suppresses repeated work until the fingerprint changes.
+
+**Next concrete step:** review the all-keep outcome against the operator's
+existing preferences. If it is too conservative, make a narrow API-specific
+prompt adjustment and repeat read-only probe + rehearsal. Otherwise explicitly
+approve the existing behavior. Keep PR #155 Draft and
+`TIMELINE_LABELS_AUTO=off` until this editorial decision and planned rollout;
+do not silently merge, activate schedule or modify Claude auth.
 
 ---
 

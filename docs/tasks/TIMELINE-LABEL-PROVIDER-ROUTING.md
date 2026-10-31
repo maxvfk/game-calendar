@@ -62,3 +62,23 @@ checks out the selected manual workflow revision into a separate read-only
 `.timeline-provider-preview` path just for the DeepSeek runner and its prompt.
 Scheduled/main jobs use the normal `main` script. Repeat the rehearsal after
 green exact-head CI; no production writes are authorized by a green probe.
+
+## Completed live rehearsal (2026-10-31)
+
+[Workflow #41206800507](https://github.com/maxvfk/game-calendar/actions/runs/41206800507)
+succeeded on corrected PR commit `c3fbf699`. Read-only `propose` obtained
+25 DeepSeek results; credentialless `record` rechecked freshly fetched `main`
+and accepted all 25 (0 guarded, 0 rejected, 0 warnings). Only the registry was
+committed to disposable `timeline-labels/rehearsal` at `6afa6bd`. Dispatched
+[CI #41206891636](https://github.com/maxvfk/game-calendar/actions/runs/41206891636)
+passed and Pages was skipped. `main` was not modified.
+
+The outcome is **25 `keep_original`, no `label` or `needs_research`** in
+both the successful read-only probe and this rehearsal. Many original identities
+were already concise, but `Overflowing Favor` (double artifact drops) and
+`Astral Imagea Park: Park Souvenir` (voucher claim) are possible missed editorial
+opportunities. This is not a proven API defect; do not infer that the model is
+incapable from one queue. Because `keep_original` persists until fingerprint
+change, the operator should approve this distribution or run a narrow,
+provider-only prompt correction/probe before enabling main writes. Transport and
+automated recording are verified; **production editorial approval is pending**.
