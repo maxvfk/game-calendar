@@ -161,3 +161,12 @@ source ingestion or schedule changes. The user reports having switched
 `TIMELINE_LABELS_AUTO` from `on` to `off`; this cannot be independently
 read from the connected GitHub API. Re-review and exact-head CI are required
 before merging PR #155. Production activation remains separately gated.
+
+**Verification update (post-fix):** [exact-head CI #41225577470](https://github.com/maxvfk/game-calendar/actions/runs/41225577470)
+on `1d21f8a` succeeded: frozen dependency installation, typecheck,
+**1440 pass / 3 existing skip / 0 fail** (1443 tests, 90 files),
+feed/site build, PostgreSQL 17 concurrency/recovery. No Pages deployment.
+The two regressions above are included in the green run.
+The independent reviewer has **not yet re-reviewed** the corrected diff.
+
+**Next concrete step:** focused Astra re-review of the two repaired findings; only after approval consider merging. Do not change `TIMELINE_LABELS_AUTO` automatically.

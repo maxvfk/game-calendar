@@ -14,7 +14,14 @@ The operator reports switching `TIMELINE_LABELS_AUTO=off`; the connected
 GitHub API does not expose repository variables, so this was not verified
 independently. No automatic activation, merge or production write was made.
 
-**Next concrete step:** verify exact-head CI and independent focused re-review
+**Verification update (post-fix):** [exact-head CI #41225577470](https://github.com/maxvfk/game-calendar/actions/runs/41225577470)
+on `1d21f8a` succeeded: frozen dependency installation, typecheck,
+**1440 pass / 3 existing skip / 0 fail** (1443 tests, 90 files),
+feed/site build, PostgreSQL 17 concurrency/recovery. No Pages deployment.
+The two regressions above are included in the green run.
+The independent reviewer has **not yet re-reviewed** the corrected diff.
+
+**Next concrete step:** obtain independent focused re-review
 of both repaired findings before deciding on merge. Keep prompt tuning separate.
 
 ---
