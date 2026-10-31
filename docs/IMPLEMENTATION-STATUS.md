@@ -1,3 +1,19 @@
+## Timeline labels — DeepSeek thinking evaluation prepared (2026-10-31)
+
+In Draft PR #155, the read-only probe adds a controlled `experiment=compare`
+for `deepseek-flash` over the same agent-input batch at efforts `none`,
+`low`, `high` and `max`. Each effort records only its own proposals,
+validation, dry-run accept report and aggregate token/time metrics as
+short-lived artifacts. `Claude Code CLI`, scheduled `Timeline labels`,
+`record.sh`, canonical preferences and production default (non-thinking)
+remain unchanged. No additional live call or production write is asserted.
+
+**Next concrete step:** pass exact-head CI, run the manual read-only
+comparison on PR #155 and inspect grounded labels and guard outcomes before
+choosing a production mode or changing editorial instructions.
+
+---
+
 ## Timeline label provider routing — TECHNICALLY VERIFIED, DRAFT PR #155 (2026-10-31)
 
 [PR #155](https://github.com/maxvfk/game-calendar/pull/155) adds DeepSeek Flash as

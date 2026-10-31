@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { apiSystemPrompt, deepSeekProposals, deepSeekRequest } from "../scripts/timeline-label-agent/run-deepseek.ts";
+import { apiSystemPrompt, deepSeekProposals, deepSeekRequest, parseReasoningEffort } from "../scripts/timeline-label-agent/run-deepseek.ts";
 import { buildTimelineQueue } from "../src/presentation/timeline-labels.ts";
 import { bundleTimelineLabelAgentInput } from "../src/presentation/timeline-label-agent-input.ts";
 import { GachaEvent } from "../src/shared/schema.ts";
@@ -33,6 +33,25 @@ describe("DeepSeek timeline-label provider (offline)", () => {
     const messages = req.messages as Array<{ content: string }>;
     expect(messages[1]!.content).toContain(id.fingerprint);
     expect(messages[1]!.content).toContain("Use existing facts only");
+  });
+  test("thinking effort maps exactly to the supported official modes", () => {
+    expect(parseReasoningEffort(undefined)).toBe("none");
+    for (const mode of ["none", "low", "high", "max"] as const) {
+      const req = deepSeekRequest(input, prompt, schema, mode);
+      expect(req.thinking).toEqual({ type: mode === "none" ? "disabled" : "enabled" });
+      expect(req).not.toHaveProperty("tools");
+      expect(req.response_format).toEqual({ type: "json_object" });
+      if (mode === "none") {
+        expect(req).not.toHaveProperty("reasoning_effort");
+        expect(req.max_tokens).toBe(8192);
+      } else {
+        expect(req.reasoning_effort).toBe(mode);
+        expect(Number(req.max_tokens)).toBeGreaterThan(8192);
+      }
+    }
+    for (const invalid of ["medium", "xhigh", "ultra", "", "disabled"]) {
+      expect(() => parseReasoningEffort(invalid)).toThrow("Unsupported DeepSeek");
+    }
   });
   test("accepts a complete or empty batch", () => {
     expect(deepSeekProposals(response(JSON.stringify({ schemaVersion: 1, decisions: [decision] })), input))
@@ -93,6 +112,21 @@ const scheduled = await Bun.file(".github/workflows/timeline-labels.yml").text()
 const probe = await Bun.file(".github/workflows/timeline-labels-probe.yml").text();
 
 describe("GitHub Actions provider isolation", () => {
+  test("thinking comparison is manual, read-only, and uses one shared input", () => {
+    expect(probe).toContain("options: [single, compare]");
+    expect(probe).toContain("options: [none, low, high, max]");
+    expect(probe).toContain("for effort in none low high max");
+    expect(probe).toContain('probe/agent-input.json "probe/compare/$effort/proposals.json"');
+    expect(probe).toContain('DEEPSEEK_REASONING_EFFORT="$effort"');
+    expect(probe).toContain("run: bun scripts/timeline-label-agent/run-deepseek.ts");
+    expect(probe).not.toContain("schedule:");
+    expect(probe).toContain("permissions:\n  contents: read");
+    expect(probe).not.toMatch(/contents:\s*write|git push|gh workflow run/);
+    expect(probe).toContain("DEEPSEEK_METRICS_PATH");
+    expect(scheduled).not.toContain("DEEPSEEK_REASONING_EFFORT");
+    expect(scheduled).not.toContain("experiment:");
+  });
+
   test("DeepSeek defaults and preserved Claude options in both workflows", () => {
     for (const wf of [scheduled, probe]) {
       expect(wf).toContain("options: [deepseek-flash, sonnet, opus]");

@@ -82,3 +82,30 @@ incapable from one queue. Because `keep_original` persists until fingerprint
 change, the operator should approve this distribution or run a narrow,
 provider-only prompt correction/probe before enabling main writes. Transport and
 automated recording are verified; **production editorial approval is pending**.
+
+## DeepSeek thinking comparison (manual read-only probe)
+
+The existing `Timeline labels probe (read-only)` has two new workflow_dispatch
+inputs. `experiment=single` keeps the historical behavior and allows DeepSeek
+`effort=none|low|high|max` (default `none`, matching production).
+`experiment=compare`, `model=deepseek-flash` makes four billed API calls,
+sequentially, with the **same generated agent-input JSON and unchanged
+editorialPreferences**. Each run has independent proposals, L1 validation,
+dry-run acceptance and metrics in `probe/compare/{none,low,high,max}/`.
+The report contains counts, token usage and duration. No reasoning content,
+API key, or raw API response is saved.
+
+Official DeepSeek Chat Completions parameters are `thinking.type=disabled`
+with no `reasoning_effort` for `none`, or `thinking.type=enabled` with
+`reasoning_effort=low|high|max`. These are real distinct modes; aliases like
+`medium` collapse to `high` and are intentionally not exposed. Larger
+bounded generation budgets and timeouts account for thinking tokens. The
+read-only workflow remains manually triggered, with contents:read and no
+push/commit/deployment. The scheduled/production workflow still invokes the
+runner with its original non-thinking default, unchanged.
+
+**Next step:** select the PR branch, `model=deepseek-flash`, `experiment=compare`
+(default `effort` irrelevant). Review the four sets of labels *qualitatively*
+against the event summaries and the accept report; a high label count alone is
+not proof of superior quality. Do not enable production until the user approves
+the mode/editorial behavior.

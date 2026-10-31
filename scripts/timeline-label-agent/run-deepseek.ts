@@ -3,6 +3,13 @@ import { readFile } from "node:fs/promises";
 
 const ENDPOINT = "https://api.deepseek.com/chat/completions";
 const MODEL = "deepseek-flash";
+// Probe-only override; the scheduled/production job does not set this variable.
+export type ReasoningEffort = "none" | "low" | "high" | "max";
+export function parseReasoningEffort(value: string | undefined): ReasoningEffort {
+  const choice = value ?? "none";
+  if (choice === "none" || choice === "low" || choice === "high" || choice === "max") return choice;
+  throw new Error("Unsupported DeepSeek reasoning effort: " + choice);
+}
 type Identity = { eventId: string; fingerprint: string };
 // The canonical queue holds rulesVersion once at the root, not on each event.
 type AgentInput = { rulesVersion: string; events: Identity[]; [key: string]: unknown };
@@ -48,13 +55,18 @@ export function apiSystemPrompt(claudePrompt: string, schema: unknown): string {
     '\nFor no events return {"schemaVersion":1,"decisions":[]}.';
 }
 
-export function deepSeekRequest(rawInput: unknown, claudePrompt: string, schema: unknown): Record<string, unknown> {
+export function deepSeekRequest(
+  rawInput: unknown, claudePrompt: string, schema: unknown, effort: ReasoningEffort = "none",
+): Record<string, unknown> {
   const input = agentInput(rawInput);
   return {
     model: MODEL,
-    thinking: { type: "disabled" },
+    thinking: { type: effort === "none" ? "disabled" : "enabled" },
+    ...(effort === "none" ? {} : { reasoning_effort: effort }),
     response_format: { type: "json_object" },
-    max_tokens: 8192,
+    // Thinking tokens count toward max_tokens, not just the final JSON. Keep
+    // bounded per-request budgets; never publish an incomplete JSON batch.
+    max_tokens: effort === "none" ? 8192 : effort === "low" ? 24576 : effort === "high" ? 32768 : 65536,
     stream: false,
     messages: [
       { role: "system", content: apiSystemPrompt(claudePrompt, schema) },
@@ -104,7 +116,9 @@ async function main(): Promise<void> {
   const input: unknown = JSON.parse(await readFile(inputPath, "utf8"));
   const prompt = await readFile(new URL("./system-prompt.md", import.meta.url), "utf8");
   const schema: unknown = JSON.parse(await readFile(new URL("./decisions.schema.json", import.meta.url), "utf8"));
-  const body = JSON.stringify(deepSeekRequest(input, prompt, schema));
+  const effort = parseReasoningEffort(process.env.DEEPSEEK_REASONING_EFFORT);
+  const body = JSON.stringify(deepSeekRequest(input, prompt, schema, effort));
+  const startedAt = Date.now();
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     let response: Response;
@@ -112,7 +126,7 @@ async function main(): Promise<void> {
       response = await fetch(ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: "Bearer " + apiKey },
-        body, signal: AbortSignal.timeout(180_000),
+        body, signal: AbortSignal.timeout(effort === "max" ? 360_000 : 240_000),
       });
     } catch {
       if (attempt === 1) { await Bun.sleep(1500); continue; }
@@ -138,6 +152,24 @@ async function main(): Promise<void> {
     }
     await Bun.write(outputPath, JSON.stringify(proposals, null, 2) + "\n");
     const usage = object(raw).usage;
+    const measured = usage && typeof usage === "object" && !Array.isArray(usage)
+      ? usage as Record<string, unknown> : {};
+    const completionDetails = measured.completion_tokens_details;
+    const details = completionDetails && typeof completionDetails === "object" &&
+      !Array.isArray(completionDetails) ? completionDetails as Record<string, unknown> : {};
+    const tokenCount = (v: unknown): number | null =>
+      typeof v === "number" && Number.isFinite(v) && v >= 0 ? v : null;
+    const metrics = {
+      model: MODEL, effort, decisions: proposals.decisions.length,
+      durationMs: Date.now() - startedAt,
+      promptTokens: tokenCount(measured.prompt_tokens),
+      completionTokens: tokenCount(measured.completion_tokens),
+      reasoningTokens: tokenCount(details.reasoning_tokens),
+    };
+    if (process.env.DEEPSEEK_METRICS_PATH) {
+      await Bun.write(process.env.DEEPSEEK_METRICS_PATH, JSON.stringify(metrics, null, 2) + "\n");
+    }
+    console.log("DeepSeek metrics: " + JSON.stringify(metrics));
     if (usage && typeof usage === "object" && !Array.isArray(usage)) {
       const u = usage as Record<string, unknown>;
       console.log("DeepSeek " + MODEL + ": " + proposals.decisions.length +
