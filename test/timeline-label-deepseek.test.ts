@@ -134,7 +134,10 @@ describe("GitHub Actions provider isolation", () => {
       expect(wf).toContain("run: bash scripts/timeline-label-agent/run-model.sh");
       expect(wf).toContain("run-deepseek.ts");
       expect(wf.match(/secrets\.CLAUDE_CODE_OAUTH_TOKEN/g)?.length).toBe(1);
-      expect(wf.match(/secrets\.DEEPSEEK_API_KEY/g)?.length).toBe(1);
+      // Probe has two mutually exclusive read-only calls (single vs compare).
+      // Scheduled/rehearsal workflow has one model call.
+      expect(wf.match(/secrets\.DEEPSEEK_API_KEY/g)?.length)
+        .toBe(wf === probe ? 2 : 1);
       expect(wf).toContain("env.MODEL != 'deepseek-flash'");
       expect(wf).toContain("env.MODEL == 'deepseek-flash'");
     }

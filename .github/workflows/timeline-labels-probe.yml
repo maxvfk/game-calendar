@@ -119,7 +119,7 @@ jobs:
         run: bun scripts/timeline-label-agent/run-deepseek.ts probe/agent-input.json probe/proposals.json
 
       # One manual run, one immutable queue, four independent DeepSeek calls.
-      # Outputs are scratch artifacts only; no git push, no permanent registry update.
+      # Outputs remain scratch artifacts only; no repository write or registry change.
       - name: Compare DeepSeek thinking efforts on the same queue
         if: steps.queue.outputs.events != '0' && env.MODEL == 'deepseek-flash' && env.EXPERIMENT == 'compare'
         env:
