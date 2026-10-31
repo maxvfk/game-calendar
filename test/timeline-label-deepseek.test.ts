@@ -57,9 +57,10 @@ describe("DeepSeek timeline-label provider (offline)", () => {
   });
 });
 
+const scheduled = await Bun.file(".github/workflows/timeline-labels.yml").text();
+const probe = await Bun.file(".github/workflows/timeline-labels-probe.yml").text();
+
 describe("GitHub Actions provider isolation", () => {
-  const scheduled = await Bun.file(".github/workflows/timeline-labels.yml").text();
-  const probe = await Bun.file(".github/workflows/timeline-labels-probe.yml").text();
   test("DeepSeek defaults and preserved Claude options in both workflows", () => {
     for (const wf of [scheduled, probe]) {
       expect(wf).toContain("options: [deepseek-flash, sonnet, opus]");

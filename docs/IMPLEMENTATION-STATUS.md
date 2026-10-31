@@ -1,3 +1,26 @@
+## Timeline label provider routing — IMPLEMENTED IN DRAFT PR #155 (2026-10-31)
+
+Draft PR [#155](https://github.com/maxvfk/game-calendar/pull/155) adds
+DeepSeek Flash JSON-mode transport to the established label proposal path.
+The original Claude Code CLI runner, OAuth secret and Sonnet/Opus choices are
+preserved unchanged, but live Claude auth is currently unavailable.
+Manual and scheduled provider selection default to DeepSeek; provider credentials
+are scoped to separate read-only steps. No change to the deterministic accept,
+event IDs, registry, label guards, kill switch, current schedule or Pages path.
+
+Offline provider tests cover JSON mapping, identity/order/length and truncated
+response handling, workflow selection and credential isolation.
+**Verification:** exact-head GitHub CI pending; live DeepSeek call not possible until
+the operator adds the repository Actions secret DEEPSEEK_API_KEY. No live
+rehearsal or main deployment is claimed. See
+[provider routing operating notes](tasks/TIMELINE-LABEL-PROVIDER-ROUTING.md).
+
+**Next concrete step:** verify exact-head CI on PR #155, configure the
+DEEPSEEK_API_KEY secret, run the read-only DeepSeek probe and then a
+rehearsal. Do not enable production writes automatically.
+
+---
+
 # Game calendar implementation status
 
 ## C0 — final bounded correction — READY FOR FINAL FOCUSED REVIEW (2026-10-31)
