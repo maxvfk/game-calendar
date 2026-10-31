@@ -16,10 +16,15 @@ remains `none`), while Claude CLI, provider switching, L1 checks and
 the canonical editorial prompt/preferences are unchanged. **Prompt editing
 is deferred to a separate future task**, as requested.
 
-**Next concrete step:** exact-head GitHub CI; before merging, confirm
-`TIMELINE_LABELS_AUTO=off` and decide on the production rollout.
-No production write, main change, merged PR or newly performed `max`
-rehearsal is claimed by this configuration update.
+**Validation:** [CI #41222252508](https://github.com/maxvfk/game-calendar/actions/runs/41222252508)
+on implementation commit `b531a8e` PASS: frozen install, typecheck,
+**1436 tests passed / 3 existing skipped / 0 failed**, site build and
+mandatory PostgreSQL 17/recovery checks. Pages deployment skipped as intended.
+
+**Next concrete step:** confirm `TIMELINE_LABELS_AUTO=off` before merging;
+then decide on a final `max` rehearsal and separately authorize production
+rollout. No production write, main change, merged PR or new `max` rehearsal
+is claimed here.
 
 ---
 
