@@ -107,9 +107,10 @@
     },
     {
       "eventId": "genshin:carefree-snowball-fight:2026-10-21",
-      "fingerprint": "sha256:c5abe62925cf719c274cc6eb1a14469ca1b9f214447af84f39f71bb39f0f5806",
+      "fingerprint": "sha256:d8ed570a8fbe273de209a6d948b2eac3f8d4cb7395eca062e536f821d90e8a54",
       "rulesVersion": "v1",
-      "decision": "keep_original"
+      "decision": "keep_original",
+      "reason": "Distinctive event name already clear."
     },
     {
       "eventId": "genshin:to-temper-thyself-and-journey-far-cycle-5:2026-08-10",
@@ -159,9 +160,10 @@
     },
     {
       "eventId": "endfield:monumental-etching-forest-of-maras:2026-10-22",
-      "fingerprint": "sha256:fcd8c671330242f99b225dd099df01886474cae4f8915760633372630f826f7a",
+      "fingerprint": "sha256:f233c1fa61c40d700ff55b6c9bfafd08b1e925a039a62bee8db2fe61abf96f99",
       "rulesVersion": "v1",
-      "decision": "keep_original"
+      "decision": "keep_original",
+      "reason": "Specific challenge name already clear."
     },
     {
       "eventId": "hsr:version-4-6-nameless-honor:2026-09-28",
@@ -171,10 +173,10 @@
     },
     {
       "eventId": "genshin:overflowing-favor:2026-10-26",
-      "fingerprint": "sha256:7c4286683232f0d38db47dd631e0a89b6eb4561f7efa63c9162a26bd03b15a2c",
+      "fingerprint": "sha256:42df6b1c8fbc015ae049cd94976c0a1de58be5c73bd0f936ac5e2057f8f90e29",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "No supporting detail for a better label."
+      "reason": "Recognizable event name; no clearer supported alternative."
     },
     {
       "eventId": "wuwa:echo-erase:2026-10-22",
@@ -532,6 +534,160 @@
       "decision": "label",
       "timelineTitle": "Vivian",
       "reason": "Featured name alone, consistent with batch."
+    },
+    {
+      "eventId": "czn:anniversary-mail-gift:2026-10-31",
+      "fingerprint": "sha256:0d5fb47d9d559070d5aba09d708b391d0d9e7677f1eccbcc5b72be724eb92a54",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current identity is already a recognizable, informative event name."
+    },
+    {
+      "eventId": "genshin:starlight-voyage-heart-unbound:2026-10-19",
+      "fingerprint": "sha256:cdb276102c20684882bcedd42a37c9e32be33612e3e10e790ef51d19bd6428aa",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Official event name is already specific."
+    },
+    {
+      "eventId": "hsr:memory-of-chaos-crossing-the-afterlife:2026-09-28",
+      "fingerprint": "sha256:f1d5ac5910d61d4671f632c71b555e1a48c899d6d2f0744cbc08ba228dd9f1e3",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode and rotation identity already preserved."
+    },
+    {
+      "eventId": "czn:overdrive-simulation:2026-10-21",
+      "fingerprint": "sha256:992a44805bfba145bfe6b72a1220221c56b903cc97b2c600237b7898374520bb",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode prefix and name already clear."
+    },
+    {
+      "eventId": "genshin:epitome-invocation-azurelight-and-symphonist-of-scents:2026-10-13",
+      "fingerprint": "sha256:d3100b201c45afbcb3fddaf06f935e4368c57312681cca0530fc846cff2a687f",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current identity with both co-headliners is informative; official title also fine."
+    },
+    {
+      "eventId": "endfield:contingency-readiness:2026-10-29",
+      "fingerprint": "sha256:c258f91991dd52b7ae861eea24efeed0b926d9734256539b668379af9fab0c7e",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Specific event name already recognizable."
+    },
+    {
+      "eventId": "endfield:rejuvenation:2026-10-15",
+      "fingerprint": "sha256:ca8b6a4495eeaac133f096c353940d0a00d68fdb0abc756c41878f4281d08382",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current identity 'Si' is the featured name; no generic suffix to strip, and the lone name is already at-a-glance."
+    },
+    {
+      "eventId": "zzz:deadly-assault-oct-23:2026-10-23",
+      "fingerprint": "sha256:98a86a52afb5d7ce95956cac5aba37dab41aaa18b356fd443b02d6d2800c684e",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Rotation identity preserved; date suffix aids distinction."
+    },
+    {
+      "eventId": "nte:circle-bounty:2026-09-30",
+      "fingerprint": "sha256:fc1dfba4fb034bf5d4b75ff2ad1d8ca14d82b524244235e8ce9f37b24a21af35",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Specific event name already clear."
+    },
+    {
+      "eventId": "hsr:garden-of-plenty:2026-10-30",
+      "fingerprint": "sha256:62994b8727ae4efcd78f0d80787772ee49fb1e08c7363b463ed2b5b1d87f2f04",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Recognizable event name; no supporting detail for a clearer label."
+    },
+    {
+      "eventId": "hsr:an-ocean-in-a-pearl:2026-09-28",
+      "fingerprint": "sha256:4bf7f867e1362111865f1ab256a3dcf0eefceb7275962f3ceb49a9510d9327b2",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current identity 'Pearl' is the featured name alone, matching the approved pattern."
+    },
+    {
+      "eventId": "hsr:brilliant-fixation-colors-for-tomorrow:2026-09-28",
+      "fingerprint": "sha256:eb587b9275c8c058c75419240cd23ba973617c24fe3441ce0540103310b93015",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current identity is the featured name alone, matching the approved pattern."
+    },
+    {
+      "eventId": "hsr:bygone-reminiscence-reforged-in-hellfire:2026-10-21",
+      "fingerprint": "sha256:1913ed77f4cf56342c0bca553b1c986a99192d7efaee825f1be7e76a4b2e9988",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current identity is the featured name alone, matching the approved pattern."
+    },
+    {
+      "eventId": "hsr:now-i-am-become-blade:2026-10-21",
+      "fingerprint": "sha256:a88a60a532cdf610f4f5f4a327bc9d0f6de64d27a45609c1e72e87a20486f2c2",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current identity is the featured name alone, matching the approved pattern."
+    },
+    {
+      "eventId": "nte:circle-gifts:2026-09-30",
+      "fingerprint": "sha256:9ca55f71a87d170fa78d121453aeae7655266c8f53e7f09cf441056bb9475824",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Specific login reward name already clear."
+    },
+    {
+      "eventId": "nte:coal-lumps-treasure:2026-10-08",
+      "fingerprint": "sha256:7e0ebf5a5665315d8746a097129ae268a83e5bd8f6b60f6af9e30ce582970b59",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Specific event name already clear."
+    },
+    {
+      "eventId": "nte:pukaland-travelogue:2026-09-30",
+      "fingerprint": "sha256:54765523f349dfeb77456e9909158dc60ceab6eb8e82e15c924560b92f5b977d",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Specific event name already clear."
+    },
+    {
+      "eventId": "nte:terminal-depths:2026-09-30",
+      "fingerprint": "sha256:729a62caa2252197d2a0af5190cce28575000e120e7d8782d349baca965e5714",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Specific challenge name already clear."
+    },
+    {
+      "eventId": "hsr:astral-imagea-park-astral-trendible:2026-09-28",
+      "fingerprint": "sha256:e15c17d79ffb1af644917384ac2f840ded9c41d1d86b3b662b60351006c63527",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Specific pool and draw name already clear."
+    },
+    {
+      "eventId": "hsr:astral-imagea-park-park-souvenir:2026-09-28",
+      "fingerprint": "sha256:0705434b5fca7b1934f86dc626a65ceb08adb55a92ec98a4eb0787f531e300c7",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Specific reward claim name already clear."
+    },
+    {
+      "eventId": "wuwa:dreams-in-the-capsule:2026-09-30",
+      "fingerprint": "sha256:df2baf2b11ece97f49ced6bf349af8f17dc159b5fb299dec3383950542be5773",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Specific event name already clear."
+    },
+    {
+      "eventId": "wuwa:gifts-of-singing-drizzle:2026-10-22",
+      "fingerprint": "sha256:5c73b26acef31a05e33eaaf048da3e8dc773904fab7a69e93600b793841588bc",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Specific login reward name already clear."
     }
   ]
 }
