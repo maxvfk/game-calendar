@@ -1,3 +1,47 @@
+## Timeline labels — DeepSeek effort comparison VERIFIED (2026-10-31)
+
+Manual read-only [run #41211418997](https://github.com/maxvfk/game-calendar/actions/runs/41211418997)
+completed on PR #155 head `41e45403`. It compared four `deepseek-flash`
+thinking modes against the exact same 25-event JSON input. Every output passed
+L1 validator without errors and the dry-run accept recorded 25 accepted,
+0 guarded, 0 rejected; the three identical validator warnings refer to
+previously confusable existing event identities, not this experiment.
+No production or rehearsal registry was modified.
+
+| effort | new label | keep original | reasoning tokens | total output tokens | wall time |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| none | 5 | 20 | n/a | 2,295 | 9.0 s |
+| low | 6 | 19 | 2,401 | 4,874 | 21.7 s |
+| high | 0 | 25 | 4,980 | 6,938 | 31.0 s |
+| max | 2 | 23 | 12,764 | 15,133 | 75.5 s |
+
+**Editorial assessment (human interpretation, not a machine-checked defect):**
+`max` produced two useful, source-grounded explanatory labels:
+`Overflowing Favor (Double Artifact Drops)` and
+`Overdrive: Simulation (Double Growth Currency)`. These are consistent with
+their own summaries. `low` also surfaced `Overflowing Favor`, but its other
+five proposed labels mostly added redundant banner-type suffixes such as
+`Event Warp` and `Chartered Headhunting` to already recognizable current
+identities; the Timeline already has banner badges. Of `none`'s five new
+labels, three were identical to the existing current identity and others
+reintroduced marketing or banner-type wording. `high` proposed nothing.
+Accept validation ensures contract/guard safety, not editorial usefulness.
+
+**Important variance:** previous non-thinking live probe #41198860725 returned
+25 `keep_original` decisions with the same 25 event IDs and semantic
+fingerprints; this run's `none` returned 5 labels. The outer `asOf` was
+different, so the raw JSON file hashes were different, but the same event
+identities/fingerprints were evaluated. One evaluation per effort is not a
+reliable statistical comparison. Do not optimize by `label` count alone.
+
+**Next concrete step:** obtain explicit operator choice of production effort
+before changing the scheduled runner. `max` is the current quality-first
+candidate, but verify on an independent batch or rerun if consistency matters;
+`low` plus a targeted prompt improvement is a cheaper alternative. Keep PR
+#155 Draft and production kill switch off pending editorial approval.
+
+---
+
 ## Timeline labels — DeepSeek thinking evaluation prepared (2026-10-31)
 
 In Draft PR #155, the read-only probe adds a controlled `experiment=compare`
