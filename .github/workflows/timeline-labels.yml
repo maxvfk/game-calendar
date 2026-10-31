@@ -106,11 +106,33 @@ jobs:
           fi
           jq '.structured_output' labels/claude-result.json > labels/proposals.json
 
+      # Preserve the authoritative main feed. During a manual prerelease
+      # rehearsal only, load the selected branch's runner separately: main may
+      # not have it yet. The record job still checks out fresh main.
+      - name: Checkout selected DeepSeek runner for branch preview
+        if: steps.queue.outputs.events != '0' && env.MODEL == 'deepseek-flash' && github.event_name == 'workflow_dispatch' && github.ref_name != 'main'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: .timeline-provider-preview
+          persist-credentials: false
+
       - name: Ask DeepSeek for decisions
         if: steps.queue.outputs.events != '0' && env.MODEL == 'deepseek-flash'
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-        run: bun scripts/timeline-label-agent/run-deepseek.ts labels/agent-input.json labels/proposals.json
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] && [ "$GITHUB_REF_NAME" != main ]; then
+            runner=".timeline-provider-preview/scripts/timeline-label-agent/run-deepseek.ts"
+          else
+            runner="scripts/timeline-label-agent/run-deepseek.ts"
+          fi
+          if [ ! -f "$runner" ]; then
+            echo "::error::DeepSeek runner not found in selected revision: $runner"
+            exit 1
+          fi
+          bun "$runner" labels/agent-input.json labels/proposals.json
 
       - name: Report a skipped run
         if: steps.queue.outputs.events == '0' || steps.model.outputs.limited == 'true'

@@ -98,13 +98,28 @@ describe("GitHub Actions provider isolation", () => {
       expect(wf).toContain("options: [deepseek-flash, sonnet, opus]");
       expect(wf).toContain("default: deepseek-flash");
       expect(wf).toContain("run: bash scripts/timeline-label-agent/run-model.sh");
-      expect(wf).toContain("run: bun scripts/timeline-label-agent/run-deepseek.ts");
+      expect(wf).toContain("run-deepseek.ts");
       expect(wf.match(/secrets\.CLAUDE_CODE_OAUTH_TOKEN/g)?.length).toBe(1);
       expect(wf.match(/secrets\.DEEPSEEK_API_KEY/g)?.length).toBe(1);
       expect(wf).toContain("env.MODEL != 'deepseek-flash'");
       expect(wf).toContain("env.MODEL == 'deepseek-flash'");
     }
     expect(scheduled).toContain("vars.TIMELINE_LABEL_MODEL || 'deepseek-flash'");
+  });
+  test("manual branch rehearsal loads the selected DeepSeek runner without replacing the main feed", () => {
+    const propose = scheduled.split("\n  propose:\n")[1]!.split("\n  record:\n")[0]!;
+    const record = scheduled.split("\n  record:\n")[1]!;
+    expect(propose).toContain("ref: main");
+    expect(propose).toContain("ref: ${{ github.sha }}");
+    expect(propose).toContain("path: .timeline-provider-preview");
+    expect(propose).toContain("persist-credentials: false");
+    expect(propose).toContain("github.event_name == 'workflow_dispatch' && github.ref_name != 'main'");
+    expect(propose).toContain('runner=".timeline-provider-preview/scripts/timeline-label-agent/run-deepseek.ts"');
+    expect(propose).toContain('runner="scripts/timeline-label-agent/run-deepseek.ts"');
+    expect(propose).toContain('bun "$runner" labels/agent-input.json labels/proposals.json');
+    expect(record).toContain("ref: main");
+    expect(record).toContain("scripts/timeline-label-agent/record.sh");
+    expect(record).not.toContain(".timeline-provider-preview");
   });
   test("the write job has neither provider credential", () => {
     const record = scheduled.split("\n  record:\n")[1]!;

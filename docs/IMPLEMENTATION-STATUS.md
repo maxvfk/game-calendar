@@ -18,21 +18,34 @@ Corrected the adapter to read the canonical top-level field and added a
 regression test using `buildTimelineQueue` and `bundleTimelineLabelAgentInput`.
 Validation of the corrected branch is pending exact-head CI and a new live probe.
 
+**Read-only live probe #41198860725:** DeepSeek successfully returned 25 decisions
+(8,597 input / 2,284 output tokens); validator and accept dry run succeeded,
+but all 25 decisions were `keep_original` (0 newly proposed labels).
+This verifies transport, not yet adequate editorial value for production.
+**Manual rehearsal #41200052369:** failed before API because `propose` still
+checked out `main`, where the branch-only DeepSeek runner did not exist.
+No proposals were recorded. Fixed workflow to keep the current-main feed
+while separately checking out the selected manual branch runner under
+`.timeline-provider-preview`. Scheduled/main runs continue to use the
+normal main checkout. A regression test asserts this isolation.
+
 **Validation:** hosted GitHub [CI 41196117037](https://github.com/maxvfk/game-calendar/actions/runs/41196117037)
 on implementation commit `27eead93`: frozen install, TypeScript, tests,
 site build and mandatory PG17/recovery checks PASS; **1432 passed,
 3 existing skipped, 0 failures** (1435 tests / 90 files).
 Pages correctly skipped on PR. This documentation-only checkpoint
 requires a fresh exact-head CI before delivery.
-The operator has added the DeepSeek Actions secret. The first live read-only
-probe failed in local input validation before the HTTP request; the corrected
-adapter requires a new probe after successful exact-head CI. No successful
-DeepSeek call, rehearsal, Claude authentication or main deployment is claimed. See
+The operator has added the DeepSeek Actions secret. The second live read-only
+probe succeeded, but the subsequent manual rehearsal failed before calling
+DeepSeek due to the runner missing from main. The checkout routing is corrected
+in this branch and awaits a new CI and rehearsal. No recorded rehearsal,
+Claude authentication or main deployment is claimed. See
 [provider routing operating notes](tasks/TIMELINE-LABEL-PROVIDER-ROUTING.md).
 
-**Next concrete step:** pass exact-head CI on corrected PR #155, rerun the
-read-only DeepSeek probe and inspect results before any rehearsal.
-Do not enable production writes automatically.
+**Next concrete step:** pass exact-head CI on PR #155 and rerun
+`Timeline labels` on the PR branch with `model=deepseek-flash` and
+`target=rehearsal`; inspect write CI and the all-keep editorial distribution
+before ever enabling production main writes.
 
 ---
 

@@ -49,3 +49,16 @@ an event property. Canonical `buildTimelineQueue` stores `rulesVersion` once
 at the root. Adapter and regression tests now use the real bundled input shape.
 Re-run the read-only probe after exact-head CI; no successful live provider call
 was established by the failed run.
+
+## Manual rehearsal checkout correction (2026-10-31)
+
+A successful [read-only DeepSeek probe #41198860725](https://github.com/maxvfk/game-calendar/actions/runs/41198860725)
+confirmed 25/25 accepted decisions but **all** decisions were `keep_original`.
+The first [manual rehearsal #41200052369](https://github.com/maxvfk/game-calendar/actions/runs/41200052369)
+failed *before calling the API*: the `propose` job deliberately used a fresh
+`main` checkout and therefore could not see branch-only `run-deepseek.ts`.
+The fix maintains the canonical main feed and a main-only record job, but
+checks out the selected manual workflow revision into a separate read-only
+`.timeline-provider-preview` path just for the DeepSeek runner and its prompt.
+Scheduled/main jobs use the normal `main` script. Repeat the rehearsal after
+green exact-head CI; no production writes are authorized by a green probe.
