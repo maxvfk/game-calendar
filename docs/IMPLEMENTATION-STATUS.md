@@ -1,3 +1,28 @@
+## Timeline labels — production effort selected: max (2026-10-31)
+
+**Operator decision:** use `deepseek-flash` with `thinking.type=enabled` and
+`reasoning_effort=max` as the normal Timeline labels model configuration.
+The previous four-effort read-only comparison
+[#41211418997](https://github.com/maxvfk/game-calendar/actions/runs/41211418997)
+was technically green across all modes. Editorial review favored `max`'s
+two concrete reward explanations over the often-redundant banner suffixes
+from `low`; this is a provisional quality choice, not statistical proof.
+
+Implemented in Draft PR #155: the DeepSeek runner now defaults to `max`
+and the regular scheduled/manual rehearsal job explicitly sets
+`DEEPSEEK_REASONING_EFFORT=max`. The read-only probe remains freely
+switchable among `none|low|high|max` (its historical single-probe default
+remains `none`), while Claude CLI, provider switching, L1 checks and
+the canonical editorial prompt/preferences are unchanged. **Prompt editing
+is deferred to a separate future task**, as requested.
+
+**Next concrete step:** exact-head GitHub CI; before merging, confirm
+`TIMELINE_LABELS_AUTO=off` and decide on the production rollout.
+No production write, main change, merged PR or newly performed `max`
+rehearsal is claimed by this configuration update.
+
+---
+
 ## Timeline labels — DeepSeek effort comparison VERIFIED (2026-10-31)
 
 Manual read-only [run #41211418997](https://github.com/maxvfk/game-calendar/actions/runs/41211418997)

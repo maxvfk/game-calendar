@@ -24,10 +24,12 @@ describe("DeepSeek timeline-label provider (offline)", () => {
     expect(neutral).toContain('"decisions"');
     expect(neutral).toContain("TOP-LEVEL input field");
   });
-  test("uses non-thinking JSON output, the same input, and no tools", () => {
+  test("defaults to max reasoning JSON output, the same input, and no tools", () => {
     const req = deepSeekRequest(input, prompt, schema);
     expect(req.model).toBe("deepseek-flash");
-    expect(req.thinking).toEqual({ type: "disabled" });
+    expect(req.thinking).toEqual({ type: "enabled" });
+    expect(req.reasoning_effort).toBe("max");
+    expect(req.max_tokens).toBe(65536);
     expect(req.response_format).toEqual({ type: "json_object" });
     expect(req).not.toHaveProperty("tools");
     const messages = req.messages as Array<{ content: string }>;
@@ -35,7 +37,7 @@ describe("DeepSeek timeline-label provider (offline)", () => {
     expect(messages[1]!.content).toContain("Use existing facts only");
   });
   test("thinking effort maps exactly to the supported official modes", () => {
-    expect(parseReasoningEffort(undefined)).toBe("none");
+    expect(parseReasoningEffort(undefined)).toBe("max");
     for (const mode of ["none", "low", "high", "max"] as const) {
       const req = deepSeekRequest(input, prompt, schema, mode);
       expect(req.thinking).toEqual({ type: mode === "none" ? "disabled" : "enabled" });
@@ -123,7 +125,7 @@ describe("GitHub Actions provider isolation", () => {
     expect(probe).toContain("permissions:\n  contents: read");
     expect(probe).not.toMatch(/contents:\s*write|git push|gh workflow run/);
     expect(probe).toContain("DEEPSEEK_METRICS_PATH");
-    expect(scheduled).not.toContain("DEEPSEEK_REASONING_EFFORT");
+    expect(scheduled).toContain("DEEPSEEK_REASONING_EFFORT: max");
     expect(scheduled).not.toContain("experiment:");
   });
 
@@ -162,6 +164,7 @@ describe("GitHub Actions provider isolation", () => {
     const record = scheduled.split("\n  record:\n")[1]!;
     expect(record).not.toContain("secrets.");
     expect(record).not.toContain("DEEPSEEK_API_KEY");
+    expect(record).not.toContain("DEEPSEEK_REASONING_EFFORT");
     expect(record).not.toContain("CLAUDE_CODE_OAUTH_TOKEN");
     expect(probe).toContain("permissions:\n  contents: read");
     expect(probe).not.toContain("contents: write");

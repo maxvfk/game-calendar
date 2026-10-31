@@ -25,7 +25,8 @@ Claude verification must wait; the routing is verified with offline tests.
 
 The model-specific steps receive only their respective secret. Record has no
 provider credentials. The DeepSeek client calls a fixed official API endpoint
-(chat/completions), model deepseek-flash, thinking disabled, JSON output.
+(chat/completions), model deepseek-flash, JSON output, and the approved production default
+thinking enabled with reasoning_effort=max (2026-10-31).
 It uses the existing editorial prompt, only replacing Claude's StructuredOutput
 transport rule; decisions.schema.json is provided to guide output. It rejects
 partial, reordered, and malformed batches before writing proposals.json.
@@ -86,8 +87,9 @@ automated recording are verified; **production editorial approval is pending**.
 ## DeepSeek thinking comparison (manual read-only probe)
 
 The existing `Timeline labels probe (read-only)` has two new workflow_dispatch
-inputs. `experiment=single` keeps the historical behavior and allows DeepSeek
-`effort=none|low|high|max` (default `none`, matching production).
+inputs. `experiment=single` allows DeepSeek
+`effort=none|low|high|max` (default `none` for backwards-compatible probe and
+Claude switching; production is explicitly `max`).
 `experiment=compare`, `model=deepseek-flash` makes four billed API calls,
 sequentially, with the **same generated agent-input JSON and unchanged
 editorialPreferences**. Each run has independent proposals, L1 validation,
@@ -101,11 +103,36 @@ with no `reasoning_effort` for `none`, or `thinking.type=enabled` with
 `medium` collapse to `high` and are intentionally not exposed. Larger
 bounded generation budgets and timeouts account for thinking tokens. The
 read-only workflow remains manually triggered, with contents:read and no
-push/commit/deployment. The scheduled/production workflow still invokes the
-runner with its original non-thinking default, unchanged.
+push/commit/deployment. The scheduled/production workflow explicitly supplies
+`DEEPSEEK_REASONING_EFFORT=max`; the runner also defaults to `max` if no
+override is provided. The Claude path remains unchanged.
 
 **Next step:** select the PR branch, `model=deepseek-flash`, `experiment=compare`
 (default `effort` irrelevant). Review the four sets of labels *qualitatively*
 against the event summaries and the accept report; a high label count alone is
 not proof of superior quality. Do not enable production until the user approves
 the mode/editorial behavior.
+
+## Selected production effort (user decision, 2026-10-31)
+
+The operator selected **DeepSeek Flash with thinking enabled,
+`reasoning_effort=max`** for routine Timeline label generation, following the
+read-only four-effort comparison
+[run #41211418997](https://github.com/maxvfk/game-calendar/actions/runs/41211418997).
+The model settings are now explicit in the scheduled/manual rehearsal workflow
+and default to `max` inside the DeepSeek runner. This does not alter the
+existing provider choice, no-tool JSON contract, editorial instructions,
+preferences, validators, registry, data/provenance, schedule or the Claude CLI.
+The probe still allows manual `none|low|high|max` comparisons.
+
+The selection is a product decision, not a claim that max always wins:
+a single sample favored two source-grounded explanatory labels at `max`;
+`low` proposed more total labels, often redundant banner suffixes. We will
+revisit prompt editing separately, without holding this provider milestone open.
+
+**Rollout remains separately gated:** PR #155 stays unmerged until approved;
+no automatic production writes are enabled by this change. The existing
+`TIMELINE_LABELS_AUTO` kill switch must be verified off before any merge, and
+must not be enabled implicitly. After exact-head CI, a fresh `max` rehearsal
+on the unmerged branch is the next validation step if the operator wants a
+recorded end-to-end check at the chosen mode.

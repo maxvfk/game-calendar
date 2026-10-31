@@ -3,10 +3,10 @@ import { readFile } from "node:fs/promises";
 
 const ENDPOINT = "https://api.deepseek.com/chat/completions";
 const MODEL = "deepseek-flash";
-// Probe-only override; the scheduled/production job does not set this variable.
+// The default production reasoning mode is max. Explicit overrides are used by the read-only probe.
 export type ReasoningEffort = "none" | "low" | "high" | "max";
 export function parseReasoningEffort(value: string | undefined): ReasoningEffort {
-  const choice = value ?? "none";
+  const choice = value ?? "max";
   if (choice === "none" || choice === "low" || choice === "high" || choice === "max") return choice;
   throw new Error("Unsupported DeepSeek reasoning effort: " + choice);
 }
@@ -56,7 +56,7 @@ export function apiSystemPrompt(claudePrompt: string, schema: unknown): string {
 }
 
 export function deepSeekRequest(
-  rawInput: unknown, claudePrompt: string, schema: unknown, effort: ReasoningEffort = "none",
+  rawInput: unknown, claudePrompt: string, schema: unknown, effort: ReasoningEffort = "max",
 ): Record<string, unknown> {
   const input = agentInput(rawInput);
   return {

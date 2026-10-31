@@ -121,6 +121,8 @@ jobs:
         if: steps.queue.outputs.events != '0' && env.MODEL == 'deepseek-flash'
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          # Chosen after the read-only four-effort quality comparison (2026-10-31).
+          DEEPSEEK_REASONING_EFFORT: max
         run: |
           set -euo pipefail
           if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] && [ "$GITHUB_REF_NAME" != main ]; then
