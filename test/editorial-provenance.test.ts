@@ -208,8 +208,24 @@ test("existing M4 still queues/accepts v1 only; v2 rollback leaves presentation 
   // article-evidence.test.ts checks four public-data goldens from pre-C0 main.
   // The rehearsal below compares before/after v2 rollback, not against main.
   const c0BuilderHash = "e2ffd5da20e4479b738ae0047e354e31523a19541c15d8ef56adee5c2cc886ce";
-  for (const f of historyFixture.m4Files) expect(sha256(await Bun.file(f.path).text()), f.path)
-    .toBe(f.path === "scripts/build-feed.ts" ? c0BuilderHash : f.sha256);
+  for (const f of historyFixture.m4Files) {
+    const current = await Bun.file(f.path).text();
+    if (f.path === ".github/workflows/timeline-labels.yml") {
+      // Provider transport is now intentionally configurable, so its old whole-file
+      // SHA is no longer a valid safety oracle. Pin the unchanged M4 write boundary
+      // directly; provider-specific checks are in timeline-label-deepseek.test.ts.
+      expect(current).toContain("vars.TIMELINE_LABELS_AUTO == 'on'");
+      expect(current).toContain("needs: propose");
+      expect(current).toContain("needs.propose.outputs.limited != 'true'");
+      expect(current).toContain("run: bash scripts/timeline-label-agent/record.sh");
+      expect(current).toContain('gh workflow run ci.yml --ref "$TARGET_BRANCH"');
+      expect(current).toContain("group: timeline-labels");
+      expect(current.split("\n  record:\n")[1]).not.toContain("secrets.");
+      continue;
+    }
+    expect(sha256(current), f.path)
+      .toBe(f.path === "scripts/build-feed.ts" ? c0BuilderHash : f.sha256);
+  }
   const v2 = migrateToV2(audit.registry, manifest);
   const feed = EventFeed.parse({ schemaVersion: 1, generatedAt: ctx.now, events: extracted.candidates.map(r => r.event), sources: [] });
   const rollback = rollbackToV1(v2);
