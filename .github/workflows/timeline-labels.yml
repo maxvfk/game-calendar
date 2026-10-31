@@ -1,6 +1,6 @@
 name: Timeline labels
 
-# Autonomous Timeline naming (docs/tasks/TIMELINE-LABEL-AUTONOMOUS.md). Asks the model
+# Autonomous Timeline naming (docs/tasks/TIMELINE-LABEL-AUTONOMOUS.md). Asks the selected model
 # once, records the accepted decisions and runs CI on the recorded commit.
 #
 # Scheduled runs write to main, and so deploy, only while the repository variable
@@ -20,10 +20,10 @@ on:
         options: [rehearsal, main]
         default: rehearsal
       model:
-        description: "Claude model alias"
+        description: "Model provider (Claude requires working OAuth)"
         type: choice
-        options: [sonnet, opus]
-        default: sonnet
+        options: [deepseek-flash, sonnet, opus]
+        default: deepseek-flash
 
 concurrency:
   group: timeline-labels
@@ -34,7 +34,8 @@ permissions:
 
 env:
   TARGET_BRANCH: ${{ (github.event_name == 'schedule' || inputs.target == 'main') && 'main' || 'timeline-labels/rehearsal' }}
-  MODEL: ${{ inputs.model || 'sonnet' }}
+  # Manual selection overrides the scheduled repository variable.
+  MODEL: ${{ github.event_name == 'workflow_dispatch' && inputs.model || vars.TIMELINE_LABEL_MODEL || 'deepseek-flash' }}
 
 jobs:
   # Read-only. The only job that sees the Claude token.
@@ -63,6 +64,13 @@ jobs:
       - name: Build feed and agent input
         run: bun run build:feed
 
+      - name: Validate model selection
+        run: |
+          case "$MODEL" in
+            deepseek-flash|sonnet|opus) ;;
+            *) echo "::error::Unsupported model: $MODEL"; exit 1 ;;
+          esac
+
       - name: Queue size
         id: queue
         run: |
@@ -74,22 +82,22 @@ jobs:
 
       # An empty queue never calls the model.
       - name: Install Claude Code CLI (pinned)
-        if: steps.queue.outputs.events != '0'
+        if: steps.queue.outputs.events != '0' && env.MODEL != 'deepseek-flash'
         run: |
           set -euo pipefail
           curl -fsSL https://claude.ai/install.sh | bash -s "$CLAUDE_CODE_VERSION"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       # A subscription limit sets limited=true and skips the rest; nothing is written.
-      - name: Ask the model for decisions
+      - name: Ask Claude for decisions
         id: model
-        if: steps.queue.outputs.events != '0'
+        if: steps.queue.outputs.events != '0' && env.MODEL != 'deepseek-flash'
         env:
           RAW_CLAUDE_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: bash scripts/timeline-label-agent/run-model.sh labels/agent-input.json labels/claude-result.json
 
-      - name: Extract proposals
-        if: steps.queue.outputs.events != '0' && steps.model.outputs.limited != 'true'
+      - name: Extract Claude proposals
+        if: steps.queue.outputs.events != '0' && env.MODEL != 'deepseek-flash' && steps.model.outputs.limited != 'true'
         run: |
           set -euo pipefail
           if ! jq -e '.subtype == "success" and .structured_output != null' labels/claude-result.json > /dev/null; then
@@ -97,6 +105,36 @@ jobs:
             exit 1
           fi
           jq '.structured_output' labels/claude-result.json > labels/proposals.json
+
+      # Preserve the authoritative main feed. During a manual prerelease
+      # rehearsal only, load the selected branch's runner separately: main may
+      # not have it yet. The record job still checks out fresh main.
+      - name: Checkout selected DeepSeek runner for branch preview
+        if: steps.queue.outputs.events != '0' && env.MODEL == 'deepseek-flash' && github.event_name == 'workflow_dispatch' && github.ref_name != 'main' && inputs.target == 'rehearsal'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: .timeline-provider-preview
+          persist-credentials: false
+
+      - name: Ask DeepSeek for decisions
+        if: steps.queue.outputs.events != '0' && env.MODEL == 'deepseek-flash'
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          # Chosen after the read-only four-effort quality comparison (2026-10-31).
+          DEEPSEEK_REASONING_EFFORT: max
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] && [ "$GITHUB_REF_NAME" != main ] && [ "$TARGET_BRANCH" = timeline-labels/rehearsal ]; then
+            runner=".timeline-provider-preview/scripts/timeline-label-agent/run-deepseek.ts"
+          else
+            runner="scripts/timeline-label-agent/run-deepseek.ts"
+          fi
+          if [ ! -f "$runner" ]; then
+            echo "::error::DeepSeek runner not found in selected revision: $runner"
+            exit 1
+          fi
+          bun "$runner" labels/agent-input.json labels/proposals.json
 
       - name: Report a skipped run
         if: steps.queue.outputs.events == '0' || steps.model.outputs.limited == 'true'

@@ -1,3 +1,173 @@
+## PR #155 — Astra independent review corrections (2026-10-31)
+
+External Astra High read-only review of head `14c475f` vs main `7722978`
+returned REQUEST CHANGES with two confirmed findings: P2, a non-main workflow
+dispatch targeting production could execute an unmerged preview runner when
+the explicit `TIMELINE_LABELS_AUTO` gate is on; P3, HTTP 200 body-read
+errors skipped the promised bounded retry. Fixes on PR #155 narrow both
+preview checkout and shell runner selection to rehearsal only, and add
+HTTP body-read failures to the two-attempt DeepSeek transport. Tests cover
+branch-preview selection against four manual/scheduled scenarios and HTTP
+200 body-read recovery, two failures, and permanent HTTP 401.
+
+The operator reports switching `TIMELINE_LABELS_AUTO=off`; the connected
+GitHub API does not expose repository variables, so this was not verified
+independently. No automatic activation, merge or production write was made.
+
+**Verification update (post-fix):** [exact-head CI #41225577470](https://github.com/maxvfk/game-calendar/actions/runs/41225577470)
+on `1d21f8a` succeeded: frozen dependency installation, typecheck,
+**1440 pass / 3 existing skip / 0 fail** (1443 tests, 90 files),
+feed/site build, PostgreSQL 17 concurrency/recovery. No Pages deployment.
+The two regressions above are included in the green run.
+The independent reviewer has **not yet re-reviewed** the corrected diff.
+
+**Next concrete step:** obtain independent focused re-review
+of both repaired findings before deciding on merge. Keep prompt tuning separate.
+
+---
+
+## Timeline labels — production effort selected: max (2026-10-31)
+
+**Operator decision:** use `deepseek-flash` with `thinking.type=enabled` and
+`reasoning_effort=max` as the normal Timeline labels model configuration.
+The previous four-effort read-only comparison
+[#41211418997](https://github.com/maxvfk/game-calendar/actions/runs/41211418997)
+was technically green across all modes. Editorial review favored `max`'s
+two concrete reward explanations over the often-redundant banner suffixes
+from `low`; this is a provisional quality choice, not statistical proof.
+
+Implemented in Draft PR #155: the DeepSeek runner now defaults to `max`
+and the regular scheduled/manual rehearsal job explicitly sets
+`DEEPSEEK_REASONING_EFFORT=max`. The read-only probe remains freely
+switchable among `none|low|high|max` (its historical single-probe default
+remains `none`), while Claude CLI, provider switching, L1 checks and
+the canonical editorial prompt/preferences are unchanged. **Prompt editing
+is deferred to a separate future task**, as requested.
+
+**Validation:** [CI #41222252508](https://github.com/maxvfk/game-calendar/actions/runs/41222252508)
+on implementation commit `b531a8e` PASS: frozen install, typecheck,
+**1436 tests passed / 3 existing skipped / 0 failed**, site build and
+mandatory PostgreSQL 17/recovery checks. Pages deployment skipped as intended.
+
+**Next concrete step:** confirm `TIMELINE_LABELS_AUTO=off` before merging;
+then decide on a final `max` rehearsal and separately authorize production
+rollout. No production write, main change, merged PR or new `max` rehearsal
+is claimed here.
+
+---
+
+## Timeline labels — DeepSeek effort comparison VERIFIED (2026-10-31)
+
+Manual read-only [run #41211418997](https://github.com/maxvfk/game-calendar/actions/runs/41211418997)
+completed on PR #155 head `41e45403`. It compared four `deepseek-flash`
+thinking modes against the exact same 25-event JSON input. Every output passed
+L1 validator without errors and the dry-run accept recorded 25 accepted,
+0 guarded, 0 rejected; the three identical validator warnings refer to
+previously confusable existing event identities, not this experiment.
+No production or rehearsal registry was modified.
+
+| effort | new label | keep original | reasoning tokens | total output tokens | wall time |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| none | 5 | 20 | n/a | 2,295 | 9.0 s |
+| low | 6 | 19 | 2,401 | 4,874 | 21.7 s |
+| high | 0 | 25 | 4,980 | 6,938 | 31.0 s |
+| max | 2 | 23 | 12,764 | 15,133 | 75.5 s |
+
+**Editorial assessment (human interpretation, not a machine-checked defect):**
+`max` produced two useful, source-grounded explanatory labels:
+`Overflowing Favor (Double Artifact Drops)` and
+`Overdrive: Simulation (Double Growth Currency)`. These are consistent with
+their own summaries. `low` also surfaced `Overflowing Favor`, but its other
+five proposed labels mostly added redundant banner-type suffixes such as
+`Event Warp` and `Chartered Headhunting` to already recognizable current
+identities; the Timeline already has banner badges. Of `none`'s five new
+labels, three were identical to the existing current identity and others
+reintroduced marketing or banner-type wording. `high` proposed nothing.
+Accept validation ensures contract/guard safety, not editorial usefulness.
+
+**Important variance:** previous non-thinking live probe #41198860725 returned
+25 `keep_original` decisions with the same 25 event IDs and semantic
+fingerprints; this run's `none` returned 5 labels. The outer `asOf` was
+different, so the raw JSON file hashes were different, but the same event
+identities/fingerprints were evaluated. One evaluation per effort is not a
+reliable statistical comparison. Do not optimize by `label` count alone.
+
+**Next concrete step:** obtain explicit operator choice of production effort
+before changing the scheduled runner. `max` is the current quality-first
+candidate, but verify on an independent batch or rerun if consistency matters;
+`low` plus a targeted prompt improvement is a cheaper alternative. Keep PR
+#155 Draft and production kill switch off pending editorial approval.
+
+---
+
+## Timeline labels — DeepSeek thinking evaluation prepared (2026-10-31)
+
+In Draft PR #155, the read-only probe adds a controlled `experiment=compare`
+for `deepseek-flash` over the same agent-input batch at efforts `none`,
+`low`, `high` and `max`. Each effort records only its own proposals,
+validation, dry-run accept report and aggregate token/time metrics as
+short-lived artifacts. `Claude Code CLI`, scheduled `Timeline labels`,
+`record.sh`, canonical preferences and production default (non-thinking)
+remain unchanged. No additional live call or production write is asserted.
+
+**Next concrete step:** pass exact-head CI, run the manual read-only
+comparison on PR #155 and inspect grounded labels and guard outcomes before
+choosing a production mode or changing editorial instructions.
+
+---
+
+## Timeline label provider routing — TECHNICALLY VERIFIED, DRAFT PR #155 (2026-10-31)
+
+[PR #155](https://github.com/maxvfk/game-calendar/pull/155) adds DeepSeek Flash as
+the default provider for Timeline labels while retaining the unchanged Claude
+Code CLI runner (Sonnet/Opus), its separate credential path and manual selection.
+The existing event/fingerprint contract, editorial preferences, v1 registry,
+L1 guards, `record.sh`, current schedule, kill switch and Pages path remain intact.
+
+### Verification
+
+- Original DeepSeek probe [#41198532156](https://github.com/maxvfk/game-calendar/actions/runs/41198532156)
+  exposed an incorrect per-event `rulesVersion` assumption; corrected with a
+  regression against the real `buildTimelineQueue` and `bundleTimelineLabelAgentInput`.
+- Subsequent live read-only [probe #41198860725](https://github.com/maxvfk/game-calendar/actions/runs/41198860725)
+  succeeded: 25 decisions; 0 validator errors, 25 accepted in dry run.
+- Original manual rehearsal [#41200052369](https://github.com/maxvfk/game-calendar/actions/runs/41200052369)
+  exposed a checkout mismatch: the branch's new runner was missing from the
+  `main` checkout. Corrected by using a separate checkout of the selected
+  manual commit for provider transport only; the feed and record job continue
+  using fresh `main`.
+- Corrected PR head `c3fbf699`: [CI #41200244965](https://github.com/maxvfk/game-calendar/actions/runs/41200244965)
+  PASS (frozen install, typecheck, 1434 passed / 3 existing skips / 0 failures,
+  build, PG17/recovery checks).
+- Full manual [rehearsal #41206800507](https://github.com/maxvfk/game-calendar/actions/runs/41206800507)
+  SUCCESS. DeepSeek returned 25 decisions (8,597 input / 2,249 output tokens).
+  The fresh-main accept step accepted all 25; 0 guarded, 0 rejected, 0 warnings.
+  Commit [`6afa6bd`](https://github.com/maxvfk/game-calendar/commit/6afa6bd007b294610206b20266299c1a8298f916)
+  changed **only** `data/presentation/timeline-labels.v1.json` on
+  `timeline-labels/rehearsal`. The separately dispatched
+  [CI #41206891636](https://github.com/maxvfk/game-calendar/actions/runs/41206891636)
+  is green; Pages did not deploy. `main` remained unchanged.
+
+### Editorial gate and next concrete step
+
+Both successful live DeepSeek batches (probe and rehearsal) returned
+**25/25 `keep_original`** and **0 `label` / 0 `needs_research`**.
+The 25 events are mostly already recognizable, but `Overflowing Favor`
+with a supported double-artifact-drops summary and `Astral Imagea Park: Park
+Souvenir` with a voucher-claim summary are examples worth editorial review.
+Thus the operational transport, secret isolation, validation and recording path
+are verified, **but production editorial behavior has not been approved**:
+recorded `keep_original` suppresses repeated work until the fingerprint changes.
+
+**Next concrete step:** review the all-keep outcome against the operator's
+existing preferences. If it is too conservative, make a narrow API-specific
+prompt adjustment and repeat read-only probe + rehearsal. Otherwise explicitly
+approve the existing behavior. Keep PR #155 Draft and
+`TIMELINE_LABELS_AUTO=off` until this editorial decision and planned rollout;
+do not silently merge, activate schedule or modify Claude auth.
+
+---
+
 # Game calendar implementation status
 
 ## C0 — final bounded correction — READY FOR FINAL FOCUSED REVIEW (2026-10-31)

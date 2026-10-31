@@ -8,10 +8,20 @@ on:
   workflow_dispatch:
     inputs:
       model:
-        description: "Claude model alias"
+        description: "Model provider (Claude requires working OAuth)"
         type: choice
-        options: [sonnet, opus]
-        default: sonnet
+        options: [deepseek-flash, sonnet, opus]
+        default: deepseek-flash
+      experiment:
+        description: "Single probe or four-effort comparison (DeepSeek only)"
+        type: choice
+        options: [single, compare]
+        default: single
+      effort:
+        description: "DeepSeek effort for a single probe (ignored in compare)"
+        type: choice
+        options: [none, low, high, max]
+        default: none
 
 concurrency:
   group: timeline-labels
@@ -24,8 +34,11 @@ jobs:
   probe:
     if: github.repository == 'maxvfk/game-calendar'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     env:
+      MODEL: ${{ inputs.model || 'deepseek-flash' }}
+      EXPERIMENT: ${{ inputs.experiment || 'single' }}
+      EFFORT: ${{ inputs.effort || 'none' }}
       CLAUDE_CODE_VERSION: "2.1.310"
     steps:
       - uses: actions/checkout@v4
@@ -41,6 +54,25 @@ jobs:
       - name: Build feed and agent input
         run: bun run build:feed
 
+      - name: Validate model selection
+        run: |
+          case "$MODEL" in
+            deepseek-flash|sonnet|opus) ;;
+            *) echo "::error::Unsupported model: $MODEL"; exit 1 ;;
+          esac
+          case "$EXPERIMENT" in
+            single|compare) ;;
+            *) echo "::error::Unsupported probe experiment"; exit 1 ;;
+          esac
+          case "$EFFORT" in
+            none|low|high|max) ;;
+            *) echo "::error::Unsupported DeepSeek effort"; exit 1 ;;
+          esac
+          if [ "$MODEL" != deepseek-flash ] && { [ "$EXPERIMENT" != single ] || [ "$EFFORT" != none ]; }; then
+            echo "::error::Thinking comparison applies only to DeepSeek; Claude CLI is unchanged"
+            exit 1
+          fi
+
       - name: Queue size
         id: queue
         run: |
@@ -53,7 +85,7 @@ jobs:
 
       # An empty queue never calls the model.
       - name: Install Claude Code CLI (pinned)
-        if: steps.queue.outputs.events != '0'
+        if: steps.queue.outputs.events != '0' && env.MODEL != 'deepseek-flash'
         run: |
           set -euo pipefail
           curl -fsSL https://claude.ai/install.sh | bash -s "$CLAUDE_CODE_VERSION"
@@ -61,16 +93,15 @@ jobs:
 
       # One call, no tools. The token is visible to this step only; the script strips
       # stray whitespace from it and warns without printing it.
-      - name: Ask the model for decisions
+      - name: Ask Claude for decisions
         id: model
-        if: steps.queue.outputs.events != '0'
+        if: steps.queue.outputs.events != '0' && env.MODEL != 'deepseek-flash'
         env:
           RAW_CLAUDE_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          MODEL: ${{ inputs.model }}
         run: bash scripts/timeline-label-agent/run-model.sh probe/agent-input.json probe/claude-result.json
 
-      - name: Extract proposals
-        if: steps.queue.outputs.events != '0' && steps.model.outputs.limited != 'true'
+      - name: Extract Claude proposals
+        if: steps.queue.outputs.events != '0' && env.MODEL != 'deepseek-flash' && steps.model.outputs.limited != 'true'
         run: |
           set -euo pipefail
           if ! jq -e '.subtype == "success" and .structured_output != null' probe/claude-result.json > /dev/null; then
@@ -79,15 +110,46 @@ jobs:
           fi
           jq '.structured_output' probe/claude-result.json > probe/proposals.json
 
+      - name: Ask DeepSeek for decisions
+        if: steps.queue.outputs.events != '0' && env.MODEL == 'deepseek-flash' && env.EXPERIMENT == 'single'
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          DEEPSEEK_REASONING_EFFORT: ${{ env.EFFORT }}
+          DEEPSEEK_METRICS_PATH: probe/metrics.json
+        run: bun scripts/timeline-label-agent/run-deepseek.ts probe/agent-input.json probe/proposals.json
+
+      # One manual run, one immutable queue, four independent DeepSeek calls.
+      # Outputs remain scratch artifacts only; no repository write or registry change.
+      - name: Compare DeepSeek thinking efforts on the same queue
+        if: steps.queue.outputs.events != '0' && env.MODEL == 'deepseek-flash' && env.EXPERIMENT == 'compare'
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          set -euo pipefail
+          for effort in none low high max; do
+            mkdir -p "probe/compare/$effort"
+            echo "::group::DeepSeek effort=$effort"
+            DEEPSEEK_REASONING_EFFORT="$effort" DEEPSEEK_METRICS_PATH="probe/compare/$effort/metrics.json" \
+              bun scripts/timeline-label-agent/run-deepseek.ts \
+                probe/agent-input.json "probe/compare/$effort/proposals.json"
+            bun scripts/timeline-labels.ts validate \
+              "probe/compare/$effort/proposals.json" > "probe/compare/$effort/validation.json"
+            bun scripts/timeline-labels.ts accept \
+              "probe/compare/$effort/proposals.json" \
+              "probe/compare/$effort/registry-after.json" \
+              "probe/compare/$effort/accept-report.json"
+            echo "::endgroup::"
+          done
+
       # The existing strict L1 validator, read-only: it never writes the registry.
       - name: Validate with the L1 validator
-        if: steps.queue.outputs.events != '0' && steps.model.outputs.limited != 'true'
+        if: steps.queue.outputs.events != '0' && steps.model.outputs.limited != 'true' && env.EXPERIMENT == 'single'
         run: bun scripts/timeline-labels.ts validate probe/proposals.json > probe/validation.json
 
       # Dry run of the deterministic accept step (M2). It writes only into probe/, never
       # the reviewed registry, so the report shows what automation would record.
       - name: Accept dry run
-        if: always() && hashFiles('probe/proposals.json') != ''
+        if: always() && env.EXPERIMENT == 'single' && hashFiles('probe/proposals.json') != ''
         run: bun scripts/timeline-labels.ts accept probe/proposals.json probe/registry-after.json probe/accept-report.json
 
       - name: Report
@@ -99,6 +161,37 @@ jobs:
             echo "## Timeline labels probe — read-only, nothing was written"
             echo
             echo "Queue events: ${EVENTS:-unknown}"
+            echo "Provider: $MODEL"
+            echo "Experiment: $EXPERIMENT"
+            if [ "$MODEL" = deepseek-flash ] && [ "$EXPERIMENT" = single ]; then
+              echo "DeepSeek effort: $EFFORT"
+              if [ -f probe/metrics.json ]; then
+                jq -r '"Time: \(.durationMs) ms, input: \(.promptTokens) tokens, output: \(.completionTokens) tokens, reasoning tokens: \(.reasoningTokens)"' probe/metrics.json
+              fi
+            fi
+            if [ "$EXPERIMENT" = compare ]; then
+              echo
+              echo "### DeepSeek thinking comparison — identical input queue, no write"
+              echo "| effort | label | keep | research | validator errors | accepted | guarded | rejected | input tok | output tok | reasoning tok | elapsed ms |"
+              echo "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"
+              for effort in none low high max; do
+                base="probe/compare/$effort"
+                if [ ! -f "$base/metrics.json" ] || [ ! -f "$base/accept-report.json" ]; then
+                  echo "| $effort | incomplete | | | | | | | | | | |"
+                  continue
+                fi
+                jq -rn --slurpfile proposal "$base/proposals.json" \
+                  --slurpfile validation "$base/validation.json" \
+                  --slurpfile report "$base/accept-report.json" \
+                  --slurpfile metrics "$base/metrics.json" \
+                  --arg effort "$effort" '
+                  def countDecision($name): [$proposal[0].decisions[] | select(.decision==$name)] | length;
+                  def countOutcome($name): [$report[0].outcomes[] | select(.outcome==$name)] | length;
+                  "| \($effort) | \(countDecision("label")) | \(countDecision("keep_original")) | \(countDecision("needs_research")) | \($validation[0].errors | length) | \(countOutcome("accepted")) | \(countOutcome("guarded")) | \(countOutcome("rejected")) | \($metrics[0].promptTokens // "?") | \($metrics[0].completionTokens // "?") | \($metrics[0].reasoningTokens // "?") | \($metrics[0].durationMs) |"'
+              done
+              echo
+              echo "Inspect the per-effort proposals, warnings, and accept reports in the artifact."
+            fi
             if [ "${EVENTS:-}" = "0" ]; then echo; echo "Empty queue: no model call."; fi
             if [ -f probe/claude-result.json ]; then
               echo

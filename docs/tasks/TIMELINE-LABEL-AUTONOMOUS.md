@@ -1,5 +1,12 @@
 # Timeline labels — autonomous naming (plan and milestones)
 
+> **Provider addendum (2026-10-31, PR #155):** This document records the
+> original Claude-only M0–M4 implementation and historical probe measurements.
+> The additive [DeepSeek provider routing](TIMELINE-LABEL-PROVIDER-ROUTING.md)
+> changes only model transport. DeepSeek is now the default in the proposed
+> workflow; the Claude Code CLI runner and Sonnet/Opus options remain unchanged.
+> Neither a live DeepSeek probe nor production activation is implied.
+
 **Status:** M0 done (operator, 2026-10-25). M3 probe ran successfully on 2026-10-26 (below).
 M1 done (Event Detail shows the label). M2 done: deterministic `accept`, dry-run in the probe.
 M3.5 done (rehearsal run 40346051669, CI green on the rehearsal branch). M4 done: scheduled
