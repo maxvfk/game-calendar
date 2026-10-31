@@ -107,6 +107,57 @@ export function deepSeekProposals(rawResponse: unknown, rawInput: unknown): Prop
   return { schemaVersion: 1, decisions };
 }
 
+/**
+ * Model transport and response validation share the same two-attempt budget.
+ * Test injection covers HTTP 200 with a body-read failure, not just pre-header errors.
+ * Never log response bodies; they may echo prompt/event content.
+ */
+export async function fetchDeepSeekDecisions(
+  body: string,
+  apiKey: string,
+  input: unknown,
+  effort: ReasoningEffort,
+  fetcher: (url: string, init: RequestInit) => Promise<Response> = fetch,
+  pause: (ms: number) => Promise<void> = Bun.sleep,
+): Promise<{ proposals: Proposals; raw: unknown }> {
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    let response: Response;
+    try {
+      response = await fetcher(ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + apiKey },
+        body, signal: AbortSignal.timeout(effort === "max" ? 360_000 : 240_000),
+      });
+    } catch {
+      if (attempt === 1) { await pause(1500); continue; }
+      throw new Error("DeepSeek network request failed after retry");
+    }
+    if (!response.ok) {
+      if ((response.status === 429 || response.status >= 500) && attempt === 1) {
+        await pause(1500);
+        continue;
+      }
+      throw new Error("DeepSeek API returned HTTP " + response.status);
+    }
+    let raw: unknown;
+    try { raw = await response.json(); }
+    catch {
+      // A successful status can still have a timed-out or truncated HTTP body.
+      if (attempt === 1) { await pause(1500); continue; }
+      throw new Error("DeepSeek HTTP response body unreadable after retry");
+    }
+    let proposals: Proposals;
+    try { proposals = deepSeekProposals(raw, input); }
+    catch (error) {
+      // JSON Output may be whitespace, incomplete, or malformed; retry once.
+      if (attempt === 1) { await pause(1500); continue; }
+      throw error;
+    }
+    return { proposals, raw };
+  }
+  throw new Error("DeepSeek produced no complete response");
+}
+
 async function main(): Promise<void> {
   const [inputPath, outputPath] = process.argv.slice(2);
   if (!inputPath || !outputPath) throw new Error("Usage: run-deepseek.ts <agent-input.json> <proposals.json>");
@@ -120,37 +171,8 @@ async function main(): Promise<void> {
   const body = JSON.stringify(deepSeekRequest(input, prompt, schema, effort));
   const startedAt = Date.now();
 
-  for (let attempt = 1; attempt <= 2; attempt++) {
-    let response: Response;
-    try {
-      response = await fetch(ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: "Bearer " + apiKey },
-        body, signal: AbortSignal.timeout(effort === "max" ? 360_000 : 240_000),
-      });
-    } catch {
-      if (attempt === 1) { await Bun.sleep(1500); continue; }
-      throw new Error("DeepSeek network request failed after retry");
-    }
-    if (!response.ok) {
-      // Never log provider error bodies, which may echo request content.
-      if ((response.status === 429 || response.status >= 500) && attempt === 1) {
-        await Bun.sleep(1500);
-        continue;
-      }
-      throw new Error("DeepSeek API returned HTTP " + response.status);
-    }
-    let raw: unknown;
-    try { raw = await response.json(); }
-    catch { throw new Error("DeepSeek API returned non-JSON HTTP content"); }
-    let proposals: Proposals;
-    try { proposals = deepSeekProposals(raw, input); }
-    catch (error) {
-      // JSON Output can return whitespace or truncated content; retry once.
-      if (attempt === 1) { await Bun.sleep(1500); continue; }
-      throw error;
-    }
-    await Bun.write(outputPath, JSON.stringify(proposals, null, 2) + "\n");
+  const { proposals, raw } = await fetchDeepSeekDecisions(body, apiKey, input, effort);
+  await Bun.write(outputPath, JSON.stringify(proposals, null, 2) + "\n");
     const usage = object(raw).usage;
     const measured = usage && typeof usage === "object" && !Array.isArray(usage)
       ? usage as Record<string, unknown> : {};
@@ -176,9 +198,6 @@ async function main(): Promise<void> {
         " decisions; input tokens=" + (u.prompt_tokens ?? "?") +
         ", output tokens=" + (u.completion_tokens ?? "?"));
     } else console.log("DeepSeek " + MODEL + ": " + proposals.decisions.length + " decisions");
-    return;
-  }
-  throw new Error("DeepSeek produced no complete response");
 }
 
 if (import.meta.main) {

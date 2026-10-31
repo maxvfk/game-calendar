@@ -110,7 +110,7 @@ jobs:
       # rehearsal only, load the selected branch's runner separately: main may
       # not have it yet. The record job still checks out fresh main.
       - name: Checkout selected DeepSeek runner for branch preview
-        if: steps.queue.outputs.events != '0' && env.MODEL == 'deepseek-flash' && github.event_name == 'workflow_dispatch' && github.ref_name != 'main'
+        if: steps.queue.outputs.events != '0' && env.MODEL == 'deepseek-flash' && github.event_name == 'workflow_dispatch' && github.ref_name != 'main' && inputs.target == 'rehearsal'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
@@ -125,7 +125,7 @@ jobs:
           DEEPSEEK_REASONING_EFFORT: max
         run: |
           set -euo pipefail
-          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] && [ "$GITHUB_REF_NAME" != main ]; then
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] && [ "$GITHUB_REF_NAME" != main ] && [ "$TARGET_BRANCH" = timeline-labels/rehearsal ]; then
             runner=".timeline-provider-preview/scripts/timeline-label-agent/run-deepseek.ts"
           else
             runner="scripts/timeline-label-agent/run-deepseek.ts"

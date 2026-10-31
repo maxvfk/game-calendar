@@ -1,3 +1,24 @@
+## PR #155 — Astra independent review corrections (2026-10-31)
+
+External Astra High read-only review of head `14c475f` vs main `7722978`
+returned REQUEST CHANGES with two confirmed findings: P2, a non-main workflow
+dispatch targeting production could execute an unmerged preview runner when
+the explicit `TIMELINE_LABELS_AUTO` gate is on; P3, HTTP 200 body-read
+errors skipped the promised bounded retry. Fixes on PR #155 narrow both
+preview checkout and shell runner selection to rehearsal only, and add
+HTTP body-read failures to the two-attempt DeepSeek transport. Tests cover
+branch-preview selection against four manual/scheduled scenarios and HTTP
+200 body-read recovery, two failures, and permanent HTTP 401.
+
+The operator reports switching `TIMELINE_LABELS_AUTO=off`; the connected
+GitHub API does not expose repository variables, so this was not verified
+independently. No automatic activation, merge or production write was made.
+
+**Next concrete step:** verify exact-head CI and independent focused re-review
+of both repaired findings before deciding on merge. Keep prompt tuning separate.
+
+---
+
 ## Timeline labels — production effort selected: max (2026-10-31)
 
 **Operator decision:** use `deepseek-flash` with `thinking.type=enabled` and

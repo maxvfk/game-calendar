@@ -136,3 +136,28 @@ no automatic production writes are enabled by this change. The existing
 must not be enabled implicitly. After exact-head CI, a fresh `max` rehearsal
 on the unmerged branch is the next validation step if the operator wants a
 recorded end-to-end check at the chosen mode.
+
+## Independent Astra High focused review (2026-10-31) — fixes prepared
+
+External read-only review of PR #155 at `14c475f` identified two confirmed
+faults in the provider-only changes:
+
+1. **P2, branch-preview could reach production:** a manual dispatch from a
+   non-main ref with `target=main` could execute the unmerged preview runner
+   when `TIMELINE_LABELS_AUTO=on`. The checkout guard now additionally
+   requires `inputs.target == 'rehearsal'`; the executed shell selector also
+   checks `TARGET_BRANCH=timeline-labels/rehearsal`. A regression executes the
+   actual shell selection for feature-branch production, feature-branch
+   rehearsal, main dispatch, and scheduled main.
+2. **P3, body-read errors did not retry:** `response.json()` failing on an
+   otherwise successful HTTP response aborted the attempt loop. The runner now
+   gives response-body reading the same bounded two-attempt policy as network
+   and incomplete-response failures; regression uses a simulated HTTP 200 with
+   a failing body followed by a successful response, plus exhausted retries
+   and no-retry HTTP 401.
+
+No new credentials, editorial prompts, model settings, registry behavior,
+source ingestion or schedule changes. The user reports having switched
+`TIMELINE_LABELS_AUTO` from `on` to `off`; this cannot be independently
+read from the connected GitHub API. Re-review and exact-head CI are required
+before merging PR #155. Production activation remains separately gated.
