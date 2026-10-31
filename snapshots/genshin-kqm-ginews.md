@@ -12,60 +12,6 @@
 
 -----
 
-# [Visit the Starlit Gala Web Event to Unlock Your Wonderland Year in Review Report!](archive/21908.md)
-## Starlit Gala: Genshin Impact Miliastra Wonderland Web Event Update!
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/15/17ce4718f54a3a21719e7d07731a1b21_1092535759659879610_transformed.jpg)
-
-Dear Traveler, more content is now available in the Starlit Gala web event. Unlock your Wonderland Year in Review Report and claim more rewards!
-
-Celebrate the Starlit Gala together and make your own memories!
-
-[>> Click to Take Part in Event <<](https://act.hoyoverse.com/ys/event/e20261001ugc-ali0ea/index.html?game_biz=hk4e_global&sign_type=2&auth_appid=e20261001ugcanniversary&authkey_ver=1&utm_source=ingame&utm_medium=notice)
-
-〓Event Duration〓
-
-Start Time:
-
-America Server: October 21, 2026 (UTC+8)
-
-Asia & TW, HK, MO & Europe Servers: October 22, 2026 (UTC+8)
-
-End Time:
-
-November 3, 2026 04:00 (UTC+8)
-
-※ Rewards cannot be claimed after the event ends. Please claim them in time.
-
-〓Eligibility〓
-
-Travelers who have reached Adventure Rank 1 or above can participate in this event.
-
-※ The data for the Wonderland Year in Review Report of the "Starlit Gala" event will be collected between the Version Luna II update and October 18, 2026, 00:00 (UTC+8) (there may be a margin of error of about 30 minutes).
-
-〓Event Description〓
-
-During the event, Travelers can click to view their Wonderland Year in Review Report and look back on their exclusive memories in Miliastra Wonderland~
-
-Once you have finished viewing the full Wonderland Year in Review Report, your Wonderland Report Summary page will be generated, and you can share it freely!
-
-〓Event Rewards〓
-
-View the entire Wonderland Year in Review Report and share it to claim Geode of Replication ×100 and the Facial Makeup "Delicate Heart."
-
-Complete more event tasks to claim Geodes of Replication, the Manekin Action "V for Victory," and Mora ×20,000.
-
-〓Event Notes〓
-
-1. Please log in to the event using your HoYoverse Account and select your corresponding character in Genshin Impact to take part. This will ensure that your rewards can be sent and claimed correctly.
-
-2. After the event ends, you will no longer be able to take part and claim the rewards, so remember to take part in time.
-
-3. The in-game rewards will be distributed via in-game mail. The mail will expire after 30 days, so don't forget to claim the rewards in time.
-
-4. This web event is provided purely for entertainment. The content of the event does not represent any actual story or settings in the game. It is not indicative of any related gameplay features in Genshin Impact.
-
------
-
 # ["A Rekviem for the Underworld" Version 7.1 Update Details](archive/21946.md)
 ## Version 7.1 Update Details
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/22/f5b06cb01edc9b576cb6fd25bf8c23d5_79390737427291834_transformed.jpg)
@@ -757,6 +703,120 @@ Fixes an issue whereby the icon for the weapon "Prospector's Drill" was incorrec
 
 -----
 
+# [Visit the Starlit Gala Web Event to Unlock Your Wonderland Year in Review Report!](archive/21908.md)
+## Starlit Gala: Genshin Impact Miliastra Wonderland Web Event Update!
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/15/17ce4718f54a3a21719e7d07731a1b21_1092535759659879610_transformed.jpg)
+
+Dear Traveler, more content is now available in the Starlit Gala web event. Unlock your Wonderland Year in Review Report and claim more rewards!
+
+Celebrate the Starlit Gala together and make your own memories!
+
+[>> Click to Take Part in Event <<](https://act.hoyoverse.com/ys/event/e20261001ugc-ali0ea/index.html?game_biz=hk4e_global&sign_type=2&auth_appid=e20261001ugcanniversary&authkey_ver=1&utm_source=ingame&utm_medium=notice)
+
+〓Event Duration〓
+
+Start Time:
+
+America Server: October 21, 2026 (UTC+8)
+
+Asia & TW, HK, MO & Europe Servers: October 22, 2026 (UTC+8)
+
+End Time:
+
+November 3, 2026 04:00 (UTC+8)
+
+※ Rewards cannot be claimed after the event ends. Please claim them in time.
+
+〓Eligibility〓
+
+Travelers who have reached Adventure Rank 1 or above can participate in this event.
+
+※ The data for the Wonderland Year in Review Report of the "Starlit Gala" event will be collected between the Version Luna II update and October 18, 2026, 00:00 (UTC+8) (there may be a margin of error of about 30 minutes).
+
+〓Event Description〓
+
+During the event, Travelers can click to view their Wonderland Year in Review Report and look back on their exclusive memories in Miliastra Wonderland~
+
+Once you have finished viewing the full Wonderland Year in Review Report, your Wonderland Report Summary page will be generated, and you can share it freely!
+
+〓Event Rewards〓
+
+View the entire Wonderland Year in Review Report and share it to claim Geode of Replication ×100 and the Facial Makeup "Delicate Heart."
+
+Complete more event tasks to claim Geodes of Replication, the Manekin Action "V for Victory," and Mora ×20,000.
+
+〓Event Notes〓
+
+1. Please log in to the event using your HoYoverse Account and select your corresponding character in Genshin Impact to take part. This will ensure that your rewards can be sent and claimed correctly.
+
+2. After the event ends, you will no longer be able to take part and claim the rewards, so remember to take part in time.
+
+3. The in-game rewards will be distributed via in-game mail. The mail will expire after 30 days, so don't forget to claim the rewards in time.
+
+4. This web event is provided purely for entertainment. The content of the event does not represent any actual story or settings in the game. It is not indicative of any related gameplay features in Genshin Impact.
+
+-----
+
+# [Beware of Phishing Websites: Keep Your Account Secure](archive/22008.md)
+## Beware of Phishing Websites: Keep Your Account Secure
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/29/a05b77dc19895db836ffa20ada9cc006_4235804805962751199_transformed.png)
+
+Dear Traveler,
+
+We have recently identified cases of Travelers' accounts being stolen through phishing websites in certain regions.
+
+To keep Travelers' accounts secure, we will continue to strengthen our security measures and take further legal action as appropriate. We would also like to remind all Travelers of the following:
+
+Always use official channels to log in and manage your account.
+
+• Please use only the official Genshin Impact client and website to log in, view, or update your account information.
+
+• Do not click links from unknown sources or enter your login details, password, or verification codes on unofficial pages. Phishing websites often lure visitors with promises of free rewards, prize draws and cashback offers, or warnings of unusual account activity. Please stay alert.
+
+• Regularly check that you still have control of the email address and phone number linked to your account. Reduce the risk of account theft by changing your password regularly, using a strong password, and strengthening your email account's security.
+
+• If you discover that the email address linked to your account has been changed to an unfamiliar one, or receive notifications of logins or changes to linked account information that you did not initiate, change your password through official channels or contact official Customer Service immediately for assistance.
+
+We are committed to keeping Travelers' accounts secure. We sincerely hope to work together with all Travelers to build and maintain a fair and welcoming gaming environment.
+
+-----
+
+# ["To Temper Thyself and Journey Far": Rewards of Dedication](archive/21892.md)
+## To Temper Thyself and Journey Far
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/08/21/f77abe8a6f4104f1229db987e2c4280a_177291918664626977_transformed.png)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/03/04/9e61fb52eb6c278d1c0c354a4cc12047_6936810366436995049_transformed.png)
+
+〓Event Duration〓
+
+<t class="t_lc" contenteditable="false">2026/11/02 04:00</t> ~ <t class="t_lc" contenteditable="false">2027/01/25 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 14 or above
+
+Complete "Knights of Favonius" in Archon Quest Prologue: Act I to unlock the Wish system
+
+Complete the World Quest "Welcome to the Adventurers' Guild" to unlock the Adventurer Handbook
+
+〓Event Details〓
+
+● During the event, claim rewards from 4 Daily Commissions and expend 120 Original Resin in a single day to complete daily training goals. Complete daily training goals 5 times in a week to complete the weekly training goal for that week. You will accumulate progress for completing weekly training goals, which can be exchanged for the corresponding stage rewards.
+
+● When you complete 8 weekly training goals, you can claim the Stella Fortuna reward. Travelers can select a desired character's Stella Fortuna from the characters on the event page's roster.
+
+※ Stella Fortuna cannot be obtained for characters you have not obtained, or for characters who have already obtained a Stella Fortuna from past "To Temper Thyself and Journey Far" events.
+
+※ During each season of the "To Temper Thyself and Journey Far" event, unclaimed Stella Fortuna rewards (earned by completing objectives) can only be exchanged for characters available in the current season. The selection opportunity does not carry over to the next season, so please select your character for exchange promptly.
+
+● In the current cycle of "To Temper Thyself and Journey Far," complete 8 weekly training goals to unlock Tempered in Practice for the following week. Once unlocked, you will receive extra rewards for completing weekly training goals. This bonus resets weekly, so be sure to claim your extra rewards in time.
+
+● After the current cycle of "To Temper Thyself and Journey Far" concludes, the next cycle will begin on the following Monday at 04:00.
+
+-----
+
 # ["Overflowing Favor" Event: Double Drops With Artifacts](archive/21053.md)
 ## Overflowing Favor
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/71613bec4ef9f79808a3d8659a3de7e3_4543893924710096263.jpg)
@@ -864,30 +924,6 @@ Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-St
 ※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
 
 ※ For more information, go to the Wish screen and select Details in the bottom-left corner.
-
------
-
-# [Beware of Phishing Websites: Keep Your Account Secure](archive/22008.md)
-## Beware of Phishing Websites: Keep Your Account Secure
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/29/a05b77dc19895db836ffa20ada9cc006_4235804805962751199_transformed.png)
-
-Dear Traveler,
-
-We have recently identified cases of Travelers' accounts being stolen through phishing websites in certain regions.
-
-To keep Travelers' accounts secure, we will continue to strengthen our security measures and take further legal action as appropriate. We would also like to remind all Travelers of the following:
-
-Always use official channels to log in and manage your account.
-
-• Please use only the official Genshin Impact client and website to log in, view, or update your account information.
-
-• Do not click links from unknown sources or enter your login details, password, or verification codes on unofficial pages. Phishing websites often lure visitors with promises of free rewards, prize draws and cashback offers, or warnings of unusual account activity. Please stay alert.
-
-• Regularly check that you still have control of the email address and phone number linked to your account. Reduce the risk of account theft by changing your password regularly, using a strong password, and strengthening your email account's security.
-
-• If you discover that the email address linked to your account has been changed to an unfamiliar one, or receive notifications of logins or changes to linked account information that you did not initiate, change your password through official channels or contact official Customer Service immediately for assistance.
-
-We are committed to keeping Travelers' accounts secure. We sincerely hope to work together with all Travelers to build and maintain a fair and welcoming gaming environment.
 
 -----
 
