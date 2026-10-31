@@ -170,3 +170,24 @@ The two regressions above are included in the green run.
 The independent reviewer has **not yet re-reviewed** the corrected diff.
 
 **Next concrete step:** focused Astra re-review of the two repaired findings; only after approval consider merging. Do not change `TIMELINE_LABELS_AUTO` automatically.
+
+## Production activation and P1–P4 closeout (2026-11-01)
+
+Operator set `TIMELINE_LABELS_AUTO=on` and manually dispatched
+[Timeline labels #41241111380](https://github.com/maxvfk/game-calendar/actions/runs/41241111380)
+from `main` with `target=main`, `model=deepseek-flash`. Successful
+`reasoning_effort=max` API run processed 25 events (22 `keep_original`,
+3 `label`), accepted all 25 with no guards/rejections/warnings and
+committed only `timeline-labels.v1.json` to `main` at
+[`d5f6434`](https://github.com/maxvfk/game-calendar/commit/d5f64347bdfd7838980677844bfc4e566cfca397).
+The accepted names describe doubled Genshin artifact drops, doubled CZN
+Growth Currency, and Endfield daily missions, all supported by supplied
+event summaries. [Dispatched CI #41241246891](https://github.com/maxvfk/game-calendar/actions/runs/41241246891)
+passed 1440 tests, full typecheck/build, mandatory PG17 checks, and
+successfully deployed to GitHub Pages. Workflow runner ran on freshly
+checked-out `main`; no feature-branch preview was used.
+
+**P1–P4 closed.** The scheduled switch is operator-confirmed `on`;
+GitHub connector cannot independently read variable values. Future
+editorial prompt refinement is intentionally separate and does not
+reopen this milestone.
