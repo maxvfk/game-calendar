@@ -8,6 +8,9 @@ its review findings are kept where they still apply.
 **Design review:** operator comments on
 [PR #147](https://github.com/maxvfk/game-calendar/pull/147) (2026-10-29), folded in below.
 **Rule that does not change:** a confidently wrong date is worse than a missing one (`AGENTS.md`).
+**Current implementation checkpoint (2026-11-01):** C0 is merged via
+[PR #152](https://github.com/maxvfk/game-calendar/pull/152). C1 starts with a
+bounded WuWa notice-inventory extension, not a reopening of C0.
 
 ## Why a different scheme
 
@@ -44,7 +47,10 @@ it would not have caught most of the gaps above.
 
 For sources that publish separate articles (KQM GINews and HSRNews, ZZZ and NTE Steam news,
 the WuWa Kuro mirror), **every** item in the snapshot is listed with its source and item ID,
-including items that produced nothing. Each gets one status:
+including items that produced nothing. C0 currently provides full inventory for the first four
+sources only. WuWa's existing E1 extractor supplies evidence for emitted events, **not** an
+independent inventory of every Atom entry; C1a.0 must close that gap before C1 statuses are
+assigned. Each inventoried item gets one status:
 
 - **processed**: every dated span in the item matches a start or end of an event produced from
   it (in the merged feed, or a reviewed row that cites the item);
@@ -79,6 +85,49 @@ baseline, audit log), never in issue text or comments. This step must not turn t
 run red.
 
 **Built on C0**, which provides the item list and the event-to-item mapping.
+
+#### C1 implementation boundaries (2026-11-01)
+
+- **C1a.0 — WuWa notice inventory first (separate PR).** Reuse the existing
+  `wuwa-kuro-mirror` Atom article discovery and E1 sidecar. Enumerate every actual
+  entry, including zero-output and non-calendar posts; use stable
+  `(sourceId, articleId)` identity and truthful source URL/capture metadata. Keep
+  each article's source text for later partial-coverage analysis. Attribute each
+  emitted WuWa event to exactly one matching article, or report explicit
+  fail-closed diagnostics for missing, duplicate or ambiguous links. Preserve
+  existing event-local WuWa E1 excerpts/hashes and all public feed/Timeline bytes,
+  event IDs and reviewed precedence. Do not implement coverage statuses or new
+  ingestion sources here. The acceptance test must replay zero-output, multi-event,
+  malformed/duplicate entries and unchanged public output on pinned inputs.
+- **C1a.1 — deterministic coverage engine (separate PR).** Build on five
+  notice-based sources (C0's four plus WuWa), reuse one bounded date-span reader
+  in C1 and later C2, match periods conservatively, retain unmatched spans, and
+  implement statuses, ignore-by-notice-or-span and a notification-only baseline.
+  A notice with one recognized event and another unmatched deadline must not be
+  marked `processed`; Starlight Voyage is the required historical regression.
+  A date alone is not proof of an in-scope event, and an ambiguous or unreadable
+  span must not become a confident complete-coverage claim.
+- **C1b — GitHub Coverage Inbox (separate PR).** Integrate the read-only report
+  into refresh as a best-effort side effect; the canonical baseline and ignore
+  decisions live in Git, not GitHub Issue text. One pinned issue, idempotent
+  updates, notify only on genuinely new items and prioritize upcoming seven-day
+  deadlines. Issue failures cannot make refresh red or change published data.
+- **Seven-game visibility is not seven-game notice coverage.** Endfield's
+  currently scheduled wiki.gg Events/Echoes pages and CZN's Prydwen banners are
+  structured/table-like surfaces, not independent first-party notice feeds.
+  Until a separate permitted official notice source is integrated, C1 must
+  explicitly show them as `notice inventory not supported / not evaluated`
+  (or an equivalently explicit source-level limitation), **never** `processed`
+  or complete because their notice inbox is empty. C3's source-family audit
+  covers all seven games, including missing announcement families and sources
+  not ingested. Adding new official transports needs separate scope, access/terms
+  review and operator authorization; it is not part of C1a.0.
+
+The recommended execution is one coordination cycle for C1a.0 → C1a.1 → C1b,
+but **one short-lived Codex branch/PR and independent review per substep**.
+No next substep or C2 starts automatically before the preceding PR is verified
+and merged. C2 reuses the bounded C1 date reader but introduces its own reviewed
+per-field evidence and CI migration in a separate milestone.
 
 ### Part 2 — coverage audit
 
@@ -214,7 +263,9 @@ rules and this scheme does not change it. Agreed with the operator on 2026-10-28
 | Step | Scope | Done when |
 | --- | --- | --- |
 | C0 | Event Context E1 evidence extraction for the article sources: KQM GINews and HSRNews, ZZZ and NTE Steam news | Two checks hold: (a) every item in the current snapshot is listed with its source and item ID, including items with no event; (b) every emitted event maps to its item, or fails closed with a diagnostic. Public feed files stay byte-identical |
-| C1 | Part 1: statuses including partial, ignore list, baseline, priority, inbox issue, built on C0 | Replayed on the snapshots before the fixes, it lists the gaps behind #119 and #130–#143, including the Starlight Voyage quest cutoff as partial |
+| C1a.0 | Extend the existing E1/C0 notice inventory to every WuWa Kuro Atom entry before classification | All WuWa entries, including zero-output, have stable IDs and source text; every emitted event has an unambiguous article link or diagnostic; prior WuWa E1 and public outputs remain unchanged |
+| C1a.1 | Part 1 offline coverage engine for five notice sources: bounded date reader, `processed`/`partially processed`/`unprocessed`/`ignored`, span ignores and notification-only baseline | Historical replay flags #119 and #130–#143 where the relevant notice is in a tracked snapshot; Starlight's earlier quest cutoff is `partially processed`, not a false `processed` |
+| C1b | Part 1 operational Coverage Inbox: one pinned issue, seven-day priority, idempotent best-effort refresh updates | Replayed output and actual refresh integration do not change public feed or turn refresh red; new-item notification is bounded; unsupported games are not shown as complete |
 | C2 | Part 3: per-field `evidence`, date reader, CI check, legacy list | Fixes #130–#143 rewritten as test cases pass; a wrong date, or a field without a quote, fails |
 | C3 | Part 2: audit prompt, audit log, due computation | One real audit run end to end for one game |
 | C4 | Part 4: dead man's switch | A deliberately skipped ping produces mail |
@@ -222,11 +273,14 @@ rules and this scheme does not change it. Agreed with the operator on 2026-10-28
 
 C0 to C4 involve no AI.
 
-**Why C0 comes first.** The E1 extractor already associates source text with the final merged
-event exactly, failing closed on ambiguity, but only for WuWa
-(`docs/evidence/event-context-wuwa-e1.md`). Extending it to the article sources is one
-deterministic piece that three later steps use: the item-to-event mapping in part 1, the date
-quotes in parts 3 and 5, and the source excerpts for summaries.
+**Why C0 came first.** WuWa E1 originally associated source text with emitted
+winners but did not enumerate all zero-output Atom entries
+(`docs/evidence/event-context-wuwa-e1.md`). Merged C0/PR #152 added full
+inventory and event-to-notice attribution for KQM GINews/HSRNews and ZZZ/NTE Steam
+(`docs/evidence/article-source-c0.md`). C1a.0 completes that inventory contract
+for WuWa before C1's shared date reader, statuses and inbox. C1/C2/C5 can then
+reuse the item evidence without assuming that tracked notices represent every
+in-scope event across all seven games.
 
 **Summaries come after C4.** They improve wording, not correctness: a missing event breaks the
 calendar's main question ("what ends first"), a plain description does not. Before Event Context
