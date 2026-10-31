@@ -1,3 +1,41 @@
+## Timeline labels — DeepSeek provider rollout code MERGED (2026-10-31)
+
+**PR [#155](https://github.com/maxvfk/game-calendar/pull/155) merged via squash**
+[`7fb72cb`](https://github.com/maxvfk/game-calendar/commit/7fb72cb595633986ece9ec1450e247ad4539f010)
+to `main`, replacing the Claude-only Timeline labels default with
+`deepseek-flash` using `thinking.type=enabled`, `reasoning_effort=max`.
+Manual `sonnet` / `opus` selection and the separate Claude Code CLI
+credential path remain available. Editorial prompt/preferences, event and
+fingerprint rules, deterministic accept/record, schedule and L1 guards
+are unchanged. Read-only comparison supports all four DeepSeek effort
+settings (`none|low|high|max`).
+
+Independent reviews: Astra High identified two confirmed issues on
+`14c475f`: P2 (non-main preview code could run with a production target
+while the kill switch was on) and P3 (failed HTTP 200 body read did not
+retry). Both were fixed in `1d21f8a` with executable regression tests;
+Sonnet's targeted re-review of `e35a2e6` returned **APPROVE**.
+Exact PR-head [CI #41225693999](https://github.com/maxvfk/game-calendar/actions/runs/41225693999)
+passed frozen installation, typecheck, **1440 passed / 3 existing skips /
+0 failed** (1443 tests), build and PostgreSQL 17 recovery/concurrency
+checks. Production Pages were not deployed by that PR check.
+
+**Operational status:** the operator explicitly changed the GitHub Actions
+repository variable `TIMELINE_LABELS_AUTO` from `on` to **`off` before
+merge. The connector cannot independently read repository variables; this
+value is operator-reported. The merge did **not** switch that variable on,
+did not run a manual production label write, and did not change the
+canonical `data/presentation/timeline-labels.v1.json` in this PR.
+The automatic label-write schedule remains effectively disabled while
+the variable stays `off`.
+
+**Next concrete step:** check the merge-commit CI / Pages deployment;
+then, only when the operator explicitly authorizes it, change
+`TIMELINE_LABELS_AUTO=on` to resume scheduled production labels with
+DeepSeek Flash max. Prompt tuning is a separate future milestone.
+
+---
+
 ## PR #155 — Astra independent review corrections (2026-10-31)
 
 External Astra High read-only review of head `14c475f` vs main `7722978`
