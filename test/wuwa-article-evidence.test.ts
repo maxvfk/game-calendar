@@ -205,3 +205,23 @@ test("full sidecar validates; forged hashes, positions and invalid references fa
     { ...side, articleAttributions: side.articleAttributions.map(a => ({ ...a, noticeId: "9003" })) },
   ]) expect(EvidenceSidecar.safeParse(mutation).success).toBe(false);
 });
+
+
+test("invalid article reference metadata cannot poison E1 recovery diagnostics", () => {
+  const e1 = extractWuwaEvidence(raw, ctx, capture);
+  const original = buildEvidenceSidecar(e1, events);
+  for (const fields of [
+    { sourceUrl: "invalid untrusted URL" }, { sourceId: "" },
+    { sourceUrl: "invalid untrusted URL", sourceId: "" },
+  ]) {
+    const inventory = extractArticleEvidence(raw, ctx, capture, events);
+    Object.assign(inventory.notices!.at(-1)!, fields);
+    const side = safelyBuildEvidenceSidecar(combine(e1, inventory), events);
+    expect(side.entries).toEqual(original.entries);
+    expect(side.unattached).toEqual(original.unattached);
+    expect(side.notices).toEqual([]);
+    expect(codes(side)).toContain("article_assembly_failed");
+    expect(EvidenceSidecar.safeParse(side).success).toBe(true);
+    expect(JSON.stringify(side.diagnostics)).not.toContain("invalid untrusted URL");
+  }
+});

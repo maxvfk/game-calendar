@@ -230,14 +230,21 @@ export function safelyBuildEvidenceSidecar(
   } catch {
     // Invalid article data must not discard independently valid WuWa E1 entries.
     if (extraction.notices?.length || extraction.articleAttributions?.length) {
-      const sources = new Map((extraction.notices ?? []).map(n => [n.sourceId, n.sourceUrl]));
+      const sources = new Map((extraction.notices ?? []).map(n => [n?.sourceId, n?.sourceUrl]));
       const failure = { code: "article_assembly_failed", sourceEventId: null,
         detail: "Optional article validation failed; article inventory and associations omitted" };
+      // Corrupt article reference fields must not poison recovery diagnostics
+      // and thereby discard an otherwise valid independent E1 lane.
+      const failures = sources.size ? [...sources].map(([sourceId, sourceUrl]) => {
+        const full = Diagnostic.safeParse({ ...failure, sourceId, sourceUrl });
+        if (full.success) return full.data;
+        return Diagnostic.parse({ ...failure, sourceUrl: null,
+          ...(Diagnostic.shape.sourceId.safeParse(sourceId).success ? { sourceId } : {}),
+        });
+      }) : [{ ...failure, sourceUrl: null }];
       try {
         return buildEvidenceSidecar({ ...extraction, notices: [], articleAttributions: [],
-          diagnostics: [...extraction.diagnostics, ...(sources.size ? [...sources].map(([sourceId, sourceUrl]) => ({
-            ...failure, sourceId, sourceUrl,
-          })) : [{ ...failure, sourceUrl: null }])] }, finalEvents, conflicts, mappings);
+          diagnostics: [...extraction.diagnostics.filter(d => Diagnostic.safeParse(d).success), ...failures] }, finalEvents, conflicts, mappings);
       } catch { /* Try recovering the independent article lane below. */ }
     }
     // Conversely, invalid E1 candidates cannot discard a valid article lane.
