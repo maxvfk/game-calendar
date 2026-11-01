@@ -225,6 +225,15 @@ export function safelyBuildEvidenceSidecar(
   conflicts: MergeResult["conflicts"] = [],
   mappings: EvidenceMapping[] = [],
 ): z.infer<typeof EvidenceSidecar> {
+  // Diagnostics are an independent auxiliary lane. Refuse invalid rows before
+  // deciding whether either evidence lane failed; never repair candidate text.
+  const validDiagnostics = extraction.diagnostics.filter(d => Diagnostic.safeParse(d).success);
+  if (validDiagnostics.length !== extraction.diagnostics.length) {
+    extraction = { ...extraction, diagnostics: [...validDiagnostics, {
+      code: "diagnostic_validation_failed", sourceEventId: null, sourceUrl: null,
+      detail: "Invalid optional diagnostics omitted; evidence validated independently",
+    }] };
+  }
   try {
     return buildEvidenceSidecar(extraction, finalEvents, conflicts, mappings);
   } catch {

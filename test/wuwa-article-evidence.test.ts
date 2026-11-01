@@ -225,3 +225,113 @@ test("invalid article reference metadata cannot poison E1 recovery diagnostics",
     expect(JSON.stringify(side.diagnostics)).not.toContain("invalid untrusted URL");
   }
 });
+
+// Exact independent-review reproducer: the canonical raw traversal still sees
+// the harmless commented preamble, but it is not the actual entry child content.
+test("review P1: commented-out content cannot replace notice 9003's actual HTML", () => {
+  const spoof = '<!--<content type="html"><![CDATA[<p>Harmless preamble.</p>]]></content>-->';
+  const changed = raw.replace('<entry><id>urn:article:9003</id>', '<entry>' + spoof + '<id>urn:article:9003</id>');
+  expect(adapter.parse(changed, ctx)).toEqual(events);
+  const inventory = safelyExtractArticleEvidence(changed, ctx, capture, events);
+  expect(codes(inventory)).toEqual(["article_extraction_failed", "article_inventory_incomplete"]);
+  expect(sourceReport(inventory)).toMatchObject({ available: false, noticeCount: 0, attributedEvents: 0 });
+  expect(inventory.articleAttributions).toHaveLength(5);
+  expect(inventory.articleAttributions!.every(a => a.noticeId === null && a.noticePosition === null)).toBe(true);
+  const e1 = extractWuwaEvidence(changed, ctx, capture);
+  const side = safelyBuildEvidenceSidecar(combine(e1, inventory), events);
+  expect(side.entries).toEqual(buildEvidenceSidecar(extractWuwaEvidence(raw, ctx, capture), events).entries);
+  expect(JSON.stringify(side.notices)).not.toContain("Harmless preamble");
+});
+
+for (const [name, spoof] of [
+  ["title", "<title>Commented title</title>"],
+  ["ID and URL", '<id>urn:article:9999</id><link href="https://wutheringwaves.kurogames.com/en/main/news/detail/9999"/>'],
+] as const) test(`review P1: discovered ${name} must correspond to actual entry fields`, () => {
+  const changed = raw.replace('<entry><id>urn:article:9003</id>', `<entry><!--${spoof}--><id>urn:article:9003</id>`);
+  expect(adapter.parse(changed, ctx)).toEqual(events);
+  expect(codes(safelyExtractArticleEvidence(changed, ctx, capture, events)))
+    .toEqual(["article_extraction_failed", "article_inventory_incomplete"]);
+});
+
+for (const field of ["id", "title", "link", "content"]) test(`review P1: ${field} must be an actual direct entry child`, () => {
+  const changed = raw.replace(/<entry><id>urn:article:9003<\/id>[\s\S]*?<\/entry>/, notice =>
+    notice.replace(new RegExp(field === "link" ? '<link\\b[^>]*\\/>' : `<${field}\\b[^>]*>[\\s\\S]*?<\\/${field}>`), value => `<author>${value}</author>`));
+  expect(changed).not.toBe(raw);
+  expect(adapter.parse(changed, ctx)).toEqual(events);
+  expect(codes(safelyExtractArticleEvidence(changed, ctx, capture, events)))
+    .toEqual(["article_extraction_failed", "article_inventory_incomplete"]);
+});
+
+test("review P1: comments inside HTML CDATA remain complete notice replay content", () => {
+  const htmlComment = '<!-- preserve <title>HTML-only title</title> -->';
+  const changed = raw.replace('<h2>Merchandise</h2>', htmlComment + '<h2>Merchandise</h2>');
+  const ex = extractArticleEvidence(changed, ctx, capture, events);
+  expect(ex.notices!.at(-1)!.content).toBe(htmlComment + expected[4].content);
+  expect(ex.diagnostics).toEqual([]);
+  expect(sourceReport(ex).available).toBe(true);
+});
+
+for (const lane of ["both", "E1 only", "articles only"] as const) test(`review P2: invalid diagnostic alone preserves valid ${lane} evidence`, () => {
+  const e1 = extractWuwaEvidence(raw, ctx, capture);
+  const inventory = extractArticleEvidence(raw, ctx, capture, events);
+  const ex = lane === "both" ? combine(e1, inventory) : lane === "E1 only" ? e1 : inventory;
+  const original = buildEvidenceSidecar(ex, events);
+  const invalid = { code: "no_useful_context", sourceEventId: null, sourceUrl: null, detail: "" };
+  const input = { ...ex, diagnostics: [...ex.diagnostics, invalid] };
+  const unchanged = structuredClone(input);
+  expect(() => buildEvidenceSidecar(input, events)).toThrow();
+  const side = safelyBuildEvidenceSidecar(input, events);
+  expect(side.entries).toEqual(original.entries);
+  expect(side.unattached).toEqual(original.unattached);
+  expect(side.notices).toEqual(original.notices);
+  expect(side.articleAttributions).toEqual(original.articleAttributions);
+  expect(codes(side)).toEqual([...codes(original), "diagnostic_validation_failed"]);
+  expect(EvidenceSidecar.safeParse(side).success).toBe(true);
+  expect(input).toEqual(unchanged);
+});
+
+test("review P2: invalid E1 candidate plus invalid diagnostic preserves inventory without repairing excerpts", () => {
+  const e1 = extractWuwaEvidence(raw, ctx, capture);
+  const inventory = extractArticleEvidence(raw, ctx, capture, events);
+  const original = buildEvidenceSidecar(inventory, events);
+  e1.candidates[0]!.source.excerpts[0]!.text = "<unsafe candidate>";
+  const input = combine(e1, inventory);
+  input.diagnostics.push({ code: "no_useful_context", sourceEventId: null, sourceUrl: null, detail: "" });
+  const unchanged = structuredClone(input);
+  const side = safelyBuildEvidenceSidecar(input, events);
+  expect(side.entries).toEqual([]);
+  expect(side.unattached).toEqual([]);
+  expect(side.notices).toEqual(original.notices);
+  expect(side.articleAttributions).toEqual(original.articleAttributions);
+  expect(codes(side)).toEqual([...codes(original), "diagnostic_validation_failed", "event_evidence_assembly_failed"]);
+  expect(articleSourceReport(side).find(s => s.sourceId === ctx.sourceId)?.available).toBe(true);
+  expect(JSON.stringify(side)).not.toContain("unsafe candidate");
+  expect(input).toEqual(unchanged);
+});
+
+test("review P2: invalid article data plus invalid diagnostic preserves independently valid E1", () => {
+  const e1 = extractWuwaEvidence(raw, ctx, capture);
+  const inventory = extractArticleEvidence(raw, ctx, capture, events);
+  inventory.notices![0]!.content = "forged";
+  const input = combine(e1, inventory);
+  input.diagnostics.push({ code: "no_useful_context", sourceEventId: null, sourceUrl: null, detail: "" });
+  const side = safelyBuildEvidenceSidecar(input, events);
+  const original = buildEvidenceSidecar(e1, events);
+  expect(side.entries).toEqual(original.entries);
+  expect(side.unattached).toEqual(original.unattached);
+  expect(side.notices).toEqual([]);
+  expect(codes(side)).toEqual([...codes(original), "diagnostic_validation_failed", "article_assembly_failed"]);
+});
+
+test("duplicate zero-output notice availability does not establish unique or complete coverage", () => {
+  const duplicate = raw.replace("</feed>", entry("9003") + "</feed>");
+  expect(adapter.parse(duplicate, ctx)).toEqual(events);
+  const side = buildEvidenceSidecar(extractArticleEvidence(duplicate, ctx, capture, events), events);
+  const report = articleSourceReport(side).find(s => s.sourceId === ctx.sourceId)!;
+  // Available means a usable inventory exists, even with retained duplicate
+  // identities. All emitted rows being attributed says nothing about those posts.
+  expect(report).toMatchObject({ available: true, noticeCount: 6, emittedEvents: 5, attributedEvents: 5, confirmedFinalAssociations: 5,
+    diagnosticCodes: ["duplicate_notice_identity"] });
+  expect(report.notices.filter(n => n.noticeId === "9003").map(n => [n.position, n.eventIds])).toEqual([[4, []], [5, []]]);
+  expect(side.diagnostics.filter(d => d.code === "duplicate_notice_identity")).toHaveLength(2);
+});

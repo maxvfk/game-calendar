@@ -7,7 +7,7 @@ import type { ParseContext } from "../src/ingest/adapters/types.ts";
 import { parseKqmHsrNews } from "../src/ingest/parsers/kqm-hsrnews.ts";
 import { parseKqmGinNews } from "../src/ingest/parsers/kqm-ginews.ts";
 import { extractArticleEvidence, safelyExtractArticleEvidence, noticeContentHash, articleSourceReport } from "../src/editorial/article-evidence.ts";
-import { buildEvidenceSidecar, EvidenceSidecar, safelyBuildEvidenceSidecar, type Capture } from "../src/editorial/event-evidence.ts";
+import { buildEvidenceSidecar, EvidenceSidecar, safelyBuildEvidenceSidecar, type Capture, type Extraction } from "../src/editorial/event-evidence.ts";
 import { GachaEvent } from "../src/shared/schema.ts";
 import { mergeEvents } from "../src/ingest/merge.ts";
 
@@ -406,4 +406,32 @@ test("executed pre-#119 HSR results differ from synthetic outputs; pre-#130 isol
   expect(gin.events).toEqual([]);
   expect(gin.error).toBe("Error: KQM GINews no dated calendar notices");
   expect(new Bun.CryptoHasher("sha256").update(await Bun.file(gin.file).text()).digest("hex")).toBe(gin.inputSha256);
+});
+
+
+test("review P2: diagnostic refusal preserves all four original C0 inventories with valid or invalid E1", async () => {
+  const { extractWuwaEvidence } = await import("../src/editorial/wuwa-evidence.ts");
+  const e1 = extractWuwaEvidence(await Bun.file("test/fixtures/wuwa/evidence-2026-10-21.xml").text(),
+    { now, game: "wuwa", sourceId: "wuwa-kuro-mirror", sourceUrl: "https://example.com/mirror" }, capture);
+  const ex: Extraction = { candidates: e1.candidates, diagnostics: e1.diagnostics, notices: [], articleAttributions: [] };
+  for (let i = 0; i < cases.length; i++) {
+    const { ctx, raw, events } = await input(i);
+    const articles = extractArticleEvidence(raw, ctx, capture, events);
+    ex.notices!.push(...articles.notices!);
+    ex.articleAttributions!.push(...articles.articleAttributions!);
+    ex.diagnostics.push(...articles.diagnostics);
+  }
+  const finals = [...e1.candidates.map(r => r.event), ...await frozenFinals()];
+  const original = buildEvidenceSidecar(ex, finals);
+  for (const invalidCandidate of [false, true]) {
+    const input = structuredClone(ex);
+    input.diagnostics.push({ code: "no_useful_context", sourceEventId: null, sourceUrl: null, detail: "" });
+    if (invalidCandidate) input.candidates[0]!.source.excerpts[0]!.text = "<unsafe>";
+    const side = safelyBuildEvidenceSidecar(input, finals);
+    expect(side.entries).toEqual(invalidCandidate ? [] : original.entries);
+    expect(side.notices).toEqual(original.notices);
+    expect(side.articleAttributions).toEqual(original.articleAttributions);
+    expect(articleSourceReport(side)).toEqual(articleSourceReport(original));
+    expect(codes(side)).toContain("diagnostic_validation_failed");
+  }
 });

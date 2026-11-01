@@ -48,12 +48,16 @@ function checkKqmInventory(raw: string, items: Array<{ id: string; heading: stri
 }
 
 /** Structural refusal guard for the canonical Atom discovery's supported layout.
- * This discovers no article data. CDATA/comments cannot create entry boundaries.
+ * Field correspondence reuses canonical discovery; no alternative ingestion parser.
+ * CDATA/comments cannot create entry boundaries.
  * Unknown, unbalanced, nested or noncanonical entry tags must not disappear from
  * an otherwise parseable inventory. Canonical parser acceptance stays unchanged.
  */
-function checkWuwaInventory(raw: string, count: number) {
-  const markup = raw.replace(/<!\[CDATA\[[\s\S]*?\]\]>/g, "").replace(/<!--[\s\S]*?-->/g, "");
+function checkWuwaInventory(raw: string, articles: ReturnType<typeof discoverWuwaArticles>) {
+  // XML comments are excluded, but comments inside HTML CDATA are source content.
+  const uncommented = raw.replace(/<!\[CDATA\[[\s\S]*?\]\]>|<!--[\s\S]*?-->/g,
+    token => token.startsWith("<!--") ? "" : token);
+  const markup = uncommented.replace(/<!\[CDATA\[[\s\S]*?\]\]>/g, "");
   const stack: string[] = [];
   let entries = 0, feeds = 0;
   const fail = () => { throw new InventoryError("article_inventory_incomplete"); };
@@ -68,22 +72,34 @@ function checkWuwaInventory(raw: string, count: number) {
     if (!stack.length) { if (name !== "feed" || ++feeds !== 1) fail(); }
     if (stack.length === 1 && !["entry", "title", "link", "id", "updated", "subtitle", "icon", "logo",
       "rights", "generator", "author", "category", "contributor"].includes(name!)) fail();
+    if (stack.includes("entry") && ["id", "title", "link", "content"].includes(name!) &&
+      stack.at(-1) !== "entry") fail();
     if (name!.split(":").at(-1) === "entry") {
       if (tag !== "<entry>" || stack.length !== 1 || stack[0] !== "feed") fail();
       entries++;
     }
     if (!selfClosing) stack.push(name!);
   }
-  if (stack.length || feeds !== 1 || entries !== count) fail();
+  if (stack.length || feeds !== 1 || entries !== articles.length) fail();
   // Duplicate/missing identity fields within a single entry are ambiguous too.
   for (const entry of markup.matchAll(/<entry>([\s\S]*?)<\/entry>/g)) {
     for (const field of ["id", "title", "link", "content"]) {
       if ([...entry[1]!.matchAll(new RegExp(`<${field}\\b`, "g"))].length !== 1) fail();
     }
   }
+  // Reuse the same canonical discovery on actual, comment-free entry fields.
+  // Counts alone cannot detect the raw traversal selecting a commented value.
+  let actual: ReturnType<typeof discoverWuwaArticles>;
+  try { actual = discoverWuwaArticles(uncommented); }
+  catch { fail(); return; }
+  if (actual.length !== articles.length || actual.some((a, i) =>
+    (["id", "title", "sourceUrl", "content"] as const).some(field => a[field] !== articles[i]![field]))) fail();
 }
 
-/** All expected sources stay visible even when no document/evidence survived. */
+/** All expected sources stay visible even when no document/evidence survived.
+ * Availability means usable inventory, including diagnosed duplicate occurrences;
+ * it proves neither unique identities nor complete source/event coverage.
+ */
 export function articleSourceReport(sidecar: { notices: ArticleNotice[]; articleAttributions: ArticleAttribution[]; diagnostics: Diagnostic[] }) {
   return Object.keys(ARTICLE_SOURCE_GAMES).sort().map(sourceId => {
     const notices = sidecar.notices.filter(n => n.sourceId === sourceId);
@@ -114,7 +130,7 @@ export function extractArticleEvidence(raw: string, ctx: ParseContext, capture: 
     let articles: ReturnType<typeof discoverWuwaArticles>;
     try { articles = discoverWuwaArticles(raw); }
     catch { throw new InventoryError("article_inventory_incomplete"); }
-    checkWuwaInventory(raw, articles.length);
+    checkWuwaInventory(raw, articles);
     items = articles.map(a => ({ noticeId: a.id, sourceUrl: a.sourceUrl,
       title: a.title, content: a.content, format: "html" }));
   } else if (ctx.sourceId === "genshin-kqm-ginews" || ctx.sourceId === "hsr-kqm-hsrnews") {
