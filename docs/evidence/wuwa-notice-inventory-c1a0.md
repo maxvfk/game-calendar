@@ -3,9 +3,53 @@
 Implemented from re-fetched current main
 `9aabb88a5ac7e4e46c1f782d115802ad4f992e16` on 2026-11-01.
 Implementation commits: `b0b82db6afd63f737836f84541dbf221ffb5656b` and
-recovery hardening `790943fa8fc80ec897cca4a5a17614adb535bd0c`.
+recovery hardening `790943fa8fc80ec897cca4a5a17614adb535bd0c`, followed by
+review corrections `41b88da41f8a302268f229a49c459f76b5fdbcc6`.
 The final documentation head and exact-head hosted CI belong to the implementation
 PR delivery record. This checkpoint does not claim independent review or merge.
+
+## Independent review corrections (2026-11-01)
+
+[Review finding](https://github.com/maxvfk/game-calendar/pull/159#issuecomment-6551768126)
+requested changes against `49735146df8a3e22e8560ef9fbd7d279f29626bf`.
+Current main was fetched again: `9aabb88a5ac7e4e46c1f782d115802ad4f992e16`.
+The existing PR branch continues; no merge or re-review approval is claimed.
+
+- **P1:** the optional WuWa guard compares every discovered ID, title, actual
+  URL and full HTML content with the same canonical discovery on entry fields
+  outside XML comments. Required fields must be direct entry children. A
+  disagreement refuses the inventory as `article_inventory_incomplete`; it does
+  not substitute corrected content or change the canonical parser. CDATA is
+  protected while excluding XML comments, so HTML comments inside source content
+  remain byte-for-byte replay material. The exact notice9003 commented
+  `<content>` preamble reproducer, title and ID/URL spoofing, and four non-child
+  field cases are covered by authored, deterministic tests.
+- **P2:** diagnostics are validated independently before either evidence lane
+  is assembled. Invalid diagnostic rows are refused with a safe, static
+  `diagnostic_validation_failed` diagnostic and no source payload. Otherwise
+  valid E1 and article data survive diagnostic-only failure. Invalid candidate
+  text is still rejected by strict validation; combined invalid E1 + invalid
+  diagnostic omits E1 and retains valid inventory/attributions, without repairing
+  an excerpt. Reciprocal invalid article + invalid diagnostic recovery and all
+  four original C0 inventories are covered too.
+- **Duplicate semantics:** availability describes a usable occurrence inventory,
+  not unique article identity or complete source coverage. The frozen zero-output
+  duplicate case reports available=true, six notices, all five emitted events
+  attributed/confirmed, and two `duplicate_notice_identity` diagnostics. Both
+  duplicate occurrences remain separately located and have no event. This does
+  not justify a coverage conclusion. Report behavior for the original C0 sources
+  is unchanged; C1a.1 classification is not implemented.
+
+Before fixes, the first 14 review regressions produced **2 pass / 12 fail** at
+reviewed head4973514. After fixes, those cases and the added four-C0 recovery
+regression pass (**15 pass / 0 fail**). Full focused WuWa/E1/C0 suite:
+**96 pass / 0 fail**. Full suite: **1479 pass / 3 existing optional age skips /
+0 fail**, 1482 tests across 91 files. Frozen install, typecheck, full build,
+build:feed and the validated offline report also pass. The full fixed-clock
+comparison below was repeated after these corrections and again at the delivered
+head; all manifests, E1 hashes and pre-existing diagnostics remain unchanged.
+Exact-head hosted CI and PostgreSQL17 results belong to the PR delivery record;
+the previous head's green CI is not presented as validation of these corrections.
 
 ## Contract
 
@@ -22,7 +66,9 @@ PR delivery record. This checkpoint does not claim independent review or merge.
   identities remain separate records, each diagnosed; ambiguous links stay null.
 - A structural guard refuses unsupported entry tags, unbalanced/nested entries,
   missing feed closure, missing or duplicate identity fields, and a mismatch
-  between entry boundaries and canonical discovery. It extracts no article data.
+  between entry boundaries and canonical discovery. It also verifies field
+  correspondence outside XML comments and direct entry parentage using that
+  same discovery.
   `article_inventory_incomplete` / `article_inventory_empty`, together with
   `article_extraction_failed`, report unavailable inventory, never a complete
   empty source. Known canonical parse failures still fail the canonical build.
@@ -38,9 +84,13 @@ PR delivery record. This checkpoint does not claim independent review or merge.
 - Extraction failures are independent. Article assembly failure preserves valid
   E1; the added reciprocal recovery preserves valid notices/attributions on E1
   assembly failure (`event_evidence_assembly_failed`). Both lanes remain optional
-  and cannot veto an otherwise valid canonical public feed.
+  and cannot veto an otherwise valid canonical public feed. Invalid diagnostics
+  are refused independently before assembly so they cannot cause a data-lane
+  failure or discard unrelated valid evidence.
 - `articleSourceReport` and the offline report now show all five sources and
-  explicit availability. No date-span reader or coverage classification exists.
+  explicit availability, including diagnosed duplicate occurrences. Availability
+  does not prove unique identities or complete coverage. No date-span reader or
+  coverage classification exists.
 
 ## Offline verification
 
@@ -50,13 +100,13 @@ Bun 1.3.14. Required commands executed:
 | --- | --- |
 | `bun install --frozen-lockfile` | PASS; 71 installs checked, no changes |
 | `bun run typecheck` | PASS |
-| `bun test` | 1464 pass / 3 existing optional age skips / 0 fail (1467 tests, 91 files) |
+| `bun test` | 1479 pass / 3 existing optional age skips / 0 fail (1482 tests, 91 files) |
 | `bun run build` | PASS; both full builds and recursive parity below |
-| `bun test test/wuwa-article-evidence.test.ts test/wuwa-kuro-atom.test.ts test/wuwa-current-events.test.ts test/event-evidence.test.ts test/article-evidence.test.ts` | 81 pass / 0 fail |
+| `bun test test/wuwa-article-evidence.test.ts test/wuwa-kuro-atom.test.ts test/wuwa-current-events.test.ts test/event-evidence.test.ts test/article-evidence.test.ts` | 96 pass / 0 fail |
 | `bun run build:feed` | PASS |
 | `bun scripts/event-evidence-report.ts` | PASS; complete sidecar Zod validation |
 
-Initial restricted-network full test: 1448 pass / 3 existing optional age skips /
+Historical pre-review restricted-network full test: 1448 pass / 3 existing optional age skips /
 3 failures (local PostgreSQL TLS peer, wire peer and HTTP server sockets). Rerun
 with local networking permitted passed: 1461 pass / 3 existing optional age skips /
 0 fail. Final rerun including the structural refusal and recovery-metadata regressions:
@@ -139,6 +189,6 @@ No semantic classification or proof that every dated paragraph produced an event
 is claimed. The available snapshot's HTML is complete for each captured notice;
 it is not a claim about uncaptured publisher revisions or missing upstream posts.
 
-Next concrete step: verify exact-head hosted CI, then independent focused review
-of discovery refusal, exact attribution and both recovery directions. Leave the
+Next concrete step: verify corrected exact-head hosted CI, then independent
+focused re-review of P1/P2, duplicate semantics, exact attribution and recovery. Leave the
 PR unmerged. Stop after C1a.0; C1a.1, C1b and C2–C5 need separate authorization.

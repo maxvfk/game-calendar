@@ -1,30 +1,37 @@
-## C1a.0 — WuWa notice inventory — IMPLEMENTED, AWAITING FOCUSED REVIEW (2026-11-01)
+## C1a.0 — REVIEW CORRECTIONS IMPLEMENTED, AWAITING FOCUSED RE-REVIEW (2026-11-01)
 
-Started from re-fetched current main `9aabb88a5ac7e4e46c1f782d115802ad4f992e16`.
-Implementation `b0b82db6afd63f737836f84541dbf221ffb5656b`, hardened in
-`790943fa8fc80ec897cca4a5a17614adb535bd0c`, adds WuWa to
-C0's internal notice inventory using the existing canonical Atom discovery,
-complete HTML and stable article IDs. Exact emitted-event attribution, honest
-availability and independent E1/inventory recovery are implemented. Canonical
-parsing, public schemas/data, IDs/dates, reviewed precedence and Timeline stay
-unchanged. This is an implementation checkpoint, not a merge or review approval.
+[Independent review](https://github.com/maxvfk/game-calendar/pull/159#issuecomment-6551768126)
+requested changes at `49735146df8a3e22e8560ef9fbd7d279f29626bf`.
+Re-fetched current main remains `9aabb88a5ac7e4e46c1f782d115802ad4f992e16`.
+Correction `41b88da41f8a302268f229a49c459f76b5fdbcc6` continues PR159's branch:
+P1 rejects fields selected from XML comments or nested outside direct Atom entry
+children, while preserving canonical parser behavior and HTML CDATA comments.
+P2 refuses malformed diagnostics independently before data-lane assembly,
+preserving valid E1 and article evidence without repairing invalid excerpts.
+Duplicate-notice availability is explicitly documented/tested as distinct from
+unique identity and complete coverage; original C0 report behavior is unchanged.
 
-[Contract, tests and replay](evidence/wuwa-notice-inventory-c1a0.md) /
+[Contract, regression details and replay](evidence/wuwa-notice-inventory-c1a0.md) /
 [measured manifests](evidence/wuwa-notice-inventory-c1a0-2026-11-01.json).
-Fixed-clock identical-input full builds match all 10 recursive public files,
-292 final events, 153 reviewed winners, the existing NTE conflict, queue/agent
-input, eight E1 entries/hashes and all pre-existing diagnostics/C0 arrays.
-Measured WuWa: 20 notices, 18 with no emitted event, 11 emitted/attributed/final
-associations, no inventory/reference diagnostics. These are snapshot measurements.
-Focused suite: 81 pass / 0 fail. Full suite: 1464 pass / 3 existing optional age
-skips / 0 fail (1467 tests, 91 files). Required install/typecheck/test/build and
-offline feed/report checks pass locally; exact-head GitHub CI belongs to the PR
-delivery record. Local socket tests need local networking enabled;
-three existing optional age tests skip locally and remain a hosted CI gate.
+First 14 review regressions reproduced **2 pass / 12 fail** on reviewed head;
+corrected review suite including four-C0 recovery: **15 pass / 0 fail**.
+Focused WuWa/E1/C0: **96 pass / 0 fail**. Full suite: **1479 pass / 3 existing
+optional age skips / 0 fail** (1482 tests, 91 files). Frozen install, typecheck,
+full build, offline feed/report checks pass. Local socket tests run with local
+networking permitted; hosted PostgreSQL17/mandatory age checks remain required.
 
-**Next concrete step:** verify green exact-head GitHub CI and hand off for
-independent focused review. Do not merge automatically. STOP after C1a.0;
-C1a.1, C1b and C2–C5 are not started.
+Repeated identical-input fixed-clock full builds match all 10 recursive public
+files, 292 final events, 153 reviewed winners, existing NTE conflict, queue/agent
+input, eight E1 entries/hashes and all pre-existing diagnostics/C0 arrays.
+Measured WuWa: 20 notices (18 with no emitted event), 11 emitted/attributed/final
+associations, no inventory/reference diagnostics on this snapshot. These are
+measurements and do not establish complete source coverage.
+
+**Next concrete step:** verify green corrected exact-head CI (recorded in PR159)
+and obtain focused independent re-review of P1/P2 and duplicate semantics. The
+reviewed head's green CI is historical, not validation of these corrections.
+No merge or completed re-review is claimed. STOP after C1a.0; C1a.1, C1b and C2–C5
+are not started.
 
 ---
 
