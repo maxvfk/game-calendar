@@ -51,7 +51,7 @@ export const Diagnostic = z.object({ code: bounded(80), sourceEventId: id.nullab
 export type Diagnostic = z.infer<typeof Diagnostic>;
 /** Full untrusted notice data for offline coverage replay; NEVER eligible model excerpts. */
 export const ArticleNotice = z.object({
-  sourceId: id, game: z.enum(["genshin", "hsr", "zzz", "nte"]), noticeId: id, sourceUrl: url,
+  sourceId: id, game: z.enum(["genshin", "hsr", "zzz", "nte", "wuwa"]), noticeId: id, sourceUrl: url,
   // Position is a snapshot locator, not part of the stable source/item identity.
   position: z.number().int().nonnegative(), title: z.string(), content: z.string(),
   format: z.enum(["markdown", "html", "bbcode"]), contentHash: z.string().regex(/^[a-f0-9]{64}$/),
@@ -238,7 +238,19 @@ export function safelyBuildEvidenceSidecar(
           diagnostics: [...extraction.diagnostics, ...(sources.size ? [...sources].map(([sourceId, sourceUrl]) => ({
             ...failure, sourceId, sourceUrl,
           })) : [{ ...failure, sourceUrl: null }])] }, finalEvents, conflicts, mappings);
-      } catch { /* The independent E1 lane also failed; omit all evidence below. */ }
+      } catch { /* Try recovering the independent article lane below. */ }
+    }
+    // Conversely, invalid E1 candidates cannot discard a valid article lane.
+    // No candidates from the failed lane become eligible excerpts.
+    if (extraction.notices?.length || extraction.articleAttributions?.length) {
+      try {
+        return buildEvidenceSidecar({ ...extraction, candidates: [],
+          diagnostics: [...extraction.diagnostics, {
+            code: "event_evidence_assembly_failed", sourceEventId: null, sourceUrl: null,
+            detail: "Optional event evidence validation failed; event-local evidence omitted",
+          }],
+        }, finalEvents, conflicts);
+      } catch { /* Neither lane could be recovered independently. */ }
     }
     return EvidenceSidecar.parse({
       schemaVersion: 1,

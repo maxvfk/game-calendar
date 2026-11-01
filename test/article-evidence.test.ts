@@ -245,7 +245,7 @@ test("offline builder retains baseline-main public bytes with all four article s
     const reportRun = Bun.spawnSync([process.execPath, join(root, "scripts/event-evidence-report.ts")], { cwd: dir });
     expect(reportRun.exitCode, reportRun.stderr.toString()).toBe(0);
     const failedReport = JSON.parse(reportRun.stdout.toString());
-    expect(failedReport.articleSources).toHaveLength(4);
+    expect(failedReport.articleSources).toHaveLength(5);
     expect(failedReport.articleSources.find((s: { sourceId: string }) => s.sourceId === "genshin-kqm-ginews"))
       .toMatchObject({ available: false, noticeCount: 0, attributedEvents: 0, confirmedFinalAssociations: 0 });
     // No document is distinct from failed extraction; both remain visible.
@@ -254,7 +254,7 @@ test("offline builder retains baseline-main public bytes with all four article s
     expect(unavailableRun.exitCode, unavailableRun.stderr.toString()).toBe(0);
     const unavailable = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
     expect(unavailable.diagnostics.filter(d => d.code === "source_unavailable").every(d => d.sourceId)).toBe(true);
-    expect(articleSourceReport(unavailable)).toHaveLength(4);
+    expect(articleSourceReport(unavailable)).toHaveLength(5);
     expect(articleSourceReport(unavailable).find(s => s.sourceId === "genshin-kqm-ginews"))
       .toMatchObject({ available: false, diagnosticCodes: ["source_unavailable"] });
   } finally { rmSync(dir, { recursive: true, force: true }); }
@@ -302,7 +302,7 @@ for (const i of [2, 3]) test(`${cases[i]![0]}: unexpected empty inventory is exp
   const failed = safelyExtractArticleEvidence(empty, ctx, capture, events);
   expect(codes(failed)).toEqual(["article_extraction_failed", "article_inventory_empty"]);
   const report = articleSourceReport(safelyBuildEvidenceSidecar(failed, await frozenFinals()));
-  expect(report).toHaveLength(4);
+  expect(report).toHaveLength(5);
   expect(report.find(s => s.sourceId === ctx.sourceId)).toMatchObject({ available: false, noticeCount: 0, attributedEvents: 0, confirmedFinalAssociations: 0 });
 });
 

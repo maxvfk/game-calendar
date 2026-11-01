@@ -1,0 +1,446 @@
+{
+  "base": "9aabb88a5ac7e4e46c1f782d115802ad4f992e16",
+  "inputSha256": "71837fcfc000671ed666dbdb26957445a55bed426908bedb20b81ea57f8c5914",
+  "ctx": {
+    "now": "2026-10-26T18:00:00.000Z",
+    "sourceId": "wuwa-kuro-mirror",
+    "sourceUrl": "https://example.com/mirror",
+    "game": "wuwa"
+  },
+  "capture": {
+    "capturedAt": "2026-10-21T20:43:03.544Z",
+    "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+    "fixtureCaptureDay": null
+  },
+  "extraction": {
+    "candidates": [
+      {
+        "event": {
+          "id": "wuwa:tomorrow-in-the-frame:2026-10-22",
+          "game": "wuwa",
+          "title": "Tomorrow in the Frame",
+          "type": "banner",
+          "summary": null,
+          "startsAt": "2026-10-22T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-11-11T03:59:00.000Z",
+          "endPrecision": "exact",
+          "regionScoped": true,
+          "regionEnds": {
+            "asia": "2026-11-11T03:59:00.000Z",
+            "europe": "2026-11-11T10:59:00.000Z",
+            "america": "2026-11-11T16:59:00.000Z"
+          },
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "sourceId": "wuwa-kuro-mirror",
+          "status": "published",
+          "confidence": 0.8,
+          "extractionMethod": "parser",
+          "version": 1,
+          "firstSeenAt": "2026-10-26T18:00:00.000Z",
+          "updatedAt": "2026-10-26T18:00:00.000Z"
+        },
+        "source": {
+          "sourceEventId": "wuwa:tomorrow-in-the-frame:2026-10-22",
+          "sourceId": "wuwa-kuro-mirror",
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "capturedAt": "2026-10-21T20:43:03.544Z",
+          "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+          "fixtureCaptureDay": null,
+          "excerpts": [
+            {
+              "kind": "featured",
+              "text": "During the event, 5-Star Resonator: Lucilla, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!"
+            }
+          ]
+        }
+      },
+      {
+        "event": {
+          "id": "wuwa:freeze-frame:2026-10-22",
+          "game": "wuwa",
+          "title": "Freeze Frame",
+          "type": "banner",
+          "summary": null,
+          "startsAt": "2026-10-22T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-11-11T03:59:00.000Z",
+          "endPrecision": "exact",
+          "regionScoped": true,
+          "regionEnds": {
+            "asia": "2026-11-11T03:59:00.000Z",
+            "europe": "2026-11-11T10:59:00.000Z",
+            "america": "2026-11-11T16:59:00.000Z"
+          },
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "sourceId": "wuwa-kuro-mirror",
+          "status": "published",
+          "confidence": 0.8,
+          "extractionMethod": "parser",
+          "version": 1,
+          "firstSeenAt": "2026-10-26T18:00:00.000Z",
+          "updatedAt": "2026-10-26T18:00:00.000Z"
+        },
+        "source": {
+          "sourceEventId": "wuwa:freeze-frame:2026-10-22",
+          "sourceId": "wuwa-kuro-mirror",
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "capturedAt": "2026-10-21T20:43:03.544Z",
+          "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+          "fixtureCaptureDay": null,
+          "excerpts": [
+            {
+              "kind": "featured",
+              "text": "During the event, 5-Star Weapon: Freeze Frame, 4-Star Weapons: Overture, Relativistic Jet, Amity Accord receive boosted drop rates!"
+            }
+          ]
+        }
+      },
+      {
+        "event": {
+          "id": "wuwa:undefined-spectrum:2026-10-22",
+          "game": "wuwa",
+          "title": "Undefined Spectrum",
+          "type": "banner",
+          "summary": null,
+          "startsAt": "2026-10-22T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-11-11T03:59:00.000Z",
+          "endPrecision": "exact",
+          "regionScoped": true,
+          "regionEnds": {
+            "asia": "2026-11-11T03:59:00.000Z",
+            "europe": "2026-11-11T10:59:00.000Z",
+            "america": "2026-11-11T16:59:00.000Z"
+          },
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "sourceId": "wuwa-kuro-mirror",
+          "status": "published",
+          "confidence": 0.8,
+          "extractionMethod": "parser",
+          "version": 1,
+          "firstSeenAt": "2026-10-26T18:00:00.000Z",
+          "updatedAt": "2026-10-26T18:00:00.000Z"
+        },
+        "source": {
+          "sourceEventId": "wuwa:undefined-spectrum:2026-10-22",
+          "sourceId": "wuwa-kuro-mirror",
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "capturedAt": "2026-10-21T20:43:03.544Z",
+          "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+          "fixtureCaptureDay": null,
+          "excerpts": [
+            {
+              "kind": "featured",
+              "text": "During the event, 5-Star Resonator: Lynae, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!"
+            }
+          ]
+        }
+      },
+      {
+        "event": {
+          "id": "wuwa:spectrum-blaster:2026-10-22",
+          "game": "wuwa",
+          "title": "Spectrum Blaster",
+          "type": "banner",
+          "summary": null,
+          "startsAt": "2026-10-22T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-11-11T03:59:00.000Z",
+          "endPrecision": "exact",
+          "regionScoped": true,
+          "regionEnds": {
+            "asia": "2026-11-11T03:59:00.000Z",
+            "europe": "2026-11-11T10:59:00.000Z",
+            "america": "2026-11-11T16:59:00.000Z"
+          },
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "sourceId": "wuwa-kuro-mirror",
+          "status": "published",
+          "confidence": 0.8,
+          "extractionMethod": "parser",
+          "version": 1,
+          "firstSeenAt": "2026-10-26T18:00:00.000Z",
+          "updatedAt": "2026-10-26T18:00:00.000Z"
+        },
+        "source": {
+          "sourceEventId": "wuwa:spectrum-blaster:2026-10-22",
+          "sourceId": "wuwa-kuro-mirror",
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "capturedAt": "2026-10-21T20:43:03.544Z",
+          "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+          "fixtureCaptureDay": null,
+          "excerpts": [
+            {
+              "kind": "featured",
+              "text": "During the event, 5-Star Weapon: Spectrum Blaster, 4-Star Weapons: Overture, Relativistic Jet, Amity Accord receive boosted drop rates!"
+            }
+          ]
+        }
+      },
+      {
+        "event": {
+          "id": "wuwa:echo-erase:2026-10-22",
+          "game": "wuwa",
+          "title": "Echo Erase",
+          "type": "other",
+          "summary": null,
+          "startsAt": "2026-10-22T00:00:00.000Z",
+          "startPrecision": "day",
+          "endsAt": "2026-11-08T19:59:00.000Z",
+          "endPrecision": "exact",
+          "regionScoped": true,
+          "regionEnds": {
+            "asia": "2026-11-08T19:59:00.000Z",
+            "europe": "2026-11-09T02:59:00.000Z",
+            "america": "2026-11-09T08:59:00.000Z"
+          },
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5571",
+          "sourceId": "wuwa-kuro-mirror",
+          "status": "published",
+          "confidence": 0.8,
+          "extractionMethod": "parser",
+          "version": 1,
+          "firstSeenAt": "2026-10-26T18:00:00.000Z",
+          "updatedAt": "2026-10-26T18:00:00.000Z"
+        },
+        "source": {
+          "sourceEventId": "wuwa:echo-erase:2026-10-22",
+          "sourceId": "wuwa-kuro-mirror",
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5571",
+          "capturedAt": "2026-10-21T20:43:03.544Z",
+          "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+          "fixtureCaptureDay": null,
+          "excerpts": [
+            {
+              "kind": "activity",
+              "text": "The latest flagship offering from Second Coming of Solaris! Come experience the fun of tapping Echo Pieces away!"
+            }
+          ]
+        }
+      }
+    ],
+    "diagnostics": []
+  },
+  "entries": [
+    {
+      "eventId": "wuwa:echo-erase:2026-10-22",
+      "game": "wuwa",
+      "sources": [
+        {
+          "sourceEventId": "wuwa:echo-erase:2026-10-22",
+          "sourceId": "wuwa-kuro-mirror",
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5571",
+          "capturedAt": "2026-10-21T20:43:03.544Z",
+          "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+          "fixtureCaptureDay": null,
+          "excerpts": [
+            {
+              "kind": "activity",
+              "text": "The latest flagship offering from Second Coming of Solaris! Come experience the fun of tapping Echo Pieces away!"
+            }
+          ]
+        }
+      ],
+      "evidenceHash": "a3ff7bc36111a1cf2a7006d67918aaccfe5516f367eb505af3cbde89ebfacec2"
+    },
+    {
+      "eventId": "wuwa:freeze-frame:2026-10-22",
+      "game": "wuwa",
+      "sources": [
+        {
+          "sourceEventId": "wuwa:freeze-frame:2026-10-22",
+          "sourceId": "wuwa-kuro-mirror",
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "capturedAt": "2026-10-21T20:43:03.544Z",
+          "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+          "fixtureCaptureDay": null,
+          "excerpts": [
+            {
+              "kind": "featured",
+              "text": "During the event, 5-Star Weapon: Freeze Frame, 4-Star Weapons: Overture, Relativistic Jet, Amity Accord receive boosted drop rates!"
+            }
+          ]
+        }
+      ],
+      "evidenceHash": "065a1984448b79891c940cd94c6cc7450786a4c0cbb9971ebc40eb2be755ccf8"
+    },
+    {
+      "eventId": "wuwa:spectrum-blaster:2026-10-22",
+      "game": "wuwa",
+      "sources": [
+        {
+          "sourceEventId": "wuwa:spectrum-blaster:2026-10-22",
+          "sourceId": "wuwa-kuro-mirror",
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "capturedAt": "2026-10-21T20:43:03.544Z",
+          "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+          "fixtureCaptureDay": null,
+          "excerpts": [
+            {
+              "kind": "featured",
+              "text": "During the event, 5-Star Weapon: Spectrum Blaster, 4-Star Weapons: Overture, Relativistic Jet, Amity Accord receive boosted drop rates!"
+            }
+          ]
+        }
+      ],
+      "evidenceHash": "7feb8875a016bb18781b94e86f6d3afb83126ecf732de10f00b5925f1645ff31"
+    },
+    {
+      "eventId": "wuwa:tomorrow-in-the-frame:2026-10-22",
+      "game": "wuwa",
+      "sources": [
+        {
+          "sourceEventId": "wuwa:tomorrow-in-the-frame:2026-10-22",
+          "sourceId": "wuwa-kuro-mirror",
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "capturedAt": "2026-10-21T20:43:03.544Z",
+          "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+          "fixtureCaptureDay": null,
+          "excerpts": [
+            {
+              "kind": "featured",
+              "text": "During the event, 5-Star Resonator: Lucilla, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!"
+            }
+          ]
+        }
+      ],
+      "evidenceHash": "43829f5a7a1a1d890b22987e4d9a922a8c2311b409c3d3e2a01acf3d783884cd"
+    },
+    {
+      "eventId": "wuwa:undefined-spectrum:2026-10-22",
+      "game": "wuwa",
+      "sources": [
+        {
+          "sourceEventId": "wuwa:undefined-spectrum:2026-10-22",
+          "sourceId": "wuwa-kuro-mirror",
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "capturedAt": "2026-10-21T20:43:03.544Z",
+          "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+          "fixtureCaptureDay": null,
+          "excerpts": [
+            {
+              "kind": "featured",
+              "text": "During the event, 5-Star Resonator: Lynae, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!"
+            }
+          ]
+        }
+      ],
+      "evidenceHash": "14e14a2c83dac9e1d3ac4f2480fd57ad136d5f636fa1f843480cbc937d2c1e4e"
+    }
+  ],
+  "unattached": [],
+  "diagnostics": [],
+  "refused": {
+    "schemaVersion": 1,
+    "extractorVersion": "wuwa-event-local-v1",
+    "hashContract": "event-evidence-sha256-v1",
+    "entries": [],
+    "unattached": [
+      {
+        "sourceEventId": "wuwa:echo-erase:2026-10-22",
+        "sourceId": "wuwa-kuro-mirror",
+        "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5571",
+        "capturedAt": "2026-10-21T20:43:03.544Z",
+        "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+        "fixtureCaptureDay": null,
+        "excerpts": [
+          {
+            "kind": "activity",
+            "text": "The latest flagship offering from Second Coming of Solaris! Come experience the fun of tapping Echo Pieces away!"
+          }
+        ]
+      },
+      {
+        "sourceEventId": "wuwa:freeze-frame:2026-10-22",
+        "sourceId": "wuwa-kuro-mirror",
+        "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+        "capturedAt": "2026-10-21T20:43:03.544Z",
+        "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+        "fixtureCaptureDay": null,
+        "excerpts": [
+          {
+            "kind": "featured",
+            "text": "During the event, 5-Star Weapon: Freeze Frame, 4-Star Weapons: Overture, Relativistic Jet, Amity Accord receive boosted drop rates!"
+          }
+        ]
+      },
+      {
+        "sourceEventId": "wuwa:spectrum-blaster:2026-10-22",
+        "sourceId": "wuwa-kuro-mirror",
+        "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+        "capturedAt": "2026-10-21T20:43:03.544Z",
+        "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+        "fixtureCaptureDay": null,
+        "excerpts": [
+          {
+            "kind": "featured",
+            "text": "During the event, 5-Star Weapon: Spectrum Blaster, 4-Star Weapons: Overture, Relativistic Jet, Amity Accord receive boosted drop rates!"
+          }
+        ]
+      },
+      {
+        "sourceEventId": "wuwa:tomorrow-in-the-frame:2026-10-22",
+        "sourceId": "wuwa-kuro-mirror",
+        "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+        "capturedAt": "2026-10-21T20:43:03.544Z",
+        "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+        "fixtureCaptureDay": null,
+        "excerpts": [
+          {
+            "kind": "featured",
+            "text": "During the event, 5-Star Resonator: Lucilla, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!"
+          }
+        ]
+      },
+      {
+        "sourceEventId": "wuwa:undefined-spectrum:2026-10-22",
+        "sourceId": "wuwa-kuro-mirror",
+        "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+        "capturedAt": "2026-10-21T20:43:03.544Z",
+        "lastConfirmedAt": "2026-10-26T11:17:37.934Z",
+        "fixtureCaptureDay": null,
+        "excerpts": [
+          {
+            "kind": "featured",
+            "text": "During the event, 5-Star Resonator: Lynae, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!"
+          }
+        ]
+      }
+    ],
+    "diagnostics": [
+      {
+        "code": "no_exact_winner",
+        "sourceEventId": "wuwa:echo-erase:2026-10-22",
+        "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5571",
+        "detail": "Evidence omitted from eligible entries"
+      },
+      {
+        "code": "no_exact_winner",
+        "sourceEventId": "wuwa:freeze-frame:2026-10-22",
+        "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+        "detail": "Evidence omitted from eligible entries"
+      },
+      {
+        "code": "no_exact_winner",
+        "sourceEventId": "wuwa:spectrum-blaster:2026-10-22",
+        "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+        "detail": "Evidence omitted from eligible entries"
+      },
+      {
+        "code": "no_exact_winner",
+        "sourceEventId": "wuwa:tomorrow-in-the-frame:2026-10-22",
+        "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+        "detail": "Evidence omitted from eligible entries"
+      },
+      {
+        "code": "no_exact_winner",
+        "sourceEventId": "wuwa:undefined-spectrum:2026-10-22",
+        "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+        "detail": "Evidence omitted from eligible entries"
+      }
+    ],
+    "notices": [],
+    "articleAttributions": []
+  }
+}

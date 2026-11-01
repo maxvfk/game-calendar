@@ -7,12 +7,13 @@ import type { ParseContext } from "../ingest/adapters/types.ts";
 import { discoverKqmGinArticles } from "../ingest/parsers/kqm-ginews.ts";
 import { discoverKqmHsrArticles } from "../ingest/parsers/kqm-hsrnews.ts";
 import { discoverZzzSteamPosts } from "../ingest/parsers/zzz-steam-rss.ts";
+import { discoverWuwaArticles } from "../ingest/parsers/wuwa-kuro-atom.ts";
 import { discoverNteSteamPosts } from "../ingest/parsers/nte-steamnews.ts";
 import type { GachaEvent } from "../shared/schema.ts";
 import { ArticleNotice, Capture, type Extraction, type ArticleAttribution, type Diagnostic } from "./event-evidence.ts";
 
 export const ARTICLE_SOURCE_GAMES = {
-  "genshin-kqm-ginews": "genshin", "hsr-kqm-hsrnews": "hsr",
+  "wuwa-kuro-mirror": "wuwa", "genshin-kqm-ginews": "genshin", "hsr-kqm-hsrnews": "hsr",
   "zzz-steam-events-official": "zzz", "nte-steamnews-official": "nte",
 } as const;
 export function isArticleSource(sourceId: string): sourceId is keyof typeof ARTICLE_SOURCE_GAMES {
@@ -46,6 +47,42 @@ function checkKqmInventory(raw: string, items: Array<{ id: string; heading: stri
   }
 }
 
+/** Structural refusal guard for the canonical Atom discovery's supported layout.
+ * This discovers no article data. CDATA/comments cannot create entry boundaries.
+ * Unknown, unbalanced, nested or noncanonical entry tags must not disappear from
+ * an otherwise parseable inventory. Canonical parser acceptance stays unchanged.
+ */
+function checkWuwaInventory(raw: string, count: number) {
+  const markup = raw.replace(/<!\[CDATA\[[\s\S]*?\]\]>/g, "").replace(/<!--[\s\S]*?-->/g, "");
+  const stack: string[] = [];
+  let entries = 0, feeds = 0;
+  const fail = () => { throw new InventoryError("article_inventory_incomplete"); };
+  for (const token of markup.matchAll(/<[^>]*>|[^<]+|</g)) {
+    const tag = token[0];
+    if (/^<\?xml\s[^?]*\?>$/.test(tag)) continue;
+    if (!tag.startsWith("<")) { if (!stack.length && tag.trim()) fail(); continue; }
+    const parsed = /^<(\/?)([\w:.-]+)(?:\s[^<>]*?)?(\/?)>$/.exec(tag);
+    if (!parsed) { fail(); continue; }
+    const [, closing, name, selfClosing] = parsed;
+    if (closing) { if (stack.pop() !== name) fail(); continue; }
+    if (!stack.length) { if (name !== "feed" || ++feeds !== 1) fail(); }
+    if (stack.length === 1 && !["entry", "title", "link", "id", "updated", "subtitle", "icon", "logo",
+      "rights", "generator", "author", "category", "contributor"].includes(name!)) fail();
+    if (name!.split(":").at(-1) === "entry") {
+      if (tag !== "<entry>" || stack.length !== 1 || stack[0] !== "feed") fail();
+      entries++;
+    }
+    if (!selfClosing) stack.push(name!);
+  }
+  if (stack.length || feeds !== 1 || entries !== count) fail();
+  // Duplicate/missing identity fields within a single entry are ambiguous too.
+  for (const entry of markup.matchAll(/<entry>([\s\S]*?)<\/entry>/g)) {
+    for (const field of ["id", "title", "link", "content"]) {
+      if ([...entry[1]!.matchAll(new RegExp(`<${field}\\b`, "g"))].length !== 1) fail();
+    }
+  }
+}
+
 /** All expected sources stay visible even when no document/evidence survived. */
 export function articleSourceReport(sidecar: { notices: ArticleNotice[]; articleAttributions: ArticleAttribution[]; diagnostics: Diagnostic[] }) {
   return Object.keys(ARTICLE_SOURCE_GAMES).sort().map(sourceId => {
@@ -71,7 +108,16 @@ export function extractArticleEvidence(raw: string, ctx: ParseContext, capture: 
   if (!isArticleSource(ctx.sourceId) || ARTICLE_SOURCE_GAMES[ctx.sourceId] !== ctx.game) throw new Error("Unsupported article source context");
   capture = Capture.parse(capture);
   let items: Array<{ noticeId: string; sourceUrl: string; title: string; content: string; format: ArticleNotice["format"] }>;
-  if (ctx.sourceId === "genshin-kqm-ginews" || ctx.sourceId === "hsr-kqm-hsrnews") {
+  if (ctx.sourceId === "wuwa-kuro-mirror") {
+    // Discovery may ignore unsupported tags for canonical compatibility;
+    // the structural guard refuses those omissions in the optional inventory.
+    let articles: ReturnType<typeof discoverWuwaArticles>;
+    try { articles = discoverWuwaArticles(raw); }
+    catch { throw new InventoryError("article_inventory_incomplete"); }
+    checkWuwaInventory(raw, articles.length);
+    items = articles.map(a => ({ noticeId: a.id, sourceUrl: a.sourceUrl,
+      title: a.title, content: a.content, format: "html" }));
+  } else if (ctx.sourceId === "genshin-kqm-ginews" || ctx.sourceId === "hsr-kqm-hsrnews") {
     const gin = ctx.sourceId === "genshin-kqm-ginews";
     const articles = gin ? discoverKqmGinArticles(raw) : discoverKqmHsrArticles(raw);
     checkKqmInventory(raw, articles);

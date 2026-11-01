@@ -5,7 +5,7 @@ import type { SourceParser } from "./types.ts";
 
 const ENTRY = /<entry>([\s\S]*?)<\/entry>/g;
 const DATE = /(20\d{2})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})/g;
-type Article = { id: string; title: string; lines: string[]; content: string; headings: string[]; evidenceLines: string[] };
+type Article = { sourceUrl: string; id: string; title: string; lines: string[]; content: string; headings: string[]; evidenceLines: string[] };
 
 function day(match: RegExpMatchArray): string {
   const date = `${match[1]}-${match[2]}-${match[3]}`;
@@ -19,7 +19,8 @@ function serverTime(match: RegExpMatchArray, offset: number): string {
   return new Date(Date.parse(day(match)) + (Number(match[4]) * 60 + Number(match[5]) - offset * 60) * 60_000).toISOString();
 }
 
-function articles(raw: string): Article[] {
+/** Canonical Atom article discovery; no event/date filtering. */
+export function discoverWuwaArticles(raw: string): Article[] {
   if (!/<feed\s+xmlns="http:\/\/www\.w3\.org\/2005\/Atom">/.test(raw)) {
     throw new Error("WuWa Atom feed namespace missing");
   }
@@ -41,7 +42,7 @@ function articles(raw: string): Article[] {
     const evidenceLines = textLines(content.replace(/[\r\n]/g, " ").replace(/<\/?(?:span|strong|b|em|i|a)\b[^>]*>/gi, ""));
     const headings = [...content.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)]
       .map(m => decodeEntities(m[1]!.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim());
-    return { id, title: decodeEntities(title), lines, content, headings, evidenceLines };
+    return { sourceUrl: link, id, title: decodeEntities(title), lines, content, headings, evidenceLines };
   });
 }
 
@@ -137,7 +138,7 @@ function candidate(article: Article, title: string, type: EventType, line: strin
 
 /** Shared identity/date traversal. Evidence never changes the parser's winner selection. */
 export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhitespace = false) {
-  const archive = articles(raw);
+  const archive = discoverWuwaArticles(raw);
   if (!archive.length) throw new Error("WuWa Atom entries missing");
   const updates = updateDays(archive);
   const scopedPatchDays = new Map<string, string>();
@@ -196,6 +197,6 @@ export function parseWuwaKuroAtom(raw: string, ctx: ParseContext): GachaEvent[] 
 
 export const wuwaKuroAtomParser: SourceParser = {
   id: "wuwa-kuro-atom", label: "WuWa Kuro notice Atom mirror",
-  canParse(raw) { try { return articles(raw).length > 0; } catch { return false; } },
+  canParse(raw) { try { return discoverWuwaArticles(raw).length > 0; } catch { return false; } },
   parse: parseWuwaKuroAtom,
 };
