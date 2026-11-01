@@ -20,7 +20,7 @@ export type DateSpan = {
 export type DateRead = { readerVersion: typeof DATE_READER_VERSION; spans: DateSpan[]; diagnostics: string[]; complete: boolean };
 const months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 const monthPattern = "(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?";
-const datePattern = `(?:\\d{4}[-/]\\d{1,2}[-/]\\d{1,2}|${monthPattern}\\s+\\d{1,2}(?:st|nd|rd|th)?(?:,?\\s+\\d{4})?|\\d{1,2}\\s+${monthPattern}(?:,?\\s+\\d{4})?|\\d{1,2}[/.]\\d{1,2}(?:[/.]\\d{2,4})?)`;
+const datePattern = `(?:\\d{4}[-/]\\d{1,2}[-/]\\d{1,2}|${monthPattern}\\s+\\d{1,2}(?:st|nd|rd|th)?(?:,?\\s+\\d{4})?|\\d{1,2}\\s+${monthPattern}(?:,?\\s+\\d{4})?|\\d{1,2}/\\d{1,2}(?:/\\d{2,4})?|\\d{1,2}\\.\\d{1,2}\\.\\d{2,4})`;
 const clockPattern = "(?:(?:[ \\t,T]+)\\d{1,2}:\\d{2}(?::\\d{2})?(?:[ \\t]*[AP]M)?)?";
 const zonePattern = "(?:[ \\t]*(?:\\(?[ \\t]*UTC(?:[ \\t]*[+−-]\\d{1,2}(?::?\\d{2})?)?[ \\t]*\\)?|Z|[+−-]\\d{2}:?\\d{2}|\\((?:server(?: time)?|global|[A-Z]{2,5})\\)))?";
 const separator = /^[\s*_,]*(?:[-–—~]|to|until)[\s*_,]*$/i;
@@ -179,7 +179,7 @@ export function readDateSpans(raw: string, format: "markdown" | "html" | "bbcode
   // coverage when a known marker fell outside the recognized language.
   const remainder = text.split("");
   for (const l of locations) for (let i = l.start; i < l.end; i++) remainder[i] = " ";
-  if (new RegExp(`${monthPattern}\\s+\\d|\\d{4}[-/]\\d|\\d{1,2}[/.]\\d{1,2}|\\d{1,2}:\\d{2}|\\b(?:tomorrow|TBD|TBA|after (?:the )?(?:version|update|maintenance))\\b`, "i").test(remainder.join(""))) diagnose("unresolved_date_expression");
+  if (new RegExp(`${monthPattern}\\s+\\d|\\d{4}[-/]\\d|\\d{1,2}/\\d{1,2}|\\d{1,2}\\.\\d{1,2}\\.\\d{2,4}|\\d{1,2}:\\d{2}|\\b(?:tomorrow|TBD|TBA|after (?:the )?(?:version|update|maintenance))\\b`, "i").test(remainder.join(""))) diagnose("unresolved_date_expression");
   if (!spans.length) diagnose("no_recognized_dates");
   return { readerVersion: DATE_READER_VERSION, spans, diagnostics: diagnostics.sort(), complete: !diagnostics.some(c => c.endsWith("_limit")) };
 }
