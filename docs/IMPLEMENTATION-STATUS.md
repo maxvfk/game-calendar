@@ -1,5 +1,6 @@
 ## C1a.1 — Deterministic Notice Coverage Engine — IMPLEMENTED, REVIEW PENDING (2026-11-01)
 
+[PR #161](https://github.com/maxvfk/game-calendar/pull/161), left unmerged.
 One branch `coverage/c1a1-deterministic` from fetched CURRENT main
 `bcf1865649ce9a9df2e46766f6bc5c792d2a73c3`. C0/C1a.0 remain closed.
 Reporting-only implementation: bounded reusable date-span reader; strict

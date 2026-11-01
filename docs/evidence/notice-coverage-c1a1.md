@@ -175,7 +175,7 @@ additional formats; omissions are not presented as full historical captures.
 Full machine-readable [Starlight report example](notice-coverage-c1a1-starlight.json)
 labels the synthetic event set explicitly; it is not a golden test oracle.
 
-Local validation on implementation `557a9ad`: frozen install, typecheck,
+Local validation on final code checkpoint `658f76e`: frozen install, typecheck,
 **1531 passed / 3 existing optional age skips / 0 failed** (1534 tests, 95 files),
 full site build and separate feed build passed. The initial restricted-sandbox
 run could not bind localhost sockets (three existing tests); enabling command
@@ -192,3 +192,7 @@ identical. Two CLI replays produce identical bytes. No generated public file is
 committed. Exact final-head hosted CI, including PG17 and encrypted recovery,
 is recorded in the delivery PR; local optional age skips are not hosted PG17
 validation. Independent review is pending and the PR must remain unmerged.
+
+A final bounded-work refinement indexes baseline membership and refusal IDs;
+its report is byte-identical to the pre-indexed result. Delivery is
+[PR #161](https://github.com/maxvfk/game-calendar/pull/161), left unmerged.
