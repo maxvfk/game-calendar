@@ -22,7 +22,7 @@ const refusal = (d: Diagnostic) => /^(?:winner_|merge_source_conflict|duplicate_
  * the calendar's selected regional representative, not a global deadline.
  */
 function matchBoundary(span: DateSpan, event: GachaEvent, basis: BoundaryMatch["basis"]): BoundaryMatch[] {
-  if (span.uncertainty.length || span.value.date === null) return [];
+  if (span.uncertainty.length || span.value.date === null || span.value.precision === "unknown") return [];
   const candidates: Array<{ field: string; value: string; precision: string }> = [];
   if (span.role !== "end" && span.region === null) candidates.push({ field: "startsAt", value: event.startsAt, precision: event.startPrecision });
   if (span.role !== "start" && event.endsAt) {
@@ -37,7 +37,7 @@ function matchBoundary(span: DateSpan, event: GachaEvent, basis: BoundaryMatch["
     // seconds stated by a notice or by the represented boundary.
     return span.value.precision === "second" ? Date.parse(c.value) === Date.parse(span.value.instant) :
       Date.parse(c.value) === Date.parse(span.value.instant);
-  }).map(c => ({ eventId: event.id, field: c.field, value: c.value, basis, precision: span.value.precision }));
+  }).map(c => ({ eventId: event.id, field: c.field, value: c.value, basis, precision: span.value.precision as BoundaryMatch["precision"] }));
 }
 export function makeCoverageBaseline(notices: ArticleNotice[]) {
   const entries = notices.map(n => BaselineEntry.parse({ sourceId: n.sourceId, noticeId: n.noticeId,
@@ -54,9 +54,10 @@ export function buildNoticeCoverage(input: {
   // Preflight limits before expensive sidecar hash/reference validation.
   const envelope = input.sidecar as Partial<z.infer<typeof EvidenceSidecar>> | null;
   const arrays = envelope && [envelope.notices, envelope.articleAttributions, envelope.diagnostics];
-  let limited = false;
+  const auxiliaryLimit = envelope && [envelope.entries, envelope.unattached].some(a => Array.isArray(a) && a.length > COVERAGE_LIMITS.events);
+  let limited = Boolean(auxiliaryLimit);
   if (arrays && Array.isArray(arrays[0]) && Array.isArray(arrays[1]) && Array.isArray(arrays[2])) {
-    limited = arrays[0].length > COVERAGE_LIMITS.notices || arrays[1].length > COVERAGE_LIMITS.attributions || arrays[2].length > COVERAGE_LIMITS.diagnostics;
+    limited ||= arrays[0].length > COVERAGE_LIMITS.notices || arrays[1].length > COVERAGE_LIMITS.attributions || arrays[2].length > COVERAGE_LIMITS.diagnostics;
     let units = 0;
     if (!limited) for (const n of arrays[0] as ArticleNotice[]) {
       units += typeof n?.content === "string" ? n.content.length : 0;
@@ -125,9 +126,15 @@ export function buildNoticeCoverage(input: {
         d.position === notice.position && d.sourceUrl === notice.sourceUrl && d.contentHash === notice.contentHash), decisionKey);
       const wholeIgnore = decisions.find(d => !d.span);
       if (wholeIgnore) usedIgnores.add(decisionKey(wholeIgnore));
-      const reads = (["title", "content"] as const).map(field => ({ field, read: spanBudget <= 0 ?
-        { readerVersion: DATE_READER_VERSION, spans: [], diagnostics: ["report_span_limit"], complete: false } : readDateSpans(notice[field], notice.format) }));
-      spanBudget -= reads.reduce((n, r) => n + r.read.spans.length, 0);
+      const reads = (["title", "content"] as const).map(field => {
+        const read = spanBudget <= 0 ? { readerVersion: DATE_READER_VERSION, spans: [], diagnostics: ["report_span_limit"], complete: false } : readDateSpans(notice[field], notice.format);
+        if (read.spans.length > spanBudget) {
+          read.spans = read.spans.slice(0, Math.max(0, spanBudget));
+          read.diagnostics.push("report_span_limit"); read.complete = false;
+        }
+        spanBudget -= read.spans.length;
+        return { field, read };
+      });
       let matchLimit = false;
       const datedSpans = reads.flatMap(({ field, read }) => read.spans.map(span => {
         const ignore = decisions.find(d => d.span?.field === field && d.span.ref === span.ref) ?? null;
@@ -154,7 +161,7 @@ export function buildNoticeCoverage(input: {
       }
       // An undated title is ordinary. An undated body or another unreadable body
       // expression is not proof of complete coverage.
-      const readDiagnostics = unique(reads.flatMap(({ field, read }) => read.diagnostics.filter(c => c !== "no_recognized_dates" || field === "content" && !datedSpans.length).map(c => `${field}:${c}`)));
+      const readDiagnostics = unique(reads.flatMap(({ field, read }) => read.diagnostics.filter(c => c !== "unresolved_date_expression" && (c !== "no_recognized_dates" || field === "content" && !datedSpans.length)).map(c => `${field}:${c}`)));
       const allDiagnostics = unique([...localDiagnostics, ...readDiagnostics, ...(associationLimit ? ["association_limit"] : []), ...(matchLimit ? ["match_limit"] : [])]);
       const incomplete = associationLimit || matchLimit || reads.some(r => !r.read.complete);
       const uncertain = !inventoryValid || duplicate || !finals || allDiagnostics.length > 0 || datedSpans.some(s => s.uncertainty.length && s.disposition !== "ignored");

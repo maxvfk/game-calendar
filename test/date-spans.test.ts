@@ -57,3 +57,12 @@ test("work and output ceilings fail visibly, never certify a truncated notice", 
   expect(r.complete).toBe(false); expect(r.spans).toHaveLength(256); expect(r.diagnostics).toContain("span_limit");
   expect(readDateSpans("undated notice")).toMatchObject({ spans: [], diagnostics: ["no_recognized_dates"] });
 });
+
+test("unsupported relative expressions retain original quotes, locations and unknown precision", () => {
+  const raw = "Claim tomorrow; after the Version 4.6 update; 04:00; TBD";
+  const r = readDateSpans(raw);
+  expect(r.spans.map(s => [s.kind, s.quote, s.value.precision])).toEqual([
+    ["unresolved", "tomorrow", "unknown"], ["unresolved", "after the Version 4.6 update", "unknown"], ["unresolved", "04:00", "unknown"], ["unresolved", "TBD", "unknown"],
+  ]);
+  for (const s of r.spans) expect(raw.slice(s.start, s.end)).toBe(s.quote);
+});

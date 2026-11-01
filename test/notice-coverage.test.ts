@@ -150,8 +150,76 @@ test("#119 actual recorded pre-repair HSR parser outputs leave both missing MoC 
   const ex = extractArticleEvidence(raw, { now, sourceId: id, game: adapter.game, sourceUrl: adapter.url }, capture, events);
   const r = buildNoticeCoverage({ sidecar: buildEvidenceSidecar(ex, events), finalEvents: events }).sources.find(s => s.sourceId === id)!.notices[0]!;
   expect(r.status).toBe("partially processed");
-  expect(r.spans).toHaveLength(21); // 20 real clocks, plus the literal character name March 7th (unknown year).
+  expect(r.spans.filter(s => s.kind === "date")).toHaveLength(21); // 20 real clocks, plus the literal character name March 7th (unknown year).
   expect(r.unmatchedSpans.map(s => s.quote)).toContain("2026/11/02 03:59:00 (server)");
   expect(r.unmatchedSpans.map(s => s.quote)).toContain("2026/12/14 03:59:00 (server)");
   expect(events.some(e => e.id.includes("memory-of-chaos"))).toBe(false);
+});
+
+test("one event's start plus another event's end cannot certify a complete range", () => {
+  const n = notice("October 19, 2026 – November 2, 2026");
+  const a = event(n, { endsAt: "2026-10-25T00:00:00.000Z" });
+  const b = event(n, { id: "genshin:second:2026-10-01", startsAt: "2026-10-01T00:00:00.000Z" });
+  const r = record(report([n], [a, b]));
+  expect(r.status).toBe("partially processed"); expect(r.unmatchedSpans).toHaveLength(2);
+  expect(r.spans.every(s => s.matches.length === 0 && s.reason === "range_not_represented_by_one_event")).toBe(true);
+});
+
+test("#131 frozen tracked Genshin recovery notices: synthetic missing-event replay preserves all three gaps", async () => {
+  const id = "genshin-kqm-ginews", a = adapterById(id)!;
+  const raw = await Bun.file("test/fixtures/genshin/expiries-2026-10-28.md").text();
+  const ex = extractArticleEvidence(raw, { now, sourceId: id, game: a.game, sourceUrl: a.url }, capture, []);
+  const r = buildNoticeCoverage({ sidecar: buildEvidenceSidecar(ex, []), finalEvents: [] }).sources.find(s => s.sourceId === id)!;
+  expect(r.notices.map(n => [n.noticeId, n.status, n.spans.filter(s => s.kind === "date").map(s => s.value.date)])).toEqual([
+    ["21053", "unprocessed", ["2026-10-26", "2026-11-02"]],
+    ["21891", "unprocessed", ["2026-10-21", "2026-11-02"]],
+    ["21890", "unprocessed", ["2026-10-13", "2026-11-03"]],
+  ]);
+});
+
+test("WuWa factual excerpt: all four convene windows and Echo Erase survive synthetic zero-output replay", async () => {
+  const id = "wuwa-kuro-mirror", a = adapterById(id)!;
+  const raw = await Bun.file("test/fixtures/wuwa/evidence-2026-10-21.xml").text();
+  const ex = extractArticleEvidence(raw, { now, sourceId: id, game: a.game, sourceUrl: a.url }, capture, []);
+  const r = buildNoticeCoverage({ sidecar: buildEvidenceSidecar(ex, []), finalEvents: [] }).sources.find(s => s.sourceId === id)!;
+  expect(r.notices.map(n => [n.noticeId, n.status, n.spans.filter(s => s.kind === "date").map(s => s.value.date)])).toEqual([
+    ["5668", "unprocessed", ["2026-10-22", "2026-11-11", "2026-10-22", "2026-11-11", "2026-10-22", "2026-11-11", "2026-10-22", "2026-11-11"]],
+    ["5571", "unprocessed", ["2026-10-22", "2026-11-09"]],
+  ]);
+});
+
+test("ZZZ factual event windows remain visible under synthetic missing-event replay", async () => {
+  const id = "zzz-steam-events-official", a = adapterById(id)!;
+  const raw = await Bun.file("test/fixtures/zzz/steam-rss-excerpts-2026-10-27.xml").text();
+  const ex = extractArticleEvidence(raw, { now, sourceId: id, game: a.game, sourceUrl: a.url }, capture, []);
+  const r = buildNoticeCoverage({ sidecar: buildEvidenceSidecar(ex, []), finalEvents: [] }).sources.find(s => s.sourceId === id)!;
+  const update = r.notices.find(n => n.noticeId === "652616887841064662")!;
+  expect(update.status).toBe("unprocessed");
+  for (const quote of ["2026/10/22 10:00 (server time)", "2026/11/30 03:59 (server time)"]) expect(update.unmatchedSpans.map(s => s.quote)).toContain(quote);
+});
+
+
+test("#139 frozen HSR Park claim recovery: synthetic missing-event scenario retains both November 11 boundaries", async () => {
+  const id = "hsr-kqm-hsrnews", a = adapterById(id)!;
+  const raw = await Bun.file("test/fixtures/editorial/c0/hsr-1437-complete.md").text();
+  const ex = extractArticleEvidence(raw, { now, sourceId: id, game: a.game, sourceUrl: a.url }, capture, []);
+  const r = buildNoticeCoverage({ sidecar: buildEvidenceSidecar(ex, []), finalEvents: [] }).sources.find(s => s.sourceId === id)!.notices[0]!;
+  expect(r.status).toBe("unprocessed");
+  const quotes = r.unmatchedSpans.map(s => s.quote);
+  expect(quotes.filter(q => q === "2026/11/11 06:00:00 (global)")).toHaveLength(4);
+  expect(quotes.filter(q => q === "2026/11/11 03:59:00 (global)")).toHaveLength(4);
+});
+
+test("NTE frozen BBCode shop and event dates retain missing-year and clock precision without auto-ignore", async () => {
+  const id = "nte-steamnews-official", a = adapterById(id)!;
+  const raw = await Bun.file("test/fixtures/editorial/c0/nte.json").text();
+  const ex = extractArticleEvidence(raw, { now, sourceId: id, game: a.game, sourceUrl: a.url }, capture, []);
+  const r = buildNoticeCoverage({ sidecar: buildEvidenceSidecar(ex, []), finalEvents: [] }).sources.find(s => s.sourceId === id)!;
+  const shop = r.notices.find(n => n.noticeId === "1847920302233942")!;
+  expect(shop.status).toBe("unprocessed"); expect(shop.ignores).toEqual([]);
+  expect(shop.spans.filter(s => s.kind === "date").map(s => [s.quote, s.uncertainty])).toEqual([
+    ["October 28, 06:30", ["missing_year", "missing_offset"]], ["November 11, 05:59 (UTC+8)", ["missing_year"]], ["October 28, 06:30 (UTC+8)", ["missing_year"]],
+  ]);
+  const eventNotice = r.notices.find(n => n.noticeId === "1847286114027833")!;
+  expect(eventNotice.spans.find(s => s.quote === "November 11, 2026, 05:59 (UTC+8)")?.value.instant).toBe("2026-11-10T21:59:00.000Z");
 });

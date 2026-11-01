@@ -9,10 +9,10 @@ export const DATE_READER_VERSION = "notice-dates-v1";
 export const DATE_LIMITS = { inputUnits: 250_000, spans: 256, quoteUnits: 512 } as const;
 export type DateValue = {
   date: string | null; clock: string | null; offsetMinutes: number | null;
-  instant: string | null; precision: "day" | "minute" | "second";
+  instant: string | null; precision: "day" | "minute" | "second" | "unknown";
 };
 export type DateSpan = {
-  ref: string; start: number; end: number; quote: string;
+  kind: "date" | "unresolved"; ref: string; start: number; end: number; quote: string;
   role: "start" | "end" | "single"; group: number | null;
   region: "asia" | "europe" | "america" | null;
   value: DateValue; uncertainty: string[];
@@ -20,7 +20,7 @@ export type DateSpan = {
 export type DateRead = { readerVersion: typeof DATE_READER_VERSION; spans: DateSpan[]; diagnostics: string[]; complete: boolean };
 const months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 const monthPattern = "(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?";
-const datePattern = `(?:\\d{4}[-/]\\d{1,2}[-/]\\d{1,2}|${monthPattern}\\s+\\d{1,2}(?:st|nd|rd|th)?(?:,?\\s+\\d{4})?|\\d{1,2}\\s+${monthPattern}(?:,?\\s+\\d{4})?|\\d{1,2}/\\d{1,2}(?:/\\d{2,4})?|\\d{1,2}\\.\\d{1,2}\\.\\d{2,4})`;
+const datePattern = `(?:\\d{4}[-/.]\\d{1,2}[-/.]\\d{1,2}|${monthPattern}\\s+\\d{1,2}(?:st|nd|rd|th)?(?:,?\\s+\\d{4})?|\\d{1,2}\\s+${monthPattern}(?:,?\\s+\\d{4})?|\\d{1,2}/\\d{1,2}(?:/\\d{2,4})?|\\d{1,2}\\.\\d{1,2}\\.\\d{2,4})`;
 const clockPattern = "(?:(?:[ \\t,T]+)\\d{1,2}:\\d{2}(?::\\d{2})?(?:[ \\t]*[AP]M)?)?";
 const zonePattern = "(?:[ \\t]*(?:\\(?[ \\t]*UTC(?:[ \\t]*[+−-]\\d{1,2}(?::?\\d{2})?)?[ \\t]*\\)?|Z|[+−-]\\d{2}:?\\d{2}|\\((?:server(?: time)?|global|[A-Z]{2,5})\\)))?";
 const separator = /^[\s*_,]*(?:[-–—~]|to|until)[\s*_,]*$/i;
@@ -71,8 +71,15 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
   }
   if (stack.length) diagnose("malformed_markup");
   if (format === "bbcode") {
-    const tags = /\[\/?[a-z][^\]\r\n]*\]/ig;
-    for (const m of raw.matchAll(tags)) mask(m.index!, m.index! + m[0].length);
+    const tags = /\[(\/?)([a-z][a-z0-9]*)(?:[=\s][^\]\r\n]*)?\]/ig;
+    const bbStack: string[] = [];
+    for (const m of raw.matchAll(tags)) {
+      mask(m.index!, m.index! + m[0].length);
+      const name = m[2]!.toLowerCase();
+      if (m[1]) { if (bbStack.pop() !== name) diagnose("malformed_markup"); }
+      else if (!["br", "hr"].includes(name)) bbStack.push(name);
+    }
+    if (bbStack.length) diagnose("malformed_markup");
     if (/\[(?:\/?(?:b|i|url|img|h[1-6]|list|quote|table|tr|td))(?:[=\s]|$)[^\]]*$/i.test(raw)) diagnose("malformed_markup");
   }
   // URLs and markdown link destinations are metadata, not dated prose.
@@ -101,8 +108,10 @@ function parseValue(text: string): { value: DateValue; uncertainty: string[] } {
   const date = new RegExp(`^(${datePattern})`, "i").exec(text)![1]!;
   let year: number | null = null, month: number | null = null, day: number | null = null;
   let m: RegExpExecArray | null;
-  if ((m = /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/.exec(date))) {
+  if ((m = /^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/.exec(date))) {
     year = +m[1]!; month = +m[2]!; day = +m[3]!;
+    const separators = date.match(/[-/.]/g)!;
+    if (separators[0] !== separators[1]) uncertainty.push("mixed_date_separators");
   } else if ((m = /^(\d{1,2})[/.](\d{1,2})(?:[/.](\d{2,4}))?$/.exec(date))) {
     // No locale inference. Only unambiguous numeric ordering is accepted.
     if (+m[1]! > 12 && +m[2]! <= 12) { day = +m[1]!; month = +m[2]!; }
@@ -164,7 +173,7 @@ export function readDateSpans(raw: string, format: "markdown" | "html" | "bbcode
     const regions = [...line.matchAll(/\b(Asia|Europe|America)\b/gi)].map(m => m[1]!.toLowerCase());
     const region = regions.length === 1 ? regions[0] as DateSpan["region"] : null;
     if (regions.length > 1) parsed.uncertainty.push("ambiguous_region");
-    spans.push({ ref: createHash("sha256").update(JSON.stringify([DATE_READER_VERSION, start, end, quote])).digest("hex"),
+    spans.push({ kind: "date", ref: createHash("sha256").update(JSON.stringify([DATE_READER_VERSION, start, end, quote])).digest("hex"),
       start, end, quote, role: "single", group: null, region, ...parsed });
     locations.push({ start: match.index!, end: match.index! + match[0].length });
   }
@@ -179,7 +188,18 @@ export function readDateSpans(raw: string, format: "markdown" | "html" | "bbcode
   // coverage when a known marker fell outside the recognized language.
   const remainder = text.split("");
   for (const l of locations) for (let i = l.start; i < l.end; i++) remainder[i] = " ";
-  if (new RegExp(`${monthPattern}\\s+\\d|\\d{4}[-/]\\d|\\d{1,2}/\\d{1,2}|\\d{1,2}\\.\\d{1,2}\\.\\d{2,4}|\\d{1,2}:\\d{2}|\\b(?:tomorrow|TBD|TBA|after (?:the )?(?:version|update|maintenance))\\b`, "i").test(remainder.join(""))) diagnose("unresolved_date_expression");
+  const unresolved = new RegExp(`${monthPattern}\\s+\\d[^\\n;]{0,80}|\\d{4}[-/.]\\d[^\\n;]{0,80}|\\d{1,2}/\\d{1,2}[^\\n;]{0,40}|\\d{1,2}\\.\\d{1,2}\\.\\d{2,4}|\\d{1,2}:\\d{2}(?::\\d{2})?|\\b(?:tomorrow|TBD|TBA|after (?:the )?(?:version \\d+\\.\\d+ (?:update|maintenance)|update|maintenance))\\b`, "gi");
   if (!spans.length) diagnose("no_recognized_dates");
+  for (const m of remainder.join("").matchAll(unresolved)) {
+    diagnose("unresolved_date_expression");
+    if (spans.length === DATE_LIMITS.spans) { diagnose("span_limit"); break; }
+    const start = positions[m.index!]!, end = ends[m.index! + m[0].length - 1]!;
+    if (end - start > DATE_LIMITS.quoteUnits) { diagnose("quote_limit"); continue; }
+    const quote = raw.slice(start, end);
+    spans.push({ kind: "unresolved", ref: createHash("sha256").update(JSON.stringify([DATE_READER_VERSION, start, end, quote])).digest("hex"),
+      start, end, quote, role: "single", group: null, region: null,
+      value: { date: null, clock: null, offsetMinutes: null, instant: null, precision: "unknown" }, uncertainty: ["unsupported_date_expression"] });
+  }
+  spans.sort((a, b) => a.start - b.start);
   return { readerVersion: DATE_READER_VERSION, spans, diagnostics: diagnostics.sort(), complete: !diagnostics.some(c => c.endsWith("_limit")) };
 }
