@@ -27,6 +27,7 @@
       }
     },
     "diagnostics": [],
+    "attentionRequired": true,
     "sources": [
       {
         "sourceId": "genshin-kqm-ginews",
@@ -36,6 +37,11 @@
         "limitations": [
           "Inventory availability is not source or calendar completeness"
         ],
+        "attention": {
+          "required": true,
+          "noticeCount": 1,
+          "reasons": []
+        },
         "diagnostics": [],
         "notices": [
           {
@@ -48,6 +54,14 @@
             "format": "markdown",
             "status": "partially processed",
             "evaluation": "uncertain",
+            "attention": {
+              "required": true,
+              "reasons": [
+                "uncertain_evaluation",
+                "unmatched_spans"
+              ],
+              "unscanned": []
+            },
             "baselineMember": false,
             "associations": [
               {
@@ -197,6 +211,13 @@
           "Inventory availability is not source or calendar completeness",
           "Missing, invalid or incomplete notice inventory"
         ],
+        "attention": {
+          "required": true,
+          "noticeCount": 0,
+          "reasons": [
+            "inventory_not_evaluated"
+          ]
+        },
         "diagnostics": [],
         "notices": []
       },
@@ -209,6 +230,13 @@
           "Inventory availability is not source or calendar completeness",
           "Missing, invalid or incomplete notice inventory"
         ],
+        "attention": {
+          "required": true,
+          "noticeCount": 0,
+          "reasons": [
+            "inventory_not_evaluated"
+          ]
+        },
         "diagnostics": [],
         "notices": []
       },
@@ -221,6 +249,13 @@
           "Inventory availability is not source or calendar completeness",
           "Missing, invalid or incomplete notice inventory"
         ],
+        "attention": {
+          "required": true,
+          "noticeCount": 0,
+          "reasons": [
+            "inventory_not_evaluated"
+          ]
+        },
         "diagnostics": [],
         "notices": []
       },
@@ -233,6 +268,13 @@
           "Inventory availability is not source or calendar completeness",
           "Missing, invalid or incomplete notice inventory"
         ],
+        "attention": {
+          "required": true,
+          "noticeCount": 0,
+          "reasons": [
+            "inventory_not_evaluated"
+          ]
+        },
         "diagnostics": [],
         "notices": []
       }
