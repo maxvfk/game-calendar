@@ -975,6 +975,24 @@ Fixes an issue whereby after the Ice Coffin of the opponents "Glaciomancer" and 
 
 -----
 
+# [HoYoLAB Community "Daily Check-In" Feature](archive/22006.md)
+## Daily Check-In Feature
+![Banner](https://sdk.hoyoverse.com/upload/ann/2022/12/06/d15f6c61e1d3d62d5e269360aaef7285_3515093605882829658.png)
+
+Dear Travelers,
+
+The HoYoLAB Community "Daily Check-In" feature is now available!
+
+Go to HoYoLAB > Tools > Genshin Impact > Check-in, and check in daily to obtain Primogems, Mora, Hero's Wit, and other in-game rewards.
+
+You will receive 100 Primogems and 10,000 Mora for your first check-in!
+
+〓Event Duration〓
+
+Permanent
+
+-----
+
 # [Version Satisfaction Survey Now Open](archive/22005.md)
 ## Version Satisfaction Survey
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2022/10/24/cfc21128e6d6e39a4e7e011ae5f14779_6352103327130460565.jpg)
@@ -1465,24 +1483,6 @@ Complete Archon Quest Chapter VII: Act II "Wraith's Nocturne"
 Epilogue Availability: After Version 7.1 Update – <t class="t_lc" contenteditable="false">2026/11/03 14:59</t>
 
 ※ Once you reach Adventure Rank 18 and complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom," you can explore the Snezhnaya region to automatically accept Archon Quest Chapter VII: Act I "Everwinter Without Mercy" and continue progressing up to the latest Archon Quest introduced in the current version update.
-
------
-
-# [HoYoLAB Community "Daily Check-In" Feature](archive/21986.md)
-## Daily Check-In Feature
-![Banner](https://sdk.hoyoverse.com/upload/ann/2022/12/06/d15f6c61e1d3d62d5e269360aaef7285_3515093605882829658.png)
-
-Dear Travelers,
-
-The HoYoLAB Community "Daily Check-In" feature is now available!
-
-Go to HoYoLAB > Tools > Genshin Impact > Check-in, and check in daily to obtain Primogems, Mora, Hero's Wit, and other in-game rewards.
-
-You will receive 100 Primogems and 10,000 Mora for your first check-in!
-
-〓Event Duration〓
-
-Permanent
 
 -----
 
