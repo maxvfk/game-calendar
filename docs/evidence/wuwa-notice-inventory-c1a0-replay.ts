@@ -37,7 +37,27 @@ for (const path of ["snapshots", "fixtures", "data/reviewed", "data/presentation
   assert.deepEqual(after, before, `Different replay inputs: ${path}`);
   Object.assign(inputs, before);
 }
-assert.equal(await Bun.file(join(base, "bun.lock")).text(), await Bun.file(join(head, "bun.lock")).text());
+// The optional XML verifier adds only saxes/xmlchars. Every baseline locked
+// package and all other manifest settings must remain identical.
+const baseLockText = await Bun.file(join(base, "bun.lock")).text();
+const headLockText = await Bun.file(join(head, "bun.lock")).text();
+const baseLock = Bun.JSONC.parse(baseLockText), headLock = Bun.JSONC.parse(headLockText);
+assert.equal(headLock.lockfileVersion, baseLock.lockfileVersion);
+for (const [name, locked] of Object.entries(baseLock.packages)) assert.deepEqual(headLock.packages[name], locked, `Changed baseline dependency: ${name}`);
+const additions = Object.keys(headLock.packages).filter(name => !(name in baseLock.packages)).sort();
+assert.deepEqual(additions, ["saxes", "xmlchars"]);
+assert.equal(headLock.packages.saxes[0], "saxes@6.0.0");
+assert.equal(headLock.packages.xmlchars[0], "xmlchars@2.2.0");
+const headWorkspaces = structuredClone(headLock.workspaces);
+assert.equal(headWorkspaces[""].dependencies.saxes, "6.0.0");
+delete headWorkspaces[""].dependencies.saxes;
+assert.deepEqual(headWorkspaces, baseLock.workspaces);
+const baseManifest = await json(base, "package.json"), headManifest = await json(head, "package.json");
+delete headManifest.dependencies.saxes;
+assert.deepEqual(headManifest, baseManifest);
+const dependencyVerification = { baseLockSha256: sha(baseLockText), headLockSha256: sha(headLockText),
+  unchangedBaselinePackages: Object.keys(baseLock.packages).length,
+  addedPackages: Object.fromEntries(additions.map(name => [name, headLock.packages[name]])) };
 for (const root of [base, head]) {
   await mkdir(join(root, "work/c1a0"), { recursive: true });
   const preload = join(root, "work/c1a0/parity-clock.ts");
@@ -66,7 +86,7 @@ const reportRun = Bun.spawnSync([process.execPath, "scripts/event-evidence-repor
 assert.equal(reportRun.exitCode, 0);
 const report = JSON.parse(reportRun.stdout.toString());
 const output = {
-  base: revision(base), implementationHead: revision(head), clock, settings, bun: Bun.version,
+  base: revision(base), implementationHead: revision(head), clock, settings, bun: Bun.version, dependencyVerification,
   inputFiles: Object.keys(inputs).length, inputManifestSha256: sha(JSON.stringify(inputs)), inputManifest: inputs,
   publicFiles: Object.keys(publicBase).length, publicManifestSha256: sha(JSON.stringify(publicBase)),
   publicBase, publicHead, byteIdentical: true,

@@ -7,6 +7,7 @@ import type { ParseContext } from "../ingest/adapters/types.ts";
 import { discoverKqmGinArticles } from "../ingest/parsers/kqm-ginews.ts";
 import { discoverKqmHsrArticles } from "../ingest/parsers/kqm-hsrnews.ts";
 import { discoverZzzSteamPosts } from "../ingest/parsers/zzz-steam-rss.ts";
+import { verifyWuwaNoticeFields } from "./wuwa-notice-xml.ts";
 import { discoverWuwaArticles } from "../ingest/parsers/wuwa-kuro-atom.ts";
 import { discoverNteSteamPosts } from "../ingest/parsers/nte-steamnews.ts";
 import type { GachaEvent } from "../shared/schema.ts";
@@ -47,55 +48,6 @@ function checkKqmInventory(raw: string, items: Array<{ id: string; heading: stri
   }
 }
 
-/** Structural refusal guard for the canonical Atom discovery's supported layout.
- * Field correspondence reuses canonical discovery; no alternative ingestion parser.
- * CDATA/comments cannot create entry boundaries.
- * Unknown, unbalanced, nested or noncanonical entry tags must not disappear from
- * an otherwise parseable inventory. Canonical parser acceptance stays unchanged.
- */
-function checkWuwaInventory(raw: string, articles: ReturnType<typeof discoverWuwaArticles>) {
-  // XML comments are excluded, but comments inside HTML CDATA are source content.
-  const uncommented = raw.replace(/<!\[CDATA\[[\s\S]*?\]\]>|<!--[\s\S]*?-->/g,
-    token => token.startsWith("<!--") ? "" : token);
-  const markup = uncommented.replace(/<!\[CDATA\[[\s\S]*?\]\]>/g, "");
-  const stack: string[] = [];
-  let entries = 0, feeds = 0;
-  const fail = () => { throw new InventoryError("article_inventory_incomplete"); };
-  for (const token of markup.matchAll(/<[^>]*>|[^<]+|</g)) {
-    const tag = token[0];
-    if (/^<\?xml\s[^?]*\?>$/.test(tag)) continue;
-    if (!tag.startsWith("<")) { if (!stack.length && tag.trim()) fail(); continue; }
-    const parsed = /^<(\/?)([\w:.-]+)(?:\s[^<>]*?)?(\/?)>$/.exec(tag);
-    if (!parsed) { fail(); continue; }
-    const [, closing, name, selfClosing] = parsed;
-    if (closing) { if (stack.pop() !== name) fail(); continue; }
-    if (!stack.length) { if (name !== "feed" || ++feeds !== 1) fail(); }
-    if (stack.length === 1 && !["entry", "title", "link", "id", "updated", "subtitle", "icon", "logo",
-      "rights", "generator", "author", "category", "contributor"].includes(name!)) fail();
-    if (stack.includes("entry") && ["id", "title", "link", "content"].includes(name!) &&
-      stack.at(-1) !== "entry") fail();
-    if (name!.split(":").at(-1) === "entry") {
-      if (tag !== "<entry>" || stack.length !== 1 || stack[0] !== "feed") fail();
-      entries++;
-    }
-    if (!selfClosing) stack.push(name!);
-  }
-  if (stack.length || feeds !== 1 || entries !== articles.length) fail();
-  // Duplicate/missing identity fields within a single entry are ambiguous too.
-  for (const entry of markup.matchAll(/<entry>([\s\S]*?)<\/entry>/g)) {
-    for (const field of ["id", "title", "link", "content"]) {
-      if ([...entry[1]!.matchAll(new RegExp(`<${field}\\b`, "g"))].length !== 1) fail();
-    }
-  }
-  // Reuse the same canonical discovery on actual, comment-free entry fields.
-  // Counts alone cannot detect the raw traversal selecting a commented value.
-  let actual: ReturnType<typeof discoverWuwaArticles>;
-  try { actual = discoverWuwaArticles(uncommented); }
-  catch { fail(); return; }
-  if (actual.length !== articles.length || actual.some((a, i) =>
-    (["id", "title", "sourceUrl", "content"] as const).some(field => a[field] !== articles[i]![field]))) fail();
-}
-
 /** All expected sources stay visible even when no document/evidence survived.
  * Availability means usable inventory, including diagnosed duplicate occurrences;
  * it proves neither unique identities nor complete source/event coverage.
@@ -128,9 +80,11 @@ export function extractArticleEvidence(raw: string, ctx: ParseContext, capture: 
     // Discovery may ignore unsupported tags for canonical compatibility;
     // the structural guard refuses those omissions in the optional inventory.
     let articles: ReturnType<typeof discoverWuwaArticles>;
-    try { articles = discoverWuwaArticles(raw); }
+    try {
+      articles = discoverWuwaArticles(raw);
+      verifyWuwaNoticeFields(raw, articles);
+    }
     catch { throw new InventoryError("article_inventory_incomplete"); }
-    checkWuwaInventory(raw, articles);
     items = articles.map(a => ({ noticeId: a.id, sourceUrl: a.sourceUrl,
       title: a.title, content: a.content, format: "html" }));
   } else if (ctx.sourceId === "genshin-kqm-ginews" || ctx.sourceId === "hsr-kqm-hsrnews") {
