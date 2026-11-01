@@ -10,7 +10,7 @@ import { assertExactBoundary } from "./helpers/verified-records.tsx";
 const ctx = { now: "2026-10-28T09:40:00.000Z", sourceId: "genshin-kqm-ginews", game: "genshin" as const,
   sourceUrl: "https://api.github.com/repos/KQM-git/GINews/contents/readme.md" };
 const raw = await Bun.file("test/fixtures/genshin/starlight-voyage-2026-10-28.md").text();
-const snapshot = await Bun.file("snapshots/genshin-kqm-ginews.md").text();
+const snapshot = await Bun.file("test/fixtures/genshin/ginews-pre-turnover-2026-11-01.md").text();
 const mainId = "genshin:starlight-voyage-heart-unbound:2026-10-19";
 const questId = "genshin:quest-completion-period-starlight-voyage-heart-unbound:2026-10-19";
 const ids = [mainId, questId];
