@@ -66,3 +66,9 @@ test("unsupported relative expressions retain original quotes, locations and unk
   ]);
   for (const s of r.spans) expect(raw.slice(s.start, s.end)).toBe(s.quote);
 });
+
+test("dot calendar dates and malformed BBCode are diagnosed conservatively", () => {
+  expect(readDateSpans("2026.10.29").spans[0]!.value.date).toBe("2026-10-29");
+  expect(readDateSpans("2026-10/29").spans[0]!.uncertainty).toEqual(["mixed_date_separators"]);
+  expect(readDateSpans("[b]2026-10-29", "bbcode").diagnostics).toContain("malformed_markup");
+});

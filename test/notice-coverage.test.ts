@@ -223,3 +223,26 @@ test("NTE frozen BBCode shop and event dates retain missing-year and clock preci
   const eventNotice = r.notices.find(n => n.noticeId === "1847286114027833")!;
   expect(eventNotice.spans.find(s => s.quote === "November 11, 2026, 05:59 (UTC+8)")?.value.instant).toBe("2026-11-10T21:59:00.000Z");
 });
+
+test("oversized report inventory and ambiguous final associations cannot claim complete coverage", () => {
+  const n = notice("October 19, 2026 – November 2, 2026");
+  const large = { ...side([n]), notices: Array(2001).fill(n) };
+  const refused = buildNoticeCoverage({ sidecar: large, finalEvents: [] });
+  expect(refused.diagnostics).toEqual(["report_input_limit"]);
+  expect(refused.sources.every(s => s.evaluation === "not evaluated")).toBe(true);
+  const finals = Array.from({ length: 65 }, (_, i) => event(n, { id: `genshin:reviewed-${i}:2026-10-19`, sourceId: "reviewed-genshin", extractionMethod: "manual" }));
+  const r = record(report([n], [], finals));
+  expect(r.evaluation).toBe("incomplete"); expect(r.status).toBe("partially processed");
+  expect(r.diagnostics).toContain("association_limit"); expect(r.diagnostics).toContain("match_limit");
+  expect(r.spans.every(s => s.matches.length <= 16)).toBe(true);
+});
+
+test("span-level reviewed decisions can resolve an unsupported clock without hiding another gap", () => {
+  const n = notice("tomorrow; November 2, 2026");
+  const unresolved = record(report([n])).spans[0]!;
+  const decision = { sourceId, noticeId: n.noticeId, position: n.position, sourceUrl: n.sourceUrl, contentHash: n.contentHash,
+    category: "other-out-of-scope", reason: "Reviewed synthetic relative-time statement", span: { field: "content", ref: unresolved.ref } };
+  const r = record(report([n], [], [], { ignores: { schemaVersion: 1, decisions: [decision] } }));
+  expect(r.spans[0]!.kind).toBe("unresolved"); expect(r.spans[0]!.disposition).toBe("ignored");
+  expect(r.unmatchedSpans.map(s => s.quote)).toEqual(["November 2, 2026"]); expect(r.status).toBe("unprocessed");
+});

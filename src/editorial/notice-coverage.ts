@@ -88,7 +88,7 @@ export function buildNoticeCoverage(input: {
     const sourceDiagnostics = side?.diagnostics.filter(d => d.sourceId === sourceId || !d.sourceId && fatalInventory.has(d.code)) ?? [];
     const sourceAvailable = Boolean(side && side.notices.some(n => n.sourceId === sourceId) && !sourceDiagnostics.some(d => fatalInventory.has(d.code)));
     const inventoryValid = sourceAvailable && !sourceDiagnostics.some(d => fatalInventory.has(d.code));
-    const notices = sorted(side?.notices.filter(n => n.sourceId === sourceId) ?? [], n => String(n.position).padStart(12, "0"));
+    const notices = (side?.notices.filter(n => n.sourceId === sourceId) ?? []).sort((a, b) => a.position - b.position);
     const records = notices.map(notice => {
       const duplicate = notices.filter(n => n.noticeId === notice.noticeId).length !== 1;
       const localDiagnostics = unique([
@@ -102,7 +102,7 @@ export function buildNoticeCoverage(input: {
       const associations: Array<{ event: GachaEvent; basis: BoundaryMatch["basis"] }> = [];
       let associationLimit = false;
       if (inventoryValid && !duplicate && notice.game === game && finals) {
-        for (const event of finalByUrl.get(notice.sourceUrl) ?? []) {
+        for (const event of sorted(finalByUrl.get(notice.sourceUrl) ?? [], e => e.id)) {
           if (associations.length === COVERAGE_LIMITS.associationsPerNotice) { associationLimit = true; break; }
           if (event.game !== game || event.status !== "published" || finalIdCounts.get(event.id) !== 1) continue;
           const related = rows.filter(a => a.event.id === event.id);
