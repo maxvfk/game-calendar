@@ -1,7 +1,8 @@
 ## C1a.0 — WuWa notice inventory — IMPLEMENTED, AWAITING FOCUSED REVIEW (2026-11-01)
 
 Started from re-fetched current main `9aabb88a5ac7e4e46c1f782d115802ad4f992e16`.
-Implementation commit `b0b82db6afd63f737836f84541dbf221ffb5656b` adds WuWa to
+Implementation `b0b82db6afd63f737836f84541dbf221ffb5656b`, hardened in
+`790943fa8fc80ec897cca4a5a17614adb535bd0c`, adds WuWa to
 C0's internal notice inventory using the existing canonical Atom discovery,
 complete HTML and stable article IDs. Exact emitted-event attribution, honest
 availability and independent E1/inventory recovery are implemented. Canonical
@@ -15,8 +16,8 @@ Fixed-clock identical-input full builds match all 10 recursive public files,
 input, eight E1 entries/hashes and all pre-existing diagnostics/C0 arrays.
 Measured WuWa: 20 notices, 18 with no emitted event, 11 emitted/attributed/final
 associations, no inventory/reference diagnostics. These are snapshot measurements.
-Focused suite: 80 pass / 0 fail. Full suite: 1463 pass / 3 existing optional age
-skips / 0 fail (1466 tests, 91 files). Required install/typecheck/test/build and
+Focused suite: 81 pass / 0 fail. Full suite: 1464 pass / 3 existing optional age
+skips / 0 fail (1467 tests, 91 files). Required install/typecheck/test/build and
 offline feed/report checks pass locally; exact-head GitHub CI belongs to the PR
 delivery record. Local socket tests need local networking enabled;
 three existing optional age tests skip locally and remain a hosted CI gate.

@@ -2,7 +2,8 @@
 
 Implemented from re-fetched current main
 `9aabb88a5ac7e4e46c1f782d115802ad4f992e16` on 2026-11-01.
-Implementation commit: `b0b82db6afd63f737836f84541dbf221ffb5656b`.
+Implementation commits: `b0b82db6afd63f737836f84541dbf221ffb5656b` and
+recovery hardening `790943fa8fc80ec897cca4a5a17614adb535bd0c`.
 The final documentation head and exact-head hosted CI belong to the implementation
 PR delivery record. This checkpoint does not claim independent review or merge.
 
@@ -49,17 +50,17 @@ Bun 1.3.14. Required commands executed:
 | --- | --- |
 | `bun install --frozen-lockfile` | PASS; 71 installs checked, no changes |
 | `bun run typecheck` | PASS |
-| `bun test` | 1463 pass / 3 existing optional age skips / 0 fail (1466 tests, 91 files) |
+| `bun test` | 1464 pass / 3 existing optional age skips / 0 fail (1467 tests, 91 files) |
 | `bun run build` | PASS; both full builds and recursive parity below |
-| `bun test test/wuwa-article-evidence.test.ts test/wuwa-kuro-atom.test.ts test/wuwa-current-events.test.ts test/event-evidence.test.ts test/article-evidence.test.ts` | 80 pass / 0 fail |
+| `bun test test/wuwa-article-evidence.test.ts test/wuwa-kuro-atom.test.ts test/wuwa-current-events.test.ts test/event-evidence.test.ts test/article-evidence.test.ts` | 81 pass / 0 fail |
 | `bun run build:feed` | PASS |
 | `bun scripts/event-evidence-report.ts` | PASS; complete sidecar Zod validation |
 
 Initial restricted-network full test: 1448 pass / 3 existing optional age skips /
 3 failures (local PostgreSQL TLS peer, wire peer and HTTP server sockets). Rerun
 with local networking permitted passed: 1461 pass / 3 existing optional age skips /
-0 fail. Final rerun including the two additional structural refusal tests: **1463 pass /
-3 existing optional age skips / 0 fail**, 1466 tests across 91 files. No application, test assertion, credentials or persistent environment
+0 fail. Final rerun including the structural refusal and recovery-metadata regressions:
+**1464 pass / 3 existing optional age skips / 0 fail**, 1467 tests across 91 files. No application, test assertion, credentials or persistent environment
 configuration was changed to resolve the socket restriction. No global tool
 configuration changed. Local optional age tests remain skipped; hosted CI must
 exercise PostgreSQL 17 and mandatory age recovery on the exact delivered head.
@@ -73,7 +74,8 @@ E1 execution is pinned in a golden including no-winner unattached records and
 diagnostics. Existing four C0 source tests retain their original data contracts;
 only the report's expected number of visible sources changes from four to five.
 The builder regression separately proves both extraction failure directions
-without changing public output. Assembly recovery is tested in both directions.
+without changing public output. Assembly recovery is tested in both directions, including malformed notice URL/ID
+metadata that must not poison the recovery diagnostics themselves.
 See [fixture provenance](../../test/fixtures/wuwa/README.md).
 
 ## Measured replay
