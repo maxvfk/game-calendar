@@ -1,0 +1,228 @@
+{
+  "base": "32070cdf2ee131a15b4191bd91be16440c550710",
+  "reviewedHead": "61c3d662cebb13ab0b1f287d97c2cb5d6502a1cb",
+  "codeCheckpoint": "7be79e3f2cee3e3d33d71f49a807d37f893dc8ea",
+  "sameCurrentMainInventoryBeforeAndAfter": true,
+  "initialFocusedReproduction": {
+    "passed": 2,
+    "failed": 8,
+    "realDependencies": true
+  },
+  "before": [
+    {
+      "sourceId": "genshin-kqm-ginews",
+      "notices": 32,
+      "statuses": {
+        "processed": 0,
+        "partially processed": 2,
+        "unprocessed": 20,
+        "ignored": 0,
+        "unclassified": 10
+      },
+      "evaluations": {
+        "uncertain": 32
+      },
+      "baselineMembers": 5,
+      "attentionRequired": 0,
+      "malformedNotices": 0
+    },
+    {
+      "sourceId": "hsr-kqm-hsrnews",
+      "notices": 13,
+      "statuses": {
+        "processed": 0,
+        "partially processed": 3,
+        "unprocessed": 5,
+        "ignored": 0,
+        "unclassified": 5
+      },
+      "evaluations": {
+        "complete": 1,
+        "uncertain": 12
+      },
+      "baselineMembers": 13,
+      "attentionRequired": 0,
+      "malformedNotices": 0
+    },
+    {
+      "sourceId": "nte-steamnews-official",
+      "notices": 31,
+      "statuses": {
+        "processed": 0,
+        "partially processed": 9,
+        "unprocessed": 15,
+        "ignored": 0,
+        "unclassified": 7
+      },
+      "evaluations": {
+        "uncertain": 31
+      },
+      "baselineMembers": 31,
+      "attentionRequired": 0,
+      "malformedNotices": 8
+    },
+    {
+      "sourceId": "wuwa-kuro-mirror",
+      "notices": 20,
+      "statuses": {
+        "processed": 0,
+        "partially processed": 2,
+        "unprocessed": 4,
+        "ignored": 0,
+        "unclassified": 14
+      },
+      "evaluations": {
+        "complete": 2,
+        "uncertain": 18
+      },
+      "baselineMembers": 20,
+      "attentionRequired": 0,
+      "malformedNotices": 0
+    },
+    {
+      "sourceId": "zzz-steam-events-official",
+      "notices": 10,
+      "statuses": {
+        "processed": 0,
+        "partially processed": 2,
+        "unprocessed": 6,
+        "ignored": 0,
+        "unclassified": 2
+      },
+      "evaluations": {
+        "uncertain": 10
+      },
+      "baselineMembers": 10,
+      "attentionRequired": 0,
+      "malformedNotices": 0
+    }
+  ],
+  "after": [
+    {
+      "sourceId": "genshin-kqm-ginews",
+      "notices": 32,
+      "statuses": {
+        "processed": 0,
+        "partially processed": 2,
+        "unprocessed": 20,
+        "ignored": 0,
+        "unclassified": 10
+      },
+      "evaluations": {
+        "uncertain": 32
+      },
+      "baselineMembers": 32,
+      "attentionRequired": 32,
+      "malformedNotices": 0
+    },
+    {
+      "sourceId": "hsr-kqm-hsrnews",
+      "notices": 13,
+      "statuses": {
+        "processed": 0,
+        "partially processed": 3,
+        "unprocessed": 5,
+        "ignored": 0,
+        "unclassified": 5
+      },
+      "evaluations": {
+        "uncertain": 13
+      },
+      "baselineMembers": 13,
+      "attentionRequired": 13,
+      "malformedNotices": 0
+    },
+    {
+      "sourceId": "nte-steamnews-official",
+      "notices": 31,
+      "statuses": {
+        "processed": 0,
+        "partially processed": 9,
+        "unprocessed": 15,
+        "ignored": 0,
+        "unclassified": 7
+      },
+      "evaluations": {
+        "uncertain": 31
+      },
+      "baselineMembers": 31,
+      "attentionRequired": 31,
+      "malformedNotices": 0
+    },
+    {
+      "sourceId": "wuwa-kuro-mirror",
+      "notices": 20,
+      "statuses": {
+        "processed": 0,
+        "partially processed": 2,
+        "unprocessed": 4,
+        "ignored": 0,
+        "unclassified": 14
+      },
+      "evaluations": {
+        "complete": 2,
+        "uncertain": 18
+      },
+      "baselineMembers": 20,
+      "attentionRequired": 20,
+      "malformedNotices": 0
+    },
+    {
+      "sourceId": "zzz-steam-events-official",
+      "notices": 10,
+      "statuses": {
+        "processed": 0,
+        "partially processed": 2,
+        "unprocessed": 6,
+        "ignored": 0,
+        "unclassified": 2
+      },
+      "evaluations": {
+        "uncertain": 10
+      },
+      "baselineMembers": 10,
+      "attentionRequired": 10,
+      "malformedNotices": 0
+    }
+  ],
+  "baselineMigration": {
+    "entries": 113,
+    "originalContentIdentitiesUnchanged": true,
+    "removedFieldsOnly": [
+      "position"
+    ],
+    "oldSha256": "d0309a031bfab8e6653c418e203d8ec5f334554e898798727b878cd4bb124e70",
+    "newSha256": "f9495e8f1a09bc45f21773116870b836f65e63b24d471a4bf3c945362f244cb9"
+  },
+  "nteClockRange": {
+    "noticeId": "1843481262703497",
+    "quote": "September 16, 2026, 00:00-12:00",
+    "before": {
+      "date": "2026-09-16",
+      "clock": "00:00:00",
+      "offsetMinutes": -720,
+      "instant": "2026-09-16T12:00:00.000Z",
+      "precision": "minute"
+    },
+    "after": {
+      "date": "2026-09-16",
+      "clock": "00:00:00",
+      "offsetMinutes": null,
+      "instant": null,
+      "precision": "minute"
+    },
+    "uncertainty": [
+      "ambiguous_clock_range_or_offset"
+    ]
+  },
+  "remainingSpanUncertaintyNonexclusive": {
+    "ambiguous_clock_range_or_offset": 1,
+    "ambiguous_numeric_order": 8,
+    "ambiguous_short_year": 1,
+    "missing_offset": 86,
+    "missing_year": 209,
+    "unsupported_date_expression": 251,
+    "unsupported_timezone": 133
+  },
+  "scopeNote": "Recorded outputs, not golden test expectations. Relative/character-name lexical markers are not independently confirmed calendar deadlines."
+}

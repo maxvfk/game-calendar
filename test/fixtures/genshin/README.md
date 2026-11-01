@@ -27,3 +27,13 @@ f9b1738c1f4e55e285abb5fea2aafeacd52c49db,
 No new source/snapshot confirmation timestamp is assigned. These regression
 fixtures are not production fallback sources. Only explicit `t_lc` periods
 for the named notice contracts are promoted to regional exact deadlines.
+
+`ginews-pre-turnover-2026-11-01.md` is the byte-identical complete tracked
+GINews snapshot from PR161 reviewed head
+`61c3d662cebb13ab0b1f287d97c2cb5d6502a1cb`, before main `32070cd` removed
+seven notices during ordinary index turnover. SHA-256: `496215b2fbca04ecc7ae96b74f0c3d8da489a0922ba2609e39fb9b478f458170`.
+No source was fetched. This pins the existing historical parser assertions
+(13 events, including Starlight and the three expiry notices) without changing
+their expected dates, IDs or fail-closed behavior. It is test-only, never a
+production fallback. The four failures also reproduced on unchanged current
+main before this fixture pin.

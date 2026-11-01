@@ -1,0 +1,36 @@
+{
+  "provenance": {
+    "revision": "32070cdf2ee131a15b4191bd91be16440c550710",
+    "file": "snapshots/nte-steamnews-official.json",
+    "sha256": "de18088648b7e9659f626912097521a8509f57eda52eb69de9e60296671b574b",
+    "note": "Complete selected notice envelopes from tracked snapshot, no refresh; independently retained for F3/F6 regressions."
+  },
+  "notices": [
+    {
+      "gid": "1843481262703497",
+      "title": "Asia & SEA Server Maintenance Notice: Sept 16",
+      "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1843481262703497",
+      "is_external_url": true,
+      "author": "PWM Game Manager",
+      "contents": "[p]Hey Appraiser,[/p][p][/p][p]The Asia and SEA servers have recently come under DDoS attack. To keep the game stable and available, we're upgrading DDoS protection on both servers on September 16, 2026, from 00:00 to 12:00 (UTC+8). Login will be unavailable during this period, so please plan accordingly. We're sorry for the disruption and appreciate your patience.[/p][p][/p][p]\\[Maintenance Window & Compensation][/p][p]● Duration: September 16, 2026, 00:00-12:00 (UTC+8)[/p][p]● Affected Servers: Asia & SEA[/p][p]● Compensation: Annulith x500[/p][p]● Eligibility: Appraisers who created their characters before September 16, 2026, 00:00 (UTC+8).[/p][p]● Distribution: Sent via in-game mail after maintenance. Be sure to claim the items before they expire.[/p][p]※ If maintenance takes longer than expected, we will send an additional Annulith x100 for each hour of delay.[/p][p][/p]",
+      "feedlabel": "Community Announcements",
+      "date": 1789443760,
+      "feedname": "steam_community_announcements",
+      "feed_type": 1,
+      "appid": 4508340
+    },
+    {
+      "gid": "1841579228661424",
+      "title": "NTE Steam Login FAQ",
+      "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1841579228661424",
+      "is_external_url": true,
+      "author": "PWM Game Manager",
+      "contents": "[p]Hey, Appraisers![/p][p][/p][p]On \\[08/19/2026], NTE will be adding Steam account login support. If you're a new player, you can simply log in with Steam to jump right into the game. If you're an existing player with game progress and want to link that to your Steam account, be sure to log in to NTE using your existing game account first, and then go to \\[User Center] > \\[Steam] to link your Steam account.[/p][p][/p][p]We've also put together a list of FAQs below for your reference. If you have any other questions, feel free to reach out to Customer Support at [url=\"https://nte.contactus@perfectworld.com\"]nte.contactus@perfectworld.com[/url].[/p][p][/p][p]Q: I've already logged in to NTE using my Steam account. Can I still link another game account that already has progress?[/p][p]A: No. Logging in with a Steam account automatically creates a brand-new User ID, and that Steam account can't be linked to another game account with existing progress.[/p][p][/p][p]Q: If I play on Steam with my Steam account, can I continue playing on other platforms?[/p][p]A: Yes. After you link your Steam account to an email address in the User Center, you can use that email to log in on other platforms and keep your game progress synced.[/p][p][/p][p]Q: My Steam account is linked to an email address / Facebook / Google. Can I unlink them later?[/p][p]A: You can unlink third-party login accounts like Facebook, Google, and Steam in the User Center. Email accounts cannot be unlinked. Please proceed with care.[/p][p][/p][p]Q: If I unlink a Steam account from my email account, which account keeps the game progress?[/p][p]A: Once the unlinking is complete, your character progress will remain with your email account.[/p][p][/p][p]Q: Can I link a Steam account on mobile or other clients?[/p][p]A: No. Currently, only the Steam game client supports Steam account login and linking.[/p][p][/p][p]Q: Can an unlinked Steam account be linked to a different game account?[/p][p]A: Yes. Once unlinked, your Steam account returns to an unused state and is ready to be linked to another NTE game account that isn't already linked to Steam. The process still follows the same order: log in to the target game account first, then link Steam.[/p]",
+      "feedlabel": "Community Announcements",
+      "date": 1787107450,
+      "feedname": "steam_community_announcements",
+      "feed_type": 1,
+      "appid": 4508340
+    }
+  ]
+}

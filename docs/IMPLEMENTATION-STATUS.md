@@ -1,3 +1,108 @@
+## C1a.1 — F1–F6 CORRECTED, AWAITING FOCUSED SONNET RE-REVIEW (2026-11-02)
+
+[PR #161](https://github.com/maxvfk/game-calendar/pull/161) remains in existing
+branch `coverage/c1a1-deterministic`, unmerged. CURRENT main `32070cdf2ee131a15b4191bd91be16440c550710`
+was fetched and merged (upstream snapshot updates only). The reviewed head was
+`61c3d662cebb13ab0b1f287d97c2cb5d6502a1cb`;
+[triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6562545868).
+[Correction details, reproductions and report distribution](evidence/notice-coverage-c1a1-review.md).
+
+Initial real-dependency regression run: **2 pass / 8 fail**. F2 state identity now
+survives insertion/reorder, stays content/format-bound and refuses ambiguous
+duplicates. Explicit committed-baseline migration preserved all 113 original
+content identities and removed only positions. F3's actual NTE human clock
+range no longer becomes a false UTC instant; legitimate explicit UTC/ISO-T
+syntax remains supported. F1 tests retain the real October 29 Starlight cutoff
+and explicitly distinguish synthetic exact-UTC missing/fixed scenarios without
+promoting same-day approximations, guessing offsets or inferring regions.
+F4 isolated day dates require stronger boundary context. F5 zero-span/unscanned
+content has explicit actionable attention. F6 escaped/prose BBCode is retained
+as text, with supported formatting and security masking preserved.
+
+Current report: **106 notices; 18 partial / 50 unprocessed / 38 null status with
+attention; 0 processed / 0 ignored**. Evaluation: **104 uncertain / 2 complete /
+0 incomplete**. All 106 retain baseline membership; main's ordinary source
+turnover removed seven Genshin notices. False malformed-markup notices fell
+8→0, the false NTE UTC instant is gone, and Genshin baseline membership recovered
+5→32 on identical current inputs. Remaining absent years/offsets, source
+server/global clocks, unresolved relative/lexical expressions, isolated-day
+context and final-winner refusals remain explicit, not fabricated coverage.
+
+Frozen install/typecheck/full tests/build/feed/report pass: **1547 pass / 3
+existing optional age skips / 0 fail** (1550 tests, 96 files), **47 focused
+coverage tests pass**. Four inherited rolling-snapshot Genshin test failures
+also reproduced on unchanged main; tests now pin existing pre-turnover Git
+bytes without changing any date/ID/count/winner/refusal expectation.
+[CURRENT-main fixed-clock parity](evidence/notice-coverage-c1a1-review-parity-2026-11-02.json):
+all 10 public files byte-identical; 292 events / 153 reviewed winners / NTE
+conflict, Timeline and complete E1/C0/C1a.0 evidence (eight E1 entries/hashes)
+unchanged. Exact new-head hosted CI including PG17/recovery is recorded in PR161.
+No canonical parser, event/reviewed data, public schema/UI, source transport or
+workflow changes. No Issue or notification delivery; C1b/C2 remain unstarted.
+
+**Next concrete step:** focused Sonnet re-review of F1–F6 on the final pushed
+head, then independent Astra review at a stabilized head. Do not merge.
+
+---
+
+## C1a.1 — Deterministic Notice Coverage Engine — IMPLEMENTED, REVIEW PENDING (2026-11-01)
+
+[PR #161](https://github.com/maxvfk/game-calendar/pull/161), left unmerged.
+One branch `coverage/c1a1-deterministic` from fetched CURRENT main
+`bcf1865649ce9a9df2e46766f6bc5c792d2a73c3`. C0/C1a.0 remain closed.
+Reporting-only implementation: bounded reusable date-span reader; strict
+notice/final-winner association; four coverage statuses with separate explicit
+uncertainty/incompleteness; whole-notice and span ignores; versioned Git-reviewed
+notification-only baseline; deterministic offline `bun run coverage:report`.
+All 113 current notices across the five supported sources remain visible,
+including duplicate occurrences/zero outputs. Endfield/CZN and unknown notice
+families explicitly report unsupported/not evaluated. No refresh, AI, API,
+Issue, notification delivery, event/data/winner/schema/UI/Timeline or workflow
+changes. C1b, C2 and subsequent milestones are not started.
+
+[Report contract, commands, state schemas, limitations and example](evidence/notice-coverage-c1a1.md).
+Baseline creation was explicit and exclusive, from unchanged starting-main
+inventories; its only effect is a report membership flag for future launch
+notifications. Content edits invalidate membership and ignores; neither state
+file hides gaps or changes coverage. Initial ignore decisions are empty.
+
+Historical acceptance: Starlight's real notice with a **synthetic main-only**
+event set is partially processed; the October 29 quest cutoff remains quoted
+beside the November 2 event end. Actual recorded pre-#119 HSR parser outputs
+leave both missing MoC windows visible. #131 Genshin recovery notices and #139
+HSR Park claims use fixed real frozen text with explicitly synthetic missing
+outputs. Further tests cover all five source formats, fully covered multi-event
+notices, zero/undated/unreadable outputs, unrelated deadlines, span ignores,
+duplicates, invalid inventories, reviewed URL refusals, regional/precision
+mismatches, malformed/oversized content, CLI exclusivity and baseline edits.
+**31 new focused tests pass**, with literal independently authored expectations.
+
+Local required gates pass: frozen install; typecheck; **1531 pass / 3 existing
+optional age-encryption skips / 0 fail** (1534 tests, 95 files); full site build;
+separate feed build; deterministic offline report. Initial sandbox socket-bind
+failures disappear with command localhost/network permission; no test weakening.
+Task-local Bun temporary/cache paths resolve install access restrictions.
+[Identical-input fixed-clock full-build evidence](evidence/notice-coverage-c1a1-parity-2026-11-01.json):
+all 10 public files byte-identical, 292 events, 153 reviewed winners and the NTE
+conflict unchanged; all Timeline artifacts and complete E1/C0/C1a.0 sidecar
+(including eight E1 entries/hashes) identical. Hosted final-head CI including
+PG17/recovery is a required delivery check recorded in the PR.
+
+Limitations: floating server/local clocks retain uncertainty and are never
+converted using inferred offsets, including Starlight/Lightward. Day precision
+never becomes an exact instant; regional ends require explicit source regions.
+Reviewed events citing other URLs cannot count. The bounded lexical reader
+intentionally produces conservative false positives (e.g. March 7th/Tomorrow
+names), unsupported expressions and incomplete evaluations; no automatic ignores
+or fixes. Baseline occurrence-position binding can cause extra candidates after
+reordering, conservatively. Availability is not complete source coverage.
+
+**Next concrete step:** independent focused review of C1a.1's reader, matching,
+uncertainty, ignore/baseline semantics and exact-head validation evidence. Leave
+PR unmerged. Do not begin C1b, C2 or later work without a new authorization.
+
+---
+
 ## C1a.0 — WuWa Notice Inventory — CLOSED (2026-11-01)
 
 **Merged:** [PR #159](https://github.com/maxvfk/game-calendar/pull/159) into
