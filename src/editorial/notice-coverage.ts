@@ -83,9 +83,11 @@ export function buildNoticeCoverage(input: {
     values.push(event); finalByUrl.set(event.sourceUrl, values);
   }
   let spanBudget = COVERAGE_LIMITS.totalSpans;
+  const baselineKeys = new Set(baseline.entries.map(baselineKey));
   const usedIgnores = new Set<string>();
   const reports = Object.entries(ARTICLE_SOURCE_GAMES).sort(([a], [b]) => compare(a, b)).map(([sourceId, game]) => {
     const sourceDiagnostics = side?.diagnostics.filter(d => d.sourceId === sourceId || !d.sourceId && fatalInventory.has(d.code)) ?? [];
+    const refusedEventIds = new Set(side?.diagnostics.filter(d => (!d.sourceId || d.sourceId === sourceId) && refusal(d)).map(d => d.sourceEventId) ?? []);
     const sourceAvailable = Boolean(side && side.notices.some(n => n.sourceId === sourceId) && !sourceDiagnostics.some(d => fatalInventory.has(d.code)));
     const inventoryValid = sourceAvailable && !sourceDiagnostics.some(d => fatalInventory.has(d.code));
     const notices = (side?.notices.filter(n => n.sourceId === sourceId) ?? []).sort((a, b) => a.position - b.position);
@@ -108,7 +110,7 @@ export function buildNoticeCoverage(input: {
           const related = rows.filter(a => a.event.id === event.id);
           // Existing refusal diagnostics remain authoritative. A direct reviewed
           // URL cannot bypass a refused C0 association to the same event.
-          const refused = side!.diagnostics.some(d => d.sourceEventId === event.id && (!d.sourceId || d.sourceId === sourceId) && refusal(d));
+          const refused = refusedEventIds.has(event.id);
           if (refused) continue;
           const confirmed = related.length === 1 && related[0]!.finalEventId === event.id &&
             related[0]!.event.sourceUrl === notice.sourceUrl && event.sourceUrl === notice.sourceUrl &&
@@ -174,7 +176,7 @@ export function buildNoticeCoverage(input: {
       else status = associations.length ? "partially processed" : "unprocessed";
       return { sourceId, game, noticeId: notice.noticeId, position: notice.position, sourceUrl: notice.sourceUrl,
         contentHash: notice.contentHash, format: notice.format, status, evaluation,
-        baselineMember: baseline.entries.some(e => baselineKey(e) === baselineKey(BaselineEntry.parse({ sourceId, noticeId: notice.noticeId, position: notice.position, sourceUrl: notice.sourceUrl, contentHash: notice.contentHash, format: notice.format }))),
+        baselineMember: baselineKeys.has(baselineKey(BaselineEntry.parse({ sourceId, noticeId: notice.noticeId, position: notice.position, sourceUrl: notice.sourceUrl, contentHash: notice.contentHash, format: notice.format }))),
         associations: sorted(associations.map(a => ({ eventId: a.event.id, basis: a.basis })), a => a.eventId),
         spans: datedSpans, unmatchedSpans: datedSpans.filter(s => s.disposition === "unmatched").map(s => ({ field: s.field, ref: s.ref, quote: s.quote, reason: s.reason })),
         ignores: decisions, diagnostics: allDiagnostics };
