@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { ArticleNotice, buildEvidenceSidecar } from "../src/editorial/event-evidence.ts";
 import { noticeContentHash } from "../src/editorial/article-evidence.ts";
 import { buildNoticeCoverage, makeCoverageBaseline } from "../src/editorial/notice-coverage.ts";
+import { Baseline, migratePositionalBaseline } from "../src/editorial/coverage-state.ts";
 import { readDateSpans } from "../src/editorial/date-spans.ts";
 import { GachaEvent } from "../src/shared/schema.ts";
 const now = "2026-10-30T12:00:00.000Z", sourceId = "genshin-kqm-ginews";
@@ -83,18 +84,18 @@ test("F4 an unrelated same-day mail eligibility date cannot certify an event bou
   expect(r.status).not.toBe("processed"); expect(r.evaluation).toBe("uncertain"); expect(r.spans[0]!.matches).toEqual([]);
 });
 test("F5 invisible/masked/limited content has actionable unscanned attention without invented dates", () => {
-  for (const text of ["x".repeat(250001), '<t bad="unterminated>October 29, 2026', "<script>October 29, 2026"]) {
+  for (const text of ["x".repeat(250001), '<t bad="unterminated>October 29, 2026', "<script>October 29, 2026", "<!-- October 29, 2026 -->"]) {
     const r = report([notice(text)])[0]!;
     expect(r.spans).toEqual([]); expect(r.status).toBeNull();
-    expect((r as unknown as { attention: { required: boolean; unscanned: unknown[] } }).attention).toMatchObject({ required: true });
-    expect((r as unknown as { attention: { unscanned: unknown[] } }).attention.unscanned.length).toBeGreaterThan(0);
+    expect(r.attention).toMatchObject({ required: true });
+    expect(r.attention.unscanned.length).toBeGreaterThan(0);
   }
 });
 test("F5 partial scans preserve attention even when all extracted dates were represented", () => {
   const n = notice("2026-10-19T10:00Z ~ 2026-11-02T03:59Z\n<script>hidden cutoff");
   const r = report([n], [event(n)])[0]!;
   expect(r.spans).toHaveLength(2); expect(r.unmatchedSpans).toEqual([]); expect(r.status).not.toBe("processed");
-  expect((r as unknown as { attention: { required: boolean } }).attention).toMatchObject({ required: true });
+  expect(r.attention).toMatchObject({ required: true });
 });
 test("F6 actual escaped NTE FAQ and bracketed prose do not masquerade as BBCode", async () => {
   const fixture = await Bun.file("test/fixtures/editorial/c1a1-review-nte.json").json();
@@ -103,4 +104,50 @@ test("F6 actual escaped NTE FAQ and bracketed prose do not masquerade as BBCode"
   const raw = String.raw`\[User Center] [Deadline October 29, 2026] [b]November 2, 2026[/b]`;
   const r = readDateSpans(raw, "bbcode");
   expect(r.diagnostics).toEqual([]); expect(r.spans.map(s => s.quote)).toEqual(["October 29, 2026", "November 2, 2026"]);
+});
+
+
+test("F2 span ignores remain bound to revision and format across insertion, but not edits or URL changes", () => {
+  const n = notice("October 29, 2026; November 2, 2026");
+  const ref = report([n])[0]!.spans[0]!.ref;
+  const decision = { sourceId, noticeId: n.noticeId, sourceUrl: n.sourceUrl, contentHash: n.contentHash, format: n.format, span: { field: "content", ref }, category: "shop", reason: "Reviewed first deadline" };
+  const state = { ignores: { schemaVersion: 1, decisions: [decision] }, baseline: makeCoverageBaseline([n]) };
+  const moved = report([{ ...n, position: 10 }], [], state)[0]!;
+  expect(moved.spans.map(s => s.disposition)).toEqual(["ignored", "unmatched"]); expect(moved.baselineMember).toBe(true);
+  for (const changed of [notice(n.content + "; December 1, 2026"), { ...n, sourceUrl: "https://example.org/changed" }, { ...n, format: "html" as const }]) {
+    const r = report([changed], [], state)[0]!;
+    expect(r.baselineMember).toBe(false); expect(r.ignores).toEqual([]);
+  }
+  const otherRevision = notice("October 30, 2026", 1);
+  expect(report([n, otherRevision], [], state).every(n => !n.baselineMember && !n.ignores.length)).toBe(true);
+  expect(() => makeCoverageBaseline([n, { ...n, position: 1 }])).toThrow("duplicate");
+});
+test("F2 explicit positional baseline migration changes shape only, refuses ambiguous legacy identities", () => {
+  const identity = { sourceId, noticeId: "old", sourceUrl: "https://example.org/old", contentHash: "a".repeat(64), format: "markdown" } as const;
+  const legacy = { schemaVersion: 1, purpose: "initial-notification-suppression-only", entries: [{ ...identity, position: 28 }] };
+  expect(() => Baseline.parse(legacy)).toThrow();
+  expect(migratePositionalBaseline(legacy)).toEqual({ schemaVersion: 1, purpose: "initial-notification-suppression-only", entries: [identity] });
+  expect(() => migratePositionalBaseline({ ...legacy, entries: [legacy.entries[0], { ...identity, position: 29 }] })).toThrow("Ambiguous");
+});
+test("F3 bare offsets require adjacent ISO-T syntax and balanced explicit timezone delimiters", () => {
+  for (const text of ["2026-09-16T00:00 -12:00", "September 16, 2026, 00:00 (UTC+8", "September 16, 2026, 00:00 UTC+8)"]) {
+    const span = readDateSpans(text).spans[0]!;
+    expect(span.value.instant).toBeNull(); expect(span.uncertainty.length).toBeGreaterThan(0);
+  }
+});
+test("F1 earlier prose about a region cannot scope a later date by coincidence", () => {
+  const r = readDateSpans("For players in Asia, the FAQ follows. 2026-11-02T03:59Z");
+  expect(r.spans[0]!.region).toBeNull();
+});
+test("F5 a span ceiling keeps an actionable unscanned reason", () => {
+  const r = report([notice("November 2, 2026; ".repeat(257))])[0]!;
+  expect(r.spans).toHaveLength(256); expect(r.evaluation).toBe("incomplete");
+  expect(r.attention.required).toBe(true); expect(r.attention.unscanned).toContainEqual({ field: "content", reason: "span_limit" });
+});
+test("F6 supported attributed tags remain balanced, escaping and arbitrary bracket prose remain readable", () => {
+  const raw = String.raw`[p][img src="asset.png"][/img][dynamiclink href="https://example.org/"]Link[/dynamiclink][/p] \[b]October 29, 2026\[/b] [b November 2, 2026]`;
+  const r = readDateSpans(raw, "bbcode");
+  expect(r.diagnostics).toEqual([]); expect(r.spans.map(s => s.quote)).toEqual(["October 29, 2026", "November 2, 2026"]);
+  expect(readDateSpans('[img src="unfinished', "bbcode").diagnostics).toContain("malformed_markup");
+  expect(readDateSpans('[b]<script>2026-10-29</script>[/b]', "bbcode").diagnostics).toContain("active_content_omitted");
 });

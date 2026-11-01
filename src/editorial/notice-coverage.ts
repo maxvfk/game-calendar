@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ArticleNotice, EvidenceSidecar, type Diagnostic } from "./event-evidence.ts";
 import { ARTICLE_SOURCE_GAMES, isArticleSource } from "./article-evidence.ts";
 import { DATE_LIMITS, DATE_READER_VERSION, readDateSpans, type DateSpan } from "./date-spans.ts";
-import { Baseline, BaselineEntry, IgnoreRegistry, baselineKey, decisionKey, emptyBaseline, emptyIgnores } from "./coverage-state.ts";
+import { Baseline, BaselineEntry, IgnoreRegistry, baselineKey, noticeStateKey, decisionKey, emptyBaseline, emptyIgnores } from "./coverage-state.ts";
 import { GachaEvent, Region } from "../shared/schema.ts";
 
 export const COVERAGE_LIMITS = { notices: 2000, events: 5000, attributions: 10000, diagnostics: 20000, totalTextUnits: 5_000_000, inputBytes: 32 * 1024 * 1024, outputBytes: 24 * 1024 * 1024, associationsPerNotice: 64, matchesPerSpan: 16, totalSpans: 20000 } as const;
@@ -23,6 +23,10 @@ const refusal = (d: Diagnostic) => /^(?:winner_|merge_source_conflict|duplicate_
  */
 function matchBoundary(span: DateSpan, event: GachaEvent, basis: BoundaryMatch["basis"]): BoundaryMatch[] {
   if (span.uncertainty.length || span.value.date === null || span.value.precision === "unknown") return [];
+  // Notice-level attribution proves provenance, not the purpose of an isolated
+  // same-day eligibility/mail/shop date. Only paired boundaries provide the
+  // stronger deterministic context needed to certify day-level coverage.
+  if (span.value.precision === "day" && span.role === "single") return [];
   const candidates: Array<{ field: string; value: string; precision: string }> = [];
   if (span.role !== "end" && span.region === null) candidates.push({ field: "startsAt", value: event.startsAt, precision: event.startPrecision });
   if (span.role !== "start" && event.endsAt) {
@@ -35,13 +39,14 @@ function matchBoundary(span: DateSpan, event: GachaEvent, basis: BoundaryMatch["
     if (c.precision !== "exact" || !span.value.instant) return false;
     // Exact in the public schema is minute precision; do not erase nonzero
     // seconds stated by a notice or by the represented boundary.
-    return span.value.precision === "second" ? Date.parse(c.value) === Date.parse(span.value.instant) :
-      Date.parse(c.value) === Date.parse(span.value.instant);
+    return Date.parse(c.value) === Date.parse(span.value.instant);
   }).map(c => ({ eventId: event.id, field: c.field, value: c.value, basis, precision: span.value.precision as BoundaryMatch["precision"] }));
 }
 export function makeCoverageBaseline(notices: ArticleNotice[]) {
+  const ids = notices.map(n => JSON.stringify([n.sourceId, n.noticeId]));
+  if (new Set(ids).size !== ids.length) throw new Error("Cannot baseline ambiguous duplicate notice identities");
   const entries = notices.map(n => BaselineEntry.parse({ sourceId: n.sourceId, noticeId: n.noticeId,
-    position: n.position, sourceUrl: n.sourceUrl, contentHash: n.contentHash, format: n.format }));
+    sourceUrl: n.sourceUrl, contentHash: n.contentHash, format: n.format }));
   return Baseline.parse({ schemaVersion: 1, purpose: "initial-notification-suppression-only", entries: sorted(entries, baselineKey) });
 }
 
@@ -124,8 +129,8 @@ export function buildNoticeCoverage(input: {
             associations.push({ event, basis: "reviewed-notice-url" });
         }
       }
-      const decisions = sorted(ignores.decisions.filter(d => d.sourceId === sourceId && d.noticeId === notice.noticeId &&
-        d.position === notice.position && d.sourceUrl === notice.sourceUrl && d.contentHash === notice.contentHash), decisionKey);
+      const stateKey = noticeStateKey(BaselineEntry.parse({ sourceId, noticeId: notice.noticeId, sourceUrl: notice.sourceUrl, contentHash: notice.contentHash, format: notice.format }));
+      const decisions = sorted(ignores.decisions.filter(d => !duplicate && noticeStateKey(d) === stateKey), decisionKey);
       const wholeIgnore = decisions.find(d => !d.span);
       if (wholeIgnore) usedIgnores.add(decisionKey(wholeIgnore));
       const reads = (["title", "content"] as const).map(field => {
@@ -145,6 +150,7 @@ export function buildNoticeCoverage(input: {
         if (matches.length > COVERAGE_LIMITS.matchesPerSpan) matchLimit = true;
         return { ...span, field, matches: matches.slice(0, COVERAGE_LIMITS.matchesPerSpan), ignore, disposition: wholeIgnore || ignore ? "ignored" as const : matches.length ? "matched" as const : "unmatched" as const,
           reason: wholeIgnore || ignore ? "reviewed_ignore" : matches.length ? null : span.uncertainty.length ? "unresolved_date" :
+            span.value.precision === "day" && span.role === "single" ? "isolated_day_requires_boundary_context" :
             !associations.length ? "no_trustworthy_notice_event_association" : "no_compatible_represented_boundary" };
       }));
       // A complete explicit range must refer to boundaries of the SAME event.
@@ -166,7 +172,7 @@ export function buildNoticeCoverage(input: {
       const readDiagnostics = unique(reads.flatMap(({ field, read }) => read.diagnostics.filter(c => c !== "unresolved_date_expression" && (c !== "no_recognized_dates" || field === "content" && !datedSpans.length)).map(c => `${field}:${c}`)));
       const allDiagnostics = unique([...localDiagnostics, ...readDiagnostics, ...(associationLimit ? ["association_limit"] : []), ...(matchLimit ? ["match_limit"] : [])]);
       const incomplete = associationLimit || matchLimit || reads.some(r => !r.read.complete);
-      const uncertain = !inventoryValid || duplicate || !finals || allDiagnostics.length > 0 || datedSpans.some(s => s.uncertainty.length && s.disposition !== "ignored");
+      const uncertain = !inventoryValid || duplicate || !finals || allDiagnostics.length > 0 || datedSpans.some(s => s.disposition !== "ignored" && (s.uncertainty.length || s.reason === "isolated_day_requires_boundary_context"));
       const evaluation: Evaluation = incomplete ? "incomplete" : uncertain ? "uncertain" : "complete";
       let status: CoverageStatus | null;
       if (wholeIgnore) status = "ignored";
@@ -174,9 +180,20 @@ export function buildNoticeCoverage(input: {
       else if (!incomplete && !uncertain && datedSpans.every(s => s.disposition === "ignored")) status = "ignored";
       else if (!incomplete && !uncertain && datedSpans.every(s => s.disposition !== "unmatched")) status = "processed";
       else status = associations.length ? "partially processed" : "unprocessed";
+      // Unknown/unscanned content is an attention item, not an invented date.
+      // A nullable actionable status must never be mistaken for a harmless row.
+      const unscanned = reads.flatMap(({ field, read }) => read.diagnostics.filter(code =>
+        code.endsWith("_limit") || ["malformed_markup", "active_content_omitted", "comment_content_omitted", "unsupported_markup", "unsupported_entity"].includes(code)
+      ).map(reason => ({ field, reason })));
+      const attentionReasons = unique([
+        ...(unscanned.length ? ["unscanned_content"] : []), ...(incomplete ? ["incomplete_evaluation"] : []),
+        ...(uncertain ? ["uncertain_evaluation"] : []), ...(status === null ? ["no_actionable_dates"] : []),
+        ...(datedSpans.some(s => s.disposition === "unmatched") ? ["unmatched_spans"] : []),
+      ]);
+      const attention = { required: status !== "ignored" && attentionReasons.length > 0, reasons: attentionReasons, unscanned };
       return { sourceId, game, noticeId: notice.noticeId, position: notice.position, sourceUrl: notice.sourceUrl,
-        contentHash: notice.contentHash, format: notice.format, status, evaluation,
-        baselineMember: baselineKeys.has(baselineKey(BaselineEntry.parse({ sourceId, noticeId: notice.noticeId, position: notice.position, sourceUrl: notice.sourceUrl, contentHash: notice.contentHash, format: notice.format }))),
+        contentHash: notice.contentHash, format: notice.format, status, evaluation, attention,
+        baselineMember: !duplicate && baselineKeys.has(stateKey),
         associations: sorted(associations.map(a => ({ eventId: a.event.id, basis: a.basis })), a => a.eventId),
         spans: datedSpans, unmatchedSpans: datedSpans.filter(s => s.disposition === "unmatched").map(s => ({ field: s.field, ref: s.ref, quote: s.quote, reason: s.reason })),
         ignores: decisions, diagnostics: allDiagnostics };
@@ -184,11 +201,14 @@ export function buildNoticeCoverage(input: {
     return { sourceId, game, available: sourceAvailable,
       evaluation: !side || !notices.length ? "not evaluated" as const : inventoryValid ? "evaluated" as const : "uncertain" as const,
       limitations: unique(["Inventory availability is not source or calendar completeness", ...(!inventoryValid ? ["Missing, invalid or incomplete notice inventory"] : [])]),
+      attention: { required: !inventoryValid || records.some(n => n.attention.required), noticeCount: records.filter(n => n.attention.required).length,
+        reasons: inventoryValid ? [] : ["inventory_not_evaluated"] },
       diagnostics: unique(sourceDiagnostics.map(d => d.code)), notices: records };
   });
   const unknownSources = unique(side?.notices.filter(n => !isArticleSource(n.sourceId)).map(n => n.sourceId) ?? []);
   return { schemaVersion: 1 as const, engineVersion: "notice-coverage-v1" as const, readerVersion: DATE_READER_VERSION,
-    limits: { ...COVERAGE_LIMITS, dateReader: DATE_LIMITS }, diagnostics: unique(diagnostics), sources: reports,
+    limits: { ...COVERAGE_LIMITS, dateReader: DATE_LIMITS }, diagnostics: unique(diagnostics),
+    attentionRequired: diagnostics.length > 0 || reports.some(s => s.attention.required), sources: reports,
     unsupported: [{ game: "endfield", evaluation: "not evaluated", reason: "notice inventory unsupported" },
       { game: "czn", evaluation: "not evaluated", reason: "notice inventory unsupported" },
       ...unknownSources.map(sourceId => ({ sourceId, evaluation: "not evaluated", reason: "notice inventory unsupported" }))],

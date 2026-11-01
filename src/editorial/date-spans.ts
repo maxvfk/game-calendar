@@ -40,7 +40,7 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
     if (raw.startsWith("<!--", i)) {
       const end = raw.indexOf("-->", i + 4);
       if (end < 0) { mask(i, raw.length); diagnose("malformed_markup"); break; }
-      mask(i, end + 3); i = end + 2; continue;
+      mask(i, end + 3); diagnose("comment_content_omitted"); i = end + 2; continue;
     }
     if (!/[A-Za-z/!?]/.test(raw[i + 1] ?? "")) continue;
     let end = i + 1, quote = "";
@@ -73,14 +73,25 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
   if (format === "bbcode") {
     const tags = /\[(\/?)([a-z][a-z0-9]*)(?:[=\s][^\]\r\n]*)?\]/ig;
     const bbStack: string[] = [];
+    const supported = new Set(["p", "b", "i", "u", "s", "strike", "h1", "h2", "h3", "h4", "h5", "h6", "url", "img", "list", "olist", "quote", "code", "table", "tr", "td", "th", "br", "hr", "spoiler", "previewyoutube", "dynamiclink"]);
+    const escaped = (index: number) => {
+      let slashes = 0; for (let i = index - 1; i >= 0 && raw[i] === "\\"; i--) slashes++;
+      return slashes % 2 === 1;
+    };
     for (const m of raw.matchAll(tags)) {
-      mask(m.index!, m.index! + m[0].length);
       const name = m[2]!.toLowerCase();
+      if (escaped(m.index!) || !supported.has(name)) continue;
+      // Attributes require '='. Recognized words in bracketed prose are not tags.
+      const simple = /^\[\/?[a-z][a-z0-9]*(?:=[^\]\r\n]*)?\]$/i.test(m[0]);
+      const attributes = /^\[(?:dynamiclink|img|previewyoutube)(?:\s+(?:href|src|title|id|youtubeid|align|size)=(?:"[^"\]\r\n]*"|'[^'\]\r\n]*'|[^\s\]"']+))+\]$/i.test(m[0]);
+      if (!simple && !attributes) continue;
+      mask(m.index!, m.index! + m[0].length);
       if (m[1]) { if (bbStack.pop() !== name) diagnose("malformed_markup"); }
       else if (!["br", "hr"].includes(name)) bbStack.push(name);
     }
     if (bbStack.length) diagnose("malformed_markup");
-    if (/\[(?:\/?(?:b|i|url|img|h[1-6]|list|quote|table|tr|td))(?:[=\s]|$)[^\]]*$/i.test(raw)) diagnose("malformed_markup");
+    const unfinished = /\[(?:\/?(?:p|b|i|u|url|img|h[1-6]|list|quote|table|tr|td|dynamiclink|previewyoutube))(?:=|\s+(?:href|src|title)=|$)[^\]]*$/i.exec(raw);
+    if (unfinished && !escaped(unfinished.index)) diagnose("malformed_markup");
   }
   // URLs and markdown link destinations are metadata, not dated prose.
   for (const m of raw.matchAll(/https?:\/\/[^\s<>"')\]]+|\]\([^\r\n)]*\)/g)) mask(m.index!, m.index! + m[0].length);
@@ -141,9 +152,17 @@ function parseValue(text: string): { value: DateValue; uncertainty: string[] } {
     }
     if (h > 23 || min > 59 || sec > 59) uncertainty.push("invalid_clock");
     else clock = `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
-    const zone = rest.slice(clockMatch[0].length).trim().replace(/[()]/g, "").replace("−", "-");
+    const zoneSuffix = rest.slice(clockMatch[0].length);
+    const rawZone = zoneSuffix.trim();
+    const zone = rawZone.replace(/[()]/g, "").replace("−", "-");
+    // A signed clock after prose is also a clock range (00:00-12:00).
+    // Only ISO date-T-time syntax disambiguates a bare numeric UTC offset.
+    const ambiguousBareOffset = /^[+−-]/.test(rawZone) && !(/^\d{4}-\d{2}-\d{2}T/i.test(text) && /^[+−-]/.test(zoneSuffix));
+    const invalidDelimiter = rawZone.startsWith("(") !== rawZone.endsWith(")");
     const z = /^(?:UTC\s*)?([+-])(\d{1,2})(?::?(\d{2}))?$/i.exec(zone);
-    if (/^(UTC|Z)$/i.test(zone)) offsetMinutes = 0;
+    if (invalidDelimiter) uncertainty.push("invalid_timezone_delimiter");
+    else if (ambiguousBareOffset) uncertainty.push("ambiguous_clock_range_or_offset");
+    else if (/^(UTC|Z)$/i.test(zone)) offsetMinutes = 0;
     else if (z) {
       const magnitude = +z[2]! * 60 + +(z[3] ?? 0);
       if (+z[2]! > 14 || +(z[3] ?? 0) > 59 || magnitude > 840) uncertainty.push("invalid_offset");
@@ -170,9 +189,8 @@ export function readDateSpans(raw: string, format: "markdown" | "html" | "bbcode
     const quote = raw.slice(start, end);
     const parsed = parseValue(match[0]);
     const line = text.slice(text.lastIndexOf("\n", match.index!) + 1, match.index!);
-    const regions = [...line.matchAll(/\b(Asia|Europe|America)\b/gi)].map(m => m[1]!.toLowerCase());
-    const region = regions.length === 1 ? regions[0] as DateSpan["region"] : null;
-    if (regions.length > 1) parsed.uncertainty.push("ambiguous_region");
+    const regionLabel = /(?:^|[;|])\s*(Asia|Europe|America):\s*$/i.exec(line);
+    const region = regionLabel ? regionLabel[1]!.toLowerCase() as DateSpan["region"] : null;
     spans.push({ kind: "date", ref: createHash("sha256").update(JSON.stringify([DATE_READER_VERSION, start, end, quote])).digest("hex"),
       start, end, quote, role: "single", group: null, region, ...parsed });
     locations.push({ start: match.index!, end: match.index! + match[0].length });

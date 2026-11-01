@@ -68,7 +68,7 @@ test("precision, offsets and region-scoped boundaries fail conservatively", () =
   const e = event(n, { endsAt: "2026-11-01T19:59:00.000Z", endPrecision: "exact", regionScoped: true,
     regionEnds: { asia: "2026-11-01T19:59:00.000Z", europe: "2026-11-02T02:59:00.000Z", america: "2026-11-02T08:59:00.000Z" } });
   const r = record(report([n], [e]));
-  expect(r.spans.map(s => s.matches.map(m => m.field))).toEqual([["startsAt"], [], [], ["regionEnds.europe"], ["regionEnds.asia"], ["regionEnds.america"]]);
+  expect(r.spans.map(s => s.matches.map(m => m.field))).toEqual([[], [], [], ["regionEnds.europe"], ["regionEnds.asia"], ["regionEnds.america"]]);
   expect(r.status).toBe("partially processed");
   expect(record(report([notice("2026-11-02 00:00 UTC")], [], [event(n, { sourceId: "reviewed-genshin", extractionMethod: "manual" })])).spans[0]!.matches).toEqual([]);
 });
@@ -81,7 +81,7 @@ test("duplicate notice IDs stay separate occurrences with original content and f
 test("span ignore does not hide a second gap; whole-notice ignore is explicit and revision-bound", () => {
   const n = notice("October 29, 2026; November 2, 2026");
   const first = record(report([n])).spans[0]!;
-  const decision = { sourceId, noticeId: n.noticeId, position: n.position, sourceUrl: n.sourceUrl, contentHash: n.contentHash,
+  const decision = { sourceId, noticeId: n.noticeId, format: n.format, sourceUrl: n.sourceUrl, contentHash: n.contentHash,
     category: "shop", reason: "Reviewed synthetic scope exclusion", span: { field: "content", ref: first.ref } };
   const ignores = { schemaVersion: 1, decisions: [decision] };
   const r = record(report([n], [], [], { ignores }));
@@ -104,7 +104,7 @@ test("baseline is explicit, deterministic and notification-only; content changes
   expect(r.baselineMember).toBe(false); expect(r.status).toBe("unprocessed"); expect(r.unmatchedSpans).toHaveLength(2);
   expect(() => Baseline.parse({ ...baseline, schemaVersion: 2 })).toThrow();
   expect(() => Baseline.parse({ ...baseline, reviewed: true })).toThrow();
-  expect(makeCoverageBaseline([notice("2026-10-29", 1), n])).toEqual(makeCoverageBaseline([n, notice("2026-10-29", 1)]));
+  expect(makeCoverageBaseline([notice("2026-10-29", 1, "second"), n])).toEqual(makeCoverageBaseline([n, notice("2026-10-29", 1, "second")]));
 });
 test("missing/invalid inventory and final evidence are not evaluated; unsupported families stay explicit", () => {
   for (const bad of [null, {}, { notices: "invalid" }]) {
@@ -131,13 +131,20 @@ test("#130 Starlight real frozen text with SYNTHETIC main-event-only output reta
   const raw = await Bun.file("test/fixtures/genshin/starlight-voyage-2026-10-28.md").text();
   const adapter = adapterById(sourceId)!;
   const ctx = { now, sourceId, game: adapter.game, sourceUrl: adapter.url };
-  const main = adapter.parse(raw, ctx).filter(e => e.id === "genshin:starlight-voyage-heart-unbound:2026-10-19");
+  const all = adapter.parse(raw, ctx);
+  const main = all.filter(e => e.id === "genshin:starlight-voyage-heart-unbound:2026-10-19");
   expect(main).toHaveLength(1); expect(main[0]!.regionEnds!.america).toBe("2026-11-02T08:59:00.000Z");
   const ex = extractArticleEvidence(raw, ctx, capture, main);
   const r = record(buildNoticeCoverage({ sidecar: buildEvidenceSidecar(ex, main), finalEvents: main }));
   expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("uncertain");
   expect(r.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02", "2026-10-19", "2026-10-29"]);
   expect(r.unmatchedSpans.some(s => s.quote === "2026/10/29 04:00" && s.reason === "unresolved_date")).toBe(true);
+  const full = record(buildNoticeCoverage({ sidecar: buildEvidenceSidecar(extractArticleEvidence(raw, ctx, capture, all), all), finalEvents: all }));
+  // Real floating t_lc clocks cannot demonstrate repaired exact coverage: both
+  // scenarios retain all four gaps until independent offset evidence exists.
+  expect(full.status).toBe("partially processed"); expect(full.evaluation).toBe("uncertain");
+  expect(full.unmatchedSpans).toEqual(r.unmatchedSpans);
+  expect(full.spans.every(s => s.value.instant === null && s.uncertainty.includes("missing_offset"))).toBe(true);
   // No original-parser success is claimed: pre-#130 parser actually threw.
 });
 
@@ -240,7 +247,7 @@ test("oversized report inventory and ambiguous final associations cannot claim c
 test("span-level reviewed decisions can resolve an unsupported clock without hiding another gap", () => {
   const n = notice("tomorrow; November 2, 2026");
   const unresolved = record(report([n])).spans[0]!;
-  const decision = { sourceId, noticeId: n.noticeId, position: n.position, sourceUrl: n.sourceUrl, contentHash: n.contentHash,
+  const decision = { sourceId, noticeId: n.noticeId, format: n.format, sourceUrl: n.sourceUrl, contentHash: n.contentHash,
     category: "other-out-of-scope", reason: "Reviewed synthetic relative-time statement", span: { field: "content", ref: unresolved.ref } };
   const r = record(report([n], [], [], { ignores: { schemaVersion: 1, decisions: [decision] } }));
   expect(r.spans[0]!.kind).toBe("unresolved"); expect(r.spans[0]!.disposition).toBe("ignored");

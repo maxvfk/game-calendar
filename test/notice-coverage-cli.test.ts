@@ -24,6 +24,13 @@ test("CLI replay is deterministic; baseline creation is explicit/exclusive; miss
     expect(Bun.spawnSync(create).exitCode).toBe(0);
     const created = readFileSync(newBaseline, "utf8"); expect(JSON.parse(created).entries).toHaveLength(5);
     expect(Bun.spawnSync(create).exitCode).not.toBe(0); expect(readFileSync(newBaseline, "utf8")).toBe(created);
+    const legacy = join(dir, "legacy-positional.json"), migratedFile = join(dir, "migrated.json");
+    const createdData = JSON.parse(created);
+    writeFileSync(legacy, JSON.stringify({ ...createdData, entries: createdData.entries.map((e: object, i: number) => ({ ...e, position: i + 20 })) }));
+    const migrate = [process.execPath, "scripts/notice-coverage-report.ts", "--migrate-baseline", legacy, "--output", migratedFile];
+    expect(Bun.spawnSync(migrate).exitCode).toBe(0); expect(readFileSync(migratedFile, "utf8")).toBe(created);
+    expect(Bun.spawnSync(migrate).exitCode).not.toBe(0);
+
     writeFileSync(evidenceFile, "corrupt JSON");
     const missing = Bun.spawnSync(args); expect(missing.exitCode).toBe(0);
     const report = JSON.parse(missing.stdout.toString());
