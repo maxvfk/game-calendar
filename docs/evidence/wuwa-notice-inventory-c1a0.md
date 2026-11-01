@@ -1,164 +1,163 @@
-# C1a.0 — WuWa notice inventory implementation checkpoint
+# C1a.0 — WuWa notice inventory: XML-aware verification checkpoint
 
-Implemented from re-fetched current main
-`9aabb88a5ac7e4e46c1f782d115802ad4f992e16` on 2026-11-01.
-Implementation commits: `b0b82db6afd63f737836f84541dbf221ffb5656b` and
-recovery hardening `790943fa8fc80ec897cca4a5a17614adb535bd0c`, followed by
-review corrections `41b88da41f8a302268f229a49c459f76b5fdbcc6`.
-The final documentation head and exact-head hosted CI belong to the implementation
-PR delivery record. This checkpoint does not claim independent review or merge.
+PR [#159](https://github.com/maxvfk/game-calendar/pull/159) remains unmerged and
+requires focused independent re-review. Original implementation base:
+`9aabb88a5ac7e4e46c1f782d115802ad4f992e16`. Most recently reviewed head:
+`a12fac35628470ae64b1836cf419032f21f76ad6`.
 
-## Independent review corrections (2026-11-01)
+Current main was re-fetched as `b8ea78d165e37962d70c967ad3b83fe7cc156dce`,
+including its snapshot refresh. Merge `aa30d77135b3432f616461e7a03dbbe62cabe51d`
+reconciles that refresh into the existing PR branch without overwriting newer
+snapshot, metadata, reviewed or registry files. Correction implementation:
+`d74d102563cb4ff530df4e640c6e524ed74ac7ad`; subsequent checkpoint documentation
+and exact-head CI are recorded in the PR delivery. No merge/re-review approval
+is claimed here.
 
-[Review finding](https://github.com/maxvfk/game-calendar/pull/159#issuecomment-6551768126)
-requested changes against `49735146df8a3e22e8560ef9fbd7d279f29626bf`.
-Current main was fetched again: `9aabb88a5ac7e4e46c1f782d115802ad4f992e16`.
-The existing PR branch continues; no merge or re-review approval is claimed.
+## Remaining P1 and its correction
 
-- **P1:** the optional WuWa guard compares every discovered ID, title, actual
-  URL and full HTML content with the same canonical discovery on entry fields
-  outside XML comments. Required fields must be direct entry children. A
-  disagreement refuses the inventory as `article_inventory_incomplete`; it does
-  not substitute corrected content or change the canonical parser. CDATA is
-  protected while excluding XML comments, so HTML comments inside source content
-  remain byte-for-byte replay material. The exact notice9003 commented
-  `<content>` preamble reproducer, title and ID/URL spoofing, and four non-child
-  field cases are covered by authored, deterministic tests.
-- **P2:** diagnostics are validated independently before either evidence lane
-  is assembled. Invalid diagnostic rows are refused with a safe, static
-  `diagnostic_validation_failed` diagnostic and no source payload. Otherwise
-  valid E1 and article data survive diagnostic-only failure. Invalid candidate
-  text is still rejected by strict validation; combined invalid E1 + invalid
-  diagnostic omits E1 and retains valid inventory/attributions, without repairing
-  an excerpt. Reciprocal invalid article + invalid diagnostic recovery and all
-  four original C0 inventories are covered too.
-- **Duplicate semantics:** availability describes a usable occurrence inventory,
-  not unique article identity or complete source coverage. The frozen zero-output
-  duplicate case reports available=true, six notices, all five emitted events
-  attributed/confirmed, and two `duplicate_notice_identity` diagnostics. Both
-  duplicate occurrences remain separately located and have no event. This does
-  not justify a coverage conclusion. Report behavior for the original C0 sources
-  is unchanged; C1a.1 classification is not implemented.
+[Second independent review](https://github.com/maxvfk/game-calendar/pull/159#issuecomment-6558658130)
+confirmed that the earlier comment-free regex comparison was still structurally
+unaware of CDATA. This exact non-field prefix in entry 9003 could make both sides
+select the fake ID/link, while the real direct-child fields remained `9003`:
 
-Before fixes, the first 14 review regressions produced **2 pass / 12 fail** at
-reviewed head4973514. After fixes, those cases and the added four-C0 recovery
-regression pass (**15 pass / 0 fail**). Full focused WuWa/E1/C0 suite:
-**96 pass / 0 fail**. Full suite: **1479 pass / 3 existing optional age skips /
-0 fail**, 1482 tests across 91 files. Frozen install, typecheck, full build,
-build:feed and the validated offline report also pass. The full fixed-clock
-comparison below was repeated after these corrections and again at the delivered
-head; all manifests, E1 hashes and pre-existing diagnostics remain unchanged.
-Exact-head hosted CI and PostgreSQL17 results belong to the PR delivery record;
-the previous head's green CI is not presented as validation of these corrections.
+```xml
+<summary type="text"><![CDATA[<id>urn:article:9999</id><link href="https://wutheringwaves.kurogames.com/en/main/news/detail/9999"/>]]></summary>
+```
 
-## Contract
+The optional guard now uses `verifyWuwaNoticeFields`, with XML-aware events from
+pinned `saxes`, independently of canonical regex discovery. It verifies:
 
-- Export the existing `discoverWuwaArticles` traversal without changing its
-  canonical acceptance, event construction, date handling or failure behavior.
-  Preserve the validated publisher link alongside the original ID and full HTML.
-- Add `wuwa-kuro-mirror` to C0's existing article-source map and `wuwa` to
-  `ArticleNotice`. The unchanged builder already calls that map using the
-  successfully parsed document, truthful capture metadata and actual adapter
-  outputs after sanitization. No additional ingestion parser or transport exists.
-- Keep every discovered article independently of event output. Identity is
-  `(sourceId, noticeId)` using the numeric component of the existing Atom
-  `urn:article:{id}`, with position as a separate occurrence locator. Duplicate
-  identities remain separate records, each diagnosed; ambiguous links stay null.
-- A structural guard refuses unsupported entry tags, unbalanced/nested entries,
-  missing feed closure, missing or duplicate identity fields, and a mismatch
-  between entry boundaries and canonical discovery. It also verifies field
-  correspondence outside XML comments and direct entry parentage using that
-  same discovery.
-  `article_inventory_incomplete` / `article_inventory_empty`, together with
-  `article_extraction_failed`, report unavailable inventory, never a complete
-  empty source. Known canonical parse failures still fail the canonical build.
-- Reuse content SHA-256 over compact JSON `[title, content]`, complete HTML,
-  actual detail URLs, capture timestamps or null, and fixture day without an
-  invented timestamp. Full notice content is untrusted replay material, never
-  eligible E1 excerpts. No excerpt ceilings, normalization or hashes changed.
-- Reuse exact URL + source/game checks and all C0 final-winner gates: exact ID,
-  type, allowed reviewed precedence, source references, merge conflicts, period,
-  precision and regional boundaries. Source-article attribution alone never
-  confirms a final winner. Missing/ambiguous linkage retains an emitted row with
-  null notice reference and a machine-readable diagnostic.
-- Extraction failures are independent. Article assembly failure preserves valid
-  E1; the added reciprocal recovery preserves valid notices/attributions on E1
-  assembly failure (`event_evidence_assembly_failed`). Both lanes remain optional
-  and cannot veto an otherwise valid canonical public feed. Invalid diagnostics
-  are refused independently before assembly so they cannot cause a data-lane
-  failure or discard unrelated valid evidence.
-- `articleSourceReport` and the offline report now show all five sources and
-  explicit availability, including diagnosed duplicate occurrences. Availability
-  does not prove unique identities or complete coverage. No date-span reader or
-  coverage classification exists.
+- One real Atom feed; every entry is a real direct child in the Atom namespace.
+- Exactly one direct ID, title, link and content field per entry, with no nested
+  element children in scalar fields. Missing, duplicate, foreign-namespace or
+  nested required fields are refused. Attributes, quoted values, XML comments
+  and CDATA are distinguished by the XML parser rather than regex tag scanning.
+- Actual ID text, decoded title text, href attribute and full original content
+  must equal the discovered candidate, in occurrence order. Candidate data is
+  never silently corrected or replaced. Mismatches and unsupported/malformed
+  documents fail optional extraction with `article_inventory_incomplete`.
+- Genuine HTML content must have one complete CDATA section and `type="html"`.
+  Content is sliced from the original string using the XML parser's documented
+  UTF-16 source offsets. Parser-normalized CDATA text is not used: CRLF, astral
+  Unicode, HTML comments and XML-looking text remain exact replay material.
+- DTDs and processing instructions are refused. No entity resolver or external
+  request is supplied. Parser errors are converted to static inventory failure
+  diagnostics without copying untrusted error text.
 
-## Offline verification
+No second ingestion path exists: the XML verifier returns no replacement notices
+or events. `src/ingest/parsers/wuwa-kuro-atom.ts` is unchanged from reviewed
+head `a12fac3`. Public canonical behavior, IDs, periods, provenance, priorities,
+reviewed precedence, registry and Timeline behavior are unchanged.
 
-Bun 1.3.14. Required commands executed:
+Dependency rationale: there was no existing strict runtime XML parser. The
+existing development HTML DOM tooling is not an appropriate XML well-formedness
+and namespace verifier. A pinned SAX XML parser avoids growing another bespoke
+lexer after two confirmed lexical blind spots. `saxes@6.0.0` and its sole
+transitive dependency `xmlchars@2.2.0` are locked with integrity hashes and used
+only by internal optional verification. All **107 baseline locked package
+records** remain identical. The replay checks them and the rest of package.json /
+workspace dependency declarations, allowing exactly those two additions rather
+than bypassing lockfile validation. Both checkouts install their own frozen
+lockfiles.
+
+## Preserved C1a.0 contracts
+
+- Existing canonical discovery remains the inventory candidate source. Stable
+  identity is `(sourceId, noticeId)`, using the numeric component of the existing
+  Atom article ID; positions locate duplicate occurrences, never synthetic IDs.
+  Every article is retained regardless of event output, including old notices,
+  previews, maintenance and non-calendar posts. Full HTML and actual publisher
+  detail URLs remain internal untrusted replay data, never eligible E1 excerpts.
+- C0's ArticleNotice, ArticleAttribution, sidecar and SHA-256 over compact JSON
+  `[title, content]` are reused. Capture timestamps remain truthful or null;
+  fixture day does not fabricate a midnight capture timestamp.
+- Attribution consumes actual successful adapter outputs and exact source
+  references, with existing final-winner checks for source, ID, type, period,
+  precision, region, merge conflict and reviewed precedence. Article linkage
+  alone is not proof of a final winner. Ambiguous/missing links retain null rows
+  and diagnostics. Duplicate occurrences are retained and never arbitrarily
+  selected.
+- [Earlier XML-comment P1 and diagnostic-isolation P2](https://github.com/maxvfk/game-calendar/pull/159#issuecomment-6551768126)
+  remain covered. Malformed diagnostics are independently refused before data
+  lane assembly. Diagnostic-only failure preserves valid E1 and inventory;
+  invalid E1 + invalid diagnostics preserves inventory without repairing an
+  excerpt. The reciprocal article failure preserves E1. The P2 implementation
+  in `event-evidence.ts` is unchanged in this correction.
+- `available=true` means a usable occurrence inventory, including diagnosed
+  duplicates; it proves neither unique identity nor complete source coverage.
+  The frozen zero-output duplicate case still has six notices, all five emitted
+  events attributed/confirmed, and two duplicate diagnostics. No coverage
+  classification, date reader, new source, refresh transport or model call exists.
+
+## Regression and command results
+
+With the reviewed verifier unchanged, the first 20 new XML cases reproduced
+**12 pass / 8 fail**. After correction and an added all-field cardinality case:
+**21 pass / 0 fail**. Expected IDs/title/URLs/content are literal values and the
+existing independently authored fixture oracle, not outputs from discovery.
+Cases cover the exact Astra ID/link prefix, CDATA title/content spoofing, nested
+non-field CDATA, genuine HTML CDATA with comments/XML-like text/CRLF/Unicode,
+quoted attribute boundaries and entities, comments outside CDATA, malformed
+attributes, field namespaces, missing/duplicate direct fields, mixed CDATA,
+unsupported DTDs, existing frozen fixtures, zero-output posts and four events
+from one article.
+
+Bun 1.3.14, correction code above:
 
 | Command | Outcome |
 | --- | --- |
-| `bun install --frozen-lockfile` | PASS; 71 installs checked, no changes |
+| `bun install --frozen-lockfile` | PASS; 73 installed packages checked, no changes |
 | `bun run typecheck` | PASS |
-| `bun test` | 1479 pass / 3 existing optional age skips / 0 fail (1482 tests, 91 files) |
-| `bun run build` | PASS; both full builds and recursive parity below |
-| `bun test test/wuwa-article-evidence.test.ts test/wuwa-kuro-atom.test.ts test/wuwa-current-events.test.ts test/event-evidence.test.ts test/article-evidence.test.ts` | 96 pass / 0 fail |
+| `bun test` | **1500 pass / 3 existing optional age skips / 0 fail**; 1503 tests, 92 files |
+| `bun run build` | PASS |
 | `bun run build:feed` | PASS |
-| `bun scripts/event-evidence-report.ts` | PASS; complete sidecar Zod validation |
+| `bun scripts/event-evidence-report.ts` | PASS; full sidecar Zod validation |
+| `bun test test/wuwa-notice-xml.test.ts` | **21 pass / 0 fail** |
+| `bun test test/wuwa-notice-xml.test.ts test/wuwa-article-evidence.test.ts test/article-evidence.test.ts test/event-evidence.test.ts test/wuwa-kuro-atom.test.ts test/wuwa-current-events.test.ts` | **117 pass / 0 fail** |
 
-Historical pre-review restricted-network full test: 1448 pass / 3 existing optional age skips /
-3 failures (local PostgreSQL TLS peer, wire peer and HTTP server sockets). Rerun
-with local networking permitted passed: 1461 pass / 3 existing optional age skips /
-0 fail. Final rerun including the structural refusal and recovery-metadata regressions:
-**1464 pass / 3 existing optional age skips / 0 fail**, 1467 tests across 91 files. No application, test assertion, credentials or persistent environment
-configuration was changed to resolve the socket restriction. No global tool
-configuration changed. Local optional age tests remain skipped; hosted CI must
-exercise PostgreSQL 17 and mandatory age recovery on the exact delivered head.
+Local package installation needed a task-local cache because the default cache
+was not writable. Scratch baseline/cache files initially fell under Bun's test
+discovery; both were moved outside the repository and the unchanged `bun test`
+command rerun for the project-only result above. No test exclusions, application
+workarounds, global configuration or credential changes were made. Local socket
+tests run with networking permitted. Three age-dependent tests remain optional
+locally; mandatory PostgreSQL17/encrypted recovery must pass in exact-head CI.
 
-New frozen regressions cover zero-output previews/maintenance/non-calendar
-notices, one article's four events, duplicate occurrences with different content,
-missing/wrong/ambiguous IDs/URLs, incomplete XML discovery, full HTML beyond E1
-limits, truthful/null metadata, hash repeatability, reviewed/final-source/period/
-region refusals and strict Zod reference/hash checks. The unchanged starting-main
-E1 execution is pinned in a golden including no-winner unattached records and
-diagnostics. Existing four C0 source tests retain their original data contracts;
-only the report's expected number of visible sources changes from four to five.
-The builder regression separately proves both extraction failure directions
-without changing public output. Assembly recovery is tested in both directions, including malformed notice URL/ID
-metadata that must not poison the recovery diagnostics themselves.
-See [fixture provenance](../../test/fixtures/wuwa/README.md).
+## Fresh current-main replay
 
-## Measured replay
-
-[Complete measured record](wuwa-notice-inventory-c1a0-2026-11-01.json) and
-[reproduction script](wuwa-notice-inventory-c1a0-replay.ts). From a dependency-ready
-checkout, create a disposable base checkout at the SHA above, install the same
-lockfile dependencies there (or link the same installed `node_modules`), then:
+[Measured record](wuwa-notice-inventory-c1a0-2026-11-01.json) and
+[reproduction script](wuwa-notice-inventory-c1a0-replay.ts). The current record
+supersedes historical `9aabb88` parity; the old manifest is not evidence for the
+refreshed inputs. Prepare a baseline checkout at **b8ea78d**, install its frozen
+lockfile and the implementation's own frozen lockfile, then run:
 
 ```sh
 bun docs/evidence/wuwa-notice-inventory-c1a0-replay.ts \
-  /path/to/base-checkout /path/to/implementation-checkout /path/to/record.json
+  /path/to/b8ea78d-checkout /path/to/implementation-checkout /path/to/record.json
 ```
 
-The script compares every file in snapshots (including any source state),
-production fixtures, reviewed data and presentation registry/preferences before
-building. It fixes Date in every Bun build subprocess at
+Both complete builds start without generated public trees. The script verifies
+all **45 identical input files** under snapshots (including any state), production
+fixtures, reviewed data and presentation registry/preferences; no state files
+are present in this input. It fixes Date in every build subprocess at
 `2026-11-01T00:00:00.000Z`, with `BASE_PATH=/`, `SNAPSHOT_DIR=snapshots`,
-`PUBLIC_DIR=public`, `INCLUDE_LEAKS=false`, `TZ=UTC`. It clears only generated
-public trees in the supplied disposable checkouts, runs both complete builds,
-then checks the complete recursive file paths and per-file SHA-256 manifests.
-No live sources are refreshed. The 45 input files match; no freshness state
-files are present in this input. Input manifest hash:
-`35d0eaacd7956872a523834c65e7d61e8e8298afb2bab8553fc9f93e17a6aa46`.
+`PUBLIC_DIR=public`, `INCLUDE_LEAKS=false`, `TZ=UTC`. There is no live refresh.
 
-**All 10 public files are byte-identical.** Manifest hash (SHA-256 of compact
-JSON mapping relative paths including `public/` to file SHA-256):
-`f78b822b5f823a3ed1cc3cfbd3705c619bd7a9f36acc5eb59c452606bbebc645`.
-All 292 final events/IDs, 153 reviewed winners, the one existing NTE date conflict,
-Timeline queue/agent input, eight E1 entries/hashes, zero unattached records,
-all existing diagnostics and all four C0 notice/attribution arrays are identical.
-Only WuWa notices and emitted-event attributions are added to the internal sidecar;
-the report gains WuWa inventory visibility.
+Input manifest SHA-256:
+`8c9c260fc3064f94a1fdb4310cc3dcad9f966a1645d6d4108648f1d429040127`.
+
+**All 10 recursive public files are byte-identical against current main.**
+Public manifest SHA-256 (compact JSON mapping paths including `public/` to file
+SHA-256):
+`86f70a6e6de6908529487224eeee6984f28f76d40b5b1f7a9aea29f1c8894328`.
+
+All **292 final events/IDs**, **153 reviewed winners**, the one existing NTE date
+conflict, Timeline queue/agent input, eight E1 entries/hashes, zero unattached
+records, all existing diagnostics and all four original C0 arrays match refreshed
+main exactly. Historical E1 evidenceHash values also remain equal; truthful
+confirmation metadata reflects the refresh. Only WuWa notices/attributions and
+inventory reporting are added internally relative to main. The replay is repeated
+at the delivered documentation head; exact head/CI links belong to PR #159.
 
 | Source | Notices | Emitted / attributed | Confirmed final associations |
 | --- | ---: | ---: | ---: |
@@ -168,27 +167,24 @@ the report gains WuWa inventory visibility.
 | WuWa Kuro Atom | 20 | 11 / 11 | 11 |
 | ZZZ Steam | 10 | 43 / 43 | 24 |
 
-All five inventories are available on this input. WuWa has 18 notices with no
-emitted event and two multi-event articles; all 11 emitted events have unique
-article associations and confirmed final associations. Zero duplicate identity,
-missing-reference or inventory failure diagnostics on this snapshot. These are
-measurements, never rolling fixed-count assertions. Existing overall diagnostics:
+All five inventories are available on these inputs. WuWa has 18 zero-output
+notices and two multi-event articles; no inventory/reference/duplicate diagnostics
+on this snapshot. These remain measurements, never rolling fixed-count oracles.
+Existing overall diagnostics, unchanged from refreshed main:
 `no_useful_context=2`, `ambiguous_section_boundary=1`,
 `winner_reference_conflict=41`, `winner_type_conflict=4`,
-`winner_period_conflict=8`, `merge_source_conflict=1`. No existing diagnostic changed.
+`winner_period_conflict=8`, `merge_source_conflict=1`.
 
 ## Remaining limits and next step
 
-The guard validates discovery completeness for the supported Atom layout; it is
-not a general XML validator. A well-formed feed containing a valid subset with
-no external total cannot prove upstream completeness. New serialization/layout
-conventions may conservatively report inventory unavailable. A failed extraction
-retains emitted rows with null notice links; invalid article assembly keeps C0's
-existing conservative omission of the article lane while preserving valid E1.
-No semantic classification or proof that every dated paragraph produced an event
-is claimed. The available snapshot's HTML is complete for each captured notice;
-it is not a claim about uncaptured publisher revisions or missing upstream posts.
+The verifier checks XML well-formedness, namespace/entry structure and the narrow
+field contract, not the entire Atom schema or semantic coverage of every dated
+span. It may conservatively refuse valid XML outside the supported serialization
+or where canonical regex discovery cannot faithfully represent actual fields.
+A well-formed feed with a valid subset and no external total cannot prove upstream
+completeness. Genuine available HTML is retained; no claim about uncaptured
+publisher revisions or missing upstream notices is made.
 
-Next concrete step: verify corrected exact-head hosted CI, then independent
-focused re-review of P1/P2, duplicate semantics, exact attribution and recovery. Leave the
-PR unmerged. Stop after C1a.0; C1a.1, C1b and C2–C5 need separate authorization.
+Next: verify exact-head hosted CI including PostgreSQL17, then obtain independent
+focused re-review of the XML field verifier and fresh-input parity. Leave PR #159
+unmerged. Stop after C1a.0; C1a.1, C1b and C2 are not started.

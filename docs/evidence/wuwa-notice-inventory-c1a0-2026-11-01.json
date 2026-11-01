@@ -1,6 +1,6 @@
 {
-  "base": "9aabb88a5ac7e4e46c1f782d115802ad4f992e16",
-  "implementationHead": "41b88da41f8a302268f229a49c459f76b5fdbcc6",
+  "base": "b8ea78d165e37962d70c967ad3b83fe7cc156dce",
+  "implementationHead": "d74d102563cb4ff530df4e640c6e524ed74ac7ad",
   "clock": "2026-11-01T00:00:00.000Z",
   "settings": {
     "BASE_PATH": "/",
@@ -10,30 +10,53 @@
     "TZ": "UTC"
   },
   "bun": "1.3.14",
+  "dependencyVerification": {
+    "baseLockSha256": "a8fbcd81c1a1e106eefae94364200dd94a4d2c2206f401f3e7ee9927b7fd9f45",
+    "headLockSha256": "441d765fc08b9b21ba39e7e363b3f25f0e2319a0d8b1b66efcd8c1dd57233d6e",
+    "unchangedBaselinePackages": 107,
+    "addedPackages": {
+      "saxes": [
+        "saxes@6.0.0",
+        "",
+        {
+          "dependencies": {
+            "xmlchars": "^2.2.0"
+          }
+        },
+        "sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA=="
+      ],
+      "xmlchars": [
+        "xmlchars@2.2.0",
+        "",
+        {},
+        "sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw=="
+      ]
+    }
+  },
   "inputFiles": 45,
-  "inputManifestSha256": "35d0eaacd7956872a523834c65e7d61e8e8298afb2bab8553fc9f93e17a6aa46",
+  "inputManifestSha256": "8c9c260fc3064f94a1fdb4310cc3dcad9f966a1645d6d4108648f1d429040127",
   "inputManifest": {
-    "snapshots/czn-prydwen-banners.html": "6a563596cfff1aeb1bcd59edd086f8063d474ba7af6e64bc7354e505b9927012",
-    "snapshots/czn-prydwen-banners.meta.json": "f7b71655a5a10b431f08f881cb827b1280e1bd5a9671512e2186a0c25e552c8e",
+    "snapshots/czn-prydwen-banners.html": "1bed751ecdc49a6f60926212dd65ed53e2b4d1cb167dc661e501988da81d8524",
+    "snapshots/czn-prydwen-banners.meta.json": "7da6afec1ebd2d985ec22fc5fb6ec8d8c660eb75900de1f7377fe9681760b87d",
     "snapshots/endfield-wikigg-echoes.html": "563cecf363e9568fa615df35b753718c81b56f0d34189ba47005d67693519a89",
     "snapshots/endfield-wikigg-echoes.meta.json": "3bd5da60b5372c45366f49291c0f907b83048da2e78dc80cee218232eb0b278b",
     "snapshots/endfield-wikigg-events.html": "cff5eaf0c6146b24a23ee51c92c6623e2144ba8bb8a2a44ea30fa8b8acbe1092",
-    "snapshots/endfield-wikigg-events.meta.json": "9eede418670c0d0adbc845252dd04c3c92eb8675b4cfe01faf1658bd2f60a8a2",
-    "snapshots/genshin-kqm-ginews.md": "167c3dc512af158afb2185a62c19d0798fbdc7e448147f77c4ae104f4c61b5a0",
-    "snapshots/genshin-kqm-ginews.meta.json": "7f318b53768364b3ca9079da27c6952629ad30107e528427ebc14963256ce405",
+    "snapshots/endfield-wikigg-events.meta.json": "b9722cd02f2b3b496035d5c205d6d90b93bc1992185b57eb621515fef18db058",
+    "snapshots/genshin-kqm-ginews.md": "496215b2fbca04ecc7ae96b74f0c3d8da489a0922ba2609e39fb9b478f458170",
+    "snapshots/genshin-kqm-ginews.meta.json": "d78d886fd2c435b5e12cd40cb5316c5d9699f037fe87d1938f071b1ffcab9dbf",
     "snapshots/hsr-kqm-hsrnews.md": "69ac6de045571958a02604199a5c37b69b4ad20d9994330312e977b97883be54",
-    "snapshots/hsr-kqm-hsrnews.meta.json": "19fdbedf734b34641bf67cfb7e8fb6e6f1f3555c634fc3492bbf0f836792358a",
+    "snapshots/hsr-kqm-hsrnews.meta.json": "fde55c84fe4a2fee065a24a4bbd20dcff4fb0bc19d55906b8e2faf214537ac32",
     "snapshots/nte-ntebuild-btr.html": "246c6a3df9c9f9524ec5cceec44fa39a116248644514971fe1406529845d78f9",
-    "snapshots/nte-ntebuild-btr.meta.json": "ab139f79cf60d5e7585f474146a0f91cc3e6600a3096f6620f644c15ba2c69fa",
+    "snapshots/nte-ntebuild-btr.meta.json": "88c494a76580c9d04852d397b5fcc2d116fa36b2d7818aa0c1b141b5c886ef5a",
     "snapshots/nte-steamnews-official.json": "de18088648b7e9659f626912097521a8509f57eda52eb69de9e60296671b574b",
-    "snapshots/nte-steamnews-official.meta.json": "af812bd5665852d35f990e425b38a1f6b8743563ff826927bddab77efd0f3918",
+    "snapshots/nte-steamnews-official.meta.json": "6e53dc6ae362aa717a9688aa6a8889a1a6fb75c8f55e2d97615e7c3760e27f4f",
     "snapshots/README.md": "16648ac0f8177ecb061f16364834224568fb26729175820d2aaf85a1e5005024",
-    "snapshots/wuwa-kuro-mirror.meta.json": "3cfe83a7794897dc6ab9ea29c5eda49fd415e438e9c834d994e41f14a083d613",
+    "snapshots/wuwa-kuro-mirror.meta.json": "32d399a7de1a60cf0815780955e0cef7943088871f809efa9b0facab6e7990e7",
     "snapshots/wuwa-kuro-mirror.xml": "8e05193e9378afcbc19058efb9a31a08261f595b4dc821bffaba82bab5604a0e",
-    "snapshots/zzz-steam-events-official.meta.json": "56a400690e32223bb3db37f1123cc28ca7b59b3bd49ab683b8212a8e66f2b43c",
-    "snapshots/zzz-steam-events-official.xml": "2343c986e3b8a2870bab322b53fe104c2f0d37b4c025551db9ab2e71b15cbe71",
+    "snapshots/zzz-steam-events-official.meta.json": "37c31e008408c4d0856c555a32c8430e32062652ea6039face7c37faf490401b",
+    "snapshots/zzz-steam-events-official.xml": "2f54732dc61a399ba54f5cd66763d8206f7ac3252797783b500b3ec39053a74a",
     "snapshots/zzz-zenlessgg-banners.json": "a35f70f44cb9de6ed6cf9785ecf35510842910b724cc42ee960c8d9da1bc37f2",
-    "snapshots/zzz-zenlessgg-banners.meta.json": "36173df61a05c15b2909dc58d92adacb61ff78ca31654a0091edc7d6de3f5e49",
+    "snapshots/zzz-zenlessgg-banners.meta.json": "58fd2ef9876be02fa302e6edbbe90cb1917f6f1fd7a692a7e22c2638662d1f35",
     "fixtures/czn/prydwen-banners-2026-09-22.html": "fb8af3937b24a89e6211fdf8d9021bedf19ce9a3f759855713766dddc48d2f1e",
     "fixtures/evidence/ntebuild-btr.meta.json": "c46fce73bef40a2ab95b5e9374b8ceadfecfd422cccca1d56e27cd49c1d38f68",
     "fixtures/evidence/ntebuild-btr.robots.txt": "1aa2e3fb29cfd0ea2b7fbe20fbd9f828c6d8b786f54d95b6f282011cec5012eb",
@@ -60,9 +83,9 @@
     "data/presentation/timeline-origin-migration.v1.json": "da39ed8cf9ef3fb63b9bdf5ee246cb2bc2943f23d26bc38469a8493df2a8f777"
   },
   "publicFiles": 10,
-  "publicManifestSha256": "f78b822b5f823a3ed1cc3cfbd3705c619bd7a9f36acc5eb59c452606bbebc645",
+  "publicManifestSha256": "86f70a6e6de6908529487224eeee6984f28f76d40b5b1f7a9aea29f1c8894328",
   "publicBase": {
-    "public/data/events.v1.json": "7e485783360a6b0d5b725951d9dfdd0614259f0296ae8256e69aab3e2cd9ef81",
+    "public/data/events.v1.json": "43517847bf8f600fd335fa08d7f016656cf069b8acb094be98f3d62d14fb4655",
     "public/data/review.v1.json": "275b2367acdf1e5bc8425e9bd3404c8624ce1effb744efa4778026930142433c",
     "public/data/timeline-label-agent-input.v1.json": "08a217f1db584e1b8d9f110d18fbd48d9214c0a59b9d689748181c3fada8509a",
     "public/data/timeline-label-queue.v1.json": "c2b58cd79e306dbab82d22e53d4e869cd8544ec4f4c0f9310b9b3b73dc6032ec",
@@ -74,7 +97,7 @@
     "public/sw.js": "2166393d8308ca751523bcc60e72b67c6304d14d4ce4822a9b375f90a642384e"
   },
   "publicHead": {
-    "public/data/events.v1.json": "7e485783360a6b0d5b725951d9dfdd0614259f0296ae8256e69aab3e2cd9ef81",
+    "public/data/events.v1.json": "43517847bf8f600fd335fa08d7f016656cf069b8acb094be98f3d62d14fb4655",
     "public/data/review.v1.json": "275b2367acdf1e5bc8425e9bd3404c8624ce1effb744efa4778026930142433c",
     "public/data/timeline-label-agent-input.v1.json": "08a217f1db584e1b8d9f110d18fbd48d9214c0a59b9d689748181c3fada8509a",
     "public/data/timeline-label-queue.v1.json": "c2b58cd79e306dbab82d22e53d4e869cd8544ec4f4c0f9310b9b3b73dc6032ec",
@@ -100,7 +123,7 @@
   ],
   "e1Entries": 8,
   "e1Unattached": 0,
-  "e1EntriesSha256": "71cdd93ca77c675e9152a7a04103599145f9eafd05e4fb2c0a9a1ea64167151e",
+  "e1EntriesSha256": "5f4ad9c6b0bc5c738c9d3df567c3d2f9c6af9122cef3e388255cbf688334517d",
   "e1UnattachedSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
   "existingDiagnosticsUnchanged": true,
   "existingArticleRowsUnchanged": true,
@@ -197,15 +220,22 @@
           "eventIds": []
         },
         {
-          "noticeId": "22005",
+          "noticeId": "22006",
           "position": 10,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/22006.md",
+          "contentHash": "62d6d0a5ba044b3afcc66a2116dd16ed2ae8705f91ec1cd1d401c09649e7c439",
+          "eventIds": []
+        },
+        {
+          "noticeId": "22005",
+          "position": 11,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/22005.md",
           "contentHash": "7e638ab33005d374f56561edb6e3595360d92fbe8e8d38c935b0576e292e3292",
           "eventIds": []
         },
         {
           "noticeId": "21889",
-          "position": 11,
+          "position": 12,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21889.md",
           "contentHash": "74d1bda05da73f0c4fc76b2eb67bffc2a62c26a9b95995ce014a962210146b59",
           "eventIds": [
@@ -214,49 +244,49 @@
         },
         {
           "noticeId": "21902",
-          "position": 12,
+          "position": 13,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21902.md",
           "contentHash": "26e482c2edf33103bf3725c705b2d81f4cf368ef3b69af904655e0ae5e43ea0f",
           "eventIds": []
         },
         {
           "noticeId": "21900",
-          "position": 13,
+          "position": 14,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21900.md",
           "contentHash": "674ba3f06b5970568b7026216b6be100dbb73ab2cc3bd1de313c973bb88563bf",
           "eventIds": []
         },
         {
           "noticeId": "21899",
-          "position": 14,
+          "position": 15,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21899.md",
           "contentHash": "1813d52b3dd0cd06d64eb1734dab909d7f53d19dde5e494486b0ed520bbc9a29",
           "eventIds": []
         },
         {
           "noticeId": "21897",
-          "position": 15,
+          "position": 16,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21897.md",
           "contentHash": "1f2d6ba70b29c2ea2851675c92e06bc766f981b88b77a33d271238371a58f18f",
           "eventIds": []
         },
         {
           "noticeId": "21896",
-          "position": 16,
+          "position": 17,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21896.md",
           "contentHash": "6e17df1cfe181f44ed2eb4d38755b1267e84a8709877e48d648f87f5c924a46e",
           "eventIds": []
         },
         {
           "noticeId": "21895",
-          "position": 17,
+          "position": 18,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21895.md",
           "contentHash": "4d748e83049a6b6321d5dd5dd5de965397931d5447371f2fa8a8943515b78d2c",
           "eventIds": []
         },
         {
           "noticeId": "21890",
-          "position": 18,
+          "position": 19,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21890.md",
           "contentHash": "053fcbe29b0c1f45574fd3fa1161cdabda5e534a74cef781095d62fa9ec08f9c",
           "eventIds": [
@@ -265,14 +295,14 @@
         },
         {
           "noticeId": "21168",
-          "position": 19,
+          "position": 20,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21168.md",
           "contentHash": "3d6e1388535b992e3bffa187eb6026c2d8ae57c88eb65f8e2a625af06beab434",
           "eventIds": []
         },
         {
           "noticeId": "21879",
-          "position": 20,
+          "position": 21,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21879.md",
           "contentHash": "415cf62c222691b80974446d950821006bf15132a6a29c66eb542fed83cd827c",
           "eventIds": [
@@ -282,7 +312,7 @@
         },
         {
           "noticeId": "21924",
-          "position": 21,
+          "position": 22,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21924.md",
           "contentHash": "56a449a132be6e3b8ac5b1b28c4e2890493a2d9d21966ead5868e0f59c47efdc",
           "eventIds": [
@@ -291,7 +321,7 @@
         },
         {
           "noticeId": "21885",
-          "position": 22,
+          "position": 23,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21885.md",
           "contentHash": "5af0e761003b229fa84b6fde901393f33f6b09bfc0c8f07d44d6329c29da7c43",
           "eventIds": [
@@ -300,19 +330,12 @@
         },
         {
           "noticeId": "21880",
-          "position": 23,
+          "position": 24,
           "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21880.md",
           "contentHash": "9585d30d22445ecd1ba09f1478ed376d6f99eea3356725d9748c8030eda0bf92",
           "eventIds": [
             "genshin:a-rekviem-for-the-underworld-limited-time-archon-quest-rewards:2026-09-23"
           ]
-        },
-        {
-          "noticeId": "21986",
-          "position": 24,
-          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21986.md",
-          "contentHash": "62d6d0a5ba044b3afcc66a2116dd16ed2ae8705f91ec1cd1d401c09649e7c439",
-          "eventIds": []
         },
         {
           "noticeId": "21881",

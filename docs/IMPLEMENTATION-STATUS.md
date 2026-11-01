@@ -1,37 +1,39 @@
-## C1a.0 — REVIEW CORRECTIONS IMPLEMENTED, AWAITING FOCUSED RE-REVIEW (2026-11-01)
+## C1a.0 — XML FIELD VERIFIER CORRECTED, AWAITING FOCUSED RE-REVIEW (2026-11-01)
 
-[Independent review](https://github.com/maxvfk/game-calendar/pull/159#issuecomment-6551768126)
-requested changes at `49735146df8a3e22e8560ef9fbd7d279f29626bf`.
-Re-fetched current main remains `9aabb88a5ac7e4e46c1f782d115802ad4f992e16`.
-Correction `41b88da41f8a302268f229a49c459f76b5fdbcc6` continues PR159's branch:
-P1 rejects fields selected from XML comments or nested outside direct Atom entry
-children, while preserving canonical parser behavior and HTML CDATA comments.
-P2 refuses malformed diagnostics independently before data-lane assembly,
-preserving valid E1 and article evidence without repairing invalid excerpts.
-Duplicate-notice availability is explicitly documented/tested as distinct from
-unique identity and complete coverage; original C0 report behavior is unchanged.
+[Second independent review](https://github.com/maxvfk/game-calendar/pull/159#issuecomment-6558658130)
+found remaining CDATA field spoofing in reviewed head `a12fac3`. Current main was
+re-fetched as `b8ea78d165e37962d70c967ad3b83fe7cc156dce`; merge `aa30d77`
+preserves its newer snapshot/metadata generation in the existing PR159 branch.
+Correction `d74d102563cb4ff530df4e640c6e524ed74ac7ad` replaces the regex-based
+verification with independent XML-aware direct-child field checks. Pinned
+`saxes@6.0.0` distinguishes markup, CDATA, comments, nesting and quoted attributes;
+original HTML CDATA is retained by source offsets. The canonical parser and
+previous P2 diagnostic-isolation code are unchanged. Prior comment-spoofing and
+duplicate semantics remain covered; availability is not proof of coverage.
 
-[Contract, regression details and replay](evidence/wuwa-notice-inventory-c1a0.md) /
-[measured manifests](evidence/wuwa-notice-inventory-c1a0-2026-11-01.json).
-First 14 review regressions reproduced **2 pass / 12 fail** on reviewed head;
-corrected review suite including four-C0 recovery: **15 pass / 0 fail**.
-Focused WuWa/E1/C0: **96 pass / 0 fail**. Full suite: **1479 pass / 3 existing
-optional age skips / 0 fail** (1482 tests, 91 files). Frozen install, typecheck,
-full build, offline feed/report checks pass. Local socket tests run with local
-networking permitted; hosted PostgreSQL17/mandatory age checks remain required.
+[Contract, dependency rationale, regressions and replay](evidence/wuwa-notice-inventory-c1a0.md) /
+[fresh current-main manifests](evidence/wuwa-notice-inventory-c1a0-2026-11-01.json).
+The first 20 XML regressions reproduced **12 pass / 8 fail** before correction.
+Final XML suite: **21 pass / 0 fail**; combined WuWa/E1/C0: **117 pass / 0 fail**.
+Full project suite: **1500 pass / 3 existing optional age skips / 0 fail**
+(1503 tests, 92 files). Frozen install, typecheck, full build and offline
+feed/report checks pass. Task-local cache/baseline files were moved outside Bun
+project test discovery; no test exclusions or global configuration changes.
 
-Repeated identical-input fixed-clock full builds match all 10 recursive public
-files, 292 final events, 153 reviewed winners, existing NTE conflict, queue/agent
-input, eight E1 entries/hashes and all pre-existing diagnostics/C0 arrays.
-Measured WuWa: 20 notices (18 with no emitted event), 11 emitted/attributed/final
-associations, no inventory/reference diagnostics on this snapshot. These are
-measurements and do not establish complete source coverage.
+Fresh identical-input fixed-clock full builds against b8ea78d match all 10
+recursive public files, 292 final events, 153 reviewed winners, existing NTE
+conflict, Timeline inputs, eight E1 entries/hashes and all pre-existing C0 arrays
+and diagnostics. All 107 baseline lock entries are unchanged; only the documented
+saxes/xmlchars dependencies are added. The new public manifest is
+`86f70a6e6de6908529487224eeee6984f28f76d40b5b1f7a9aea29f1c8894328`;
+the prior `9aabb88` manifest is historical. WuWa measurement: 20 notices, 18
+zero-output, 11 emitted/attributed/final associations, no inventory diagnostics.
 
-**Next concrete step:** verify green corrected exact-head CI (recorded in PR159)
-and obtain focused independent re-review of P1/P2 and duplicate semantics. The
-reviewed head's green CI is historical, not validation of these corrections.
-No merge or completed re-review is claimed. STOP after C1a.0; C1a.1, C1b and C2–C5
-are not started.
+**Next concrete step:** verify corrected exact-head CI including PostgreSQL17
+and obtain independent focused re-review of the XML verifier and new-input parity.
+Final head and hosted CI are recorded in PR159; earlier green runs do not validate
+this correction. No merge or completed re-review is claimed. STOP after C1a.0;
+C1a.1, C1b and C2–C5 are not started.
 
 ---
 
