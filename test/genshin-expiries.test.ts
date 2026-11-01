@@ -17,7 +17,7 @@ const weaponEnds = { asia: "2026-11-03T06:59:00.000Z", europe: "2026-11-03T13:59
 
 test("real stored notices yield two exact regional expiries and one separately identified weapon channel", async () => {
   expect(parsed.map(e => e.id).sort()).toEqual([...ids].sort());
-  const snapshot = parseKqmGinNews(await Bun.file("snapshots/genshin-kqm-ginews.md").text(), ctx);
+  const snapshot = parseKqmGinNews(await Bun.file("test/fixtures/genshin/ginews-pre-turnover-2026-11-01.md").text(), ctx);
   expect(snapshot.filter(e => ids.includes(e.id))).toEqual(parsed);
   for (const e of parsed) {
     expect(e.startPrecision).toBe("day");
@@ -33,7 +33,7 @@ test("real stored notices yield two exact regional expiries and one separately i
 });
 
 test("reviewed winners retain old completion IDs/discovery and survive incomplete source or rolling notice removal", async () => {
-  const full = parseKqmGinNews(await Bun.file("snapshots/genshin-kqm-ginews.md").text(), ctx);
+  const full = parseKqmGinNews(await Bun.file("test/fixtures/genshin/ginews-pre-turnover-2026-11-01.md").text(), ctx);
   const selected = reviewed.filter(e => ids.includes(e.id));
   expect(selected).toHaveLength(3);
   for (const groups of [[reviewed, full], [full, reviewed], [reviewed, full, parsed]]) {
