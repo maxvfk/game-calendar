@@ -171,3 +171,24 @@ Starlight scenario is explicitly synthetic. #131's three tracked recovery
 notices and #139's Park claim windows are separate synthetic missing-event
 scenarios over the real frozen source bodies. Factual WuWa/ZZZ excerpts test
 additional formats; omissions are not presented as full historical captures.
+
+Full machine-readable [Starlight report example](notice-coverage-c1a1-starlight.json)
+labels the synthetic event set explicitly; it is not a golden test oracle.
+
+Local validation on implementation `557a9ad`: frozen install, typecheck,
+**1531 passed / 3 existing optional age skips / 0 failed** (1534 tests, 95 files),
+full site build and separate feed build passed. The initial restricted-sandbox
+run could not bind localhost sockets (three existing tests); enabling command
+network permission resolved all three, without changing tests or configuration.
+Bun's install needed task-local TMPDIR/BUN_TMPDIR/BUN_INSTALL_CACHE_DIR under
+`work/`; no global configuration or repository lockfile change was made.
+
+The [fixed-clock replay record](notice-coverage-c1a1-parity-2026-11-01.json)
+compares the exact starting main to the implementation using 45 identical input
+files. All 10 recursive public files, 292 events / 153 reviewed winners / existing
+NTE conflict, Timeline public artifacts and the entire E1/C0/C1a.0 sidecar match.
+Eight E1 entries and hashes, all notices, attribution rows and diagnostics remain
+identical. Two CLI replays produce identical bytes. No generated public file is
+committed. Exact final-head hosted CI, including PG17 and encrypted recovery,
+is recorded in the delivery PR; local optional age skips are not hosted PG17
+validation. Independent review is pending and the PR must remain unmerged.

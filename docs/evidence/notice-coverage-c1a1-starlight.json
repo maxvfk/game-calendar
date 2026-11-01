@@ -1,0 +1,254 @@
+{
+  "scenario": "Synthetic main-event-only outputs on real frozen Starlight notice; not original pre-130 parser output; example only, not a test oracle",
+  "input": "test/fixtures/genshin/starlight-voyage-2026-10-28.md",
+  "inputSha256": "9ee2a8317e465da1d3d00117e1234d04c58d0252a36348a0c7463f9d4b83e4b6",
+  "finalEventIds": [
+    "genshin:starlight-voyage-heart-unbound:2026-10-19"
+  ],
+  "report": {
+    "schemaVersion": 1,
+    "engineVersion": "notice-coverage-v1",
+    "readerVersion": "notice-dates-v1",
+    "limits": {
+      "notices": 2000,
+      "events": 5000,
+      "attributions": 10000,
+      "diagnostics": 20000,
+      "totalTextUnits": 5000000,
+      "inputBytes": 33554432,
+      "outputBytes": 25165824,
+      "associationsPerNotice": 64,
+      "matchesPerSpan": 16,
+      "totalSpans": 20000,
+      "dateReader": {
+        "inputUnits": 250000,
+        "spans": 256,
+        "quoteUnits": 512
+      }
+    },
+    "diagnostics": [],
+    "sources": [
+      {
+        "sourceId": "genshin-kqm-ginews",
+        "game": "genshin",
+        "available": true,
+        "evaluation": "evaluated",
+        "limitations": [
+          "Inventory availability is not source or calendar completeness"
+        ],
+        "diagnostics": [],
+        "notices": [
+          {
+            "sourceId": "genshin-kqm-ginews",
+            "game": "genshin",
+            "noticeId": "21901",
+            "position": 0,
+            "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21901.md",
+            "contentHash": "3553cf46f0a4c39993527f6f8d473a3c4723af2df769297edf43839a9fc7a677",
+            "format": "markdown",
+            "status": "partially processed",
+            "evaluation": "uncertain",
+            "baselineMember": false,
+            "associations": [
+              {
+                "eventId": "genshin:starlight-voyage-heart-unbound:2026-10-19",
+                "basis": "confirmed-attribution"
+              }
+            ],
+            "spans": [
+              {
+                "kind": "date",
+                "ref": "fce5bd921ea85e81860d2f240581830b27a6198bb6aafb7dc685e8de7520ff5a",
+                "start": 239,
+                "end": 255,
+                "quote": "2026/10/19 10:00",
+                "role": "start",
+                "group": 0,
+                "region": null,
+                "value": {
+                  "date": "2026-10-19",
+                  "clock": "10:00:00",
+                  "offsetMinutes": null,
+                  "instant": null,
+                  "precision": "minute"
+                },
+                "uncertainty": [
+                  "missing_offset"
+                ],
+                "field": "content",
+                "matches": [],
+                "ignore": null,
+                "disposition": "unmatched",
+                "reason": "unresolved_date"
+              },
+              {
+                "kind": "date",
+                "ref": "aa00079425385045dd72595c0b8207cdda061d496b2fc55ccbb901200338823c",
+                "start": 302,
+                "end": 318,
+                "quote": "2026/11/02 03:59",
+                "role": "end",
+                "group": 0,
+                "region": null,
+                "value": {
+                  "date": "2026-11-02",
+                  "clock": "03:59:00",
+                  "offsetMinutes": null,
+                  "instant": null,
+                  "precision": "minute"
+                },
+                "uncertainty": [
+                  "missing_offset"
+                ],
+                "field": "content",
+                "matches": [],
+                "ignore": null,
+                "disposition": "unmatched",
+                "reason": "unresolved_date"
+              },
+              {
+                "kind": "date",
+                "ref": "1048668f976e8f4d8ca25a05cccd6c1cf40ee4863d9c3c0bab205ef4e71e937b",
+                "start": 389,
+                "end": 405,
+                "quote": "2026/10/19 10:00",
+                "role": "start",
+                "group": 1,
+                "region": null,
+                "value": {
+                  "date": "2026-10-19",
+                  "clock": "10:00:00",
+                  "offsetMinutes": null,
+                  "instant": null,
+                  "precision": "minute"
+                },
+                "uncertainty": [
+                  "missing_offset"
+                ],
+                "field": "content",
+                "matches": [],
+                "ignore": null,
+                "disposition": "unmatched",
+                "reason": "unresolved_date"
+              },
+              {
+                "kind": "date",
+                "ref": "4fba5dda6b347cecf051684de4d91f1aa84ad2f2b63e2b80e5f731fc3e46cce6",
+                "start": 452,
+                "end": 468,
+                "quote": "2026/10/29 04:00",
+                "role": "end",
+                "group": 1,
+                "region": null,
+                "value": {
+                  "date": "2026-10-29",
+                  "clock": "04:00:00",
+                  "offsetMinutes": null,
+                  "instant": null,
+                  "precision": "minute"
+                },
+                "uncertainty": [
+                  "missing_offset"
+                ],
+                "field": "content",
+                "matches": [],
+                "ignore": null,
+                "disposition": "unmatched",
+                "reason": "unresolved_date"
+              }
+            ],
+            "unmatchedSpans": [
+              {
+                "field": "content",
+                "ref": "fce5bd921ea85e81860d2f240581830b27a6198bb6aafb7dc685e8de7520ff5a",
+                "quote": "2026/10/19 10:00",
+                "reason": "unresolved_date"
+              },
+              {
+                "field": "content",
+                "ref": "aa00079425385045dd72595c0b8207cdda061d496b2fc55ccbb901200338823c",
+                "quote": "2026/11/02 03:59",
+                "reason": "unresolved_date"
+              },
+              {
+                "field": "content",
+                "ref": "1048668f976e8f4d8ca25a05cccd6c1cf40ee4863d9c3c0bab205ef4e71e937b",
+                "quote": "2026/10/19 10:00",
+                "reason": "unresolved_date"
+              },
+              {
+                "field": "content",
+                "ref": "4fba5dda6b347cecf051684de4d91f1aa84ad2f2b63e2b80e5f731fc3e46cce6",
+                "quote": "2026/10/29 04:00",
+                "reason": "unresolved_date"
+              }
+            ],
+            "ignores": [],
+            "diagnostics": []
+          }
+        ]
+      },
+      {
+        "sourceId": "hsr-kqm-hsrnews",
+        "game": "hsr",
+        "available": false,
+        "evaluation": "not evaluated",
+        "limitations": [
+          "Inventory availability is not source or calendar completeness",
+          "Missing, invalid or incomplete notice inventory"
+        ],
+        "diagnostics": [],
+        "notices": []
+      },
+      {
+        "sourceId": "nte-steamnews-official",
+        "game": "nte",
+        "available": false,
+        "evaluation": "not evaluated",
+        "limitations": [
+          "Inventory availability is not source or calendar completeness",
+          "Missing, invalid or incomplete notice inventory"
+        ],
+        "diagnostics": [],
+        "notices": []
+      },
+      {
+        "sourceId": "wuwa-kuro-mirror",
+        "game": "wuwa",
+        "available": false,
+        "evaluation": "not evaluated",
+        "limitations": [
+          "Inventory availability is not source or calendar completeness",
+          "Missing, invalid or incomplete notice inventory"
+        ],
+        "diagnostics": [],
+        "notices": []
+      },
+      {
+        "sourceId": "zzz-steam-events-official",
+        "game": "zzz",
+        "available": false,
+        "evaluation": "not evaluated",
+        "limitations": [
+          "Inventory availability is not source or calendar completeness",
+          "Missing, invalid or incomplete notice inventory"
+        ],
+        "diagnostics": [],
+        "notices": []
+      }
+    ],
+    "unsupported": [
+      {
+        "game": "endfield",
+        "evaluation": "not evaluated",
+        "reason": "notice inventory unsupported"
+      },
+      {
+        "game": "czn",
+        "evaluation": "not evaluated",
+        "reason": "notice inventory unsupported"
+      }
+    ],
+    "unusedIgnoreDecisions": []
+  }
+}
