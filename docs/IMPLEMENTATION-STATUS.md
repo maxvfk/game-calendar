@@ -1,3 +1,32 @@
+## C1a.0 — WuWa notice inventory — IMPLEMENTED, AWAITING FOCUSED REVIEW (2026-11-01)
+
+Started from re-fetched current main `9aabb88a5ac7e4e46c1f782d115802ad4f992e16`.
+Implementation commit `b0b82db6afd63f737836f84541dbf221ffb5656b` adds WuWa to
+C0's internal notice inventory using the existing canonical Atom discovery,
+complete HTML and stable article IDs. Exact emitted-event attribution, honest
+availability and independent E1/inventory recovery are implemented. Canonical
+parsing, public schemas/data, IDs/dates, reviewed precedence and Timeline stay
+unchanged. This is an implementation checkpoint, not a merge or review approval.
+
+[Contract, tests and replay](evidence/wuwa-notice-inventory-c1a0.md) /
+[measured manifests](evidence/wuwa-notice-inventory-c1a0-2026-11-01.json).
+Fixed-clock identical-input full builds match all 10 recursive public files,
+292 final events, 153 reviewed winners, the existing NTE conflict, queue/agent
+input, eight E1 entries/hashes and all pre-existing diagnostics/C0 arrays.
+Measured WuWa: 20 notices, 18 with no emitted event, 11 emitted/attributed/final
+associations, no inventory/reference diagnostics. These are snapshot measurements.
+Focused suite: 80 pass / 0 fail. Full suite: 1463 pass / 3 existing optional age
+skips / 0 fail (1466 tests, 91 files). Required install/typecheck/test/build and
+offline feed/report checks pass locally; exact-head GitHub CI belongs to the PR
+delivery record. Local socket tests need local networking enabled;
+three existing optional age tests skip locally and remain a hosted CI gate.
+
+**Next concrete step:** verify green exact-head GitHub CI and hand off for
+independent focused review. Do not merge automatically. STOP after C1a.0;
+C1a.1, C1b and C2–C5 are not started.
+
+---
+
 ## Timeline labels — DeepSeek P1–P4 production rollout CLOSED (2026-11-01)
 
 **Production verification completed** following merged [PR #155](https://github.com/maxvfk/game-calendar/pull/155)

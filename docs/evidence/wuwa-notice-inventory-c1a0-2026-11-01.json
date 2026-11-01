@@ -1,0 +1,1135 @@
+{
+  "base": "9aabb88a5ac7e4e46c1f782d115802ad4f992e16",
+  "implementationHead": "b0b82db6afd63f737836f84541dbf221ffb5656b",
+  "clock": "2026-11-01T00:00:00.000Z",
+  "settings": {
+    "BASE_PATH": "/",
+    "SNAPSHOT_DIR": "snapshots",
+    "PUBLIC_DIR": "public",
+    "INCLUDE_LEAKS": "false",
+    "TZ": "UTC"
+  },
+  "bun": "1.3.14",
+  "inputFiles": 45,
+  "inputManifestSha256": "35d0eaacd7956872a523834c65e7d61e8e8298afb2bab8553fc9f93e17a6aa46",
+  "inputManifest": {
+    "snapshots/czn-prydwen-banners.html": "6a563596cfff1aeb1bcd59edd086f8063d474ba7af6e64bc7354e505b9927012",
+    "snapshots/czn-prydwen-banners.meta.json": "f7b71655a5a10b431f08f881cb827b1280e1bd5a9671512e2186a0c25e552c8e",
+    "snapshots/endfield-wikigg-echoes.html": "563cecf363e9568fa615df35b753718c81b56f0d34189ba47005d67693519a89",
+    "snapshots/endfield-wikigg-echoes.meta.json": "3bd5da60b5372c45366f49291c0f907b83048da2e78dc80cee218232eb0b278b",
+    "snapshots/endfield-wikigg-events.html": "cff5eaf0c6146b24a23ee51c92c6623e2144ba8bb8a2a44ea30fa8b8acbe1092",
+    "snapshots/endfield-wikigg-events.meta.json": "9eede418670c0d0adbc845252dd04c3c92eb8675b4cfe01faf1658bd2f60a8a2",
+    "snapshots/genshin-kqm-ginews.md": "167c3dc512af158afb2185a62c19d0798fbdc7e448147f77c4ae104f4c61b5a0",
+    "snapshots/genshin-kqm-ginews.meta.json": "7f318b53768364b3ca9079da27c6952629ad30107e528427ebc14963256ce405",
+    "snapshots/hsr-kqm-hsrnews.md": "69ac6de045571958a02604199a5c37b69b4ad20d9994330312e977b97883be54",
+    "snapshots/hsr-kqm-hsrnews.meta.json": "19fdbedf734b34641bf67cfb7e8fb6e6f1f3555c634fc3492bbf0f836792358a",
+    "snapshots/nte-ntebuild-btr.html": "246c6a3df9c9f9524ec5cceec44fa39a116248644514971fe1406529845d78f9",
+    "snapshots/nte-ntebuild-btr.meta.json": "ab139f79cf60d5e7585f474146a0f91cc3e6600a3096f6620f644c15ba2c69fa",
+    "snapshots/nte-steamnews-official.json": "de18088648b7e9659f626912097521a8509f57eda52eb69de9e60296671b574b",
+    "snapshots/nte-steamnews-official.meta.json": "af812bd5665852d35f990e425b38a1f6b8743563ff826927bddab77efd0f3918",
+    "snapshots/README.md": "16648ac0f8177ecb061f16364834224568fb26729175820d2aaf85a1e5005024",
+    "snapshots/wuwa-kuro-mirror.meta.json": "3cfe83a7794897dc6ab9ea29c5eda49fd415e438e9c834d994e41f14a083d613",
+    "snapshots/wuwa-kuro-mirror.xml": "8e05193e9378afcbc19058efb9a31a08261f595b4dc821bffaba82bab5604a0e",
+    "snapshots/zzz-steam-events-official.meta.json": "56a400690e32223bb3db37f1123cc28ca7b59b3bd49ab683b8212a8e66f2b43c",
+    "snapshots/zzz-steam-events-official.xml": "2343c986e3b8a2870bab322b53fe104c2f0d37b4c025551db9ab2e71b15cbe71",
+    "snapshots/zzz-zenlessgg-banners.json": "a35f70f44cb9de6ed6cf9785ecf35510842910b724cc42ee960c8d9da1bc37f2",
+    "snapshots/zzz-zenlessgg-banners.meta.json": "36173df61a05c15b2909dc58d92adacb61ff78ca31654a0091edc7d6de3f5e49",
+    "fixtures/czn/prydwen-banners-2026-09-22.html": "fb8af3937b24a89e6211fdf8d9021bedf19ce9a3f759855713766dddc48d2f1e",
+    "fixtures/evidence/ntebuild-btr.meta.json": "c46fce73bef40a2ab95b5e9374b8ceadfecfd422cccca1d56e27cd49c1d38f68",
+    "fixtures/evidence/ntebuild-btr.robots.txt": "1aa2e3fb29cfd0ea2b7fbe20fbd9f828c6d8b786f54d95b6f282011cec5012eb",
+    "fixtures/evidence/prydwen-czn-banners.meta.json": "65a6b6eca8d6db5bb22feed1cf1842c6ea0d50bf230d1647970aff530dd25ed3",
+    "fixtures/evidence/prydwen-czn-banners.robots.txt": "a3a3e3da1aa4be41db60ec5c1caeb9427770030e00d71c82823243e215e2bc37",
+    "fixtures/genshin/kqm-ginews-2026-09-23.md": "618e2f08ed1bdac5b58a7a9f2cdd6cc6c6115934689cc57f0bb45f8127b38241",
+    "fixtures/hsr/kqm-hsrnews-2026-09-23.md": "a6151e906833d55aa1f14817a1574f452b1f35636c555d6406451770f5e451bd",
+    "fixtures/hsr/kqm-hsrnews-4.6-lightward-2026-10-27.md": "6ea1ad8a00c6997ac352d6df7daa7b036efb3dae9ddd96677db414228f7cf7c8",
+    "fixtures/nte/ntebuild-btr-2026-09-22.html": "908ffd02c439b18bb9967e66a1d3455dc909fe63d68b47e54ec99a9e0d68b42c",
+    "fixtures/nte/steamnews-official-2026-09-22.json": "8ec3934928f9b6363699731a931b718ac02e53a71f72241b6519ea9d7c6ec085",
+    "fixtures/README.md": "d92d8791cb984795d08e63d6566d45f598153fdf8dcd23af5470cd6c611bc176",
+    "fixtures/wuwa/kuro-mirror-2026-09-23.xml": "3c14f77135bed9a86b6947825b4cd53b99c0e37e23f68a6dbb3e5edcfc829aa4",
+    "data/reviewed/czn.json": "3b26208f7336232b607743d50b6a86ae00b5cc6521c60382d13ee4842d75341c",
+    "data/reviewed/endfield.json": "18efe12249aa1bd9150fbb9fa5a74ac123b8e01b4eaa515333b936f44a24757a",
+    "data/reviewed/genshin.json": "6ae052b1b43177b7cda6cc89af996fdc31977e3bcd2e7e4bb5fb9ac65c042c4d",
+    "data/reviewed/hsr.json": "02e41560a28b9485a0df21c82f0868b3333f6e07845c75b9f6c4a4b77a1dc733",
+    "data/reviewed/nte.json": "1a59fe15a1ffca2bae97c9e87bcba889e7998ed78f0b663121161b0df7d28e1c",
+    "data/reviewed/README.md": "f441cf811ef2abd4bd191d0dc7d356e17835c9033f7dba1df4c2494daf87bfc8",
+    "data/reviewed/wuwa.json": "9cfe07793e9708497a30e512b0735d2319d89d678d2621f09f1710ffb66cc822",
+    "data/reviewed/zzz.json": "3d39c82f014e2f3554ed790436d0fa94f2a493628b9a3fca10a6f012f9c6dd30",
+    "data/presentation/README.md": "7d0fcd1e37078e27c35cf6a55e03489012ced35a3e2336af8624c55f3c47901f",
+    "data/presentation/timeline-label-preferences.v1.json": "89dbf31859d3799367ef0aadb8f3d0e6655d084d6b798aae64d33ba0c9ba230d",
+    "data/presentation/timeline-labels.v1.json": "b3b410fef3cc755e8910f890e08b41b301f01cb6c2ed65697b50af2b596494bd",
+    "data/presentation/timeline-origin-migration.v1.json": "da39ed8cf9ef3fb63b9bdf5ee246cb2bc2943f23d26bc38469a8493df2a8f777"
+  },
+  "publicFiles": 10,
+  "publicManifestSha256": "f78b822b5f823a3ed1cc3cfbd3705c619bd7a9f36acc5eb59c452606bbebc645",
+  "publicBase": {
+    "public/data/events.v1.json": "7e485783360a6b0d5b725951d9dfdd0614259f0296ae8256e69aab3e2cd9ef81",
+    "public/data/review.v1.json": "275b2367acdf1e5bc8425e9bd3404c8624ce1effb744efa4778026930142433c",
+    "public/data/timeline-label-agent-input.v1.json": "08a217f1db584e1b8d9f110d18fbd48d9214c0a59b9d689748181c3fada8509a",
+    "public/data/timeline-label-queue.v1.json": "c2b58cd79e306dbab82d22e53d4e869cd8544ec4f4c0f9310b9b3b73dc6032ec",
+    "public/icon.svg": "b9e5e0ec070e5e22e60077d58070d04f370ea4233188de2bde76ad0a8e09fabe",
+    "public/index.html": "b922904e23311a8c345fd0ae90883b49b2fc457c587e47a5ded4aa92d9e7b00a",
+    "public/main.js": "6100f4d370ff77ab42165e3f4d2d26db08e8586cbfaec0080501bb32cadfdd12",
+    "public/manifest.webmanifest": "2e69846cb68cd49d361dda5b663a05b5900df8814a8ec871d76b09e586b0dd8e",
+    "public/styles.css": "c560cdb9276f9135871c29438b083505cef14b337ceb4fc9cd8a819605bc01be",
+    "public/sw.js": "2166393d8308ca751523bcc60e72b67c6304d14d4ce4822a9b375f90a642384e"
+  },
+  "publicHead": {
+    "public/data/events.v1.json": "7e485783360a6b0d5b725951d9dfdd0614259f0296ae8256e69aab3e2cd9ef81",
+    "public/data/review.v1.json": "275b2367acdf1e5bc8425e9bd3404c8624ce1effb744efa4778026930142433c",
+    "public/data/timeline-label-agent-input.v1.json": "08a217f1db584e1b8d9f110d18fbd48d9214c0a59b9d689748181c3fada8509a",
+    "public/data/timeline-label-queue.v1.json": "c2b58cd79e306dbab82d22e53d4e869cd8544ec4f4c0f9310b9b3b73dc6032ec",
+    "public/icon.svg": "b9e5e0ec070e5e22e60077d58070d04f370ea4233188de2bde76ad0a8e09fabe",
+    "public/index.html": "b922904e23311a8c345fd0ae90883b49b2fc457c587e47a5ded4aa92d9e7b00a",
+    "public/main.js": "6100f4d370ff77ab42165e3f4d2d26db08e8586cbfaec0080501bb32cadfdd12",
+    "public/manifest.webmanifest": "2e69846cb68cd49d361dda5b663a05b5900df8814a8ec871d76b09e586b0dd8e",
+    "public/styles.css": "c560cdb9276f9135871c29438b083505cef14b337ceb4fc9cd8a819605bc01be",
+    "public/sw.js": "2166393d8308ca751523bcc60e72b67c6304d14d4ce4822a9b375f90a642384e"
+  },
+  "byteIdentical": true,
+  "events": 292,
+  "eventIdsSha256": "a85721c41a7c1e74a790f958de040be40eabf87793338aaa13512b11e14fb2c5",
+  "reviewedWinners": 153,
+  "dateConflicts": [
+    {
+      "eventId": "nte:circle-bounty:2026-08-19",
+      "field": "endsAt",
+      "region": "asia",
+      "keptUrl": "https://nte.perfectworld.com/en/article/news/gamenews/20260817/263605.html",
+      "otherUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1840944183787941"
+    }
+  ],
+  "e1Entries": 8,
+  "e1Unattached": 0,
+  "e1EntriesSha256": "71cdd93ca77c675e9152a7a04103599145f9eafd05e4fb2c0a9a1ea64167151e",
+  "e1UnattachedSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "existingDiagnosticsUnchanged": true,
+  "existingArticleRowsUnchanged": true,
+  "articleSources": [
+    {
+      "sourceId": "genshin-kqm-ginews",
+      "available": true,
+      "diagnosticCodes": [
+        "winner_period_conflict",
+        "winner_reference_conflict"
+      ],
+      "noticeCount": 39,
+      "emittedEvents": 13,
+      "attributedEvents": 13,
+      "confirmedFinalAssociations": 5,
+      "notices": [
+        {
+          "noticeId": "21947",
+          "position": 0,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21947.md",
+          "contentHash": "22edf6d8fb5e4f0f3d18d049cab788ee00993cc95c305838f772059c9dd4cfb6",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21946",
+          "position": 1,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21946.md",
+          "contentHash": "736672ea73befca7b87a9889364450eafef30fbf1c4a31bfdfdce17971d03546",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21908",
+          "position": 2,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21908.md",
+          "contentHash": "e07ceedfe02d0c8bc0e86b4e24f852f47c3e3ef3da0b31bb9a133b618689132d",
+          "eventIds": []
+        },
+        {
+          "noticeId": "22008",
+          "position": 3,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/22008.md",
+          "contentHash": "39ce177ca3af8664d9696e75f6fdada848998e35cc3e864d8421d55a56aa5d88",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21892",
+          "position": 4,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21892.md",
+          "contentHash": "78685caa0d8a4bea55ac1cf31a2b9e7557a3d78d5ec9b4102419bb4261d5f112",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21053",
+          "position": 5,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21053.md",
+          "contentHash": "168b65f7449c195a5c5cd12710ff5494d905836bc50fe004b617dbd3a86216b1",
+          "eventIds": [
+            "genshin:overflowing-favor:2026-10-26"
+          ]
+        },
+        {
+          "noticeId": "21901",
+          "position": 6,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21901.md",
+          "contentHash": "8413b22393bae708820c22f5009a8c8fa9901481b457378c7d30976b2ea64d72",
+          "eventIds": [
+            "genshin:quest-completion-period-starlight-voyage-heart-unbound:2026-10-19",
+            "genshin:starlight-voyage-heart-unbound:2026-10-19"
+          ]
+        },
+        {
+          "noticeId": "21891",
+          "position": 7,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21891.md",
+          "contentHash": "134f81eb61140901b6afe068f0f89700acd5f47170d04637793caab85127ea64",
+          "eventIds": [
+            "genshin:carefree-snowball-fight:2026-10-21"
+          ]
+        },
+        {
+          "noticeId": "21888",
+          "position": 8,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21888.md",
+          "contentHash": "3fcd7bd663aeb97e048edea917900f19a185c16eb9b44bfaac5837ae97b37008",
+          "eventIds": [
+            "genshin:void-stars-advent:2026-10-13"
+          ]
+        },
+        {
+          "noticeId": "21956",
+          "position": 9,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21956.md",
+          "contentHash": "f116ebadc34d1e124d36b62ec3b8d40d21b8400f84ff6eb02002e633b56cfbcb",
+          "eventIds": []
+        },
+        {
+          "noticeId": "22005",
+          "position": 10,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/22005.md",
+          "contentHash": "7e638ab33005d374f56561edb6e3595360d92fbe8e8d38c935b0576e292e3292",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21889",
+          "position": 11,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21889.md",
+          "contentHash": "74d1bda05da73f0c4fc76b2eb67bffc2a62c26a9b95995ce014a962210146b59",
+          "eventIds": [
+            "genshin:la-chanson-cerise:2026-10-13"
+          ]
+        },
+        {
+          "noticeId": "21902",
+          "position": 12,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21902.md",
+          "contentHash": "26e482c2edf33103bf3725c705b2d81f4cf368ef3b69af904655e0ae5e43ea0f",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21900",
+          "position": 13,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21900.md",
+          "contentHash": "674ba3f06b5970568b7026216b6be100dbb73ab2cc3bd1de313c973bb88563bf",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21899",
+          "position": 14,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21899.md",
+          "contentHash": "1813d52b3dd0cd06d64eb1734dab909d7f53d19dde5e494486b0ed520bbc9a29",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21897",
+          "position": 15,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21897.md",
+          "contentHash": "1f2d6ba70b29c2ea2851675c92e06bc766f981b88b77a33d271238371a58f18f",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21896",
+          "position": 16,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21896.md",
+          "contentHash": "6e17df1cfe181f44ed2eb4d38755b1267e84a8709877e48d648f87f5c924a46e",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21895",
+          "position": 17,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21895.md",
+          "contentHash": "4d748e83049a6b6321d5dd5dd5de965397931d5447371f2fa8a8943515b78d2c",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21890",
+          "position": 18,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21890.md",
+          "contentHash": "053fcbe29b0c1f45574fd3fa1161cdabda5e534a74cef781095d62fa9ec08f9c",
+          "eventIds": [
+            "genshin:epitome-invocation-azurelight-and-symphonist-of-scents:2026-10-13"
+          ]
+        },
+        {
+          "noticeId": "21168",
+          "position": 19,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21168.md",
+          "contentHash": "3d6e1388535b992e3bffa187eb6026c2d8ae57c88eb65f8e2a625af06beab434",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21879",
+          "position": 20,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21879.md",
+          "contentHash": "415cf62c222691b80974446d950821006bf15132a6a29c66eb542fed83cd827c",
+          "eventIds": [
+            "genshin:missive-of-grace-a-thank-you-gift:2026-09-28",
+            "genshin:resplendent-starlight:2026-10-01"
+          ]
+        },
+        {
+          "noticeId": "21924",
+          "position": 21,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21924.md",
+          "contentHash": "56a449a132be6e3b8ac5b1b28c4e2890493a2d9d21966ead5868e0f59c47efdc",
+          "eventIds": [
+            "genshin:tabletop-troupe-a-gathering-on-adventurers-eve:2026-09-23"
+          ]
+        },
+        {
+          "noticeId": "21885",
+          "position": 22,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21885.md",
+          "contentHash": "5af0e761003b229fa84b6fde901393f33f6b09bfc0c8f07d44d6329c29da7c43",
+          "eventIds": [
+            "genshin:across-the-frozen-wilds-honing-ones-edge:2026-09-23"
+          ]
+        },
+        {
+          "noticeId": "21880",
+          "position": 23,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21880.md",
+          "contentHash": "9585d30d22445ecd1ba09f1478ed376d6f99eea3356725d9748c8030eda0bf92",
+          "eventIds": [
+            "genshin:a-rekviem-for-the-underworld-limited-time-archon-quest-rewards:2026-09-23"
+          ]
+        },
+        {
+          "noticeId": "21986",
+          "position": 24,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21986.md",
+          "contentHash": "62d6d0a5ba044b3afcc66a2116dd16ed2ae8705f91ec1cd1d401c09649e7c439",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21881",
+          "position": 25,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21881.md",
+          "contentHash": "65c10e1fb17e1e17385926ea14d805e34166d3bfe3f08f112822d9bc8be51ff9",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21923",
+          "position": 26,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21923.md",
+          "contentHash": "54be7e0a87d9a5b2986ec2c5baa38808e621768f9cdd63414a08b2a5d6c52a9a",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21848",
+          "position": 27,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21848.md",
+          "contentHash": "37b2729cc16f29fcc74e0266ab925be1dd384ffba43b00453acfc33ac805a49d",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21882",
+          "position": 28,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21882.md",
+          "contentHash": "86db2b3ec234e0575160c82cb64415c68a8aa8713fbb296c77c9cb3b6c93f7b3",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21884",
+          "position": 29,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21884.md",
+          "contentHash": "4f8bdf7cab9568af749489eeaca5ca4243c860dc618edf29fee2ac7897507582",
+          "eventIds": [
+            "genshin:moontrace-version-7-1-battle-pass:2026-09-23"
+          ]
+        },
+        {
+          "noticeId": "20508",
+          "position": 30,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/20508.md",
+          "contentHash": "1d46dfcc77c73f87fa62175f91aeecc4d79ef5830ad082eee82044bbce01c807",
+          "eventIds": []
+        },
+        {
+          "noticeId": "3802",
+          "position": 31,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/3802.md",
+          "contentHash": "7ebf18c5e09ee04ee6e6087bbe952d8717ffe26c1a6bff4b2a09d81b6724b2ab",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21811",
+          "position": 32,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21811.md",
+          "contentHash": "1186f23b927491609d9797995cc4f5f7574510aff554f878c631e556199c89ac",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21812",
+          "position": 33,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21812.md",
+          "contentHash": "a604e6eced6511747a0830a01b0c36a1e0a5fc88dba86c9f29f79a97d36b3555",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21761",
+          "position": 34,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21761.md",
+          "contentHash": "90b9f97f1a000d26d9585ab90898b4ff1aa03aecb4a931c5618ec7ca62b9c7e5",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1249",
+          "position": 35,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/1249.md",
+          "contentHash": "1ecfc26b2746eec6eec2f75140aa7f75a7faf43d049a6f0ecd445b81b5435dbf",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1250",
+          "position": 36,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/1250.md",
+          "contentHash": "7600c2830a6a40bdddd760c42799b80d03a864e6fafcff44897bdab9650127cc",
+          "eventIds": []
+        },
+        {
+          "noticeId": "21455",
+          "position": 37,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/21455.md",
+          "contentHash": "d4cc42ea4fed7aed713e397dca62faaa50b8f6392512863d30d20f64a683be12",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1251",
+          "position": 38,
+          "sourceUrl": "https://github.com/KQM-git/GINews/blob/master/archive/1251.md",
+          "contentHash": "56cf40fbf2616aece5680932eb52d33cf597409b43657b0e699b4e0e314e414e",
+          "eventIds": []
+        }
+      ]
+    },
+    {
+      "sourceId": "hsr-kqm-hsrnews",
+      "available": true,
+      "diagnosticCodes": [],
+      "noticeCount": 13,
+      "emittedEvents": 11,
+      "attributedEvents": 11,
+      "confirmedFinalAssociations": 11,
+      "notices": [
+        {
+          "noticeId": "1456",
+          "position": 0,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1456.md",
+          "contentHash": "165ec7dbce3fc31d508aca1aa5b7f40883b1cbbdedc4f8101b06f92b9437dde9",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1466",
+          "position": 1,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1466.md",
+          "contentHash": "5b29dc29149ebcd204993a51227cfea3b0330c969291067e2301e9ab76bbfddc",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1422",
+          "position": 2,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1422.md",
+          "contentHash": "d41ec12e26fd785947b3adbd1273a1c22366bcebb55fb19af5542984851f41e2",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1424",
+          "position": 3,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1424.md",
+          "contentHash": "510c258ff23c096ebe564b110ec4c7f3690175c130ca12cbffa538ca8a51a573",
+          "eventIds": [
+            "hsr:garden-of-plenty:2026-10-30"
+          ]
+        },
+        {
+          "noticeId": "1437",
+          "position": 4,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1437.md",
+          "contentHash": "e24f6729dcbfa1722ed6bbc445d8c5cea750fe9f7cd98935f30fb6d91ec7deef",
+          "eventIds": [
+            "hsr:apocalyptic-shadow-dominance-of-oblivion:2026-10-05",
+            "hsr:astral-imagea-park-astral-trendible:2026-09-28",
+            "hsr:astral-imagea-park-park-souvenir:2026-09-28",
+            "hsr:interastral-peace-gala-one-take:2026-10-21",
+            "hsr:love-ghosts-robots:2026-09-28",
+            "hsr:memory-of-chaos-crossing-the-afterlife:2026-09-28",
+            "hsr:memory-of-chaos-survival-of-the-fittest:2026-11-02",
+            "hsr:pure-fiction-imagined-words:2026-10-19",
+            "hsr:wishpower-up-down-with-voracity:2026-09-28"
+          ]
+        },
+        {
+          "noticeId": "1447",
+          "position": 5,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1447.md",
+          "contentHash": "777e1d5f3731432e4667f57933d8d1ecf9bcc7aa08ace4ac1061be63c3fd0e59",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1416",
+          "position": 6,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1416.md",
+          "contentHash": "b048bfdec7b3c3c2be01762c71731d3456669d73b4d4b1cf37129447630a5cdf",
+          "eventIds": [
+            "hsr:version-4-6-nameless-honor:2026-09-28"
+          ]
+        },
+        {
+          "noticeId": "1406",
+          "position": 7,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1406.md",
+          "contentHash": "3982094a6ec169e03d58ab31391b19efcb6bbf58087298256eb6a58acefeee0f",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1415",
+          "position": 8,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1415.md",
+          "contentHash": "7e12bad080df73f087b3e23ae5d03cd9f6530f50cc6b79ac7095b7c6fb1f3401",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1421",
+          "position": 9,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1421.md",
+          "contentHash": "e69356a69b368d8b0e9a3bbc256b0ac12c13b2559acc77a4ccd28826d432b89b",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1196",
+          "position": 10,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/1196.md",
+          "contentHash": "2d1804fd1ee2f1dd2237c8240950de54505b4e5f69d9b6987e373299a5bc1a72",
+          "eventIds": []
+        },
+        {
+          "noticeId": "211",
+          "position": 11,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/211.md",
+          "contentHash": "80a7dffcb9cf1175bb483c323cfce16bee232b1be26383cc16cf7bc064de05fd",
+          "eventIds": []
+        },
+        {
+          "noticeId": "186",
+          "position": 12,
+          "sourceUrl": "https://github.com/KQM-git/HSRNews/blob/master/archive/186.md",
+          "contentHash": "25988ea290e1607a2941714d0245f936e6cde5ee638e8a54b204e6fc3da674d7",
+          "eventIds": []
+        }
+      ]
+    },
+    {
+      "sourceId": "nte-steamnews-official",
+      "available": true,
+      "diagnosticCodes": [
+        "merge_source_conflict",
+        "winner_period_conflict",
+        "winner_reference_conflict"
+      ],
+      "noticeCount": 31,
+      "emittedEvents": 54,
+      "attributedEvents": 54,
+      "confirmedFinalAssociations": 40,
+      "notices": [
+        {
+          "noticeId": "1847920302241406",
+          "position": 0,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1847920302241406",
+          "contentHash": "a3a9a612e73db74d0f5b29324dbeb4b41fb3e2687b854be5dd5aaeee3deb4f26",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1847920302233942",
+          "position": 1,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1847920302233942",
+          "contentHash": "e19541be9bfc190f522dd28e945d8e5d96a5054926feba9d61e7098578394207",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1847286114035705",
+          "position": 2,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1847286114035705",
+          "contentHash": "b12212b850e9a2a04696cd1d1e222c1c1360e9699c96526d0fca48106949f893",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1847286114031962",
+          "position": 3,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1847286114031962",
+          "contentHash": "ab420f4587445dc8cf16053c2a29ed3ce00243c8350ccdf0d128cec9ec50eb4c",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1847286114027833",
+          "position": 4,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1847286114027833",
+          "contentHash": "ef813f21275375d36efdbc33ce9319e9429ce8828a8742f4c1a71513b61efadd",
+          "eventIds": [
+            "nte:dazzling-star:2026-10-21"
+          ]
+        },
+        {
+          "noticeId": "1846651706693892",
+          "position": 5,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1846651706693892",
+          "contentHash": "57dcf072f591f91c6463c7b8d7a99069400d60b2985944270cf56f8da6efc5f5",
+          "eventIds": [
+            "nte:far-side-of-the-moon:2026-10-21",
+            "nte:gold-clash:2026-10-26",
+            "nte:puka-lucky-flip:2026-10-29",
+            "nte:server-maintenance-notice-october-21:2026-10-20",
+            "nte:snap-golden-crackshot:2026-10-21"
+          ]
+        },
+        {
+          "noticeId": "1846018067935498",
+          "position": 6,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1846018067935498",
+          "contentHash": "5ee17b1ca64000b0fdbdfdfd5969ad6fca4d22ceabd5432a0ac296a3a503d767",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1846018067928196",
+          "position": 7,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1846018067928196",
+          "contentHash": "f1fe8149efcbeaafa574fd2a1146fbf3e919472f281695ac2eebea7fdfab9186",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1845383656388326",
+          "position": 8,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1845383656388326",
+          "contentHash": "4fb43810d39d1d55572037b1a95cd6dd02f16b41295372113d203c8e6f8567a8",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1845383656380024",
+          "position": 9,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1845383656380024",
+          "contentHash": "12529132b99fc2a167df4bea1474342891c17dc16becedecaced5e1a2cee08e8",
+          "eventIds": [
+            "nte:foretold-finale:2026-09-30"
+          ]
+        },
+        {
+          "noticeId": "1844751498233952",
+          "position": 10,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1844751498233952",
+          "contentHash": "00bded73b3448ce381b24a3dceab7acfe52a1f9069f20e4cca3ba71dff5a0a9a",
+          "eventIds": [
+            "nte:circle-bounty:2026-09-30",
+            "nte:circle-gifts:2026-09-30",
+            "nte:coal-lumps-treasure:2026-10-08",
+            "nte:pukaland-travelogue:2026-09-30",
+            "nte:terminal-depths:2026-09-30"
+          ]
+        },
+        {
+          "noticeId": "1843481262703497",
+          "position": 11,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1843481262703497",
+          "contentHash": "3627703c35b7966c5fa7144ea4a8d8d4f644c41d80319dcd215b9d037fe7d676",
+          "eventIds": [
+            "nte:asia-sea-server-maintenance-notice-sept-16:2026-09-15"
+          ]
+        },
+        {
+          "noticeId": "1843481262694451",
+          "position": 12,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1843481262694451",
+          "contentHash": "7db2cc26674a70679a289a86641e6d02c8712bf70b84a77bf07c3dd7067d7c59",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1843481262688322",
+          "position": 13,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1843481262688322",
+          "contentHash": "f92ab2323825cc73b65569a25cb616171b5a90d5ccd0adfdd9d360642726c024",
+          "eventIds": [
+            "nte:surfing-all-channels:2026-09-09"
+          ]
+        },
+        {
+          "noticeId": "1842846814455151",
+          "position": 14,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1842846814455151",
+          "contentHash": "f1b5be9177bd220762962b78627ea85a69d894e3fea4e383ca4823fa60092219",
+          "eventIds": [
+            "nte:breezy-tour:2026-09-17",
+            "nte:fons-rush:2026-09-21",
+            "nte:marching-beyond-time:2026-09-09",
+            "nte:misty-tipsy-style:2026-09-09",
+            "nte:pixel-surge:2026-09-14",
+            "nte:runaway-echoes:2026-09-09",
+            "nte:server-maintenance-notice-2026-09-09:2026-09-08",
+            "nte:voice-of-the-voyager:2026-09-09"
+          ]
+        },
+        {
+          "noticeId": "1842846814452584",
+          "position": 15,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1842846814452584",
+          "contentHash": "7d48df16b753453ce003d94f757f4581fd4b504938cc4bca19c6fa7898f4d45f",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1842212951302471",
+          "position": 16,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1842212951302471",
+          "contentHash": "d0509ce26f302752438aee9453355b39083cb3a13034c18742bdf95612bfa82e",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1842212951296079",
+          "position": 17,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1842212951296079",
+          "contentHash": "f75fa461d5abb5905de6cb96dcb7adbf5f56604141ba781d9ccded90489f2d57",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1841579228667940",
+          "position": 18,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1841579228667940",
+          "contentHash": "c49e48400315a6af00697faebf3fd3ef346f3c0556a0dfe841a5349d18bfa474",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1841579228664554",
+          "position": 19,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1841579228664554",
+          "contentHash": "c72c301a8c85e8fbcbe61eda2f08d3ca139f9b02ecff97421bf87020c1e02c08",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1841579228661424",
+          "position": 20,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1841579228661424",
+          "contentHash": "b3581d9118e98f397b2b2e6890c6cbfe230ff2a26f31caa45bbc28ffe30be188",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1840944183787941",
+          "position": 21,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1840944183787941",
+          "contentHash": "f3b7bb75eac4fa3b277d7367309788bf74c470437a56a65cb60d63c0202eaacf",
+          "eventIds": [
+            "nte:alluring-shadows:2026-08-19",
+            "nte:circle-bounty:2026-08-19",
+            "nte:circle-gifts:2026-08-19",
+            "nte:gold-clash:2026-08-31",
+            "nte:hunters-crucible:2026-08-19",
+            "nte:lucent-tides:2026-08-19",
+            "nte:ravenous-blade:2026-08-19",
+            "nte:ready-ready:2026-08-19",
+            "nte:shipwreck-salvage:2026-08-28",
+            "nte:stamina-recharge:2026-08-24",
+            "nte:surf-breaker:2026-08-19",
+            "nte:the-ichi-daime:2026-08-19",
+            "nte:ver-1-3-rising-from-the-moonlit-fog-patch-notes:2026-08-18",
+            "nte:volley-star:2026-08-19"
+          ]
+        },
+        {
+          "noticeId": "1840310314341073",
+          "position": 22,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1840310314341073",
+          "contentHash": "3937a64dd5cd7dcb9273d7d8bf4fa6f8e9465f58257123d51dd6f76df46d25db",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1839676055884775",
+          "position": 23,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1839676055884775",
+          "contentHash": "4ee69ec747ebac1d2b9d69e316b80f89aefe60bd1533d5a89e97ad216f123a38",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1839041357037261",
+          "position": 24,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1839041357037261",
+          "contentHash": "ff115c42ad39e46f5f43d215e5174983850a7c87dee283abb640588c75a57bc5",
+          "eventIds": [
+            "nte:fishing-frenzy:2026-08-03",
+            "nte:fons-rush:2026-08-10",
+            "nte:going-going-gone:2026-07-29",
+            "nte:pixel-surge:2026-08-03",
+            "nte:server-maintenance-notice-july-29-nte-utc-8:2026-07-28",
+            "nte:the-lifeline:2026-07-29",
+            "nte:the-wrong-gate:2026-07-29",
+            "nte:warren-lucky-flip:2026-08-05"
+          ]
+        },
+        {
+          "noticeId": "1838407329258836",
+          "position": 25,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1838407329258836",
+          "contentHash": "5a55bb0d8cc3ae67168844e62830ed6ee6200e9e7164c4f3c56956e0530daa8a",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1837955055362579",
+          "position": 26,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1837955055362579",
+          "contentHash": "cd477f554a1fefc881080b6e640f49b631efaa560d618ff1b73afdf2377c77ae",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1836506165582164",
+          "position": 27,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1836506165582164",
+          "contentHash": "671118e9cb6d83d7cd2a8b88d8adfa833941ff94753ddc0c40c48e80cc9e6f21",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1836506165577421",
+          "position": 28,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1836506165577421",
+          "contentHash": "6c90a7652ea02b271fbb190594cf1e0bb483da8cfb7d9be56feed3c1191f2bb9",
+          "eventIds": [
+            "nte:999-nights:2026-07-08",
+            "nte:before-the-dawn:2026-07-08",
+            "nte:blushing-mirage:2026-07-08",
+            "nte:circle-bounty:2026-07-08",
+            "nte:circle-gifts:2026-07-08",
+            "nte:gold-clash:2026-07-20",
+            "nte:neon-rift:2026-07-08",
+            "nte:shadow-n-seek:2026-07-17",
+            "nte:stamina-recharge:2026-07-13",
+            "nte:version-1-2-999-nights-patch-notes:2026-07-07"
+          ]
+        },
+        {
+          "noticeId": "1836506165556394",
+          "position": 29,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1836506165556394",
+          "contentHash": "86828ec616048336023330372c2be2622afa7fb2de49ee6ca7ce02fa1bc6b20e",
+          "eventIds": []
+        },
+        {
+          "noticeId": "1833334318573778",
+          "position": 30,
+          "sourceUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1833334318573778",
+          "contentHash": "dc0cc110b860e40800f98cc7beead56edf972ec234bd64ef2f625ce7fa33dbc3",
+          "eventIds": []
+        }
+      ]
+    },
+    {
+      "sourceId": "wuwa-kuro-mirror",
+      "available": true,
+      "diagnosticCodes": [],
+      "noticeCount": 20,
+      "emittedEvents": 11,
+      "attributedEvents": 11,
+      "confirmedFinalAssociations": 11,
+      "notices": [
+        {
+          "noticeId": "5668",
+          "position": 0,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5668",
+          "contentHash": "3b081583f29e4d3a378ccc335cf6035d7975573abce0ee53c1d74653639ed5b0",
+          "eventIds": [
+            "wuwa:freeze-frame:2026-10-22",
+            "wuwa:spectrum-blaster:2026-10-22",
+            "wuwa:tomorrow-in-the-frame:2026-10-22",
+            "wuwa:undefined-spectrum:2026-10-22"
+          ]
+        },
+        {
+          "noticeId": "5653",
+          "position": 1,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5653",
+          "contentHash": "435af2b838dcc8a947fe0400cfd9a3faf60a7b7c36f94994673eecdf674bf6bf",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5644",
+          "position": 2,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5644",
+          "contentHash": "d9509c700ca57985d92c48bcd3e6db37765cde474b75ee0bf7059ff945d52e9a",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5626",
+          "position": 3,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5626",
+          "contentHash": "8d11a77d95e812f7a67eaae5020bd4243e793216a22e1ddd073b787a5046e0ae",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5625",
+          "position": 4,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5625",
+          "contentHash": "6dd596493f50325420c329604c173b898e9d6033b38e4f41df0405faa0133362",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5616",
+          "position": 5,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5616",
+          "contentHash": "e665ed933879d88ce0dda1c627938758c59f99c65401fd258e0974a58c53e4a8",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5615",
+          "position": 6,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5615",
+          "contentHash": "aad9ae5263ecfe0a01f9217d10915365f900aac537d2e0705802aaf672ee9856",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5608",
+          "position": 7,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5608",
+          "contentHash": "c7391e71b86a59074a512b980326f51b44cc5d288862b8a35176407649e85cf5",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5607",
+          "position": 8,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5607",
+          "contentHash": "a22613665929086f4d3ab38d14bc4b67eff84ee5fedaa664fc5bc234bd22f79e",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5603",
+          "position": 9,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5603",
+          "contentHash": "489b01f3f11c0f9f5158c5c058be090c792ddc5f974f3bf1dcecf19e3582ab07",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5575",
+          "position": 10,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5575",
+          "contentHash": "e53e71483bf75a9648b59d177b9eb854f6ec3a477b289b0e0992485df1366cbf",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5574",
+          "position": 11,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5574",
+          "contentHash": "dcbbbd145119bf2bdc0190894cf6a30fab6f3705d1044c995f9045d42df7c44a",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5573",
+          "position": 12,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5573",
+          "contentHash": "7fd32c179d3906d143a6e90cf3fc8eedd743ab0cee831917ec7c79a075ce54f3",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5571",
+          "position": 13,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5571",
+          "contentHash": "8be33994ac05b0579a07d174898b7dbef9b24a6eea733dc7b19f6185c4aae175",
+          "eventIds": [
+            "wuwa:artisans-search:2026-10-08",
+            "wuwa:beyond-the-waves-land-of-xuanfang:2026-10-29",
+            "wuwa:cubie-wars:2026-09-30",
+            "wuwa:dreams-in-the-capsule:2026-09-30",
+            "wuwa:echo-erase:2026-10-22",
+            "wuwa:gifts-of-singing-drizzle:2026-10-22",
+            "wuwa:gifts-of-waking-moon:2026-09-30"
+          ]
+        },
+        {
+          "noticeId": "5557",
+          "position": 14,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5557",
+          "contentHash": "fa50a5888ff198ce1afb1c9f8b28a5aa2813464eb8a31758cc566d6c9bcd4782",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5555",
+          "position": 15,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5555",
+          "contentHash": "9335e7eb143b1db666aefbe64d7cbb905f72e30bd46b2c68697d9e2015d4d1c1",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5546",
+          "position": 16,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5546",
+          "contentHash": "208bf21d60a314d8618e114ce881e06a1670092a5b7c959ce74773de3ef42b5f",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5532",
+          "position": 17,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5532",
+          "contentHash": "66c1495fd875586c767eedeafa8d54b66f1f292da0a51e3075a7026b1df5248a",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5529",
+          "position": 18,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5529",
+          "contentHash": "abc3716fa57cee3e2ec188085133cc94e100ffd0832b671d9c0e55a523675477",
+          "eventIds": []
+        },
+        {
+          "noticeId": "5521",
+          "position": 19,
+          "sourceUrl": "https://wutheringwaves.kurogames.com/en/main/news/detail/5521",
+          "contentHash": "2f422e688969dda10714356add47de62bb575e409362f6e283ec6310d3c6d1e0",
+          "eventIds": []
+        }
+      ]
+    },
+    {
+      "sourceId": "zzz-steam-events-official",
+      "available": true,
+      "diagnosticCodes": [
+        "winner_reference_conflict",
+        "winner_type_conflict"
+      ],
+      "noticeCount": 10,
+      "emittedEvents": 43,
+      "attributedEvents": 43,
+      "confirmedFinalAssociations": 24,
+      "notices": [
+        {
+          "noticeId": "652616887841064662",
+          "position": 0,
+          "sourceUrl": "https://steamcommunity.com/games/4162040/announcements/detail/652616887841064662",
+          "contentHash": "fee025fbedff121144816e402134af70606dc00699f1af55d2f56aa6aa66af75",
+          "eventIds": [
+            "zzz:advanced-bounty-area-patrol:2026-11-04",
+            "zzz:all-new-program:2026-10-21",
+            "zzz:cyber-miracle-healer-on-duty:2026-10-28",
+            "zzz:data-bounty-combat-simulation:2026-11-25",
+            "zzz:en-nah-into-your-lap:2026-11-11",
+            "zzz:repair-drifting-art:2026-11-16",
+            "zzz:spooky-funhouse-tales:2026-10-22",
+            "zzz:trails-of-the-hobbling-crow:2026-11-11"
+          ]
+        },
+        {
+          "noticeId": "667252863011914641",
+          "position": 1,
+          "sourceUrl": "https://steamcommunity.com/games/4162040/announcements/detail/667252863011914641",
+          "contentHash": "df83e6c0701e978ab17305c038d25a64fed40c245f4b64fc15c25e3b5f39ca15",
+          "eventIds": []
+        },
+        {
+          "noticeId": "714537487845820570",
+          "position": 2,
+          "sourceUrl": "https://steamcommunity.com/games/4162040/announcements/detail/714537487845820570",
+          "contentHash": "d8d3c1eaa35f6e94f3ed07676a72f78360aec593c9afa3069a7d693bc2eb2bd7",
+          "eventIds": [
+            "zzz:advanced-bounty-area-patrol:2026-09-23",
+            "zzz:all-new-program:2026-09-09",
+            "zzz:angels-support-operation:2026-09-09",
+            "zzz:chronicles-of-the-hobbling-crow:2026-10-03",
+            "zzz:clink-clank-pinball-knight:2026-09-10",
+            "zzz:data-bounty-combat-simulation:2026-10-14",
+            "zzz:diary-of-an-orbie-parent:2026-09-30",
+            "zzz:en-nah-into-your-lap:2026-09-30",
+            "zzz:potential-hypothesis-reforged-in-fire:2026-09-09",
+            "zzz:shadow-chase-showdown:2026-09-16",
+            "zzz:surprise-screening-plan:2026-09-23"
+          ]
+        },
+        {
+          "noticeId": "712284420447405348",
+          "position": 3,
+          "sourceUrl": "https://steamcommunity.com/games/4162040/announcements/detail/712284420447405348",
+          "contentHash": "9505fd9fc6a37d8564d936c671e1c10dec9c7ff8e79deb1e032421edc14ef719",
+          "eventIds": []
+        },
+        {
+          "noticeId": "711156617370927265",
+          "position": 4,
+          "sourceUrl": "https://steamcommunity.com/games/4162040/announcements/detail/711156617370927265",
+          "contentHash": "4e394341e08d65b9de0d05cfb9231687f6eba43d11bbf24eedef14842a2ee128",
+          "eventIds": []
+        },
+        {
+          "noticeId": "706649847851123193",
+          "position": 5,
+          "sourceUrl": "https://steamcommunity.com/games/4162040/announcements/detail/706649847851123193",
+          "contentHash": "2e0700a9bfa14c3028274e9c5b36b4e46b9ba2be51ad71e134026481ee945f1a",
+          "eventIds": [
+            "zzz:combat-training-triple-bounty:2026-09-02",
+            "zzz:crispy-meal-deployment-plan:2026-08-19",
+            "zzz:dangerous-fugitives-leisurely-vacation:2026-08-24",
+            "zzz:ding-dong-delivery-training-in-progress:2026-08-28",
+            "zzz:extensive-patrol-triple-bounty:2026-08-12",
+            "zzz:gift-from-the-clouds:2026-07-29",
+            "zzz:marcel-anniversary-gift:2026-07-29",
+            "zzz:phaethons-grand-reveal-of-the-year:2026-07-29",
+            "zzz:potential-hypothesis-hunting-game:2026-07-29",
+            "zzz:snap-focus-showdown:2026-08-07",
+            "zzz:summer-waves-roll-in:2026-07-29",
+            "zzz:the-great-en-nah-giveaway:2026-08-19"
+          ]
+        },
+        {
+          "noticeId": "693140950130622536",
+          "position": 6,
+          "sourceUrl": "https://steamcommunity.com/games/4162040/announcements/detail/693140950130622536",
+          "contentHash": "58b4ebf0674b6ccb1f6ee3017c7ec168106805e66e4bc00b3dff02c2513c76f8",
+          "eventIds": []
+        },
+        {
+          "noticeId": "702145613257509311",
+          "position": 7,
+          "sourceUrl": "https://steamcommunity.com/games/4162040/announcements/detail/702145613257509311",
+          "contentHash": "749541931aebeb85c5f3e0721655aa7b0320316b60b0e0f09a292f635fb0c17f",
+          "eventIds": []
+        },
+        {
+          "noticeId": "704396868946233232",
+          "position": 8,
+          "sourceUrl": "https://steamcommunity.com/games/4162040/announcements/detail/704396868946233232",
+          "contentHash": "2b6266e069868d285bb011cf6747ebd687ddc4a8c9a2f3ba43300bc994e14890",
+          "eventIds": [
+            "zzz:advanced-bounty-area-patrol:2026-07-02",
+            "zzz:all-new-program:2026-06-17",
+            "zzz:art-is-bangboo:2026-07-08",
+            "zzz:assemble-mock-exam-comeback-plan:2026-06-26",
+            "zzz:bangbang-the-genius-and-the-miracle-chip:2026-06-17",
+            "zzz:celestial-nexus-intelligence-dossier:2026-06-17",
+            "zzz:commemorative-gift:2026-06-17",
+            "zzz:data-bounty-combat-simulation:2026-07-22",
+            "zzz:en-nah-into-your-lap:2026-07-08",
+            "zzz:first-generation-void-hunter-returns:2026-07-17",
+            "zzz:gleaming-shadow-team-battle:2026-06-19",
+            "zzz:tales-of-the-hobbling-crow:2026-07-03"
+          ]
+        },
+        {
+          "noticeId": "704396868946232792",
+          "position": 9,
+          "sourceUrl": "https://steamcommunity.com/games/4162040/announcements/detail/704396868946232792",
+          "contentHash": "e9d0f94af318fa20622a3b77e88fccd4049085937e6d908246532dae0420ddd9",
+          "eventIds": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": {
+    "no_useful_context": 2,
+    "ambiguous_section_boundary": 1,
+    "winner_reference_conflict": 41,
+    "winner_type_conflict": 4,
+    "winner_period_conflict": 8,
+    "merge_source_conflict": 1
+  }
+}
