@@ -1,4 +1,14 @@
-## C1a.0 — XML FIELD VERIFIER CORRECTED, AWAITING FOCUSED RE-REVIEW (2026-11-01)
+## C1a.0 — WuWa Notice Inventory — CLOSED (2026-11-01)
+
+**Merged:** [PR #159](https://github.com/maxvfk/game-calendar/pull/159) into
+`main` as squash commit `d6e3ced06508446890de4c62b4a86b33182249ff`.
+Final implementation head `d1658e91636ecf9a52016f290dea4aca041e8e11`
+was independently re-reviewed by Astra High: **no blocking defects**, with
+135 additional structural/offset assertions passing. Exact-head
+[CI #41328516832](https://github.com/maxvfk/game-calendar/actions/runs/41328516832)
+passed including PostgreSQL17 and mandatory encrypted recovery.
+This closeout records completed C1a.0 only; it is not a claim of complete
+notice coverage across all seven games.
 
 [Second independent review](https://github.com/maxvfk/game-calendar/pull/159#issuecomment-6558658130)
 found remaining CDATA field spoofing in reviewed head `a12fac3`. Current main was
@@ -29,11 +39,10 @@ saxes/xmlchars dependencies are added. The new public manifest is
 the prior `9aabb88` manifest is historical. WuWa measurement: 20 notices, 18
 zero-output, 11 emitted/attributed/final associations, no inventory diagnostics.
 
-**Next concrete step:** verify corrected exact-head CI including PostgreSQL17
-and obtain independent focused re-review of the XML verifier and new-input parity.
-Final head and hosted CI are recorded in PR159; earlier green runs do not validate
-this correction. No merge or completed re-review is claimed. STOP after C1a.0;
-C1a.1, C1b and C2–C5 are not started.
+**Next concrete step:** begin separately authorized **C1a.1 — deterministic
+coverage engine** from CURRENT `main`, with its own short-lived branch, tests,
+PR and independent review. C1b, C2 and later milestones have not started.
+Do not begin C1a.1 automatically from this closeout.
 
 ---
 
