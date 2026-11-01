@@ -51,7 +51,7 @@ export const Diagnostic = z.object({ code: bounded(80), sourceEventId: id.nullab
 export type Diagnostic = z.infer<typeof Diagnostic>;
 /** Full untrusted notice data for offline coverage replay; NEVER eligible model excerpts. */
 export const ArticleNotice = z.object({
-  sourceId: id, game: z.enum(["genshin", "hsr", "zzz", "nte"]), noticeId: id, sourceUrl: url,
+  sourceId: id, game: z.enum(["genshin", "hsr", "zzz", "nte", "wuwa"]), noticeId: id, sourceUrl: url,
   // Position is a snapshot locator, not part of the stable source/item identity.
   position: z.number().int().nonnegative(), title: z.string(), content: z.string(),
   format: z.enum(["markdown", "html", "bbcode"]), contentHash: z.string().regex(/^[a-f0-9]{64}$/),
@@ -225,20 +225,48 @@ export function safelyBuildEvidenceSidecar(
   conflicts: MergeResult["conflicts"] = [],
   mappings: EvidenceMapping[] = [],
 ): z.infer<typeof EvidenceSidecar> {
+  // Diagnostics are an independent auxiliary lane. Refuse invalid rows before
+  // deciding whether either evidence lane failed; never repair candidate text.
+  const validDiagnostics = extraction.diagnostics.filter(d => Diagnostic.safeParse(d).success);
+  if (validDiagnostics.length !== extraction.diagnostics.length) {
+    extraction = { ...extraction, diagnostics: [...validDiagnostics, {
+      code: "diagnostic_validation_failed", sourceEventId: null, sourceUrl: null,
+      detail: "Invalid optional diagnostics omitted; evidence validated independently",
+    }] };
+  }
   try {
     return buildEvidenceSidecar(extraction, finalEvents, conflicts, mappings);
   } catch {
     // Invalid article data must not discard independently valid WuWa E1 entries.
     if (extraction.notices?.length || extraction.articleAttributions?.length) {
-      const sources = new Map((extraction.notices ?? []).map(n => [n.sourceId, n.sourceUrl]));
+      const sources = new Map((extraction.notices ?? []).map(n => [n?.sourceId, n?.sourceUrl]));
       const failure = { code: "article_assembly_failed", sourceEventId: null,
         detail: "Optional article validation failed; article inventory and associations omitted" };
+      // Corrupt article reference fields must not poison recovery diagnostics
+      // and thereby discard an otherwise valid independent E1 lane.
+      const failures = sources.size ? [...sources].map(([sourceId, sourceUrl]) => {
+        const full = Diagnostic.safeParse({ ...failure, sourceId, sourceUrl });
+        if (full.success) return full.data;
+        return Diagnostic.parse({ ...failure, sourceUrl: null,
+          ...(Diagnostic.shape.sourceId.safeParse(sourceId).success ? { sourceId } : {}),
+        });
+      }) : [{ ...failure, sourceUrl: null }];
       try {
         return buildEvidenceSidecar({ ...extraction, notices: [], articleAttributions: [],
-          diagnostics: [...extraction.diagnostics, ...(sources.size ? [...sources].map(([sourceId, sourceUrl]) => ({
-            ...failure, sourceId, sourceUrl,
-          })) : [{ ...failure, sourceUrl: null }])] }, finalEvents, conflicts, mappings);
-      } catch { /* The independent E1 lane also failed; omit all evidence below. */ }
+          diagnostics: [...extraction.diagnostics.filter(d => Diagnostic.safeParse(d).success), ...failures] }, finalEvents, conflicts, mappings);
+      } catch { /* Try recovering the independent article lane below. */ }
+    }
+    // Conversely, invalid E1 candidates cannot discard a valid article lane.
+    // No candidates from the failed lane become eligible excerpts.
+    if (extraction.notices?.length || extraction.articleAttributions?.length) {
+      try {
+        return buildEvidenceSidecar({ ...extraction, candidates: [],
+          diagnostics: [...extraction.diagnostics, {
+            code: "event_evidence_assembly_failed", sourceEventId: null, sourceUrl: null,
+            detail: "Optional event evidence validation failed; event-local evidence omitted",
+          }],
+        }, finalEvents, conflicts);
+      } catch { /* Neither lane could be recovered independently. */ }
     }
     return EvidenceSidecar.parse({
       schemaVersion: 1,

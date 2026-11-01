@@ -1,3 +1,42 @@
+## C1a.0 — XML FIELD VERIFIER CORRECTED, AWAITING FOCUSED RE-REVIEW (2026-11-01)
+
+[Second independent review](https://github.com/maxvfk/game-calendar/pull/159#issuecomment-6558658130)
+found remaining CDATA field spoofing in reviewed head `a12fac3`. Current main was
+re-fetched as `b8ea78d165e37962d70c967ad3b83fe7cc156dce`; merge `aa30d77`
+preserves its newer snapshot/metadata generation in the existing PR159 branch.
+Correction `d74d102563cb4ff530df4e640c6e524ed74ac7ad` replaces the regex-based
+verification with independent XML-aware direct-child field checks. Pinned
+`saxes@6.0.0` distinguishes markup, CDATA, comments, nesting and quoted attributes;
+original HTML CDATA is retained by source offsets. The canonical parser and
+previous P2 diagnostic-isolation code are unchanged. Prior comment-spoofing and
+duplicate semantics remain covered; availability is not proof of coverage.
+
+[Contract, dependency rationale, regressions and replay](evidence/wuwa-notice-inventory-c1a0.md) /
+[fresh current-main manifests](evidence/wuwa-notice-inventory-c1a0-2026-11-01.json).
+The first 20 XML regressions reproduced **12 pass / 8 fail** before correction.
+Final XML suite: **21 pass / 0 fail**; combined WuWa/E1/C0: **117 pass / 0 fail**.
+Full project suite: **1500 pass / 3 existing optional age skips / 0 fail**
+(1503 tests, 92 files). Frozen install, typecheck, full build and offline
+feed/report checks pass. Task-local cache/baseline files were moved outside Bun
+project test discovery; no test exclusions or global configuration changes.
+
+Fresh identical-input fixed-clock full builds against b8ea78d match all 10
+recursive public files, 292 final events, 153 reviewed winners, existing NTE
+conflict, Timeline inputs, eight E1 entries/hashes and all pre-existing C0 arrays
+and diagnostics. All 107 baseline lock entries are unchanged; only the documented
+saxes/xmlchars dependencies are added. The new public manifest is
+`86f70a6e6de6908529487224eeee6984f28f76d40b5b1f7a9aea29f1c8894328`;
+the prior `9aabb88` manifest is historical. WuWa measurement: 20 notices, 18
+zero-output, 11 emitted/attributed/final associations, no inventory diagnostics.
+
+**Next concrete step:** verify corrected exact-head CI including PostgreSQL17
+and obtain independent focused re-review of the XML verifier and new-input parity.
+Final head and hosted CI are recorded in PR159; earlier green runs do not validate
+this correction. No merge or completed re-review is claimed. STOP after C1a.0;
+C1a.1, C1b and C2–C5 are not started.
+
+---
+
 ## Timeline labels — DeepSeek P1–P4 production rollout CLOSED (2026-11-01)
 
 **Production verification completed** following merged [PR #155](https://github.com/maxvfk/game-calendar/pull/155)

@@ -7,12 +7,14 @@ import type { ParseContext } from "../ingest/adapters/types.ts";
 import { discoverKqmGinArticles } from "../ingest/parsers/kqm-ginews.ts";
 import { discoverKqmHsrArticles } from "../ingest/parsers/kqm-hsrnews.ts";
 import { discoverZzzSteamPosts } from "../ingest/parsers/zzz-steam-rss.ts";
+import { verifyWuwaNoticeFields } from "./wuwa-notice-xml.ts";
+import { discoverWuwaArticles } from "../ingest/parsers/wuwa-kuro-atom.ts";
 import { discoverNteSteamPosts } from "../ingest/parsers/nte-steamnews.ts";
 import type { GachaEvent } from "../shared/schema.ts";
 import { ArticleNotice, Capture, type Extraction, type ArticleAttribution, type Diagnostic } from "./event-evidence.ts";
 
 export const ARTICLE_SOURCE_GAMES = {
-  "genshin-kqm-ginews": "genshin", "hsr-kqm-hsrnews": "hsr",
+  "wuwa-kuro-mirror": "wuwa", "genshin-kqm-ginews": "genshin", "hsr-kqm-hsrnews": "hsr",
   "zzz-steam-events-official": "zzz", "nte-steamnews-official": "nte",
 } as const;
 export function isArticleSource(sourceId: string): sourceId is keyof typeof ARTICLE_SOURCE_GAMES {
@@ -46,7 +48,10 @@ function checkKqmInventory(raw: string, items: Array<{ id: string; heading: stri
   }
 }
 
-/** All expected sources stay visible even when no document/evidence survived. */
+/** All expected sources stay visible even when no document/evidence survived.
+ * Availability means usable inventory, including diagnosed duplicate occurrences;
+ * it proves neither unique identities nor complete source/event coverage.
+ */
 export function articleSourceReport(sidecar: { notices: ArticleNotice[]; articleAttributions: ArticleAttribution[]; diagnostics: Diagnostic[] }) {
   return Object.keys(ARTICLE_SOURCE_GAMES).sort().map(sourceId => {
     const notices = sidecar.notices.filter(n => n.sourceId === sourceId);
@@ -71,7 +76,18 @@ export function extractArticleEvidence(raw: string, ctx: ParseContext, capture: 
   if (!isArticleSource(ctx.sourceId) || ARTICLE_SOURCE_GAMES[ctx.sourceId] !== ctx.game) throw new Error("Unsupported article source context");
   capture = Capture.parse(capture);
   let items: Array<{ noticeId: string; sourceUrl: string; title: string; content: string; format: ArticleNotice["format"] }>;
-  if (ctx.sourceId === "genshin-kqm-ginews" || ctx.sourceId === "hsr-kqm-hsrnews") {
+  if (ctx.sourceId === "wuwa-kuro-mirror") {
+    // Discovery may ignore unsupported tags for canonical compatibility;
+    // the structural guard refuses those omissions in the optional inventory.
+    let articles: ReturnType<typeof discoverWuwaArticles>;
+    try {
+      articles = discoverWuwaArticles(raw);
+      verifyWuwaNoticeFields(raw, articles);
+    }
+    catch { throw new InventoryError("article_inventory_incomplete"); }
+    items = articles.map(a => ({ noticeId: a.id, sourceUrl: a.sourceUrl,
+      title: a.title, content: a.content, format: "html" }));
+  } else if (ctx.sourceId === "genshin-kqm-ginews" || ctx.sourceId === "hsr-kqm-hsrnews") {
     const gin = ctx.sourceId === "genshin-kqm-ginews";
     const articles = gin ? discoverKqmGinArticles(raw) : discoverKqmHsrArticles(raw);
     checkKqmInventory(raw, articles);

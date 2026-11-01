@@ -7,7 +7,7 @@ import type { ParseContext } from "../src/ingest/adapters/types.ts";
 import { parseKqmHsrNews } from "../src/ingest/parsers/kqm-hsrnews.ts";
 import { parseKqmGinNews } from "../src/ingest/parsers/kqm-ginews.ts";
 import { extractArticleEvidence, safelyExtractArticleEvidence, noticeContentHash, articleSourceReport } from "../src/editorial/article-evidence.ts";
-import { buildEvidenceSidecar, EvidenceSidecar, safelyBuildEvidenceSidecar, type Capture } from "../src/editorial/event-evidence.ts";
+import { buildEvidenceSidecar, EvidenceSidecar, safelyBuildEvidenceSidecar, type Capture, type Extraction } from "../src/editorial/event-evidence.ts";
 import { GachaEvent } from "../src/shared/schema.ts";
 import { mergeEvents } from "../src/ingest/merge.ts";
 
@@ -245,7 +245,7 @@ test("offline builder retains baseline-main public bytes with all four article s
     const reportRun = Bun.spawnSync([process.execPath, join(root, "scripts/event-evidence-report.ts")], { cwd: dir });
     expect(reportRun.exitCode, reportRun.stderr.toString()).toBe(0);
     const failedReport = JSON.parse(reportRun.stdout.toString());
-    expect(failedReport.articleSources).toHaveLength(4);
+    expect(failedReport.articleSources).toHaveLength(5);
     expect(failedReport.articleSources.find((s: { sourceId: string }) => s.sourceId === "genshin-kqm-ginews"))
       .toMatchObject({ available: false, noticeCount: 0, attributedEvents: 0, confirmedFinalAssociations: 0 });
     // No document is distinct from failed extraction; both remain visible.
@@ -254,7 +254,7 @@ test("offline builder retains baseline-main public bytes with all four article s
     expect(unavailableRun.exitCode, unavailableRun.stderr.toString()).toBe(0);
     const unavailable = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
     expect(unavailable.diagnostics.filter(d => d.code === "source_unavailable").every(d => d.sourceId)).toBe(true);
-    expect(articleSourceReport(unavailable)).toHaveLength(4);
+    expect(articleSourceReport(unavailable)).toHaveLength(5);
     expect(articleSourceReport(unavailable).find(s => s.sourceId === "genshin-kqm-ginews"))
       .toMatchObject({ available: false, diagnosticCodes: ["source_unavailable"] });
   } finally { rmSync(dir, { recursive: true, force: true }); }
@@ -302,7 +302,7 @@ for (const i of [2, 3]) test(`${cases[i]![0]}: unexpected empty inventory is exp
   const failed = safelyExtractArticleEvidence(empty, ctx, capture, events);
   expect(codes(failed)).toEqual(["article_extraction_failed", "article_inventory_empty"]);
   const report = articleSourceReport(safelyBuildEvidenceSidecar(failed, await frozenFinals()));
-  expect(report).toHaveLength(4);
+  expect(report).toHaveLength(5);
   expect(report.find(s => s.sourceId === ctx.sourceId)).toMatchObject({ available: false, noticeCount: 0, attributedEvents: 0, confirmedFinalAssociations: 0 });
 });
 
@@ -406,4 +406,32 @@ test("executed pre-#119 HSR results differ from synthetic outputs; pre-#130 isol
   expect(gin.events).toEqual([]);
   expect(gin.error).toBe("Error: KQM GINews no dated calendar notices");
   expect(new Bun.CryptoHasher("sha256").update(await Bun.file(gin.file).text()).digest("hex")).toBe(gin.inputSha256);
+});
+
+
+test("review P2: diagnostic refusal preserves all four original C0 inventories with valid or invalid E1", async () => {
+  const { extractWuwaEvidence } = await import("../src/editorial/wuwa-evidence.ts");
+  const e1 = extractWuwaEvidence(await Bun.file("test/fixtures/wuwa/evidence-2026-10-21.xml").text(),
+    { now, game: "wuwa", sourceId: "wuwa-kuro-mirror", sourceUrl: "https://example.com/mirror" }, capture);
+  const ex: Extraction = { candidates: e1.candidates, diagnostics: e1.diagnostics, notices: [], articleAttributions: [] };
+  for (let i = 0; i < cases.length; i++) {
+    const { ctx, raw, events } = await input(i);
+    const articles = extractArticleEvidence(raw, ctx, capture, events);
+    ex.notices!.push(...articles.notices!);
+    ex.articleAttributions!.push(...articles.articleAttributions!);
+    ex.diagnostics.push(...articles.diagnostics);
+  }
+  const finals = [...e1.candidates.map(r => r.event), ...await frozenFinals()];
+  const original = buildEvidenceSidecar(ex, finals);
+  for (const invalidCandidate of [false, true]) {
+    const input = structuredClone(ex);
+    input.diagnostics.push({ code: "no_useful_context", sourceEventId: null, sourceUrl: null, detail: "" });
+    if (invalidCandidate) input.candidates[0]!.source.excerpts[0]!.text = "<unsafe>";
+    const side = safelyBuildEvidenceSidecar(input, finals);
+    expect(side.entries).toEqual(invalidCandidate ? [] : original.entries);
+    expect(side.notices).toEqual(original.notices);
+    expect(side.articleAttributions).toEqual(original.articleAttributions);
+    expect(articleSourceReport(side)).toEqual(articleSourceReport(original));
+    expect(codes(side)).toContain("diagnostic_validation_failed");
+  }
 });

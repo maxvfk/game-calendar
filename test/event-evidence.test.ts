@@ -229,6 +229,9 @@ test("offline builder uses same fixture/snapshot, creates only internal sidecar;
     const baselineHashes = ["5a4a572f059346bdbd1d73c4c2c9bae199b00c079fea015dde2922f2fbedcd0f", "5666c8df89862cfc76373aa45ab35fd9ca995e6d31c8bbcbf4ba89c3bb1b8590", "7b98f1cb1a2e61382dcbae60fc76890cced2a28bb2e9c0abc83b8001d1c2ee4c"];
     expect(before.map(bytes => new Bun.CryptoHasher("sha256").update(bytes).digest("hex"))).toEqual(baselineHashes);
     let side = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
+    expect(side.notices.map(n => n.noticeId)).toEqual(["5668", "5571"]);
+    expect(side.articleAttributions).toHaveLength(5);
+    expect(side.notices.every(n => n.capturedAt === null && n.fixtureCaptureDay === "2026-10-21")).toBe(true);
     expect(side.entries).toHaveLength(5); expect(side.entries[0]!.sources[0]!.capturedAt).toBeNull();
     expect(side.entries[0]!.sources[0]!.fixtureCaptureDay).toBe("2026-10-21");
     // Changing source context, but no canonical fields, must change only evidence.
@@ -258,9 +261,24 @@ test("offline builder uses same fixture/snapshot, creates only internal sidecar;
     expect(run.exitCode, run.stderr.toString()).toBe(0);
     expect(await Promise.all(publicPaths.map(p => Bun.file(join(dir, "public/data", p)).text()))).toEqual(snapBefore);
     const failed = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
+    expect(failed.notices.map(n => n.noticeId)).toEqual(["5668", "5571", "91919"]);
+    expect(failed.articleAttributions).toHaveLength(5);
+    expect(failed.articleAttributions.every(a => a.noticeId !== null)).toBe(true);
     expect(failed.entries).toEqual([]);
     expect(codes(failed)).toContain("source_extraction_failed");
     expect(run.stderr.toString()).toContain("optional WuWa evidence extraction failed");
+    // Legacy canonical discovery accepts a missing feed close. Inventory must
+    // refuse incomplete structure without discarding independently valid E1.
+    await Bun.write(join(dir, "snapshots/wuwa-kuro-mirror.xml"), raw.replace("</feed>", ""));
+    run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);
+    expect(await Promise.all(publicPaths.map(p => Bun.file(join(dir, "public/data", p)).text()))).toEqual(snapBefore);
+    const incomplete = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
+    expect(incomplete.entries).toEqual(side.entries);
+    expect(incomplete.unattached).toEqual(side.unattached);
+    expect(codes(incomplete)).toContain("article_inventory_incomplete");
+    expect(incomplete.notices).toEqual([]);
+    expect(incomplete.articleAttributions).toHaveLength(5);
+    expect(incomplete.articleAttributions.every(a => a.noticeId === null)).toBe(true);
     // No cached/fixture input: sidecar is overwritten with absence, not stale eligible evidence.
     rmSync(join(dir, "fixtures/wuwa"), { recursive: true }); rmSync(join(dir, "snapshots"), { recursive: true });
     run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);
