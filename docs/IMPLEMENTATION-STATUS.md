@@ -1,3 +1,47 @@
+## C1a.1 — FINAL P1-B TOKEN BOUNDARY CORRECTED, CLOSURE REVIEW PENDING (2026-11-03)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+[Focused triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6589469457)
+reviewed `27e3afe05c8763546995cf9f02caa465d88d3aa9`; P1-A/P1-C/P2-D are independently
+confirmed fixed and unchanged. CURRENT main remains
+`dba863d373a3e50c9dce32fc45e2dda178adc460`, already integrated; no refresh or merge.
+
+[Counterexamples, local correction and test evidence](evidence/notice-coverage-c1a1-token-boundary-2026-11-03.md):
+the five `<5 >5 ~5 –5 —5` continuations formerly produced a trusted exact prefix
+and false processed/complete/no-attention. Now full malformed quotes remain
+unresolved, with null instants and partial/uncertain/required attention. The local
+scan no longer stops solely on punctuation; dated range context distinguishes
+real separators. Positive sentence punctuation, explicit UTC/ISO offsets,
+whitespace prose, ranges and three-format projection remain tested. No changes
+to markup/code contexts, BBCode/fragment policy, matching/status engine or guard.
+
+Reviewed-reader reproduction: **49 pass / 6 fail** (five counterexamples plus
+an 18-case letter/digit boundary matrix). After correction: **104 focused tests /
+1527 assertions pass**. Required frozen install, typecheck, full build, feed build
+and report pass. Full suite: **1604 pass / 3 existing optional age skips / 0 fail**
+(1607 tests, 97 files). All reader/coverage quote mappings retain raw UTF-16 slices.
+[Fresh parity](evidence/notice-coverage-c1a1-token-boundary-parity-2026-11-03.json)
+verifies all 10 public files and complete E1/C0/C1a.0 sidecar against current main,
+including inventories, attributions, diagnostics/refusals and eight E1 hashes;
+292 events / 153 reviewed winners / Timeline/conflicts match. All 113 baseline
+identities and exact bytes remain intact; no public/canonical/reviewed/workflow
+or source snapshot change.
+
+[Identical-input rolling delta](evidence/notice-coverage-c1a1-token-boundary-report-2026-11-03.json):
+two historical NTE en-dash clock ranges are retained whole with both times visible,
+so spans 776 → 774 and unmatched 761 → 759. No offset/end is inferred; instants,
+matching and all other notice fields stay unchanged. Report remains 122 notices,
+18 partial / 64 unprocessed / 40 unclassified, evaluation 120 uncertain / 2 complete.
+Repeated new output matches; hash changes 90c1cc97… → 20fbc663… for this documented
+reader correction, not changed inputs. Final pushed head and exact-head CI results
+including PG17/mandatory encrypted recovery are recorded in PR161.
+
+**Next concrete step:** one focused independent P1-B closure review on the exact
+new head. CI is not review approval. Keep PR161 unmerged; do not start C1b/C2,
+Daily Passes or another milestone.
+
+---
+
 ## C1a.1 — RESIDUAL ASTRA P1 CORRECTED, CLOSURE REVIEW PENDING (2026-11-02)
 
 Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
