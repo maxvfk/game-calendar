@@ -24,6 +24,7 @@ const datePattern = `(?:\\d{4}[-/.]\\d{1,2}[-/.]\\d{1,2}|${monthPattern}[ \\t]+\
 const clockPattern = "(?:(?:[ \\t,T]+)\\d{1,2}:\\d{2}(?::\\d{2})?(?:[ \\t]*[AP]M)?)?";
 const zonePattern = "(?:[ \\t]*(?:\\(?[ \\t]*UTC(?:[ \\t]*[+−-]\\d{1,2}(?::?\\d{2})?)?[ \\t]*\\)?|Z|[+−-]\\d{2}:?\\d{2}|\\((?:server(?: time)?|global|[A-Z]{2,5})\\)))?";
 const separator = /^[ \t*_,]*(?:[-–—~]|to|until)[ \t*_,]*$/i;
+const rangeBoundary = new RegExp(`^(?:[-–—~]|to|until)[ \\t*_,]*${datePattern}${clockPattern}${zonePattern}(?![\\p{L}\\d/])`, "iu");
 
 /** Mask markup, attributes, URL destinations and active content; never execute it.
  * Keep a source-offset map through one-pass entity decoding. Unknown entities
@@ -268,10 +269,13 @@ export function readDateSpans(raw: string, format: "markdown" | "html" | "bbcode
     if (parsed.value.precision !== "day" && !/[ \t]$/.test(match[0])) {
       // Sentence punctuation may terminate a token, but punctuation followed
       // immediately by more token content (e.g. UTC+8:30,5) is not a valid zone
-      // prefix. Inspect the entire adjacent non-whitespace chunk, preserving
-      // structural range separators and trimming only trailing punctuation.
+      // prefix. Inspect the entire adjacent non-whitespace chunk. A range
+      // separator delimits a token only with a recognized dated boundary after
+      // it; bare punctuation such as '<5' or '~5' cannot certify a prefix.
       let tokenEnd = visibleEnd;
-      while (tokenEnd < text.length && !/[\s<>~–—]/u.test(text[tokenEnd]!)) tokenEnd++;
+      if (!rangeBoundary.test(text.slice(visibleEnd))) {
+        while (tokenEnd < text.length && !/\s/u.test(text[tokenEnd]!)) tokenEnd++;
+      }
       const continuation = text.slice(visibleEnd, tokenEnd).replace(/[,;!?.()[\]{}"']+$/u, "");
       if (continuation) {
         visibleEnd += continuation.length;

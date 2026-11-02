@@ -175,3 +175,55 @@ test("residual P1-C code positives, real link destinations and URL metadata stay
     expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
   }
 });
+
+// Final P1-B: contextual boundaries, not punctuation stop characters.
+for (const suffix of ["<5", ">5", "~5", "–5", "—5"]) test(`final P1-B reported ${suffix} cannot certify a represented end`, () => {
+  const raw = `🧭 Main: ${period}\nEnd: 2026-11-02 12:29 UTC+8:30${suffix}`;
+  const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+  expect(r.status).not.toBe("processed"); expect(r.evaluation).toBe("uncertain"); expect(r.attention.required).toBe(true);
+  const read = readDateSpans(raw); mapped(raw, read.spans);
+  const bad = read.spans.find(s => s.quote.includes("12:29"))!;
+  expect(bad).toBeDefined(); expect(bad.value.instant).toBeNull(); expect(bad.uncertainty.length).toBeGreaterThan(0);
+  expect(bad.quote).toContain(suffix);
+});
+test("final P1-B boundary matrix rejects punctuation followed by digits or letters", () => {
+  for (const punctuation of ["<", ">", "~", "–", "—", "|", ":", "/", "?"]) for (const following of ["5", "x"]) {
+    // Entity-decoded '<x' is visible text, rather than a raw malformed HTML tag.
+    const suffix = (punctuation === "<" ? "&lt;" : punctuation) + following;
+    const raw = `🧭 Main: ${period}\nEnd: 2026-11-02 12:29 UTC+8:30${suffix}`;
+    const read = readDateSpans(raw); mapped(raw, read.spans);
+    const bad = read.spans.find(s => s.quote.includes("12:29"))!;
+    expect(bad).toBeDefined(); expect(bad.value.instant).toBeNull(); expect(bad.uncertainty.length).toBeGreaterThan(0);
+    const r = gap(raw, "markdown"); expect(r.unmatchedSpans.some(s => s.ref === bad.ref)).toBe(true);
+  }
+});
+test("final P1-B terminal punctuation and whitespace delimit legitimate UTC/ISO tokens", () => {
+  for (const end of ["2026-11-02 12:29 UTC+8:30.", "2026-11-02 12:29 UTC+8:30, ", "2026-11-02 12:29 UTC+8:30; Next", "2026-11-02 12:29 UTC+8:30!", "2026-11-02 12:29 (UTC+8:30)", "2026-11-02 12:29 UTC+8:30 5 rewards", "2026-11-02T12:29+08:30."]) {
+    const raw = `🧭 Main: ${period}\nEnd: ${end}`;
+    const read = readDateSpans(raw); mapped(raw, read.spans);
+    expect(read.spans.at(-1)!.value.instant).toBe("2026-11-02T03:59:00.000Z");
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  }
+});
+test("final P1-B genuine dated ranges stay exact through all source projections", () => {
+  for (const separator of ["~", "–", "—", " - ", " to ", " until "]) for (const format of ["markdown", "html", "bbcode"] as const) {
+    const start = "2026-10-19 18:30 UTC+8:30", end = "2026-11-02 12:29 UTC+8:30";
+    const raw = format === "html" ? `🧭 <b>${start}</b>${separator}<i>${end}</i>` :
+      format === "bbcode" ? `🧭 [b]${start}[/b]${separator}[i]${end}[/i]` : `🧭 **${start}**${separator}**${end}**`;
+    const read = readDateSpans(raw, format); mapped(raw, read.spans);
+    expect(read.spans.map(s => s.value.instant)).toEqual(["2026-10-19T10:00:00.000Z", "2026-11-02T03:59:00.000Z"]);
+    expect(read.spans.map(s => s.role)).toEqual(["start", "end"]);
+    const r = coverage(raw, format); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  }
+});
+test("final P1-B real markup boundaries remain distinct from unsupported literal punctuation", () => {
+  for (const [format, end] of [["html", "<b>2026-11-02 12:29 UTC+8:30</b><br>Next"], ["bbcode", "[b]2026-11-02 12:29 UTC+8:30[/b][br]Next"], ["markdown", "**2026-11-02 12:29 UTC+8:30**."]] as const) {
+    const raw = `🧭 Main: ${period}\n${end}`;
+    const read = readDateSpans(raw, format); mapped(raw, read.spans);
+    expect(read.spans.at(-1)!.value.instant).toBe("2026-11-02T03:59:00.000Z");
+    const r = coverage(raw, format); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  }
+});
