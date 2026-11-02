@@ -1,3 +1,39 @@
+## C1a.1 — B1 PORTABLE OUTPUT GUARD CORRECTED, READY FOR FINAL ASTRA (2026-11-02)
+
+[PR #161](https://github.com/maxvfk/game-calendar/pull/161) remains unmerged on
+`coverage/c1a1-deterministic`, based on CURRENT main
+`51bcb01dd50539bcf9351b6a8088ced89ad16028`. Reviewed predecessor:
+`288f7e9ac40b2d18546d2de131e4e51a5edb898e`;
+[DeepSeek B1 triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6575642896).
+Only B1 was changed: the two CLI write modes share one resolved-output guard
+that checks both separator conventions and compares `public` components without
+case sensitivity. Valid internal destinations and the existing `open(...,"wx")`
+behavior are unchanged. No coverage-engine or unrelated quality change.
+
+Both mode regressions failed before correction and now pass on Linux with
+simulated Windows syntax: nine prohibited forms per mode (relative, drive,
+UNC, mixed separators, POSIX absolute and capitalization) reject with the guard
+error and no output file. Native internal work/publicity paths succeed; repeated
+writes fail and leave bytes unchanged. Native Windows execution was not performed.
+
+Required local gates pass: frozen install, typecheck, **3 CLI regressions / 49
+focused coverage tests**, full **1549 pass / 3 existing optional age skips /
+0 fail** (1552 tests, 96 files), full builds, separate feed build and repeated
+coverage report. Fixed-clock identical-input comparison against starting main:
+all **10 public files**, 292 events / 153 reviewed winners / existing conflict,
+Timeline and the **complete E1/C0/C1a.0 sidecar** are identical, including eight
+E1 entries/hashes, inventories, attributions, diagnostics and refusals. All 113
+baseline identities and exact file bytes remain unchanged. Report bytes and
+106-notice status/evaluation distribution are unchanged from the reviewed head.
+
+Final pushed head and its exact-head hosted CI including PostgreSQL17 and
+mandatory encrypted recovery are recorded in PR161. **Next concrete step:**
+independent final Astra review on that exact new head, including B1 and the
+remaining nonblocking notes in the triage. No matching change or broad Sonnet
+cycle is introduced. Do not merge or start C1b/C2, Daily Passes or other work.
+
+---
+
 ## C1a.1 — POST-CI-RECOVERY INTEGRATED, READY FOR FOCUSED REVIEW (2026-11-02)
 
 [PR #161](https://github.com/maxvfk/game-calendar/pull/161) remains unmerged on
