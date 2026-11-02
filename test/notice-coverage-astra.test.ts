@@ -92,3 +92,86 @@ test("P1-A large inline markup cannot bypass quote limits or claim complete cove
   expect(read.diagnostics).toContain("quote_limit"); expect(read.complete).toBe(false);
   expect(gap(raw, "html").evaluation).toBe("incomplete");
 });
+
+// Residual DeepSeek counterexamples: authored independently of rolling snapshots.
+for (const tag of ["color=red", "font=Arial", "size=12"]) test(`residual P1-A BBCode ${tag} cannot hide a deadline`, () => {
+  const name = tag.split("=")[0];
+  const raw = `🧭 Main: ${period}\nQuest: [${tag}]2026[/${name}]-10-29`;
+  const read = readDateSpans(raw, "bbcode"); mapped(raw, read.spans);
+  expect(read.spans.some(s => s.value.date === "2026-10-29") || read.diagnostics.includes("unsupported_markup")).toBe(true);
+  gap(raw, "bbcode");
+});
+test("residual P1-A supported BBCode styles and ordinary bracketed prose remain discriminative", () => {
+  for (const tag of ["color=red", "font=Arial", "size=12"]) {
+    const name = tag.split("=")[0];
+    const raw = `🧭 Main: [${tag}]2026[/${name}]-10-19T10:00Z ~ 2026-11-02T03:59Z\n[color options] [font Arial] [size 12] [color]`;
+    const read = readDateSpans(raw, "bbcode"); mapped(raw, read.spans); expect(read.diagnostics).toEqual([]);
+    const r = coverage(raw, "bbcode"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  }
+  for (const tag of ["[color=]2026[/color]-10-29", "[size=12]2026-10-29"]) {
+    const raw = `🧭 Main: ${period}\n${tag}`, read = readDateSpans(raw, "bbcode"); mapped(raw, read.spans);
+    expect(read.diagnostics.some(d => d === "unsupported_markup" || d === "malformed_markup")).toBe(true);
+    gap(raw, "bbcode");
+  }
+});
+for (const [format, fragments] of [
+  ["html", "<p>2026</p><p>-10-29</p>"], ["bbcode", "[p]2026[/p][p]-10-29[/p]"],
+  ["markdown", "2026\n\n-10-29"], ["html", "<div>2026-10</div><div>-29</div>"],
+  ["markdown", "October\n\n29, 2026"],
+] as const) test(`residual P1-A ${format} split fragments are uncertain without an invented date: ${fragments}`, () => {
+  const raw = `🧭 Main: ${period}\nQuest: ${fragments}`;
+  const read = readDateSpans(raw, format); mapped(raw, read.spans);
+  expect(read.diagnostics).toContain("split_date_fragments");
+  expect(read.spans.some(s => s.value.date === "2026-10-29")).toBe(false);
+  gap(raw, format);
+});
+test("residual P1-A unrelated block years/numbers, intervening prose and distant fragments stay complete", () => {
+  for (const [format, suffix] of [
+    ["html", "<p>2026</p><p>29 rewards</p>"], ["bbcode", "[p]2026[/p][p]10 points[/p]"],
+    ["markdown", "2026\n\n10\n\n29"], ["markdown", "2026\nQuest details\n-10-29"],
+    ["markdown", `2026${"\n".repeat(40)}-10-29`],
+  ] as const) {
+    const raw = `🧭 Main: ${period}\n${suffix}`, read = readDateSpans(raw, format); mapped(raw, read.spans);
+    expect(read.diagnostics).toEqual([]);
+    const r = coverage(raw, format); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  }
+});
+for (const suffix of [",5", ";5", "!5", ")5", ",5.", ");5"]) test(`residual P1-B punctuation continuation ${suffix} cannot certify an exact prefix`, () => {
+  const bad = `🧭 Deadline: 2026-11-02 12:29 UTC+8:30${suffix}`;
+  const read = readDateSpans(bad); mapped(bad, read.spans);
+  const date = read.spans.find(s => s.kind === "date")!;
+  expect(date).toBeDefined(); expect(date.value.instant).toBeNull(); expect(date.uncertainty.length).toBeGreaterThan(0);
+  gap(`Main: ${period}\n${bad}`, "markdown");
+});
+test("residual P1-B legitimate timezone punctuation and whitespace remain exact", () => {
+  for (const end of ["UTC+8:30.", "UTC+8:30, ", "UTC+8:30; Next", "UTC+8:30!", "(UTC+8:30)", "UTC+8:30, next 5 rewards", "UTC+8:30 5 rewards"]) {
+    const raw = `🧭 Main: ${period}\nEnd: 2026-11-02 12:29 ${end}`;
+    const read = readDateSpans(raw); mapped(raw, read.spans);
+    expect(read.spans.filter(s => s.kind === "date").at(-1)!.value.instant).toBe("2026-11-02T03:59:00.000Z");
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  }
+});
+for (const literal of ["`[Quest](2026-10-29T04:00Z)`", "<code>[Quest](2026-10-29T04:00Z)</code>", "``[Quest](2026-10-29T04:00Z)``"]) test(`residual P1-C code context keeps literal date visible: ${literal}`, () => {
+  const raw = `🧭 Main: ${period}\nQuest: ${literal}`;
+  const read = readDateSpans(raw); mapped(raw, read.spans);
+  expect(read.spans.some(s => s.value.instant === "2026-10-29T04:00:00.000Z")).toBe(true);
+  // Complete evaluation means the date was read, not that coverage is complete.
+  // A visible exact missing deadline must be retained as a partial-coverage gap.
+  const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+  expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(true);
+  const deadline = r.spans.find(s => s.value.instant === "2026-10-29T04:00:00.000Z")!;
+  expect(deadline.disposition).toBe("unmatched"); expect(r.unmatchedSpans.some(s => s.ref === deadline.ref)).toBe(true);
+});
+test("residual P1-C code positives, real link destinations and URL metadata stay distinct", () => {
+  for (const literal of ["`[End](2026-11-02T03:59Z)`", "<code>[End](2026-11-02T03:59Z)</code>"]) {
+    const raw = `🧭 Main: ${period}\n${literal}\n[Quest](2026-10-29T04:00Z)\n[Site](https://example.org/2026-10-29)\n\`https://example.org/2026-10-29\``;
+    const read = readDateSpans(raw); mapped(raw, read.spans);
+    expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02", "2026-11-02"]);
+    expect(read.diagnostics).toEqual([]);
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  }
+});

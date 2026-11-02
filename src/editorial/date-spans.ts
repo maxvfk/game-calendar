@@ -32,6 +32,7 @@ const separator = /^[ \t*_,]*(?:[-–—~]|to|until)[ \t*_,]*$/i;
 function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: (code: string) => void) {
   const chars = raw.split("");
   const removed = new Uint8Array(raw.length);
+  const codeContext = new Uint8Array(raw.length);
   const remove = (start: number, end: number) => { for (let i = start; i < end; i++) removed[i] = 1; };
   const escaped = (index: number) => {
     let slashes = 0; for (let i = index - 1; i >= 0 && raw[i] === "\\"; i--) slashes++;
@@ -41,6 +42,7 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
   const blockHtml = new Set(["p", "div", "br", "hr", "li", "ul", "ol", "table", "thead", "tbody", "tfoot", "tr", "td", "th", "h1", "h2", "h3", "h4", "h5", "h6", "section", "article", "header", "footer", "main", "aside", "figure", "figcaption", "pre", "blockquote", "dl", "dt", "dd", "details", "summary"]);
   const mask = (start: number, end: number) => { for (let i = start; i < end; i++) if (chars[i] !== "\n" && chars[i] !== "\r") chars[i] = " "; };
   const stack: string[] = [];
+  let htmlCodeStart: number | null = null;
   const voidTags = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);
   // Linear tag scanner; quotes inside attributes cannot terminate a tag.
   for (let i = 0; i < raw.length; i++) {
@@ -71,6 +73,12 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
     const element = /^<(\/?)([a-z][a-z0-9-]*)\b/i.exec(tag);
     if (element) {
       const name = element[2]!.toLowerCase();
+      if (format === "markdown" && (name === "code" || name === "pre")) {
+        if (!element[1] && htmlCodeStart === null) htmlCodeStart = i;
+        else if (element[1] && htmlCodeStart !== null) {
+          codeContext.fill(1, htmlCodeStart, end + 1); htmlCodeStart = null;
+        }
+      }
       if (element[1]) {
         if (stack.pop() !== name) diagnose("malformed_markup");
       } else if (!voidTags.has(name) && !/\/\s*>$/.test(tag)) stack.push(name);
@@ -85,38 +93,61 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
     i = end;
   }
   if (stack.length) diagnose("malformed_markup");
+  if (htmlCodeStart !== null) codeContext.fill(1, htmlCodeStart);
   if (format === "bbcode") {
     const tags = /\[(\/?)([a-z][a-z0-9]*)(?:[=\s][^\]\r\n]*)?\]/ig;
     const bbStack: string[] = [];
-    const supported = new Set(["p", "b", "i", "u", "s", "strike", "h1", "h2", "h3", "h4", "h5", "h6", "url", "img", "list", "olist", "quote", "code", "table", "tr", "td", "th", "br", "hr", "spoiler", "previewyoutube", "dynamiclink"]);
+    const supported = new Set(["p", "b", "i", "u", "s", "strike", "color", "font", "size", "h1", "h2", "h3", "h4", "h5", "h6", "url", "img", "list", "olist", "quote", "code", "table", "tr", "td", "th", "br", "hr", "spoiler", "previewyoutube", "dynamiclink"]);
     for (const m of raw.matchAll(tags)) {
       const name = m[2]!.toLowerCase();
       if (escaped(m.index!) || !supported.has(name)) continue;
+      // Parameterized styles need actual tag syntax, not [color options] or
+      // an ordinary standalone [color] label. Attributes are inert metadata.
+      if (["color", "font", "size"].includes(name) && !/^\[(?:\/(?:color|font|size)|(?:color|font|size)=[^\]\r\n]+)\]$/i.test(m[0])) {
+        if (m[0].includes("=")) diagnose("unsupported_markup");
+        continue;
+      }
       // Attributes require '='. Recognized words in bracketed prose are not tags.
       const simple = /^\[\/?[a-z][a-z0-9]*(?:=[^\]\r\n]*)?\]$/i.test(m[0]);
       const attributes = /^\[(?:dynamiclink|img|previewyoutube)(?:\s+(?:href|src|title|id|youtubeid|align|size)=(?:"[^"\]\r\n]*"|'[^'\]\r\n]*'|[^\s\]"']+))+\]$/i.test(m[0]);
       if (!simple && !attributes) continue;
-      if (["b", "i", "u", "s", "strike", "url", "code", "spoiler"].includes(name)) remove(m.index!, m.index! + m[0].length);
+      if (["b", "i", "u", "s", "strike", "color", "font", "size", "url", "code", "spoiler"].includes(name)) remove(m.index!, m.index! + m[0].length);
       else { mask(m.index!, m.index! + m[0].length); chars[m.index!] = "\n"; }
       if (m[1]) { if (bbStack.pop() !== name) diagnose("malformed_markup"); }
       else if (!["br", "hr"].includes(name)) bbStack.push(name);
     }
     if (bbStack.length) diagnose("malformed_markup");
-    const unfinished = /\[(?:\/?(?:p|b|i|u|url|img|h[1-6]|list|quote|table|tr|td|dynamiclink|previewyoutube))(?:=|\s+(?:href|src|title)=|$)[^\]]*$/i.exec(raw);
+    const unfinished = /\[(?:\/?(?:p|b|i|u|color|font|size|url|img|h[1-6]|list|quote|table|tr|td|dynamiclink|previewyoutube))(?:=|\s+(?:href|src|title)=|$)[^\]]*$/i.exec(raw);
     if (unfinished && !escaped(unfinished.index)) diagnose("malformed_markup");
   }
   if (format === "markdown") {
+    // Identify code before Markdown formatting/link matching. Equal backtick
+    // runs delimit literal content; unmatched runs stay explicit uncertainty.
+    // This scan and the disjoint bitmap fills are bounded by inputUnits.
+    let codeStart: number | null = null, ticks = 0;
+    for (let i = 0; i < raw.length; i++) {
+      if (raw[i] !== "`") continue;
+      let end = i + 1; while (raw[end] === "`") end++;
+      if (codeStart === null) {
+        if (!escaped(i)) { codeStart = i; ticks = end - i; }
+      } else if (end - i === ticks) {
+        codeContext.fill(1, codeStart, end);
+        remove(codeStart, codeStart + ticks); remove(i, end); codeStart = null;
+      }
+      i = end - 1;
+    }
+    if (codeStart !== null) { codeContext.fill(1, codeStart); diagnose("unsupported_markup"); }
     // Only paired, single-line inline delimiters are elided. Offsets always
     // refer to raw UTF-16 units; nested styles can share the removal bitmap.
-    const emphasis: Array<[RegExp, number]> = [[/\*\*\*([^*\r\n]+)\*\*\*/g, 3], [/(?<![\p{L}\d])___([^_\r\n]+)___(?![\p{L}\d])/gu, 3], [/\*\*([^*\r\n]+)\*\*/g, 2], [/(?<![\p{L}\d])__([^_\r\n]+)__(?![\p{L}\d])/gu, 2], [/~~([^~\r\n]+)~~/g, 2], [/\*([^*\r\n]+)\*/g, 1], [/(?<![\p{L}\d])_([^_\r\n]+)_(?![\p{L}\d])/gu, 1], [/`([^`\r\n]+)`/g, 1]];
+    const emphasis: Array<[RegExp, number]> = [[/\*\*\*([^*\r\n]+)\*\*\*/g, 3], [/(?<![\p{L}\d])___([^_\r\n]+)___(?![\p{L}\d])/gu, 3], [/\*\*([^*\r\n]+)\*\*/g, 2], [/(?<![\p{L}\d])__([^_\r\n]+)__(?![\p{L}\d])/gu, 2], [/~~([^~\r\n]+)~~/g, 2], [/\*([^*\r\n]+)\*/g, 1], [/(?<![\p{L}\d])_([^_\r\n]+)_(?![\p{L}\d])/gu, 1]];
     for (const [pattern, size] of emphasis) for (const m of raw.matchAll(pattern)) {
-      if (escaped(m.index!) || removed[m.index!] || m[1] !== m[1]!.trim()) continue;
+      if (escaped(m.index!) || codeContext[m.index!] || removed[m.index!] || m[1] !== m[1]!.trim()) continue;
       remove(m.index!, m.index! + size); remove(m.index! + m[0].length - size, m.index! + m[0].length);
     }
     // Spaces in a bare destination are not a Markdown link. Parenthesized
     // prose in HTML/BBCode is never processed by this Markdown-only rule.
     const links = /\[([^\[\]\r\n]{1,2048})\]\((?:<[^<>\r\n]{1,2048}>|[^\s()<>]{1,2048})(?:[ \t]+(?:"[^"\r\n]*"|'[^'\r\n]*'))?\)/g;
-    for (const m of raw.matchAll(links)) if (!escaped(m.index!)) {
+    for (const m of raw.matchAll(links)) if (!escaped(m.index!) && !codeContext[m.index!]) {
       const destination = m.index! + m[1]!.length + 2;
       mask(destination, m.index! + m[0].length);
     }
@@ -214,6 +245,18 @@ export function readDateSpans(raw: string, format: "markdown" | "html" | "bbcode
   const diagnose = (code: string) => { if (!diagnostics.includes(code)) diagnostics.push(code); };
   if (raw.length > DATE_LIMITS.inputUnits) return { readerVersion: DATE_READER_VERSION, spans: [], diagnostics: ["input_limit"], complete: false };
   const { text, positions, ends } = visible(raw, format, diagnose);
+  // Never assemble dates across blocks. Diagnose only adjacent fragments that
+  // form a valid calendar day when the bounded separator gap is removed:
+  // YYYY / -MM-DD, YYYY-MM / -DD, or Month / DD[, YYYY]. Arbitrary years,
+  // separate numbers, intervening prose and distant blocks do not qualify.
+  const blockGap = "[ \\t]{0,32}(?:\\r?\\n[ \\t]{0,32}){1,8}";
+  const fragments = new RegExp(`(?<![\\p{L}\\d/.-])(?:\\d{4}${blockGap}[-/.]\\d{1,2}[-/.]\\d{1,2}|\\d{4}[-/.]\\d{1,2}${blockGap}[-/.]\\d{1,2}|${monthPattern}${blockGap}\\d{1,2}(?:st|nd|rd|th)?(?:,?[ \\t]+\\d{4})?)(?![\\p{L}\\d/.-])`, "giu");
+  for (const m of text.matchAll(fragments)) {
+    const numeric = /^\d/.test(m[0]);
+    const candidate = m[0].replace(/\s+/g, numeric ? "" : " ");
+    const parsed = parseValue(candidate);
+    if (parsed.value.date !== null || !numeric && parsed.uncertainty.includes("missing_year")) diagnose("split_date_fragments");
+  }
   const re = new RegExp(`(?<![\\p{L}\\d/.-])${datePattern}${clockPattern}${zonePattern}(?![\\p{L}\\d/])`, "giu");
   const spans: DateSpan[] = [];
   const locations: Array<{ start: number; end: number }> = [];
@@ -222,14 +265,19 @@ export function readDateSpans(raw: string, format: "markdown" | "html" | "bbcode
     if (spans.length === DATE_LIMITS.spans) { diagnose("span_limit"); break; }
     let visibleEnd = match.index + match[0].length;
     let parsed = parseValue(match[0]);
-    const tail = text.slice(visibleEnd, visibleEnd + 4);
-    const tokenBoundary = /^[\s,;!?<>~–—()[\]{}"']/u;
-    const continuation = tail.length > 0 && !tokenBoundary.test(tail) &&
-      !(tail.startsWith(".") && (tail.length === 1 || tokenBoundary.test(tail.slice(1))));
-    if (parsed.value.precision !== "day" && continuation) {
-      while (visibleEnd < text.length && !tokenBoundary.test(text.slice(visibleEnd, visibleEnd + 2))) visibleEnd++;
-      parsed = parseValue(text.slice(match.index, visibleEnd));
-      re.lastIndex = visibleEnd;
+    if (parsed.value.precision !== "day" && !/[ \t]$/.test(match[0])) {
+      // Sentence punctuation may terminate a token, but punctuation followed
+      // immediately by more token content (e.g. UTC+8:30,5) is not a valid zone
+      // prefix. Inspect the entire adjacent non-whitespace chunk, preserving
+      // structural range separators and trimming only trailing punctuation.
+      let tokenEnd = visibleEnd;
+      while (tokenEnd < text.length && !/[\s<>~–—]/u.test(text[tokenEnd]!)) tokenEnd++;
+      const continuation = text.slice(visibleEnd, tokenEnd).replace(/[,;!?.()[\]{}"']+$/u, "");
+      if (continuation) {
+        visibleEnd += continuation.length;
+        parsed = parseValue(text.slice(match.index, visibleEnd));
+        re.lastIndex = visibleEnd;
+      }
     }
     const start = positions[match.index]!, end = ends[visibleEnd - 1]!;
     if (end - start > DATE_LIMITS.quoteUnits) { diagnose("quote_limit"); continue; }
