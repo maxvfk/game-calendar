@@ -1,3 +1,49 @@
+## C1a.1 — POST-CI-RECOVERY INTEGRATED, READY FOR FOCUSED REVIEW (2026-11-02)
+
+[PR #161](https://github.com/maxvfk/game-calendar/pull/161) remains unmerged on
+`coverage/c1a1-deterministic`. Starting CURRENT main:
+`51bcb01dd50539bcf9351b6a8088ced89ad16028` ([merged PR #162](https://github.com/maxvfk/game-calendar/pull/162));
+previous PR head: `fe7ea18e86ae3ff0851f4b2da4f3c357202f20b4`.
+Normal merge `fa3300d53b143cf3405073d3580c4b4bd2dbda50` required no conflicts or
+manual resolutions. Its content tree is identical to the previous PR head:
+the four accepted historical Genshin recovery files were already byte-identical.
+They are now inherited from main and excluded from PR161's final file diff.
+No fixture duplication, assertion change, implementation redesign or new scope.
+Only this factual status entry was added after the merge; the final diff remains
+21 C1a.1-specific files (engine/state, offline CLI/parity script, tests/fixture,
+report evidence/docs, package command and Git state inclusion rules).
+
+Fresh integrated validation passes: frozen install, typecheck, **47 focused
+coverage tests / 18 historical Genshin-KQM tests**, full **1547 pass / 3 existing
+optional age skips / 0 fail** (1550 tests, 96 files), full builds, separate
+`build:feed` and deterministic `coverage:report`. Fixed clock
+`2026-11-01T00:00:00.000Z`, identical production inputs against starting main:
+**all 10 recursive public files byte-identical**, 292 events / 153 reviewed
+winners / existing NTE conflict and Timeline artifacts stable. The **entire**
+E1/C0/C1a.0 sidecar is equal, including eight E1 entries/hashes, notice inventories,
+article attributions, diagnostics and refusal semantics.
+
+Coverage report bytes are identical to the previous head and repeated runs:
+**106 notices; 18 partial / 50 unprocessed / 38 null status with attention;
+0 processed / ignored. Evaluation: 104 uncertain / 2 complete / 0 incomplete.**
+All **113 original notification-baseline identities and exact file bytes** are
+preserved, including seven absent Genshin notices (21053, 21761, 21884, 21891,
+21895, 21896, 21901). No baseline regeneration/reinitialization was performed.
+F1–F6, insertion/reorder/revision/duplicate safety and historical evidence are
+unchanged. Missing years/offsets, relative/lexical expressions and insufficient
+boundary context retain their documented uncertainty; no dates, offsets or
+regional deadlines were added.
+
+Final pushed head and its exact-head GitHub CI (including PostgreSQL17 concurrency
+and mandatory encrypted recovery) are recorded in PR161. **Next concrete step:**
+independent Sonnet focused re-review of F1–F6 on that **final integrated head**
+against main 51bcb01, not only the earlier fe7ea18. After findings are resolved,
+independent Astra review follows a stabilized head. CI is validation, not review.
+Leave merge to the coordinator. C1b/C2, Daily Passes and other milestones remain
+unstarted; no source refresh/recovery, Timeline labels or Account Sync change.
+
+---
+
 ## C1a.1 — F1–F6 CORRECTED, AWAITING FOCUSED SONNET RE-REVIEW (2026-11-02)
 
 [PR #161](https://github.com/maxvfk/game-calendar/pull/161) remains in existing
