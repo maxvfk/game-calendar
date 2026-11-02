@@ -1190,60 +1190,6 @@ Fixes an issue whereby the icon for the weapon "Prospector's Drill" was incorrec
 
 -----
 
-# [Visit the Starlit Gala Web Event to Unlock Your Wonderland Year in Review Report!](archive/21908.md)
-## Starlit Gala: Genshin Impact Miliastra Wonderland Web Event Update!
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/15/17ce4718f54a3a21719e7d07731a1b21_1092535759659879610_transformed.jpg)
-
-Dear Traveler, more content is now available in the Starlit Gala web event. Unlock your Wonderland Year in Review Report and claim more rewards!
-
-Celebrate the Starlit Gala together and make your own memories!
-
-[>> Click to Take Part in Event <<](https://act.hoyoverse.com/ys/event/e20261001ugc-ali0ea/index.html?game_biz=hk4e_global&sign_type=2&auth_appid=e20261001ugcanniversary&authkey_ver=1&utm_source=ingame&utm_medium=notice)
-
-〓Event Duration〓
-
-Start Time:
-
-America Server: October 21, 2026 (UTC+8)
-
-Asia & TW, HK, MO & Europe Servers: October 22, 2026 (UTC+8)
-
-End Time:
-
-November 3, 2026 04:00 (UTC+8)
-
-※ Rewards cannot be claimed after the event ends. Please claim them in time.
-
-〓Eligibility〓
-
-Travelers who have reached Adventure Rank 1 or above can participate in this event.
-
-※ The data for the Wonderland Year in Review Report of the "Starlit Gala" event will be collected between the Version Luna II update and October 18, 2026, 00:00 (UTC+8) (there may be a margin of error of about 30 minutes).
-
-〓Event Description〓
-
-During the event, Travelers can click to view their Wonderland Year in Review Report and look back on their exclusive memories in Miliastra Wonderland~
-
-Once you have finished viewing the full Wonderland Year in Review Report, your Wonderland Report Summary page will be generated, and you can share it freely!
-
-〓Event Rewards〓
-
-View the entire Wonderland Year in Review Report and share it to claim Geode of Replication ×100 and the Facial Makeup "Delicate Heart."
-
-Complete more event tasks to claim Geodes of Replication, the Manekin Action "V for Victory," and Mora ×20,000.
-
-〓Event Notes〓
-
-1. Please log in to the event using your HoYoverse Account and select your corresponding character in Genshin Impact to take part. This will ensure that your rewards can be sent and claimed correctly.
-
-2. After the event ends, you will no longer be able to take part and claim the rewards, so remember to take part in time.
-
-3. The in-game rewards will be distributed via in-game mail. The mail will expire after 30 days, so don't forget to claim the rewards in time.
-
-4. This web event is provided purely for entertainment. The content of the event does not represent any actual story or settings in the game. It is not indicative of any related gameplay features in Genshin Impact.
-
------
-
 # [Beware of Phishing Websites: Keep Your Account Secure](archive/22008.md)
 ## Beware of Phishing Websites: Keep Your Account Secure
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/29/a05b77dc19895db836ffa20ada9cc006_4235804805962751199_transformed.png)
@@ -1398,30 +1344,6 @@ Permanent
 
 -----
 
-# [Version Satisfaction Survey Now Open](archive/22005.md)
-## Version Satisfaction Survey
-![Banner](https://sdk.hoyoverse.com/upload/ann/2022/10/24/cfc21128e6d6e39a4e7e011ae5f14779_6352103327130460565.jpg)
-
-Dear Traveler,
-
-Our developers have prepared a survey to help us bring you the best-possible Genshin Impact experience. Please complete the survey to win a reward~
-
-〓Survey Duration〓
-
-2026/10/30 10:00:00 (global) - 2026/11/02 23:59:59 (global)
-
-〓Survey Address〓
-
-[Click here to fill out the survey](https://webstatic.hoyoverse.com/common/event/survey-user-v2/index.html?auth_appid=survey_CNnui-JEtB-seXZlJUP2c9jilD8EU4RRrLIDn7a24uepabS&game_biz=hk4e_global&surveyId=41395&format=1&sign_type=2&authkey_ver=1)
-
-Travelers can also open the link via Paimon Menu > Mail > Version Satisfaction Survey > Survey Link to access the survey or via Paimon Menu > Survey > Select "Version Satisfaction Survey" to fill out the survey. After completing filling out the survey through any of the steps, you will get a prize, and you don't need to fill it in again~
-
-Answers cannot be edited after submitting the survey, so please be sure to fill it out carefully.
-
-We thank all Travelers for your invaluable feedback!
-
------
-
 # [Event Wish "La Chanson Cerise" - Boosted Drop Rate for "Tasteful Excellence" Escoffier (Cryo)!](archive/21889.md)
 ## Event Wish "La Chanson Cerise"
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/e77eb5aab52127e55989bb8162d671d8_5676769242945454268_transformed.jpg)
@@ -1544,34 +1466,6 @@ After awakening your Miliastra Wonderland Manekin
 
 -----
 
-# [Starlit Gala](archive/21897.md)
-## Starlit Gala
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/17/a0a4a0cff37b7e26fe0e4faf3c009df9_6381299032088306271_transformed.jpg)
-
-〓Event Duration〓
-
-After Version 7.1 Update – <t class="t_gl" contenteditable="false">2026/11/03 04:00</t>
-
-〓Event Rewards〓
-
-Headwear "Unusual Hilichurl Mask," "Cryo Slime Hat," Primogems, Geodes of Replication, Prismatic Crystals, Actions, Expressions, and more.
-
-〓Event Details〓
-
-● During the Starlit Gala event, Travelers can claim the Cosmetic gift "Unusual Hilichurl Mask," visit the Miliastra Shop to check out related content, and participate in Amongst the Thousand Stars: Wonderland Creator Contest, Starlit Gala: Wonderland Selects, and the Starlit Gala web event.
-
-● During the creation and submission period for Amongst the Thousand Stars: Wonderland Creator Contest (After the Version 7.1 update – <t class="t_gl" contenteditable="false">2026/11/02 11:59</t>), check the option to enter Amongst the Thousand Stars: Wonderland Creator Contest when first publishing a Wonderland for a chance to obtain Creation Ticket No.1, Primogems, and other rewards! More event details are available on the contest website.
-
-● After the Starlit Gala: Wonderland Selects event begins, Travelers can participate during the event period (<t class="t_gl" contenteditable="false">2026/10/01 12:00</t> – <t class="t_gl" contenteditable="false">2026/10/22 03:59</t>). Play the featured Wonderlands and complete Celebration Objectives to accumulate Festive Fever and obtain rewards including the "Cryo Slime Hat" cosmetic, Primogems, Geodes of Replication, Prismatic Crystals, Actions, and Expressions. You can also vote for your favorite Wonderlands and help select the 20 "Wonderlands of the Year" of the first Starlit Gala event!
-
-● After the special Starlit Gala web event begins, Travelers can participate during the event period (<t class="t_gl" contenteditable="false">2026/10/01 12:00</t> – <t class="t_gl" contenteditable="false">2026/11/03 04:00</t>), complete missions, and obtain Primogems, Geodes of Replication, Miliastra Wonderland items, and other rewards!
-
-※ The Wonderland Selects event only features Wonderlands published before <t class="t_gl" contenteditable="false">2026/09/25 23:59</t> (GMT+8) that are of high overall quality and are not in Early Access. Wonderlands of the Year will be selected based on multiple factors, including total votes and overall quality.
-
-※ During the Wonderland Selects event, Travelers can also access the Starlit Gala web event directly from the Wonderland Selects event screen.
-
------
-
 # [Event Wish "Epitome Invocation" - Boosted Drop Rates for Azurelight (Sword) and Symphonist of Scents (Polearm)!](archive/21890.md)
 ## Event Wish "Epitome Invocation"
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/23/ccc187c09296b4a1990c8cf98dcadb46_5421147638874447905_transformed.jpg)
@@ -1597,66 +1491,6 @@ Event Wish Duration | Promotional Weapons (5-Star) | Featured Weapons (4-Star)
 ※ Of the above weapons, the event-exclusive weapons will not be available in the standard wish "Wanderlust Invocation."
 
 ※ For more information, go to the Wish screen and select Details in the bottom-left corner.
-
------
-
-# [Stygian Onslaught Event: Disturbance-affected Ley Line challenges](archive/21168.md)
-## Stygian Onslaught
-![Banner](https://sdk.hoyoverse.com/upload/ann/2025/10/23/40da7ab1ce17afd008e7a10c6ee6e67b_3372052251159312794_transformed.jpg)
-
-〓Event Rewards〓
-
-![img](https://sdk.hoyoverse.com/upload/ann/2025/06/05/2b8eaa5bc75b36d842c22a91c3bb4fb4_2475835335613495492.png)
-
-〓Event Duration〓
-
-Event Duration: <t class="t_lc" contenteditable="false">2026/09/30 10:00</t>  - <t class="t_lc" contenteditable="false">2026/11/03 03:59</t>
-
-Disturbance Outbreak: <t class="t_lc" contenteditable="false">2026/09/30 10:00</t>  - <t class="t_lc" contenteditable="false">2026/10/10 03:59</t>
-
-〓Eligibility〓
-
-Adventure Rank 20 or above
-
-And complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
-
-※Complete Archon Quest "Perilous Trail" first to get the best experience from this event.
-
-〓Event Details〓
-
-● Challenge gameplay: You must select a difficulty first. After you enter a challenge, you must complete 3 phases, for a total of 3 time-limited battles. The challenge is considered complete once all opponents in all 3 battles are beaten.
-
-● Difficulty: difficulty levels in ascending order are "Normal," "Advancing," "Hard," "Menacing," "Fearless," and "Dire."
-
-The higher the initial difficulty selected, the more restrictive the rules applied during the challenge, and the tougher enemies will be.
-
-From the "Hard" difficulty onward, you can only unlock the next difficulty by clearing the current one.
-
-● "Exalted Ones": There can be a maximum of 16 "Exalted Ones" at any one time during the challenge.
-
-"Exalted Ones" will obtain buff effects; adding them to your party will help you complete the challenge.
-
-There can be a maximum of 16 "Exalted Ones" at any one time during the challenge, and their number is subject to change.
-
-Under the "Dire" difficulty, "Exalted Ones" no longer obtain buff effects.
-
-● Disturbance Outbreak: In the first 10 days from when the challenge is available, the Ley Line disturbance will be in an "Outbreak" state.
-
-During the Disturbance Outbreak, players with Adventure Rank 45 and above can challenge stages at "Hard" difficulty onwards, and upon completing them, can consume Resin to earn the rewards from their chosen Domains of Blessing, while also accumulating Dire Prestige.
-
-Accumulate a certain amount of Dire Prestige to receive extra Artifact rewards and Dust of Enlightenment.
-
-After the Disturbance Outbreak ends, players will not be able to consume Resins to claim rewards from their selected Domain of Blessing.
-
-● Completing a more difficult challenge will also let you obtain the rewards from the difficulties below that one.
-
-Rewards for "Fearless" and "Dire" difficulties can only be claimed upon completing the single-player challenge.
-
-● Co-Op Mode: All difficulty levels support Co-Op Mode of up to 4 players.
-
-"Normal," "Advancing," and "Hard" difficulties support matchmaking or Co-Op Mode within the same world.
-
-"Menacing," "Fearless," and "Dire" difficulties only support Co-Op challenges within the same world.
 
 -----
 
@@ -1800,14 +1634,6 @@ Permanently available after the Version 7.1 update
 Adventure Rank 18 or above
 
 Complete Archon Quests: Chapter VII: Act III "White Night, Like a Dream Upon Waking"
-
------
-
-# [Version 7.1 Benefits Overview](archive/21923.md)
-## Version 7.1 Benefits Overview
-
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/09/12/503dbdabd59d6ff5aebd151d5011b7f7_3634289702927936987_transformed.jpg)
 
 -----
 
