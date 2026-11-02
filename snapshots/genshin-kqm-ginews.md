@@ -1,3 +1,421 @@
+# [Event Wish "Myriad Patterns Unfold" - Boosted drop rate for "Rules Set at Naught" Mitya (Electro)!](archive/21997.md)
+## Event Wish "Myriad Patterns Unfold"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/29/3cd76fed0001990a4f53fc06ad510ccd_794691239659394631_transformed.png)
+
+Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
+
+〓Event Wish Details〓
+
+Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
+--- | --- | ---
+After the Version 7.2 update — <t class="t_lc" contenteditable="false">2026/11/24 17:59</t> | "Rules Set at Naught" Mitya (Electro) | "Fort Fulguration" Valeriy (Electro)
+^ | ^ | "Lens of Verity" Charlotte (Cryo)
+^ | ^ | "Thorny Benevolence" Rosaria (Cryo)
+
+● During this event wish, the event-exclusive 5-star character "Rules Set at Naught" Mitya (Electro) will receive a huge drop-rate boost!
+
+● During this event wish, the 4-star characters "Fort Fulguration" Valeriy (Electro), "Lens of Verity" Charlotte (Cryo), and "Thorny Benevolence" Rosaria (Cryo) will receive a huge drop-rate boost!
+
+● After this event wish ends, the 4-star character "Fort Fulguration" Valeriy (Electro) will be available in the standard wish "Wanderlust Invocation" in the next Version.
+
+※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
+
+※ This is for "Character Event Wish." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
+
+※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
+
+※ For more information, go to the Wish screen and select Details in the bottom-left corner.
+
+-----
+
+# ["Polyphonic Season" Season Opening Announcement](archive/21993.md)
+## Polyphonic Season
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/26/fc8e12c95e7b2d400c80f04aaf7d749e_5129367042064515496_transformed.jpg)
+
+〓Season Duration〓
+
+Preparation Phase: After the Version 7.2 update – <t class="t_lc" contenteditable="false">2026/11/05 09:59</t>
+
+Play Phase: <t class="t_lc" contenteditable="false">2026/11/05 10:00</t> – <t class="t_lc" contenteditable="false">2026/12/15 03:59</t>
+
+Showcase Phase: <t class="t_lc" contenteditable="false">2026/12/15 04:00</t> – End of Version 7.2
+
+〓Eligibility〓
+
+After awakening your Miliastra Wonderland Manekin
+
+〓Season Details〓
+
+● Each season consists of three phases: The Preparation Phase, Play Phase, and Showcase Phase.
+
+● During the Play Phase, Travelers can earn points or leaderboard scores by participating in Wonderlands that feature ranks or leaderboards.
+
+※ In some Wonderlands, points and leaderboard scores cannot be earned through Room Mode. For specific details, please refer to the Craftsperson's configuration for each Wonderland.
+
+● During the Preparation and Showcase Phases, Travelers can still participate in Wonderlands, though points and leaderboard scores cannot be earned.
+
+● After each season ends, ranked Wonderlands may or may not carry over their corresponding stage points to the next season, and those with leaderboards may reset their rankings. For specific details on point retention and leaderboard resets, please refer to the configuration set by each Craftsperson for their Wonderland.
+
+-----
+
+# [Take Part in "Raiment Collection: Radiance Ablaze" to Obtain an "Tinker's Treasures" Manekin Cosmetic Set of Your Choice](archive/21991.md)
+## Raiment Collection: Radiance Ablaze
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/26/ec56ac469ab2a28ca06108b4cf121dc8_5198805140344510161_transformed.jpg)
+
+〓Event Duration〓
+
+After Version 7.2 Update – <t class="t_lc" contenteditable="false">2026/12/16 05:59</t>
+
+〓Event Rewards〓
+
+An "Tinker's Treasures" Manekin Cosmetic Set of your choice and Geodes of Replication
+
+〓Eligibility〓
+
+After awakening your Miliastra Wonderland Manekin
+
+〓Event Details〓
+
+● During the event, Travelers can obtain corresponding "Treasured Insights" and Geodes of Replication by completing Treasured Quests. Rewards from these quests are subject to a weekly limit.
+
+● During the event, once your total accumulated "Treasured Insights" reaches the required amount, you can claim the Manekin Cosmetics Set "Tinker's Treasures."
+
+● Before claiming your first component of the "Tinker's Treasures" Manekin Cosmetic Set, you may freely switch between available set rewards. Once you've claimed any component of the set, your choice will be locked and cannot be changed.
+
+※ The Manekin Cosmetic Set "Tinker's Treasures" will be available for a limited time in the Miliastra Shop after Version 7.2 ends. Please visit the Miliastra Shop for more details.
+
+-----
+
+# ["Wonderland Treasures: Frosty Court" – New Manekin Cosmetics Now Available](archive/21990.md)
+## Wonderland Treasures: Frosty Court
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/26/a48d1fa02e0b52e1ba0e36c4bcd80464_9072444056486820371_transformed.jpg)
+
+〓Event Ode Details〓
+
+Event Ode Duration | Limited Legendary (5-Star) Cosmetic | Elite (4-Star) Cosmetics
+--- | --- | ---
+After the Version 7.2 update  —  <t class="t_lc" contenteditable="false">2026/12/15 14:59</t> | "Frosty Plume" | "Winter's Warmth"
+^ | ^ | "Wildpeak Echoes"
+^ | ^ | "Healing Heart"
+
+● During the event, the limited Legendary (5-Star) Cosmetic "Frosty Plume" and Elite (4-Star) Cosmetics "Winter's Warmth," "Wildpeak Echoes," and "Healing Heart" will be available in the Manekin Cosmetic Event Ode 2!
+
+● During the event, upon obtaining the limited Legendary (5-Star) Cosmetic "Frosty Plume" for the same Manekin/Manekina a second time (whether obtained in an Ode, redeemed at the shop, or received as a gift), you will unlock its Ascension "Frosty Plume: Shadowed Verse."
+
+※ Event Ode 2 for this event follows the same rules as previous events. For more information on Event Odes, go to the Event Ode screen and select Details in the bottom-left corner.
+
+※ Manekin cosmetics and actions are for reference only. Please refer to the actual in-game appearance.
+
+-----
+
+# ["Wonderland Treasures: Polyphonic Harmony": New Manekin Cosmetics Now Available](archive/21989.md)
+## Wonderland Treasures: Polyphonic Harmony
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/26/00f293903ce1f15f522e633f8eab1de5_6604583643147968203_transformed.jpg)
+
+During the event, Travelers can obtain desired Manekin Cosmetics via the "Polyphonic Harmony" Event Ode, Chronicle of Polyphony, or the Miliastra Shop!
+
+Play Popular Miliastra Wonderland stages with your new Sets or Try-On Capes equipped to obtain a Primogems ×60 reward!
+
+〓Event Ode Details〓
+
+Event Ode Duration | Limited Legendary (5-Star) Cosmetic | Elite (4-Star) Cosmetics
+--- | --- | ---
+After the Version 7.2 update  —  <t class="t_lc" contenteditable="false">2026/12/15 14:59</t> | Polyphonic Variations | Dreamkeeper Plush
+^ | ^ | Tea-Time Enchantment
+^ | ^ | A Study in Bloom
+
+● During the event, the limited Legendary (5-Star) Cosmetic "Polyphonic Variations" and Elite (4-Star) Cosmetics "Dreamkeeper Plush," "Tea-Time Enchantment," and "A Study in Bloom" will be available in the Manekin Cosmetic Event Ode!
+
+● During the event, upon obtaining the event-exclusive Legendary (5-Star) Cosmetic "Polyphonic Variations" for the same Manekin/Manekina a second time (whether obtained in an Ode, redeemed at the Shop, or received as a gift), you will unlock its Ascension "Polyphonic Variations: Verdant Reverie."
+
+※ The current Event Ode follows the same rules as previous events. For more information on Event Odes, go to the Event Ode screen and select Details in the bottom-left corner.
+
+※ Manekin cosmetics and actions are for reference only. Please refer to the actual in-game appearance.
+
+〓Miliastra Shop〓
+
+Cosmetic Availability Period | Cosmetic Availability Period
+--- | ---
+After the Version 7.2 update Available for 3 consecutive versions | After the Version 7.2 update Available for 3 consecutive versions
+Limited-Time Discount Period | Limited-Time Discount Period
+After the Version 7.2 update  —  <t class="t_lc" contenteditable="false">2026/12/14 03:59</t> | After the Version 7.2 update  —  <t class="t_lc" contenteditable="false">2026/12/14 03:59</t>
+Elite (4-Star) Cosmetics | Exceptional (3-Star) Cosmetics
+Manekin Cosmetic "Pixel Motion" Manekina Cosmetic "Pixel Motion" | Manekin Cosmetic "Masquerade" Manekina Cosmetic "Masquerade"
+Manekin Cosmetic "Afternoon Nectar" Manekina Cosmetic "Afternoon Nectar" | Manekin Cosmetic "Fish on the Run" Manekina Cosmetic "Fish on the Run"
+Manekin Cosmetic "Prelude to Spring" Manekina Cosmetic "Prelude to Spring" | ^
+
+● After the Version 7.2 update, a total of 6 Elite (4-Star) Cosmetics and 4 Exceptional (3-Star) Cosmetics will be available in the Miliastra Shop for a limited time. Each Cosmetic can be purchased once during its availability period.
+
+● New Cosmetic Sets for Version 7.2! The featured Elite (4-Star) Cosmetic Sets in the current event are available for Chronal Nexus ×960 during the discount period and will revert to Chronal Nexus ×1,200 once the offer ends. The featured Exceptional (3-Star) Cosmetic Set "Masquerade" in the current event is available for Chronal Nexus ×160 during the discount period and will revert to Chronal Nexus ×200 once the offer ends. The "Fish on the Run" Cosmetic Set is available for Chronal Nexus ×240 during the discount period and will revert toChronal Nexus ×300 once the offer ends.
+
+● New themed Cosmetic Sets can be purchased as bundles that include both the Manekin and Manekina versions. For the current event, the featured Elite (4-Star) Cosmetic Bundle is priced at Chronal Nexus ×1,440 while the featured Exceptional (3-Star) Cosmetic Bundle "Masquerade" is priced at Chronal Nexus ×240.  In addition, the "Fish on the Run" Set Bundle is priced at Chronal Nexus ×360. These bundles are only available during the limited-time discount period for the corresponding Cosmetic Sets. For more details about Cosmetic Bundles, please visit the Miliastra Shop.
+
+● After the Version 7.2 update, more information on the available Facial Makeup will be provided in the Miliastra Shop.
+
+● You can view your purchased Manekin Cosmetics via Paimon Menu > Cosmetic Plans.
+
+〓Chronicle of Polyphony〓
+
+● Event Duration: After the Version 7.2 update – <t class="t_lc" contenteditable="false">2026/12/14 03:59</t>
+
+● During the event, Travelers can earn an abundance of rewards through the Miliastra Pass. By unlocking "Chronicles of the Realms" or "Epic of the Realms," you'll obtain the limited (4-Star) Cosmetic "Harmonic Insight"! Those who purchase Epic of the Realms directly will also receive the Miliastra Pass-exclusive lobby "Nocturne Theater: Melodious Echoes."
+
+※ Travelers who have already unlocked Chronicles of the Realms need only exchange the remaining difference in cost through purchasing Chronicle Recompilation in order to unlock Epic of the Realms.
+
+※ The purchase of Chronicles of the Realms, Epic of the Realms, and Chronicle Recompilation for this Miliastra Pass period will be available until 2026/12/14 02:59. After the purchase period ends, you can still complete Chronicle Missions and claim rewards. Traveler, please take note of the purchase period and event duration of the Miliastra Pass.
+
+● After unlocking Chronicles of the Realms or Epic of the Realms, you will unlock the "Battle Pass Boon" effect, granting a discount when purchasing the corresponding Battle Pass in Teyvat. Likewise, unlocking Gnostic Hymn or Gnostic Chorus will grant the "Chronicle Boon" effect, offering a discount when purchasing the corresponding Miliastra Pass in Miliastra Wonderland. You can check the Boon button on the Miliastra Pass or Battle Pass purchase screen for more details. The Boon effect can only be activated once during the current event period.
+
+● The Miliastra Pass and Battle Pass share the same start and end dates each period. Please be sure to check the time and claim your rewards promptly.
+
+〓New Standard Ode Set Catalog〓
+
+After the Version 7.2 update, a new Elite (4-Star) Set Catalog "Drifting with the Waves" will be added to the Standard Ode "Encounter Echoes."
+
+※ For more information, go to the Standard Ode screen and select Details in the bottom-left corner.
+
+-----
+
+# [Event Wish "Chanson of Many Waters" - Boosted Drop Rate for "Endless Solo of Solitude" Furina (Hydro)!](archive/21998.md)
+## Event Wish - Chanson of Many Waters
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/2c8c069aa5b229366b959448bffd3246_2432052726259589754_transformed.png)
+
+Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
+
+〓Event Wish Details〓
+
+Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
+--- | --- | ---
+After the Version 7.2 update — <t class="t_lc" contenteditable="false">2026/11/24 17:59</t> | "Endless Solo of Solitude"  Furina (Hydro) | "Fort Fulguration" Valeriy (Electro)
+^ | ^ | "Lens of Verity" Charlotte (Cryo)
+^ | ^ | "Thorny Benevolence" Rosaria (Cryo)
+
+● During this event wish, the event-exclusive 5-star character "Endless Solo of Solitude" Furina (Hydro) will receive a huge drop-rate boost!
+
+● During this event wish, the 4-star characters "Fort Fulguration" Valeriy (Electro), "Lens of Verity" Charlotte (Cryo), and "Thorny Benevolence" Rosaria (Cryo) will receive a huge drop-rate boost!
+
+● After this event wish ends, the 4-star character "Fort Fulguration" Valeriy (Electro) will be available in the standard wish "Wanderlust Invocation" in the next Version.
+
+※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
+
+※ This is for "Character Event Wish-2." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
+
+※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
+
+※ For more information, go to the Wish screen and select Details in the bottom-left corner.
+
+-----
+
+# [Event Wish "Epitome Invocation" - Boosted Drop Rate for Starsealed Edict (Catalyst) and Splendor of Tranquil Waters (Sword)!](archive/21977.md)
+## Event Wish "Epitome Invocation"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/d3a5d8754d2fb660034928d788e65b56_7742835065218102399_transformed.png)
+
+Travelers, stock up on weapons and characters in "Epitome Invocation" to make your party stronger in combat!
+
+〓Event Wish Details〓
+
+Event Wish Duration | Promotional Weapons (5-Star) | Featured Weapons (4-Star)
+--- | --- | ---
+After the Version 7.2 update — <t class="t_lc" contenteditable="false">2026/11/24 17:59</t> | Starsealed Edict (Catalyst)  Splendor of Tranquil Waters (Sword) | The Dockhand's Assistant (Sword)
+^ | ^ | Prospector's Drill (Polearm)
+^ | ^ | Dawning Frost (Catalyst)
+^ | ^ | Rainslasher (Claymore)
+^ | ^ | Rust (Bow)
+
+● During this event wish, the event-exclusive 5-star weapons Starsealed Edict (Catalyst) and Splendor of Tranquil Waters (Sword) will receive a huge drop-rate boost!
+
+● During the event, the event-exclusive 4-star weapons The Dockhand's Assistant (Sword), Prospector's Drill (Polearm), Dawning Frost (Catalyst), as well as the 4-star weapons Rainslasher (Claymore) and Rust (Bow) will receive a huge drop rate boost!
+
+● During the event, use Epitomized Path to chart a course towards a promotional 5-star weapon, such as Starsealed Edict (Catalyst) or Splendor of Tranquil Waters (Sword). For more information on Epitomized Path, go to the Wish screen and select Details in the bottom-left corner.
+
+※ Of the above weapons, the event-exclusive weapons will not be available in the standard wish "Wanderlust Invocation."
+
+※ For more information, go to the Wish screen and select Details in the bottom-left corner.
+
+-----
+
+# ["The Grand Defense: Defy the Unjust Judgment" Event: Participate to Invite a 4-Star Character of Your Choice](archive/21969.md)
+## The Grand Defense: Defy the Unjust Judgment
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/24d48be1e7998ca6e5f43f6771aedff5_2455336246588177925_transformed.png)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/09/24/405a55b86e5074691d97521dc6c0d5e5_6814700333827861367_transformed.png)
+
+〓Event Duration〓
+
+Available throughout the entirety of Version 7.2
+
+〓Eligibility〓
+
+Adventure Rank 20 or above
+
+Complete Archon Quest Chapter VII: Act IV "A Rekviem for the Underworld"
+
+※This event is closely tied to the Archon Quest and will unlock as you progress through Archon Quest Chapter VII: Act VI "A Yesterday Sent From Beyond."
+
+For the best experience, we recommend completing plenty of Story Quests, Hangout Events, and World Quests, and pacing your playthrough of this event alongside your Archon Quest progress!
+
+※Travelers who have reached Adventure Rank 20 or above and completed Archon Quest Prologue: Act III "Song of the Dragon and Freedom" can take part in the event via "Quick Start" on the event page.
+
+〓Event Details〓
+
+● During the event, Travelers must provide support across multiple battlefronts by completing three types of operations: Emergency Rescue, Securing Air Supremacy, and Tactical Sweep.
+
+● In "Emergency Rescue" operations, Travelers must use the overhead surveillance devices to search for and locate rescue targets, then head to their locations and help them escape.
+
+● In "Securing Air Supremacy" operations, Travelers must guide a Favonian Falcon along a designated flight path, defeating as many monsters as possible along the way and delivering intelligence.
+
+● In "Tactical Sweep" operations, Travelers must deploy members to complete various events, then take on a boss and reduce its HP as much as possible within the time limit.
+
+● Complete operations to reduce the Holy Soil threat. Once it drops to a certain level, you can invite one of the following 4-star characters of your choice and obtain rewards including Primogems, Crown of Insight, and other rewards.
+
+● Available 4-star characters: Amber, Xiangling, Thoma, Collei, Lynette, Kachina, Aino, and Alyosha.
+
+※After the event ends, you can still experience the "Trial of Usurpation" as you progress through Archon Quest Chapter VII: Act VI "A Yesterday Sent From Beyond." Your current progress will be retained.
+
+-----
+
+# [Complete the Archon Quest "Hour of Ruin" Within the Specified Duration to Obtain Additional Primogems, Character Ascension Materials, and Other Rewards](archive/21970.md)
+## Hour of Ruin
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/087457d4e71c622ef4310ac47ceaefbd_37499916569621753_transformed.png)
+
+After the Version update, Archon Quests Chapter VII: Act V and Act VI will be permanently available. Meet the unlock criteria to unlock said Archon Quests.
+
+Complete the corresponding Archon Quest within the specified duration to obtain Primogems, Character Ascension Materials, Character Level-Up Materials, Snezhnaya regional specialties, and other rewards.
+
+〓Specified Duration〓
+
+After the Version 7.2 update – <t class="t_lc" contenteditable="false">2026/12/15 14:59</t>
+
+〓Archon Quest Unlock Criteria〓
+
+Adventure Rank 18 or above
+
+Complete Archon Quest Chapter VII: Act IV "A Rekviem for the Underworld"
+
+※ Once you reach Adventure Rank 18 and complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom," you can explore the Snezhnaya region to automatically accept Archon Quest Chapter VII: Act I "Everwinter Without Mercy" and continue progressing up to the latest Archon Quest introduced in the current version update.
+
+-----
+
+# [Where Kristall Roots Run Deep: Complete the Exploration Missions Within the Specified Duration to Obtain an Additional Reward of Primogems ×400](archive/21971.md)
+## Where Kristall Roots Run Deep
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/1848aa6ab1abbbfd8d5635f931dd8076_3177586817696557418_transformed.png)
+
+After the version update, the following new areas of Snezhnaya will be unlocked: Novokitezhgrad and Wingspan Peak.
+
+Complete the corresponding exploration missions within the specified duration to obtain an additional reward of Primogems ×400.
+
+〓Specified Duration〓
+
+After the Version 7.2 update – <t class="t_lc" contenteditable="false">2027/01/26 14:59</t>
+
+-----
+
+# ["Adventurer's Booster Bundles" - Round 53 Available for a Limited Time](archive/21973.md)
+## Adventurer's Booster Bundles
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/7315906b39d517cbdc148e650c926c65_5837513735044723651_transformed.png)
+
+Round 53 of Adventurer's Booster Bundles is available for a limited time in the Shop!
+
+〓Adventurer's Instructional Bundle〓
+
+Duration: After the Version 7.2 update – <t class="t_lc" contenteditable="false">2026/11/18 23:59</t>
+
+Purchase Requirements: Adventure Rank 25 or above
+
+Bundle Contents: Virtuous Share Bundle ×25, Mora ×150,000
+
+Bundle Price: Now 10% off for a limited time! The price after discount is 680 Genesis Crystals. Can be purchased up to three times in total.
+
+※ Virtuous Share Bundle: After usage, you can select any one 3-star Talent Level-Up Material from all the options available in the current Version.
+
+〓Adventurer's Jumbo Ore Bundle〓
+
+Duration: After the Version 7.2 update – <t class="t_lc" contenteditable="false">2026/11/18 23:59</t>
+
+Purchase Requirements: Adventure Rank 25 or above
+
+Bundle Contents: Mystic Enhancement Ore ×100, Mora ×100,000
+
+Bundle Price: Now 10% off for a limited time! The price after discount is 680 Genesis Crystals. Can be purchased up to five times in total.
+
+-----
+
+# [Repertoire of Myriad Melodies Update - Encounter: Interlude of the Long Journey](archive/21972.md)
+## Encounter: Interlude of the Long Journey
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/537714f9a2caf9483166a9145e1998fe_2394825375141082324_transformed.png)
+
+After the Version 7.2 update, the new album "Encounter: Interlude of the Long Journey" will be added to Repertoire of Myriad Melodies.
+
+Complete the corresponding performance missions within the specified duration to obtain an additional reward of Primogems ×60.
+
+〓Specified Duration〓
+
+After the Version 7.2 update – <t class="t_lc" contenteditable="false">2026/12/15 14:59</t>
+
+-----
+
+# ["Sacred Spirit Chronicle" Event Details](archive/21974.md)
+## Sacred Spirit Chronicle
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/f386a39d6c016a8e9713fefde65263e0_7946567089703729544_transformed.png)
+
+Travelers can earn rich rewards in "Sacred Spirit Chronicle" during the event duration. Unlock Gnostic Hymn or Gnostic Chorus to further earn Intertwined Fate and a designated 4-star weapon! Purchase Gnostic Chorus directly to get the exclusive BP namecard "Travel Notes: Sacred Spirit" and Furnishing Blueprint "Rock-Paper-Scissors Companion" and Dust of Enlightenment.
+
+〓Event Duration〓
+
+After the Version 7.2 update – <t class="t_lc" contenteditable="false">2026/12/14 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 20 or above
+
+〓Event Details〓
+
+● Sojourner's Battle Pass will be unlocked by default every BP Period. Travelers can also unlock either Gnostic Hymn or Gnostic Chorus in order to earn even more rewards, or directly purchase Gnostic Chorus at a discounted price.
+
+※ Travelers who have already unlocked Gnostic Hymn need only exchange the remaining difference in cost through purchasing Travel Notes in order to unlock Gnostic Chorus.
+
+※ The purchasing of Gnostic Hymn, Gnostic Chorus, and Travel Notes for this Battle Pass will end on <t class="t_lc" contenteditable="false">2026/12/14 02:59</t>. Travelers can still complete Battle Pass Missions and claim rewards after the purchase period ends. Travelers, please take note of the purchase period and start time of the Battle Pass.
+
+● After unlocking Gnostic Hymn or Gnostic Chorus, you will unlock the Chronicle Boon effect, granting a discount when purchasing the corresponding Miliastra Pass in Miliastra Wonderland. Likewise, unlocking Chronicles of the Realms or Epic of the Realms will grant the Battle Pass Boon effect, offering a discount when purchasing the corresponding Battle Pass in Teyvat. You can check the Boon button on the Miliastra Pass or Battle Pass purchase screen for more details. The Boon effect can only be activated once during the current event period.
+
+● The Battle Pass and Miliastra Pass share the same start and end dates each period. Please be sure to check the time and claim your rewards promptly.
+
+-----
+
+# ["Genius Invokation TCG" The Forge Realm's Temper: Endless Swarm](archive/20834.md)
+## Genius Invokation TCG - The Forge Realm's Temper
+![Banner](https://sdk.hoyoverse.com/upload/ann/2024/11/05/cf324597e5d687e26d86f297e59c9ebd_2179973999643752178.jpg)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2024/10/17/77bc8ce33030bc36a950e3ef25faf437_4187973441338794750.png)
+
+〓Event Duration〓
+
+Available throughout the entirety of Version 7.2
+
+〓Eligibility〓
+
+Adventure Rank 32 or above
+
+Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
+
+And complete the World Quest "Battlefield of Dice, Cats, and Cards"
+
+〓Event Details〓
+
+● After the event starts, Travelers can go to Prince at The Cat's Tail to select stages to challenge.
+
+● This event includes 4 stages and each stage has its distinctive challenge rules.
+
+● Defeat opponents within these stages to accrue score. Defeat as many opponents as possible within the Round limit to score more points.
+
+● After completing the challenge, points will be obtained based on the number of opponents defeated. Achieving the required scores will allow Travelers to claim the corresponding rewards.
+
+-----
+
 # [New Content Overview](archive/21947.md)
 ## Version 7.1 Now Available
 
@@ -9,6 +427,75 @@
 ![img](https://sdk.hoyoverse.com/upload/ann/2026/09/22/591393f7fafb22e961db672360c59894_1141827441502975847_transformed.jpg)
 
 ![img](https://sdk.hoyoverse.com/upload/ann/2026/09/22/af8a4cf990ad188aefc718430d5f50dd_6995115695880001838_transformed.jpg)
+
+-----
+
+# [Version 7.2 Update Maintenance Preview](archive/22002.md)
+## Version 7.2 Update Maintenance Preview
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/26/c941908b14dcaf160083796a10645f89_383696375333346151_transformed.jpg)
+
+Dear Traveler,
+
+The development team will begin update maintenance on <t class="t_gl" contenteditable="false">2026/11/04 06:00</t>. Once maintenance is complete, the game will be updated to the all-new Version 7.2: "Hour of Ruin."
+
+At the same time, pre-installation for Version 7.2 is now available. Travelers can download part of the update resources in advance to enjoy faster access once the version update goes live.
+
+〓Update Maintenance Information〓
+
+Update maintenance begins <t class="t_gl" contenteditable="false">2026/11/04 06:00</t> and is estimated to take 5 hours.
+
+Maintenance Compensation: Primogems ×300 (60 Primogems per hour the servers are down)
+
+〓Scope of Maintenance Compensation〓
+
+Maintenance Compensation: Travelers who have reached Adventure Rank 5 or above by <t class="t_gl" contenteditable="false">2026/11/04 06:00</t>.
+
+Compensation must be claimed before the end of Version 7.2.
+
+Our developers will distribute compensation to Travelers via in-game mail within 5 hours after the update maintenance is finished. The mail will expire after 30 days, so don't forget to claim the attached compensation in time.
+
+〓Pre-Installation Details〓
+
+The estimated storage space required for pre-installation is as follows:
+
+PC: 8 GB
+
+Mobile: 3 GB
+
+*The exact download size may differ depending on which voice-over packs are installed. The estimate above is based on a typical setup with one voice-over pack selected.
+
+For more update details, including adjustments, optimizations, bug fixes, and other compensation details, please see the Version Update Details notice to be posted at <t class="t_gl" contenteditable="false">2026/11/04 07:00</t>.
+
+<details open="true">
+<summary>Summary of Update Methods</summary>
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/04/02/63132cf77c487a61ddfd4f1fc3808c6c_3767529921317771834_transformed.jpg)
+
+</details>
+
+-----
+
+# ["Across the Frozen Wilds, Honing One's Edge" Event: New Travelers Can Invite a 5-Star Character of Your Choice From the "Wanderlust Invocation" Standard Wish](archive/21968.md)
+## Across the Frozen Wilds, Honing One's Edge
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/509f11ffc89b5f675693d10478d563f1_8275206890847569474_transformed.png)
+
+〓Event Duration〓
+
+After the Version 7.2 update and until the end of the Version 7.x
+
+〓Eligibility〓
+
+Travelers who have completed registration and unlocked the Wish feature after the Version 7.2 update
+
+〓Event Details〓
+
+● New Travelers who register after the Version 7.2 update are eligible to participate in the "Across the Frozen Wilds, Honing One's Edge" event. The event will be available within 42 days after registration.
+
+● After unlocking the Wish feature, new Travelers can invite a 5-star character of your choice from the Standard Wish "Wanderlust Invocation" to join your party via the event interface. When you invite a character, you also receive Ascension Level-Up Materials for the same character.
+
+※ For Travelers who register near the end of Version 7.x, the event duration may run shorter than 42 days. Please refer to the remaining time displayed on the event page for the exact duration.
+
+※ Travelers can invite a character only once during the event. Once the event is over, you will be unable to invite characters. Please make sure you invite them in time.
 
 -----
 
