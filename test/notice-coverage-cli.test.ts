@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { mkdtempSync, rmSync, writeFileSync, readFileSync, mkdirSync, existsSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync, readFileSync, mkdirSync, existsSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve, dirname } from "node:path";
 import { ARTICLE_SOURCE_GAMES, noticeContentHash } from "../src/editorial/article-evidence.ts";
@@ -41,7 +41,7 @@ test("CLI replay is deterministic; baseline creation is explicit/exclusive; miss
 });
 
 
-for (const mode of ["create", "migrate"] as const) test(`B1 ${mode}: portable public-path guard refuses without files; internal writes stay exclusive`, () => {
+for (const mode of ["create", "migrate"] as const) test(`B1/P2-D ${mode}: portable paths and parent symlinks refuse without files; internal writes stay exclusive`, () => {
   const dir = mkdtempSync(join(tmpdir(), "notice-paths-"));
   const cli = resolve("scripts/notice-coverage-report.ts");
   try {
@@ -70,7 +70,19 @@ for (const mode of ["create", "migrate"] as const) test(`B1 ${mode}: portable pu
       expect(result.stderr.toString()).toContain("Coverage state cannot be written under public/");
       expect(existsSync(target)).toBe(false);
     }
-    for (const output of ["work/baseline.json", "publicity/baseline.json"]) {
+    // P2-D: real parent symlinks must not bypass the lexical guard.
+    const realPublic = join(dir, "public"), alias = join(dir, "alias");
+    mkdirSync(join(realPublic, "nested"), { recursive: true });
+    symlinkSync(realPublic, alias, "dir");
+    for (const [output, realOutput] of [["alias/symlink.json", join(realPublic, "symlink.json")],
+      ["alias/nested/nested.json", join(realPublic, "nested", "nested.json")]]) {
+      const result = Bun.spawnSync(args(output!), { cwd: dir });
+      expect(result.exitCode).not.toBe(0); expect(result.stderr.toString()).toContain("Coverage state cannot be written under public/");
+      expect(existsSync(realOutput!)).toBe(false);
+    }
+    const privateDir = join(dir, "private"); mkdirSync(privateDir);
+    symlinkSync(privateDir, join(dir, "internal-alias"), "dir");
+    for (const output of ["work/baseline.json", "publicity/baseline.json", "internal-alias/baseline.json"]) {
       const target = resolve(dir, output); mkdirSync(dirname(target), { recursive: true });
       const first = Bun.spawnSync(args(output), { cwd: dir });
       expect(first.exitCode).toBe(0);

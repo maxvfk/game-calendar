@@ -20,10 +20,10 @@ export type DateSpan = {
 export type DateRead = { readerVersion: typeof DATE_READER_VERSION; spans: DateSpan[]; diagnostics: string[]; complete: boolean };
 const months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 const monthPattern = "(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?";
-const datePattern = `(?:\\d{4}[-/.]\\d{1,2}[-/.]\\d{1,2}|${monthPattern}\\s+\\d{1,2}(?:st|nd|rd|th)?(?:,?\\s+\\d{4})?|\\d{1,2}\\s+${monthPattern}(?:,?\\s+\\d{4})?|\\d{1,2}/\\d{1,2}(?:/\\d{2,4})?|\\d{1,2}\\.\\d{1,2}\\.\\d{2,4})`;
+const datePattern = `(?:\\d{4}[-/.]\\d{1,2}[-/.]\\d{1,2}|${monthPattern}[ \\t]+\\d{1,2}(?:st|nd|rd|th)?(?:,?[ \\t]+\\d{4})?|\\d{1,2}[ \\t]+${monthPattern}(?:,?[ \\t]+\\d{4})?|\\d{1,2}/\\d{1,2}(?:/\\d{2,4})?|\\d{1,2}\\.\\d{1,2}\\.\\d{2,4})`;
 const clockPattern = "(?:(?:[ \\t,T]+)\\d{1,2}:\\d{2}(?::\\d{2})?(?:[ \\t]*[AP]M)?)?";
 const zonePattern = "(?:[ \\t]*(?:\\(?[ \\t]*UTC(?:[ \\t]*[+−-]\\d{1,2}(?::?\\d{2})?)?[ \\t]*\\)?|Z|[+−-]\\d{2}:?\\d{2}|\\((?:server(?: time)?|global|[A-Z]{2,5})\\)))?";
-const separator = /^[\s*_,]*(?:[-–—~]|to|until)[\s*_,]*$/i;
+const separator = /^[ \t*_,]*(?:[-–—~]|to|until)[ \t*_,]*$/i;
 
 /** Mask markup, attributes, URL destinations and active content; never execute it.
  * Keep a source-offset map through one-pass entity decoding. Unknown entities
@@ -31,6 +31,14 @@ const separator = /^[\s*_,]*(?:[-–—~]|to|until)[\s*_,]*$/i;
  */
 function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: (code: string) => void) {
   const chars = raw.split("");
+  const removed = new Uint8Array(raw.length);
+  const remove = (start: number, end: number) => { for (let i = start; i < end; i++) removed[i] = 1; };
+  const escaped = (index: number) => {
+    let slashes = 0; for (let i = index - 1; i >= 0 && raw[i] === "\\"; i--) slashes++;
+    return slashes % 2 === 1;
+  };
+  const inlineHtml = new Set(["b", "strong", "i", "em", "u", "s", "strike", "span", "t", "a", "font", "small", "big", "sup", "sub", "code", "del", "ins"]);
+  const blockHtml = new Set(["p", "div", "br", "hr", "li", "ul", "ol", "table", "thead", "tbody", "tfoot", "tr", "td", "th", "h1", "h2", "h3", "h4", "h5", "h6", "section", "article", "header", "footer", "main", "aside", "figure", "figcaption", "pre", "blockquote", "dl", "dt", "dd"]);
   const mask = (start: number, end: number) => { for (let i = start; i < end; i++) if (chars[i] !== "\n" && chars[i] !== "\r") chars[i] = " "; };
   const stack: string[] = [];
   const voidTags = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);
@@ -67,17 +75,20 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
         if (stack.pop() !== name) diagnose("malformed_markup");
       } else if (!voidTags.has(name) && !/\/\s*>$/.test(tag)) stack.push(name);
     }
-    mask(i, end + 1); i = end;
+    const name = element?.[2]?.toLowerCase();
+    if (name && inlineHtml.has(name)) remove(i, end + 1);
+    else {
+      mask(i, end + 1);
+      if (name && blockHtml.has(name)) chars[i] = "\n";
+      else if (name && !voidTags.has(name)) diagnose("unsupported_markup");
+    }
+    i = end;
   }
   if (stack.length) diagnose("malformed_markup");
   if (format === "bbcode") {
     const tags = /\[(\/?)([a-z][a-z0-9]*)(?:[=\s][^\]\r\n]*)?\]/ig;
     const bbStack: string[] = [];
     const supported = new Set(["p", "b", "i", "u", "s", "strike", "h1", "h2", "h3", "h4", "h5", "h6", "url", "img", "list", "olist", "quote", "code", "table", "tr", "td", "th", "br", "hr", "spoiler", "previewyoutube", "dynamiclink"]);
-    const escaped = (index: number) => {
-      let slashes = 0; for (let i = index - 1; i >= 0 && raw[i] === "\\"; i--) slashes++;
-      return slashes % 2 === 1;
-    };
     for (const m of raw.matchAll(tags)) {
       const name = m[2]!.toLowerCase();
       if (escaped(m.index!) || !supported.has(name)) continue;
@@ -85,7 +96,8 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
       const simple = /^\[\/?[a-z][a-z0-9]*(?:=[^\]\r\n]*)?\]$/i.test(m[0]);
       const attributes = /^\[(?:dynamiclink|img|previewyoutube)(?:\s+(?:href|src|title|id|youtubeid|align|size)=(?:"[^"\]\r\n]*"|'[^'\]\r\n]*'|[^\s\]"']+))+\]$/i.test(m[0]);
       if (!simple && !attributes) continue;
-      mask(m.index!, m.index! + m[0].length);
+      if (["b", "i", "u", "s", "strike", "url", "code", "spoiler"].includes(name)) remove(m.index!, m.index! + m[0].length);
+      else { mask(m.index!, m.index! + m[0].length); chars[m.index!] = "\n"; }
       if (m[1]) { if (bbStack.pop() !== name) diagnose("malformed_markup"); }
       else if (!["br", "hr"].includes(name)) bbStack.push(name);
     }
@@ -93,12 +105,35 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
     const unfinished = /\[(?:\/?(?:p|b|i|u|url|img|h[1-6]|list|quote|table|tr|td|dynamiclink|previewyoutube))(?:=|\s+(?:href|src|title)=|$)[^\]]*$/i.exec(raw);
     if (unfinished && !escaped(unfinished.index)) diagnose("malformed_markup");
   }
-  // URLs and markdown link destinations are metadata, not dated prose.
-  for (const m of raw.matchAll(/https?:\/\/[^\s<>"')\]]+|\]\([^\r\n)]*\)/g)) mask(m.index!, m.index! + m[0].length);
+  if (format === "markdown") {
+    // Only paired, single-line inline delimiters are elided. Offsets always
+    // refer to raw UTF-16 units; nested styles can share the removal bitmap.
+    const emphasis: Array<[RegExp, number]> = [[/\*\*\*([^*\r\n]+)\*\*\*/g, 3], [/(?<![\p{L}\d])___([^_\r\n]+)___(?![\p{L}\d])/gu, 3], [/\*\*([^*\r\n]+)\*\*/g, 2], [/(?<![\p{L}\d])__([^_\r\n]+)__(?![\p{L}\d])/gu, 2], [/~~([^~\r\n]+)~~/g, 2], [/\*([^*\r\n]+)\*/g, 1], [/(?<![\p{L}\d])_([^_\r\n]+)_(?![\p{L}\d])/gu, 1], [/`([^`\r\n]+)`/g, 1]];
+    for (const [pattern, size] of emphasis) for (const m of raw.matchAll(pattern)) {
+      if (escaped(m.index!) || removed[m.index!] || m[1] !== m[1]!.trim()) continue;
+      remove(m.index!, m.index! + size); remove(m.index! + m[0].length - size, m.index! + m[0].length);
+    }
+    // Spaces in a bare destination are not a Markdown link. Parenthesized
+    // prose in HTML/BBCode is never processed by this Markdown-only rule.
+    const links = /\[([^\[\]\r\n]{1,2048})\]\((?:<[^<>\r\n]{1,2048}>|[^\s()<>]{1,2048})(?:[ \t]+(?:"[^"\r\n]*"|'[^'\r\n]*'))?\)/g;
+    for (const m of raw.matchAll(links)) if (!escaped(m.index!)) {
+      const destination = m.index! + m[1]!.length + 2;
+      mask(destination, m.index! + m[0].length);
+    }
+  }
+  // URL metadata is excluded in every format; visible non-URL prose is kept.
+  for (const m of raw.matchAll(/https?:\/\/[^\s<>"')\]]+/g)) mask(m.index!, m.index! + m[0].length);
+  if (format === "markdown") {
+    const residual = chars.map((c, i) => removed[i] ? " " : c).join("");
+    // Unhandled inline syntax remains explicit uncertainty, never a hidden gap.
+    // List bullets and literal intraword underscores are not formatting here.
+    if (/\*+(?=[\p{L}\d])|(?<=[\p{L}\d])\*+|(?<![\p{L}\d])_+(?=[\p{L}\d])|(?<=[\p{L}\d])_+(?![\p{L}\d])|~~|`/u.test(residual)) diagnose("unsupported_markup");
+  }
   const masked = chars.join("");
   let text = ""; const positions: number[] = [], ends: number[] = [];
   const entities: Record<string, string> = { nbsp: " ", amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", ndash: "–", mdash: "—" };
   for (let i = 0; i < masked.length; i++) {
+    if (removed[i]) continue;
     if (masked[i] === "&") {
       const entity = /^&(#x[\da-f]{1,6}|#\d{1,7}|[a-z]{1,16});/i.exec(masked.slice(i, i + 20));
       if (entity) {
@@ -182,18 +217,29 @@ export function readDateSpans(raw: string, format: "markdown" | "html" | "bbcode
   const re = new RegExp(`(?<![\\p{L}\\d/.-])${datePattern}${clockPattern}${zonePattern}(?![\\p{L}\\d/])`, "giu");
   const spans: DateSpan[] = [];
   const locations: Array<{ start: number; end: number }> = [];
-  for (const match of text.matchAll(re)) {
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(text))) {
     if (spans.length === DATE_LIMITS.spans) { diagnose("span_limit"); break; }
-    const start = positions[match.index!]!, end = ends[match.index! + match[0].length - 1]!;
+    let visibleEnd = match.index + match[0].length;
+    let parsed = parseValue(match[0]);
+    const tail = text.slice(visibleEnd, visibleEnd + 4);
+    const tokenBoundary = /^[\s,;!?<>~–—()[\]{}"']/u;
+    const continuation = tail.length > 0 && !tokenBoundary.test(tail) &&
+      !(tail.startsWith(".") && (tail.length === 1 || tokenBoundary.test(tail.slice(1))));
+    if (parsed.value.precision !== "day" && continuation) {
+      while (visibleEnd < text.length && !tokenBoundary.test(text.slice(visibleEnd, visibleEnd + 2))) visibleEnd++;
+      parsed = parseValue(text.slice(match.index, visibleEnd));
+      re.lastIndex = visibleEnd;
+    }
+    const start = positions[match.index]!, end = ends[visibleEnd - 1]!;
     if (end - start > DATE_LIMITS.quoteUnits) { diagnose("quote_limit"); continue; }
     const quote = raw.slice(start, end);
-    const parsed = parseValue(match[0]);
     const line = text.slice(text.lastIndexOf("\n", match.index!) + 1, match.index!);
     const regionLabel = /(?:^|[;|])\s*(Asia|Europe|America):\s*$/i.exec(line);
     const region = regionLabel ? regionLabel[1]!.toLowerCase() as DateSpan["region"] : null;
     spans.push({ kind: "date", ref: createHash("sha256").update(JSON.stringify([DATE_READER_VERSION, start, end, quote])).digest("hex"),
       start, end, quote, role: "single", group: null, region, ...parsed });
-    locations.push({ start: match.index!, end: match.index! + match[0].length });
+    locations.push({ start: match.index, end: visibleEnd });
   }
   let group = 0;
   for (let i = 0; i + 1 < spans.length; i++) {

@@ -1,7 +1,7 @@
 /** Offline CLI. Reads existing C0/E1 + final events; never builds or refreshes. */
-import { open } from "node:fs/promises";
+import { open, realpath } from "node:fs/promises";
 import { parseArgs } from "node:util";
-import { resolve } from "node:path";
+import { resolve, dirname } from "node:path";
 import { buildNoticeCoverage, COVERAGE_LIMITS, makeCoverageBaseline } from "../src/editorial/notice-coverage.ts";
 import { EvidenceSidecar } from "../src/editorial/event-evidence.ts";
 import { Baseline, IgnoreRegistry, migratePositionalBaseline } from "../src/editorial/coverage-state.ts";
@@ -21,9 +21,10 @@ async function json(path: string) {
 }
 /** Inspect both separator conventions, including Windows component casing,
  * even when a Windows-form path is supplied on a POSIX host. */
-function internalOutputPath(path: string): string {
+async function internalOutputPath(path: string): Promise<string> {
   const output = resolve(path);
-  if (output.split(/[\\/]/).some(part => part.toLowerCase() === "public"))
+  const publicComponent = (value: string) => value.split(/[\\/]/).some(part => part.toLowerCase() === "public");
+  if (publicComponent(output) || publicComponent(await realpath(dirname(output))))
     throw new Error("Coverage state cannot be written under public/");
   return output;
 }
@@ -32,7 +33,7 @@ function internalOutputPath(path: string): string {
 const sidecar = await json(values.sidecar!).catch(() => null);
 if (values["migrate-baseline"]) {
   if (!values.output || values["create-baseline"]) throw new Error("Use --migrate-baseline LEGACY --output NEW_INTERNAL_PATH");
-  const output = internalOutputPath(values.output);
+  const output = await internalOutputPath(values.output);
   const migrated = migratePositionalBaseline(await json(values["migrate-baseline"]));
   const handle = await open(output, "wx");
   try { await handle.writeFile(JSON.stringify(migrated, null, 2) + "\n"); } finally { await handle.close(); }
@@ -42,7 +43,7 @@ if (values["migrate-baseline"]) {
   const validation = buildNoticeCoverage({ sidecar: valid, finalEvents: [] });
   if (validation.diagnostics.length || validation.sources.some(s => !s.available || s.evaluation !== "evaluated"))
     throw new Error("Baseline requires all five usable inventories; missing/incomplete inventory cannot initialize launch suppression");
-  const output = internalOutputPath(values["create-baseline"]);
+  const output = await internalOutputPath(values["create-baseline"]);
   // Internal Git state only. Exclusive creation prevents silent rebaselining.
   const text = JSON.stringify(makeCoverageBaseline(valid.notices), null, 2) + "\n";
   const handle = await open(output, "wx");
