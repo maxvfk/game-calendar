@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
-import { mkdtempSync, rmSync, writeFileSync, readFileSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync, readFileSync, mkdirSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve, dirname } from "node:path";
 import { ARTICLE_SOURCE_GAMES, noticeContentHash } from "../src/editorial/article-evidence.ts";
 import { buildEvidenceSidecar } from "../src/editorial/event-evidence.ts";
 import { emptyBaseline, emptyIgnores } from "../src/editorial/coverage-state.ts";
@@ -37,5 +37,46 @@ test("CLI replay is deterministic; baseline creation is explicit/exclusive; miss
     expect(report.diagnostics).toContain("invalid_notice_inventory"); expect(report.sources.every((s: { evaluation: string }) => s.evaluation === "not evaluated")).toBe(true);
     writeFileSync(ignores, '{"schemaVersion":2,"decisions":[]}');
     expect(Bun.spawnSync(args).exitCode).not.toBe(0);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+
+for (const mode of ["create", "migrate"] as const) test(`B1 ${mode}: portable public-path guard refuses without files; internal writes stay exclusive`, () => {
+  const dir = mkdtempSync(join(tmpdir(), "notice-paths-"));
+  const cli = resolve("scripts/notice-coverage-report.ts");
+  try {
+    const title = "Synthetic path-guard notice", content = "October 29, 2026";
+    const notices = Object.entries(ARTICLE_SOURCE_GAMES).map(([sourceId, game]) => ({ sourceId, game, position: 0, noticeId: "path-test", sourceUrl: `https://example.org/${sourceId}`,
+      title, content, contentHash: noticeContentHash(title, content), format: "markdown" as const, capturedAt: null, lastConfirmedAt: null, fixtureCaptureDay: null }));
+    const evidenceFile = join(dir, "evidence.json"), legacyFile = join(dir, "legacy.json");
+    writeFileSync(evidenceFile, JSON.stringify(buildEvidenceSidecar({ candidates: [], diagnostics: [], notices, articleAttributions: [] }, [])));
+    writeFileSync(legacyFile, JSON.stringify({ schemaVersion: 1, purpose: "initial-notification-suppression-only", entries: notices.map(n => ({ sourceId: n.sourceId, noticeId: n.noticeId, sourceUrl: n.sourceUrl, contentHash: n.contentHash, format: n.format, position: 0 })) }));
+    const args = (output: string) => mode === "create" ? [process.execPath, cli, "--sidecar", evidenceFile, "--create-baseline", output] :
+      [process.execPath, cli, "--migrate-baseline", legacyFile, "--output", output];
+    // Windows syntax is intentionally passed unchanged to Linux child processes.
+    // Without a portable guard these are writable literal filenames here, so
+    // failure cannot be falsely explained by a missing directory or drive.
+    const prohibited = [
+      String.raw`public\baseline.json`, String.raw`PuBlIc\baseline.json`,
+      String.raw`C:\project\PUBLIC\baseline.json`, String.raw`\\server\share\Public\baseline.json`,
+      String.raw`folder/PuBlIc\baseline.json`, "C:/project/PUBLIC/baseline.json",
+      "public/baseline.json", join(dir, "public", "absolute.json"), "Public/uppercase.json",
+    ];
+    for (const output of prohibited) {
+      const target = resolve(dir, output);
+      mkdirSync(dirname(target), { recursive: true }); // An unguarded open would succeed.
+      const result = Bun.spawnSync(args(output), { cwd: dir });
+      expect(result.exitCode).not.toBe(0);
+      expect(result.stderr.toString()).toContain("Coverage state cannot be written under public/");
+      expect(existsSync(target)).toBe(false);
+    }
+    for (const output of ["work/baseline.json", "publicity/baseline.json"]) {
+      const target = resolve(dir, output); mkdirSync(dirname(target), { recursive: true });
+      const first = Bun.spawnSync(args(output), { cwd: dir });
+      expect(first.exitCode).toBe(0);
+      const bytes = readFileSync(target); expect(JSON.parse(bytes.toString()).entries).toHaveLength(5);
+      expect(Bun.spawnSync(args(output), { cwd: dir }).exitCode).not.toBe(0);
+      expect(readFileSync(target)).toEqual(bytes);
+    }
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });

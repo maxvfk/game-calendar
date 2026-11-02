@@ -19,13 +19,20 @@ async function json(path: string) {
   if (file.size > COVERAGE_LIMITS.inputBytes) throw new Error(`Input exceeds ${COVERAGE_LIMITS.inputBytes} bytes: ${path}`);
   return file.json();
 }
+/** Inspect both separator conventions, including Windows component casing,
+ * even when a Windows-form path is supplied on a POSIX host. */
+function internalOutputPath(path: string): string {
+  const output = resolve(path);
+  if (output.split(/[\\/]/).some(part => part.toLowerCase() === "public"))
+    throw new Error("Coverage state cannot be written under public/");
+  return output;
+}
 // Missing/corrupt evidence becomes an explicit not-evaluated report. Invalid
 // reviewed state is a hard CLI error; silently dropping decisions is unsafe.
 const sidecar = await json(values.sidecar!).catch(() => null);
 if (values["migrate-baseline"]) {
   if (!values.output || values["create-baseline"]) throw new Error("Use --migrate-baseline LEGACY --output NEW_INTERNAL_PATH");
-  const output = resolve(values.output);
-  if (output.split("/").includes("public")) throw new Error("Coverage state cannot be written under public/");
+  const output = internalOutputPath(values.output);
   const migrated = migratePositionalBaseline(await json(values["migrate-baseline"]));
   const handle = await open(output, "wx");
   try { await handle.writeFile(JSON.stringify(migrated, null, 2) + "\n"); } finally { await handle.close(); }
@@ -35,9 +42,8 @@ if (values["migrate-baseline"]) {
   const validation = buildNoticeCoverage({ sidecar: valid, finalEvents: [] });
   if (validation.diagnostics.length || validation.sources.some(s => !s.available || s.evaluation !== "evaluated"))
     throw new Error("Baseline requires all five usable inventories; missing/incomplete inventory cannot initialize launch suppression");
-  const output = resolve(values["create-baseline"]);
+  const output = internalOutputPath(values["create-baseline"]);
   // Internal Git state only. Exclusive creation prevents silent rebaselining.
-  if (output.split("/").includes("public")) throw new Error("Coverage state cannot be written under public/");
   const text = JSON.stringify(makeCoverageBaseline(valid.notices), null, 2) + "\n";
   const handle = await open(output, "wx");
   try { await handle.writeFile(text); } finally { await handle.close(); }
