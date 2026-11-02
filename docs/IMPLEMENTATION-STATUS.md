@@ -1,3 +1,52 @@
+## C1a.1 — FINAL ASTRA FOUR-CASE CORRECTIONS, RE-REVIEW PENDING (2026-11-02)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+Starting CURRENT main `51bcb01dd50539bcf9351b6a8088ced89ad16028`; reviewed head
+`475719dfecbc4f07840a67e4cdc1e1a0efedc6db`;
+[audit triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6576548728).
+[Fixes, synthetic regression provenance, report changes and review handoff](evidence/notice-coverage-c1a1-astra.md).
+
+Initial reproductions: **3 pass / 19 fail**. P1-A now projects supported inline
+Markdown/HTML/BBCode formatting through raw UTF-16 mapping and keeps blocks
+separate, with explicit uncertainty for unsupported syntax/limits. P1-B validates
+an entire adjacent timezone token before a trusted instant, preserving legitimate
+offsets and clock-range/missing-offset uncertainty. P1-C masks genuine Markdown
+destinations only in Markdown; non-link bracketed prose stays visible. P2-D
+checks the existing output parent's real path in both baseline write modes,
+retaining B1 case/separator checks and exclusive wx creation. Real Linux symlink
+negatives and valid internal-alias controls pass. No speculative concurrent
+filesystem hardening or unrelated quality fix was introduced.
+
+Frozen install/typecheck/build/feed/report pass; **74 focused tests** and full
+**1574 pass / 3 existing optional age skips / 0 fail** (1577 tests, 97 files).
+Negative reader AND notice-level cases cannot report processed/complete/no
+attention; correctly formed exact-offset positives still match. Every synthetic
+and actual report span was checked against its original UTF-16 quote slice.
+[Fresh public and complete evidence parity](evidence/notice-coverage-c1a1-astra-parity-2026-11-02.json)
+against main: all 10 public files, 292 events / 153 reviewed winners / conflict,
+Timeline and entire E1/C0/C1a.0 sidecar (eight E1 entries/hashes, inventories,
+attributions, diagnostics/refusals) identical. All 113 baseline identities and
+exact file bytes remain unchanged, including the seven absent Genshin notices.
+
+[Observed report delta](evidence/notice-coverage-c1a1-astra-report-delta-2026-11-02.json):
+106 notices / 725 spans / 710 unmatched; status remains 18 partial / 50 unprocessed /
+38 null attention / 0 processed/ignored; evaluation 104 uncertain / 2 complete /
+0 incomplete. Eight quote/ref bounds in four notices change at correct block
+boundaries, without parsed-value/matching changes. One existing unclosed Markdown
+fiction-note emphasis gains explicit unsupported-markup attention. Thus the report
+hash legitimately changes (686ef04c… → 4943adbb…), while repeated new reports match.
+No old distribution or historical evidence record was forced or rewritten.
+
+Only reader/CLI guard, related regressions and factual evidence/docs changed;
+canonical generation, snapshots, IDs/provenance/precision, reviewed precedence,
+C0/E1/C1a.0 contracts, Timeline and Account Sync remain untouched. Final exact-head
+CI including PG17 and mandatory encrypted recovery is recorded in PR161.
+**Next concrete step:** focused Sonnet/DeepSeek four-case re-review on the new
+exact head, then focused Astra closure. CI is not review approval. Do not merge
+or begin C1b/C2, Daily Passes or other milestones.
+
+---
+
 ## C1a.1 — B1 PORTABLE OUTPUT GUARD CORRECTED, READY FOR FINAL ASTRA (2026-11-02)
 
 [PR #161](https://github.com/maxvfk/game-calendar/pull/161) remains unmerged on

@@ -169,7 +169,17 @@ Reader work is bounded to 250,000 UTF-16 units and 256 spans per field, with
 512-unit verbatim quotes. The lexical markup reader does not execute content,
 resolve entities externally, construct a DOM or follow URLs. It masks tag
 attributes, comments, active content and URL destinations; it decodes a small
-entity set with source offsets. Malformed/unclosed markup, unknown entities,
+entity set with source offsets. Supported inline HTML/BBCode tags and paired
+single-line Markdown emphasis/code delimiters are elided with a raw UTF-16
+removal map, rather than substituted spaces inside dates. Block boundaries
+remain separate and date/range grammar cannot cross them. Unknown inline syntax
+remains explicit uncertainty. Quotes span the original first/last visible date
+units, including any intervening raw formatting; outer opening tags/markers need
+not be part of a date quote. Every quote equals the original UTF-16 slice.
+Markdown link destinations are masked only in Markdown and only for supported
+syntactically valid link forms. Bracketed parenthesized prose remains visible in
+HTML/BBCode and invalid/escaped Markdown links. URL metadata stays excluded in
+all three formats. Malformed/unclosed markup, unknown entities,
 unsupported relative dates and limits prevent `processed`. This is a bounded
 source-format reader, not a general natural-language/HTML interpretation engine.
 Month/day titles such as the character name March 7th or Tomorrow in the Frame
@@ -183,7 +193,11 @@ All input evidence/state and outputs are internal, untrusted analysis data.
 
 Bare signed offsets are accepted only when adjacent to an ISO `YYYY-MM-DDT`
 clock. Human `00:00-12:00` ranges remain ambiguous, never a false UTC instant;
-explicit `UTC±H[:MM]` and ISO-T offset forms remain supported. BBCode recognizes
+explicit `UTC±H[:MM]` and ISO-T offset forms remain supported. A clock match
+is extended through an adjacent timezone-token suffix before the anchored zone
+validator can produce an instant. `UTC+5.5`, `UTC+8:3` and other unsupported
+suffixes remain unresolved rather than accepting a valid prefix; ordinary
+sentence punctuation still terminates a valid zone. BBCode recognizes
 only supported syntax and respects backslash escaping; arbitrary bracketed prose
 stays readable. Active content and comments remain masked and trigger unscanned
 attention. Known precision mismatches intentionally produce gaps. No automatic server-time
@@ -230,3 +244,13 @@ its report is byte-identical to the pre-indexed result. Delivery is
 
 Current F1–F6 corrections, validation and next review gate are recorded in
 [the review handoff](notice-coverage-c1a1-review.md).
+
+
+The output guard retains separator/case checks and additionally resolves the
+existing parent directory with `realpath` before either exclusive write. A
+parent alias into `public/` is rejected; valid internal aliases still work. This
+addresses existing symlinks, not speculative hostile concurrent filesystem swaps.
+
+[Final Astra correction evidence](notice-coverage-c1a1-astra.md) records the
+four confirmed reader/containment fixes, synthetic regression provenance,
+current report changes, fresh main parity and the next focused review gate.
