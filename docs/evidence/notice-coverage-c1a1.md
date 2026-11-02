@@ -170,7 +170,7 @@ Reader work is bounded to 250,000 UTF-16 units and 256 spans per field, with
 resolve entities externally, construct a DOM or follow URLs. It masks tag
 attributes, comments, active content and URL destinations; it decodes a small
 entity set with source offsets. Supported inline HTML/BBCode tags and paired
-single-line Markdown emphasis/code delimiters are elided with a raw UTF-16
+single-line Markdown emphasis and paired code delimiters are elided with a raw UTF-16
 removal map, rather than substituted spaces inside dates. Block boundaries
 remain separate and date/range grammar cannot cross them. Unknown inline syntax
 remains explicit uncertainty. Quotes span the original first/last visible date
@@ -254,3 +254,12 @@ addresses existing symlinks, not speculative hostile concurrent filesystem swaps
 [Final Astra correction evidence](notice-coverage-c1a1-astra.md) records the
 four confirmed reader/containment fixes, synthetic regression provenance,
 current report changes, fresh main parity and the next focused review gate.
+
+
+[Residual Astra closure evidence](notice-coverage-c1a1-residual.md) supersedes the
+previous closure target: color/font/size BBCode styles are recognized without
+executing attributes; code contexts protect visible literals from Markdown link
+masking; timezone suffix validation examines internal punctuation; narrowly
+recognized adjacent block fragments produce uncertainty without a joined date.
+It records new-main integration, the three-way rolling-input replay and the next
+focused independent closure gate. P2-D remains unchanged.

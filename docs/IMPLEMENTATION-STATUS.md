@@ -1,3 +1,54 @@
+## C1a.1 — RESIDUAL ASTRA P1 CORRECTED, CLOSURE REVIEW PENDING (2026-11-02)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+[DeepSeek triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6580700179)
+reviewed `a044be733e8b6226665a1d26139521e68fb162c7`. CURRENT main
+`dba863d373a3e50c9dce32fc45e2dda178adc460` was integrated by a normal,
+conflict-free merge (`eacaff50d538d2708358ba603366be875bc71612`); no source refresh
+was performed. Snapshots and the already-merged CI-RECOVERY files are absent
+from the final PR diff against new main.
+
+[Counterexamples, bounded recognition policy and validation](evidence/notice-coverage-c1a1-residual.md):
+parameterized color/font/size BBCode exposes inline dates without treating
+ordinary bracketed prose as tags; adjacent recognizable date fragments across
+nearby blocks gain explicit uncertainty without an assembled date; timezone
+punctuation followed by digits cannot certify a valid prefix; literal backtick
+and HTML code contexts keep visible dates out of Markdown destination masking.
+Legitimate styles, exact offsets/punctuation, real links, URL metadata and raw
+UTF-16 quote offsets remain tested. P2-D's existing realpath/separator/case/wx
+guard is unchanged and its real-symlink regressions pass.
+
+Final authored regression file on the old reader: **28 pass / 18 fail**; after
+correction, **95 focused tests / 966 assertions pass**. Frozen install,
+typecheck, build, separate feed build and deterministic report pass. Full suite:
+**1595 pass / 3 existing optional age skips / 0 fail** (1598 tests, 97 files).
+[Fixed-clock parity against new main](evidence/notice-coverage-c1a1-residual-parity-2026-11-02.json)
+passes all 10 public files and the entire E1/C0/C1a.0 sidecar, including eight E1
+entries/hashes, inventories, attributions, diagnostics/refusals; 292 canonical
+events, 153 reviewed winners and Timeline/conflict outputs match.
+
+[Three-way report replay](evidence/notice-coverage-c1a1-residual-report-2026-11-02.json)
+separates inputs from code: old/new readers produce identical bytes on refreshed
+inputs. Inventory changes 106 → 122 notices (16 Genshin additions), 725 → 776 spans,
+710 → 761 unmatched. Status: 18 partial / 64 unprocessed / 40 unclassified /
+0 processed or ignored. Evaluation: 120 uncertain / 2 complete / 0 incomplete.
+All 113 baseline identities and exact bytes remain unchanged; six revised ZZZ
+notices correctly lose baseline membership (106 → 100 current members).
+Report SHA changes solely with refreshed inputs (4943adbb… → 90c1cc97…).
+No actual rolling uncertainty/span/status change is attributable to this reader
+correction; independently authored counterexamples establish the fixes.
+
+Final pushed head and exact-head CI results including PG17/mandatory encrypted
+recovery are recorded in PR161. Complete evaluation describes reading, not
+coverage: an exact missing code-context deadline is partial with required
+attention even when completely read. No engine/status redesign, source snapshot,
+canonical ID/date/provenance/precision, reviewed precedence, Timeline, Account
+Sync, workflow or public schema change. **Next concrete step:** focused independent
+closure review on the exact new head. Do not merge or begin C1b/C2, Daily Passes
+or another milestone.
+
+---
+
 ## C1a.1 — FINAL ASTRA FOUR-CASE CORRECTIONS, RE-REVIEW PENDING (2026-11-02)
 
 Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
