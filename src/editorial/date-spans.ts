@@ -38,7 +38,7 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
     return slashes % 2 === 1;
   };
   const inlineHtml = new Set(["b", "strong", "i", "em", "u", "s", "strike", "span", "t", "a", "font", "small", "big", "sup", "sub", "code", "del", "ins"]);
-  const blockHtml = new Set(["p", "div", "br", "hr", "li", "ul", "ol", "table", "thead", "tbody", "tfoot", "tr", "td", "th", "h1", "h2", "h3", "h4", "h5", "h6", "section", "article", "header", "footer", "main", "aside", "figure", "figcaption", "pre", "blockquote", "dl", "dt", "dd"]);
+  const blockHtml = new Set(["p", "div", "br", "hr", "li", "ul", "ol", "table", "thead", "tbody", "tfoot", "tr", "td", "th", "h1", "h2", "h3", "h4", "h5", "h6", "section", "article", "header", "footer", "main", "aside", "figure", "figcaption", "pre", "blockquote", "dl", "dt", "dd", "details", "summary"]);
   const mask = (start: number, end: number) => { for (let i = start; i < end; i++) if (chars[i] !== "\n" && chars[i] !== "\r") chars[i] = " "; };
   const stack: string[] = [];
   const voidTags = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);

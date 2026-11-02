@@ -42,10 +42,13 @@ test("P1-A inline projection preserves exact positive matches and separates bloc
     const r = coverage(raw, format); mapped(raw, r.spans);
     expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
   }
-  for (const [format, raw] of [["html", "<p>2026</p><p>-10-29T04:00Z</p>"], ["bbcode", "[p]2026[/p][p]-10-29T04:00Z[/p]"], ["markdown", "October\n\n29, 2026"]] as const) {
+  for (const [format, raw] of [["html", "<p>2026</p><p>-10-29T04:00Z</p>"], ["bbcode", "[p]2026[/p][p]-10-29T04:00Z[/p]"], ["markdown", "October\n\n29, 2026"], ["html", "<details><summary>2026</summary>-10-29T04:00Z</details>"]] as const) {
     const read = readDateSpans(raw, format); mapped(raw, read.spans);
     expect(read.spans.some(s => s.kind === "date" && s.value.date === "2026-10-29")).toBe(false);
   }
+  const details = "🧭 <details><summary>Quest</summary><b>2026</b>-10-29</details>";
+  const read = readDateSpans(details, "html"); mapped(details, read.spans);
+  expect(read.spans[0]!.value.date).toBe("2026-10-29"); expect(read.diagnostics).toEqual([]);
 });
 for (const [token, clock] of [["UTC+5.5", "08:59"], ["UTC+8:3", "11:59"], ["UTC+8:300", "11:59"], ["UTC+8foo", "11:59"], ["UTC+08:30junk", "12:29"], ["UTC+8/30", "11:59"], ["Zfoo", "03:59"], ["UTC+8_extra", "11:59"], ["UTC+8%", "11:59"], ["UTC+8=30", "11:59"]]) test(`P1-B entire malformed ${token} is uncertain, never a trusted prefix`, () => {
   const bad = `🧭 Deadline: 2026-11-02 ${clock} ${token}`;
