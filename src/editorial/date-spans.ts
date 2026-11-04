@@ -293,9 +293,10 @@ export function readDateSpans(raw: string, format: "markdown" | "html" | "bbcode
         while (tokenEnd < text.length && !/\s/u.test(text[tokenEnd]!)) tokenEnd++;
       }
       const tail = text.slice(visibleEnd, tokenEnd);
-      // A standalone sentence closer after a bare token may be punctuation.
+      // A sentence closer needs a corresponding opener before the date.
       // Never erase an opener, embedded parentheses or extra wrapper closers.
-      const sentenceTail = !/[()]/.test(match[0]) && /^[,;!?.)\[\]{}"']*$/.test(tail);
+      const closingDate = !tail.includes(")") || text[match.index - 1] === "(" && tail.split(")").length === 2;
+      const sentenceTail = closingDate && !/[()]/.test(match[0]) && /^[,;!?.)\[\]{}"']*$/.test(tail);
       const continuation = sentenceTail ? "" : tail.replace(/[,;!?.[\]{}"']+$/u, "");
       if (continuation) {
         visibleEnd += continuation.length;

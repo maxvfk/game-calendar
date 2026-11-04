@@ -246,9 +246,14 @@ test("Astra P1-B nested wrappers and stray parentheses never produce an instant"
     expect(bad.value.instant).toBeNull(); expect(bad.value.offsetMinutes).toBeNull(); expect(bad.uncertainty.length).toBeGreaterThan(0);
     const r = gap(raw, "markdown"); expect(r.spans.find(s => s.ref === bad.ref)!.matches).toEqual([]);
   }
+  for (const expression of ["2026-11-02T12:29+08:30)", "2026-11-02T03:59Z)"]) {
+    const raw = `🧭 Main: ${period}\nEnd: ${expression}`;
+    const read = readDateSpans(raw); mapped(raw, read.spans); expect(read.spans.at(-1)!.value.instant).toBeNull();
+    gap(raw, "markdown");
+  }
 });
 test("Astra P1-B balanced supported wrappers, sentence punctuation and ISO offsets remain exact", () => {
-  for (const expression of ["2026-11-02 11:59 (UTC+8)", "2026-11-02 12:29 (UTC+8:30)", "2026-11-02 12:29 ( UTC+8:30 ).", "2026-11-02 12:29 UTC+8:30", "2026-11-02T12:29+08:30", "2026-11-02T03:59Z.)"]) {
+  for (const expression of ["2026-11-02 11:59 (UTC+8)", "2026-11-02 12:29 (UTC+8:30)", "2026-11-02 12:29 ( UTC+8:30 ).", "2026-11-02 12:29 UTC+8:30", "2026-11-02T12:29+08:30", "(2026-11-02T03:59Z.)"]) {
     const raw = `🧭 Main: ${period}\nEnd: ${expression}`;
     const read = readDateSpans(raw); mapped(raw, read.spans);
     expect(read.spans.at(-1)!.value.instant).toBe("2026-11-02T03:59:00.000Z");
