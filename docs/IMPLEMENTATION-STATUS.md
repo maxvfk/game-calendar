@@ -1,3 +1,40 @@
+## C1a.1 — CONTAINER-PREFIXED P1-C CORRECTED, CLOSURE REVIEW PENDING (2026-11-05)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+[Focused finding](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6642256602)
+reviewed `e60ec30b4432c880db7be1b6d963f656f77451aa`. CURRENT main remains
+`9488ecb3f578adb09b748600ac1cb58282724a88`, already integrated; no merge/refresh.
+[Correction, context distinctions and regressions](evidence/notice-coverage-c1a1-containers-2026-11-05.md)
+use a bounded quote/list-prefix and relative-indent probe before link masking.
+Tabs, marker padding, list continuations, blank container lines and dedents keep
+literal dates visible while genuine paragraph/quote/item links remain metadata.
+Ambiguous transitions keep explicit uncertainty; depth beyond 16 prefixes is
+incomplete with attention. Original UTF-16 mapping is preserved. No full
+CommonMark parser or new dependency; P1-A/P1-B/P2-D and CZN recovery unchanged.
+
+Reviewed-reader final regression file: **71 pass / 13 fail**; corrected focused
+set **133 pass / 2453 assertions**. The earlier ambiguous four-physical-space
+list row is now an explicit prose-link positive: only two spaces remain after
+list padding. Independent negative code, exact covered-date, nested/container,
+transition, inline/fenced/HTML, whitespace and depth controls pass. Required
+local checks pass; full suite **1633 pass / 3 existing optional age skips / 0 fail**
+(1636 tests, 97 files). [Fresh parity](evidence/notice-coverage-c1a1-containers-parity-2026-11-05.json)
+matches all 10 public files, 296 events / 153 reviewed winners, Timeline/conflicts
+and the complete E1/C0/C1a.0 sidecar (eight E1 hashes, inventories, attributions,
+diagnostics/refusals). All 113 baseline identities and bytes remain intact.
+
+[Same-input report comparison](evidence/notice-coverage-c1a1-containers-report-2026-11-05.json)
+is byte-identical to the reviewed reader: 101 notices / 714 spans / 699 unmatched;
+20 partial / 44 unprocessed / 37 unclassified, evaluation 99 uncertain / 2 complete,
+76 current baseline members. SHA remains 003a4cdb…; no rolling example or output
+distribution is invented/forced. Reported synthetic cases now retain the exact
+missing deadline as partial/complete/attention required. Final head and exact-head
+PG17/encrypted-recovery CI results are recorded in PR161. **Next:** one focused
+independent container-class P1-C closure on the exact new head. Do not merge or
+begin C1b/C2, Daily Passes or another milestone.
+
+---
+
 ## C1a.1 — TWO FINAL ASTRA BLOCKERS CORRECTED, CLOSURE REVIEW PENDING (2026-11-04)
 
 Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
