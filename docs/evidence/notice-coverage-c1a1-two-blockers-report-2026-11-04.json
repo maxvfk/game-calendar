@@ -1,0 +1,404 @@
+{
+  "startingMain": "9488ecb3f578adb09b748600ac1cb58282724a88",
+  "previousMain": "dba863d373a3e50c9dce32fc45e2dda178adc460",
+  "reviewedHead": "dc2e49eef6d739dedbed056a1d97fc624fa8e4cc",
+  "integrationMerge": "f45564df08dbe2f1e4eb67351de24b01341ec8ee",
+  "codeCheckpoint": "8a154e6b8208d89a05351dd95ca1456855e59f31",
+  "clock": "2026-11-01T00:00:00.000Z",
+  "baseline": {
+    "entries": 113,
+    "bytesUnchanged": true,
+    "sha256": "f9495e8f1a09bc45f21773116870b836f65e63b24d471a4bf3c945362f244cb9"
+  },
+  "reviewedReaderOldInputs": {
+    "reportSha256": "20fbc663a1240b7c48a0c31ab684af9a41ffe3341fb7cccd00ff9cf0b3f6256c",
+    "notices": 122,
+    "spans": 774,
+    "unmatchedSpans": 759,
+    "instants": 54,
+    "status": {
+      "partially processed": 18,
+      "unclassified": 40,
+      "unprocessed": 64
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 120
+    },
+    "baselineMembers": 100
+  },
+  "reviewedReaderCurrentMainInputs": {
+    "reportSha256": "003a4cdbaa589ba0138dab8308268d6001dfde8aaeeaf057559e35c0dfd354cb",
+    "notices": 101,
+    "spans": 714,
+    "unmatchedSpans": 699,
+    "instants": 54,
+    "status": {
+      "partially processed": 20,
+      "unclassified": 37,
+      "unprocessed": 44
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 99
+    },
+    "baselineMembers": 76
+  },
+  "correctedReaderCurrentMainInputs": {
+    "reportSha256": "003a4cdbaa589ba0138dab8308268d6001dfde8aaeeaf057559e35c0dfd354cb",
+    "notices": 101,
+    "spans": 714,
+    "unmatchedSpans": 699,
+    "instants": 54,
+    "status": {
+      "partially processed": 20,
+      "unclassified": 37,
+      "unprocessed": 44
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 99
+    },
+    "baselineMembers": 76
+  },
+  "readerOnlyReportByteIdentical": true,
+  "deterministicReplay": true,
+  "allActualUtf16SourceQuotesVerified": true,
+  "publicManifestRecheckedAfterSeparateFeedBuild": true,
+  "counterexamplesBefore": [
+    {
+      "case": "UTC+8(30)",
+      "quote": "2026-11-02 12:29 UTC+8(30",
+      "instant": "2026-11-02T03:59:00.000Z",
+      "offsetMinutes": 510,
+      "uncertainty": [],
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "matchedSpans": 3,
+      "unmatched": []
+    },
+    {
+      "case": "UTC+8:3(0)",
+      "quote": "2026-11-02 12:29 UTC+8:3(0",
+      "instant": "2026-11-02T03:59:00.000Z",
+      "offsetMinutes": 510,
+      "uncertainty": [],
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "matchedSpans": 3,
+      "unmatched": []
+    },
+    {
+      "case": "UTC+8(3)0",
+      "quote": "2026-11-02 12:29 UTC+8(3)0",
+      "instant": "2026-11-02T03:59:00.000Z",
+      "offsetMinutes": 510,
+      "uncertainty": [],
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "matchedSpans": 3,
+      "unmatched": []
+    },
+    {
+      "case": "UTC+8)3(0",
+      "quote": "2026-11-02 12:29 UTC+8)3(0",
+      "instant": "2026-11-02T03:59:00.000Z",
+      "offsetMinutes": 510,
+      "uncertainty": [],
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "matchedSpans": 3,
+      "unmatched": []
+    },
+    {
+      "case": "    ",
+      "quote": null,
+      "instant": null,
+      "offsetMinutes": null,
+      "uncertainty": null,
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "matchedSpans": 2,
+      "unmatched": []
+    },
+    {
+      "case": "\t",
+      "quote": null,
+      "instant": null,
+      "offsetMinutes": null,
+      "uncertainty": null,
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "matchedSpans": 2,
+      "unmatched": []
+    }
+  ],
+  "counterexamplesAfter": [
+    {
+      "case": "UTC+8(30)",
+      "quote": "2026-11-02 12:29 UTC+8(30)",
+      "instant": null,
+      "offsetMinutes": null,
+      "uncertainty": [
+        "invalid_timezone_delimiter"
+      ],
+      "status": "partially processed",
+      "evaluation": "uncertain",
+      "attentionRequired": true,
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "c1b03b93da16d58050e570bc462011b42dc78022f5f5e5052a0cc4e1830a0b92",
+          "quote": "2026-11-02 12:29 UTC+8(30)",
+          "reason": "unresolved_date"
+        }
+      ]
+    },
+    {
+      "case": "UTC+8:3(0)",
+      "quote": "2026-11-02 12:29 UTC+8:3(0)",
+      "instant": null,
+      "offsetMinutes": null,
+      "uncertainty": [
+        "invalid_timezone_delimiter"
+      ],
+      "status": "partially processed",
+      "evaluation": "uncertain",
+      "attentionRequired": true,
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "d04d6d610c82b91a1af9f822f2424d73370250a34ff965c3b3809da259895968",
+          "quote": "2026-11-02 12:29 UTC+8:3(0)",
+          "reason": "unresolved_date"
+        }
+      ]
+    },
+    {
+      "case": "UTC+8(3)0",
+      "quote": "2026-11-02 12:29 UTC+8(3)0",
+      "instant": null,
+      "offsetMinutes": null,
+      "uncertainty": [
+        "invalid_timezone_delimiter"
+      ],
+      "status": "partially processed",
+      "evaluation": "uncertain",
+      "attentionRequired": true,
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "d487169f0697449a344ae8e3f1565f54be2f3ca19482f692bc8f05f293871821",
+          "quote": "2026-11-02 12:29 UTC+8(3)0",
+          "reason": "unresolved_date"
+        }
+      ]
+    },
+    {
+      "case": "UTC+8)3(0",
+      "quote": "2026-11-02 12:29 UTC+8)3(0",
+      "instant": null,
+      "offsetMinutes": null,
+      "uncertainty": [
+        "invalid_timezone_delimiter"
+      ],
+      "status": "partially processed",
+      "evaluation": "uncertain",
+      "attentionRequired": true,
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "63bfca3214e3e4038d55238ef65a4fa4af6541d7c9ecc9520a730e63130ace03",
+          "quote": "2026-11-02 12:29 UTC+8)3(0",
+          "reason": "unresolved_date"
+        }
+      ]
+    },
+    {
+      "case": "    ",
+      "quote": "2026-10-29T04:00Z",
+      "instant": "2026-10-29T04:00:00.000Z",
+      "offsetMinutes": 0,
+      "uncertainty": [],
+      "status": "partially processed",
+      "evaluation": "complete",
+      "attentionRequired": true,
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "850ef83a2cbb81075809657fae97f84abd89715b09a924e4352c414de89a1a6f",
+          "quote": "2026-10-29T04:00Z",
+          "reason": "no_compatible_represented_boundary"
+        }
+      ]
+    },
+    {
+      "case": "\t",
+      "quote": "2026-10-29T04:00Z",
+      "instant": "2026-10-29T04:00:00.000Z",
+      "offsetMinutes": 0,
+      "uncertainty": [],
+      "status": "partially processed",
+      "evaluation": "complete",
+      "attentionRequired": true,
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "98c12fe8d118c23ea7a2235599619212efdcd45675b1386d7e458378426126f8",
+          "quote": "2026-10-29T04:00Z",
+          "reason": "no_compatible_represented_boundary"
+        }
+      ]
+    }
+  ],
+  "newNoticeIdentities": [
+    [
+      "genshin-kqm-ginews",
+      "21999"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "22011"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "22014"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "22031"
+    ]
+  ],
+  "removedNoticeIdentities": [
+    [
+      "genshin-kqm-ginews",
+      "20508"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21168"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21811"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21879"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21880"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21881"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21882"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21885"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21888"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21889"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21890"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21897"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21899"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21900"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21902"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21908"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21923"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21924"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21946"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21947"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "21956"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "22002"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "22005"
+    ],
+    [
+      "genshin-kqm-ginews",
+      "3802"
+    ],
+    [
+      "hsr-kqm-hsrnews",
+      "1422"
+    ]
+  ],
+  "revisedNoticeIdentities": [],
+  "regressionReproduction": {
+    "oldReaderPass": 56,
+    "oldReaderFail": 12,
+    "focusedCorrectedPass": 117,
+    "focusedCorrectedFail": 0
+  },
+  "inheritedCznTestBlocker": {
+    "mainReproduced": true,
+    "originalTestCommit": "1cb00dc77afe64d1c1649b0d780ae636d9f39467",
+    "originalSnapshotSha256": "e0b7affc0bc728a036178f1006d5469f1629670330bfa6a8ae5a66b38f6bca75",
+    "existingFixture": "test/fixtures/czn/verified-banners-2026-10-22.html",
+    "fixtureSha256": "eaed1d7d2cdb17227ebae6f65f3c743cb48ea246fbaecbd25d4919e66436083e",
+    "allTenParsedEventsIdenticalToOriginalAuthoringInput": true,
+    "allAssertionsPreserved": true,
+    "newFixtureOrSourceFetch": false
+  },
+  "note": "Observed replay, not generated test expectations. Report changes reflect inherited main inputs; reader-only report is byte-identical. CZN validation recovery changes only an unrelated historical test input path to an already-existing equivalent fixture."
+}

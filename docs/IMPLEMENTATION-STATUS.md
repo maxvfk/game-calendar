@@ -1,3 +1,47 @@
+## C1a.1 — TWO FINAL ASTRA BLOCKERS CORRECTED, CLOSURE REVIEW PENDING (2026-11-04)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+[Coordinator triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6591342430)
+reviewed `dc2e49eef6d739dedbed056a1d97fc624fa8e4cc`. CURRENT main
+`9488ecb3f578adb09b748600ac1cb58282724a88` merged normally without conflicts
+(`f45564df08dbe2f1e4eb67351de24b01341ec8ee`); its refreshed inputs and Timeline
+labels are inherited unchanged. No source refresh was performed.
+
+[Corrections, counterexamples and validation](evidence/notice-coverage-c1a1-two-blockers-2026-11-04.md):
+P1-B validates raw timezone wrappers before removing one supported outer pair;
+embedded/unmatched parentheses cannot normalize into offsets or be trimmed away.
+P1-C protects four-space/tab code before Markdown destination masking, tracks
+blank/dedent/paragraph transitions and diagnoses ambiguous block-marker contexts.
+Exact missing literals remain unmatched with partial/complete/attention; malformed
+timezones have null instants/offsets and partial/uncertain/attention. Positive
+wrappers, offsets, punctuation, ranges and code/link contexts remain covered.
+P1-A/P2-D, matching/status, baseline/ignore and CLI behavior remain unchanged.
+
+Final authored tests on reviewed reader: **56 pass / 12 fail**; corrected focused
+set: **117 pass / 1951 assertions**. A concrete unrelated current-main blocker was
+also reproduced: historical CZN test expects ten banners from a now-eight-card
+rolling snapshot. Minimal separate recovery reuses an existing historical fixture
+whose full parsed ten-event array equals the original test-authoring snapshot;
+only input path/comment change, every assertion remains. No new fixture/capture.
+Required local gates pass; full suite **1617 pass / 3 existing optional age skips /
+0 fail** (1620 tests, 97 files). [Fresh parity](evidence/notice-coverage-c1a1-two-blockers-parity-2026-11-04.json)
+against new main matches all 10 public files, 296 events / 153 reviewed winners,
+Timeline/conflicts and complete E1/C0/C1a.0 sidecar (eight E1 hashes, inventories,
+attributions, diagnostics/refusals). All 113 baseline identities/bytes remain.
+
+[Three-way report replay](evidence/notice-coverage-c1a1-two-blockers-report-2026-11-04.json):
+reviewed/corrected readers give identical bytes on new inputs. Input turnover
+(four Genshin additions, 24 Genshin/one HSR removals) changes 122 → 101 notices,
+774 → 714 spans, 759 → 699 unmatched. Current status: 20 partial / 44 unprocessed /
+37 unclassified; evaluation 99 uncertain / 2 complete. Current baseline members
+100 → 76 solely through inputs, without altering the stored 113 identities.
+Report hash 20fbc663… → 003a4cdb… reflects inputs, not forced distributions.
+Final head and exact-head PG17/encrypted-recovery CI results are recorded in PR161.
+**Next:** focused independent closure of these two findings on the exact new head.
+Do not merge or begin C1b/C2, Daily Passes or another milestone.
+
+---
+
 ## C1a.1 — FINAL P1-B TOKEN BOUNDARY CORRECTED, CLOSURE REVIEW PENDING (2026-11-03)
 
 Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
