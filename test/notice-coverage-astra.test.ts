@@ -227,3 +227,64 @@ test("final P1-B real markup boundaries remain distinct from unsupported literal
     expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
   }
 });
+
+// Astra High: validate raw zone structure; preserve indented literal code.
+for (const zone of ["UTC+8(30)", "UTC+8:3(0)", "UTC+8(3)0", "UTC+8)3(0"]) test(`Astra P1-B raw ${zone} cannot normalize into a represented instant`, () => {
+  const raw = `🧭 Main: ${period}\nEnd: 2026-11-02 12:29 ${zone}`;
+  const r = gap(raw, "markdown"); expect(r.status).toBe("partially processed");
+  const read = readDateSpans(raw); mapped(raw, read.spans);
+  const bad = read.spans.find(s => s.quote.includes("12:29"))!;
+  expect(bad.value.instant).toBeNull(); expect(bad.value.offsetMinutes).toBeNull(); expect(bad.uncertainty.length).toBeGreaterThan(0);
+  expect(bad.quote).toContain(zone); expect(r.spans.find(s => s.ref === bad.ref)!.matches).toEqual([]);
+  expect(r.unmatchedSpans.some(s => s.ref === bad.ref)).toBe(true);
+});
+test("Astra P1-B nested wrappers and stray parentheses never produce an instant", () => {
+  for (const zone of ["UTC+8()", "UTC+8(", "UTC+8)(", "UTC+8:3)", "(UTC+8:30))", "((UTC+8:30))", "(UTC+8(30))", "UTC+8:30(note)", "(+08:30)"]) {
+    const raw = `🧭 Main: ${period}\nEnd: 2026-11-02 12:29 ${zone}`;
+    const read = readDateSpans(raw); mapped(raw, read.spans);
+    const bad = read.spans.find(s => s.quote.includes("12:29"))!;
+    expect(bad.value.instant).toBeNull(); expect(bad.value.offsetMinutes).toBeNull(); expect(bad.uncertainty.length).toBeGreaterThan(0);
+    const r = gap(raw, "markdown"); expect(r.spans.find(s => s.ref === bad.ref)!.matches).toEqual([]);
+  }
+});
+test("Astra P1-B balanced supported wrappers, sentence punctuation and ISO offsets remain exact", () => {
+  for (const expression of ["2026-11-02 11:59 (UTC+8)", "2026-11-02 12:29 (UTC+8:30)", "2026-11-02 12:29 ( UTC+8:30 ).", "2026-11-02 12:29 UTC+8:30", "2026-11-02T12:29+08:30", "2026-11-02T03:59Z.)"]) {
+    const raw = `🧭 Main: ${period}\nEnd: ${expression}`;
+    const read = readDateSpans(raw); mapped(raw, read.spans);
+    expect(read.spans.at(-1)!.value.instant).toBe("2026-11-02T03:59:00.000Z");
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  }
+});
+for (const indent of ["    ", "\t", "  \t"]) test(`Astra P1-C indented code ${JSON.stringify(indent)} retains a missing exact deadline`, () => {
+  const raw = `🧭 Main: ${period}\n\n${indent}[Quest](2026-10-29T04:00Z)`;
+  const read = readDateSpans(raw); mapped(raw, read.spans);
+  expect(read.spans.at(-1)!.value.instant).toBe("2026-10-29T04:00:00.000Z");
+  const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+  expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(true);
+  const missing = r.spans.find(s => s.value.instant === "2026-10-29T04:00:00.000Z")!;
+  expect(missing.matches).toEqual([]); expect(r.unmatchedSpans.some(s => s.ref === missing.ref)).toBe(true);
+});
+test("Astra P1-C blank lines preserve code blocks, dedents restore genuine link masking", () => {
+  const raw = `🧭 Main: ${period}\n\n    [Quest](2026-10-29T04:00Z)\n\n\t[Quest2](2026-10-30T04:00Z)\n\n[Actual link](2026-10-28T04:00Z)\nParagraph\n    [Continuation link](2026-10-27T04:00Z)`;
+  const read = readDateSpans(raw); mapped(raw, read.spans);
+  expect(read.spans.map(s => s.value.instant)).toEqual(["2026-10-19T10:00:00.000Z", "2026-11-02T03:59:00.000Z", "2026-10-29T04:00:00.000Z", "2026-10-30T04:00:00.000Z"]);
+  const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+  expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(true); expect(r.unmatchedSpans).toHaveLength(2);
+});
+test("Astra P1-C ordinary indented paragraph continuations and three-space links remain links", () => {
+  for (const indent of ["    ", "\t", "  \t"]) {
+    const raw = `🧭 Main: ${period}\n${indent}[Continuation](2026-10-29T04:00Z)\n  End: 2026-11-02T03:59Z\n\n   [Three-space link](2026-10-30T04:00Z)`;
+    const read = readDateSpans(raw); mapped(raw, read.spans);
+    expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02", "2026-11-02"]);
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  }
+});
+test("Astra P1-C exact covered indented code, backticks, HTML code and URL metadata stay distinct", () => {
+  const raw = `🧭 Main: ${period}\n\n    [End](2026-11-02T03:59Z)\n\t[Site](https://example.org/2026-10-29)\n\n\`[End](2026-11-02T03:59Z)\`\n<code>[End](2026-11-02T03:59Z)</code>\n[Real link](2026-10-29T04:00Z)`;
+  const read = readDateSpans(raw); mapped(raw, read.spans);
+  expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02", "2026-11-02", "2026-11-02", "2026-11-02"]);
+  const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+  expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+});

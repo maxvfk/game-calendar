@@ -122,12 +122,25 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
     if (unfinished && !escaped(unfinished.index)) diagnose("malformed_markup");
   }
   if (format === "markdown") {
+    // Standard indented code cannot interrupt a paragraph. Blank lines allow
+    // entry/continuation; a non-indented content line ends the block. Count tab
+    // stops as columns while keeping the original UTF-16 indices untouched.
+    let previousBlank = true, indentedCode = false;
+    for (const line of raw.matchAll(/[^\r\n]*(?:\r\n|\r|\n|$)/g)) {
+      const blank = /^[ \t\r\n]*$/.test(line[0]);
+      if (blank) { previousBlank = true; continue; }
+      let columns = 0;
+      for (const c of /^[ \t]*/.exec(line[0])![0]) columns += c === "\t" ? 4 - columns % 4 : 1;
+      indentedCode = columns >= 4 && (previousBlank || indentedCode);
+      if (indentedCode) codeContext.fill(1, line.index!, line.index! + line[0].length);
+      previousBlank = false;
+    }
     // Identify code before Markdown formatting/link matching. Equal backtick
     // runs delimit literal content; unmatched runs stay explicit uncertainty.
     // This scan and the disjoint bitmap fills are bounded by inputUnits.
     let codeStart: number | null = null, ticks = 0;
     for (let i = 0; i < raw.length; i++) {
-      if (raw[i] !== "`") continue;
+      if (raw[i] !== "`" || codeContext[i]) continue;
       let end = i + 1; while (raw[end] === "`") end++;
       if (codeStart === null) {
         if (!escaped(i)) { codeStart = i; ticks = end - i; }
@@ -221,11 +234,14 @@ function parseValue(text: string): { value: DateValue; uncertainty: string[] } {
     else clock = `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
     const zoneSuffix = rest.slice(clockMatch[0].length);
     const rawZone = zoneSuffix.trim();
-    const zone = rawZone.replace(/[()]/g, "").replace("−", "-");
+    // Validate the whole supported wrapper BEFORE normalization. Embedded or
+    // stray parentheses must never turn UTC+8(30) into the valid UTC+830.
+    const wrapper = /^\([ \t]*(UTC(?:[ \t]*[+−-]\d{1,2}(?::?\d{2})?)?|server(?: time)?|global|[A-Z]{2,5})[ \t]*\)$/i.exec(rawZone);
+    const invalidDelimiter = /[()]/.test(rawZone) && !wrapper;
+    const zone = invalidDelimiter ? "" : (wrapper?.[1] ?? rawZone).replace("−", "-");
     // A signed clock after prose is also a clock range (00:00-12:00).
     // Only ISO date-T-time syntax disambiguates a bare numeric UTC offset.
     const ambiguousBareOffset = /^[+−-]/.test(rawZone) && !(/^\d{4}-\d{2}-\d{2}T/i.test(text) && /^[+−-]/.test(zoneSuffix));
-    const invalidDelimiter = rawZone.startsWith("(") !== rawZone.endsWith(")");
     const z = /^(?:UTC\s*)?([+-])(\d{1,2})(?::?(\d{2}))?$/i.exec(zone);
     if (invalidDelimiter) uncertainty.push("invalid_timezone_delimiter");
     else if (ambiguousBareOffset) uncertainty.push("ambiguous_clock_range_or_offset");
@@ -276,7 +292,11 @@ export function readDateSpans(raw: string, format: "markdown" | "html" | "bbcode
       if (!rangeBoundary.test(text.slice(visibleEnd))) {
         while (tokenEnd < text.length && !/\s/u.test(text[tokenEnd]!)) tokenEnd++;
       }
-      const continuation = text.slice(visibleEnd, tokenEnd).replace(/[,;!?.()[\]{}"']+$/u, "");
+      const tail = text.slice(visibleEnd, tokenEnd);
+      // A standalone sentence closer after a bare token may be punctuation.
+      // Never erase an opener, embedded parentheses or extra wrapper closers.
+      const sentenceTail = !/[()]/.test(match[0]) && /^[,;!?.)\[\]{}"']*$/.test(tail);
+      const continuation = sentenceTail ? "" : tail.replace(/[,;!?.[\]{}"']+$/u, "");
       if (continuation) {
         visibleEnd += continuation.length;
         parsed = parseValue(text.slice(match.index, visibleEnd));
