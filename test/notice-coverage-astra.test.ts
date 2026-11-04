@@ -287,7 +287,7 @@ test("Astra P1-C ordinary indented paragraph continuations and three-space links
   }
 });
 test("Astra P1-C indented literals after block markers fail closed without a block-parser guess", () => {
-  for (const marker of ["## Quest", "---", "```\ntext\n```", "<div>Quest</div>", "> Quote", "- List item"]) {
+  for (const marker of ["## Quest", "---", "```\ntext\n```", "<div>Quest</div>", "> Quote"]) {
     const raw = `🧭 Main: ${period}\n\n${marker}\n    [Quest](2026-10-29T04:00Z)`;
     const read = readDateSpans(raw); mapped(raw, read.spans);
     expect(read.diagnostics).toContain("unsupported_code_context");
@@ -301,4 +301,75 @@ test("Astra P1-C exact covered indented code, backticks, HTML code and URL metad
   expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02", "2026-11-02", "2026-11-02", "2026-11-02"]);
   const r = coverage(raw, "markdown"); mapped(raw, r.spans);
   expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+});
+
+const containerCases: Array<[string, string]> = [
+  ["reported blockquote", "> quote\n>\n>     [Quest](2026-10-29T04:00Z)"],
+  ["bullet first-line code", "-     [Quest](2026-10-29T04:00Z)"],
+  ["ordered first-line code", "1.     [Quest](2026-10-29T04:00Z)"],
+  ["nested blockquote", "> > quote\n> >\n> >     [Quest](2026-10-29T04:00Z)"],
+  ["quote containing list", "> -     [Quest](2026-10-29T04:00Z)"],
+  ["list containing quote", "- >     [Quest](2026-10-29T04:00Z)"],
+  ["bullet continuation", "- item\n\n      [Quest](2026-10-29T04:00Z)"],
+  ["ordered continuation", "1. item\n\n       [Quest](2026-10-29T04:00Z)"],
+  ["quote tabs", "> \t\t[Quest](2026-10-29T04:00Z)"],
+  ["list tabs", "-\t\t[Quest](2026-10-29T04:00Z)"],
+];
+for (const [name, body] of containerCases) test(`container P1-C ${name} retains a missing exact deadline`, () => {
+  const raw = `🧭 Main: ${period}\n\n${body}`;
+  const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+  expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(true);
+  const read = readDateSpans(raw); mapped(raw, read.spans);
+  const missing = r.spans.find(s => s.value.instant === "2026-10-29T04:00:00.000Z")!;
+  expect(missing).toBeDefined(); expect(missing.matches).toEqual([]); expect(r.unmatchedSpans).toContainEqual({ field: "content", ref: missing.ref, quote: "2026-10-29T04:00Z", reason: "no_compatible_represented_boundary" });
+});
+test("container P1-C genuine paragraph, quote and list links remain destinations", () => {
+  for (const body of [
+    "[Quest](2026-10-29T04:00Z)", "> [Quest](2026-10-29T04:00Z)", ">    [Quest](2026-10-29T04:00Z)", ">\t[Quest](2026-10-29T04:00Z)",
+    "- [Quest](2026-10-29T04:00Z)", "-    [Quest](2026-10-29T04:00Z)", "-\t[Quest](2026-10-29T04:00Z)", "1.    [Quest](2026-10-29T04:00Z)",
+    "> - [Quest](2026-10-29T04:00Z)", "- > [Quest](2026-10-29T04:00Z)",
+    "- item\n\n    [Quest](2026-10-29T04:00Z)", "1. item\n\n     [Quest](2026-10-29T04:00Z)", "- List item\n    [Quest](2026-10-29T04:00Z)",
+    "> quote\n>     [Quest](2026-10-29T04:00Z)", "- item\n      [Quest](2026-10-29T04:00Z)",
+  ]) {
+    const raw = `🧭 Main: ${period}\n\n${body}`, read = readDateSpans(raw); mapped(raw, read.spans);
+    expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02"]); expect(read.diagnostics).toEqual([]);
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false); expect(r.unmatchedSpans).toEqual([]);
+  }
+});
+test("container P1-C blank container lines, continued code and dedents keep their contexts", () => {
+  const raw = `🧭 Main: ${period}\n\n> - item\n>\n>       [Quest](2026-10-29T04:00Z)\n>\n>       [Quest2](2026-10-30T04:00Z)\n> normal [Link](2026-10-28T04:00Z)\n\n- normal [Link](2026-10-27T04:00Z)\n\n[Outside](2026-10-26T04:00Z)`;
+  const read = readDateSpans(raw); mapped(raw, read.spans);
+  expect(read.spans.map(s => s.value.instant)).toEqual(["2026-10-19T10:00:00.000Z", "2026-11-02T03:59:00.000Z", "2026-10-29T04:00:00.000Z", "2026-10-30T04:00:00.000Z"]);
+  const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+  expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(true); expect(r.unmatchedSpans).toHaveLength(2);
+});
+test("container P1-C covered literal dates still confirm exact event boundaries", () => {
+  for (const [, body] of containerCases) {
+    const raw = `🧭 Main: ${period}\n\n${body.replace("2026-10-29T04:00Z", "2026-11-02T03:59Z")}`;
+    const read = readDateSpans(raw); mapped(raw, read.spans); expect(read.spans).toHaveLength(3); expect(read.diagnostics).toEqual([]);
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false); expect(r.unmatchedSpans).toEqual([]);
+  }
+});
+test("container P1-C uncertain container exits retain literals and require attention", () => {
+  for (const body of ["> quote\n    [Quest](2026-10-29T04:00Z)", "- item\n   >     [Quest](2026-10-29T04:00Z)"]) {
+    const raw = `🧭 Main: ${period}\n\n${body}`;
+    const read = readDateSpans(raw); mapped(raw, read.spans); expect(read.diagnostics).toContain("unsupported_code_context");
+    expect(read.spans.some(s => s.value.instant === "2026-10-29T04:00:00.000Z")).toBe(true);
+    const r = gap(raw, "markdown"); expect(r.unmatchedSpans.length).toBeGreaterThan(0);
+  }
+});
+test("container P1-C inline, fenced and HTML code contexts retain visible dates", () => {
+  for (const body of ["> `[Quest](2026-10-29T04:00Z)`", "> ```\n> [Quest](2026-10-29T04:00Z)\n> ```", "- ```\n  [Quest](2026-10-29T04:00Z)\n  ```", "> <code>[Quest](2026-10-29T04:00Z)</code>"]) {
+    const raw = `🧭 Main: ${period}\n\n${body}`;
+    const read = readDateSpans(raw); mapped(raw, read.spans); expect(read.spans.some(s => s.value.instant === "2026-10-29T04:00:00.000Z")).toBe(true);
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(true); expect(r.unmatchedSpans).toHaveLength(1);
+  }
+});
+test("container P1-C prefix-depth ceiling is explicit incomplete evaluation", () => {
+  const raw = `🧭 Main: ${period}\n\n${"> ".repeat(17)}[Quest](2026-10-29T04:00Z)`;
+  const read = readDateSpans(raw); mapped(raw, read.spans); expect(read.diagnostics).toContain("container_limit"); expect(read.complete).toBe(false);
+  const r = gap(raw, "markdown"); expect(r.evaluation).toBe("incomplete");
 });

@@ -122,24 +122,63 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
     if (unfinished && !escaped(unfinished.index)) diagnose("malformed_markup");
   }
   if (format === "markdown") {
-    // Standard indented code cannot interrupt a paragraph. Blank lines allow
-    // entry/continuation; a non-indented content line ends the block. Count tab
-    // stops as columns while keeping the original UTF-16 indices untouched.
+    // Probe only quote/list prefixes and relative indentation, not a Markdown
+    // block tree. Expanded columns are used ONLY for this probe; source maps
+    // and codeContext always retain the original UTF-16 physical-line indices.
+    type Container = { kind: "quote" | "list"; padding: number };
+    const sameContainer = (a: Container, b?: Container) => a.kind === b?.kind && (a.kind === "quote" || a.padding === b.padding);
+    let previousContainers: Container[] = [];
     let previousBlank = true, indentedCode = false, previousBlockMarker = false;
     for (const line of raw.matchAll(/[^\r\n]*(?:\r\n|\r|\n|$)/g)) {
-      const blank = /^[ \t\r\n]*$/.test(line[0]);
-      if (blank) { previousBlank = true; continue; }
-      let columns = 0;
-      for (const c of /^[ \t]*/.exec(line[0])![0]) columns += c === "\t" ? 4 - columns % 4 : 1;
-      // Container/block markers need more context than a paragraph continuation.
-      // Keep their indented literals visible and fail closed, without parsing a
-      // full Markdown block tree or guessing container indentation.
-      const ambiguousCode = columns >= 4 && !previousBlank && !indentedCode && previousBlockMarker;
+      let expanded = "", column = 0;
+      for (const c of line[0]) {
+        const width = c === "\t" ? 4 - column % 4 : 1;
+        expanded += c === "\t" ? " ".repeat(width) : c; column += width;
+      }
+      const containers: Container[] = [];
+      let offset = 0, newItem = false, knownPrefix = true, limited = false;
+      while (true) {
+        const rest = expanded.slice(offset);
+        const quote = /^ {0,3}> ?/.exec(rest);
+        const list = /^( {0,3})([-+*]|\d{1,9}[.)])( +|(?=[\r\n]|$))/.exec(rest);
+        const active = knownPrefix ? previousContainers[containers.length] : undefined;
+        let frame: Container | undefined;
+        if (quote) frame = { kind: "quote", padding: quote[0].length };
+        else if (list) {
+          // CommonMark list padding is 1–4 spaces; 5+ consumes one, leaving
+          // the remaining indentation for code (not ordinary item prose).
+          const spaces = list[3]!.length;
+          frame = { kind: "list", padding: list[1]!.length + list[2]!.length + (spaces >= 1 && spaces <= 4 ? spaces : 1) };
+        } else if (active?.kind === "list" && rest.startsWith(" ".repeat(active.padding))) frame = active;
+        if (!frame) break;
+        if (containers.length === 16) { limited = true; break; }
+        knownPrefix &&= sameContainer(frame, previousContainers[containers.length]);
+        if (list && !quote) { newItem = true; knownPrefix = false; }
+        containers.push(frame); offset += frame.padding;
+      }
+      if (limited) {
+        diagnose("container_limit"); codeContext.fill(1, line.index!, line.index! + line[0].length);
+        previousContainers = []; previousBlank = true; indentedCode = false; previousBlockMarker = false; continue;
+      }
+      const content = expanded.slice(offset);
+      if (/^[ \r\n]*$/.test(content)) {
+        previousBlank = true;
+        // Blank quote lines can omit list padding without ending that list.
+        if (newItem || !containers.every((c, i) => sameContainer(c, previousContainers[i]))) {
+          previousContainers = containers; indentedCode = false; previousBlockMarker = false;
+        }
+        continue;
+      }
+      const columns = /^ */.exec(content)![0].length;
+      const changed = containers.length !== previousContainers.length || !containers.every((c, i) => sameContainer(c, previousContainers[i]));
+      // Lazy/container exits and other block transitions are deliberately
+      // uncertain. Indented code cannot interrupt a known same-item paragraph.
+      const ambiguousCode: boolean = columns >= 4 && !previousBlank && !newItem && (changed || !indentedCode && previousBlockMarker);
       if (ambiguousCode) diagnose("unsupported_code_context");
-      indentedCode = columns >= 4 && (previousBlank || indentedCode);
+      indentedCode = columns >= 4 && (previousBlank || newItem || !changed && indentedCode || ambiguousCode);
       if (indentedCode || ambiguousCode) codeContext.fill(1, line.index!, line.index! + line[0].length);
-      previousBlank = false;
-      previousBlockMarker = /^[ \t]{0,3}(?:[#>~`<]|[-*+_=]{2,}(?:[ \t\r\n]|$)|(?:[-*+]|\d+[.)])[ \t])/.test(line[0]);
+      previousContainers = containers; previousBlank = false;
+      previousBlockMarker = /^ {0,3}(?:[#>~`<]|[-*+_=]{2,}(?:[ \r\n]|$)|(?:[-*+]|\d+[.)]) )/.test(content);
     }
     // Identify code before Markdown formatting/link matching. Equal backtick
     // runs delimit literal content; unmatched runs stay explicit uncertainty.
