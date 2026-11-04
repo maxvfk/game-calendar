@@ -125,8 +125,11 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
     // Probe only quote/list prefixes and relative indentation, not a Markdown
     // block tree. Expanded columns are used ONLY for this probe; source maps
     // and codeContext always retain the original UTF-16 physical-line indices.
-    type Container = { kind: "quote" | "list"; padding: number };
+    type Container = { kind: "quote" | "list"; padding: number; empty?: boolean };
     const sameContainer = (a: Container, b?: Container) => a.kind === b?.kind && (a.kind === "quote" || a.padding === b.padding);
+    // Tabs have already become columns when this is called. Require one marker
+    // kind, at least three occurrences, and at most three relative leading spaces.
+    const isThematicBreak = (value: string) => !value.startsWith("    ") && /^(?:\*{3,}|-{3,}|_{3,})$/.test(value.replace(/[ \r\n]/g, ""));
     let previousContainers: Container[] = [];
     let previousBlank = true, indentedCode = false, previousBlockMarker = false;
     for (const line of raw.matchAll(/[^\r\n]*(?:\r\n|\r|\n|$)/g)) {
@@ -136,7 +139,7 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
         expanded += c === "\t" ? " ".repeat(width) : c; column += width;
       }
       const containers: Container[] = [];
-      let offset = 0, newItem = false, knownPrefix = true, limited = false;
+      let offset = 0, newItem = false, knownPrefix = true, limited = false, thematic = false, rejectedParagraphMarker = false;
       while (true) {
         const rest = expanded.slice(offset);
         const quote = /^ {0,3}> ?/.exec(rest);
@@ -144,13 +147,24 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
         const active = knownPrefix ? previousContainers[containers.length] : undefined;
         let frame: Container | undefined;
         const continuation = active?.kind === "list" && rest.startsWith(" ".repeat(active.padding));
+        // Continuation padding belongs to an established parent; at that
+        // relative level a thematic break takes precedence over NEW list items.
+        if (!continuation && isThematicBreak(rest)) { thematic = true; break; }
         if (continuation) frame = active;
         else if (quote) frame = { kind: "quote", padding: quote[0].length };
         else if (list) {
           // CommonMark list padding is 1–4 spaces; 5+ consumes one, leaving
           // the remaining indentation for code (not ordinary item prose).
           const spaces = list[3]!.length;
-          frame = { kind: "list", padding: list[1]!.length + list[2]!.length + (spaces >= 1 && spaces <= 4 ? spaces : 1) };
+          const empty = /^[ \r\n]*$/.test(rest.slice(list[0].length));
+          const paragraphHere = !previousBlank && !indentedCode && !previousBlockMarker && !newItem &&
+            containers.length === previousContainers.length && containers.every((c, i) => sameContainer(c, previousContainers[i]));
+          // Empty items and ordered starts other than 1 cannot interrupt a
+          // paragraph. They are not reliable continuation frames for later code.
+          if (paragraphHere && (empty || /^\d/.test(list[2]!) && Number.parseInt(list[2]!, 10) !== 1)) {
+            rejectedParagraphMarker = true; break;
+          }
+          frame = { kind: "list", padding: list[1]!.length + list[2]!.length + (!empty && spaces >= 1 && spaces <= 4 ? spaces : 1), empty };
         }
         if (!frame) break;
         if (containers.length === 16) { limited = true; break; }
@@ -163,14 +177,25 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
         previousContainers = []; previousBlank = true; indentedCode = false; previousBlockMarker = false; continue;
       }
       const content = expanded.slice(offset);
+      if (thematic) {
+        for (const c of containers) if (c.kind === "list") c.empty = false;
+        previousContainers = containers; previousBlank = true; indentedCode = false; previousBlockMarker = false; continue;
+      }
       if (/^[ \r\n]*$/.test(content)) {
         previousBlank = true;
         // Blank quote lines can omit list padding without ending that list.
         if (newItem || !containers.every((c, i) => sameContainer(c, previousContainers[i]))) {
           previousContainers = containers; indentedCode = false; previousBlockMarker = false;
         }
+        // A genuinely empty item can acquire content on the next nonblank line,
+        // but cannot retain its padding across an intervening blank line.
+        if (!newItem) {
+          const emptyAt = previousContainers.findIndex(c => c.kind === "list" && c.empty);
+          if (emptyAt >= 0) previousContainers = previousContainers.slice(0, emptyAt);
+        }
         continue;
       }
+      for (const c of containers) if (c.kind === "list") c.empty = false;
       const columns = /^ */.exec(content)![0].length;
       const changed = containers.length !== previousContainers.length || !containers.every((c, i) => sameContainer(c, previousContainers[i]));
       // Lazy/container exits and other block transitions are deliberately
@@ -180,7 +205,8 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
       indentedCode = columns >= 4 && (previousBlank || newItem || !changed && indentedCode || ambiguousCode);
       if (indentedCode || ambiguousCode) codeContext.fill(1, line.index!, line.index! + line[0].length);
       previousContainers = containers; previousBlank = false;
-      previousBlockMarker = /^ {0,3}(?:[#>~`<]|[-*+_=]{2,}(?:[ \r\n]|$)|(?:[-*+]|\d+[.)]) )/.test(content);
+      previousBlockMarker = rejectedParagraphMarker ? /^ {0,3}-+ *[\r\n]*$/.test(content) :
+        /^ {0,3}(?:[#>~`<]|[-*+_=]{2,}(?:[ \r\n]|$)|(?:[-*+]|\d+[.)]) )/.test(content);
     }
     // Identify code before Markdown formatting/link matching. Equal backtick
     // runs delimit literal content; unmatched runs stay explicit uncertainty.

@@ -287,7 +287,7 @@ test("Astra P1-C ordinary indented paragraph continuations and three-space links
   }
 });
 test("Astra P1-C indented literals after block markers fail closed without a block-parser guess", () => {
-  for (const marker of ["## Quest", "---", "```\ntext\n```", "<div>Quest</div>", "> Quote"]) {
+  for (const marker of ["## Quest", "```\ntext\n```", "<div>Quest</div>", "> Quote"]) {
     const raw = `🧭 Main: ${period}\n\n${marker}\n    [Quest](2026-10-29T04:00Z)`;
     const read = readDateSpans(raw); mapped(raw, read.spans);
     expect(read.diagnostics).toContain("unsupported_code_context");
@@ -374,4 +374,64 @@ test("container P1-C prefix-depth ceiling is explicit incomplete evaluation", ()
   const raw = `🧭 Main: ${period}\n\n${"> ".repeat(17)}[Quest](2026-10-29T04:00Z)`;
   const read = readDateSpans(raw); mapped(raw, read.spans); expect(read.diagnostics).toContain("container_limit"); expect(read.complete).toBe(false);
   const r = gap(raw, "markdown"); expect(r.evaluation).toBe("incomplete");
+});
+
+function blockMissing(body: string, complete = true) {
+  const raw = `🧭 Main: ${period}\n\n${body}`, read = readDateSpans(raw); mapped(raw, read.spans);
+  const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+  expect(r.status).toBe("partially processed"); expect(r.attention.required).toBe(true);
+  expect(r.evaluation).toBe(complete ? "complete" : "uncertain");
+  const missing = r.spans.find(s => s.value.instant === "2026-10-29T04:00:00.000Z");
+  expect(missing).toBeDefined(); expect(missing!.matches).toEqual([]); expect(r.unmatchedSpans.some(s => s.ref === missing!.ref)).toBe(true);
+}
+const questLiteral = "[Quest](2026-10-29T04:00Z)";
+for (const rule of ["* * *", "- - -", "*  *  *", "_ _ _", "---"]) for (const blank of [false, true]) test(`block-state thematic ${JSON.stringify(rule)} blank=${blank} retains the missing literal`, () => {
+  blockMissing(`${rule}\n${blank ? "\n" : ""}    ${questLiteral}`);
+});
+test("block-state thematic spacing/tabs are relative to actual quote and list prefixes", () => {
+  for (const body of [
+    `  *\t*\t*\n\t${questLiteral}`, `   _ _ _\n\n  \t${questLiteral}`,
+    `> * * *\n>     ${questLiteral}`, `> _\t_\t_\n>\n> \t\t${questLiteral}`,
+    `- item\n  * * *\n      ${questLiteral}`, `> - item\n>   - - -\n>\n>       ${questLiteral}`,
+    `- item\n  > _ _ _\n  >     ${questLiteral}`, `- * * *\n      ${questLiteral}`,
+    `Text\n* * *\n    ${questLiteral}`, `Text\n_ _ _\n    ${questLiteral}`,
+  ]) blockMissing(body);
+});
+for (const marker of ["-", "+", "1.", "2."]) test(`block-state empty ${marker} expires across blank lines`, () => {
+  blockMissing(`${marker}\n\n    ${questLiteral}`);
+});
+test("block-state empty-item lifetime respects quote/list scope and tabs", () => {
+  for (const body of [`-\t\n\n\t${questLiteral}`, `> -\n>\n>     ${questLiteral}`, `- parent\n\n  -\n\n      ${questLiteral}`, `> - parent\n>\n>   1.\n>\n>       ${questLiteral}`]) blockMissing(body);
+});
+test("block-state ordered non-one markers cannot interrupt an existing paragraph", () => {
+  for (const marker of ["2.", "0.", "2)", "12."]) blockMissing(`Text\n${marker} foo\n\n     ${questLiteral}`);
+  blockMissing(`> Text\n> 2. foo\n>\n>     ${questLiteral}`);
+  blockMissing(`- item\n  Text\n  2. foo\n\n      ${questLiteral}`);
+});
+test("block-state genuine prose and reliable list frames retain real destinations", () => {
+  for (const body of [
+    `Text\n1. foo\n\n     ${questLiteral}`, `Text\n\n2. foo\n\n     ${questLiteral}`, `2. foo\n\n     ${questLiteral}`,
+    `Text\n2. foo\n     ${questLiteral}`, `Text\n1.\n     ${questLiteral}`, `Text\n+\n    ${questLiteral}`,
+    `-\n    ${questLiteral}`, `-    \n    ${questLiteral}`, `-\t\n    ${questLiteral}`,
+    `- nonempty\n\n    ${questLiteral}`, `* * x\n\n    ${questLiteral}`, `* *\n\n    ${questLiteral}`,
+    `> Text\n> 1. foo\n>\n>      ${questLiteral}`, `> * * x\n>\n>     ${questLiteral}`,
+    `- item\n2. foo\n\n     ${questLiteral}`, `> Text\n2. foo\n\n     ${questLiteral}`,
+    String.raw`\* \* \*` + `\n    ${questLiteral}`,
+  ]) {
+    const raw = `🧭 Main: ${period}\n\n${body}`, read = readDateSpans(raw); mapped(raw, read.spans);
+    expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02"]); expect(read.diagnostics).toEqual([]);
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false); expect(r.unmatchedSpans).toEqual([]);
+  }
+});
+test("block-state recognized code can match covered exact boundaries without blanket uncertainty", () => {
+  for (const body of [`* * *\n    ${questLiteral}`, `_ _ _\n\n    ${questLiteral}`, `-\n\n    ${questLiteral}`, `Text\n2. foo\n\n     ${questLiteral}`, `> * * *\n>     ${questLiteral}`]) {
+    const raw = `🧭 Main: ${period}\n\n${body.replace("2026-10-29T04:00Z", "2026-11-02T03:59Z")}`;
+    const read = readDateSpans(raw); mapped(raw, read.spans); expect(read.spans).toHaveLength(3); expect(read.diagnostics).toEqual([]);
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  }
+});
+test("block-state weak empty paragraph marker retains potential code with uncertainty", () => {
+  blockMissing(`Text\n-\n    ${questLiteral}`, false);
 });
