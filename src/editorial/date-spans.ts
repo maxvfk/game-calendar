@@ -143,17 +143,19 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
         const list = /^( {0,3})([-+*]|\d{1,9}[.)])( +|(?=[\r\n]|$))/.exec(rest);
         const active = knownPrefix ? previousContainers[containers.length] : undefined;
         let frame: Container | undefined;
-        if (quote) frame = { kind: "quote", padding: quote[0].length };
+        const continuation = active?.kind === "list" && rest.startsWith(" ".repeat(active.padding));
+        if (continuation) frame = active;
+        else if (quote) frame = { kind: "quote", padding: quote[0].length };
         else if (list) {
           // CommonMark list padding is 1–4 spaces; 5+ consumes one, leaving
           // the remaining indentation for code (not ordinary item prose).
           const spaces = list[3]!.length;
           frame = { kind: "list", padding: list[1]!.length + list[2]!.length + (spaces >= 1 && spaces <= 4 ? spaces : 1) };
-        } else if (active?.kind === "list" && rest.startsWith(" ".repeat(active.padding))) frame = active;
+        }
         if (!frame) break;
         if (containers.length === 16) { limited = true; break; }
         knownPrefix &&= sameContainer(frame, previousContainers[containers.length]);
-        if (list && !quote) { newItem = true; knownPrefix = false; }
+        if (list && !quote && !continuation) { newItem = true; knownPrefix = false; }
         containers.push(frame); offset += frame.padding;
       }
       if (limited) {

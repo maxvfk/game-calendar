@@ -330,6 +330,8 @@ test("container P1-C genuine paragraph, quote and list links remain destinations
     "> - [Quest](2026-10-29T04:00Z)", "- > [Quest](2026-10-29T04:00Z)",
     "- item\n\n    [Quest](2026-10-29T04:00Z)", "1. item\n\n     [Quest](2026-10-29T04:00Z)", "- List item\n    [Quest](2026-10-29T04:00Z)",
     "> quote\n>     [Quest](2026-10-29T04:00Z)", "- item\n      [Quest](2026-10-29T04:00Z)",
+    "- parent\n  - child\n\n    [Child](2026-10-29T04:00Z)\n\n  [Parent](2026-10-28T04:00Z)\n\n    [Continuation](2026-10-27T04:00Z)",
+    String.raw`\>     [Quest](2026-10-29T04:00Z)`, String.raw`\-     [Quest](2026-10-29T04:00Z)`,
   ]) {
     const raw = `🧭 Main: ${period}\n\n${body}`, read = readDateSpans(raw); mapped(raw, read.spans);
     expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02"]); expect(read.diagnostics).toEqual([]);
