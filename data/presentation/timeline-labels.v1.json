@@ -330,10 +330,10 @@
     },
     {
       "eventId": "czn:full-scale-offensive-season-4:2026-08-19",
-      "fingerprint": "sha256:24846cc39582f9cc7dcc0ce4d908cdf646b302d72a420957b155c11d15f63102",
+      "fingerprint": "sha256:5fb84d1bbbc86c649a93e0232c9d6a8118bf9f5db8b960586ec792439e893e94",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "Season identity already clear."
+      "reason": "Season number already distinguishes this historical phase."
     },
     {
       "eventId": "endfield:deep-cold-issue:2026-09-02",
@@ -691,6 +691,174 @@
       "rulesVersion": "v1",
       "decision": "keep_original",
       "reason": "Login gift name is already distinctive; no input detail supports a better label."
+    },
+    {
+      "eventId": "czn:anniversary-mail-gift:2026-11-03",
+      "fingerprint": "sha256:ff0c89b13f6054f6081e7ac5468b1d1a98783a3631c138dbfbaf915531a015a6",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Dated anniversary mail gift identity is already specific and recognizable."
+    },
+    {
+      "eventId": "wuwa:gifts-of-waking-moon:2026-09-30",
+      "fingerprint": "sha256:8bc4097fc589fd96e7bb3ea509d10131e5b47dc445c200015089f176f4d2191f",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Distinctive official name; no clearer truthful alternative exists in the input."
+    },
+    {
+      "eventId": "wuwa:cubie-wars:2026-09-30",
+      "fingerprint": "sha256:667a77c5a1fe1dbdf9c3eff5b41a8ca8a06704b62e95a26b3708d619de5a13c0",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode name is already the recognizable identity."
+    },
+    {
+      "eventId": "czn:basin-of-hyperspace-dimensional-twilight:2026-10-21",
+      "fingerprint": "sha256:2b2e3cb1433d0672cc3d01a0165637be5eed1857d129e16c571bfb199794c497",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Challenge name and phase are already clear."
+    },
+    {
+      "eventId": "czn:full-scale-offensive:2026-09-30",
+      "fingerprint": "sha256:aab36dd387bcc438898ce9de93f2d2bfbbd0ca4b88743a238031189654ce3bb9",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode name is recognizable; no season number is stated, so none is added."
+    },
+    {
+      "eventId": "czn:nightmare-carnival-additional-aether:2026-10-21",
+      "fingerprint": "sha256:7550c2f0ba932fa82dfab1bc580b009e893e5a209337826470b8bf01a882a981",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Already identifies the Carnival sub-benefit clearly."
+    },
+    {
+      "eventId": "zzz:shiyu-defense-critical-node-oct-30:2026-10-30",
+      "fingerprint": "sha256:ff87a743548c6cd16f918ef301426b39ad7885036b1000f1c88581b66a81a09a",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode plus rotation date already distinguishes this cycle."
+    },
+    {
+      "eventId": "endfield:ancestral-spring-flows-anew:2026-10-29",
+      "fingerprint": "sha256:a989823d536cc7dd256434f47b351cdaa4285970cbd61465ed2b26de43b17ac1",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "currentIdentity already presents the featured character, matching the approved banner pattern."
+    },
+    {
+      "eventId": "endfield:tender-sprig-issue:2026-10-29",
+      "fingerprint": "sha256:7493243df1a3bc5827a688a28e9410f8fcf05f909ec1c5a1664db2ee64272b5c",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "currentIdentity already presents the featured weapon name."
+    },
+    {
+      "eventId": "zzz:version-3-3-issue-fix-compensation:2026-10-21",
+      "fingerprint": "sha256:ed52d9b464268ef6d44c5e162f404908d7eb128cec20b9fccf14a1e524695219",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Compensation name is specific and recognizable."
+    },
+    {
+      "eventId": "zzz:new-eridu-city-fund-version-3-3:2026-10-21",
+      "fingerprint": "sha256:ac5a4b97e70eee5e8f708cd69160e29d36baf44d5ce6f82f1cd4a58c2bff9de2",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode name plus version is already specific."
+    },
+    {
+      "eventId": "czn:anniversary-background-gift:2026-10-28",
+      "fingerprint": "sha256:1d435cfa314a6a60238392f578ef1f03dc8f1663571aa03d99e849cad1692770",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Gift type and background name are both stated."
+    },
+    {
+      "eventId": "czn:anniversary-sticker-gift:2026-10-21",
+      "fingerprint": "sha256:a6125bcbe4171e156a9e8ec6a84a260c67bcd89a57847934b0d49a3af5e60be7",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Gift type and named subject are both stated."
+    },
+    {
+      "eventId": "czn:nightmare-carnival:2026-10-21",
+      "fingerprint": "sha256:f4abcc5a82f4b6b49beef5e6114b34c280f0e17b9bd092a0cc02b034fb96b55f",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Official umbrella event name; no single reward represents the whole event."
+    },
+    {
+      "eventId": "czn:rossweisse-trauma-code-blade-poised-against-the-cycle:2026-10-21",
+      "fingerprint": "sha256:e2eead8974e0742582b436062a798577ac8fb120e421c199eff2c17ba57f8407",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Trauma Code name and subject are distinctive; not shortened for its own sake."
+    },
+    {
+      "eventId": "hsr:memory-of-chaos-survival-of-the-fittest:2026-11-02",
+      "fingerprint": "sha256:1059887b39a8f45c4fbe4a2936d42110cfec97bbddb8cb68a92e2fcd4d6a4e8c",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode and season name are preserved and recognizable."
+    },
+    {
+      "eventId": "czn:galactic-disaster-season-5-a-promise-upon-the-snow-main-content:2026-10-21",
+      "fingerprint": "sha256:6c0b514da308e0d21e0036b593bf957247a9cdb0b00487737486d15827154673",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Season, chapter name and main-content phase are all stated and recognizable."
+    },
+    {
+      "eventId": "czn:nightmare-dream-park:2026-10-21",
+      "fingerprint": "sha256:de289056bd2a321db6371fbd22514499c99bbbc9606518d3b3158a5eb8a6c7bb",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Event name is already distinct and recognizable."
+    },
+    {
+      "eventId": "endfield:seal-of-jade-issue:2026-10-15",
+      "fingerprint": "sha256:777d3275d24896af73fe977fd6a077e516f9e291f15ee391f974a386215db56b",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "currentIdentity already presents the featured weapon name."
+    },
+    {
+      "eventId": "endfield:secret-sanctuary:2026-11-05",
+      "fingerprint": "sha256:f9805ffa41aa8624818911e36cbc79718dcab5cc9ce8a4d75aa650141baf066f",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Exchange/shop name is already recognizable."
+    },
+    {
+      "eventId": "endfield:contingency-contract-indigo-experimental-operation:2026-11-05",
+      "fingerprint": "sha256:5ed1093045b877feee69c2a5256bfe560357952afda561a386a17a7102ec24f4",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode and operation name are already specific."
+    },
+    {
+      "eventId": "endfield:echoes-of-war-season-of-fervor:2026-11-05",
+      "fingerprint": "sha256:e5db80d89df5ce0ede40b4eead3bfe78bb7ce7d15b7895309adada745ce2a3da",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode prefix and season name are both present."
+    },
+    {
+      "eventId": "endfield:the-stars-are-with-me:2026-11-05",
+      "fingerprint": "sha256:802f7313204dcc6a6d12a840845e574990f29023a04f4a8526df1bc9bd2182a3",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Distinctive official name; adding type wording would use terms not present in the event."
+    },
+    {
+      "eventId": "endfield:back-to-the-rustics:2026-11-05",
+      "fingerprint": "sha256:9c601ea70f5f0c1fda4e93c847191284f6fe22e1cd65c134e679628b3359b4d7",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Narrative event name is already recognizable."
     }
   ]
 }
