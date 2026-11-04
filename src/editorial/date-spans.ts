@@ -125,15 +125,21 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
     // Standard indented code cannot interrupt a paragraph. Blank lines allow
     // entry/continuation; a non-indented content line ends the block. Count tab
     // stops as columns while keeping the original UTF-16 indices untouched.
-    let previousBlank = true, indentedCode = false;
+    let previousBlank = true, indentedCode = false, previousBlockMarker = false;
     for (const line of raw.matchAll(/[^\r\n]*(?:\r\n|\r|\n|$)/g)) {
       const blank = /^[ \t\r\n]*$/.test(line[0]);
       if (blank) { previousBlank = true; continue; }
       let columns = 0;
       for (const c of /^[ \t]*/.exec(line[0])![0]) columns += c === "\t" ? 4 - columns % 4 : 1;
+      // Container/block markers need more context than a paragraph continuation.
+      // Keep their indented literals visible and fail closed, without parsing a
+      // full Markdown block tree or guessing container indentation.
+      const ambiguousCode = columns >= 4 && !previousBlank && !indentedCode && previousBlockMarker;
+      if (ambiguousCode) diagnose("unsupported_code_context");
       indentedCode = columns >= 4 && (previousBlank || indentedCode);
-      if (indentedCode) codeContext.fill(1, line.index!, line.index! + line[0].length);
+      if (indentedCode || ambiguousCode) codeContext.fill(1, line.index!, line.index! + line[0].length);
       previousBlank = false;
+      previousBlockMarker = /^[ \t]{0,3}(?:[#>~`<]|[-*+_=]{2,}(?:[ \t\r\n]|$)|(?:[-*+]|\d+[.)])[ \t])/.test(line[0]);
     }
     // Identify code before Markdown formatting/link matching. Equal backtick
     // runs delimit literal content; unmatched runs stay explicit uncertainty.

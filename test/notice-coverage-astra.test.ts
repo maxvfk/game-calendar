@@ -286,6 +286,15 @@ test("Astra P1-C ordinary indented paragraph continuations and three-space links
     expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
   }
 });
+test("Astra P1-C indented literals after block markers fail closed without a block-parser guess", () => {
+  for (const marker of ["## Quest", "---", "```\ntext\n```", "<div>Quest</div>", "> Quote", "- List item"]) {
+    const raw = `🧭 Main: ${period}\n\n${marker}\n    [Quest](2026-10-29T04:00Z)`;
+    const read = readDateSpans(raw); mapped(raw, read.spans);
+    expect(read.diagnostics).toContain("unsupported_code_context");
+    expect(read.spans.some(s => s.value.instant === "2026-10-29T04:00:00.000Z")).toBe(true);
+    gap(raw, "markdown");
+  }
+});
 test("Astra P1-C exact covered indented code, backticks, HTML code and URL metadata stay distinct", () => {
   const raw = `🧭 Main: ${period}\n\n    [End](2026-11-02T03:59Z)\n\t[Site](https://example.org/2026-10-29)\n\n\`[End](2026-11-02T03:59Z)\`\n<code>[End](2026-11-02T03:59Z)</code>\n[Real link](2026-10-29T04:00Z)`;
   const read = readDateSpans(raw); mapped(raw, read.spans);
