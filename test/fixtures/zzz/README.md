@@ -35,3 +35,20 @@ are retained as factual list excerpts. All 20 parsed records equal the full
 notices/mutations in tests are explicitly test-only, never production coverage.
 Persistent production snapshots use the documented factual-capture JSON schema;
 its hash/length identify the original raw HTTP response, not a fictional raw feed.
+
+## Rolling-window pins (2026-10-28)
+
+`steam-rss-2026-10-28.xml` and `banner-rss-2026-10-28.json` are byte-identical
+copies of this repository's own `snapshots/zzz-steam-events-official.xml` and
+`snapshots/zzz-zenlessgg-banners.json` at commit `103520f` (where
+`test/zzz-rewards.test.ts` was written). SHA-256 equals each snapshot's
+recorded `contentHash`:
+
+| File | Snapshot commit | Confirmed | SHA-256 |
+| --- | --- | --- | --- |
+| `steam-rss-2026-10-28.xml` | `f92e373` | 2026-10-28T11:26:25.722Z | `6f3e0ceea5e7306a278d0be08536fbe8211ea3ea040015123f258132ed74a6cf` |
+| `banner-rss-2026-10-28.json` | `28cb6e7` | 2026-10-28T11:26:25.520Z | `a35f70f44cb9de6ed6cf9785ecf35510842910b724cc42ee960c8d9da1bc37f2` |
+
+No source was fetched. They pin the exact 43 Steam / 20 banner counts asserted
+by the reviewed-rescue regression, so ordinary feed turnover in the production
+snapshots cannot turn CI red. Test-only; never a production fallback.

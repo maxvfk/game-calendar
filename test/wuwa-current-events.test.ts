@@ -5,7 +5,8 @@ import { mergeEvents } from "../src/ingest/merge.ts";
 import { Region } from "../src/shared/schema.ts";
 import { assertExactBoundary } from "./helpers/verified-records.tsx";
 
-const raw = await Bun.file("snapshots/wuwa-kuro-mirror.xml").text();
+// Pinned Oct 28 capture: articles_latest is a rolling window, so notice 5571 and the 11/7 counts age out.
+const raw = await Bun.file("test/fixtures/wuwa/kuro-mirror-2026-10-28.xml").text();
 const ctx = { game: "wuwa" as const, sourceId: "wuwa-kuro-mirror", sourceUrl: "https://api.github.com/repos/TheLovinator1/wutheringwaves/contents/articles_latest.xml", now: "2026-10-28T12:00:00.000Z" };
 const parse = (input = raw) => parseWuwaKuroAtom(input, ctx);
 const names = new Set(["Cubie Wars", "Dreams in the Capsule", "Gifts of Waking Moon", "Gifts of Singing Drizzle"]);

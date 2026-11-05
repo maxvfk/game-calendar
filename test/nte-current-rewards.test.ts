@@ -5,7 +5,8 @@ import { mergeEvents } from "../src/ingest/merge.ts";
 import { Region } from "../src/shared/schema.ts";
 import { assertExactBoundary } from "./helpers/verified-records.tsx";
 
-const feed = await Bun.file("snapshots/nte-steamnews-official.json").json();
+// Pinned Oct 28 capture: Steam returns a rolling 50-post window, so the reward post and 49/54 counts age out.
+const feed = await Bun.file("test/fixtures/nte/steamnews-2026-10-28.json").json();
 const gid = "1844751498233952";
 const post = feed.appnews.newsitems.find((p: { gid: string }) => p.gid === gid)!;
 const ctx = { game: "nte" as const, sourceId: "nte-steamnews-official", sourceUrl: "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/", now: "2026-10-28T12:00:00.000Z" };
