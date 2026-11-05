@@ -1,0 +1,204 @@
+{
+  "base": "fcd4a3998af0000c04aff68ca82dc3bbbb913659",
+  "implementationHead": "2ad2c3116a1d83d9bd768e2fb706ba6c2d7b4e34",
+  "clock": "2026-11-01T00:00:00.000Z",
+  "settings": {
+    "BASE_PATH": "/",
+    "SNAPSHOT_DIR": "snapshots",
+    "PUBLIC_DIR": "public",
+    "INCLUDE_LEAKS": "false",
+    "TZ": "UTC"
+  },
+  "bun": "1.3.14",
+  "inputFiles": 45,
+  "inputManifestSha256": "37ba7a2135694ac3eb12ee2cf738528932a7e55751fada9889233d17b759b288",
+  "inputManifest": {
+    "snapshots/README.md": "16648ac0f8177ecb061f16364834224568fb26729175820d2aaf85a1e5005024",
+    "snapshots/czn-prydwen-banners.html": "872530afa4a1d8a68f8548bd4a468775f3c3ff3239ada5fda7376fa4d4f1054d",
+    "snapshots/czn-prydwen-banners.meta.json": "3820c7f1f65caab4ead4ccf0294f6e1b552e3675b7d4c1fd49964ee317af6871",
+    "snapshots/endfield-wikigg-echoes.html": "563cecf363e9568fa615df35b753718c81b56f0d34189ba47005d67693519a89",
+    "snapshots/endfield-wikigg-echoes.meta.json": "3bd5da60b5372c45366f49291c0f907b83048da2e78dc80cee218232eb0b278b",
+    "snapshots/endfield-wikigg-events.html": "49611e4900b2c43cfada85fb1ac26bfaf4d1cfb522c022d330143d6f4bd60a82",
+    "snapshots/endfield-wikigg-events.meta.json": "687d9e01b66e2d4ef9df8e9e0287047ff0c248ff057d6fc8442db9ff77665454",
+    "snapshots/genshin-kqm-ginews.md": "f0fba4836b9b7634c2dfabb08287457d9870c2070fe60371fce22c196dfc3c61",
+    "snapshots/genshin-kqm-ginews.meta.json": "9434e572e7de3265246bb81549f73231907da5c78812c13b345910fcbda4cdfb",
+    "snapshots/hsr-kqm-hsrnews.md": "c93ae7c2ac00592704f22b2b212602fdd0c80bb8f11bc5e2b41f6fa73bed2e3d",
+    "snapshots/hsr-kqm-hsrnews.meta.json": "bd42baddd8d41293322760b86a59847d3e5952f11d0a12e778682ab0795aea9f",
+    "snapshots/nte-ntebuild-btr.html": "246c6a3df9c9f9524ec5cceec44fa39a116248644514971fe1406529845d78f9",
+    "snapshots/nte-ntebuild-btr.meta.json": "d8e989b4623270d494041835ba11521a53460a6cc50156a09b07bffc64a2719c",
+    "snapshots/nte-steamnews-official.json": "de18088648b7e9659f626912097521a8509f57eda52eb69de9e60296671b574b",
+    "snapshots/nte-steamnews-official.meta.json": "c012b08d495f88cb9bb295de6d3653cc9e2a5f466e97985bb49b5b1555b4e21a",
+    "snapshots/wuwa-kuro-mirror.meta.json": "fc6a426a5a8c3c0769fb5030f5f98ff814ee69fe1d79864553a685a323777a99",
+    "snapshots/wuwa-kuro-mirror.xml": "8e05193e9378afcbc19058efb9a31a08261f595b4dc821bffaba82bab5604a0e",
+    "snapshots/zzz-steam-events-official.meta.json": "8fe232db7123f0b25eb773c5d129e047aa76ffc05cb26685f182975cee4fab31",
+    "snapshots/zzz-steam-events-official.xml": "4115fb1177da71f227739219c07ede8f7334814bf26e70f21366059a142f1aec",
+    "snapshots/zzz-zenlessgg-banners.json": "a35f70f44cb9de6ed6cf9785ecf35510842910b724cc42ee960c8d9da1bc37f2",
+    "snapshots/zzz-zenlessgg-banners.meta.json": "831b85e2c445e0fe6b653ef4ce1bae26060fcf9e8f58a8c9c487f88d92354186",
+    "fixtures/README.md": "d92d8791cb984795d08e63d6566d45f598153fdf8dcd23af5470cd6c611bc176",
+    "fixtures/czn/prydwen-banners-2026-09-22.html": "fb8af3937b24a89e6211fdf8d9021bedf19ce9a3f759855713766dddc48d2f1e",
+    "fixtures/evidence/ntebuild-btr.meta.json": "c46fce73bef40a2ab95b5e9374b8ceadfecfd422cccca1d56e27cd49c1d38f68",
+    "fixtures/evidence/ntebuild-btr.robots.txt": "1aa2e3fb29cfd0ea2b7fbe20fbd9f828c6d8b786f54d95b6f282011cec5012eb",
+    "fixtures/evidence/prydwen-czn-banners.meta.json": "65a6b6eca8d6db5bb22feed1cf1842c6ea0d50bf230d1647970aff530dd25ed3",
+    "fixtures/evidence/prydwen-czn-banners.robots.txt": "a3a3e3da1aa4be41db60ec5c1caeb9427770030e00d71c82823243e215e2bc37",
+    "fixtures/genshin/kqm-ginews-2026-09-23.md": "618e2f08ed1bdac5b58a7a9f2cdd6cc6c6115934689cc57f0bb45f8127b38241",
+    "fixtures/hsr/kqm-hsrnews-2026-09-23.md": "a6151e906833d55aa1f14817a1574f452b1f35636c555d6406451770f5e451bd",
+    "fixtures/hsr/kqm-hsrnews-4.6-lightward-2026-10-27.md": "6ea1ad8a00c6997ac352d6df7daa7b036efb3dae9ddd96677db414228f7cf7c8",
+    "fixtures/nte/ntebuild-btr-2026-09-22.html": "908ffd02c439b18bb9967e66a1d3455dc909fe63d68b47e54ec99a9e0d68b42c",
+    "fixtures/nte/steamnews-official-2026-09-22.json": "8ec3934928f9b6363699731a931b718ac02e53a71f72241b6519ea9d7c6ec085",
+    "fixtures/wuwa/kuro-mirror-2026-09-23.xml": "3c14f77135bed9a86b6947825b4cd53b99c0e37e23f68a6dbb3e5edcfc829aa4",
+    "data/reviewed/README.md": "f441cf811ef2abd4bd191d0dc7d356e17835c9033f7dba1df4c2494daf87bfc8",
+    "data/reviewed/czn.json": "3b26208f7336232b607743d50b6a86ae00b5cc6521c60382d13ee4842d75341c",
+    "data/reviewed/endfield.json": "18efe12249aa1bd9150fbb9fa5a74ac123b8e01b4eaa515333b936f44a24757a",
+    "data/reviewed/genshin.json": "6ae052b1b43177b7cda6cc89af996fdc31977e3bcd2e7e4bb5fb9ac65c042c4d",
+    "data/reviewed/hsr.json": "02e41560a28b9485a0df21c82f0868b3333f6e07845c75b9f6c4a4b77a1dc733",
+    "data/reviewed/nte.json": "1a59fe15a1ffca2bae97c9e87bcba889e7998ed78f0b663121161b0df7d28e1c",
+    "data/reviewed/wuwa.json": "9cfe07793e9708497a30e512b0735d2319d89d678d2621f09f1710ffb66cc822",
+    "data/reviewed/zzz.json": "3d39c82f014e2f3554ed790436d0fa94f2a493628b9a3fca10a6f012f9c6dd30",
+    "data/presentation/README.md": "7d0fcd1e37078e27c35cf6a55e03489012ced35a3e2336af8624c55f3c47901f",
+    "data/presentation/timeline-label-preferences.v1.json": "89dbf31859d3799367ef0aadb8f3d0e6655d084d6b798aae64d33ba0c9ba230d",
+    "data/presentation/timeline-labels.v1.json": "e9e9f34c2f6d0b27dd40cc4a037627c978ccd1278ad5cbade7e4f6380e38fadc",
+    "data/presentation/timeline-origin-migration.v1.json": "da39ed8cf9ef3fb63b9bdf5ee246cb2bc2943f23d26bc38469a8493df2a8f777"
+  },
+  "publicFiles": 10,
+  "publicManifestSha256": "11c43b9b15d6223404958ab85a399ef548f2186354767761bb92a2c3d3d67a04",
+  "publicBase": {
+    "public/data/events.v1.json": "f175a359f830e91aa823ac6bcba24b6fa236aa025b70cc757558211b6ce1bf10",
+    "public/data/review.v1.json": "275b2367acdf1e5bc8425e9bd3404c8624ce1effb744efa4778026930142433c",
+    "public/data/timeline-label-agent-input.v1.json": "91e5a20df1e4c4a10a45e584cd670beba7380c2570ad9809d4cbe7f9372cc8d0",
+    "public/data/timeline-label-queue.v1.json": "713c250491502ae79c468a6419f152297190245ffedf1f30398a28b0756521ce",
+    "public/icon.svg": "b9e5e0ec070e5e22e60077d58070d04f370ea4233188de2bde76ad0a8e09fabe",
+    "public/index.html": "b922904e23311a8c345fd0ae90883b49b2fc457c587e47a5ded4aa92d9e7b00a",
+    "public/main.js": "6100f4d370ff77ab42165e3f4d2d26db08e8586cbfaec0080501bb32cadfdd12",
+    "public/manifest.webmanifest": "2e69846cb68cd49d361dda5b663a05b5900df8814a8ec871d76b09e586b0dd8e",
+    "public/styles.css": "c560cdb9276f9135871c29438b083505cef14b337ceb4fc9cd8a819605bc01be",
+    "public/sw.js": "2166393d8308ca751523bcc60e72b67c6304d14d4ce4822a9b375f90a642384e"
+  },
+  "publicHead": {
+    "public/data/events.v1.json": "f175a359f830e91aa823ac6bcba24b6fa236aa025b70cc757558211b6ce1bf10",
+    "public/data/review.v1.json": "275b2367acdf1e5bc8425e9bd3404c8624ce1effb744efa4778026930142433c",
+    "public/data/timeline-label-agent-input.v1.json": "91e5a20df1e4c4a10a45e584cd670beba7380c2570ad9809d4cbe7f9372cc8d0",
+    "public/data/timeline-label-queue.v1.json": "713c250491502ae79c468a6419f152297190245ffedf1f30398a28b0756521ce",
+    "public/icon.svg": "b9e5e0ec070e5e22e60077d58070d04f370ea4233188de2bde76ad0a8e09fabe",
+    "public/index.html": "b922904e23311a8c345fd0ae90883b49b2fc457c587e47a5ded4aa92d9e7b00a",
+    "public/main.js": "6100f4d370ff77ab42165e3f4d2d26db08e8586cbfaec0080501bb32cadfdd12",
+    "public/manifest.webmanifest": "2e69846cb68cd49d361dda5b663a05b5900df8814a8ec871d76b09e586b0dd8e",
+    "public/styles.css": "c560cdb9276f9135871c29438b083505cef14b337ceb4fc9cd8a819605bc01be",
+    "public/sw.js": "2166393d8308ca751523bcc60e72b67c6304d14d4ce4822a9b375f90a642384e"
+  },
+  "byteIdentical": true,
+  "events": 296,
+  "eventIdsSha256": "d18c6c83d5c44f9203fdad80ee5853755653e632dc0ad23e04734ea90cb8d879",
+  "reviewedWinners": 153,
+  "canonicalEventsSha256": "da4e77957aa36b4470182f2c2b11de3fe0278b354ba0535fbdd4724fdef01dd7",
+  "dateConflicts": [
+    {
+      "eventId": "nte:circle-bounty:2026-08-19",
+      "field": "endsAt",
+      "region": "asia",
+      "keptUrl": "https://nte.perfectworld.com/en/article/news/gamenews/20260817/263605.html",
+      "otherUrl": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1840944183787941"
+    }
+  ],
+  "completeSidecarIdentical": true,
+  "sidecarSha256": "86bd0ccdeb1c6f43881bcb541c840b218d111a5c741d02e9a1ba29cfb1950401",
+  "e1Entries": 8,
+  "e1EntriesSha256": "238a1596d9df0796f74c4e62aaacd1d56afc58b7c7b70f1deafc05d996efbc36",
+  "e1UnattachedSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "articleNoticesSha256": "6ec6646280b7bdeb5e1d9427ce42fea89a5ba4038d2bce5a267dd9354dc1abe7",
+  "articleAttributionsSha256": "89e2e473246723a0e714e4922f30b2304a663dafeffdc10b6c9d49bccfe59c6e",
+  "diagnosticsSha256": "73b859a4d134da634f31346ce67adb9fd5b9774ae8b93fe5faba7c248defb75f",
+  "reportDeterministic": true,
+  "reportSha256": "f563207a40ff2e05486e6ab6dbf8d0f628f291cdf96b09b973786cf9012c56e7",
+  "sources": [
+    {
+      "sourceId": "genshin-kqm-ginews",
+      "available": true,
+      "notices": 28,
+      "statusCounts": {
+        "processed": 0,
+        "partially processed": 4,
+        "unprocessed": 14,
+        "ignored": 0,
+        "unclassified": 10
+      },
+      "evaluationCounts": {
+        "complete": 0,
+        "uncertain": 28,
+        "incomplete": 0
+      },
+      "baselineMembers": 9
+    },
+    {
+      "sourceId": "hsr-kqm-hsrnews",
+      "available": true,
+      "notices": 12,
+      "statusCounts": {
+        "processed": 0,
+        "partially processed": 3,
+        "unprocessed": 5,
+        "ignored": 0,
+        "unclassified": 4
+      },
+      "evaluationCounts": {
+        "complete": 0,
+        "uncertain": 12,
+        "incomplete": 0
+      },
+      "baselineMembers": 12
+    },
+    {
+      "sourceId": "nte-steamnews-official",
+      "available": true,
+      "notices": 31,
+      "statusCounts": {
+        "processed": 0,
+        "partially processed": 9,
+        "unprocessed": 15,
+        "ignored": 0,
+        "unclassified": 7
+      },
+      "evaluationCounts": {
+        "complete": 0,
+        "uncertain": 31,
+        "incomplete": 0
+      },
+      "baselineMembers": 31
+    },
+    {
+      "sourceId": "wuwa-kuro-mirror",
+      "available": true,
+      "notices": 20,
+      "statusCounts": {
+        "processed": 0,
+        "partially processed": 2,
+        "unprocessed": 4,
+        "ignored": 0,
+        "unclassified": 14
+      },
+      "evaluationCounts": {
+        "complete": 2,
+        "uncertain": 18,
+        "incomplete": 0
+      },
+      "baselineMembers": 20
+    },
+    {
+      "sourceId": "zzz-steam-events-official",
+      "available": true,
+      "notices": 10,
+      "statusCounts": {
+        "processed": 0,
+        "partially processed": 2,
+        "unprocessed": 6,
+        "ignored": 0,
+        "unclassified": 2
+      },
+      "evaluationCounts": {
+        "complete": 0,
+        "uncertain": 10,
+        "incomplete": 0
+      },
+      "baselineMembers": 10
+    }
+  ]
+}

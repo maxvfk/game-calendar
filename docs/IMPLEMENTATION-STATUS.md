@@ -1,3 +1,42 @@
+## C1a.1 — THEMATIC/WEAK-LIST P1-C CORRECTED, SONNET CLOSURE PENDING (2026-11-05)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+[Coordinator triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6645320287)
+reviewed `bf0139042fb3c45571e4f830d85c14f6671ca0eb`. CURRENT main
+`fcd4a3998af0000c04aff68ca82dc3bbbb913659` merged cleanly via normal merge
+`c12fe17d03734218e324690f80a7afea1a684936`; refreshed snapshots are inherited,
+not refreshed by this task. [Local correction and semantic evidence](evidence/notice-coverage-c1a1-block-state-2026-11-05.md)
+recognize relative thematic breaks before new list markers, expire truly empty
+item frames across blanks and reject empty/non-1 ordered paragraph interruptions.
+Valid nonempty lists, genuine links, quote/list nesting, tabs and continuations
+remain covered. The existing bounded probe is extended without a full parser,
+new dependency or changes to P1-A/P1-B/P2-D, CZN recovery, CLI or matching engine.
+
+Reviewed reader: **86 pass / 18 fail** in final authored regression file;
+corrected focused set: **153 pass / 3087 assertions**. All previous positive
+controls remain; a recognized `---` boundary moves from uncertainty-only fallback
+to explicit complete code controls, retaining unmatched/attention assertions.
+32 independently rendered Pandoc/CommonMark controls verify code/link semantics;
+Pandoc is verification-only, not a dependency. Required local checks pass; full
+suite **1653 pass / 3 existing optional age skips / 0 fail** (1656 tests, 97 files).
+[Fresh parity](evidence/notice-coverage-c1a1-block-state-parity-2026-11-05.json)
+matches all 10 public files, 296 events / 153 reviewed winners, Timeline/conflicts
+and the entire E1/C0/C1a.0 sidecar (eight E1 hashes, inventories, attributions,
+diagnostics/refusals). All 113 baseline identities and bytes remain unchanged.
+
+[Three-way report evidence](evidence/notice-coverage-c1a1-block-state-report-2026-11-05.json)
+shows old/new readers byte-identical on current inputs: 101 notices / 714 spans /
+699 unmatched, 20 partial / 44 unprocessed / 37 unclassified, evaluation 99 uncertain /
+2 complete. Six refreshed ZZZ content identities again match preserved baseline,
+so current members rise 76 → 82; no reinitialization. Report SHA 003a4cdb… → f563207a…
+reflects refreshed inputs/capture metadata only. All actual/synthetic source
+quotes retain UTF-16 slice parity. Final exact-head PG17/encrypted-recovery CI
+results are recorded in PR161. **Next:** Sonnet focused block-state closure on
+that exact head, then Astra final closure. Do not merge or begin C1b/C2,
+Daily Passes or another milestone.
+
+---
+
 ## C1a.1 — CONTAINER-PREFIXED P1-C CORRECTED, CLOSURE REVIEW PENDING (2026-11-05)
 
 Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
