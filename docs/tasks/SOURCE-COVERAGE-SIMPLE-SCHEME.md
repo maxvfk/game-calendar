@@ -11,6 +11,9 @@ its review findings are kept where they still apply.
 **Current implementation checkpoint (2026-11-01):** C0 is merged via
 [PR #152](https://github.com/maxvfk/game-calendar/pull/152). C1 starts with a
 bounded WuWa notice-inventory extension, not a reopening of C0.
+**Re-order (2026-11-05):** source date context
+(CTX) and the read-only C5 stage 1 probe move ahead of C2–C4, and C1b is split into
+two phases. See [Re-order 2026-11-05](#re-order-2026-11-05-context-first).
 
 ## Why a different scheme
 
@@ -107,7 +110,10 @@ run red.
   marked `processed`; Starlight Voyage is the required historical regression.
   A date alone is not proof of an in-scope event, and an ambiguous or unreadable
   span must not become a confident complete-coverage claim.
-- **C1b — GitHub Coverage Inbox (separate PR).** Integrate the read-only report
+- **C1b — GitHub Coverage Inbox (separate PR; two phases per the 2026-11-05 re-order).**
+  Phase 1 (C1b.1) notifies only on new notices that emitted zero events; the C0/C1a.0
+  inventory already supports this. Phase 2 (C1b.2) adds partially-processed notices
+  after CTX shows real-text discrimination. Integrate the read-only report
   into refresh as a best-effort side effect; the canonical baseline and ignore
   decisions live in Git, not GitHub Issue text. One pinned issue, idempotent
   updates, notify only on genuinely new items and prioritize upcoming seven-day
@@ -181,7 +187,8 @@ enough to finish or redo.
 - **CI check.** Every dated field of such a row must be covered by one entry. CI reads the date
   in each quote with the same deterministic date reader as parts 1 and 5 and requires it to
   match the named field after time-zone conversion, at the stated precision. A server-time
-  quote ("04:00 server time") needs a reviewed per-game table of server offsets; without one the
+  quote ("04:00 server time") needs a reviewed, source-scoped server-time rule (from CTX, with
+  C2 adding its own stricter acceptance contract); without one the
   field stays at day precision. The reader covers the date formats our sources use, not every
   possible format. An unreadable or ambiguous quote fails CI: the row goes to `unknown` or day
   precision, or the reader is extended. It is never bypassed with a guessed exact time.
@@ -195,6 +202,17 @@ missed runs at `27 5,17 * * *`, allowing for multi-hour schedule delays). This a
 GitHub disabling schedules after 60 days without repository activity. The service account is
 the operator's; the ping URL is stored as a secret.
 
+**Publication freshness (added 2026-11-05).** A heartbeat on successful refresh is not
+enough. From 2026-11-03 22:23 to 2026-11-05 01:25 UTC every scheduled `Refresh sources` run
+succeeded, but the CI it dispatched failed on a test, so `Deploy to Pages` was skipped and the
+live site kept the 2026-11-03 12:53 data for about 36 hours without any alert beyond the CI
+failure mails. Add a small independent check that compares what was refreshed with what is
+live: for example, the newest committed `snapshots/*.meta.json` `contentChangedAt` against the
+live feed's `sources[].contentChangedAt` / `generatedAt`, or the newest successful CI/Pages
+deployment on `main`. It alerts when newer committed source content has not reached the live
+feed within a bounded delay, and stays quiet when sources simply did not change. It is
+independent of CTX and C5.1 and can be scheduled on its own.
+
 ### Part 5 — model extraction for unprocessed notices
 
 This is a target stage of the scheme, not an optional experiment: sources often already
@@ -206,29 +224,40 @@ Timeline labels:
 
 - **Input**, built in the job from the snapshot with no network access: the notice text, the
   game's current events and a Git-reviewed scope policy (what counts as an event).
-- **Call:** `claude -p --tools ""`, Sonnet, output constrained by a JSON schema, through the
-  existing `scripts/timeline-label-agent/run-model.sh` (usage-limit and auth handling). For each
-  notice the model returns either:
+- **Call:** a configurable provider and model with no tools, output constrained by a JSON
+  schema. Reuse the existing Timeline label infrastructure where it fits: DeepSeek through
+  `scripts/timeline-label-agent/run-deepseek.ts`, or `claude -p --tools ""` through
+  `scripts/timeline-label-agent/run-model.sh` (usage-limit and auth handling); other providers
+  are optional. No production path depends on a model being available. For each notice the
+  model returns either:
   - `event` with a title, type and the **verbatim quote** of each date line;
   - `ignore` with a reason;
   - `unsure`.
 - **The model does not compute dates.** Code does all the checks:
   - every quote must occur verbatim in the notice text;
   - the date reader parses it and converts it to UTC;
-  - a server-time quote without a reviewed offset table makes the item `unsure`;
+  - a server-time quote without a supported, source-scoped CTX rule makes the item `unsure`
+    (without CTX almost every real notice is `unsure`);
   - an overlap with an existing event (same period, similar title) is not published but
     reported;
   - the result passes the normal schema validation and calendar sanity checks.
   - Anything that fails stays in the inbox for the operator.
 - **Remaining risk:** the model can attach the wrong date from the same notice to an event (the
   Starlight Voyage quest cutoff on Oct 29 versus the event end on Nov 2). The quote check cannot
-  see that, so the stages below measure it before anything is published automatically.
+  see that: a verbatim quote proves only that the text is in the notice, not that it belongs to
+  the event the model named. The stages below measure it before anything is published
+  automatically.
 
 Stages:
 
-1. **Probe** (read-only, like Timeline M3). Run on the notices behind fixes #119 and #130–#143,
-   including notices with several deadlines (Starlight Voyage), and compare with the reviewed
-   records made by hand. This also decides whether Sonnet is enough or Haiku is.
+1. **Probe** (read-only, like Timeline M3; step C5.1). Run on the notices behind fixes #119 and
+   #130–#143, including notices with several deadlines (Starlight Voyage), and compare with the
+   reviewed records made by hand. Provider and model are configurable (for example DeepSeek and a
+   Claude model side by side). Measure, against that ground truth: detection recall, date-to-event
+   attribution (especially the Starlight two-deadline case), duplicates of existing events,
+   unsupported or ambiguous outputs, cost and latency. Report two layers separately:
+   (a) event and quote discovery, measurable **before** CTX; (b) verified date conversion and
+   matching, measurable only **after** CTX. The probe writes only a report; it never changes data.
 2. **Proposals.** Runs after refresh. Results go to the inbox issue as proposed reviewed rows,
    with evidence; the operator applies them by hand.
 3. **Automatic recording** is the intended end state, enabled only by a separate operator GO on
@@ -265,13 +294,92 @@ rules and this scheme does not change it. Agreed with the operator on 2026-10-28
 | C0 | Event Context E1 evidence extraction for the article sources: KQM GINews and HSRNews, ZZZ and NTE Steam news | Two checks hold: (a) every item in the current snapshot is listed with its source and item ID, including items with no event; (b) every emitted event maps to its item, or fails closed with a diagnostic. Public feed files stay byte-identical |
 | C1a.0 | Extend the existing E1/C0 notice inventory to every WuWa Kuro Atom entry before classification | All WuWa entries, including zero-output, have stable IDs and source text; every emitted event has an unambiguous article link or diagnostic; prior WuWa E1 and public outputs remain unchanged |
 | C1a.1 | Part 1 offline coverage engine for five notice sources: bounded date reader, `processed`/`partially processed`/`unprocessed`/`ignored`, span ignores and notification-only baseline | Historical replay flags #119 and #130–#143 where the relevant notice is in a tracked snapshot; Starlight's earlier quest cutoff is `partially processed`, not a false `processed` |
-| C1b | Part 1 operational Coverage Inbox: one pinned issue, seven-day priority, idempotent best-effort refresh updates | Replayed output and actual refresh integration do not change public feed or turn refresh red; new-item notification is bounded; unsupported games are not shown as complete |
+| C1b.1 | Part 1 operational Coverage Inbox, phase 1: one pinned issue listing **new** notices from the C0/C1a.0 inventory that emitted **zero** events; seven-day priority, idempotent best-effort refresh updates; the issue states the five-source limit | Replayed output and actual refresh integration do not change public feed or turn refresh red; new-item notification is bounded; no notification for existing uncertain spans; Endfield/CZN and other unsupported sources are shown as not evaluated, never complete |
+| CTX | Source-scoped date semantics for **matching and reporting only** (see below) | The design-review acceptance contract holds on a labeled, source-realistic corpus: per-notice discrimination and an explicit false-`processed` guardrail, with the required real-text cases (see below); the match count is a progress measure only; public files byte-identical |
+| C5.1 | Part 5 stage 1: read-only, provider-agnostic model probe | Probe report compared with the reviewed records: detection recall, date-to-event attribution (Starlight), duplicates, unsupported/ambiguous outputs, cost, latency; discovery and verified conversion reported separately |
+| C1b.2 | Part 1 inbox, phase 2: add `partially processed` notices; starts only after CTX shows actionable partial-notice discrimination on real source material | Notifications for partial notices on real snapshots are few and actionable, not every notice |
 | C2 | Part 3: per-field `evidence`, date reader, CI check, legacy list | Fixes #130–#143 rewritten as test cases pass; a wrong date, or a field without a quote, fails |
 | C3 | Part 2: audit prompt, audit log, due computation | One real audit run end to end for one game |
-| C4 | Part 4: dead man's switch | A deliberately skipped ping produces mail |
-| C5 | Part 5, stages 1–3, each a separate operator decision | Stage 1: probe report compared with the reviewed records. Stage 3: the measured criteria above are met |
+| C4 | Part 4: dead man's switch and publication freshness check | A deliberately skipped ping produces mail; committed source content that does not reach the live feed within the bounded delay produces an alert; unchanged sources produce none |
+| C5.2–5.3 | Part 5 stages 2–3, each a separate operator decision | Stage 3: the measured criteria above are met |
 
-C0 to C4 involve no AI.
+C0 to C4 and CTX involve no AI. C5.1 is read-only and publishes nothing. C3 and C4 do
+not depend on CTX or C5.1 and can be scheduled whenever convenient; C4's publication
+freshness check is worth prioritizing on its own.
+
+### Re-order 2026-11-05: context first
+
+**Status:** introduced by the PR that adds this section; merging it is the operator's
+acceptance of the new order. Evidence: the C1a.1 measurements and decision memo on
+[PR #161](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6647707287).
+
+**Why.** On the real snapshots the C1a.1 engine matches 15 of 714 dated spans; all 101
+notices need attention and none is `processed`. The reader is not at fault: the
+ordinary source date forms are version-anchored starts ("after the Version 7.2 update"),
+dates without a year (mostly NTE), `(server time)`/`(global)` clocks and clocks without a zone.
+The plan only resolves them in C2, after C1b. Part 5 has the same dependency: the model
+returns quotes, code converts them, and a server-time quote without a supported server-time
+rule is `unsure`. So C1b.2, C2 and C5 all wait on the same missing piece. Fixing parsers one layout
+at a time does not remove that dependency, and model extraction is the intended long-term
+answer to layout drift (Part 5), so it should be measured early rather than last.
+
+**CTX scope: source-scoped date semantics, matching and reporting only.**
+
+CTX is not one universal per-game UTC table. Each rule names the source or notice family
+it applies to and the exact semantics it supports, and cites its evidence:
+
+- KQM `<t class="t_lc">` (server-local) versus `t_gl` (global) clock tags;
+- HSR `(server)` versus `(global)` qualifiers, and the equivalent `(server time)` forms of
+  other sources;
+- regional boundaries for each such rule (which regions, which offsets, any DST rule);
+- year context: from the notice's publication date or explicit title/version context, as the
+  NTE parser already does, only where unambiguous;
+- version anchors: "after the Version X update" resolved against a reviewed version-start
+  source.
+
+Existing parser knowledge is reused only where it is backed by the cited source and an
+explicit contract, for example Genshin's fixed UTC+8 / UTC+1 / UTC−5 regional `t_lc` clocks
+(`test/fixtures/genshin/README.md`). A daily-reset clock is **not automatically** an
+event-time offset: `docs/research/daily-reset-clocks/` documents reset behaviour, and for NTE
+its regional server offsets and DST are explicitly unverified
+(`docs/research/daily-reset-clocks/nte.md`). Unsupported, unverified or conflicting contexts
+stay uncertain and can never certify `processed`. Every CTX-derived match records its
+derivation (rule, source, inputs) and stays visible in the report. **CTX never writes
+published fields:** published dates still come only from parsers and reviewed rows, under the
+`AGENTS.md` data rules. CTX is high-risk work under `docs/DEVELOPMENT-WORKFLOW.md`, so it
+starts with a read-only design review. C2 later validates stricter field-level date evidence
+independently; CTX matching is not C2's acceptance standard.
+
+**CTX acceptance: correctness before match count.** The current 15 of 714 matched spans is a
+progress measure, not a success condition. The design review defines:
+
+- a labeled, source-realistic validation corpus drawn from tracked snapshots and historical
+  fixtures;
+- precision/recall or equivalent per-notice discrimination measures;
+- an explicit **false-`processed` / false-completeness guardrail**.
+
+Required cases: the actual frozen Starlight text in both states (main event only →
+`partially processed`; main event plus quest deadline → `processed` only if the evidence
+really supports it); #119; conflicting and unknown server clocks; ambiguous years; and a valid
+quote attached to the wrong deadline. If the rest of a notice cannot be fully evaluated, it is
+not forced to `processed` to improve the metric.
+
+**C5.1 earlier.** Stage 1 is read-only, provider-agnostic and depends only on C0/C1a.0
+notice texts, the reviewed records as ground truth and, for date conversion, CTX. Event and
+quote discovery can be measured in parallel with CTX; verified conversion and matching follow
+once CTX lands. A verbatim quote is not proof of attribution, so attribution is scored against
+the reviewed records, not assumed. The probe results decide how much precision
+C1b.2 and C2 still need, before effort goes into them.
+
+**Phase boundaries and unchanged parts.** C1a.1 finishes on PR #161 under its own closure
+contract, with no reopening or speculative date-reader rewrite here. C1b.1 notifies only on
+new zero-output notices, states the five-source limit, and does not notify on existing
+uncertain spans or claim completeness for Endfield/CZN. C1b.2 starts only when CTX shows
+actionable partial-notice discrimination on real source material. No step starts
+automatically. Stages 2–3 of Part 5 keep their separate operator GO and measured criteria.
+Sources that no notice feed covers (Endfield, CZN, events absent from tracked sources) still
+need Part 2 audits and new sources; neither CTX nor Part 5 can find events the project
+does not read.
 
 **Why C0 came first.** WuWa E1 originally associated source text with emitted
 winners but did not enumerate all zero-output Atom entries
