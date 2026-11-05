@@ -1,0 +1,1575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Wuthering Waves Articles</title>
+    <link href="https://wutheringwaves.kurogames.com/en/main/news/" rel="alternate" type="text/html"/>
+    <link href="https://raw.githubusercontent.com/TheLovinator1/wutheringwaves/refs/heads/master/articles_latest.xml" rel="self" type="application/atom+xml"/>
+    <id>urn:wutheringwaves:feed</id>
+    <updated>2026-10-20T18:18:40+00:00</updated>
+    <subtitle>Latest articles from Wuthering Waves</subtitle>
+    <icon>https://raw.githubusercontent.com/TheLovinator1/wutheringwaves/refs/heads/master/logo.png</icon>
+    <logo>https://raw.githubusercontent.com/TheLovinator1/wutheringwaves/refs/heads/master/logo.png</logo>
+    <rights>Copyright © 2026 Wuthering Waves</rights>
+    <generator uri="https://git.lovinator.space/TheLovinator/wutheringwaves" version="1.0">Python Script</generator>
+    <author>
+        <name>Wuthering Waves</name>
+        <email>wutheringwaves_ensupport@kurogames.com</email>
+        <uri>https://wutheringwaves.kurogames.com</uri>
+    </author>
+    
+                <entry>
+                    <id>urn:article:5668</id>
+                    <title>[Version 3.7 Featured Resonator/Weapon Convene: Phase Ⅱ]</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5668" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p><strong>[Tomorrow in the Frame] Featured Resonator Convene</strong></p>
+<p>During the event, <strong>5-Star Resonator: Lucilla, 4-Star Resonators: Lumi, Danjin, and Chixia</strong> receive boosted drop rates!</p>
+<h1>Duration</h1>
+<p>2026-10-22 10:00 - 2026-11-11 11:59 (server time)</p>
+<h1>Eligibility</h1>
+<ul>
+<li>
+<p>Reach Union Level 5.</p>
+</li>
+<li>
+<p>Or complete the combat trial in First Resonance.</p>
+</li>
+<li>
+<p>Or access Main Quest Fast Track Event and proceed with the Main Quest until you reach a certain point.</p>
+</li>
+</ul>
+<h1>Convene Rules</h1>
+<ul>
+<li>
+<p>[Tomorrow in the Frame] is a Featured Resonator Convene event banner. Use Radiant Tide to convene. You are guaranteed at least one 4-Star or higher rarity Resonator or Weapon every 10 attempts.</p>
+</li>
+<li>
+<p>The guarantee count is shared among all Featured Resonator Convene events and is carried over until a 5-Star Resonator is obtained.</p>
+</li>
+<li>
+<p>Featured Resonator Lucilla is exclusive to the [Tomorrow in the Frame] Featured Resonator Convene and will not be available by other means once the event ends.</p>
+</li>
+<li>
+<p>Featured Resonator Lucilla&#39;s Waveband will be simultaneously made available in the Afterglow Coral Store with a limit of 2 purchases, and it will be removed once the Convene event ends.</p>
+</li>
+<li>
+<p>During the event, all the Resonators who receive boosted drop rates will become available in Ascendant Aces as Trial Resonators. Complete their Ascendant Aces challenges to obtain rewards.</p>
+</li>
+</ul>
+<p><em>For more details, please refer to the in-game Convene page.</em></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792425600000/xhali8ty5l43rrwp79-1792491287655.jpg" /></p>
+<p><strong>[Freeze Frame] Featured Weapon Convene</strong></p>
+<p>During the event, <strong>5-Star Weapon: Freeze Frame, 4-Star Weapons: Overture, Relativistic Jet, Amity Accord</strong> receive boosted drop rates!</p>
+<h1>Duration</h1>
+<p>2026-10-22 10:00 - 2026-11-11 11:59 (server time)</p>
+<h1>Eligibility</h1>
+<ul>
+<li>
+<p>Reach Union Level 5.</p>
+</li>
+<li>
+<p>Or complete the combat trial in First Resonance.</p>
+</li>
+<li>
+<p>Or access Main Quest Fast Track Event and proceed with the Main Quest until you reach a certain point.</p>
+</li>
+</ul>
+<h1>Convene Rules</h1>
+<ul>
+<li>
+<p>[Absolute Pulsation] is a Featured Weapon Convene event banner.</p>
+</li>
+<li>
+<p>Use Forging Tide to convene. You are guaranteed at least one 4-Star or higher rarity Resonator or Weapon every 10 attempts.</p>
+</li>
+<li>
+<p>The guarantee count is shared among all Featured Weapon Convene events and is carried over until a 5-Star Weapon is obtained.</p>
+</li>
+<li>
+<p>The 5-Star Weapon you Convene is guaranteed to be Freeze Frame.</p>
+</li>
+<li>
+<p>Featured Weapon Freeze Frame is exclusive to the Featured Weapon Convene and will not be available by other means once the event ends.</p>
+</li>
+</ul>
+<p><em>For more details, please refer to the in-game Convene page.</em></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792425600000/mkwgesoxygmvpr5kwu-1792490848114.jpg" /></p>
+<p><strong>[Undefined Spectrum] Featured Resonator Convene</strong></p>
+<p>During the event, 5-Star Resonator: <strong>Lynae, 4-Star Resonators: Lumi, Danjin, and Chixia</strong> receive boosted drop rates!</p>
+<h1>Duration</h1>
+<p>2026-10-22 10:00 - 2026-11-11 11:59 (server time)</p>
+<h1>Eligibility</h1>
+<ul>
+<li>
+<p>Reach Union Level 5.</p>
+</li>
+<li>
+<p>Or complete the combat trial in First Resonance.</p>
+</li>
+<li>
+<p>Or access Main Quest Fast Track Event and proceed with the Main Quest until you reach a certain point.</p>
+</li>
+</ul>
+<h1>Convene Rules</h1>
+<ul>
+<li>
+<p>[Undefined Spectrum] is a Featured Resonator Convene event banner. Use Radiant Tide to convene. You are guaranteed at least one 4-Star or higher rarity Resonator or Weapon every 10 attempts.</p>
+</li>
+<li>
+<p>The guarantee count is shared among all Featured Resonator Convene events and is carried over until a 5-Star Resonator is obtained.</p>
+</li>
+<li>
+<p>Featured Resonator Lynae is exclusive to the [Undefined Spectrum] Featured Resonator Convene and will not be available by other means once the event ends.</p>
+</li>
+<li>
+<p>Featured Resonator Lynae&#39;s Waveband will be simultaneously made available in the Afterglow Coral Store with a limit of 2 purchases, and it will be removed once the Convene event ends.</p>
+</li>
+<li>
+<p>During the event, all the Resonators who receive boosted drop rates will become available in Ascendant Aces as Trial Resonators. Complete their Ascendant Aces challenges to obtain rewards.</p>
+</li>
+</ul>
+<p><em>For more details, please refer to the in-game Convene page.</em></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792425600000/avcdasdjqql65vo90n-1792490903974.jpg" /></p>
+<p><strong>[Spectrum Blaster] Featured Weapon Convene</strong></p>
+<p>During the event, <strong>5-Star Weapon: Spectrum Blaster, 4-Star Weapons: Overture, Relativistic Jet, Amity Accord</strong> receive boosted drop rates!</p>
+<h1>Duration</h1>
+<p>2026-10-22 10:00 - 2026-11-11 11:59 (server time)</p>
+<h1>Eligibility</h1>
+<ul>
+<li>
+<p>Reach Union Level 5.</p>
+</li>
+<li>
+<p>Or complete the combat trial in First Resonance.</p>
+</li>
+<li>
+<p>Or access Main Quest Fast Track Event and proceed with the Main Quest until you reach a certain point.</p>
+</li>
+</ul>
+<h1>Convene Rules</h1>
+<ul>
+<li>
+<p>[Absolute Pulsation] is a Featured Weapon Convene event banner.</p>
+</li>
+<li>
+<p>Use Forging Tide to convene. You are guaranteed at least one 4-Star or higher rarity Resonator or Weapon every 10 attempts.</p>
+</li>
+<li>
+<p>The guarantee count is shared among all Featured Weapon Convene events and is carried over until a 5-Star Weapon is obtained.</p>
+</li>
+<li>
+<p>The 5-Star Weapon you Convene is guaranteed to be Spectrum Blaster.</p>
+</li>
+<li>
+<p>Featured Weapon Spectrum Blaster is exclusive to the Featured Weapon Convene and will not be available by other means once the event ends.</p>
+</li>
+</ul>
+<p><em>For more details, please refer to the in-game Convene page.</em></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792425600000/swu3k9nrl8j55cd92n-1792490946923.jpg" /></p>]]></content>
+                    <published>2026-10-20T18:18:40+00:00</published>
+                    <updated>2026-10-20T18:18:40+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5653</id>
+                    <title>Upcoming Events in Wuthering Waves Version 3.7</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5653" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>Here is a compilation of the upcoming events in Version 3.7. Don&#39;t miss out!<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792425600000/1xox7ovygipiiwnsnc-1792460373670.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792425600000/jm2rsgb1yukr435fgj-1792460385632.jpg" /></p>]]></content>
+                    <published>2026-10-20T09:40:28+00:00</published>
+                    <updated>2026-10-20T09:40:28+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5644</id>
+                    <title>Profile Reveal | Power of Ten — Suoming</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5644" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>Loading Data&gt;&gt;&gt;</p>
+<h1>Suoming</h1>
+<p>Born in Huating, Mengzhou, she founded the Ten Seals Covenant as its Seal Master to liberate her homeland from the Evil Miasma. Later, by the Sentinel&#39;s decree, she served as Intendant of the Ministry of Sentinel Affairs, watching over all of Mengzhou.<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/pschl2zbs6d2meg84m-1792137929039.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/f3ci7wtfxus6zl1lbe-1792137955242.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/0xyrumpv62m78ml2mn-1792138024135.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/okv7ggh4djaxdke86w-1792138130984.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/qz1a3fkcac9as1oceb-1792138150407.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/tk9vkmghyeici95l42-1792138277420.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/ch5jwzs4ssa0fojxff-1792138444444.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/g30vhq05jjs5plx75l-1792138467380.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/5regub0in3y7l2abc5-1792138486258.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/0pci0q1quwuo5rsifn-1792138636832.jpg" /></p>]]></content>
+                    <published>2026-10-16T16:19:24+00:00</published>
+                    <updated>2026-10-16T16:19:24+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5626</id>
+                    <title>Resonator Review | Memory Palace — Lucilla</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5626" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>Lucilla, President of Startorch Academy and idealist with both feet on the ground. She holds quiet vigil over her students as they rise to challenge the very sky.<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792166400000/sgkj4fwuwzyzct5ou2-1792207561469.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792166400000/upkjxvcen2sk5af43s-1792207580965.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792166400000/9407hszvlvg9namnbx-1792207597875.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792166400000/m8k6ahcf9p850qu9gm-1792207617807.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792166400000/xpqdl500gw6pafzggl-1792207637574.jpg" /></p>]]></content>
+                    <published>2026-10-14T17:06:43+00:00</published>
+                    <updated>2026-10-14T17:06:43+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5625</id>
+                    <title>Post-Lament Anthropocene: Stars Intertwined | Suoming</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5625" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>Suoming, Seal Master of the Ten Seals Covenant, and Intendant of Mengzhou&#39;s Ministry of Sentinel Affairs. Any enemy of Mengzhou is an enemy of mine.<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/qd896gmi8vbx2y88u4-1791889690987.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/zm9nkndv997c882njm-1791889720639.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/e0a9eydav0vmwlk9p3-1791889736034.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/1ax9ws51n7gt7y1rm2-1791889760750.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/ye1qy4npc8qbh6l8nf-1791889779658.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/rhhup331oqf93uyzcb-1792139567076.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/b9zlc9nemmgbw6sryk-1792139339366.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/3vjcsyu7iwuecv6qlj-1792139357330.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792080000000/zrrpgp6v1u53wqhsh0-1792139387755.gif" /></p>]]></content>
+                    <published>2026-10-13T19:10:35+00:00</published>
+                    <updated>2026-10-13T19:10:35+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5616</id>
+                    <title>Resonator Review | Radiant Spectrum — Lynae</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5616" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>A Startorch Academy prep student whose head-turning, electric style hides an inner focus as explosive as a coiled spring.<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1792166400000/qmxeklhslwrv9x47n7-1792207724518.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/0u8ig9corvctx99x7m-1791806502425.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/3bihqf3u7i1w666a6s-1791806540958.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/90ou3jpjohrnhho7jj-1791873983899.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/qfv9jnsq0q81icv8kq-1791874011500.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/12e7z0fxckpp1vr5jv-1791874045918.png" /></p>]]></content>
+                    <published>2026-10-12T20:08:28+00:00</published>
+                    <updated>2026-10-12T20:08:28+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5615</id>
+                    <title>Version 3.7 Story Cinematics Wallpaper</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5615" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>The song of old grows quiet, yet over mountains and rivers, there is still a way forward together.<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/hkbm7pcp8gurgihc69-1791807905497.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/ln4pol0p42mj8bsn47-1791807905662.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/pnmfy6esl8gpbu57fv-1791807954051.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/el3f5vwze510bl8c28-1791808056820.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/6uf23ascextjw6qazs-1791808034823.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/9wmbuic2bf28h4cslg-1791808098766.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/8j21epq8ckpu3icveg-1791808144620.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/65kxfv8z1f1halpqkt-1791808179851.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/jie4awieeot6jewdbr-1791808210075.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/wz2txaavwlnm64t415-1791808229205.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/0p2618tzgd12yjh1yv-1791808248286.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/wlhrgnis5mlndwi64i-1791808272214.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/x37mnybxnhiwkl4h9z-1791808293699.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/yguyxb3z6wpuc0gjhq-1791808317753.jpg" /></p>]]></content>
+                    <published>2026-10-12T19:58:21+00:00</published>
+                    <updated>2026-10-12T19:58:21+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5608</id>
+                    <title>Post-Lament Anthropocene: Comprehensive Mirror for Historians — Records of the Huanglong Sentinels</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5608" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>Members of the Pioneer Association compiled these notes on the Sentinels on their own initiative, gathering the local chronicles, anecdotes, and folk legends that can still be traced, in the hope of recording and piecing together the Sentinels&#39; past deeds as fully as possible.</p>
+<p>These records contain some speculative conclusions that remain unverified and may require further information to confirm or clarify.<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/ybezed6jv3gdaisjd8-1791797555598.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/igmdtb07kyx3jlezni-1791874685147.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791820800000/jsw7q5n91t03u9fitt-1791874702902.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/prrs8nxe6a5kttgi9e-1791797589549.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/anbt8pfqikrdfekane-1791797589791.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/lj2ferc5gckynhbua8-1791797589796.png" /></p>]]></content>
+                    <published>2026-10-12T17:36:36+00:00</published>
+                    <updated>2026-10-12T17:36:36+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5607</id>
+                    <title>Post-Lament Anthropocene: Enemies — Suhsin the Inevitable</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5607" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>Reckoner of fate, revealer of one true path. The fox shadow at the deepest reach of the Civilization Capsule.</p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/5piyoppgkyuy5tsxj1-1791796562132.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/gzbzuza7wctbuf6vsx-1791796584365.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/eo834be1lnpsmj6amb-1791796605483.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/r0mfeubqx2y44wzewo-1791796688563.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/tg84lcved2pbkh05lq-1791797234332.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791734400000/81n0ptyy6ltjrqbn1s-1791797255884.gif" /></p>]]></content>
+                    <published>2026-10-12T17:30:28+00:00</published>
+                    <updated>2026-10-12T17:30:28+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5603</id>
+                    <title>Tidal Photography: Land of Xuanfang Photo Challenge | Winners Reveal</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5603" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/osgyc3razodrck81pi-1791209084166.jpg" />Tidal Photography: Land of Xuanfang Photo Challenge has concluded. Thank you all for your participation!</p>
+<p>Below is the list of winners for this event. Within each tier, winners are listed in no particular order.</p>
+<p>1st Place</p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/l96g2mmqn8w4zgj1rh-1791208899190.octet-stream" /></p>
+<p><a href="https://x.com/Yumisatutubrrr">@Yumisatutubrrr</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/ewva84bjfglwamy435-1791208898875.octet-stream" /></p>
+<p><a href="https://x.com/nudel5466">@nudel5466</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/vu91nh2cykb7rxtqz3-1791208895962.octet-stream" /></p>
+<p><a href="https://x.com/jinble916">@jinble916</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/enb9l70wl5r8yus92r-1791208889812.octet-stream" /></p>
+<p><a href="https://x.com/eco_wuwapic">@eco_wuwapic</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/v5aur4fbxttkb5gsni-1791208895094.octet-stream" /></p>
+<p><a href="https://x.com/Wuwa___n">@Wuwa___n</a></p>
+<p>2nd Place</p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/3qnsyhuoe73b59hcb8-1791208898613.octet-stream" /></p>
+<p><a href="https://x.com/RYO06_wuthering">@RYO06_wuthering</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/nva592xxpjuho1l1fq-1791208901351.octet-stream" /></p>
+<p><a href="https://x.com/meicho_wuwa">@meicho_wuwa</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/qydovkavllt86odn47-1791208900521.octet-stream" /></p>
+<p><a href="https://x.com/Luna_solaris07">@Luna_solaris07</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/m4luc855gn7mveagie-1791208902276.octet-stream" /></p>
+<p><a href="https://x.com/Fulmine_WFS">@Fulmine_WFS</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/4ufrn2be0hkv27cunc-1791208896038.octet-stream" /></p>
+<p><a href="https://x.com/fishonthesun">@fishonthesun</a></p>
+<p>3rd Place</p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/hpi8yzdrfi30bwrdzh-1791208888593.octet-stream" /></p>
+<p><a href="https://x.com/sss95363057">@sss95363057</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/o2huo2uyf6xd9jzvqy-1791208899812.octet-stream" /></p>
+<p><a href="https://x.com/hameln1128">@hameln1128</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/6jctt6xq3d9zkz0f7s-1791208893968.octet-stream" /></p>
+<p><a href="https://x.com/kire_same">@kire_same</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/qk4e3fz7oati75a6u6-1791208900435.octet-stream" /></p>
+<p><a href="https://x.com/Daisyence">@Daisyence</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/q1hyz6rozniwqawg51-1791208899335.octet-stream" /></p>
+<p><a href="https://x.com/Digo_WuWaPhoto">@Digo_WuWaPhoto</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/kgnfe4frehgx52rlpf-1791208894453.octet-stream" /></p>
+<p><a href="https://x.com/Mosaboncino777">@Mosaboncino777</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/xem2j4qkl41kzyjtbf-1791208899904.octet-stream" /></p>
+<p><a href="https://x.com/komakii_o">@komakii_o</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/uz3rcgvix2oh1th1gt-1791208896930.octet-stream" /></p>
+<p><a href="https://x.com/suzuto_syaro">@suzuto_syaro</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/hmy16bypkp5bo92tnp-1791208895876.octet-stream" /></p>
+<p><a href="https://x.com/ani_kizashi">@ani_kizashi</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/xyz63mi5rwnymo7b8y-1791208902213.octet-stream" /></p>
+<p><a href="https://x.com/Riruprti">@Riruprti</a></p>
+<p>4th Place</p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/6zioleb2njx4ax5wyw-1791208887705.octet-stream" /></p>
+<p><a href="https://x.com/sollunbangsong1">@sollunbangsong1</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/8gdu9uz4w9f23fkbed-1791208900123.octet-stream" /></p>
+<p><a href="https://x.com/Ragizo_Frame">@Ragizo_Frame</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/akiwebsite/website2.0/images/1791129600000/q4e3dyutl7dnk8ybfk-1791208885744.jpeg" /></p>
+<p><a href="https://www.facebook.com/feng.lei.5">@江毅祥</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/gqyh7l17a73eyqmawx-1791208899940.octet-stream" /></p>
+<p><a href="https://x.com/nashi_tsubu_ww">@nashi_tsubu_ww</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/r8o6jqascjmc5sz5g9-1791208890509.octet-stream" /></p>
+<p><a href="https://x.com/iz_notme">@iz_notme</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/w9ztz53xqkd5c3043o-1791208889229.octet-stream" /></p>
+<p><a href="https://x.com/PhantoSora">@PhantoSora</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/4aymrzad263nnbwwef-1791208899160.octet-stream" /></p>
+<p><a href="https://x.com/lightwuthering">@lightwuthering</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/3742nuopcq6s5cp75b-1791208899907.octet-stream" /></p>
+<p><a href="https://x.com/ura_uraShiki">@ura_uraShiki</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/4emu50qtzo6eku7qxv-1791208899126.octet-stream" /></p>
+<p><a href="https://x.com/wuwa_cinema">@wuwa_cinema</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/400qd79fho4hxbank3-1791208891332.octet-stream" /></p>
+<p><a href="https://x.com/Schlafzeit24">@Schlafzeit24</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/xoznx9d6aktpyppz00-1791208897629.octet-stream" /></p>
+<p><a href="https://x.com/hapicle__">@hapicle__</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/bs1q6uj11l5veqtuom-1791208895282.octet-stream" /></p>
+<p><a href="https://x.com/as5829orenji">@as5829orenji</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/cr30ket2otzgzauhll-1791208899277.octet-stream" /></p>
+<p><a href="https://x.com/wilanuwuwa">@wilanuwuwa</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/gmufvtd3p70n6iqh11-1791208892207.octet-stream" /></p>
+<p><a href="https://x.com/Erebus_Waves">@Erebus_Waves</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/ena888r17b38c40nca-1791208899760.octet-stream" /></p>
+<p><a href="https://x.com/dark_ledeu">@dark_ledeu</a></p>
+<p>5th Place</p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/shsrqit3b1u12zbr23-1791208892797.octet-stream" /></p>
+<p>[@AeRiaL8_GarDen0</p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/udc8uwrjfki5cwi9cs-1791208898944.octet-stream" />](https://x.com/AeRiaL8_GarDen0)</p>
+<p><a href="https://x.com/rover_archive">@rover_archive</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/6icwkcgx7dz22wrhbd-1791208889812.octet-stream" /></p>
+<p><a href="https://x.com/Grynoote">@Grynoote</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/ifra60v06mtfbxqxtv-1791208891311.octet-stream" /></p>
+<p><a href="https://x.com/unryu_wuwa">@unryu_wuwa</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/czq437yis7gre8w1k4-1791208893691.octet-stream" /></p>
+<p><a href="https://x.com/ajarofnatella">@ajarofnatella</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/9j5lddd1agv7amrhe2-1791208900064.octet-stream" /></p>
+<p><a href="https://x.com/PitPichuPi">@PitPichuPi</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/op0cxwh0wsmdn58qvn-1791208898416.octet-stream" /></p>
+<p><a href="https://x.com/rimu10749">@rimu10749</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/qj8fy67f085z4c5g80-1791208898671.octet-stream" /></p>
+<p><a href="https://x.com/TheEndrik16">@TheEndrik16</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/lpurpl54k3w4x1hqa0-1791208897445.octet-stream" /></p>
+<p><a href="https://x.com/saulus0000">@saulus0000</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/htk2iqx3yajysq6eeq-1791208889565.octet-stream" /></p>
+<p><a href="https://x.com/nyanchu1914">@nyanchu1914</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/39kfiudxdbljmq0f4y-1791208890587.octet-stream" /></p>
+<p><a href="https://x.com/Hisui95324">@Hisui95324</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/zajl44f7b2167txfgb-1791208888323.octet-stream" /></p>
+<p><a href="https://x.com/taibo_6315">@taibo_6315</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/6ck7jxv5u2442kbu5g-1791208895305.octet-stream" /></p>
+<p><a href="https://x.com/774n4Na4">@774n4Na4</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/h140sxvdy8zfqg8ip2-1791208898216.octet-stream" /></p>
+<p><a href="https://x.com/kurogame_9999">@kurogame_9999</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/amys4oiieeet1wsznc-1791208899191.octet-stream" /></p>
+<p><a href="https://x.com/fromdesl">@fromdesl</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/8hf381dhc1nd2mk70m-1791208892432.octet-stream" /></p>
+<p><a href="https://x.com/Yorusagizzz">@Yorusagizzz</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/r0ys5hdbkd7eh5q74t-1791208897312.octet-stream" /></p>
+<p><a href="https://x.com/blck_swan21">@blck_swan21</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/uhhrax8oh8ubf9qpgs-1791208901892.octet-stream" /></p>
+<p><a href="https://x.com/minh_MBN99">@minh_MBN99</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/qkqsd4uj7ftsztobre-1791208900871.octet-stream" /></p>
+<p><a href="https://x.com/Quinnable_VP">@Quinnable_VP</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1791129600000/stqkx7p9sjnpuy13bt-1791208892652.octet-stream" /></p>
+<p><a href="https://x.com/qqadzzi">@qqadzzi</a></p>]]></content>
+                    <published>2026-10-05T22:00:30+00:00</published>
+                    <updated>2026-10-05T22:00:30+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5575</id>
+                    <title>Wuthering Waves Fan Creation Event Winners Reveal</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5575" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/2d8t1jygr7pcp5544n-1790742812583.jpg" /></p>
+<p>Wuthering Waves Fan Creation Event</p>
+<p>&#34;Lamplight in Mirage, Sword&#39;s Resolve in Heart&#34;</p>
+<p>has concluded, and we want to express our heartfelt appreciation to all participants for their dedication and creativity in our fan art event. Let&#39;s view the winning entries and their contributors!</p>
+<p><strong>1st Place<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/ny9dfdvvxwhgni8a8t-1790742906797.jfif" /></strong></p>
+<p><a href="https://x.com/Azipou_">@Azipou_</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/1xh52zkb70xxpwwlt5-1790742942460.jfif" /></p>
+<p><a href="https://x.com/Jupito_b">@Jupito_b</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/avoc4eyojk8uj9xoji-1790743020431.jfif" /></p>
+<p><a href="https://x.com/valtearart">@valtearart</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/7egnvs5v72dymuznt3-1790743258117.jfif" /></p>
+<p><a href="https://x.com/yirin3617">@yirin3617</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/bvk72rjimy61rplu29-1790743295904.jfif" /></p>
+<p><a href="https://x.com/yoshi_houndbell">@yoshi_houndbell</a></p>
+<p><strong>2nd Place</strong><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/zu7i51quok8ma4zkb7-1790743363188.jfif" /></p>
+<p><a href="https://x.com/HanasawaHsu">@HanasawaHsu</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/bgdtao8issmcxrirma-1790748042550.jfif" /></p>
+<p><a href="https://x.com/mae_otokeshi">@mae_otokeshi</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/qkxov3a7wx8isxyz6f-1790748067850.jfif" /></p>
+<p><a href="https://x.com/Nick_____123">@Nick_____123</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/7ckwiypjaccioecpse-1790748097008.jfif" /></p>
+<p><a href="https://x.com/Peony_f4">@Peony_f4</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/azdc30ekt223m9nxip-1790748171015.jfif" /></p>
+<p><a href="https://x.com/Toki_0356">@Toki_0356</a></p>
+<p><strong>3rd Place</strong><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/i08epfmocvdbhfovqz-1790748251330.jfif" /></p>
+<p><a href="https://x.com/_imnk_">@_imnk_</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/tspl84oib1lxv6tlg1-1790748427649.jfif" /></p>
+<p><a href="https://x.com/chucky1000sun">@chucky1000sun</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/vvpq99fm6fd8qb271n-1790748449869.jfif" /></p>
+<p><a href="https://x.com/Coco_Sakeko">@Coco_Sakeko</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/q3xs23rzvx796uff4y-1790748477314.jfif" /></p>
+<p><a href="https://x.com/dualnaito">@dualnaito</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/v84cyo0zpigr7516v4-1790748501425.jfif" /></p>
+<p><a href="https://x.com/jinzzaanim">@jinzzaanim</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/5tbp9nwf8q3rea102c-1790748538325.jfif" /></p>
+<p><a href="https://x.com/lolbyts">@lolbyts</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/2cggzhq70hi8x2ebfs-1790748581570.jfif" /></p>
+<p><a href="https://x.com/nomn_pop">@nomn_pop</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/lo4guzilnm5f5mk8oi-1790748603356.jfif" /></p>
+<p><a href="https://x.com/oiro_ik">@oiro_ik</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/t6m0gdeyj29atvicx5-1790748623769.jfif" /></p>
+<p><a href="https://x.com/ssanTi2">@ssanTi2</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/dl2p6hapx8mgbwvauo-1790748663345.jfif" /></p>
+<p><a href="https://x.com/X0cious">@X0cious</a></p>
+<p><strong>4th Place</strong><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/863uu3hp4r8ervx520-1790748703998.jfif" /></p>
+<p><a href="https://x.com/_wandzardeen_">@_wandzardeen_</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/7vrvom4hq5woaa6jkv-1790748759441.jfif" /></p>
+<p><a href="https://x.com/0_tsunamayo_0">@0_tsunamayo_0</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/cvj581b1h96lv1n88s-1790748782214.jfif" /></p>
+<p><a href="https://x.com/Angelo2602_">@Angelo2602_</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/u7s3sq3nsbla7bttdi-1790748811953.jfif" /></p>
+<p><a href="https://x.com/ayakaze_aoi">@ayakaze_aoi</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/8qrpbc8njry1235vev-1790748851871.jfif" /></p>
+<p><a href="https://x.com/butyou_net">@butyou_net</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/rv2lf3i8seo923f4ui-1790748875568.jfif" /></p>
+<p><a href="https://x.com/celsior500">@celsior500</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/gkbfzq0y7iejgt8mlt-1790748900828.jfif" /></p>
+<p><a href="https://x.com/ibelsibels">@ibelsibels</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/bl44kcsogb7wr2ia5c-1790748919993.jfif" /></p>
+<p><a href="https://x.com/Kysteryz">@Kysteryz</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/3k22l54pej6d07vmcx-1790748940899.jfif" /></p>
+<p><a href="https://x.com/NiahtiArt">@NiahtiArt</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/4se06uygq15580w3r5-1790748970250.jfif" /></p>
+<p><a href="https://x.com/ooC1iD7XwimLOou">@ooC1iD7XwimLOou</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/izsdjmg9q554pg7y83-1790749002344.jfif" /></p>
+<p><a href="https://x.com/ossost07111">@ossost07111</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/vtijjt38pncwse6nkg-1790749024000.jfif" /></p>
+<p><a href="https://x.com/Rockwell_n1">@Rockwell_n1</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/8ekxe2kw27iysnt67t-1790749048839.jfif" /></p>
+<p><a href="https://x.com/sae_naiyatsu">@sae_naiyatsu</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/7uo1dr2a5gdm8plrma-1790749094186.jfif" /></p>
+<p><a href="https://x.com/yama_7182">@yama_7182</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/lec5woaoxgxc87qpo2-1790749119022.jfif" /></p>
+<p><a href="https://x.com/Yuelycia">@Yuelycia</a></p>
+<p><strong>5th Place</strong> <img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/ec8ru8gb2xtoloutwv-1790749158455.jfif" /></p>
+<p><a href="https://x.com/_O_Possom">@_O_Possom</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/n0n477ex1ljv9om8fc-1790749184335.jfif" /></p>
+<p><a href="https://x.com/Are_A_R">@Are_A_R</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/ipc7u8cu7oqw93x4st-1790749204015.jfif" /></p>
+<p><a href="https://x.com/chokkon12">@chokkon12</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/yz5ltjesd51e1p0n3v-1790749226359.jfif" /></p>
+<p><a href="https://x.com/DaN_GaaM">@DaN_GaaM</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/iftlo9dadga8a1v28i-1790749260218.jfif" /></p>
+<p><a href="https://x.com/ggulgul_cm">@ggulgul_cm</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/4fv982co72fttz6eoc-1790749280200.jfif" /></p>
+<p><a href="https://x.com/gujrv">@gujrv</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/thnrpded9ajfr9pexf-1790749306072.jfif" /></p>
+<p><a href="https://x.com/IricityOfficial">@IricityOfficial</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/mzum7h8er5v4lk2vr8-1790749354199.jfif" /></p>
+<p><a href="https://x.com/Kyogree_">@Kyogree_</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/3y798hixwe4w2dtulv-1790749374179.jfif" /></p>
+<p><a href="https://x.com/mieumiso">@mieumiso</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/8puc7gw8x060vei7h2-1790749424077.jfif" /></p>
+<p><a href="https://x.com/Nabenohalcas">@Nabenohalcas</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/niujiwh1ympajcx1re-1790749468028.jfif" /></p>
+<p><a href="https://x.com/rena31415926">@rena31415926</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/zqsdvm5xpxim4v80la-1790749501486.jfif" /></p>
+<p><a href="https://x.com/shahoshii">@shahoshii</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/2fsnh07g4f9rrzimfh-1790749551236.jpg" /></p>
+<p><a href="https://www.instagram.com/shirokohusdband/">@shirokohusdband</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/r9vu3qr09crud9dur2-1790749583922.jfif" /></p>
+<p><a href="https://x.com/wa_me02">@wa_me02</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/09w80n260lak6keiq4-1790749602868.jfif" /></p>
+<p><a href="https://x.com/wandahoooiM1225">@wandahoooiM1225</a></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/d8j1lyw65fmd3ubeyz-1790749658360.jfif" /></p>
+<p><a href="https://x.com/YonesDraws">@YonesDraws</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/6lmzqml9e64yw7kro3-1790749685945.jfif" /></p>
+<p><a href="https://x.com/yoru_shiki">@yoru_shiki</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/0pmey7ppt63eusf9y6-1790749709701.jfif" /></p>
+<p><a href="https://x.com/YukiAzuyaYuki">@YukiAzuyaYuki</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/pv6vmdydilh314his6-1790749745284.jpg" /></p>
+<p><a href="https://www.instagram.com/yuuchi_ir/">@yuuchi_ir</a><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/6297dyrtiawx7v41fr-1790749765241.jfif" /></p>
+<p><a href="https://x.com/Z_RAIN1">@Z_RAIN1</a></p>]]></content>
+                    <published>2026-09-30T12:43:43+00:00</published>
+                    <updated>2026-09-30T12:43:43+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5574</id>
+                    <title>V3.7 Wuthering Waves Battle Rush</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5574" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>Dear Rovers,</p>
+<p>The Wuthering Waves Battle Rush is now live! Record and share your most exciting battle moments with the hashtags #WutheringWaves and #WuwaBattle on X (Twitter)/YouTube Shorts/TikTok to compete for a reward of Astrite x2,000 and a chance to get featured on our social media with direct credits! Other than these rewards, 10 extra winners will be selected to receive a $50 Amazon Gift Card.</p>
+<p>Showcase your outstanding battle tactics in a condensed clip and share them with us!</p>
+<p><strong>Content Requirement</strong></p>
+<p>Create your own combat video featuring Wuthering Waves.</p>
+<p>We require no limits to the characters, level, or scenes. All entries that feature your combat in Wuthering Waves are qualified to join the event and compete for rewards!</p>
+<p><strong>How to Submit</strong></p>
+<p>Post your work on X (Twitter)/YouTube Shorts/TikTok with both hashtags #WutheringWaves and #WuwaBattle included publicly.</p>
+<p><strong>Submission Period</strong></p>
+<p>2026/09/30 - 2026/10/28 (PT)</p>
+<p><strong>Judging Criteria</strong></p>
+<p>All eligible works will undergo evaluation based on their adherence to the theme, degree of completion, reception among players, and other relevant factors.</p>
+<p><strong>Notes</strong></p>
+<p>To qualify for participation, you should include both hashtags #WutheringWaves and #WuwaBattle in your post.</p>
+<p>Deleted posts will not be qualified for entitlement of rewards.</p>
+<p>You can submit multiple entries. However, the same work published on different platforms will not count towards the rewards.</p>
+<p>Entries listed below may be excluded from the judging process:</p>
+<ul>
+<li>
+<p>Works not created in accordance with Wuthering Waves</p>
+</li>
+<li>
+<p>Works found to contain plagiarism or infringement of intellectual property rights</p>
+</li>
+<li>
+<p>Works submitted outside the event period</p>
+</li>
+<li>
+<p>Works created with the assistance of AI technology</p>
+</li>
+<li>
+<p>Works featuring extremely aggressive content, including but not limited to themes of pornography, violence, politics, or racism</p>
+</li>
+<li>
+<p>Works that have already been used for commercial purposes</p>
+</li>
+<li>
+<p>Works deemed inappropriate by the judges</p>
+</li>
+</ul>
+<p>Failure to reply to the official staff within 7 days from the date of notification will be considered a waiver of entitlement to the rewards.</p>
+<p>This event is open to submissions from all languages, as creators proficient in any language are eligible to compete for rewards. Entries differing only in language will be treated as equivalent works.</p>]]></content>
+                    <published>2026-09-30T11:55:03+00:00</published>
+                    <updated>2026-09-30T11:55:03+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5573</id>
+                    <title>Wuthering Waves Fan Creation Event &#34;Prism&#39;s Illusion, Heart&#39;s Illumination&#34; is now live!</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5573" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/bryv1pxgnibrn3m0rb-1790739898179.jpg" />Dear Rovers,</p>
+<p>Wuthering Waves Fan Creation Event &#34;Prism&#39;s Illusion, Heart&#39;s Illumination&#34; is now live! Post your work with hashtags #WutheringWaves and #WuWaFanart on X (Twitter)/Instagram/Facebook and fill out the form for a chance to win iPhone 18 Pro 512GB, Astrites and more!</p>
+<p>Create your works of boundless imagination to present the world of Wuthering Waves!</p>
+<p>Proceed to submit:</p>
+<p>&lt;https://forms.gle/8qLSRyDiNZt9XMuT9&gt;</p>
+<p>Content Requirement</p>
+<p>Create your own artwork about Wuthering Waves Version 3.7 &#34;Prism&#39;s Illusion, Heart&#39;s Illumination&#34;!</p>
+<p>Whether it&#39;s an illustration of your beloved character, comical moments from your adventures, or difficult combos you&#39;ve mastered—anything that aligns with the theme is eligible for submission. Share your artwork or video for a chance to win exciting prizes!</p>
+<p>How to Submit</p>
+<ol>
+<li>
+<p>Post your artwork on X (Twitter)/Instagram/Facebook with both hashtags #WutheringWaves and #WuWaFanart included.</p>
+</li>
+<li>
+<p>Complete the submission form with your submission details. Once done, your submission will be considered successful.</p>
+</li>
+</ol>
+<ul>
+<li>Please quote your post link with the right hashtags published publicly on the designated platforms.</li>
+</ul>
+<p>Submission form: &lt;https://forms.gle/8qLSRyDiNZt9XMuT9&gt;</p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/dld83uxgi0ibwp6e3o-1790739978573.jpg" /></p>
+<p>Submission Period</p>
+<p>2026/09/30 - 2026/10/31 (PT)</p>
+<p>Rewards</p>
+<p>1st Place (5 Winners): iPhone 18 Pro 512GB</p>
+<p>2nd Place (5 Winners): 6,000 Astrites &amp; 800 USD</p>
+<p>3rd Place (10 Winners): 3,000 Astrites &amp; 400 USD</p>
+<p>4th Place (15 Winners): 2,000 Astrites &amp; 200 USD</p>
+<p>5th Place (20 Winners): 1,000 Astrites &amp; Official Merchandise</p>
+<p>Lucky Prize (20 Winners): $20 Amazon Gift Card</p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790697600000/0gwwstvrsmss204tu9-1790740086582.jpg" /></p>
+<p><strong>Judging Criteria</strong></p>
+<p>All eligible works will undergo evaluation based on their adherence to the theme, degree of completion, reception among players, and other relevant factors.</p>
+<p><strong>Notes</strong></p>
+<ol>
+<li>
+<p>To qualify for participation, you should include both hashtags #WutheringWaves and #WuWaFanart in your post and fill out the submission form.</p>
+</li>
+<li>
+<p>Deleted posts will not be qualified for entitlement of rewards.</p>
+</li>
+<li>
+<p>This fan art campaign allows participants to submit multiple entries. However, each participant can only receive rewards once.</p>
+</li>
+<li>
+<p>Entries listed below may be excluded from the judging process:</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>Works not created in accordance with Wuthering Waves</p>
+</li>
+<li>
+<p>Works found to contain plagiarism or infringement of intellectual property rights</p>
+</li>
+<li>
+<p>Works submitted outside the event period</p>
+</li>
+<li>
+<p>Works created with the assistance of AI technology</p>
+</li>
+<li>
+<p>Works featuring extremely aggressive content, including but not limited to themes of pornography, violence, politics, or racism</p>
+</li>
+<li>
+<p>Works that have already been used for commercial purposes</p>
+</li>
+<li>
+<p>Works previously entered into other fan creation events</p>
+</li>
+<li>
+<p>Works deemed inappropriate by the judges</p>
+</li>
+</ul>
+<ol start="5">
+<li>
+<p>Failure to reply to the official staff within 7 days from the date of notification will be considered a waiver of entitlement to the rewards.</p>
+</li>
+<li>
+<p>This event is open to submissions from all languages, as creators proficient in any language are eligible to compete for rewards. Entries differing only in language will be treated as equivalent works.</p>
+</li>
+<li>
+<p>By participating in the event, you grant KURO GAMES the right to freely republish your submitted content on the internet and social media platforms, with appropriate credit given to the creator. No additional notice will be provided prior to publication.</p>
+</li>
+<li>
+<p>This event is available solely to participants on the designated servers listed below: America, Europe, Asia, SEA, HMT(HK,MO,TW).</p>
+</li>
+</ol>]]></content>
+                    <published>2026-09-30T11:51:44+00:00</published>
+                    <updated>2026-09-30T11:51:44+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5571</id>
+                    <title>Patch Notes for Wuthering Waves Version 3.7: Prism&#39;s Illusion, Heart&#39;s Illumination</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5571" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790611200000/dngsdsx5ljkeowz86m-1790680670533.jpg" />Dear Rovers,</p>
+<p>Thank you for your continued support. The following is a summary of content that will become available in Version 3.7: Prism&#39;s Illusion, Heart&#39;s Illumination.</p>
+<p><strong>[Maintenance Time &amp; Compensation Details]</strong></p>
+<p><strong>✦Maintenance Time:</strong> <strong>2026-09-30 04:00 - 2026-09-30 11:00 (UTC+8)</strong></p>
+<p><strong>✦Maintenance Compensation: Astrite x300, Crystal Solvent x2</strong></p>
+<p><strong>✦Compensation Eligibility: Create a character and unlock the Mail feature before 2026-09-30 04:00 (UTC+8). The compensation will remain claimable until the next version update.</strong></p>
+<p><em>In the event that the maintenance is extended, the dev team will issue a follow-up notice and adjust the compensation accordingly.</em></p>
+<p><strong>✦Bug Fixes: Compensation Astrite x300</strong></p>
+<p><strong>✦Compensation Eligibility: Create a character and unlock the Mail feature before 2026-09-30 04:00 (UTC+8). The compensation will remain claimable until the next version update.</strong></p>
+<p><strong>[Version Update Details]</strong></p>
+<h1>New Resonators</h1>
+<p><strong>5-Star Resonator: Hsin (Electro/Rectifier)</strong></p>
+<p>Sentinel Hsin, guide of Mengzhou&#39;s civilization. Deeply emotional and fond of worldly joys, She has long kept the fires of mortal life burning amid the bustle of trade and the shifting of seasons.</p>
+<h2>Combat Roles: Main Damage Dealer, Coordinated Attack, Resonance Skill DMG, Unison, Electro Flare</h2>
+<p><em>Obtainable through the [As Full as Tonight, Forever] Featured Resonator Convene.</em></p>
+<p><strong>5-Star Resonator: Suoming (Electro/Sword)</strong></p>
+<p>Born in Huating, Mengzhou, she founded the Ten Seals Covenant as its Seal Master to liberate her homeland from the Evil Miasma. Later, by the Sentinel&#39;s decree, she served as Intendant of the Ministry of Sentinel Affairs, watching over all of Mengzhou.</p>
+<h2>Combat Roles: Concerto Efficiency, Basic Attack DMG, Unison, Electro DMG Amplification, Resonance Skill DMG Amplification</h2>
+<p><em>Obtainable through the [Nine Deaths, One Unbent Heart] Featured Resonator Convene.</em></p>
+<h1>New Weapons</h1>
+<p><strong>5-Star Weapon: Blooming Jadehaven (Rectifier)</strong></p>
+<p>Jade to pillars, gold to nexus, a hundred mechanisms meshed into one working. Infinite forms divide and proliferate among the blooms, and it still fits in the palm of Her hand.</p>
+<p>Walls and mechanisms know no feeling. What makes a life&#39;s work worth the life is not the making, but that something in it was loved.</p>
+<p><em>Obtainable through the [Blooming Jadehaven] Featured Weapon Convene.</em></p>
+<p><strong>5-Star Weapon: Unspoken Rue (Sword)</strong></p>
+<p>With this canopy, she sheltered all life and sealed the Evil Miasma.</p>
+<p>The Blight Rain ceased, the Miasmic Thunder fell silent, and a deep darkness lies trapped upon the canopy&#39;s surface.</p>
+<p>Beneath it linger the shadows of no return, always walking by her side.</p>
+<p><em>Obtainable through the [Unspoken Rue] Featured Weapon Convene.</em></p>
+<h1>New Area</h1>
+<p><strong>Simulacrum Nexus of Mengzhou</strong></p>
+<p><strong>Area includes: Heartscape Labyrinth, Heart of Flames, Heart of Frost, Heart of Bloom, Heart of Stillness, Heart of Ruin, Heart of Appearance</strong></p>
+<p>Xuanfang Hold&#39;s control mainframe, otherwise known as the Manifold Sanctum, governing the foundational order that keeps the city running.</p>
+<p><em>Reach the location during Main Quest Chapter IV Act IV &#34;Simulacrum of the Heartt.&#34;</em></p>
+<h1>New Echoes</h1>
+<p>Formrender, Soulfrayer, Skywatch Lancer, Bloomburst Puppet, Jade Nether Serpent and one new COST 4 Echo</p>
+<p>**</p>
+<h2>New Sonata Effects: Heart of Sworn Vigil (5pcs Set), Flash of Electric Reflection (5pcs Set), Flower of Tinged Yearning (5pcs Set)**</h2>
+<p>Heart of Sworn Vigil (5pcs Set): Inflicting Electro Flare on the target, obtaining Unison, or triggering Unison Response increases the Resonator&#39;s Crit. Rate by 15% and grants them 22.5% Electro DMG for 30s.</p>
+<p>Flash of Electric Reflection (5pcs Set): When the Resonator inflicts Electro Flare on enemies, they gain the following effects: Gain 10% Electro DMG Bonus for 15s. While this effect is active, casting Outro Skill grants the incoming Resonator 25% Electro DMG Bonus for 15s.</p>
+<p>Flower of Tinged Yearning (5pcs Set): Healing a Resonator in the team increases the ATK of all Resonators in the team by 10% for 30s. Effects of the same name do not stack. While the effect is active, if the Resonator gains Unison effect or triggers Unison Response, their ATK is further increased by 15%.</p>
+<p>**</p>
+<h2>New Tacet Fields: Heart of Stillness Tacet Field, Heart of Flames Tacet Field**</h2>
+<p>**</p>
+<h2>New Tacet Discord Nest: Simulacrum Nexus Tacet Discord Nest**</h2>
+<h1>New Stories</h1>
+<p><strong>[Main Quest] Chapter IV Act IV: Simulacrum of the Heart</strong></p>
+<p>The Waking Moon Festival is drawing near in the Land of Xuanfang, yet rumors that &#34;the Hold is doomed to fall&#34; have begun to spread through the city. To uncover the cause—and to find Hsin, who has not shown Herself for a long time—you enter the Simulacrum Nexus deep within the Sanctum, together with Suoming, an Intendant who claims to have been sent by the Ministry of Sentinel Affairs in search of Hsin the Moon Fox.</p>
+<ul>
+<li>
+<p>Duration: Permanently available after Version 3.7 update.</p>
+</li>
+<li>
+<p>Eligibility: Complete Main Quest Chapter IV Segue &#34;The Nethermancer&#39;s Requiem&#34; to unlock.</p>
+</li>
+</ul>
+<p><strong>New Quest Type</strong></p>
+<p><strong>Tales Quest: Moonlike Heart, Mortal Longing</strong></p>
+<p>A mysterious girl approaches you on WavesLine, asking for your help to collect the scattered Feeling Capsule Shards.</p>
+<ul>
+<li>
+<p>Duration: Permanently available after Version 3.7 update.</p>
+</li>
+<li>
+<p>Eligibility: Complete Main Quest Chapter IV Act IV &#34;Simulacrum of the Heart.&#34;</p>
+</li>
+</ul>
+<h1>New Events &amp; Gameplay Features</h1>
+<p><strong>[Special Events] [Cubie Wars] Leisure Event</strong></p>
+<p>With Encore&#39;s help, the Second Coming of Solaris has built a Wooly Stage for the Cubie Wars. On this stage, the Cubie Warriors will make use of magical items to wage a fierce battle!</p>
+<ul>
+<li>Duration: Version 3.7 Update - 2026-11-11 11:59 (server time)</li>
+</ul>
+<p><strong>[Dreams in the Capsule] Area Exploration Event</strong></p>
+<p>Here Mengzhou&#39;s mountains and rivers, its woods and wilds, meet its pavilions and towers, the very place the people of Mengzhou, bound to one another across time, make their homes and live out their lives. Peace and quiet, ardor and flame, despondency and sorrow, every feeling there is settles into a Heart Realm of its own, continuing without end. In this small world, the Court of Savantae and Hsin are shaping the face of Mengzhou anew.</p>
+<p>This is the Simulacrum Nexus.</p>
+<ul>
+<li>Duration: Version 3.7 Update - 2026-11-11 03:59 (server time)</li>
+</ul>
+<p><strong>[Past Dreams, Traced Seals] Photo Collection Event</strong></p>
+<p>Hsin has arranged a task for Suoming, asking you to join her in recording the sights of the Simulacrum Nexus of Mengzhou.</p>
+<p>A trip &#34;down memory lane&#34; that draws out the long-sealed memories of the Ten Seals Covenant…</p>
+<ul>
+<li>Duration: Permanently available after Version 3.7 update.</li>
+</ul>
+<p><strong>[Artisan&#39;s Search] Featured Combat Event</strong></p>
+<p>Lisha, apprentice Artisan, reporting for duty!</p>
+<ul>
+<li>Duration: 2026-10-08 04:00 - 2026-10-26 03:59 (server time)</li>
+</ul>
+<p><strong>[Echo Erase] Leisure Event</strong></p>
+<p>The latest flagship offering from Second Coming of Solaris! Come experience the fun of tapping Echo Pieces away!</p>
+<ul>
+<li>Duration: 2026-10-22 10:00 - 2026-11-09 03:59 (server time)</li>
+</ul>
+<p><strong>[Beyond the Waves: Land of Xuanfang] Featured Exploration Event</strong></p>
+<p>During the event, you can complete event tasks once per day to obtain a set number of Adventure Logs. Each Adventure Log can be exchanged for an Adventure Package.</p>
+<ul>
+<li>Duration: 2026-10-29 04:00 - 2026-11-11 03:59 (server time)</li>
+</ul>
+<p><strong>[Gifts of Waking Moon] 7-Day Login Event</strong></p>
+<p>During the event, log in to claim the day&#39;s login rewards from the event page.</p>
+<ul>
+<li>Duration: Version 3.7 Update - 2026-11-11 03:59 (server time)</li>
+</ul>
+<p><strong>[Version Special Login Event]</strong></p>
+<p><strong>[Gifts of Singing Drizzle] Limited-Time Login Event</strong></p>
+<p>After the event starts, log in to the game daily to add one day to your cumulative login days. Sign-in records refresh daily at 04:00 server time. Once your cumulative login days meet the requirement, the corresponding cumulative login reward will be ready to claim.</p>
+<p><strong>✦Duration: 2026-10-22 10:00 - 2026-11-11 03:59 (server time)</strong></p>
+<h1>Rewards</h1>
+<p><strong>[Log in for 1 day in total]: Radiant Tide x5, Premium Tuner x100</strong></p>
+<p><strong>[Log in for 3 days in total]: Radiant Tide x5, Crystal Solvent x5</strong></p>
+<p><strong>[Web Events]</strong></p>
+<p><strong>[Waking Moon Fishing] Web Event</strong></p>
+<p>The Waking Moon Festival is underway. Lights shine everywhere. Then a mysterious stall appears right in front of you...</p>
+<p>Participate in the fishing challenge and unlock entries in the Fishing Index to win Astrites! And complete event tasks to win Advanced Sealed Tubes and more.</p>
+<ul>
+<li>Duration: 2026-10-15 10:00 - 2026-11-01 09:59 (UTC+8)</li>
+</ul>
+<p><strong>[Back to Solaris] Web Event</strong></p>
+<p>Invite your former companions back and complete tasks together to receive Astrites, Shell Credits, and more! Returning Rovers who link their accounts will also receive bonus gifts! With code linking rewards available for Returning Players!</p>
+<ul>
+<li>Duration: Version 3.7 Update - 2026-11-11 23:59 (UTC+8)</li>
+</ul>
+<p><strong>[New Permanent Event]</strong></p>
+<p><strong>Blooms for the Shadow</strong></p>
+<p>Looming over the Simulacrum Nexus of Mengzhou, the Nexus Fox Shadow watches the realm with cold detachment. Everything within the Heart Realms is born of Hsin&#39;s heart, and shifts as it does. This towering shadow, a manifestation of the heart, is bound up in that same interplay, shaping and shaped by the Heart Realms in turn.</p>
+<p>However, a conversation with a Celestial from the Court of Savantae has revealed something new: the Fox Shadow reacts to a specific token within the Simulacrum Nexus...</p>
+<ul>
+<li>Duration: Permanently available after Version 3.7 update.</li>
+</ul>
+<h1>New Merch</h1>
+<h2>Accessories: Hsin - Spring in Bloom, Suoming - Glazed Roseate</h2>
+<p>WavesLine Looks: Light of Waking Moon (WavesLine Theme), Solicitude of the Heart (WavesLine Decor), Glow of Lanterns (Chat Background), Rice Cake (Chat Bubble)</p>
+<p><strong>The Moonlit Path event will be available in Version 3.7. During the event, obtain Moonlit Rings unlock the following new rewards.</strong></p>
+<h2>Accessories: Hsin - Where Dreams Shine Clear, Rover - Not Even Close</h2>
+<h2>Sigil: Not Even Close</h2>
+<h2>Avatar: Abby Tossing</h2>
+<h2>Motorbike Accessory: Hsin Cube</h2>
+<h2>Collection Item: Cloudview Seat</h2>
+<p><em>Collection Items can be equipped on the Utility Wheel and used in the Overworld.</em></p>
+<h1>Other New Content</h1>
+<h2>Sigils: Showtime, All Forms in One Heart</h2>
+<h2>Avatar: Wooly&#39;s Blessing</h2>
+<h2>Motorbike Livery: Fox Shadow at Sunset</h2>
+<h2>Phantom Echo: Phantom: Skywatch Lancer, Phantom: Smolder</h2>
+<p><em>Sigil: Showtime and Avatar: Wooly&#39;s Blessing can be obtained by participating in the Leisure Event &#34;Cubie Wars.&#34;</em></p>
+<p><strong>[Adjustments and Optimizations]</strong></p>
+<h1>Features</h1>
+<p>**</p>
+<h2>Backpack:**</h2>
+<p><strong>Optimized Echo Backpack Storage</strong></p>
+<ul>
+<li>
+<p>All unequipped, non-upgraded Echoes in your Echo Backpack that share the same Echo type, Sonata Effect, and Mainstat will automatically stack into a single backpack item.</p>
+</li>
+<li>
+<p>Each backpack item can hold up to 999 Echoes. The excess will be removed.</p>
+</li>
+<li>
+<p>Adjusted the placement of the pieces of information displayed on Echo icons.</p>
+</li>
+<li>
+<p>After Version 3.7 goes live, all your Echoes will automatically stack. Locked/Discarded Echoes that meet the stack requirements will stack according to the following rules.</p>
+</li>
+</ul>
+<ol>
+<li>
+<p>Locked Echoes and Non-locked Echoes will be marked &#34;Locked&#34; and stack together.</p>
+</li>
+<li>
+<p>Discarded Echoes and Unmarked Echoes will be marked &#34;Discarded&#34; and stack together.</p>
+</li>
+<li>
+<p>Locked Echoes and Discarded Echoes will be marked &#34;Locked&#34; and stack together.</p>
+</li>
+</ol>
+<p>**</p>
+<h2>Echo Recommendation**</h2>
+<p><strong>Optimized Display of Echo Recommendation Screen</strong></p>
+<ul>
+<li>
+<p>On the Suggest screen for Echo Recommendation, with Resonators who have two Resonance Modes, Resonance Mode-specific Echo sets will be recommended. If a popular set is the same as the default recommendation, the corresponding Resonance Mode icon will be displayed.</p>
+</li>
+<li>
+<p>The above information will be synced to the Suggest menu for Echo Equipment.</p>
+</li>
+</ul>
+<p>**</p>
+<h2>Team**</h2>
+<p><strong>Added Team Management</strong></p>
+<ul>
+<li>
+<p>You can drag to reorder your teams via the Team Management menu.</p>
+</li>
+<li>
+<p>You can also rename your teams. (The name of a team is displayed in the top left corner of the screen.)</p>
+</li>
+<li>
+<p>The number of team setups has been increased to 20.</p>
+</li>
+</ul>
+<p><strong>Added Lineup 3D Display</strong></p>
+<ul>
+<li>
+<p>A 3D/2D button will appear in the top right corner of the Team screen, allowing you to switch between 3D and 2D display. (※2D is the default.)</p>
+</li>
+<li>
+<p>Select the 3D option to display your Resonators in 3D mode.</p>
+</li>
+<li>
+<p>Added the Preset Teams menu to the lineup page for Tower of Adversity, allowing you to select one of the Preset Teams for a challenge.</p>
+</li>
+<li>
+<p>3D Display is not available on devices with the following configurations:</p>
+</li>
+</ul>
+<ol>
+<li>iOS:</li>
+</ol>
+<p>RAM≤ 4GB</p>
+<ol start="2">
+<li>Android:</li>
+</ol>
+<p>RAM≤ 6GB.</p>
+<p><em>Enabling 3D Display may contribute to the device load. Please choose the suitable option based on the performance of your device.</em></p>
+<p><em>The current 3D Display feature is not the final version. We will continue to refine this feature in further versions in terms of visuals and device load.</em></p>
+<p>**</p>
+<h2>Camera Mode:**</h2>
+<p><strong>Improved Functionality &amp; Usability</strong></p>
+<ul>
+<li>
+<p>New UI, with the previously available features intact.</p>
+</li>
+<li>
+<p>Added more shooting modes and adjustable parameters.</p>
+</li>
+</ul>
+<p><strong>New Shooting Modes</strong></p>
+<ul>
+<li>
+<p>Handheld mode, allowing you to adjust the character&#39;s line of sight.</p>
+</li>
+<li>
+<p>Selfie mode, allowing you to take photos of Rover in various poses and expressions. (※Only Rover is available in Selfie mode.)</p>
+</li>
+<li>
+<p>Added a drone view to the original shooting mode, allowing you to capture expansive panoramic views from great distances.</p>
+</li>
+</ul>
+<p><strong>New Supportive Features</strong></p>
+<ul>
+<li>
+<p>Added reference lines, allowing you to better frame and adjust shots.</p>
+</li>
+<li>
+<p>Added lens templates, allowing you to select among the preset lens templates.</p>
+</li>
+<li>
+<p>Added Quick Focus, allowing you to focus the camera on your subject by clicking on it. After using Quick Focus, you can adjust the Focus Distance with your subject as a reference.</p>
+</li>
+</ul>
+<p><strong>Added On-character Lighting Templates</strong></p>
+<ul>
+<li>Select lighting templates to adjust the lighting effects on the current Resonator. You may adjust the Lighting Direction.</li>
+</ul>
+<p><em>We will continue to refine the on-character lighting parameters and bring you more options in this regard. Please stay tuned.</em></p>
+<p><strong>Added Environmental Settings</strong></p>
+<ul>
+<li>
+<p>You can adjust environmental settings such as Time, Weather, and Foliage Wind Direction in the Environment tab. (Changes to Time may take some time to take effect.)</p>
+</li>
+<li>
+<p>Added the Atmosphere effect option. You can adjust the effect density.</p>
+</li>
+<li>
+<p>With the Foliage Wind Direction option, you can adjust the wind direction, along with the wind strength. The wind direction and strength will affect how the foliage and the Atmosphere objects move.</p>
+</li>
+<li>
+<p>The Environmental Settings apply only to Camera mode.</p>
+</li>
+</ul>
+<p><strong>Added Preset Frames</strong></p>
+<ul>
+<li>
+<p>You can add a preset frame to the photo you are taking.</p>
+</li>
+<li>
+<p>Added the selectable &#34;Wuthering Waves&#34; logo to the photo you are taking (the size of the logo is adjustable.)</p>
+</li>
+</ul>
+<p><strong>Optimized Global Filter Settings</strong></p>
+<ul>
+<li>
+<p>In addition to the preset Filters in camera mode, there are also an adjustable Color Palette and other adjustable advanced parameters.</p>
+</li>
+<li>
+<p>The Global Filter settings in Camera mode do not affect the Global Filter settings for and the display of the Overworld.</p>
+</li>
+</ul>
+<h1>Leveling</h1>
+<p>**</p>
+<h2>Synthesis:**</h2>
+<p><strong>Added One-Way Conversion</strong></p>
+<ul>
+<li>
+<p>Access this feature via Synthesis &gt; Conversion &gt; One-Way Conversion</p>
+</li>
+<li>
+<p>Added a method of obtaining Regenerative Pistils (Bioprinting material). You can convert collectible Resonator Ascension materials found within Jinzhou, Black Shores, Rinascita, Roya Frostlands, and Mengzhou, via One-Way Conversion, into Regenerative Pistils.</p>
+</li>
+</ul>
+<h1>Challenges, Puzzles, &amp; Events</h1>
+<p>**</p>
+<h2>Weekly Activity:**</h2>
+<p>Partially Adjusted Gameplay of &#34;Fantasies of the Thousand Gateways&#34;</p>
+<ul>
+<li>
+<p>Added Sigils associated with Flashburn (Fusion Burst) and Frostbane (Glacio Chafe).</p>
+</li>
+<li>
+<p>Added gameplay content associated with Metaphors and Shop Items.</p>
+</li>
+<li>
+<p>Optimized the mechanics of how Popular Teams recommendations are made in Tower of Adversity.</p>
+</li>
+</ul>
+<p>**</p>
+<h2>Quests**</h2>
+<p>**</p>
+<h2>Journey Log:**</h2>
+<p><strong>Added Main Quest Replay Mode</strong></p>
+<ul>
+<li>
+<p>After Version 3.7 is released, you can replay the Main Quests of Version 1.1: Thaw of Eons, Version 1.2: In the Turquoise Moonglow, and Version 1.3: To the Shore&#39;s End.</p>
+</li>
+<li>
+<p>If you&#39;ve already completed the above-mentioned Main Quests, go to Quests &gt; Journey Log. To enter Replay Mode, press &#34;Replay&#34; on any of the Main Quests available for Replay. ※(To unlock Version 1.2: In the Turquoise Moonglow in Replay Mode, complete the Main Quest of Version 1.1 first.)</p>
+</li>
+<li>
+<p>Your progress is automatically saved when you exit Replay Mode. You can resume from where you left off in the Journey Log, or reset your progress manually.</p>
+</li>
+</ul>
+<p><em>Some Main Quest-exclusive Trophies can be obtained through Replay Mode, but Items obtained during Replay Mode only exist there and won&#39;t carry over.</em></p>
+<p><em>We will continue to refine the Journey Log feature and include more Quests in Replay Mode. Please stay tuned.</em></p>
+<ul>
+<li>Optimized the quest flow and instructions of the Daily Quest &#34;Short Days, Shorter Nights&#34; and increased its daily reset frequency.</li>
+</ul>
+<h1>UI</h1>
+<ul>
+<li>
+<p>Added a display of reward collection progress for certain gameplay features available in the Simulacrum Nexus of Mengzhou. When you&#39;re experiencing a specific gameplay feature, press the icon that appears next to the mini map in the top left corner of the screen to view your reward collection progress for the gameplay feature.</p>
+</li>
+<li>
+<p>Adjusted the information that is displayed upon pressing certain icons on the map. When icons associated with certain gameplay features available in the Simulacrum Nexus of Mengzhou are selected, the displayed information will now include your reward collection progress.</p>
+</li>
+<li>
+<p>Optimized the display of certain icons.</p>
+</li>
+</ul>
+<h1>Graphics &amp; Performance</h1>
+<p>**</p>
+<h2>Graphics Settings**</h2>
+<p><strong>Extended Availability of Vulkan on Mobile</strong></p>
+<p>Following the Version 3.7 update maintenance, the Vulkan option can also be enabled on the following processors:</p>
+<ol>
+<li>
+<p>Kirin Series: Kirin 8000, Kirin 8000A</p>
+</li>
+<li>
+<p>Dimensity Series: Dimensity 7200, Dimensity 7200-Ultra, Dimensity 8000, Dimensity 8100, Dimensity 8100-MAX, Dimensity 8200, Dimensity 8200-Ultimate, Dimensity 8200-Ultra, Dimensity 8250 Star Speed Edition, Dimensity 7300, Dimensity 7300-Ultra, Dimensity 8300-Ultra, Dimensity 8350, Dimensity 7500</p>
+</li>
+<li>
+<p>Exynos Series: Exynos 1480</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>This option is accessible via Settings &gt; Graphics &gt; Vulkan. Please restart the game after enabling the Vulkan option for the change to take effect.</p>
+</li>
+<li>
+<p>Enabling the Vulkan option improves the game&#39;s performance and power consumption while it is being run on mobile.</p>
+</li>
+</ul>
+<p><em>Additionally, the Vulkan option will now be on by default on mobile devices equipped with Exynos 2600, Exynos 2500, Exynos 2400, Exynos 2200, or Exynos 1480, for better performance.</em></p>
+<p>Extended Availability of Self-developed Frame Generation on Mobile</p>
+<ul>
+<li>
+<p>Extended support for self-developed frame generation to mobile devices equipped with Dimensity 9300 and Dimensity 9300+. If your processor meets the requirements, you can enable this option via Settings &gt; Graphics &gt; Frame Generation after enabling Vulkan.</p>
+</li>
+<li>
+<p>Running the game with the &#34;Frame Generation&#34; option enabled at 60FPS (maximum) consumes less power than running the game at 60FPS without the option enabled.</p>
+</li>
+</ul>
+<h1>Audio</h1>
+<ul>
+<li>Optimized some audio/stereo effects.</li>
+</ul>
+<h1>Other</h1>
+<ul>
+<li>
+<p>Optimized instructional text that appears while driving the motorbike in certain scenarios.</p>
+</li>
+<li>
+<p>Optimized the descriptions of certain in-game settings and functions.</p>
+</li>
+</ul>
+<h1>Online Testing</h1>
+<p>**</p>
+<h2>Limited Test**</h2>
+<p><strong>Tiered Client Resource Downloads</strong></p>
+<ul>
+<li>
+<p>Tiered Client Resource Downloads is a feature that allows you to select between different resource tiers. In future versions of Wuthering Waves, the original single resource package will be divided into three tiers based on differences in graphics quality, models, and other game assets: UHD, HD, and SD. You may select and download the tier that best suits the storage space and device specifications of your device.</p>
+</li>
+<li>
+<p>Test Participants and Test Schedule:</p>
+</li>
+</ul>
+<ol>
+<li>
+<p>PC (※Official Launcher): The test will become available in stages on PC after the Version 3.7 update.</p>
+</li>
+<li>
+<p>iOS/Android Mobile: The test will become available on all iOS/Android mobile devices after the Version 3.7 update.</p>
+</li>
+</ol>
+<p><em>The test schedule may be subject to change due to version stability or other considerations. Please refer to the announcement titled &#34;About Tiered Client Resource Downloads&#34; for more information about the test, available features, and FAQ.</em></p>
+<p><em>This feature is at the testing stage and is not the final version.</em></p>
+<p>**</p>
+<h2>Full-scale Test**</h2>
+<p><strong>&#34;New Programming Language&#34; Cross-Platform Performance Optimization</strong></p>
+<ul>
+<li>
+<p>We have conducted several rounds of testing for the &#34;New Programming Language&#34; performance optimization in Version 3.6 and have verified its stability. The limited test phase ended on 2026-09-09 at 15:00 (UTC+8). This optimization is now available to all players across all platforms.</p>
+</li>
+<li>
+<p>On devices that meet the requirements across all platforms, the game&#39;s overall performance and average frame rate will improve to a certain extent.</p>
+</li>
+<li>
+<p>This optimization is currently unavailable on the following devices (on these devices, the game client will continue to run in the original programming language, and the gaming experience will not be affected):</p>
+</li>
+</ul>
+<ol>
+<li>
+<p>iOS mobile: RAM ≤ 4GB; iPhone 14 series with iOS 16.0/17.0/17.1/17.2.</p>
+</li>
+<li>
+<p>Android mobile: RAM≤ 6GB.</p>
+</li>
+</ol>
+<p><em>This optimization is at the testing stage and is not the final version. The requirements regarding device specifications and the overall performance may be subject to change.</em></p>
+<p><strong>[Bug Fixes]</strong></p>
+<p>**</p>
+<h2>Resonators &amp; Weapons**</h2>
+<ul>
+<li>
+<p>Fixed an issue where Resonator Qingxiao&#39;s character model sometimes behaved abnormally while in the &#34;Ephemeral Transcendence&#34; state.</p>
+</li>
+<li>
+<p>Fixed an issue where a number appeared on certain Skill icons while Resonator Qingxiao was in the &#34;Sword Flight&#34; state to show the remaining attempts of the Skill.</p>
+</li>
+<li>
+<p>Fixed an issue where Resonator Qingxiao might move outside the bounds of the Map upon casting Sword Step.</p>
+</li>
+<li>
+<p>Fixed a clipping issue with Resonator Qingxiao&#39;s character model displayed on the Resonators page.</p>
+</li>
+<li>
+<p>Fixed an issue where Plume Step might not be triggered at the right time while Resonator Suisui was in the &#34;Roaming Transcendent&#34; state.</p>
+</li>
+<li>
+<p>Fixed an issue where Resonator Chisa&#39;s character model behaved abnormally on some mobile devices when she made certain movements while wearing the Outfit &#34;Peach Parfait.&#34;</p>
+</li>
+<li>
+<p>Fixed an issue with the movements of Resonator Cartethyia in her Fleurdelys form while walking on water.</p>
+</li>
+<li>
+<p>Fixed an issue that prevented Rover: Electro from interacting with the Hearthbear in the &#34;Roya Frostlands - Frostlands Surface&#34; area.</p>
+</li>
+<li>
+<p>Fixed an issue where switching teams or weapons might prevent the buff &#34;the ATK of all nearby Resonators in the team is increased&#34; offered by the weapon &#34;Firstlight&#39;s Herald&#34; from taking effect.</p>
+</li>
+</ul>
+<p>**</p>
+<h2>Enemies &amp; Echoes**</h2>
+<ul>
+<li>Fixed an issue where the effect &#34;after casting the Echo Skill &#39;Thousand-Puppet Pavilion,&#39; when the Resonator equipped with this Echo inflicts Havoc Bane, consume 1 Blade of Thousand Memories to deal Havoc DMG&#34; could be triggered more than once every 1s.</li>
+</ul>
+<p>**</p>
+<h2>Features**</h2>
+<ul>
+<li>
+<p>Fixed an issue where the frame generation function might not work while in the &#34;Huanglong - Mengzhou&#34; area.</p>
+</li>
+<li>
+<p>Fixed an issue where the screens of devices equipped with AMD Series graphics cards might flash with the frame generation option enabled.</p>
+</li>
+<li>
+<p>Fixed an issue in the &#34;Guidebook - Activity - Weekly - Phantasma Dreamland: Rhapsody&#34; event where Echoes in the Chop Chop series might not be devoured first after the item &#34;Unbeliever&#39;s Crown&#34; was selected.</p>
+</li>
+<li>
+<p>Fixed an issue that might cause a random prompt to pop up when claiming rewards on the &#34;Guidebook - Activity&#34; screen.</p>
+</li>
+<li>
+<p>Fixed an issue where the Exploration Report for the &#34;Roya Frostlands - Lahai-Roi - Rebirth Uplands&#34; area contained textual errors.</p>
+</li>
+<li>
+<p>Fixed an issue with the lighting effects that affected the current screen when opening the Resonators screen while in the &#34;Roya Frostlands - Dimmr Plains&#34; area.</p>
+</li>
+<li>
+<p>Fixed an issue where the &#34;Tactical Hologram: Calamity - Impermanence Heron&#34; entry was marked as uncompleted on the Milestones screen after the corresponding challenge had been completed.</p>
+</li>
+<li>
+<p>Fixed an issue with the order of the Sonata Sets displayed on the &#34;Data Bank - Sonata Gallery&#34; screen.</p>
+</li>
+<li>
+<p>Fixed an issue that prevented red dots on the &#34;Terminal - Guidebook&#34; screen from disappearing.</p>
+</li>
+<li>
+<p>Fixed an issue in Keyboard &amp; Mouse mode where some input setting changes made via Settings &gt; Controls might be nullified in some situations.</p>
+</li>
+<li>
+<p>Fixed an issue that prevented the player from pressing and holding the icon of a Resonator to shift it to a different slot on the Lineup screen.</p>
+</li>
+<li>
+<p>Fixed a display issue with the time on the Chat screen.</p>
+</li>
+<li>
+<p>Fixed an issue with the lighting effects of the expedition motorbike screen.</p>
+</li>
+<li>
+<p>Fixed an issue where certain player actions could nullify changes to the order of the favorited songs in the Heart Radio Channel.</p>
+</li>
+<li>
+<p>Fixed an issue where the Hack Response option was missing from the Combat Role section on the Filter menu for Resonators.</p>
+</li>
+<li>
+<p>Fixed an issue in controller mode where the &#34;releasing the Wheel button will trigger the feature the stick is pointing to&#34; function for the Utility wheel was closed by default.</p>
+</li>
+<li>
+<p>Fixed a display issue with some of the text displayed on the Echo recommendation screen.</p>
+</li>
+<li>
+<p>Fixed a display issue with certain Item icons.</p>
+</li>
+</ul>
+<p>**</p>
+<h2>Challenges, Puzzles, &amp; Events**</h2>
+<ul>
+<li>
+<p>Fixed an issue in the &#34;Endstate Matrix&#34; event where the temporary Resonance Mode selected for a Resonator with multiple Resonance Modes and additional Vigor in the team was not saved in some situations, making it necessary to make the section again when restarting a challenge.</p>
+</li>
+<li>
+<p>Fixed an issue in controller mode where certain player actions could cause the screen to become unresponsive in the &#34;Whimpering Wastes&#34; event.</p>
+</li>
+<li>
+<p>Fixed an issue in the &#34;Lament Recon: Tacet Crisis&#34; event where the items &#34;Purple Candy&#34; and &#34;Blue Candy&#34; did not take effect after being selected.</p>
+</li>
+<li>
+<p>Fixed an issue in the &#34;Lament Recon: Tacet Crisis&#34; event where only one instance of healing occurred after collecting a large number of Life Balls with the item &#34;Sign of Harvest&#34; selected.</p>
+</li>
+<li>
+<p>Fixed an issue where the &#34;Lament Recon: Tacet Crisis&#34; event remained marked as uncompleted after it was completed.</p>
+</li>
+<li>
+<p>Fixed an issue in the &#34;Old Man and the Whale&#34; event where the confirmation dialog box appeared repeatedly upon using &#34;Baiting&#34; or &#34;Fast Travel to Dock.&#34;</p>
+</li>
+<li>
+<p>Fixed a display issue in the &#34;Old Man and the Whale&#34; event that affected the displayed text after selecting Rachel the Fishing Boat.</p>
+</li>
+<li>
+<p>Fixed an issue where the character model might float above the surface after completing Sword Flight.</p>
+</li>
+<li>
+<p>Fixed an issue where certain Sword Flight Points remained marked as uncompleted after the corresponding challenges had been completed.</p>
+</li>
+<li>
+<p>Fixed an issue that prevented the player from exiting the &#34;Squarefield Sparring&#34; event.</p>
+</li>
+<li>
+<p>Fixed an issue in controller mode where button remapping did not take full effect in Route Constructor Racing Challenges.</p>
+</li>
+<li>
+<p>Fixed an issue where certain interactable objects in &#34;The Three Fratellis&#39; Challenge&#34; in the &#34;Rinascita - Ragunna - Thessaleo Fells&#34; area remained displayed as interactable after the challenge had been completed.</p>
+</li>
+</ul>
+<p>**</p>
+<h2>Quests**</h2>
+<ul>
+<li>
+<p>Fixed an issue in the Main Quest &#34;Song of the Heart Sword&#34; where the Resonator might drop below the surface and could not return to the task location during the objective &#34;Defeat the incoming Autopuppet.&#34;</p>
+</li>
+<li>
+<p>Fixed an issue in the Main Quest &#34;Song of the Heart Sword&#34; where Qingxiao&#39;s character model behaved abnormally on some Android devices under specific settings while displaying certain scenes.</p>
+</li>
+<li>
+<p>Fixed an issue in the Main Quest &#34;Song of the Heart Sword&#34; where certain scenes were blurry on iOS devices.</p>
+</li>
+<li>
+<p>Fixed an issue in the Main Quest &#34;Beneath a Melting Night Sky&#34; where opening WavesLine might cause a random pop-up to appear.</p>
+</li>
+<li>
+<p>Fixed a clipping issue with certain Resonator models and NPC models in some Main Quests.</p>
+</li>
+<li>
+<p>Fixed an issue where a black screen occurred briefly on PS5 devices while displaying certain scenes of some Main Quests.</p>
+</li>
+<li>
+<p>Fixed an issue that prevented quest progression in the Exploration Quest &#34;Faithful Heart Tested at Skyfall&#34; where Zhongxu might fall outside the bounds of the Map and could not return to the Map while it was being operated by the player.</p>
+</li>
+<li>
+<p>Fixed an issue in the Side Quest &#34;A Night of Shimmering Stars&#34; where identical NPCs appeared simultaneously at some task locations.</p>
+</li>
+<li>
+<p>Fixed an issue where the Side Quest &#34;Where Wisdom Lights the Way&#34; remained marked as uncompleted in Journey Log after it was completed.</p>
+</li>
+<li>
+<p>Fixed an issue in Autoplay mode during certain quests where the next dialogue section did not play when the current section had been played.</p>
+</li>
+<li>
+<p>Fixed an issue where it was impossible to use Fast Travel to return to the task location during certain quests.</p>
+</li>
+<li>
+<p>Fixed an issue where the quest tracking icon did not appear after some Side Quests were accepted after messaging with the corresponding NPCs.</p>
+</li>
+</ul>
+<p>**</p>
+<h2>Environment**</h2>
+<ul>
+<li>
+<p>Fixed an issue with certain bodies of water in the &#34;Huanglong - Mengzhou - Western Fang Peaks&#34; area that made it impossible to swim in them.</p>
+</li>
+<li>
+<p>Fixed an issue on Mac where the water surface did not freeze as the motorbike passed over it.</p>
+</li>
+<li>
+<p>Resolved known instances of objects clipping through each other or floating above the surface.</p>
+</li>
+</ul>]]></content>
+                    <published>2026-09-29T19:18:45+00:00</published>
+                    <updated>2026-09-29T19:18:45+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5557</id>
+                    <title>Resonator Review | Stasis, Cycle, Renewal — Iuno</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5557" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>She is favored by fate under one name, and swept away by it in another. Yet never once has she been defeated, nor has she ever yielded.</p>
+<p>Now, witness the defiant Priestess. Witness what keeps her striding forward, never to look back. Witness how she walks the intricate web of destiny and becomes the only answer.<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790611200000/ozezjqhf2qr46xr2jz-1790663786434.jpg" /></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790611200000/jxkmn2u2ry849l30zd-1790663498171.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790611200000/kw4xe0o5dupem375qo-1790663586277.jpg" /></p>]]></content>
+                    <published>2026-09-29T14:41:51+00:00</published>
+                    <updated>2026-09-29T14:41:51+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5555</id>
+                    <title>Event Preview | [Cubie Wars] Leisure Event Coming Soon!</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5555" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790611200000/jq9dtlykl5qkm8i72a-1790655752989.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790611200000/309ttohi4vltp4coso-1790662411803.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790611200000/jzrwru2ww62ur3ul57-1790655898432.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790611200000/ifhm1ezx7kenyl5mn8-1790655850393.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790611200000/l0p31ax2fy2m69qmzv-1790655868026.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790611200000/7d9ggld8vum42jaxja-1790662004123.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790611200000/9n1sbat1w1oi29j10v-1790655962735.gif" /></p>]]></content>
+                    <published>2026-09-29T14:17:05+00:00</published>
+                    <updated>2026-09-29T14:17:05+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5546</id>
+                    <title>[Version 3.7 Featured Resonator/Weapon Convene: Phase Ⅰ]</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5546" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p><strong>[Horizon of Dawnbreak] Featured Resonator Convene</strong></p>
+<p>During the event, <strong>5-Star Resonator: Chisa, 4-Star Resonators: Buling, Taoqi, and Youhu</strong> receive boosted drop rates!</p>
+<h1>Duration</h1>
+<p>Version 3.7 update - 2026-10-22 09:59 (server time)</p>
+<h1>Eligibility</h1>
+<ul>
+<li>
+<p>Reach Union Level 5.</p>
+</li>
+<li>
+<p>Or complete the combat trial in First Resonance.</p>
+</li>
+<li>
+<p>Or access Main Quest Fast Track Event and proceed with the Main Quest until you reach a certain point.</p>
+</li>
+</ul>
+<h1>Convene Rules</h1>
+<ul>
+<li>
+<p>[Horizon of Dawnbreak] is a Featured Resonator Convene event banner. Use Radiant Tide to convene. You are guaranteed at least one 4-Star or higher rarity Resonator or Weapon every 10 attempts.</p>
+</li>
+<li>
+<p>The guarantee count is shared among all Featured Resonator Convene events and is carried over until a 5-Star Resonator is obtained.</p>
+</li>
+<li>
+<p>Featured Resonator Chisa is exclusive to the [Horizon of Dawnbreak] Featured Resonator Convene and will not be available by other means once the event ends.</p>
+</li>
+<li>
+<p>Featured Resonator Chisa&#39;s Waveband will be simultaneously made available in the Afterglow Coral Store with a limit of 2 purchases, and it will be removed once the Convene event ends.</p>
+</li>
+<li>
+<p>During the event, all the Resonators who receive boosted drop rates will become available in Ascendant Aces as Trial Resonators. Complete their Ascendant Aces challenges to obtain rewards.</p>
+</li>
+</ul>
+<p><em>For more details, please refer to the in-game Convene page.<img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/trn2p82rluezvtpbhd-1790599750647.jpg" /></em></p>
+<p><strong>[Kumokiri] Featured Weapon Convene</strong></p>
+<p>During the event, <strong>5-Star Weapon: Kumokiri, 4-Star Weapons: Fusion Accretion, Commando of Conviction, and Dauntless Evernight</strong> receive boosted drop rates!</p>
+<h1>Duration</h1>
+<p>Version 3.7 update - 2026-10-22 09:59 (server time)</p>
+<h1>Eligibility</h1>
+<ul>
+<li>
+<p>Reach Union Level 5.</p>
+</li>
+<li>
+<p>Or complete the combat trial in First Resonance.</p>
+</li>
+<li>
+<p>Or access Main Quest Fast Track Event and proceed with the Main Quest until you reach a certain point.</p>
+</li>
+</ul>
+<h1>Convene Rules</h1>
+<ul>
+<li>
+<p>[Absolute Pulsation] is a Featured Weapon Convene event banner.</p>
+</li>
+<li>
+<p>Use Forging Tide to convene. You are guaranteed at least one 4-Star or higher rarity Resonator or Weapon every 10 attempts.</p>
+</li>
+<li>
+<p>The guarantee count is shared among all Featured Weapon Convene events and is carried over until a 5-Star Weapon is obtained.</p>
+</li>
+<li>
+<p>The 5-Star Weapon you Convene is guaranteed to be Kumokiri.</p>
+</li>
+<li>
+<p>Featured Weapon Kumokiri is exclusive to the Featured Weapon Convene and will not be available by other means once the event ends.</p>
+</li>
+</ul>
+<p><em>For more details, please refer to the in-game Convene page.</em></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/bp1ghgcr0axdqnq3tg-1790599781062.jpg" /></p>
+<p><strong>[Across Time&#39;s Waxes and Wanes] Featured Resonator Convene</strong></p>
+<p>During the event, <strong>5-Star Resonator: Iuno, 4-Star Resonators: Buling, Taoqi, and Youhu</strong> receive boosted drop rates!</p>
+<h1>Duration</h1>
+<p>Version 3.7 update - 2026-10-22 09:59 (server time)</p>
+<h1>Eligibility</h1>
+<ul>
+<li>
+<p>Reach Union Level 5.</p>
+</li>
+<li>
+<p>Or complete the combat trial in First Resonance.</p>
+</li>
+<li>
+<p>Or access Main Quest Fast Track Event and proceed with the Main Quest until you reach a certain point.</p>
+</li>
+</ul>
+<h1>Convene Rules</h1>
+<ul>
+<li>
+<p>[Across Time&#39;s Waxes and Wanes] is a Featured Resonator Convene event banner. Use Radiant Tide to convene. You are guaranteed at least one 4-Star or higher rarity Resonator or Weapon every 10 attempts.</p>
+</li>
+<li>
+<p>The guarantee count is shared among all Featured Resonator Convene events and is carried over until a 5-Star Resonator is obtained.</p>
+</li>
+<li>
+<p>Featured Resonator Iuno is exclusive to the [Across Time&#39;s Waxes and Wanes] Featured Resonator Convene and will not be available by other means once the event ends.</p>
+</li>
+<li>
+<p>Featured Resonator Iuno&#39;s Waveband will be simultaneously made available in the Afterglow Coral Store with a limit of 2 purchases, and it will be removed once the Convene event ends.</p>
+</li>
+<li>
+<p>During the event, all the Resonators who receive boosted drop rates will become available in Ascendant Aces as Trial Resonators. Complete their Ascendant Aces challenges to obtain rewards.</p>
+</li>
+</ul>
+<p><em>For more details, please refer to the in-game Convene page.</em></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/52fuzc2q5izfpskj6p-1790599795275.jpg" /></p>
+<p><strong>[Moongazer&#39;s Sigil] Featured Weapon Convene</strong></p>
+<p>During the event, <strong>5-Star Weapon: Moongazer&#39;s Sigil, 4-Star Weapons: Fusion Accretion, Commando of Conviction, and Dauntless Evernight</strong> receive boosted drop rates!</p>
+<h1>Duration</h1>
+<p>Version 3.7 update - 2026-10-22 09:59 (server time)</p>
+<h1>Eligibility</h1>
+<ul>
+<li>
+<p>Reach Union Level 5.</p>
+</li>
+<li>
+<p>Or complete the combat trial in First Resonance.</p>
+</li>
+<li>
+<p>Or access Main Quest Fast Track Event and proceed with the Main Quest until you reach a certain point.</p>
+</li>
+</ul>
+<h1>Convene Rules</h1>
+<ul>
+<li>
+<p>[Absolute Pulsation] is a Featured Weapon Convene event banner.</p>
+</li>
+<li>
+<p>Use Forging Tide to convene. You are guaranteed at least one 4-Star or higher rarity Resonator or Weapon every 10 attempts.</p>
+</li>
+<li>
+<p>The guarantee count is shared among all Featured Weapon Convene events and is carried over until a 5-Star Weapon is obtained.</p>
+</li>
+<li>
+<p>The 5-Star Weapon you Convene is guaranteed to be Moongazer&#39;s Sigil.</p>
+</li>
+<li>
+<p>Featured Weapon Moongazer&#39;s Sigil is exclusive to the Featured Weapon Convene and will not be available by other means once the event ends.</p>
+</li>
+</ul>
+<p><em>For more details, please refer to the in-game Convene page.</em></p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/5se8wi7o764x037898-1790599812463.jpg" /></p>]]></content>
+                    <published>2026-09-28T20:51:59+00:00</published>
+                    <updated>2026-09-28T20:51:59+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5532</id>
+                    <title>New Region Preview II | Simulacrum Nexus of Mengzhou, Coming Soon!</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5532" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/b8zqnyou56ejwymeio-1790587080238.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/zfjfbxl3eogknuctg8-1790588859864.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/tlwuznwdnj5p35l4kb-1790588939007.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/lvpt525gb153cve96s-1790588956813.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/0m2upg1i4igdzihhxi-1790587341365.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/4811849r5gf0o3gdqt-1790587396249.png" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/sbace11i160lpagjyu-1790588999522.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/4n84ikg9d5pmjhx466-1790589036500.gif" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/ik1t7xbu2uifgji0ua-1790589088115.gif" /></p>]]></content>
+                    <published>2026-09-28T16:04:28+00:00</published>
+                    <updated>2026-09-28T16:04:28+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5529</id>
+                    <title>Wuthering Waves Update Content | Version 3.7 &#34;Prism&#39;s Illusion, Heart&#39;s Illumination&#34; Planned for Release on September 30th (UTC+8)</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5529" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/lhdi179svdjham40sc-1790578113847.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/pdhlordq6txzihumi3-1790577900644.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/b307u53274ngsynr6w-1790578044718.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/0rioucn8tj7k7gjeo5-1790578091396.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790524800000/jmmsmfjj8n2426xkrb-1790586045104.jpg" /></p>]]></content>
+                    <published>2026-09-28T14:54:24+00:00</published>
+                    <updated>2026-09-28T14:54:24+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+                <entry>
+                    <id>urn:article:5521</id>
+                    <title>New Region Preview I | Simulacrum Nexus of Mengzhou, Coming Soon!</title>
+                    <link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5521" rel="alternate" type="text/html"/>
+                    <content type="html"><![CDATA[<p>Discover the environments and gameplay of the new region!</p>
+<p><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/r91mvk48mbsl1q730y-1790399204157.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/e77sr96svw18mlri9y-1790399656039.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/njtfczgm42en2r9mzv-1790399670157.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/roy00p511wma6g3yfw-1790399946176.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/20anexfap89runqaia-1790399988947.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/8r85v465e936ndfqtb-1790400007222.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/umzmr4nvnqknjw9xxr-1790400126514.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/xa8vom6woiuuh6md0c-1790405552882.jpg" /><img alt="" src="https://hw-media-cdn-mingchao.kurogame.com/object/1790352000000/if580m97rzh5i6fo5w-1790405594778.gif" /></p>]]></content>
+                    <published>2026-09-26T13:08:39+00:00</published>
+                    <updated>2026-09-26T13:08:39+00:00</updated>
+                    <category term="Notice"/>
+                    <author>
+                        <name>Wuthering Waves</name>
+                        <email>wutheringwaves_ensupport@kurogames.com</email>
+                        <uri>https://wutheringwaves.kurogames.com</uri>
+                    </author>
+                </entry>
+        
+</feed>
