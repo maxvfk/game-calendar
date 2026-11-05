@@ -1,3 +1,25 @@
+## C1a.1 — FINAL MAIN INTEGRATION, OPUS CLOSURE PENDING (2026-11-05)
+
+Current main advanced to `3b5c8827c2dbd4783dadbcda210937299433bbcc` during the
+three P1-C corrections' validation. It merges the accepted CZN historical test
+repair (PR164). Normal merge `d062771fa145d6ed3189bf7bcd49f21a0874019a` resolves
+only the duplicate comment conflict by adopting main's exact test file; fixture
+path and every assertion remain unchanged. The CZN test is no longer in PR161's
+file diff. No source inputs, parser or UI behavior changed in this integration.
+
+All required commands pass again after merge: frozen install/typecheck/full
+build/feed/report; **1670 pass / 3 existing optional age skips / 0 fail**.
+[Final current-main parity](evidence/notice-coverage-c1a1-fences-integration-parity-2026-11-05.json)
+verifies all ten public files and the complete E1/C0/C1a.0 sidecar against 3b5c882.
+Input/public/canonical/evidence/report hashes equal the original fcd4a39 replay;
+all 113 baseline identities/bytes remain intact. [Correction details and original checkpoints](evidence/notice-coverage-c1a1-fences-2026-11-05.md)
+remain preserved. Final pushed head and successful exact-head PG17/encrypted
+recovery CI are recorded in PR161. **Next:** Opus focused closure of the three
+P1-C cases on that exact integrated head, then Astra closure. Do not merge or
+start C1b/C2, Daily Passes or another milestone.
+
+---
+
 ## C1a.1 — REMAINING BLOCK-STATE/FENCE P1-C CORRECTED, OPUS CLOSURE PENDING (2026-11-05)
 
 Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.

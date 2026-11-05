@@ -1,10 +1,10 @@
 # C1a.1 — quote blanks, lazy ancestry and fenced-code closure
 
 [Accepted coordinator triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6646804310)
-reviewed `83691de83b1b76550631829d7bc0db315acac308`. CURRENT main remains
-`fcd4a3998af0000c04aff68ca82dc3bbbb913659`, already integrated in the existing
-PR161 branch. No merge, source refresh, unrelated data/UI change or new milestone
-was needed. The prior thematic/container fixes remain in place.
+reviewed `83691de83b1b76550631829d7bc0db315acac308`. Initial validation used already-integrated main
+`fcd4a3998af0000c04aff68ca82dc3bbbb913659`. Final current-main integration is
+recorded below. No source refresh, unrelated data/UI change or new milestone was
+performed. The prior thematic/container fixes remain in place.
 
 ## Three local corrections
 
@@ -114,3 +114,23 @@ Next: **Opus focused closure of these three P1-C cases on the exact new head**,
 then Astra final closure after stabilization. Keep PR161 open/unmerged; do not
 begin C1b/C2, Daily Passes or another milestone. Historical evidence retains its
 original checkpoints.
+
+
+## Final current-main integration
+
+Main advanced during validation to `3b5c8827c2dbd4783dadbcda210937299433bbcc`,
+which merges the independently accepted CZN historical test correction via PR164.
+Normal merge `d062771fa145d6ed3189bf7bcd49f21a0874019a` preserves reviewed history.
+The only conflict was the explanatory comment above the same frozen-fixture path;
+main's exact file was adopted. Fixture path, ten-banner, winner/merge-order and
+conflict assertions are unchanged. The CZN file is now absent from PR161's diff
+against current main. No source inputs or implementation changed in this merge.
+
+All required commands were repeated after integration: frozen install/typecheck,
+**1670 pass / 3 existing skips / 0 fail**, full build, separate feed build and
+deterministic report. [Final current-main parity](notice-coverage-c1a1-fences-integration-parity-2026-11-05.json)
+verifies all ten public files and complete sidecar against **3b5c882**. Input,
+canonical/public, E1/notice/attribution/diagnostic and report hashes are identical
+to the initial replay; only the base/head metadata changes. The original parity
+checkpoint remains preserved above. All 113 baseline identities/bytes remain.
+Final exact-head CI and the Opus review target are recorded in PR161.
