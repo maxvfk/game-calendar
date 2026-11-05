@@ -187,6 +187,10 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
         if (newItem || !containers.every((c, i) => sameContainer(c, previousContainers[i]))) {
           previousContainers = containers; indentedCode = false; previousBlockMarker = false;
         }
+        const missingQuote = previousContainers.findIndex((c, i) => c.kind === "quote" && !sameContainer(c, containers[i]));
+        if (missingQuote >= 0) {
+          previousContainers = previousContainers.slice(0, missingQuote); indentedCode = false; previousBlockMarker = false;
+        }
         // A genuinely empty item can acquire content on the next nonblank line,
         // but cannot retain its padding across an intervening blank line.
         if (!newItem) {
@@ -198,15 +202,21 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
       for (const c of containers) if (c.kind === "list") c.empty = false;
       const columns = /^ */.exec(content)![0].length;
       const changed = containers.length !== previousContainers.length || !containers.every((c, i) => sameContainer(c, previousContainers[i]));
+      const blockMarker = rejectedParagraphMarker ? /^ {0,3}-+ *[\r\n]*$/.test(content) :
+        /^ {0,3}(?:[#>~`<]|[-*+_=]{2,}(?:[ \r\n]|$)|(?:[-*+]|\d+[.)]) )/.test(content);
+      // A lazy paragraph line can omit container prefixes. Retain that bounded
+      // ancestry for the NEXT interruption decision, without consuming padding
+      // from the current physical line or calling it a top-level paragraph.
+      const lazy = !previousBlank && !indentedCode && !previousBlockMarker && !newItem && !blockMarker && columns < 4 &&
+        containers.length < previousContainers.length && containers.every((c, i) => sameContainer(c, previousContainers[i]));
       // Lazy/container exits and other block transitions are deliberately
       // uncertain. Indented code cannot interrupt a known same-item paragraph.
       const ambiguousCode: boolean = columns >= 4 && !previousBlank && !newItem && (changed || !indentedCode && previousBlockMarker);
       if (ambiguousCode) diagnose("unsupported_code_context");
       indentedCode = columns >= 4 && (previousBlank || newItem || !changed && indentedCode || ambiguousCode);
       if (indentedCode || ambiguousCode) codeContext.fill(1, line.index!, line.index! + line[0].length);
-      previousContainers = containers; previousBlank = false;
-      previousBlockMarker = rejectedParagraphMarker ? /^ {0,3}-+ *[\r\n]*$/.test(content) :
-        /^ {0,3}(?:[#>~`<]|[-*+_=]{2,}(?:[ \r\n]|$)|(?:[-*+]|\d+[.)]) )/.test(content);
+      if (!lazy) previousContainers = containers;
+      previousBlank = false; previousBlockMarker = blockMarker;
     }
     // Identify code before Markdown formatting/link matching. Equal backtick
     // runs delimit literal content; unmatched runs stay explicit uncertainty.

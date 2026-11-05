@@ -435,3 +435,71 @@ test("block-state recognized code can match covered exact boundaries without bla
 test("block-state weak empty paragraph marker retains potential code with uncertainty", () => {
   blockMissing(`Text\n-\n    ${questLiteral}`, false);
 });
+
+for (const [name, body] of [
+  ["unprefixed blank", `> - item\n\n>      ${questLiteral}`],
+  ["shorter quote stack", `> > - item\n>\n>      ${questLiteral}`],
+  ["list parent quote closes", `- > - item\n\n  >      ${questLiteral}`],
+  ["tabs and CRLF", `> - item\r\n\r\n> \t  ${questLiteral}`],
+] as const) test(`remaining P1-C quote blank ${name} expires missing quote children`, () => blockMissing(body));
+for (const [name, body] of [
+  ["ordered list", `1. a\nlazy\n*\n      ${questLiteral}`],
+  ["blockquote", `> a\nlazy\n*\n      ${questLiteral}`],
+  ["nested list/quote", `> 1. a\n> lazy\n> *\n>       ${questLiteral}`],
+  ["CRLF", `1. a\r\nlazy\r\n*\r\n\t  ${questLiteral}`],
+] as const) test(`remaining P1-C lazy ${name} retains interruption context`, () => blockMissing(body));
+test("remaining P1-C prefixed blanks, lazy prose and real interruptions keep genuine destinations", () => {
+  for (const body of [
+    `> - item\n>\n>      ${questLiteral}`, `> > - item\n> >\n> >      ${questLiteral}`,
+    `Text\nlazy\n*\n      ${questLiteral}`, `1. a\nlazy\n2. foo\n\n     ${questLiteral}`,
+    `> a\nlazy\n2. foo\n\n     ${questLiteral}`, `1. a\nlazy\n\n    ${questLiteral}`,
+  ]) {
+    const raw = `🧭 Main: ${period}\n\n${body}`, read = readDateSpans(raw); mapped(raw, read.spans);
+    expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02"]); expect(read.diagnostics).toEqual([]);
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false); expect(r.unmatchedSpans).toEqual([]);
+  }
+});
+for (const [name, body] of [
+  ["reported cross-block", `> \`\`\`\n> code\n\`\`\`\n${questLiteral}`],
+  ["prose cannot close", `\`\`\`\ncode\nprose \`\`\`\n${questLiteral}`],
+  ["shorter run cannot close", `\`\`\`\`\ncode\n\`\`\`\n${questLiteral}`],
+  ["closing suffix is not syntax", `\`\`\`\ncode\n\`\`\` trailing\n${questLiteral}`],
+  ["other container cannot close", `\`\`\`\ncode\n> \`\`\`\n${questLiteral}`],
+] as const) test(`remaining P1-C fence ${name} never hides a literal`, () => {
+  blockMissing(body, false);
+  expect(readDateSpans(body).diagnostics).toContain("unclosed_code_fence");
+});
+const validFenceBodies = [
+  `\`\`\`\n${questLiteral}\n\`\`\``, `\`\`\` lang\n${questLiteral}\n\`\`\`\``,
+  `\`\`\`\`\n\`\`\`\n${questLiteral}\n\`\`\`\``, `~~~ lang\n${questLiteral}\n~~~`,
+  `> \`\`\`\n> ${questLiteral}\n> \`\`\``, `- \`\`\`\n  ${questLiteral}\n  \`\`\``,
+  `> - \`\`\`\n>   ${questLiteral}\n>   \`\`\``,
+  `> \`\`\`\n> code\n\`\`\`\n${questLiteral}\n\`\`\``,
+  `\`\`\`\nprose \`\`\`\n${questLiteral}\n\`\`\``,
+  `  \`\`\`\r\n${questLiteral}\r\n   \`\`\`\t`,
+];
+test("remaining P1-C valid fence syntax/container closure retains only the literal deadline", () => {
+  for (const body of validFenceBodies) blockMissing(`${body}\n[Real link](2026-10-28T04:00Z)`);
+});
+test("remaining P1-C covered valid fences still confirm exact event boundaries", () => {
+  for (const body of validFenceBodies) {
+    const raw = `🧭 Main: ${period}\n\n${body.replace("2026-10-29T04:00Z", "2026-11-02T03:59Z")}\n[Real link](2026-10-28T04:00Z)`;
+    const read = readDateSpans(raw); mapped(raw, read.spans); expect(read.diagnostics).toEqual([]); expect(read.spans).toHaveLength(3);
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  }
+});
+test("remaining P1-C inline runs, fence exits and metadata stay distinct", () => {
+  for (const body of [
+    `text \`\`a \` b\`\`\n[Real](2026-10-29T04:00Z)`, `\`\`\`code\`\`\`\n[Real](2026-10-29T04:00Z)`,
+    `> \`\`\`\n> code\n[Real](2026-10-29T04:00Z)`, `<code>[End](2026-11-02T03:59Z)</code>`,
+    `\`[End](2026-11-02T03:59Z)\``, `\`\`[End](2026-11-02T03:59Z) \` text\`\``,
+    `\`\`\` 2026-10-29\n[End](2026-11-02T03:59Z)\n\`\`\``,
+  ]) {
+    const raw = `🧭 Main: ${period}\n\n${body}`, read = readDateSpans(raw); mapped(raw, read.spans);
+    expect(read.spans.some(s => s.value.date === "2026-10-29")).toBe(false); expect(read.diagnostics).toEqual([]);
+    const r = coverage(raw, "markdown"); mapped(raw, r.spans);
+    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  }
+});
