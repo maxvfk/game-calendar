@@ -126,6 +126,9 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
     // block tree. Expanded columns are used ONLY for this probe; source maps
     // and codeContext always retain the original UTF-16 physical-line indices.
     type Container = { kind: "quote" | "list"; padding: number; empty?: boolean };
+    type Fence = { marker: string; size: number; containers: Container[] };
+    let fence: Fence | null = null;
+    const inlineBoundary = new Uint8Array(raw.length);
     const sameContainer = (a: Container, b?: Container) => a.kind === b?.kind && (a.kind === "quote" || a.padding === b.padding);
     // Tabs have already become columns when this is called. Require one marker
     // kind, at least three occurrences, and at most three relative leading spaces.
@@ -137,6 +140,33 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
       for (const c of line[0]) {
         const width = c === "\t" ? 4 - column % 4 : 1;
         expanded += c === "\t" ? " ".repeat(width) : c; column += width;
+      }
+      if (fence) {
+        // Code has no lazy container continuation. Require the opening quote
+        // markers/list padding physically; otherwise this container ended and
+        // the current line must be parsed anew, not used as its closing fence.
+        let prefix = 0, sameScope = true;
+        for (const c of fence.containers) {
+          const rest = expanded.slice(prefix);
+          if (c.kind === "quote") {
+            const q = /^ {0,3}> ?/.exec(rest);
+            if (!q) { sameScope = false; break; }
+            prefix += q[0].length;
+          } else if (rest.startsWith(" ".repeat(c.padding))) prefix += c.padding;
+          else if (!/^[ \r\n]*$/.test(rest)) { sameScope = false; break; }
+        }
+        inlineBoundary[line.index!] = 1;
+        if (sameScope) {
+          codeContext.fill(1, line.index!, line.index! + line[0].length);
+          const close = /^ {0,3}(`+|~+) *[\r\n]*$/.exec(expanded.slice(prefix));
+          if (close && close[1]![0] === fence.marker && close[1]!.length >= fence.size) {
+            mask(line.index!, line.index! + line[0].length);
+            previousContainers = fence.containers; fence = null;
+            previousBlank = true; indentedCode = false; previousBlockMarker = false;
+          }
+          continue;
+        }
+        fence = null; previousBlank = true; indentedCode = false; previousBlockMarker = false;
       }
       const containers: Container[] = [];
       let offset = 0, newItem = false, knownPrefix = true, limited = false, thematic = false, rejectedParagraphMarker = false;
@@ -173,15 +203,18 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
         containers.push(frame); offset += frame.padding;
       }
       if (limited) {
+        inlineBoundary[line.index!] = 1;
         diagnose("container_limit"); codeContext.fill(1, line.index!, line.index! + line[0].length);
         previousContainers = []; previousBlank = true; indentedCode = false; previousBlockMarker = false; continue;
       }
       const content = expanded.slice(offset);
       if (thematic) {
+        inlineBoundary[line.index!] = 1;
         for (const c of containers) if (c.kind === "list") c.empty = false;
         previousContainers = containers; previousBlank = true; indentedCode = false; previousBlockMarker = false; continue;
       }
       if (/^[ \r\n]*$/.test(content)) {
+        inlineBoundary[line.index!] = 1;
         previousBlank = true;
         // Blank quote lines can omit list padding without ending that list.
         if (newItem || !containers.every((c, i) => sameContainer(c, previousContainers[i]))) {
@@ -201,6 +234,14 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
       }
       for (const c of containers) if (c.kind === "list") c.empty = false;
       const columns = /^ */.exec(content)![0].length;
+      const open = /^ {0,3}(`{3,}|~{3,})([^\r\n]*)[\r\n]*$/.exec(content);
+      if (open && !codeContext[line.index!] && (open[1]![0] !== "`" || !open[2]!.includes("`"))) {
+        fence = { marker: open[1]![0]!, size: open[1]!.length, containers: [...containers] };
+        inlineBoundary[line.index!] = 1;
+        codeContext.fill(1, line.index!, line.index! + line[0].length);
+        mask(line.index!, line.index! + line[0].length); // Fence/info is metadata.
+        previousContainers = containers; previousBlank = false; indentedCode = false; previousBlockMarker = false; continue;
+      }
       const changed = containers.length !== previousContainers.length || !containers.every((c, i) => sameContainer(c, previousContainers[i]));
       const blockMarker = rejectedParagraphMarker ? /^ {0,3}-+ *[\r\n]*$/.test(content) :
         /^ {0,3}(?:[#>~`<]|[-*+_=]{2,}(?:[ \r\n]|$)|(?:[-*+]|\d+[.)]) )/.test(content);
@@ -214,15 +255,21 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
       const ambiguousCode: boolean = columns >= 4 && !previousBlank && !newItem && (changed || !indentedCode && previousBlockMarker);
       if (ambiguousCode) diagnose("unsupported_code_context");
       indentedCode = columns >= 4 && (previousBlank || newItem || !changed && indentedCode || ambiguousCode);
+      if (newItem || changed && !lazy || indentedCode || blockMarker || previousBlockMarker) inlineBoundary[line.index!] = 1;
       if (indentedCode || ambiguousCode) codeContext.fill(1, line.index!, line.index! + line[0].length);
       if (!lazy) previousContainers = containers;
       previousBlank = false; previousBlockMarker = blockMarker;
     }
-    // Identify code before Markdown formatting/link matching. Equal backtick
-    // runs delimit literal content; unmatched runs stay explicit uncertainty.
+    if (fence) diagnose("unclosed_code_fence");
+    // Inline spans cannot pair with fenced code or across known block boundaries.
+    // Equal runs within a paragraph may cross soft line breaks. Unmatched runs
+    // retain literal evidence and explicit uncertainty.
     // This scan and the disjoint bitmap fills are bounded by inputUnits.
     let codeStart: number | null = null, ticks = 0;
     for (let i = 0; i < raw.length; i++) {
+      if (inlineBoundary[i] && codeStart !== null) {
+        codeContext.fill(1, codeStart, i); codeStart = null; diagnose("unsupported_markup");
+      }
       if (raw[i] !== "`" || codeContext[i]) continue;
       let end = i + 1; while (raw[end] === "`") end++;
       if (codeStart === null) {
@@ -252,7 +299,7 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
   // URL metadata is excluded in every format; visible non-URL prose is kept.
   for (const m of raw.matchAll(/https?:\/\/[^\s<>"')\]]+/g)) mask(m.index!, m.index! + m[0].length);
   if (format === "markdown") {
-    const residual = chars.map((c, i) => removed[i] ? " " : c).join("");
+    const residual = chars.map((c, i) => removed[i] || codeContext[i] && (c === "`" || c === "~") ? " " : c).join("");
     // Unhandled inline syntax remains explicit uncertainty, never a hidden gap.
     // List bullets and literal intraword underscores are not formatting here.
     if (/\*+(?=[\p{L}\d])|(?<=[\p{L}\d])\*+|(?<![\p{L}\d])_+(?=[\p{L}\d])|(?<=[\p{L}\d])_+(?![\p{L}\d])|~~|`/u.test(residual)) diagnose("unsupported_markup");

@@ -287,7 +287,7 @@ test("Astra P1-C ordinary indented paragraph continuations and three-space links
   }
 });
 test("Astra P1-C indented literals after block markers fail closed without a block-parser guess", () => {
-  for (const marker of ["## Quest", "```\ntext\n```", "<div>Quest</div>", "> Quote"]) {
+  for (const marker of ["## Quest", "<div>Quest</div>", "> Quote"]) {
     const raw = `🧭 Main: ${period}\n\n${marker}\n    [Quest](2026-10-29T04:00Z)`;
     const read = readDateSpans(raw); mapped(raw, read.spans);
     expect(read.diagnostics).toContain("unsupported_code_context");
@@ -478,6 +478,7 @@ const validFenceBodies = [
   `> \`\`\`\n> code\n\`\`\`\n${questLiteral}\n\`\`\``,
   `\`\`\`\nprose \`\`\`\n${questLiteral}\n\`\`\``,
   `  \`\`\`\r\n${questLiteral}\r\n   \`\`\`\t`,
+  `\`\`\`\ntext\n\`\`\`\n    ${questLiteral}`,
 ];
 test("remaining P1-C valid fence syntax/container closure retains only the literal deadline", () => {
   for (const body of validFenceBodies) blockMissing(`${body}\n[Real link](2026-10-28T04:00Z)`);
