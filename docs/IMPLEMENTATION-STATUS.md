@@ -1,3 +1,41 @@
+## C1a.1 — REMAINING BLOCK-STATE/FENCE P1-C CORRECTED, OPUS CLOSURE PENDING (2026-11-05)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+[Accepted triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6646804310)
+reviewed `83691de83b1b76550631829d7bc0db315acac308`. CURRENT main remains
+`fcd4a3998af0000c04aff68ca82dc3bbbb913659`, already integrated; no merge/refresh.
+[Corrections, replays and semantic controls](evidence/notice-coverage-c1a1-fences-2026-11-05.md):
+blank lines expire absent quote frames/descendants; lazy paragraph lines retain
+ancestry for interruption decisions; fences use physical container/line syntax,
+marker lengths and whitespace-only closers, separately from inline code spans.
+A wrong-container run cannot close a fence. Unclosed fences keep literal dates
+and explicit uncertainty. No full renderer/dependency; P1-A/P1-B/P2-D, CZN repair,
+matching/status engine, baseline/ignore, CLI and prior thematic fixes unchanged.
+
+Reviewed-reader final regression file: **105 pass / 16 fail**; corrected focused
+set **170 pass / 3621 assertions**. Independent Pandoc/CommonMark comparisons
+cover 32 authored controls (verification only, not a dependency). Previous
+positive controls remain. The closed-fence uncertainty row moves to explicit
+code-boundary controls with stronger exact/unmatched assertions. Every synthetic
+and actual quote retains original UTF-16 slice parity. Required local commands
+pass; full suite **1670 pass / 3 existing optional age skips / 0 fail** (1673 tests,
+97 files). [Fresh parity](evidence/notice-coverage-c1a1-fences-parity-2026-11-05.json)
+matches all 10 public files, 296 events / 153 reviewed winners, Timeline/conflicts
+and complete E1/C0/C1a.0 sidecar (eight E1 hashes, inventories, attributions,
+diagnostics/refusals). All 113 baseline identities and bytes remain unchanged.
+
+[Same-input report replay](evidence/notice-coverage-c1a1-fences-report-2026-11-05.json)
+is byte-identical to the reviewed reader: 101 notices / 714 spans / 699 unmatched,
+20 partial / 44 unprocessed / 37 unclassified, evaluation 99 uncertain / 2 complete,
+82 current baseline members. SHA remains f563207a…; no forced distribution or
+invented rolling example. Exact missing literals in the first two cases now give
+partial/complete/attention; the unclosed-root-fence case is partial/uncertain/attention.
+Final head and exact-head PG17/encrypted-recovery CI results are recorded in PR161.
+**Next:** Opus focused closure on the exact new head, then Astra final closure.
+Do not merge or begin C1b/C2, Daily Passes or another milestone.
+
+---
+
 ## C1a.1 — THEMATIC/WEAK-LIST P1-C CORRECTED, SONNET CLOSURE PENDING (2026-11-05)
 
 Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.

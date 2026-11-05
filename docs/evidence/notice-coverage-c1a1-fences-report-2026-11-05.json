@@ -1,0 +1,316 @@
+{
+  "startingMain": "fcd4a3998af0000c04aff68ca82dc3bbbb913659",
+  "reviewedHead": "83691de83b1b76550631829d7bc0db315acac308",
+  "codeCheckpoint": "46959bc723d9abc4c866af54742a90ade7e1bb7a",
+  "sameSidecarAndFinalEventsForBothReaders": true,
+  "beforeReportSha256": "f563207a40ff2e05486e6ab6dbf8d0f628f291cdf96b09b973786cf9012c56e7",
+  "afterReportSha256": "f563207a40ff2e05486e6ab6dbf8d0f628f291cdf96b09b973786cf9012c56e7",
+  "reportByteIdenticalToReviewedReader": true,
+  "deterministicReplay": true,
+  "allActualUtf16SourceQuotesVerified": true,
+  "publicManifestRecheckedAfterSeparateFeedBuild": true,
+  "baseline": {
+    "entries": 113,
+    "bytesUnchanged": true,
+    "sha256": "f9495e8f1a09bc45f21773116870b836f65e63b24d471a4bf3c945362f244cb9"
+  },
+  "before": {
+    "notices": 101,
+    "spans": 714,
+    "unmatchedSpans": 699,
+    "instants": 54,
+    "status": {
+      "partially processed": 20,
+      "unclassified": 37,
+      "unprocessed": 44
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 99
+    },
+    "baselineMembers": 82
+  },
+  "after": {
+    "notices": 101,
+    "spans": 714,
+    "unmatchedSpans": 699,
+    "instants": 54,
+    "status": {
+      "partially processed": 20,
+      "unclassified": 37,
+      "unprocessed": 44
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 99
+    },
+    "baselineMembers": 82
+  },
+  "counterexamplesBefore": [
+    {
+      "body": "> - item\n\n>      [Quest](2026-10-29T04:00Z)",
+      "quote": null,
+      "instant": null,
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "diagnostics": [],
+      "matchedSpans": 2,
+      "unmatched": []
+    },
+    {
+      "body": "1. a\nlazy\n*\n      [Quest](2026-10-29T04:00Z)",
+      "quote": null,
+      "instant": null,
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "diagnostics": [],
+      "matchedSpans": 2,
+      "unmatched": []
+    },
+    {
+      "body": "> ```\n> code\n```\n[Quest](2026-10-29T04:00Z)",
+      "quote": null,
+      "instant": null,
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "diagnostics": [],
+      "matchedSpans": 2,
+      "unmatched": []
+    }
+  ],
+  "counterexamplesAfter": [
+    {
+      "body": "> - item\n\n>      [Quest](2026-10-29T04:00Z)",
+      "quote": "2026-10-29T04:00Z",
+      "instant": "2026-10-29T04:00:00.000Z",
+      "status": "partially processed",
+      "evaluation": "complete",
+      "attentionRequired": true,
+      "diagnostics": [],
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "024c301c366e4aa874d139f8674502f4945d91bb9b3c2aba896762e590e5c8ef",
+          "quote": "2026-10-29T04:00Z",
+          "reason": "no_compatible_represented_boundary"
+        }
+      ]
+    },
+    {
+      "body": "1. a\nlazy\n*\n      [Quest](2026-10-29T04:00Z)",
+      "quote": "2026-10-29T04:00Z",
+      "instant": "2026-10-29T04:00:00.000Z",
+      "status": "partially processed",
+      "evaluation": "complete",
+      "attentionRequired": true,
+      "diagnostics": [],
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "29ae58ac69f020682b66215985aa2e9913af0a93b8856769f451cd9454fe7dbd",
+          "quote": "2026-10-29T04:00Z",
+          "reason": "no_compatible_represented_boundary"
+        }
+      ]
+    },
+    {
+      "body": "> ```\n> code\n```\n[Quest](2026-10-29T04:00Z)",
+      "quote": "2026-10-29T04:00Z",
+      "instant": "2026-10-29T04:00:00.000Z",
+      "status": "partially processed",
+      "evaluation": "uncertain",
+      "attentionRequired": true,
+      "diagnostics": [
+        "content:unclosed_code_fence"
+      ],
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "024c301c366e4aa874d139f8674502f4945d91bb9b3c2aba896762e590e5c8ef",
+          "quote": "2026-10-29T04:00Z",
+          "reason": "no_compatible_represented_boundary"
+        }
+      ]
+    }
+  ],
+  "regressionReproduction": {
+    "oldReaderPass": 105,
+    "oldReaderFail": 16,
+    "correctedFocusedPass": 170,
+    "correctedFocusedFail": 0
+  },
+  "independentCommonMarkReference": {
+    "tool": "pandoc 3.1.11.1",
+    "reader": "commonmark",
+    "purpose": "Existing verification tool only, no project dependency. Authored Bun expectations are separate from these observed renderings.",
+    "cases": [
+      {
+        "body": "> - item\n\n>      [Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<blockquote>\n<ul>\n<li>item</li>\n</ul>\n</blockquote>\n<blockquote>\n<pre><code> [Quest](2026-10-29T04:00Z)</code></pre>\n</blockquote>\n"
+      },
+      {
+        "body": "> > - item\n>\n>      [Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<blockquote>\n<blockquote>\n<ul>\n<li>item</li>\n</ul>\n</blockquote>\n<pre><code> [Quest](2026-10-29T04:00Z)</code></pre>\n</blockquote>\n"
+      },
+      {
+        "body": "- > - item\n\n  >      [Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<ul>\n<li><blockquote>\n<ul>\n<li>item</li>\n</ul>\n</blockquote>\n<blockquote>\n<pre><code> [Quest](2026-10-29T04:00Z)</code></pre>\n</blockquote></li>\n</ul>\n"
+      },
+      {
+        "body": "1. a\nlazy\n*\n      [Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<ol type=\"1\">\n<li>a lazy</li>\n</ol>\n<ul>\n<li><pre><code>[Quest](2026-10-29T04:00Z)</code></pre></li>\n</ul>\n"
+      },
+      {
+        "body": "> a\nlazy\n*\n      [Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<blockquote>\n<p>a lazy</p>\n</blockquote>\n<ul>\n<li><pre><code>[Quest](2026-10-29T04:00Z)</code></pre></li>\n</ul>\n"
+      },
+      {
+        "body": "> 1. a\n> lazy\n> *\n>       [Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<blockquote>\n<ol type=\"1\">\n<li>a lazy</li>\n</ol>\n<ul>\n<li><pre><code>[Quest](2026-10-29T04:00Z)</code></pre></li>\n</ul>\n</blockquote>\n"
+      },
+      {
+        "body": "> ```\n> code\n```\n[Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<blockquote>\n<pre><code>code</code></pre>\n</blockquote>\n<pre><code>[Quest](2026-10-29T04:00Z)\n</code></pre>\n"
+      },
+      {
+        "body": "```\ncode\nprose ```\n[Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<pre><code>code\nprose ```\n[Quest](2026-10-29T04:00Z)\n</code></pre>\n"
+      },
+      {
+        "body": "````\ncode\n```\n[Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<pre><code>code\n```\n[Quest](2026-10-29T04:00Z)\n</code></pre>\n"
+      },
+      {
+        "body": "```\ncode\n``` trailing\n[Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<pre><code>code\n``` trailing\n[Quest](2026-10-29T04:00Z)\n</code></pre>\n"
+      },
+      {
+        "body": "```\ncode\n> ```\n[Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<pre><code>code\n&gt; ```\n[Quest](2026-10-29T04:00Z)\n</code></pre>\n"
+      },
+      {
+        "body": "```\n[Quest](2026-10-29T04:00Z)\n```",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<pre><code>[Quest](2026-10-29T04:00Z)</code></pre>\n"
+      },
+      {
+        "body": "``` lang\n[Quest](2026-10-29T04:00Z)\n````",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<pre class=\"lang\"><code>[Quest](2026-10-29T04:00Z)</code></pre>\n"
+      },
+      {
+        "body": "````\n```\n[Quest](2026-10-29T04:00Z)\n````",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<pre><code>```\n[Quest](2026-10-29T04:00Z)</code></pre>\n"
+      },
+      {
+        "body": "~~~ lang\n[Quest](2026-10-29T04:00Z)\n~~~",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<pre class=\"lang\"><code>[Quest](2026-10-29T04:00Z)</code></pre>\n"
+      },
+      {
+        "body": "> ```\n> [Quest](2026-10-29T04:00Z)\n> ```",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<blockquote>\n<pre><code>[Quest](2026-10-29T04:00Z)</code></pre>\n</blockquote>\n"
+      },
+      {
+        "body": "- ```\n  [Quest](2026-10-29T04:00Z)\n  ```",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<ul>\n<li><pre><code>[Quest](2026-10-29T04:00Z)</code></pre></li>\n</ul>\n"
+      },
+      {
+        "body": "> - ```\n>   [Quest](2026-10-29T04:00Z)\n>   ```",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<blockquote>\n<ul>\n<li><pre><code>[Quest](2026-10-29T04:00Z)</code></pre></li>\n</ul>\n</blockquote>\n"
+      },
+      {
+        "body": "> ```\n> code\n```\n[Quest](2026-10-29T04:00Z)\n```",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<blockquote>\n<pre><code>code</code></pre>\n</blockquote>\n<pre><code>[Quest](2026-10-29T04:00Z)</code></pre>\n"
+      },
+      {
+        "body": "  ```\r\n[Quest](2026-10-29T04:00Z)\r\n   ```\t",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<pre><code>[Quest](2026-10-29T04:00Z)</code></pre>\n"
+      },
+      {
+        "body": "`[Quest](2026-10-29T04:00Z)`",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<p><code>[Quest](2026-10-29T04:00Z)</code></p>\n"
+      },
+      {
+        "body": "``[Quest](2026-10-29T04:00Z) ` text``",
+        "authoredExpectation": "literal",
+        "renderedHtml": "<p><code>[Quest](2026-10-29T04:00Z) ` text</code></p>\n"
+      },
+      {
+        "body": "> - item\n>\n>      [Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "destination",
+        "renderedHtml": "<blockquote>\n<ul>\n<li><p>item</p>\n<p><a href=\"2026-10-29T04:00Z\">Quest</a></p></li>\n</ul>\n</blockquote>\n"
+      },
+      {
+        "body": "> > - item\n> >\n> >      [Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "destination",
+        "renderedHtml": "<blockquote>\n<blockquote>\n<ul>\n<li><p>item</p>\n<p><a href=\"2026-10-29T04:00Z\">Quest</a></p></li>\n</ul>\n</blockquote>\n</blockquote>\n"
+      },
+      {
+        "body": "Text\nlazy\n*\n      [Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "destination",
+        "renderedHtml": "<p>Text lazy * <a href=\"2026-10-29T04:00Z\">Quest</a></p>\n"
+      },
+      {
+        "body": "1. a\nlazy\n2. foo\n\n     [Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "destination",
+        "renderedHtml": "<ol type=\"1\">\n<li><p>a lazy</p></li>\n<li><p>foo</p>\n<p><a href=\"2026-10-29T04:00Z\">Quest</a></p></li>\n</ol>\n"
+      },
+      {
+        "body": "> a\nlazy\n2. foo\n\n     [Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "destination",
+        "renderedHtml": "<blockquote>\n<p>a lazy</p>\n</blockquote>\n<ol start=\"2\" type=\"1\">\n<li><p>foo</p>\n<p><a href=\"2026-10-29T04:00Z\">Quest</a></p></li>\n</ol>\n"
+      },
+      {
+        "body": "1. a\nlazy\n\n    [Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "destination",
+        "renderedHtml": "<ol type=\"1\">\n<li><p>a lazy</p>\n<p><a href=\"2026-10-29T04:00Z\">Quest</a></p></li>\n</ol>\n"
+      },
+      {
+        "body": "> ```\n> code\n[Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "destination",
+        "renderedHtml": "<blockquote>\n<pre><code>code</code></pre>\n</blockquote>\n<p><a href=\"2026-10-29T04:00Z\">Quest</a></p>\n"
+      },
+      {
+        "body": "text ``a ` b``\n[Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "destination",
+        "renderedHtml": "<p>text <code>a ` b</code> <a href=\"2026-10-29T04:00Z\">Quest</a></p>\n"
+      },
+      {
+        "body": "```code```\n[Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "destination",
+        "renderedHtml": "<p><code>code</code> <a href=\"2026-10-29T04:00Z\">Quest</a></p>\n"
+      },
+      {
+        "body": "```\ncode\n```\n[Quest](2026-10-29T04:00Z)",
+        "authoredExpectation": "destination",
+        "renderedHtml": "<pre><code>code</code></pre>\n<p><a href=\"2026-10-29T04:00Z\">Quest</a></p>\n"
+      }
+    ]
+  },
+  "note": "Observed replays, not generated test expectations. No input refresh or rolling reader-only report change; valid fence/paragraph controls are independently authored, and unclosed root fences retain literal evidence with explicit uncertainty."
+}
