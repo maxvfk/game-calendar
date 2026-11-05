@@ -30,6 +30,8 @@ Attribution: Endfield Talos Wiki contributors, wiki.gg, source page links above;
 CC BY-SA 4.0 as stated in the captured wiki footer. These are schedule/markup
 excerpts only. Historical tests are pinned so routine production snapshot turnover
 cannot replace an Illusion fixture with Phantasia and invalidate its assertions.
+`test/timeline-days.test.ts` also reads `illusion-2026-09-24.html` for its Cycle I
+daily-cell regression; it parses identically to the stale production snapshot.
 
 Official Shadow Marked verification is documented in
 `docs/research/endfield-recurring-endgame.md`, section 16. Official article HTML

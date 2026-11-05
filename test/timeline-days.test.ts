@@ -74,7 +74,7 @@ test("now opens at 20% on phone, 25% on desktop, and clamps at the board start",
 test("current endgame exact deadlines land inside their daily cells", async () => {
   const rows = (await Promise.all(["zzz", "czn", "endfield"].map(async game =>
     materializeReviewedBatch(await Bun.file(`data/reviewed/${game}.json`).json()).events))).flat();
-  rows.push(...parseWikiGgEchoesSeason(await Bun.file("snapshots/endfield-wikigg-echoes.html").text(), {
+  rows.push(...parseWikiGgEchoesSeason(await Bun.file("test/fixtures/endfield/illusion-2026-09-24.html").text(), {
     game: "endfield", sourceId: "endfield-wikigg-echoes", now: "2026-09-24T12:00:00.000Z",
     sourceUrl: "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Illusion",
   }));
