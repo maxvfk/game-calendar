@@ -1,0 +1,1620 @@
+{
+  "main": "d867114001738817d9da72939b8b9a6045f4555e",
+  "reviewedHead": "b3b0ad36d6f3ff15212cc49164937eafc5e8ae98",
+  "codeCheckpoint": "e1c2e613ed8007bc42e3a25e24104b7f859cf584",
+  "sameSidecarAndFinalEventsForBothReaders": true,
+  "beforeReportSha256": "f563207a40ff2e05486e6ab6dbf8d0f628f291cdf96b09b973786cf9012c56e7",
+  "afterReportSha256": "f563207a40ff2e05486e6ab6dbf8d0f628f291cdf96b09b973786cf9012c56e7",
+  "reportByteIdentical": true,
+  "deterministicReplay": true,
+  "allActualUtf16SourceQuotesVerified": 714,
+  "publicManifestRecheckedAfterSeparateFeedBuild": true,
+  "baseline": {
+    "entries": 113,
+    "bytesUnchanged": true,
+    "sha256": "f9495e8f1a09bc45f21773116870b836f65e63b24d471a4bf3c945362f244cb9"
+  },
+  "before": {
+    "notices": 101,
+    "spans": 714,
+    "unmatchedSpans": 699,
+    "instants": 54,
+    "attentionNotices": 101,
+    "status": {
+      "partially processed": 20,
+      "unclassified": 37,
+      "unprocessed": 44
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 99
+    },
+    "baselineMembers": 82,
+    "maskedDateLikeDestinationNotices": 0
+  },
+  "after": {
+    "notices": 101,
+    "spans": 714,
+    "unmatchedSpans": 699,
+    "instants": 54,
+    "attentionNotices": 101,
+    "status": {
+      "partially processed": 20,
+      "unclassified": 37,
+      "unprocessed": 44
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 99
+    },
+    "baselineMembers": 82,
+    "maskedDateLikeDestinationNotices": 0
+  },
+  "opus139Window": {
+    "opusWindow": true,
+    "main": "d867114001738817d9da72939b8b9a6045f4555e",
+    "reviewedHead": "b3b0ad36d6f3ff15212cc49164937eafc5e8ae98",
+    "codeCheckpoint": "e1c2e613ed8007bc42e3a25e24104b7f859cf584",
+    "method": "Every origin/main snapshot body revision -> extractArticleEvidence, dedupe by sourceId|contentHash. Title/content reads compared in full. Coverage uses each first-observed snapshot canonical parser outputs, no reviewed winners or artificial event removals. Only before/after delta is asserted, not historical repaired-state completeness.",
+    "versions": [
+      {
+        "sourceId": "genshin-kqm-ginews",
+        "snapshotCommits": 10,
+        "uniqueSnapshotBodies": 10,
+        "noticeRevisions": 59
+      },
+      {
+        "sourceId": "hsr-kqm-hsrnews",
+        "snapshotCommits": 5,
+        "uniqueSnapshotBodies": 5,
+        "noticeRevisions": 13
+      },
+      {
+        "sourceId": "zzz-steam-events-official",
+        "snapshotCommits": 17,
+        "uniqueSnapshotBodies": 17,
+        "noticeRevisions": 16
+      },
+      {
+        "sourceId": "nte-steamnews-official",
+        "snapshotCommits": 3,
+        "uniqueSnapshotBodies": 3,
+        "noticeRevisions": 31
+      },
+      {
+        "sourceId": "wuwa-kuro-mirror",
+        "snapshotCommits": 1,
+        "uniqueSnapshotBodies": 1,
+        "noticeRevisions": 20
+      }
+    ],
+    "uniqueNoticeRevisions": 139,
+    "formats": {
+      "bbcode": 31,
+      "html": 36,
+      "markdown": 72
+    },
+    "extractionFailures": 0,
+    "sourceQuoteParity": true,
+    "readerComparisons": 278,
+    "changedReaderOutputs": 0,
+    "changedCoverageRecords": 0,
+    "changedDiagnostics": 0,
+    "changedStatuses": 0,
+    "changedAttention": 0,
+    "frequencies": {
+      "markdownNotices": 72,
+      "markdownFences": 0,
+      "blockquote": 0,
+      "indentedCodeCandidate": 0,
+      "indentedListItem": 0,
+      "listMarkerFiveSpaces": 0,
+      "inlineBacktick": 0,
+      "htmlCodePre": 0,
+      "thematicBreak": 70,
+      "noticesWithLinks": 71,
+      "links": 110,
+      "httpDestinations": 110,
+      "nonHttpDestinations": 0,
+      "bbcodeUnsupportedContextCandidates": 0,
+      "htmlCodeQuoteCommentScriptStyle": 0
+    },
+    "newDiagnosticNoticeCount": 0,
+    "readerDiffs": [],
+    "coverageDiffs": [],
+    "readerShaBefore": "138423bc1d2823573b73c361cc0e3b1eb4ce823570775feee3fb017654bbb643",
+    "readerShaAfter": "138423bc1d2823573b73c361cc0e3b1eb4ce823570775feee3fb017654bbb643",
+    "coverageShaBefore": "ec296f5e1ebdeae11d224b8de6500c945533ac96a77d8de7bfda42d80f94050b",
+    "coverageShaAfter": "ec296f5e1ebdeae11d224b8de6500c945533ac96a77d8de7bfda42d80f94050b",
+    "inventory": [
+      {
+        "key": "genshin-kqm-ginews|616bf6877a090cac144cc2ca677f64d5d6893c1d6d9b9e83682c54ca31b0df4b",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21993",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|1558b03c51a80f4bcf622f1b0886a91af28281863d18c97383271713eed8a250",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21991",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|4878150ea3a8867d392fb97196863aa3ddf4093cfbce2e0cd0087921f8fb3c62",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21990",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|73cc4ab56764597b93df495da5a3634bdf5fc91dc3a11457d3ad159ecda1747d",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21989",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|cf5ee8014dca575b2d46810654f10d9c9ff5e859ef9272950ad6e3b6a03785ee",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "22011",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|d88b18b57d858210d1b03dfb3899bf90d66717c8ac964bc08874c5089a56c5c2",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "22014",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|a1eed0060e66de0d1042b5e6a163d15b114297b86342561d8297621450022d77",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "22031",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|70a46cd40414059a01381a39ee5dca11d979f280ac1a95e865fefc08333afa25",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21997",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|9905f0910a281f2480dd27fe1b44447771df3425aa3a8bc5c1f535fa035134a2",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21998",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|48facd0e6f9c93f9056134ce2288a81d515e801ce55852312412fdf6e00f328f",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21977",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|ca6d8284284c3376f917c3a1392aead0370e9fbeb519cda61b8c87ff908a4b10",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21969",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|635d2d4a25cfb74e905d558fdfb0f6393913e8e672d68a5c92f15b3b58394d7f",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21970",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|f3ffd845c135475ca940027443f6a1eedf71453e2012620e43114b18966d7480",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21971",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|7043081454eeb5a3e1421a7cbce9bc7f0138463191c1a19ba7bb3f15798b24eb",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21973",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|848b50750f993f354840b49d5b79c9a0e5bd79638f4dd550323b9752b7a75db3",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21972",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|8713755371c9c1b10a98aed434c59708ed6bd33510bb41adfd7154d40332b90b",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21974",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|86605bae427a40e712b538e839ae7f23c6f42cb24dcfa146f8308a48f16741ad",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "20834",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|67823f9bb662c37ded660f50206575ef6fcf6c33c9cb077102e7e761e483b625",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21968",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|39ce177ca3af8664d9696e75f6fdada848998e35cc3e864d8421d55a56aa5d88",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "22008",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|78685caa0d8a4bea55ac1cf31a2b9e7557a3d78d5ec9b4102419bb4261d5f112",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21892",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|62d6d0a5ba044b3afcc66a2116dd16ed2ae8705f91ec1cd1d401c09649e7c439",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "22006",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|88b89f1b8e716f9f6e56ff08ff72552b0f24df53b79272a93e71c1d974a5f795",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21999",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|37b2729cc16f29fcc74e0266ab925be1dd384ffba43b00453acfc33ac805a49d",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21848",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|a604e6eced6511747a0830a01b0c36a1e0a5fc88dba86c9f29f79a97d36b3555",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21812",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|1ecfc26b2746eec6eec2f75140aa7f75a7faf43d049a6f0ecd445b81b5435dbf",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "1249",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|7600c2830a6a40bdddd760c42799b80d03a864e6fafcff44897bdab9650127cc",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "1250",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|d4cc42ea4fed7aed713e397dca62faaa50b8f6392512863d30d20f64a683be12",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "21455",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|56cf40fbf2616aece5680932eb52d33cf597409b43657b0e699b4e0e314e414e",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "1251",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|22edf6d8fb5e4f0f3d18d049cab788ee00993cc95c305838f772059c9dd4cfb6",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21947",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|d7240f4b72989343c1a346e22e14a264b460473e44d6236ef6cc6e8dc446cb1b",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "22002",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|736672ea73befca7b87a9889364450eafef30fbf1c4a31bfdfdce17971d03546",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21946",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|3fcd7bd663aeb97e048edea917900f19a185c16eb9b44bfaac5837ae97b37008",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21888",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|f116ebadc34d1e124d36b62ec3b8d40d21b8400f84ff6eb02002e633b56cfbcb",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21956",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|74d1bda05da73f0c4fc76b2eb67bffc2a62c26a9b95995ce014a962210146b59",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21889",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|26e482c2edf33103bf3725c705b2d81f4cf368ef3b69af904655e0ae5e43ea0f",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21902",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|674ba3f06b5970568b7026216b6be100dbb73ab2cc3bd1de313c973bb88563bf",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21900",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|1813d52b3dd0cd06d64eb1734dab909d7f53d19dde5e494486b0ed520bbc9a29",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21899",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|053fcbe29b0c1f45574fd3fa1161cdabda5e534a74cef781095d62fa9ec08f9c",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21890",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|415cf62c222691b80974446d950821006bf15132a6a29c66eb542fed83cd827c",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21879",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|56a449a132be6e3b8ac5b1b28c4e2890493a2d9d21966ead5868e0f59c47efdc",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21924",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|5af0e761003b229fa84b6fde901393f33f6b09bfc0c8f07d44d6329c29da7c43",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21885",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|9585d30d22445ecd1ba09f1478ed376d6f99eea3356725d9748c8030eda0bf92",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21880",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|65c10e1fb17e1e17385926ea14d805e34166d3bfe3f08f112822d9bc8be51ff9",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21881",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|86db2b3ec234e0575160c82cb64415c68a8aa8713fbb296c77c9cb3b6c93f7b3",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21882",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|1d46dfcc77c73f87fa62175f91aeecc4d79ef5830ad082eee82044bbce01c807",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "20508",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|7ebf18c5e09ee04ee6e6087bbe952d8717ffe26c1a6bff4b2a09d81b6724b2ab",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "3802",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|1186f23b927491609d9797995cc4f5f7574510aff554f878c631e556199c89ac",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "21811",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|e07ceedfe02d0c8bc0e86b4e24f852f47c3e3ef3da0b31bb9a133b618689132d",
+        "commit": "dba863d373a3e50c9dce32fc45e2dda178adc460",
+        "noticeId": "21908",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|7e638ab33005d374f56561edb6e3595360d92fbe8e8d38c935b0576e292e3292",
+        "commit": "dba863d373a3e50c9dce32fc45e2dda178adc460",
+        "noticeId": "22005",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|1f2d6ba70b29c2ea2851675c92e06bc766f981b88b77a33d271238371a58f18f",
+        "commit": "dba863d373a3e50c9dce32fc45e2dda178adc460",
+        "noticeId": "21897",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|3d6e1388535b992e3bffa187eb6026c2d8ae57c88eb65f8e2a625af06beab434",
+        "commit": "dba863d373a3e50c9dce32fc45e2dda178adc460",
+        "noticeId": "21168",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|54be7e0a87d9a5b2986ec2c5baa38808e621768f9cdd63414a08b2a5d6c52a9a",
+        "commit": "dba863d373a3e50c9dce32fc45e2dda178adc460",
+        "noticeId": "21923",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|168b65f7449c195a5c5cd12710ff5494d905836bc50fe004b617dbd3a86216b1",
+        "commit": "b8ea78d165e37962d70c967ad3b83fe7cc156dce",
+        "noticeId": "21053",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|8413b22393bae708820c22f5009a8c8fa9901481b457378c7d30976b2ea64d72",
+        "commit": "b8ea78d165e37962d70c967ad3b83fe7cc156dce",
+        "noticeId": "21901",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|134f81eb61140901b6afe068f0f89700acd5f47170d04637793caab85127ea64",
+        "commit": "b8ea78d165e37962d70c967ad3b83fe7cc156dce",
+        "noticeId": "21891",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|6e17df1cfe181f44ed2eb4d38755b1267e84a8709877e48d648f87f5c924a46e",
+        "commit": "b8ea78d165e37962d70c967ad3b83fe7cc156dce",
+        "noticeId": "21896",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|4d748e83049a6b6321d5dd5dd5de965397931d5447371f2fa8a8943515b78d2c",
+        "commit": "b8ea78d165e37962d70c967ad3b83fe7cc156dce",
+        "noticeId": "21895",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|4f8bdf7cab9568af749489eeaca5ca4243c860dc618edf29fee2ac7897507582",
+        "commit": "b8ea78d165e37962d70c967ad3b83fe7cc156dce",
+        "noticeId": "21884",
+        "format": "markdown"
+      },
+      {
+        "key": "genshin-kqm-ginews|90b9f97f1a000d26d9585ab90898b4ff1aa03aecb4a931c5618ec7ca62b9c7e5",
+        "commit": "b8ea78d165e37962d70c967ad3b83fe7cc156dce",
+        "noticeId": "21761",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|165ec7dbce3fc31d508aca1aa5b7f40883b1cbbdedc4f8101b06f92b9437dde9",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "1456",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|5b29dc29149ebcd204993a51227cfea3b0330c969291067e2301e9ab76bbfddc",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "1466",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|510c258ff23c096ebe564b110ec4c7f3690175c130ca12cbffa538ca8a51a573",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "1424",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|e24f6729dcbfa1722ed6bbc445d8c5cea750fe9f7cd98935f30fb6d91ec7deef",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "1437",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|777e1d5f3731432e4667f57933d8d1ecf9bcc7aa08ace4ac1061be63c3fd0e59",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "1447",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|b048bfdec7b3c3c2be01762c71731d3456669d73b4d4b1cf37129447630a5cdf",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "1416",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|3982094a6ec169e03d58ab31391b19efcb6bbf58087298256eb6a58acefeee0f",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "1406",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|7e12bad080df73f087b3e23ae5d03cd9f6530f50cc6b79ac7095b7c6fb1f3401",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "1415",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|e69356a69b368d8b0e9a3bbc256b0ac12c13b2559acc77a4ccd28826d432b89b",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "1421",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|2d1804fd1ee2f1dd2237c8240950de54505b4e5f69d9b6987e373299a5bc1a72",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "1196",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|80a7dffcb9cf1175bb483c323cfce16bee232b1be26383cc16cf7bc064de05fd",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "211",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|25988ea290e1607a2941714d0245f936e6cde5ee638e8a54b204e6fc3da674d7",
+        "commit": "3381e2565a8615a9c5bec69ddfbc619777428b83",
+        "noticeId": "186",
+        "format": "markdown"
+      },
+      {
+        "key": "hsr-kqm-hsrnews|d41ec12e26fd785947b3adbd1273a1c22366bcebb55fb19af5542984851f41e2",
+        "commit": "39021f406bca753efc7385b9f889089c76de07aa",
+        "noticeId": "1422",
+        "format": "markdown"
+      },
+      {
+        "key": "zzz-steam-events-official|fee025fbedff121144816e402134af70606dc00699f1af55d2f56aa6aa66af75",
+        "commit": "fcd4a3998af0000c04aff68ca82dc3bbbb913659",
+        "noticeId": "652616887841064662",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|df83e6c0701e978ab17305c038d25a64fed40c245f4b64fc15c25e3b5f39ca15",
+        "commit": "fcd4a3998af0000c04aff68ca82dc3bbbb913659",
+        "noticeId": "667252863011914641",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|d8d3c1eaa35f6e94f3ed07676a72f78360aec593c9afa3069a7d693bc2eb2bd7",
+        "commit": "fcd4a3998af0000c04aff68ca82dc3bbbb913659",
+        "noticeId": "714537487845820570",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|9505fd9fc6a37d8564d936c671e1c10dec9c7ff8e79deb1e032421edc14ef719",
+        "commit": "fcd4a3998af0000c04aff68ca82dc3bbbb913659",
+        "noticeId": "712284420447405348",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|4e394341e08d65b9de0d05cfb9231687f6eba43d11bbf24eedef14842a2ee128",
+        "commit": "fcd4a3998af0000c04aff68ca82dc3bbbb913659",
+        "noticeId": "711156617370927265",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|2e0700a9bfa14c3028274e9c5b36b4e46b9ba2be51ad71e134026481ee945f1a",
+        "commit": "fcd4a3998af0000c04aff68ca82dc3bbbb913659",
+        "noticeId": "706649847851123193",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|58b4ebf0674b6ccb1f6ee3017c7ec168106805e66e4bc00b3dff02c2513c76f8",
+        "commit": "fcd4a3998af0000c04aff68ca82dc3bbbb913659",
+        "noticeId": "693140950130622536",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|749541931aebeb85c5f3e0721655aa7b0320316b60b0e0f09a292f635fb0c17f",
+        "commit": "fcd4a3998af0000c04aff68ca82dc3bbbb913659",
+        "noticeId": "702145613257509311",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|2b6266e069868d285bb011cf6747ebd687ddc4a8c9a2f3ba43300bc994e14890",
+        "commit": "fcd4a3998af0000c04aff68ca82dc3bbbb913659",
+        "noticeId": "704396868946233232",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|e9d0f94af318fa20622a3b77e88fccd4049085937e6d908246532dae0420ddd9",
+        "commit": "fcd4a3998af0000c04aff68ca82dc3bbbb913659",
+        "noticeId": "704396868946232792",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|74f0ecbb0ae3e0a69a3dccf2b98d86c9848f8ace1d4bddefb01e44a6fc4c7e0e",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "667252863011914641",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|87587881d1b47fa4387eff6fc6a04d57919e45a739de2377c1e5ec3baa3be3e4",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "712284420447405348",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|c4b548cc1dd76708bcc5b37a5faeaeef34cb91fe58e9a17bdf4b83508609de77",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "711156617370927265",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|0d1dd2fac1f2b53e756219883d320eccbd69be00bf42b51ab5133250fdaf9e06",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "706649847851123193",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|8eab4d17ef851c7c6f826c09adc714e33b0108f2f6dc2c0c4cb0e27b26284f13",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "693140950130622536",
+        "format": "html"
+      },
+      {
+        "key": "zzz-steam-events-official|63225a5c584bcb89c7cef8632ece38f39df431f186f4d227c954b40cca036d9b",
+        "commit": "9488ecb3f578adb09b748600ac1cb58282724a88",
+        "noticeId": "702145613257509311",
+        "format": "html"
+      },
+      {
+        "key": "nte-steamnews-official|a3a9a612e73db74d0f5b29324dbeb4b41fb3e2687b854be5dd5aaeee3deb4f26",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1847920302241406",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|e19541be9bfc190f522dd28e945d8e5d96a5054926feba9d61e7098578394207",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1847920302233942",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|b12212b850e9a2a04696cd1d1e222c1c1360e9699c96526d0fca48106949f893",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1847286114035705",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|ab420f4587445dc8cf16053c2a29ed3ce00243c8350ccdf0d128cec9ec50eb4c",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1847286114031962",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|ef813f21275375d36efdbc33ce9319e9429ce8828a8742f4c1a71513b61efadd",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1847286114027833",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|57dcf072f591f91c6463c7b8d7a99069400d60b2985944270cf56f8da6efc5f5",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1846651706693892",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|5ee17b1ca64000b0fdbdfdfd5969ad6fca4d22ceabd5432a0ac296a3a503d767",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1846018067935498",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|f1fe8149efcbeaafa574fd2a1146fbf3e919472f281695ac2eebea7fdfab9186",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1846018067928196",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|4fb43810d39d1d55572037b1a95cd6dd02f16b41295372113d203c8e6f8567a8",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1845383656388326",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|12529132b99fc2a167df4bea1474342891c17dc16becedecaced5e1a2cee08e8",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1845383656380024",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|00bded73b3448ce381b24a3dceab7acfe52a1f9069f20e4cca3ba71dff5a0a9a",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1844751498233952",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|3627703c35b7966c5fa7144ea4a8d8d4f644c41d80319dcd215b9d037fe7d676",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1843481262703497",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|7db2cc26674a70679a289a86641e6d02c8712bf70b84a77bf07c3dd7067d7c59",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1843481262694451",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|f92ab2323825cc73b65569a25cb616171b5a90d5ccd0adfdd9d360642726c024",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1843481262688322",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|f1b5be9177bd220762962b78627ea85a69d894e3fea4e383ca4823fa60092219",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1842846814455151",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|7d48df16b753453ce003d94f757f4581fd4b504938cc4bca19c6fa7898f4d45f",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1842846814452584",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|d0509ce26f302752438aee9453355b39083cb3a13034c18742bdf95612bfa82e",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1842212951302471",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|f75fa461d5abb5905de6cb96dcb7adbf5f56604141ba781d9ccded90489f2d57",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1842212951296079",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|c49e48400315a6af00697faebf3fd3ef346f3c0556a0dfe841a5349d18bfa474",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1841579228667940",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|c72c301a8c85e8fbcbe61eda2f08d3ca139f9b02ecff97421bf87020c1e02c08",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1841579228664554",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|b3581d9118e98f397b2b2e6890c6cbfe230ff2a26f31caa45bbc28ffe30be188",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1841579228661424",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|f3b7bb75eac4fa3b277d7367309788bf74c470437a56a65cb60d63c0202eaacf",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1840944183787941",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|3937a64dd5cd7dcb9273d7d8bf4fa6f8e9465f58257123d51dd6f76df46d25db",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1840310314341073",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|4ee69ec747ebac1d2b9d69e316b80f89aefe60bd1533d5a89e97ad216f123a38",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1839676055884775",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|ff115c42ad39e46f5f43d215e5174983850a7c87dee283abb640588c75a57bc5",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1839041357037261",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|5a55bb0d8cc3ae67168844e62830ed6ee6200e9e7164c4f3c56956e0530daa8a",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1838407329258836",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|cd477f554a1fefc881080b6e640f49b631efaa560d618ff1b73afdf2377c77ae",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1837955055362579",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|671118e9cb6d83d7cd2a8b88d8adfa833941ff94753ddc0c40c48e80cc9e6f21",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1836506165582164",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|6c90a7652ea02b271fbb190594cf1e0bb483da8cfb7d9be56feed3c1191f2bb9",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1836506165577421",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|86828ec616048336023330372c2be2622afa7fb2de49ee6ca7ce02fa1bc6b20e",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1836506165556394",
+        "format": "bbcode"
+      },
+      {
+        "key": "nte-steamnews-official|dc0cc110b860e40800f98cc7beead56edf972ec234bd64ef2f625ce7fa33dbc3",
+        "commit": "7722978e8f60e685cb705e61b2e2cf65ffdcbd56",
+        "noticeId": "1833334318573778",
+        "format": "bbcode"
+      },
+      {
+        "key": "wuwa-kuro-mirror|3b081583f29e4d3a378ccc335cf6035d7975573abce0ee53c1d74653639ed5b0",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5668",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|435af2b838dcc8a947fe0400cfd9a3faf60a7b7c36f94994673eecdf674bf6bf",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5653",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|d9509c700ca57985d92c48bcd3e6db37765cde474b75ee0bf7059ff945d52e9a",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5644",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|8d11a77d95e812f7a67eaae5020bd4243e793216a22e1ddd073b787a5046e0ae",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5626",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|6dd596493f50325420c329604c173b898e9d6033b38e4f41df0405faa0133362",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5625",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|e665ed933879d88ce0dda1c627938758c59f99c65401fd258e0974a58c53e4a8",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5616",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|aad9ae5263ecfe0a01f9217d10915365f900aac537d2e0705802aaf672ee9856",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5615",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|c7391e71b86a59074a512b980326f51b44cc5d288862b8a35176407649e85cf5",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5608",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|a22613665929086f4d3ab38d14bc4b67eff84ee5fedaa664fc5bc234bd22f79e",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5607",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|489b01f3f11c0f9f5158c5c058be090c792ddc5f974f3bf1dcecf19e3582ab07",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5603",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|e53e71483bf75a9648b59d177b9eb854f6ec3a477b289b0e0992485df1366cbf",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5575",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|dcbbbd145119bf2bdc0190894cf6a30fab6f3705d1044c995f9045d42df7c44a",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5574",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|7fd32c179d3906d143a6e90cf3fc8eedd743ab0cee831917ec7c79a075ce54f3",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5573",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|8be33994ac05b0579a07d174898b7dbef9b24a6eea733dc7b19f6185c4aae175",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5571",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|fa50a5888ff198ce1afb1c9f8b28a5aa2813464eb8a31758cc566d6c9bcd4782",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5557",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|9335e7eb143b1db666aefbe64d7cbb905f72e30bd46b2c68697d9e2015d4d1c1",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5555",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|208bf21d60a314d8618e114ce881e06a1670092a5b7c959ce74773de3ef42b5f",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5546",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|66c1495fd875586c767eedeafa8d54b66f1f292da0a51e3075a7026b1df5248a",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5532",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|abc3716fa57cee3e2ec188085133cc94e100ffd0832b671d9c0e55a523675477",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5529",
+        "format": "html"
+      },
+      {
+        "key": "wuwa-kuro-mirror|2f422e688969dda10714356add47de62bb575e409362f6e283ec6310d3c6d1e0",
+        "commit": "794fb21d2f4ad8bc75a95a18314a6718198e814b",
+        "noticeId": "5521",
+        "format": "html"
+      }
+    ],
+    "diagnosticNoticeFrequencies": {
+      "active_content_omitted": 2,
+      "no_recognized_dates": 133,
+      "unresolved_date_expression": 70,
+      "unsupported_markup": 3
+    }
+  },
+  "allAvailableMainHistory": {
+    "opusWindow": false,
+    "main": "d867114001738817d9da72939b8b9a6045f4555e",
+    "reviewedHead": "b3b0ad36d6f3ff15212cc49164937eafc5e8ae98",
+    "codeCheckpoint": "e1c2e613ed8007bc42e3a25e24104b7f859cf584",
+    "method": "Every origin/main snapshot body revision -> extractArticleEvidence, dedupe by sourceId|contentHash. Title/content reads compared in full. Coverage uses each first-observed snapshot canonical parser outputs, no reviewed winners or artificial event removals. Only before/after delta is asserted, not historical repaired-state completeness.",
+    "versions": [
+      {
+        "sourceId": "genshin-kqm-ginews",
+        "snapshotCommits": 31,
+        "uniqueSnapshotBodies": 31,
+        "noticeRevisions": 74
+      },
+      {
+        "sourceId": "hsr-kqm-hsrnews",
+        "snapshotCommits": 19,
+        "uniqueSnapshotBodies": 19,
+        "noticeRevisions": 30
+      },
+      {
+        "sourceId": "zzz-steam-events-official",
+        "snapshotCommits": 19,
+        "uniqueSnapshotBodies": 19,
+        "noticeRevisions": 16
+      },
+      {
+        "sourceId": "nte-steamnews-official",
+        "snapshotCommits": 13,
+        "uniqueSnapshotBodies": 13,
+        "noticeRevisions": 31
+      },
+      {
+        "sourceId": "wuwa-kuro-mirror",
+        "snapshotCommits": 15,
+        "uniqueSnapshotBodies": 15,
+        "noticeRevisions": 44
+      }
+    ],
+    "uniqueNoticeRevisions": 195,
+    "formats": {
+      "bbcode": 31,
+      "html": 60,
+      "markdown": 104
+    },
+    "extractionFailures": 0,
+    "sourceQuoteParity": true,
+    "readerComparisons": 390,
+    "changedReaderOutputs": 0,
+    "changedCoverageRecords": 0,
+    "changedDiagnostics": 0,
+    "changedStatuses": 0,
+    "changedAttention": 0,
+    "frequencies": {
+      "markdownNotices": 104,
+      "markdownFences": 0,
+      "blockquote": 0,
+      "indentedCodeCandidate": 0,
+      "indentedListItem": 0,
+      "listMarkerFiveSpaces": 0,
+      "inlineBacktick": 0,
+      "htmlCodePre": 0,
+      "thematicBreak": 102,
+      "noticesWithLinks": 95,
+      "links": 148,
+      "httpDestinations": 148,
+      "nonHttpDestinations": 0,
+      "bbcodeUnsupportedContextCandidates": 0,
+      "htmlCodeQuoteCommentScriptStyle": 0
+    },
+    "newDiagnosticNoticeCount": 0,
+    "readerDiffs": [],
+    "coverageDiffs": [],
+    "readerShaBefore": "ccee5eb56646ecae08ded5a6e28047278327c06988a95cbe89b161c61967d6d2",
+    "readerShaAfter": "ccee5eb56646ecae08ded5a6e28047278327c06988a95cbe89b161c61967d6d2",
+    "coverageShaBefore": "5567048d4d743be98896a915978e32cd9ef71acb182c437a91315994f15383d3",
+    "coverageShaAfter": "5567048d4d743be98896a915978e32cd9ef71acb182c437a91315994f15383d3",
+    "diagnosticNoticeFrequencies": {
+      "active_content_omitted": 2,
+      "no_recognized_dates": 189,
+      "unresolved_date_expression": 84,
+      "unsupported_markup": 5
+    }
+  },
+  "regressionReproduction": {
+    "newOptionBTestsOnOldReader": {
+      "pass": 16,
+      "fail": 28
+    },
+    "correctedFocused": {
+      "pass": 214,
+      "fail": 0,
+      "assertions": 4322
+    },
+    "priorCounterexamples": 15,
+    "individuallyReviewedChangedExistingTests": 12,
+    "full": {
+      "pass": 1714,
+      "skip": 3,
+      "fail": 0
+    }
+  },
+  "counterexamples": {
+    "allSpansAndMatchesUnchanged": true,
+    "beforeConfidentProcessed": 22,
+    "beforeAlreadyUncertain": 6,
+    "afterUncertainWithAttention": 28,
+    "cases": [
+      {
+        "field": "title",
+        "destination": "2026-10-29T04:00Z",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "2026-10-29T04:00Z",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "archive/2030-10-31.md",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "archive/2030-10-31.md",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "2026/10/29",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "2026/10/29",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "29/10/2026",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "29/10/2026",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "2026-99-99",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "2026-99-99",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "<October 29, 2026>",
+        "before": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:malformed_markup",
+            "title:unsupported_markup"
+          ]
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:malformed_markup",
+            "title:masked_date_like_destination",
+            "title:unsupported_markup"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "<October 29, 2026>",
+        "before": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:malformed_markup",
+            "content:unsupported_markup"
+          ]
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:malformed_markup",
+            "content:masked_date_like_destination",
+            "content:unsupported_markup"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "<29 October 2026>",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "<29 October 2026>",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "<October 29>",
+        "before": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:malformed_markup",
+            "title:unsupported_markup"
+          ]
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:malformed_markup",
+            "title:masked_date_like_destination",
+            "title:unsupported_markup"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "<October 29>",
+        "before": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:malformed_markup",
+            "content:unsupported_markup"
+          ]
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:malformed_markup",
+            "content:masked_date_like_destination",
+            "content:unsupported_markup"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "2026-10-",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "2026-10-",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "04:00",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "04:00",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "TBD",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "TBD",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "TBA",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "TBA",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "tomorrow",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "tomorrow",
+        "before": {
+          "status": "processed",
+          "evaluation": "complete",
+          "attention": false,
+          "diagnostics": []
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:masked_date_like_destination"
+          ]
+        }
+      },
+      {
+        "field": "title",
+        "destination": "<after the Version 6.0 update>",
+        "before": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:malformed_markup",
+            "title:unsupported_markup"
+          ]
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "title:malformed_markup",
+            "title:masked_date_like_destination",
+            "title:unsupported_markup"
+          ]
+        }
+      },
+      {
+        "field": "content",
+        "destination": "<after the Version 6.0 update>",
+        "before": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:malformed_markup",
+            "content:unsupported_markup"
+          ]
+        },
+        "after": {
+          "status": "partially processed",
+          "evaluation": "uncertain",
+          "attention": true,
+          "diagnostics": [
+            "content:malformed_markup",
+            "content:masked_date_like_destination",
+            "content:unsupported_markup"
+          ]
+        }
+      }
+    ]
+  },
+  "notes": [
+    "Historical window uses latest 10/5/17/3/1 snapshot bodies as listed in Opus memo; 59/13/16/31/20 unique source revisions and 72/36/31 formats independently reproduced. Committed inventory identifies each revision. All 195 available history revisions additionally compared, covering earlier history beyond that window.",
+    "Coverage delta replays historical canonical parser output, not historical reviewed winners. Current report separately reuses identical complete final-event and sidecar inputs. No source fetched.",
+    "Real Starlight October29 floating-clock cutoff preserved, but main-only and both-events real-text scenarios remain partial/uncertain without verified offsets. Discrimination is demonstrated only by the explicit-UTC synthetic analogue."
+  ]
+}

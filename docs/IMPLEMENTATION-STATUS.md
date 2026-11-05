@@ -1,3 +1,55 @@
+## C1a.1 — FINAL BOUNDED OPTION B IMPLEMENTED, INDEPENDENT CLOSURES PENDING (2026-11-05)
+
+[Operator decision](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6647933853)
+approves Option B and the explicit Starlight limitation for C1a.1 only.
+Reviewed head `b3b0ad36d6f3ff15212cc49164937eafc5e8ae98`; starting main
+`3b5c8827c2dbd4783dadbcda210937299433bbcc` advanced to
+`d867114001738817d9da72939b8b9a6045f4555e` (frozen test repairs and future-workflow
+policy). Normal merge `e1c2e613ed8007bc42e3a25e24104b7f859cf584` was conflict-free;
+main-only files are excluded from the PR diff. Checks/parity repeated after merge.
+No source inputs changed. PR161 stays open.
+[Implementation and individually reviewed expectations](evidence/notice-coverage-c1a1-option-b-2026-11-05.md):
+the existing bounded Markdown destination loop reuses recognized/unresolved date
+patterns to diagnose non-HTTP(S) date-like destinations before masking. The
+stable `masked_date_like_destination` diagnostic reaches title/content consumers,
+forces uncertain evaluation and attention, without inventing a span/instant.
+Container/fence logic, canonical parsers, matching/status, CLI and baseline remain
+unchanged. No CommonMark rewrite/dependency, source refresh or later milestone.
+
+New authored file on old reader: **16 pass / 28 fail**. Full-notice replay shows
+22 formerly processed/complete/no-attention rows now partial/uncertain/attention;
+six already-uncertain rows gain the specific diagnostic. All spans/matches are
+unchanged. Fifteen prior P1-C counterexamples remain safe. Twelve synthetic
+positive-control expectations now require uncertainty for non-URL date metadata;
+original safety/quote/instant assertions remain. HTTP(S), dated image URLs,
+ordinary supported notices and covered exact code dates remain usable.
+
+[Real-input comparison](evidence/notice-coverage-c1a1-option-b-report-2026-11-05.json)
+reproduces Opus's **139-revision** window and additionally compares all **195**
+available main-history revisions. No reader/diagnostic/status/attention changes;
+all 110 Markdown links in the Opus window are HTTP(S), with zero guard-triggering
+or code/container constructs. Current report remains byte-identical: 101 notices,
+714 spans, 699 unmatched; 20 partial / 44 unprocessed / 37 unclassified;
+99 uncertain / 2 complete; all 101 need attention. No forced distribution.
+
+**Accepted limitation:** real frozen Starlight retains the October29 cutoff,
+but both main-only and both-event real-text scenarios stay partial/uncertain
+without verified server-time context. Discriminative missing/fixed behavior is
+proved only by the separately authored explicit-UTC analogue. No server offsets,
+missing-year inference or version anchors are introduced. Real-text discrimination
+is a gate for later context-resolution work, not a claim made by C1a.1 or C2.
+
+All required local commands pass: **214 focused**, full **1714 pass / 3 existing
+optional age skips / 0 fail**. [Fixed-clock parity](evidence/notice-coverage-c1a1-option-b-parity-2026-11-05.json)
+verifies 10/10 public files, 296 events/153 reviewed winners and the entire
+E1/C0/C1a.0 sidecar unchanged against current main. All **113 baseline identities
+and exact bytes** are preserved. Exact final head and successful hosted CI with
+PG17 concurrency/mandatory encrypted recovery are recorded in PR161 after push.
+**Next:** Opus focused Option-B closure → Astra final closure → operator-authorized
+merge. Do not merge or begin C1b/C2, Daily Passes or another milestone.
+
+---
+
 ## C1a.1 — FINAL MAIN INTEGRATION, OPUS CLOSURE PENDING (2026-11-05)
 
 Current main advanced to `3b5c8827c2dbd4783dadbcda210937299433bbcc` during the
