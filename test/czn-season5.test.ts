@@ -39,7 +39,8 @@ test("Celestial Bulwark unlocks stay in one seasonal card and do not redefine th
 });
 
 test("healthy banner-only source omits the seasonal families; reviewed rescue keeps all prior winners and conflicts",async()=>{
- const parsed=parsePrydwenCzn(await Bun.file("snapshots/czn-prydwen-banners.html").text(),{game:"czn",sourceId:"czn-prydwen-banners",sourceUrl:"https://www.prydwen.gg/chaos-zero-nightmare/banners",now:"2026-10-28T21:00:00.000Z"});
+ // Pin historical merge invariants to the ten-card Oct 22 capture; live snapshots naturally lose expired banners.
+ const parsed=parsePrydwenCzn(await Bun.file("test/fixtures/czn/verified-banners-2026-10-22.html").text(),{game:"czn",sourceId:"czn-prydwen-banners",sourceUrl:"https://www.prydwen.gg/chaos-zero-nightmare/banners",now:"2026-10-28T21:00:00.000Z"});
  expect(parsed).toHaveLength(10);expect(parsed.every(e=>e.type==="banner")).toBe(true);
  const before=mergeEvents([reviewed.filter(e=>!ids.includes(e.id)),parsed]);
  for(const groups of [[reviewed,parsed],[parsed,reviewed,cards]]){
