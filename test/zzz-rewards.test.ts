@@ -24,10 +24,11 @@ test('issue-fix claim is one fixed UTC+8 instant, with sourced eligibility and n
  for(const r of Region.options)assertExactBoundary(e,r,'2026-11-20T15:59:00.000Z');
  expect(rewards).toHaveLength(2);
 });
+// Exact 43/20 counts are pinned to the Oct 28 captures; rolling snapshots legitimately turn over.
 test('healthy restricted source families omit rewards; reviewed rescue preserves every prior winner',async()=>{
  const ctx={game:'zzz' as const,now:'2026-10-28T12:00:00.000Z'};
- const steam=parseZzzSteamRss(await Bun.file('snapshots/zzz-steam-events-official.xml').text(),{...ctx,sourceId:'zzz-steam-events-official',sourceUrl:ZZZ_STEAM_RSS_URL});
- const banners=parseZzzBannerRss(await Bun.file('snapshots/zzz-zenlessgg-banners.json').text(),{...ctx,sourceId:ZZZ_BANNER_SOURCE_ID,sourceUrl:ZZZ_BANNER_RSS_URL});
+ const steam=parseZzzSteamRss(await Bun.file('test/fixtures/zzz/steam-rss-2026-10-28.xml').text(),{...ctx,sourceId:'zzz-steam-events-official',sourceUrl:ZZZ_STEAM_RSS_URL});
+ const banners=parseZzzBannerRss(await Bun.file('test/fixtures/zzz/banner-rss-2026-10-28.json').text(),{...ctx,sourceId:ZZZ_BANNER_SOURCE_ID,sourceUrl:ZZZ_BANNER_RSS_URL});
  expect(steam).toHaveLength(43);expect(banners).toHaveLength(20);expect([...steam,...banners].some(e=>ids.includes(e.id))).toBe(false);
  const before=mergeEvents([reviewed.filter(e=>!ids.includes(e.id)),steam,banners]);
  const after=mergeEvents([reviewed,steam,banners,rewards]);
