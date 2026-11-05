@@ -1,3 +1,566 @@
+## C1a.1 — FINAL BOUNDED OPTION B IMPLEMENTED, INDEPENDENT CLOSURES PENDING (2026-11-05)
+
+[Operator decision](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6647933853)
+approves Option B and the explicit Starlight limitation for C1a.1 only.
+Reviewed head `b3b0ad36d6f3ff15212cc49164937eafc5e8ae98`; starting main
+`3b5c8827c2dbd4783dadbcda210937299433bbcc` advanced to
+`d867114001738817d9da72939b8b9a6045f4555e` (frozen test repairs and future-workflow
+policy). Normal merge `e1c2e613ed8007bc42e3a25e24104b7f859cf584` was conflict-free;
+main-only files are excluded from the PR diff. Checks/parity repeated after merge.
+No source inputs changed. PR161 stays open.
+[Implementation and individually reviewed expectations](evidence/notice-coverage-c1a1-option-b-2026-11-05.md):
+the existing bounded Markdown destination loop reuses recognized/unresolved date
+patterns to diagnose non-HTTP(S) date-like destinations before masking. The
+stable `masked_date_like_destination` diagnostic reaches title/content consumers,
+forces uncertain evaluation and attention, without inventing a span/instant.
+Container/fence logic, canonical parsers, matching/status, CLI and baseline remain
+unchanged. No CommonMark rewrite/dependency, source refresh or later milestone.
+
+New authored file on old reader: **16 pass / 28 fail**. Full-notice replay shows
+22 formerly processed/complete/no-attention rows now partial/uncertain/attention;
+six already-uncertain rows gain the specific diagnostic. All spans/matches are
+unchanged. Fifteen prior P1-C counterexamples remain safe. Twelve synthetic
+positive-control expectations now require uncertainty for non-URL date metadata;
+original safety/quote/instant assertions remain. HTTP(S), dated image URLs,
+ordinary supported notices and covered exact code dates remain usable.
+
+[Real-input comparison](evidence/notice-coverage-c1a1-option-b-report-2026-11-05.json)
+reproduces Opus's **139-revision** window and additionally compares all **195**
+available main-history revisions. No reader/diagnostic/status/attention changes;
+all 110 Markdown links in the Opus window are HTTP(S), with zero guard-triggering
+or code/container constructs. Current report remains byte-identical: 101 notices,
+714 spans, 699 unmatched; 20 partial / 44 unprocessed / 37 unclassified;
+99 uncertain / 2 complete; all 101 need attention. No forced distribution.
+
+**Accepted limitation:** real frozen Starlight retains the October29 cutoff,
+but both main-only and both-event real-text scenarios stay partial/uncertain
+without verified server-time context. Discriminative missing/fixed behavior is
+proved only by the separately authored explicit-UTC analogue. No server offsets,
+missing-year inference or version anchors are introduced. Real-text discrimination
+is a gate for later context-resolution work, not a claim made by C1a.1 or C2.
+
+All required local commands pass: **214 focused**, full **1714 pass / 3 existing
+optional age skips / 0 fail**. [Fixed-clock parity](evidence/notice-coverage-c1a1-option-b-parity-2026-11-05.json)
+verifies 10/10 public files, 296 events/153 reviewed winners and the entire
+E1/C0/C1a.0 sidecar unchanged against current main. All **113 baseline identities
+and exact bytes** are preserved. Exact final head and successful hosted CI with
+PG17 concurrency/mandatory encrypted recovery are recorded in PR161 after push.
+**Next:** Opus focused Option-B closure → Astra final closure → operator-authorized
+merge. Do not merge or begin C1b/C2, Daily Passes or another milestone.
+
+---
+
+## C1a.1 — FINAL MAIN INTEGRATION, OPUS CLOSURE PENDING (2026-11-05)
+
+Current main advanced to `3b5c8827c2dbd4783dadbcda210937299433bbcc` during the
+three P1-C corrections' validation. It merges the accepted CZN historical test
+repair (PR164). Normal merge `d062771fa145d6ed3189bf7bcd49f21a0874019a` resolves
+only the duplicate comment conflict by adopting main's exact test file; fixture
+path and every assertion remain unchanged. The CZN test is no longer in PR161's
+file diff. No source inputs, parser or UI behavior changed in this integration.
+
+All required commands pass again after merge: frozen install/typecheck/full
+build/feed/report; **1670 pass / 3 existing optional age skips / 0 fail**.
+[Final current-main parity](evidence/notice-coverage-c1a1-fences-integration-parity-2026-11-05.json)
+verifies all ten public files and the complete E1/C0/C1a.0 sidecar against 3b5c882.
+Input/public/canonical/evidence/report hashes equal the original fcd4a39 replay;
+all 113 baseline identities/bytes remain intact. [Correction details and original checkpoints](evidence/notice-coverage-c1a1-fences-2026-11-05.md)
+remain preserved. Final pushed head and successful exact-head PG17/encrypted
+recovery CI are recorded in PR161. **Next:** Opus focused closure of the three
+P1-C cases on that exact integrated head, then Astra closure. Do not merge or
+start C1b/C2, Daily Passes or another milestone.
+
+---
+
+## C1a.1 — REMAINING BLOCK-STATE/FENCE P1-C CORRECTED, OPUS CLOSURE PENDING (2026-11-05)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+[Accepted triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6646804310)
+reviewed `83691de83b1b76550631829d7bc0db315acac308`. CURRENT main remains
+`fcd4a3998af0000c04aff68ca82dc3bbbb913659`, already integrated; no merge/refresh.
+[Corrections, replays and semantic controls](evidence/notice-coverage-c1a1-fences-2026-11-05.md):
+blank lines expire absent quote frames/descendants; lazy paragraph lines retain
+ancestry for interruption decisions; fences use physical container/line syntax,
+marker lengths and whitespace-only closers, separately from inline code spans.
+A wrong-container run cannot close a fence. Unclosed fences keep literal dates
+and explicit uncertainty. No full renderer/dependency; P1-A/P1-B/P2-D, CZN repair,
+matching/status engine, baseline/ignore, CLI and prior thematic fixes unchanged.
+
+Reviewed-reader final regression file: **105 pass / 16 fail**; corrected focused
+set **170 pass / 3621 assertions**. Independent Pandoc/CommonMark comparisons
+cover 32 authored controls (verification only, not a dependency). Previous
+positive controls remain. The closed-fence uncertainty row moves to explicit
+code-boundary controls with stronger exact/unmatched assertions. Every synthetic
+and actual quote retains original UTF-16 slice parity. Required local commands
+pass; full suite **1670 pass / 3 existing optional age skips / 0 fail** (1673 tests,
+97 files). [Fresh parity](evidence/notice-coverage-c1a1-fences-parity-2026-11-05.json)
+matches all 10 public files, 296 events / 153 reviewed winners, Timeline/conflicts
+and complete E1/C0/C1a.0 sidecar (eight E1 hashes, inventories, attributions,
+diagnostics/refusals). All 113 baseline identities and bytes remain unchanged.
+
+[Same-input report replay](evidence/notice-coverage-c1a1-fences-report-2026-11-05.json)
+is byte-identical to the reviewed reader: 101 notices / 714 spans / 699 unmatched,
+20 partial / 44 unprocessed / 37 unclassified, evaluation 99 uncertain / 2 complete,
+82 current baseline members. SHA remains f563207a…; no forced distribution or
+invented rolling example. Exact missing literals in the first two cases now give
+partial/complete/attention; the unclosed-root-fence case is partial/uncertain/attention.
+Final head and exact-head PG17/encrypted-recovery CI results are recorded in PR161.
+**Next:** Opus focused closure on the exact new head, then Astra final closure.
+Do not merge or begin C1b/C2, Daily Passes or another milestone.
+
+---
+
+## C1a.1 — THEMATIC/WEAK-LIST P1-C CORRECTED, SONNET CLOSURE PENDING (2026-11-05)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+[Coordinator triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6645320287)
+reviewed `bf0139042fb3c45571e4f830d85c14f6671ca0eb`. CURRENT main
+`fcd4a3998af0000c04aff68ca82dc3bbbb913659` merged cleanly via normal merge
+`c12fe17d03734218e324690f80a7afea1a684936`; refreshed snapshots are inherited,
+not refreshed by this task. [Local correction and semantic evidence](evidence/notice-coverage-c1a1-block-state-2026-11-05.md)
+recognize relative thematic breaks before new list markers, expire truly empty
+item frames across blanks and reject empty/non-1 ordered paragraph interruptions.
+Valid nonempty lists, genuine links, quote/list nesting, tabs and continuations
+remain covered. The existing bounded probe is extended without a full parser,
+new dependency or changes to P1-A/P1-B/P2-D, CZN recovery, CLI or matching engine.
+
+Reviewed reader: **86 pass / 18 fail** in final authored regression file;
+corrected focused set: **153 pass / 3087 assertions**. All previous positive
+controls remain; a recognized `---` boundary moves from uncertainty-only fallback
+to explicit complete code controls, retaining unmatched/attention assertions.
+32 independently rendered Pandoc/CommonMark controls verify code/link semantics;
+Pandoc is verification-only, not a dependency. Required local checks pass; full
+suite **1653 pass / 3 existing optional age skips / 0 fail** (1656 tests, 97 files).
+[Fresh parity](evidence/notice-coverage-c1a1-block-state-parity-2026-11-05.json)
+matches all 10 public files, 296 events / 153 reviewed winners, Timeline/conflicts
+and the entire E1/C0/C1a.0 sidecar (eight E1 hashes, inventories, attributions,
+diagnostics/refusals). All 113 baseline identities and bytes remain unchanged.
+
+[Three-way report evidence](evidence/notice-coverage-c1a1-block-state-report-2026-11-05.json)
+shows old/new readers byte-identical on current inputs: 101 notices / 714 spans /
+699 unmatched, 20 partial / 44 unprocessed / 37 unclassified, evaluation 99 uncertain /
+2 complete. Six refreshed ZZZ content identities again match preserved baseline,
+so current members rise 76 → 82; no reinitialization. Report SHA 003a4cdb… → f563207a…
+reflects refreshed inputs/capture metadata only. All actual/synthetic source
+quotes retain UTF-16 slice parity. Final exact-head PG17/encrypted-recovery CI
+results are recorded in PR161. **Next:** Sonnet focused block-state closure on
+that exact head, then Astra final closure. Do not merge or begin C1b/C2,
+Daily Passes or another milestone.
+
+---
+
+## C1a.1 — CONTAINER-PREFIXED P1-C CORRECTED, CLOSURE REVIEW PENDING (2026-11-05)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+[Focused finding](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6642256602)
+reviewed `e60ec30b4432c880db7be1b6d963f656f77451aa`. CURRENT main remains
+`9488ecb3f578adb09b748600ac1cb58282724a88`, already integrated; no merge/refresh.
+[Correction, context distinctions and regressions](evidence/notice-coverage-c1a1-containers-2026-11-05.md)
+use a bounded quote/list-prefix and relative-indent probe before link masking.
+Tabs, marker padding, list continuations, blank container lines and dedents keep
+literal dates visible while genuine paragraph/quote/item links remain metadata.
+Ambiguous transitions keep explicit uncertainty; depth beyond 16 prefixes is
+incomplete with attention. Original UTF-16 mapping is preserved. No full
+CommonMark parser or new dependency; P1-A/P1-B/P2-D and CZN recovery unchanged.
+
+Reviewed-reader final regression file: **71 pass / 13 fail**; corrected focused
+set **133 pass / 2453 assertions**. The earlier ambiguous four-physical-space
+list row is now an explicit prose-link positive: only two spaces remain after
+list padding. Independent negative code, exact covered-date, nested/container,
+transition, inline/fenced/HTML, whitespace and depth controls pass. Required
+local checks pass; full suite **1633 pass / 3 existing optional age skips / 0 fail**
+(1636 tests, 97 files). [Fresh parity](evidence/notice-coverage-c1a1-containers-parity-2026-11-05.json)
+matches all 10 public files, 296 events / 153 reviewed winners, Timeline/conflicts
+and the complete E1/C0/C1a.0 sidecar (eight E1 hashes, inventories, attributions,
+diagnostics/refusals). All 113 baseline identities and bytes remain intact.
+
+[Same-input report comparison](evidence/notice-coverage-c1a1-containers-report-2026-11-05.json)
+is byte-identical to the reviewed reader: 101 notices / 714 spans / 699 unmatched;
+20 partial / 44 unprocessed / 37 unclassified, evaluation 99 uncertain / 2 complete,
+76 current baseline members. SHA remains 003a4cdb…; no rolling example or output
+distribution is invented/forced. Reported synthetic cases now retain the exact
+missing deadline as partial/complete/attention required. Final head and exact-head
+PG17/encrypted-recovery CI results are recorded in PR161. **Next:** one focused
+independent container-class P1-C closure on the exact new head. Do not merge or
+begin C1b/C2, Daily Passes or another milestone.
+
+---
+
+## C1a.1 — TWO FINAL ASTRA BLOCKERS CORRECTED, CLOSURE REVIEW PENDING (2026-11-04)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+[Coordinator triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6591342430)
+reviewed `dc2e49eef6d739dedbed056a1d97fc624fa8e4cc`. CURRENT main
+`9488ecb3f578adb09b748600ac1cb58282724a88` merged normally without conflicts
+(`f45564df08dbe2f1e4eb67351de24b01341ec8ee`); its refreshed inputs and Timeline
+labels are inherited unchanged. No source refresh was performed.
+
+[Corrections, counterexamples and validation](evidence/notice-coverage-c1a1-two-blockers-2026-11-04.md):
+P1-B validates raw timezone wrappers before removing one supported outer pair;
+embedded/unmatched parentheses cannot normalize into offsets or be trimmed away.
+P1-C protects four-space/tab code before Markdown destination masking, tracks
+blank/dedent/paragraph transitions and diagnoses ambiguous block-marker contexts.
+Exact missing literals remain unmatched with partial/complete/attention; malformed
+timezones have null instants/offsets and partial/uncertain/attention. Positive
+wrappers, offsets, punctuation, ranges and code/link contexts remain covered.
+P1-A/P2-D, matching/status, baseline/ignore and CLI behavior remain unchanged.
+
+Final authored tests on reviewed reader: **56 pass / 12 fail**; corrected focused
+set: **117 pass / 1951 assertions**. A concrete unrelated current-main blocker was
+also reproduced: historical CZN test expects ten banners from a now-eight-card
+rolling snapshot. Minimal separate recovery reuses an existing historical fixture
+whose full parsed ten-event array equals the original test-authoring snapshot;
+only input path/comment change, every assertion remains. No new fixture/capture.
+Required local gates pass; full suite **1617 pass / 3 existing optional age skips /
+0 fail** (1620 tests, 97 files). [Fresh parity](evidence/notice-coverage-c1a1-two-blockers-parity-2026-11-04.json)
+against new main matches all 10 public files, 296 events / 153 reviewed winners,
+Timeline/conflicts and complete E1/C0/C1a.0 sidecar (eight E1 hashes, inventories,
+attributions, diagnostics/refusals). All 113 baseline identities/bytes remain.
+
+[Three-way report replay](evidence/notice-coverage-c1a1-two-blockers-report-2026-11-04.json):
+reviewed/corrected readers give identical bytes on new inputs. Input turnover
+(four Genshin additions, 24 Genshin/one HSR removals) changes 122 → 101 notices,
+774 → 714 spans, 759 → 699 unmatched. Current status: 20 partial / 44 unprocessed /
+37 unclassified; evaluation 99 uncertain / 2 complete. Current baseline members
+100 → 76 solely through inputs, without altering the stored 113 identities.
+Report hash 20fbc663… → 003a4cdb… reflects inputs, not forced distributions.
+Final head and exact-head PG17/encrypted-recovery CI results are recorded in PR161.
+**Next:** focused independent closure of these two findings on the exact new head.
+Do not merge or begin C1b/C2, Daily Passes or another milestone.
+
+---
+
+## C1a.1 — FINAL P1-B TOKEN BOUNDARY CORRECTED, CLOSURE REVIEW PENDING (2026-11-03)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+[Focused triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6589469457)
+reviewed `27e3afe05c8763546995cf9f02caa465d88d3aa9`; P1-A/P1-C/P2-D are independently
+confirmed fixed and unchanged. CURRENT main remains
+`dba863d373a3e50c9dce32fc45e2dda178adc460`, already integrated; no refresh or merge.
+
+[Counterexamples, local correction and test evidence](evidence/notice-coverage-c1a1-token-boundary-2026-11-03.md):
+the five `<5 >5 ~5 –5 —5` continuations formerly produced a trusted exact prefix
+and false processed/complete/no-attention. Now full malformed quotes remain
+unresolved, with null instants and partial/uncertain/required attention. The local
+scan no longer stops solely on punctuation; dated range context distinguishes
+real separators. Positive sentence punctuation, explicit UTC/ISO offsets,
+whitespace prose, ranges and three-format projection remain tested. No changes
+to markup/code contexts, BBCode/fragment policy, matching/status engine or guard.
+
+Reviewed-reader reproduction: **49 pass / 6 fail** (five counterexamples plus
+an 18-case letter/digit boundary matrix). After correction: **104 focused tests /
+1527 assertions pass**. Required frozen install, typecheck, full build, feed build
+and report pass. Full suite: **1604 pass / 3 existing optional age skips / 0 fail**
+(1607 tests, 97 files). All reader/coverage quote mappings retain raw UTF-16 slices.
+[Fresh parity](evidence/notice-coverage-c1a1-token-boundary-parity-2026-11-03.json)
+verifies all 10 public files and complete E1/C0/C1a.0 sidecar against current main,
+including inventories, attributions, diagnostics/refusals and eight E1 hashes;
+292 events / 153 reviewed winners / Timeline/conflicts match. All 113 baseline
+identities and exact bytes remain intact; no public/canonical/reviewed/workflow
+or source snapshot change.
+
+[Identical-input rolling delta](evidence/notice-coverage-c1a1-token-boundary-report-2026-11-03.json):
+two historical NTE en-dash clock ranges are retained whole with both times visible,
+so spans 776 → 774 and unmatched 761 → 759. No offset/end is inferred; instants,
+matching and all other notice fields stay unchanged. Report remains 122 notices,
+18 partial / 64 unprocessed / 40 unclassified, evaluation 120 uncertain / 2 complete.
+Repeated new output matches; hash changes 90c1cc97… → 20fbc663… for this documented
+reader correction, not changed inputs. Final pushed head and exact-head CI results
+including PG17/mandatory encrypted recovery are recorded in PR161.
+
+**Next concrete step:** one focused independent P1-B closure review on the exact
+new head. CI is not review approval. Keep PR161 unmerged; do not start C1b/C2,
+Daily Passes or another milestone.
+
+---
+
+## C1a.1 — RESIDUAL ASTRA P1 CORRECTED, CLOSURE REVIEW PENDING (2026-11-02)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+[DeepSeek triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6580700179)
+reviewed `a044be733e8b6226665a1d26139521e68fb162c7`. CURRENT main
+`dba863d373a3e50c9dce32fc45e2dda178adc460` was integrated by a normal,
+conflict-free merge (`eacaff50d538d2708358ba603366be875bc71612`); no source refresh
+was performed. Snapshots and the already-merged CI-RECOVERY files are absent
+from the final PR diff against new main.
+
+[Counterexamples, bounded recognition policy and validation](evidence/notice-coverage-c1a1-residual.md):
+parameterized color/font/size BBCode exposes inline dates without treating
+ordinary bracketed prose as tags; adjacent recognizable date fragments across
+nearby blocks gain explicit uncertainty without an assembled date; timezone
+punctuation followed by digits cannot certify a valid prefix; literal backtick
+and HTML code contexts keep visible dates out of Markdown destination masking.
+Legitimate styles, exact offsets/punctuation, real links, URL metadata and raw
+UTF-16 quote offsets remain tested. P2-D's existing realpath/separator/case/wx
+guard is unchanged and its real-symlink regressions pass.
+
+Final authored regression file on the old reader: **28 pass / 18 fail**; after
+correction, **95 focused tests / 966 assertions pass**. Frozen install,
+typecheck, build, separate feed build and deterministic report pass. Full suite:
+**1595 pass / 3 existing optional age skips / 0 fail** (1598 tests, 97 files).
+[Fixed-clock parity against new main](evidence/notice-coverage-c1a1-residual-parity-2026-11-02.json)
+passes all 10 public files and the entire E1/C0/C1a.0 sidecar, including eight E1
+entries/hashes, inventories, attributions, diagnostics/refusals; 292 canonical
+events, 153 reviewed winners and Timeline/conflict outputs match.
+
+[Three-way report replay](evidence/notice-coverage-c1a1-residual-report-2026-11-02.json)
+separates inputs from code: old/new readers produce identical bytes on refreshed
+inputs. Inventory changes 106 → 122 notices (16 Genshin additions), 725 → 776 spans,
+710 → 761 unmatched. Status: 18 partial / 64 unprocessed / 40 unclassified /
+0 processed or ignored. Evaluation: 120 uncertain / 2 complete / 0 incomplete.
+All 113 baseline identities and exact bytes remain unchanged; six revised ZZZ
+notices correctly lose baseline membership (106 → 100 current members).
+Report SHA changes solely with refreshed inputs (4943adbb… → 90c1cc97…).
+No actual rolling uncertainty/span/status change is attributable to this reader
+correction; independently authored counterexamples establish the fixes.
+
+Final pushed head and exact-head CI results including PG17/mandatory encrypted
+recovery are recorded in PR161. Complete evaluation describes reading, not
+coverage: an exact missing code-context deadline is partial with required
+attention even when completely read. No engine/status redesign, source snapshot,
+canonical ID/date/provenance/precision, reviewed precedence, Timeline, Account
+Sync, workflow or public schema change. **Next concrete step:** focused independent
+closure review on the exact new head. Do not merge or begin C1b/C2, Daily Passes
+or another milestone.
+
+---
+
+## C1a.1 — FINAL ASTRA FOUR-CASE CORRECTIONS, RE-REVIEW PENDING (2026-11-02)
+
+Existing [PR #161](https://github.com/maxvfk/game-calendar/pull/161), unmerged.
+Starting CURRENT main `51bcb01dd50539bcf9351b6a8088ced89ad16028`; reviewed head
+`475719dfecbc4f07840a67e4cdc1e1a0efedc6db`;
+[audit triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6576548728).
+[Fixes, synthetic regression provenance, report changes and review handoff](evidence/notice-coverage-c1a1-astra.md).
+
+Initial reproductions: **3 pass / 19 fail**. P1-A now projects supported inline
+Markdown/HTML/BBCode formatting through raw UTF-16 mapping and keeps blocks
+separate, with explicit uncertainty for unsupported syntax/limits. P1-B validates
+an entire adjacent timezone token before a trusted instant, preserving legitimate
+offsets and clock-range/missing-offset uncertainty. P1-C masks genuine Markdown
+destinations only in Markdown; non-link bracketed prose stays visible. P2-D
+checks the existing output parent's real path in both baseline write modes,
+retaining B1 case/separator checks and exclusive wx creation. Real Linux symlink
+negatives and valid internal-alias controls pass. No speculative concurrent
+filesystem hardening or unrelated quality fix was introduced.
+
+Frozen install/typecheck/build/feed/report pass; **74 focused tests** and full
+**1574 pass / 3 existing optional age skips / 0 fail** (1577 tests, 97 files).
+Negative reader AND notice-level cases cannot report processed/complete/no
+attention; correctly formed exact-offset positives still match. Every synthetic
+and actual report span was checked against its original UTF-16 quote slice.
+[Fresh public and complete evidence parity](evidence/notice-coverage-c1a1-astra-parity-2026-11-02.json)
+against main: all 10 public files, 292 events / 153 reviewed winners / conflict,
+Timeline and entire E1/C0/C1a.0 sidecar (eight E1 entries/hashes, inventories,
+attributions, diagnostics/refusals) identical. All 113 baseline identities and
+exact file bytes remain unchanged, including the seven absent Genshin notices.
+
+[Observed report delta](evidence/notice-coverage-c1a1-astra-report-delta-2026-11-02.json):
+106 notices / 725 spans / 710 unmatched; status remains 18 partial / 50 unprocessed /
+38 null attention / 0 processed/ignored; evaluation 104 uncertain / 2 complete /
+0 incomplete. Eight quote/ref bounds in four notices change at correct block
+boundaries, without parsed-value/matching changes. One existing unclosed Markdown
+fiction-note emphasis gains explicit unsupported-markup attention. Thus the report
+hash legitimately changes (686ef04c… → 4943adbb…), while repeated new reports match.
+No old distribution or historical evidence record was forced or rewritten.
+
+Only reader/CLI guard, related regressions and factual evidence/docs changed;
+canonical generation, snapshots, IDs/provenance/precision, reviewed precedence,
+C0/E1/C1a.0 contracts, Timeline and Account Sync remain untouched. Final exact-head
+CI including PG17 and mandatory encrypted recovery is recorded in PR161.
+**Next concrete step:** focused Sonnet/DeepSeek four-case re-review on the new
+exact head, then focused Astra closure. CI is not review approval. Do not merge
+or begin C1b/C2, Daily Passes or other milestones.
+
+---
+
+## C1a.1 — B1 PORTABLE OUTPUT GUARD CORRECTED, READY FOR FINAL ASTRA (2026-11-02)
+
+[PR #161](https://github.com/maxvfk/game-calendar/pull/161) remains unmerged on
+`coverage/c1a1-deterministic`, based on CURRENT main
+`51bcb01dd50539bcf9351b6a8088ced89ad16028`. Reviewed predecessor:
+`288f7e9ac40b2d18546d2de131e4e51a5edb898e`;
+[DeepSeek B1 triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6575642896).
+Only B1 was changed: the two CLI write modes share one resolved-output guard
+that checks both separator conventions and compares `public` components without
+case sensitivity. Valid internal destinations and the existing `open(...,"wx")`
+behavior are unchanged. No coverage-engine or unrelated quality change.
+
+Both mode regressions failed before correction and now pass on Linux with
+simulated Windows syntax: nine prohibited forms per mode (relative, drive,
+UNC, mixed separators, POSIX absolute and capitalization) reject with the guard
+error and no output file. Native internal work/publicity paths succeed; repeated
+writes fail and leave bytes unchanged. Native Windows execution was not performed.
+
+Required local gates pass: frozen install, typecheck, **3 CLI regressions / 49
+focused coverage tests**, full **1549 pass / 3 existing optional age skips /
+0 fail** (1552 tests, 96 files), full builds, separate feed build and repeated
+coverage report. Fixed-clock identical-input comparison against starting main:
+all **10 public files**, 292 events / 153 reviewed winners / existing conflict,
+Timeline and the **complete E1/C0/C1a.0 sidecar** are identical, including eight
+E1 entries/hashes, inventories, attributions, diagnostics and refusals. All 113
+baseline identities and exact file bytes remain unchanged. Report bytes and
+106-notice status/evaluation distribution are unchanged from the reviewed head.
+
+Final pushed head and its exact-head hosted CI including PostgreSQL17 and
+mandatory encrypted recovery are recorded in PR161. **Next concrete step:**
+independent final Astra review on that exact new head, including B1 and the
+remaining nonblocking notes in the triage. No matching change or broad Sonnet
+cycle is introduced. Do not merge or start C1b/C2, Daily Passes or other work.
+
+---
+
+## C1a.1 — POST-CI-RECOVERY INTEGRATED, READY FOR FOCUSED REVIEW (2026-11-02)
+
+[PR #161](https://github.com/maxvfk/game-calendar/pull/161) remains unmerged on
+`coverage/c1a1-deterministic`. Starting CURRENT main:
+`51bcb01dd50539bcf9351b6a8088ced89ad16028` ([merged PR #162](https://github.com/maxvfk/game-calendar/pull/162));
+previous PR head: `fe7ea18e86ae3ff0851f4b2da4f3c357202f20b4`.
+Normal merge `fa3300d53b143cf3405073d3580c4b4bd2dbda50` required no conflicts or
+manual resolutions. Its content tree is identical to the previous PR head:
+the four accepted historical Genshin recovery files were already byte-identical.
+They are now inherited from main and excluded from PR161's final file diff.
+No fixture duplication, assertion change, implementation redesign or new scope.
+Only this factual status entry was added after the merge; the final diff remains
+21 C1a.1-specific files (engine/state, offline CLI/parity script, tests/fixture,
+report evidence/docs, package command and Git state inclusion rules).
+
+Fresh integrated validation passes: frozen install, typecheck, **47 focused
+coverage tests / 18 historical Genshin-KQM tests**, full **1547 pass / 3 existing
+optional age skips / 0 fail** (1550 tests, 96 files), full builds, separate
+`build:feed` and deterministic `coverage:report`. Fixed clock
+`2026-11-01T00:00:00.000Z`, identical production inputs against starting main:
+**all 10 recursive public files byte-identical**, 292 events / 153 reviewed
+winners / existing NTE conflict and Timeline artifacts stable. The **entire**
+E1/C0/C1a.0 sidecar is equal, including eight E1 entries/hashes, notice inventories,
+article attributions, diagnostics and refusal semantics.
+
+Coverage report bytes are identical to the previous head and repeated runs:
+**106 notices; 18 partial / 50 unprocessed / 38 null status with attention;
+0 processed / ignored. Evaluation: 104 uncertain / 2 complete / 0 incomplete.**
+All **113 original notification-baseline identities and exact file bytes** are
+preserved, including seven absent Genshin notices (21053, 21761, 21884, 21891,
+21895, 21896, 21901). No baseline regeneration/reinitialization was performed.
+F1–F6, insertion/reorder/revision/duplicate safety and historical evidence are
+unchanged. Missing years/offsets, relative/lexical expressions and insufficient
+boundary context retain their documented uncertainty; no dates, offsets or
+regional deadlines were added.
+
+Final pushed head and its exact-head GitHub CI (including PostgreSQL17 concurrency
+and mandatory encrypted recovery) are recorded in PR161. **Next concrete step:**
+independent Sonnet focused re-review of F1–F6 on that **final integrated head**
+against main 51bcb01, not only the earlier fe7ea18. After findings are resolved,
+independent Astra review follows a stabilized head. CI is validation, not review.
+Leave merge to the coordinator. C1b/C2, Daily Passes and other milestones remain
+unstarted; no source refresh/recovery, Timeline labels or Account Sync change.
+
+---
+
+## C1a.1 — F1–F6 CORRECTED, AWAITING FOCUSED SONNET RE-REVIEW (2026-11-02)
+
+[PR #161](https://github.com/maxvfk/game-calendar/pull/161) remains in existing
+branch `coverage/c1a1-deterministic`, unmerged. CURRENT main `32070cdf2ee131a15b4191bd91be16440c550710`
+was fetched and merged (upstream snapshot updates only). The reviewed head was
+`61c3d662cebb13ab0b1f287d97c2cb5d6502a1cb`;
+[triage](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6562545868).
+[Correction details, reproductions and report distribution](evidence/notice-coverage-c1a1-review.md).
+
+Initial real-dependency regression run: **2 pass / 8 fail**. F2 state identity now
+survives insertion/reorder, stays content/format-bound and refuses ambiguous
+duplicates. Explicit committed-baseline migration preserved all 113 original
+content identities and removed only positions. F3's actual NTE human clock
+range no longer becomes a false UTC instant; legitimate explicit UTC/ISO-T
+syntax remains supported. F1 tests retain the real October 29 Starlight cutoff
+and explicitly distinguish synthetic exact-UTC missing/fixed scenarios without
+promoting same-day approximations, guessing offsets or inferring regions.
+F4 isolated day dates require stronger boundary context. F5 zero-span/unscanned
+content has explicit actionable attention. F6 escaped/prose BBCode is retained
+as text, with supported formatting and security masking preserved.
+
+Current report: **106 notices; 18 partial / 50 unprocessed / 38 null status with
+attention; 0 processed / 0 ignored**. Evaluation: **104 uncertain / 2 complete /
+0 incomplete**. All 106 retain baseline membership; main's ordinary source
+turnover removed seven Genshin notices. False malformed-markup notices fell
+8→0, the false NTE UTC instant is gone, and Genshin baseline membership recovered
+5→32 on identical current inputs. Remaining absent years/offsets, source
+server/global clocks, unresolved relative/lexical expressions, isolated-day
+context and final-winner refusals remain explicit, not fabricated coverage.
+
+Frozen install/typecheck/full tests/build/feed/report pass: **1547 pass / 3
+existing optional age skips / 0 fail** (1550 tests, 96 files), **47 focused
+coverage tests pass**. Four inherited rolling-snapshot Genshin test failures
+also reproduced on unchanged main; tests now pin existing pre-turnover Git
+bytes without changing any date/ID/count/winner/refusal expectation.
+[CURRENT-main fixed-clock parity](evidence/notice-coverage-c1a1-review-parity-2026-11-02.json):
+all 10 public files byte-identical; 292 events / 153 reviewed winners / NTE
+conflict, Timeline and complete E1/C0/C1a.0 evidence (eight E1 entries/hashes)
+unchanged. Exact new-head hosted CI including PG17/recovery is recorded in PR161.
+No canonical parser, event/reviewed data, public schema/UI, source transport or
+workflow changes. No Issue or notification delivery; C1b/C2 remain unstarted.
+
+**Next concrete step:** focused Sonnet re-review of F1–F6 on the final pushed
+head, then independent Astra review at a stabilized head. Do not merge.
+
+---
+
+## C1a.1 — Deterministic Notice Coverage Engine — IMPLEMENTED, REVIEW PENDING (2026-11-01)
+
+[PR #161](https://github.com/maxvfk/game-calendar/pull/161), left unmerged.
+One branch `coverage/c1a1-deterministic` from fetched CURRENT main
+`bcf1865649ce9a9df2e46766f6bc5c792d2a73c3`. C0/C1a.0 remain closed.
+Reporting-only implementation: bounded reusable date-span reader; strict
+notice/final-winner association; four coverage statuses with separate explicit
+uncertainty/incompleteness; whole-notice and span ignores; versioned Git-reviewed
+notification-only baseline; deterministic offline `bun run coverage:report`.
+All 113 current notices across the five supported sources remain visible,
+including duplicate occurrences/zero outputs. Endfield/CZN and unknown notice
+families explicitly report unsupported/not evaluated. No refresh, AI, API,
+Issue, notification delivery, event/data/winner/schema/UI/Timeline or workflow
+changes. C1b, C2 and subsequent milestones are not started.
+
+[Report contract, commands, state schemas, limitations and example](evidence/notice-coverage-c1a1.md).
+Baseline creation was explicit and exclusive, from unchanged starting-main
+inventories; its only effect is a report membership flag for future launch
+notifications. Content edits invalidate membership and ignores; neither state
+file hides gaps or changes coverage. Initial ignore decisions are empty.
+
+Historical acceptance: Starlight's real notice with a **synthetic main-only**
+event set is partially processed; the October 29 quest cutoff remains quoted
+beside the November 2 event end. Actual recorded pre-#119 HSR parser outputs
+leave both missing MoC windows visible. #131 Genshin recovery notices and #139
+HSR Park claims use fixed real frozen text with explicitly synthetic missing
+outputs. Further tests cover all five source formats, fully covered multi-event
+notices, zero/undated/unreadable outputs, unrelated deadlines, span ignores,
+duplicates, invalid inventories, reviewed URL refusals, regional/precision
+mismatches, malformed/oversized content, CLI exclusivity and baseline edits.
+**31 new focused tests pass**, with literal independently authored expectations.
+
+Local required gates pass: frozen install; typecheck; **1531 pass / 3 existing
+optional age-encryption skips / 0 fail** (1534 tests, 95 files); full site build;
+separate feed build; deterministic offline report. Initial sandbox socket-bind
+failures disappear with command localhost/network permission; no test weakening.
+Task-local Bun temporary/cache paths resolve install access restrictions.
+[Identical-input fixed-clock full-build evidence](evidence/notice-coverage-c1a1-parity-2026-11-01.json):
+all 10 public files byte-identical, 292 events, 153 reviewed winners and the NTE
+conflict unchanged; all Timeline artifacts and complete E1/C0/C1a.0 sidecar
+(including eight E1 entries/hashes) identical. Hosted final-head CI including
+PG17/recovery is a required delivery check recorded in the PR.
+
+Limitations: floating server/local clocks retain uncertainty and are never
+converted using inferred offsets, including Starlight/Lightward. Day precision
+never becomes an exact instant; regional ends require explicit source regions.
+Reviewed events citing other URLs cannot count. The bounded lexical reader
+intentionally produces conservative false positives (e.g. March 7th/Tomorrow
+names), unsupported expressions and incomplete evaluations; no automatic ignores
+or fixes. Baseline occurrence-position binding can cause extra candidates after
+reordering, conservatively. Availability is not complete source coverage.
+
+**Next concrete step:** independent focused review of C1a.1's reader, matching,
+uncertainty, ignore/baseline semantics and exact-head validation evidence. Leave
+PR unmerged. Do not begin C1b, C2 or later work without a new authorization.
+
+---
+
 ## C1a.0 — WuWa Notice Inventory — CLOSED (2026-11-01)
 
 **Merged:** [PR #159](https://github.com/maxvfk/game-calendar/pull/159) into

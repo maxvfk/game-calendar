@@ -6,6 +6,7 @@
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "parse": "bun run scripts/parse-fixture.ts",
+    "coverage:report": "bun scripts/notice-coverage-report.ts",
     "build:feed": "bun run scripts/build-feed.ts",
     "refresh": "bun run scripts/refresh-sources.ts",
     "build:css": "bunx @tailwindcss/cli -i src/client/styles.css -o public/styles.css --minify",

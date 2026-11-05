@@ -1,0 +1,288 @@
+{
+  "startingMain": "dba863d373a3e50c9dce32fc45e2dda178adc460",
+  "reviewedHead": "27e3afe05c8763546995cf9f02caa465d88d3aa9",
+  "codeCheckpoint": "8498e891b074fd7c6045e8f00f9713893b761fb8",
+  "sameSidecarAndFinalEventsForBothReaders": true,
+  "clock": "2026-11-01T00:00:00.000Z",
+  "beforeReportSha256": "90c1cc977182567772319012898bbe94715154e98a3edf35467e22e5bdc84f41",
+  "afterReportSha256": "20fbc663a1240b7c48a0c31ab684af9a41ffe3341fb7cccd00ff9cf0b3f6256c",
+  "deterministicReplay": true,
+  "allActualUtf16SourceQuotesVerified": true,
+  "publicManifestRecheckedAfterSeparateFeedBuild": true,
+  "baseline": {
+    "entries": 113,
+    "bytesUnchanged": true,
+    "sha256": "f9495e8f1a09bc45f21773116870b836f65e63b24d471a4bf3c945362f244cb9"
+  },
+  "before": {
+    "notices": 122,
+    "spans": 776,
+    "unmatchedSpans": 761,
+    "instants": 54,
+    "status": {
+      "partially processed": 18,
+      "unclassified": 40,
+      "unprocessed": 64
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 120
+    },
+    "baselineMembers": 100
+  },
+  "after": {
+    "notices": 122,
+    "spans": 774,
+    "unmatchedSpans": 759,
+    "instants": 54,
+    "status": {
+      "partially processed": 18,
+      "unclassified": 40,
+      "unprocessed": 64
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 120
+    },
+    "baselineMembers": 100
+  },
+  "counterexamplesBefore": [
+    {
+      "suffix": "<5",
+      "quote": "2026-11-02 12:29 UTC+8:30",
+      "instant": "2026-11-02T03:59:00.000Z",
+      "uncertainty": [],
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false
+    },
+    {
+      "suffix": ">5",
+      "quote": "2026-11-02 12:29 UTC+8:30",
+      "instant": "2026-11-02T03:59:00.000Z",
+      "uncertainty": [],
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false
+    },
+    {
+      "suffix": "~5",
+      "quote": "2026-11-02 12:29 UTC+8:30",
+      "instant": "2026-11-02T03:59:00.000Z",
+      "uncertainty": [],
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false
+    },
+    {
+      "suffix": "–5",
+      "quote": "2026-11-02 12:29 UTC+8:30",
+      "instant": "2026-11-02T03:59:00.000Z",
+      "uncertainty": [],
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false
+    },
+    {
+      "suffix": "—5",
+      "quote": "2026-11-02 12:29 UTC+8:30",
+      "instant": "2026-11-02T03:59:00.000Z",
+      "uncertainty": [],
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false
+    }
+  ],
+  "counterexamplesAfter": [
+    {
+      "suffix": "<5",
+      "quote": "2026-11-02 12:29 UTC+8:30<5",
+      "instant": null,
+      "uncertainty": [
+        "unsupported_timezone"
+      ],
+      "status": "partially processed",
+      "evaluation": "uncertain",
+      "attentionRequired": true
+    },
+    {
+      "suffix": ">5",
+      "quote": "2026-11-02 12:29 UTC+8:30>5",
+      "instant": null,
+      "uncertainty": [
+        "unsupported_timezone"
+      ],
+      "status": "partially processed",
+      "evaluation": "uncertain",
+      "attentionRequired": true
+    },
+    {
+      "suffix": "~5",
+      "quote": "2026-11-02 12:29 UTC+8:30~5",
+      "instant": null,
+      "uncertainty": [
+        "unsupported_timezone"
+      ],
+      "status": "partially processed",
+      "evaluation": "uncertain",
+      "attentionRequired": true
+    },
+    {
+      "suffix": "–5",
+      "quote": "2026-11-02 12:29 UTC+8:30–5",
+      "instant": null,
+      "uncertainty": [
+        "unsupported_timezone"
+      ],
+      "status": "partially processed",
+      "evaluation": "uncertain",
+      "attentionRequired": true
+    },
+    {
+      "suffix": "—5",
+      "quote": "2026-11-02 12:29 UTC+8:30—5",
+      "instant": null,
+      "uncertainty": [
+        "unsupported_timezone"
+      ],
+      "status": "partially processed",
+      "evaluation": "uncertain",
+      "attentionRequired": true
+    }
+  ],
+  "changedNotices": [
+    {
+      "sourceId": "nte-steamnews-official",
+      "noticeId": "1840944183787941",
+      "beforeSpans": [
+        {
+          "kind": "date",
+          "field": "content",
+          "start": 777,
+          "end": 799,
+          "quote": "August 19, 2026, 06:00",
+          "value": {
+            "date": "2026-08-19",
+            "clock": "06:00:00",
+            "offsetMinutes": null,
+            "instant": null,
+            "precision": "minute"
+          },
+          "uncertainty": [
+            "missing_offset"
+          ],
+          "matches": []
+        },
+        {
+          "kind": "unresolved",
+          "field": "content",
+          "start": 800,
+          "end": 805,
+          "quote": "11:00",
+          "value": {
+            "date": null,
+            "clock": null,
+            "offsetMinutes": null,
+            "instant": null,
+            "precision": "unknown"
+          },
+          "uncertainty": [
+            "unsupported_date_expression"
+          ],
+          "matches": []
+        }
+      ],
+      "afterSpans": [
+        {
+          "kind": "date",
+          "field": "content",
+          "start": 777,
+          "end": 805,
+          "quote": "August 19, 2026, 06:00–11:00",
+          "value": {
+            "date": "2026-08-19",
+            "clock": "06:00:00",
+            "offsetMinutes": null,
+            "instant": null,
+            "precision": "minute"
+          },
+          "uncertainty": [
+            "unsupported_timezone"
+          ],
+          "matches": []
+        }
+      ],
+      "allOtherNoticeFieldsUnchanged": true
+    },
+    {
+      "sourceId": "nte-steamnews-official",
+      "noticeId": "1836506165577421",
+      "beforeSpans": [
+        {
+          "kind": "date",
+          "field": "content",
+          "start": 1947,
+          "end": 1966,
+          "quote": "July 8, 2026, 06:00",
+          "value": {
+            "date": "2026-07-08",
+            "clock": "06:00:00",
+            "offsetMinutes": null,
+            "instant": null,
+            "precision": "minute"
+          },
+          "uncertainty": [
+            "missing_offset"
+          ],
+          "matches": []
+        },
+        {
+          "kind": "unresolved",
+          "field": "content",
+          "start": 1967,
+          "end": 1972,
+          "quote": "11:00",
+          "value": {
+            "date": null,
+            "clock": null,
+            "offsetMinutes": null,
+            "instant": null,
+            "precision": "unknown"
+          },
+          "uncertainty": [
+            "unsupported_date_expression"
+          ],
+          "matches": []
+        }
+      ],
+      "afterSpans": [
+        {
+          "kind": "date",
+          "field": "content",
+          "start": 1947,
+          "end": 1972,
+          "quote": "July 8, 2026, 06:00–11:00",
+          "value": {
+            "date": "2026-07-08",
+            "clock": "06:00:00",
+            "offsetMinutes": null,
+            "instant": null,
+            "precision": "minute"
+          },
+          "uncertainty": [
+            "unsupported_timezone"
+          ],
+          "matches": []
+        }
+      ],
+      "allOtherNoticeFieldsUnchanged": true
+    }
+  ],
+  "authoredRegressionReproduction": {
+    "oldReaderPass": 49,
+    "oldReaderFail": 6,
+    "focusedCorrectedPass": 104,
+    "focusedCorrectedFail": 0
+  },
+  "note": "Observed replay, not a test oracle. Two uncertain NTE clock ranges are kept whole rather than split at en dashes; no instant, offset, status or evaluation is promoted."
+}

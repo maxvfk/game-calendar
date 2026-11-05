@@ -146,3 +146,9 @@ snapshots/*.tmp-*
 
 # Generated internal editorial evidence (never Pages assets).
 /tmp/editorial/
+
+# Git-reviewed offline coverage state (C1a.1)
+!data/coverage/
+data/coverage/*
+!data/coverage/ignored-notices.v1.json
+!data/coverage/notification-baseline.v1.json

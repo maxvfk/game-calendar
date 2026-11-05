@@ -1,0 +1,479 @@
+/** Bounded source-text date reader. No ingestion defaults, DOM, evaluation or I/O.
+ * Locations are UTF-16 offsets into the ORIGINAL input; quotes are verbatim.
+ * A span is one dated boundary; range peers share a group and roles.
+ */
+import { createHash } from "node:crypto";
+import { parseIsoDay } from "../ingest/dates.ts";
+
+export const DATE_READER_VERSION = "notice-dates-v1";
+export const DATE_LIMITS = { inputUnits: 250_000, spans: 256, quoteUnits: 512 } as const;
+export type DateValue = {
+  date: string | null; clock: string | null; offsetMinutes: number | null;
+  instant: string | null; precision: "day" | "minute" | "second" | "unknown";
+};
+export type DateSpan = {
+  kind: "date" | "unresolved"; ref: string; start: number; end: number; quote: string;
+  role: "start" | "end" | "single"; group: number | null;
+  region: "asia" | "europe" | "america" | null;
+  value: DateValue; uncertainty: string[];
+};
+export type DateRead = { readerVersion: typeof DATE_READER_VERSION; spans: DateSpan[]; diagnostics: string[]; complete: boolean };
+const months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+const monthPattern = "(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?";
+const datePattern = `(?:\\d{4}[-/.]\\d{1,2}[-/.]\\d{1,2}|${monthPattern}[ \\t]+\\d{1,2}(?:st|nd|rd|th)?(?:,?[ \\t]+\\d{4})?|\\d{1,2}[ \\t]+${monthPattern}(?:,?[ \\t]+\\d{4})?|\\d{1,2}/\\d{1,2}(?:/\\d{2,4})?|\\d{1,2}\\.\\d{1,2}\\.\\d{2,4})`;
+const clockPattern = "(?:(?:[ \\t,T]+)\\d{1,2}:\\d{2}(?::\\d{2})?(?:[ \\t]*[AP]M)?)?";
+const zonePattern = "(?:[ \\t]*(?:\\(?[ \\t]*UTC(?:[ \\t]*[+−-]\\d{1,2}(?::?\\d{2})?)?[ \\t]*\\)?|Z|[+−-]\\d{2}:?\\d{2}|\\((?:server(?: time)?|global|[A-Z]{2,5})\\)))?";
+const separator = /^[ \t*_,]*(?:[-–—~]|to|until)[ \t*_,]*$/i;
+const rangeBoundary = new RegExp(`^(?:[-–—~]|to|until)[ \\t*_,]*${datePattern}${clockPattern}${zonePattern}(?![\\p{L}\\d/])`, "iu");
+const unresolvedPattern = `${monthPattern}\\s+\\d[^\\n;]{0,80}|\\d{4}[-/.]\\d[^\\n;]{0,80}|\\d{1,2}/\\d{1,2}[^\\n;]{0,40}|\\d{1,2}\\.\\d{1,2}\\.\\d{2,4}|\\d{1,2}:\\d{2}(?::\\d{2})?|\\b(?:tomorrow|TBD|TBA|after (?:the )?(?:version \\d+\\.\\d+ (?:update|maintenance)|update|maintenance))\\b`;
+const dateLikeDestination = new RegExp(`(?:${datePattern}|${unresolvedPattern})`, "i");
+
+/** Mask markup, attributes, URL destinations and active content; never execute it.
+ * Keep a source-offset map through one-pass entity decoding. Unknown entities
+ * and malformed/unsupported constructs remain explicit evaluation uncertainty.
+ */
+function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: (code: string) => void) {
+  const chars = raw.split("");
+  const removed = new Uint8Array(raw.length);
+  const codeContext = new Uint8Array(raw.length);
+  const remove = (start: number, end: number) => { for (let i = start; i < end; i++) removed[i] = 1; };
+  const escaped = (index: number) => {
+    let slashes = 0; for (let i = index - 1; i >= 0 && raw[i] === "\\"; i--) slashes++;
+    return slashes % 2 === 1;
+  };
+  const inlineHtml = new Set(["b", "strong", "i", "em", "u", "s", "strike", "span", "t", "a", "font", "small", "big", "sup", "sub", "code", "del", "ins"]);
+  const blockHtml = new Set(["p", "div", "br", "hr", "li", "ul", "ol", "table", "thead", "tbody", "tfoot", "tr", "td", "th", "h1", "h2", "h3", "h4", "h5", "h6", "section", "article", "header", "footer", "main", "aside", "figure", "figcaption", "pre", "blockquote", "dl", "dt", "dd", "details", "summary"]);
+  const mask = (start: number, end: number) => { for (let i = start; i < end; i++) if (chars[i] !== "\n" && chars[i] !== "\r") chars[i] = " "; };
+  const stack: string[] = [];
+  let htmlCodeStart: number | null = null;
+  const voidTags = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);
+  // Linear tag scanner; quotes inside attributes cannot terminate a tag.
+  for (let i = 0; i < raw.length; i++) {
+    if (raw[i] !== "<") continue;
+    if (raw.startsWith("<!--", i)) {
+      const end = raw.indexOf("-->", i + 4);
+      if (end < 0) { mask(i, raw.length); diagnose("malformed_markup"); break; }
+      mask(i, end + 3); diagnose("comment_content_omitted"); i = end + 2; continue;
+    }
+    if (!/[A-Za-z/!?]/.test(raw[i + 1] ?? "")) continue;
+    let end = i + 1, quote = "";
+    for (; end < raw.length; end++) {
+      const c = raw[end]!;
+      if (quote) { if (c === quote) quote = ""; }
+      else if (c === "'" || c === '"') quote = c;
+      else if (c === ">") break;
+    }
+    if (end === raw.length) { mask(i, end); diagnose("malformed_markup"); break; }
+    const tag = raw.slice(i, end + 1);
+    const active = /^<(script|style|iframe|object)\b/i.exec(tag)?.[1];
+    if (active) {
+      const close = new RegExp(`</${active}\\s*>`, "ig"); close.lastIndex = end + 1;
+      const match = close.exec(raw);
+      mask(i, match ? match.index + match[0].length : raw.length);
+      diagnose("active_content_omitted"); i = match ? match.index + match[0].length - 1 : raw.length; continue;
+    }
+    if (/^<!|^<\?/.test(tag)) diagnose("unsupported_markup");
+    const element = /^<(\/?)([a-z][a-z0-9-]*)\b/i.exec(tag);
+    if (element) {
+      const name = element[2]!.toLowerCase();
+      if (format === "markdown" && (name === "code" || name === "pre")) {
+        if (!element[1] && htmlCodeStart === null) htmlCodeStart = i;
+        else if (element[1] && htmlCodeStart !== null) {
+          codeContext.fill(1, htmlCodeStart, end + 1); htmlCodeStart = null;
+        }
+      }
+      if (element[1]) {
+        if (stack.pop() !== name) diagnose("malformed_markup");
+      } else if (!voidTags.has(name) && !/\/\s*>$/.test(tag)) stack.push(name);
+    }
+    const name = element?.[2]?.toLowerCase();
+    if (name && inlineHtml.has(name)) remove(i, end + 1);
+    else {
+      mask(i, end + 1);
+      if (name && blockHtml.has(name)) chars[i] = "\n";
+      else if (name && !voidTags.has(name)) diagnose("unsupported_markup");
+    }
+    i = end;
+  }
+  if (stack.length) diagnose("malformed_markup");
+  if (htmlCodeStart !== null) codeContext.fill(1, htmlCodeStart);
+  if (format === "bbcode") {
+    const tags = /\[(\/?)([a-z][a-z0-9]*)(?:[=\s][^\]\r\n]*)?\]/ig;
+    const bbStack: string[] = [];
+    const supported = new Set(["p", "b", "i", "u", "s", "strike", "color", "font", "size", "h1", "h2", "h3", "h4", "h5", "h6", "url", "img", "list", "olist", "quote", "code", "table", "tr", "td", "th", "br", "hr", "spoiler", "previewyoutube", "dynamiclink"]);
+    for (const m of raw.matchAll(tags)) {
+      const name = m[2]!.toLowerCase();
+      if (escaped(m.index!) || !supported.has(name)) continue;
+      // Parameterized styles need actual tag syntax, not [color options] or
+      // an ordinary standalone [color] label. Attributes are inert metadata.
+      if (["color", "font", "size"].includes(name) && !/^\[(?:\/(?:color|font|size)|(?:color|font|size)=[^\]\r\n]+)\]$/i.test(m[0])) {
+        if (m[0].includes("=")) diagnose("unsupported_markup");
+        continue;
+      }
+      // Attributes require '='. Recognized words in bracketed prose are not tags.
+      const simple = /^\[\/?[a-z][a-z0-9]*(?:=[^\]\r\n]*)?\]$/i.test(m[0]);
+      const attributes = /^\[(?:dynamiclink|img|previewyoutube)(?:\s+(?:href|src|title|id|youtubeid|align|size)=(?:"[^"\]\r\n]*"|'[^'\]\r\n]*'|[^\s\]"']+))+\]$/i.test(m[0]);
+      if (!simple && !attributes) continue;
+      if (["b", "i", "u", "s", "strike", "color", "font", "size", "url", "code", "spoiler"].includes(name)) remove(m.index!, m.index! + m[0].length);
+      else { mask(m.index!, m.index! + m[0].length); chars[m.index!] = "\n"; }
+      if (m[1]) { if (bbStack.pop() !== name) diagnose("malformed_markup"); }
+      else if (!["br", "hr"].includes(name)) bbStack.push(name);
+    }
+    if (bbStack.length) diagnose("malformed_markup");
+    const unfinished = /\[(?:\/?(?:p|b|i|u|color|font|size|url|img|h[1-6]|list|quote|table|tr|td|dynamiclink|previewyoutube))(?:=|\s+(?:href|src|title)=|$)[^\]]*$/i.exec(raw);
+    if (unfinished && !escaped(unfinished.index)) diagnose("malformed_markup");
+  }
+  if (format === "markdown") {
+    // Probe only quote/list prefixes and relative indentation, not a Markdown
+    // block tree. Expanded columns are used ONLY for this probe; source maps
+    // and codeContext always retain the original UTF-16 physical-line indices.
+    type Container = { kind: "quote" | "list"; padding: number; empty?: boolean };
+    type Fence = { marker: string; size: number; containers: Container[] };
+    let fence: Fence | null = null;
+    const inlineBoundary = new Uint8Array(raw.length);
+    const sameContainer = (a: Container, b?: Container) => a.kind === b?.kind && (a.kind === "quote" || a.padding === b.padding);
+    // Tabs have already become columns when this is called. Require one marker
+    // kind, at least three occurrences, and at most three relative leading spaces.
+    const isThematicBreak = (value: string) => !value.startsWith("    ") && /^(?:\*{3,}|-{3,}|_{3,})$/.test(value.replace(/[ \r\n]/g, ""));
+    let previousContainers: Container[] = [];
+    let previousBlank = true, indentedCode = false, previousBlockMarker = false;
+    for (const line of raw.matchAll(/[^\r\n]*(?:\r\n|\r|\n|$)/g)) {
+      let expanded = "", column = 0;
+      for (const c of line[0]) {
+        const width = c === "\t" ? 4 - column % 4 : 1;
+        expanded += c === "\t" ? " ".repeat(width) : c; column += width;
+      }
+      if (fence) {
+        // Code has no lazy container continuation. Require the opening quote
+        // markers/list padding physically; otherwise this container ended and
+        // the current line must be parsed anew, not used as its closing fence.
+        let prefix = 0, sameScope = true;
+        for (const c of fence.containers) {
+          const rest = expanded.slice(prefix);
+          if (c.kind === "quote") {
+            const q = /^ {0,3}> ?/.exec(rest);
+            if (!q) { sameScope = false; break; }
+            prefix += q[0].length;
+          } else if (rest.startsWith(" ".repeat(c.padding))) prefix += c.padding;
+          else if (!/^[ \r\n]*$/.test(rest)) { sameScope = false; break; }
+        }
+        inlineBoundary[line.index!] = 1;
+        if (sameScope) {
+          codeContext.fill(1, line.index!, line.index! + line[0].length);
+          const close = /^ {0,3}(`+|~+) *[\r\n]*$/.exec(expanded.slice(prefix));
+          if (close && close[1]![0] === fence.marker && close[1]!.length >= fence.size) {
+            mask(line.index!, line.index! + line[0].length);
+            previousContainers = fence.containers; fence = null;
+            previousBlank = true; indentedCode = false; previousBlockMarker = false;
+          }
+          continue;
+        }
+        fence = null; previousBlank = true; indentedCode = false; previousBlockMarker = false;
+      }
+      const containers: Container[] = [];
+      let offset = 0, newItem = false, knownPrefix = true, limited = false, thematic = false, rejectedParagraphMarker = false;
+      while (true) {
+        const rest = expanded.slice(offset);
+        const quote = /^ {0,3}> ?/.exec(rest);
+        const list = /^( {0,3})([-+*]|\d{1,9}[.)])( +|(?=[\r\n]|$))/.exec(rest);
+        const active = knownPrefix ? previousContainers[containers.length] : undefined;
+        let frame: Container | undefined;
+        const continuation = active?.kind === "list" && rest.startsWith(" ".repeat(active.padding));
+        // Continuation padding belongs to an established parent; at that
+        // relative level a thematic break takes precedence over NEW list items.
+        if (!continuation && isThematicBreak(rest)) { thematic = true; break; }
+        if (continuation) frame = active;
+        else if (quote) frame = { kind: "quote", padding: quote[0].length };
+        else if (list) {
+          // CommonMark list padding is 1–4 spaces; 5+ consumes one, leaving
+          // the remaining indentation for code (not ordinary item prose).
+          const spaces = list[3]!.length;
+          const empty = /^[ \r\n]*$/.test(rest.slice(list[0].length));
+          const paragraphHere = !previousBlank && !indentedCode && !previousBlockMarker && !newItem &&
+            containers.length === previousContainers.length && containers.every((c, i) => sameContainer(c, previousContainers[i]));
+          // Empty items and ordered starts other than 1 cannot interrupt a
+          // paragraph. They are not reliable continuation frames for later code.
+          if (paragraphHere && (empty || /^\d/.test(list[2]!) && Number.parseInt(list[2]!, 10) !== 1)) {
+            rejectedParagraphMarker = true; break;
+          }
+          frame = { kind: "list", padding: list[1]!.length + list[2]!.length + (!empty && spaces >= 1 && spaces <= 4 ? spaces : 1), empty };
+        }
+        if (!frame) break;
+        if (containers.length === 16) { limited = true; break; }
+        knownPrefix &&= sameContainer(frame, previousContainers[containers.length]);
+        if (list && !quote && !continuation) { newItem = true; knownPrefix = false; }
+        containers.push(frame); offset += frame.padding;
+      }
+      if (limited) {
+        inlineBoundary[line.index!] = 1;
+        diagnose("container_limit"); codeContext.fill(1, line.index!, line.index! + line[0].length);
+        previousContainers = []; previousBlank = true; indentedCode = false; previousBlockMarker = false; continue;
+      }
+      const content = expanded.slice(offset);
+      if (thematic) {
+        inlineBoundary[line.index!] = 1;
+        for (const c of containers) if (c.kind === "list") c.empty = false;
+        previousContainers = containers; previousBlank = true; indentedCode = false; previousBlockMarker = false; continue;
+      }
+      if (/^[ \r\n]*$/.test(content)) {
+        inlineBoundary[line.index!] = 1;
+        previousBlank = true;
+        // Blank quote lines can omit list padding without ending that list.
+        if (newItem || !containers.every((c, i) => sameContainer(c, previousContainers[i]))) {
+          previousContainers = containers; indentedCode = false; previousBlockMarker = false;
+        }
+        const missingQuote = previousContainers.findIndex((c, i) => c.kind === "quote" && !sameContainer(c, containers[i]));
+        if (missingQuote >= 0) {
+          previousContainers = previousContainers.slice(0, missingQuote); indentedCode = false; previousBlockMarker = false;
+        }
+        // A genuinely empty item can acquire content on the next nonblank line,
+        // but cannot retain its padding across an intervening blank line.
+        if (!newItem) {
+          const emptyAt = previousContainers.findIndex(c => c.kind === "list" && c.empty);
+          if (emptyAt >= 0) previousContainers = previousContainers.slice(0, emptyAt);
+        }
+        continue;
+      }
+      for (const c of containers) if (c.kind === "list") c.empty = false;
+      const columns = /^ */.exec(content)![0].length;
+      const open = /^ {0,3}(`{3,}|~{3,})([^\r\n]*)[\r\n]*$/.exec(content);
+      if (open && !codeContext[line.index!] && (open[1]![0] !== "`" || !open[2]!.includes("`"))) {
+        fence = { marker: open[1]![0]!, size: open[1]!.length, containers: [...containers] };
+        inlineBoundary[line.index!] = 1;
+        codeContext.fill(1, line.index!, line.index! + line[0].length);
+        mask(line.index!, line.index! + line[0].length); // Fence/info is metadata.
+        previousContainers = containers; previousBlank = false; indentedCode = false; previousBlockMarker = false; continue;
+      }
+      const changed = containers.length !== previousContainers.length || !containers.every((c, i) => sameContainer(c, previousContainers[i]));
+      const blockMarker = rejectedParagraphMarker ? /^ {0,3}-+ *[\r\n]*$/.test(content) :
+        /^ {0,3}(?:[#>~`<]|[-*+_=]{2,}(?:[ \r\n]|$)|(?:[-*+]|\d+[.)]) )/.test(content);
+      // A lazy paragraph line can omit container prefixes. Retain that bounded
+      // ancestry for the NEXT interruption decision, without consuming padding
+      // from the current physical line or calling it a top-level paragraph.
+      const lazy = !previousBlank && !indentedCode && !previousBlockMarker && !newItem && !blockMarker && columns < 4 &&
+        containers.length < previousContainers.length && containers.every((c, i) => sameContainer(c, previousContainers[i]));
+      // Lazy/container exits and other block transitions are deliberately
+      // uncertain. Indented code cannot interrupt a known same-item paragraph.
+      const ambiguousCode: boolean = columns >= 4 && !previousBlank && !newItem && (changed || !indentedCode && previousBlockMarker);
+      if (ambiguousCode) diagnose("unsupported_code_context");
+      indentedCode = columns >= 4 && (previousBlank || newItem || !changed && indentedCode || ambiguousCode);
+      if (newItem || changed && !lazy || indentedCode || blockMarker || previousBlockMarker) inlineBoundary[line.index!] = 1;
+      if (indentedCode || ambiguousCode) codeContext.fill(1, line.index!, line.index! + line[0].length);
+      if (!lazy) previousContainers = containers;
+      previousBlank = false; previousBlockMarker = blockMarker;
+    }
+    if (fence) diagnose("unclosed_code_fence");
+    // Inline spans cannot pair with fenced code or across known block boundaries.
+    // Equal runs within a paragraph may cross soft line breaks. Unmatched runs
+    // retain literal evidence and explicit uncertainty.
+    // This scan and the disjoint bitmap fills are bounded by inputUnits.
+    let codeStart: number | null = null, ticks = 0;
+    for (let i = 0; i < raw.length; i++) {
+      if (inlineBoundary[i] && codeStart !== null) {
+        codeContext.fill(1, codeStart, i); codeStart = null; diagnose("unsupported_markup");
+      }
+      if (raw[i] !== "`" || codeContext[i]) continue;
+      let end = i + 1; while (raw[end] === "`") end++;
+      if (codeStart === null) {
+        if (!escaped(i)) { codeStart = i; ticks = end - i; }
+      } else if (end - i === ticks) {
+        codeContext.fill(1, codeStart, end);
+        remove(codeStart, codeStart + ticks); remove(i, end); codeStart = null;
+      }
+      i = end - 1;
+    }
+    if (codeStart !== null) { codeContext.fill(1, codeStart); diagnose("unsupported_markup"); }
+    // Only paired, single-line inline delimiters are elided. Offsets always
+    // refer to raw UTF-16 units; nested styles can share the removal bitmap.
+    const emphasis: Array<[RegExp, number]> = [[/\*\*\*([^*\r\n]+)\*\*\*/g, 3], [/(?<![\p{L}\d])___([^_\r\n]+)___(?![\p{L}\d])/gu, 3], [/\*\*([^*\r\n]+)\*\*/g, 2], [/(?<![\p{L}\d])__([^_\r\n]+)__(?![\p{L}\d])/gu, 2], [/~~([^~\r\n]+)~~/g, 2], [/\*([^*\r\n]+)\*/g, 1], [/(?<![\p{L}\d])_([^_\r\n]+)_(?![\p{L}\d])/gu, 1]];
+    for (const [pattern, size] of emphasis) for (const m of raw.matchAll(pattern)) {
+      if (escaped(m.index!) || codeContext[m.index!] || removed[m.index!] || m[1] !== m[1]!.trim()) continue;
+      remove(m.index!, m.index! + size); remove(m.index! + m[0].length - size, m.index! + m[0].length);
+    }
+    // Spaces in a bare destination are not a Markdown link. Parenthesized
+    // prose in HTML/BBCode is never processed by this Markdown-only rule.
+    const links = /\[([^\[\]\r\n]{1,2048})\]\((<[^<>\r\n]{1,2048}>|[^\s()<>]{1,2048})(?:[ \t]+(?:"[^"\r\n]*"|'[^'\r\n]*'))?\)/g;
+    for (const m of raw.matchAll(links)) if (!escaped(m.index!) && !codeContext[m.index!]) {
+      const destination = m.index! + m[1]!.length + 2;
+      const target = m[2]!.startsWith("<") ? m[2]!.slice(1, -1) : m[2]!;
+      // A bounded advisory reader cannot prove every link/code context. Keep
+      // metadata masked, but never silently certify a non-URL date destination.
+      // Reuse recognized/unresolved forms; do not parse it or invent an instant.
+      if (!/^https?:\/\//i.test(target) && dateLikeDestination.test(target)) diagnose("masked_date_like_destination");
+      mask(destination, m.index! + m[0].length);
+    }
+  }
+  // URL metadata is excluded in every format; visible non-URL prose is kept.
+  for (const m of raw.matchAll(/https?:\/\/[^\s<>"')\]]+/g)) mask(m.index!, m.index! + m[0].length);
+  if (format === "markdown") {
+    const residual = chars.map((c, i) => removed[i] || codeContext[i] && (c === "`" || c === "~") ? " " : c).join("");
+    // Unhandled inline syntax remains explicit uncertainty, never a hidden gap.
+    // List bullets and literal intraword underscores are not formatting here.
+    if (/\*+(?=[\p{L}\d])|(?<=[\p{L}\d])\*+|(?<![\p{L}\d])_+(?=[\p{L}\d])|(?<=[\p{L}\d])_+(?![\p{L}\d])|~~|`/u.test(residual)) diagnose("unsupported_markup");
+  }
+  const masked = chars.join("");
+  let text = ""; const positions: number[] = [], ends: number[] = [];
+  const entities: Record<string, string> = { nbsp: " ", amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", ndash: "–", mdash: "—" };
+  for (let i = 0; i < masked.length; i++) {
+    if (removed[i]) continue;
+    if (masked[i] === "&") {
+      const entity = /^&(#x[\da-f]{1,6}|#\d{1,7}|[a-z]{1,16});/i.exec(masked.slice(i, i + 20));
+      if (entity) {
+        const key = entity[1]!, point = key.startsWith("#") ? Number.parseInt(key.slice(key[1]?.toLowerCase() === "x" ? 2 : 1), key[1]?.toLowerCase() === "x" ? 16 : 10) : null;
+        const decoded = point !== null && point > 0 && point <= 0x10ffff && !(point >= 0xd800 && point <= 0xdfff) ? String.fromCodePoint(point) : entities[key.toLowerCase()];
+        if (decoded === undefined) diagnose("unsupported_entity");
+        const replacement = decoded ?? " ";
+        for (const c of replacement.split("")) { text += c; positions.push(i); ends.push(i + entity[0].length); }
+        i += entity[0].length - 1; continue;
+      }
+    }
+    text += masked[i]; positions.push(i); ends.push(i + 1);
+  }
+  return { text, positions, ends };
+}
+function parseValue(text: string): { value: DateValue; uncertainty: string[] } {
+  const uncertainty: string[] = [];
+  const date = new RegExp(`^(${datePattern})`, "i").exec(text)![1]!;
+  let year: number | null = null, month: number | null = null, day: number | null = null;
+  let m: RegExpExecArray | null;
+  if ((m = /^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/.exec(date))) {
+    year = +m[1]!; month = +m[2]!; day = +m[3]!;
+    const separators = date.match(/[-/.]/g)!;
+    if (separators[0] !== separators[1]) uncertainty.push("mixed_date_separators");
+  } else if ((m = /^(\d{1,2})[/.](\d{1,2})(?:[/.](\d{2,4}))?$/.exec(date))) {
+    // No locale inference. Only unambiguous numeric ordering is accepted.
+    if (+m[1]! > 12 && +m[2]! <= 12) { day = +m[1]!; month = +m[2]!; }
+    else if (+m[2]! > 12 && +m[1]! <= 12) { month = +m[1]!; day = +m[2]!; }
+    else uncertainty.push("ambiguous_numeric_order");
+    if (m[3]?.length === 4) year = +m[3];
+    else if (m[3]) uncertainty.push("ambiguous_short_year");
+  } else {
+    const name = new RegExp(monthPattern, "i").exec(date)![0];
+    month = months.findIndex(n => n.startsWith(name.toLowerCase().replace(/\.$/, "").slice(0, 3))) + 1;
+    const numbers = date.replace(name, "").match(/\d+/g) ?? [];
+    day = +(numbers[0] ?? 0); if (numbers[1]?.length === 4) year = +numbers[1];
+  }
+  if (year === null) uncertainty.push("missing_year");
+  const dayText = year !== null && month !== null && day !== null ? `${String(year).padStart(4, "0")}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}` : null;
+  const validDay = dayText && parseIsoDay(dayText) ? dayText : null;
+  if (dayText && !validDay) uncertainty.push("invalid_date");
+  const rest = text.slice(date.length);
+  const clockMatch = /^[\s,T]+(\d{1,2}):(\d{2})(?::(\d{2}))?(?:\s*([AP])M)?/i.exec(rest);
+  let clock: string | null = null;
+  let offsetMinutes: number | null = null;
+  if (clockMatch) {
+    let h = +clockMatch[1]!; const min = +clockMatch[2]!, sec = +(clockMatch[3] ?? 0);
+    if (clockMatch[4]) {
+      if (h < 1 || h > 12) uncertainty.push("invalid_clock");
+      h = h % 12 + (clockMatch[4].toUpperCase() === "P" ? 12 : 0);
+    }
+    if (h > 23 || min > 59 || sec > 59) uncertainty.push("invalid_clock");
+    else clock = `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+    const zoneSuffix = rest.slice(clockMatch[0].length);
+    const rawZone = zoneSuffix.trim();
+    // Validate the whole supported wrapper BEFORE normalization. Embedded or
+    // stray parentheses must never turn UTC+8(30) into the valid UTC+830.
+    const wrapper = /^\([ \t]*(UTC(?:[ \t]*[+−-]\d{1,2}(?::?\d{2})?)?|server(?: time)?|global|[A-Z]{2,5})[ \t]*\)$/i.exec(rawZone);
+    const invalidDelimiter = /[()]/.test(rawZone) && !wrapper;
+    const zone = invalidDelimiter ? "" : (wrapper?.[1] ?? rawZone).replace("−", "-");
+    // A signed clock after prose is also a clock range (00:00-12:00).
+    // Only ISO date-T-time syntax disambiguates a bare numeric UTC offset.
+    const ambiguousBareOffset = /^[+−-]/.test(rawZone) && !(/^\d{4}-\d{2}-\d{2}T/i.test(text) && /^[+−-]/.test(zoneSuffix));
+    const z = /^(?:UTC\s*)?([+-])(\d{1,2})(?::?(\d{2}))?$/i.exec(zone);
+    if (invalidDelimiter) uncertainty.push("invalid_timezone_delimiter");
+    else if (ambiguousBareOffset) uncertainty.push("ambiguous_clock_range_or_offset");
+    else if (/^(UTC|Z)$/i.test(zone)) offsetMinutes = 0;
+    else if (z) {
+      const magnitude = +z[2]! * 60 + +(z[3] ?? 0);
+      if (+z[2]! > 14 || +(z[3] ?? 0) > 59 || magnitude > 840) uncertainty.push("invalid_offset");
+      else offsetMinutes = (z[1] === "-" ? -1 : 1) * magnitude;
+    } else uncertainty.push(zone ? "unsupported_timezone" : "missing_offset");
+  }
+  const precision = clockMatch ? clockMatch[3] ? "second" : "minute" : "day";
+  const instant = validDay && clock && offsetMinutes !== null && uncertainty.length === 0 ? new Date(Date.parse(`${validDay}T${clock}Z`) - offsetMinutes * 60_000).toISOString() : null;
+  return { value: { date: validDay, clock, offsetMinutes, instant, precision }, uncertainty };
+}
+
+export function readDateSpans(raw: string, format: "markdown" | "html" | "bbcode" = "markdown"): DateRead {
+  const diagnostics: string[] = [];
+  const diagnose = (code: string) => { if (!diagnostics.includes(code)) diagnostics.push(code); };
+  if (raw.length > DATE_LIMITS.inputUnits) return { readerVersion: DATE_READER_VERSION, spans: [], diagnostics: ["input_limit"], complete: false };
+  const { text, positions, ends } = visible(raw, format, diagnose);
+  // Never assemble dates across blocks. Diagnose only adjacent fragments that
+  // form a valid calendar day when the bounded separator gap is removed:
+  // YYYY / -MM-DD, YYYY-MM / -DD, or Month / DD[, YYYY]. Arbitrary years,
+  // separate numbers, intervening prose and distant blocks do not qualify.
+  const blockGap = "[ \\t]{0,32}(?:\\r?\\n[ \\t]{0,32}){1,8}";
+  const fragments = new RegExp(`(?<![\\p{L}\\d/.-])(?:\\d{4}${blockGap}[-/.]\\d{1,2}[-/.]\\d{1,2}|\\d{4}[-/.]\\d{1,2}${blockGap}[-/.]\\d{1,2}|${monthPattern}${blockGap}\\d{1,2}(?:st|nd|rd|th)?(?:,?[ \\t]+\\d{4})?)(?![\\p{L}\\d/.-])`, "giu");
+  for (const m of text.matchAll(fragments)) {
+    const numeric = /^\d/.test(m[0]);
+    const candidate = m[0].replace(/\s+/g, numeric ? "" : " ");
+    const parsed = parseValue(candidate);
+    if (parsed.value.date !== null || !numeric && parsed.uncertainty.includes("missing_year")) diagnose("split_date_fragments");
+  }
+  const re = new RegExp(`(?<![\\p{L}\\d/.-])${datePattern}${clockPattern}${zonePattern}(?![\\p{L}\\d/])`, "giu");
+  const spans: DateSpan[] = [];
+  const locations: Array<{ start: number; end: number }> = [];
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(text))) {
+    if (spans.length === DATE_LIMITS.spans) { diagnose("span_limit"); break; }
+    let visibleEnd = match.index + match[0].length;
+    let parsed = parseValue(match[0]);
+    if (parsed.value.precision !== "day" && !/[ \t]$/.test(match[0])) {
+      // Sentence punctuation may terminate a token, but punctuation followed
+      // immediately by more token content (e.g. UTC+8:30,5) is not a valid zone
+      // prefix. Inspect the entire adjacent non-whitespace chunk. A range
+      // separator delimits a token only with a recognized dated boundary after
+      // it; bare punctuation such as '<5' or '~5' cannot certify a prefix.
+      let tokenEnd = visibleEnd;
+      if (!rangeBoundary.test(text.slice(visibleEnd))) {
+        while (tokenEnd < text.length && !/\s/u.test(text[tokenEnd]!)) tokenEnd++;
+      }
+      const tail = text.slice(visibleEnd, tokenEnd);
+      // A sentence closer needs a corresponding opener before the date.
+      // Never erase an opener, embedded parentheses or extra wrapper closers.
+      const closingDate = !tail.includes(")") || text[match.index - 1] === "(" && tail.split(")").length === 2;
+      const sentenceTail = closingDate && !/[()]/.test(match[0]) && /^[,;!?.)\[\]{}"']*$/.test(tail);
+      const continuation = sentenceTail ? "" : tail.replace(/[,;!?.[\]{}"']+$/u, "");
+      if (continuation) {
+        visibleEnd += continuation.length;
+        parsed = parseValue(text.slice(match.index, visibleEnd));
+        re.lastIndex = visibleEnd;
+      }
+    }
+    const start = positions[match.index]!, end = ends[visibleEnd - 1]!;
+    if (end - start > DATE_LIMITS.quoteUnits) { diagnose("quote_limit"); continue; }
+    const quote = raw.slice(start, end);
+    const line = text.slice(text.lastIndexOf("\n", match.index!) + 1, match.index!);
+    const regionLabel = /(?:^|[;|])\s*(Asia|Europe|America):\s*$/i.exec(line);
+    const region = regionLabel ? regionLabel[1]!.toLowerCase() as DateSpan["region"] : null;
+    spans.push({ kind: "date", ref: createHash("sha256").update(JSON.stringify([DATE_READER_VERSION, start, end, quote])).digest("hex"),
+      start, end, quote, role: "single", group: null, region, ...parsed });
+    locations.push({ start: match.index, end: visibleEnd });
+  }
+  let group = 0;
+  for (let i = 0; i + 1 < spans.length; i++) {
+    if (separator.test(text.slice(locations[i]!.end, locations[i + 1]!.start))) {
+      spans[i]!.role = "start"; spans[i]!.group = group;
+      spans[i + 1]!.role = "end"; spans[i + 1]!.group = group++; i++;
+    }
+  }
+  // Date-like unsupported forms stay visible through diagnostics. Never certify
+  // coverage when a known marker fell outside the recognized language.
+  const remainder = text.split("");
+  for (const l of locations) for (let i = l.start; i < l.end; i++) remainder[i] = " ";
+  const unresolved = new RegExp(unresolvedPattern, "gi");
+  if (!spans.length) diagnose("no_recognized_dates");
+  for (const m of remainder.join("").matchAll(unresolved)) {
+    diagnose("unresolved_date_expression");
+    if (spans.length === DATE_LIMITS.spans) { diagnose("span_limit"); break; }
+    const start = positions[m.index!]!, end = ends[m.index! + m[0].length - 1]!;
+    if (end - start > DATE_LIMITS.quoteUnits) { diagnose("quote_limit"); continue; }
+    const quote = raw.slice(start, end);
+    spans.push({ kind: "unresolved", ref: createHash("sha256").update(JSON.stringify([DATE_READER_VERSION, start, end, quote])).digest("hex"),
+      start, end, quote, role: "single", group: null, region: null,
+      value: { date: null, clock: null, offsetMinutes: null, instant: null, precision: "unknown" }, uncertainty: ["unsupported_date_expression"] });
+  }
+  spans.sort((a, b) => a.start - b.start);
+  return { readerVersion: DATE_READER_VERSION, spans, diagnostics: diagnostics.sort(), complete: !diagnostics.some(c => c.endsWith("_limit")) };
+}

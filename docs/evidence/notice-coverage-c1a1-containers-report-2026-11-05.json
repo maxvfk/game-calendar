@@ -1,0 +1,228 @@
+{
+  "startingMain": "9488ecb3f578adb09b748600ac1cb58282724a88",
+  "reviewedHead": "e60ec30b4432c880db7be1b6d963f656f77451aa",
+  "codeCheckpoint": "7add2c9e38d78f69037ef4aef3c8f9893f555fa8",
+  "sameSidecarAndFinalEventsForBothReaders": true,
+  "beforeReportSha256": "003a4cdbaa589ba0138dab8308268d6001dfde8aaeeaf057559e35c0dfd354cb",
+  "afterReportSha256": "003a4cdbaa589ba0138dab8308268d6001dfde8aaeeaf057559e35c0dfd354cb",
+  "reportByteIdenticalToReviewedReader": true,
+  "deterministicReplay": true,
+  "allActualUtf16SourceQuotesVerified": true,
+  "publicManifestRecheckedAfterSeparateFeedBuild": true,
+  "baseline": {
+    "entries": 113,
+    "bytesUnchanged": true,
+    "sha256": "f9495e8f1a09bc45f21773116870b836f65e63b24d471a4bf3c945362f244cb9"
+  },
+  "before": {
+    "notices": 101,
+    "spans": 714,
+    "unmatchedSpans": 699,
+    "instants": 54,
+    "status": {
+      "partially processed": 20,
+      "unclassified": 37,
+      "unprocessed": 44
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 99
+    },
+    "baselineMembers": 76
+  },
+  "after": {
+    "notices": 101,
+    "spans": 714,
+    "unmatchedSpans": 699,
+    "instants": 54,
+    "status": {
+      "partially processed": 20,
+      "unclassified": 37,
+      "unprocessed": 44
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 99
+    },
+    "baselineMembers": 76
+  },
+  "counterexamplesBefore": [
+    {
+      "body": "> quote\n>\n>     [Quest](2026-10-29T04:00Z)",
+      "quote": null,
+      "instant": null,
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "matchedSpans": 2,
+      "unmatched": []
+    },
+    {
+      "body": "-     [Quest](2026-10-29T04:00Z)",
+      "quote": null,
+      "instant": null,
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "matchedSpans": 2,
+      "unmatched": []
+    },
+    {
+      "body": "1.     [Quest](2026-10-29T04:00Z)",
+      "quote": null,
+      "instant": null,
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "matchedSpans": 2,
+      "unmatched": []
+    },
+    {
+      "body": "> -     [Quest](2026-10-29T04:00Z)",
+      "quote": null,
+      "instant": null,
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "matchedSpans": 2,
+      "unmatched": []
+    },
+    {
+      "body": "> > quote\n> >\n> >     [Quest](2026-10-29T04:00Z)",
+      "quote": null,
+      "instant": null,
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "matchedSpans": 2,
+      "unmatched": []
+    },
+    {
+      "body": "> \t\t[Quest](2026-10-29T04:00Z)",
+      "quote": null,
+      "instant": null,
+      "status": "processed",
+      "evaluation": "complete",
+      "attentionRequired": false,
+      "matchedSpans": 2,
+      "unmatched": []
+    }
+  ],
+  "counterexamplesAfter": [
+    {
+      "body": "> quote\n>\n>     [Quest](2026-10-29T04:00Z)",
+      "quote": "2026-10-29T04:00Z",
+      "instant": "2026-10-29T04:00:00.000Z",
+      "status": "partially processed",
+      "evaluation": "complete",
+      "attentionRequired": true,
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "b61c522ab1ec14c0a5d7f5ee003000b2ce3a119b5c2a01be5e72088edff07e21",
+          "quote": "2026-10-29T04:00Z",
+          "reason": "no_compatible_represented_boundary"
+        }
+      ]
+    },
+    {
+      "body": "-     [Quest](2026-10-29T04:00Z)",
+      "quote": "2026-10-29T04:00Z",
+      "instant": "2026-10-29T04:00:00.000Z",
+      "status": "partially processed",
+      "evaluation": "complete",
+      "attentionRequired": true,
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "38820cfe55de928c6fad01ddb4cca18f0c2301f8426d3d1269f1299cf1ec3d2c",
+          "quote": "2026-10-29T04:00Z",
+          "reason": "no_compatible_represented_boundary"
+        }
+      ]
+    },
+    {
+      "body": "1.     [Quest](2026-10-29T04:00Z)",
+      "quote": "2026-10-29T04:00Z",
+      "instant": "2026-10-29T04:00:00.000Z",
+      "status": "partially processed",
+      "evaluation": "complete",
+      "attentionRequired": true,
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "cf451425ec8750ed1be5cfeb6793a7334013a9a2949df8e6495bfcc543437178",
+          "quote": "2026-10-29T04:00Z",
+          "reason": "no_compatible_represented_boundary"
+        }
+      ]
+    },
+    {
+      "body": "> -     [Quest](2026-10-29T04:00Z)",
+      "quote": "2026-10-29T04:00Z",
+      "instant": "2026-10-29T04:00:00.000Z",
+      "status": "partially processed",
+      "evaluation": "complete",
+      "attentionRequired": true,
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "57dd1bc5b73843ff4cfa1be63db20701231c466a1c468d99fec501c09453adc6",
+          "quote": "2026-10-29T04:00Z",
+          "reason": "no_compatible_represented_boundary"
+        }
+      ]
+    },
+    {
+      "body": "> > quote\n> >\n> >     [Quest](2026-10-29T04:00Z)",
+      "quote": "2026-10-29T04:00Z",
+      "instant": "2026-10-29T04:00:00.000Z",
+      "status": "partially processed",
+      "evaluation": "complete",
+      "attentionRequired": true,
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "9d5439e217da72f2df826dc431c3f3b2b57c489631d7f23ef91291677582eabe",
+          "quote": "2026-10-29T04:00Z",
+          "reason": "no_compatible_represented_boundary"
+        }
+      ]
+    },
+    {
+      "body": "> \t\t[Quest](2026-10-29T04:00Z)",
+      "quote": "2026-10-29T04:00Z",
+      "instant": "2026-10-29T04:00:00.000Z",
+      "status": "partially processed",
+      "evaluation": "complete",
+      "attentionRequired": true,
+      "matchedSpans": 2,
+      "unmatched": [
+        {
+          "field": "content",
+          "ref": "850ef83a2cbb81075809657fae97f84abd89715b09a924e4352c414de89a1a6f",
+          "quote": "2026-10-29T04:00Z",
+          "reason": "no_compatible_represented_boundary"
+        }
+      ]
+    }
+  ],
+  "regressionReproduction": {
+    "oldReaderPass": 71,
+    "oldReaderFail": 13,
+    "correctedFocusedPass": 133,
+    "correctedFocusedFail": 0
+  },
+  "policy": {
+    "containerPrefixDepth": 16,
+    "exceededDepthDiagnostic": "container_limit",
+    "exceededDepthEvaluation": "incomplete",
+    "ambiguousContextDiagnostic": "unsupported_code_context"
+  },
+  "note": "Observed report/counterexample replay, not generated test expectations. Rolling bytes unchanged; the root/list-padding false-positive fixture is reclassified into independently authored genuine-link controls."
+}

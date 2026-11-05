@@ -1,0 +1,276 @@
+{
+  "startingMain": "51bcb01dd50539bcf9351b6a8088ced89ad16028",
+  "previousReviewedHead": "475719dfecbc4f07840a67e4cdc1e1a0efedc6db",
+  "codeCheckpoint": "0b7a0dc0d33b1800b8df5712919dc79b3fec58f8",
+  "sameSidecarAndFinalEventsForBothReaders": true,
+  "beforeReportSha256": "686ef04cf0188aa556d0167a5fb4568680ca3464eac41d67968c5d4184e79a87",
+  "afterReportSha256": "4943adbbadb007e439c802ca6b26e3ebb4d29d6283521c67d88a86f60f8198e1",
+  "afterReplayByteIdentical": true,
+  "actualSourceMappingVerifiedForEverySpan": true,
+  "baseline": {
+    "entries": 113,
+    "bytesUnchanged": true,
+    "sha256": "f9495e8f1a09bc45f21773116870b836f65e63b24d471a4bf3c945362f244cb9"
+  },
+  "initialReproduction": {
+    "passed": 3,
+    "failed": 19,
+    "note": "Before corrections; additional edge cases were subsequently authored, never generated from implementation output."
+  },
+  "before": {
+    "notices": 106,
+    "status": {
+      "partially processed": 18,
+      "unclassified": 38,
+      "unprocessed": 50
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 104
+    },
+    "spans": 725,
+    "unmatchedSpans": 710,
+    "instants": 54,
+    "diagnostics": {
+      "content:active_content_omitted": 1,
+      "content:no_recognized_dates": 38,
+      "merge_source_conflict": 1,
+      "winner_period_conflict": 7,
+      "winner_reference_conflict": 11,
+      "winner_type_conflict": 2
+    }
+  },
+  "after": {
+    "notices": 106,
+    "status": {
+      "partially processed": 18,
+      "unclassified": 38,
+      "unprocessed": 50
+    },
+    "evaluation": {
+      "complete": 2,
+      "uncertain": 104
+    },
+    "spans": 725,
+    "unmatchedSpans": 710,
+    "instants": 54,
+    "diagnostics": {
+      "content:active_content_omitted": 1,
+      "content:no_recognized_dates": 38,
+      "content:unsupported_markup": 1,
+      "merge_source_conflict": 1,
+      "winner_period_conflict": 7,
+      "winner_reference_conflict": 11,
+      "winner_type_conflict": 2
+    }
+  },
+  "changedSpanQuotesAndRefs": [
+    {
+      "sourceId": "genshin-kqm-ginews",
+      "noticeId": "21879",
+      "field": "content",
+      "changedFields": [
+        "ref",
+        "start",
+        "end",
+        "quote"
+      ],
+      "before": {
+        "ref": "a31504e49afcea453826129c4e7bd47adb0bbf3ef52677db9bcfdcddbe034fb2",
+        "start": 928,
+        "end": 939,
+        "quote": "1\nSeptember"
+      },
+      "after": {
+        "ref": "f25d5c881965d9bff42d77d85248970c63c09dff13f9823eef32eef8182277c5",
+        "start": 930,
+        "end": 942,
+        "quote": "September 29"
+      },
+      "parsedValueUnchanged": true,
+      "matchingUnchanged": true
+    },
+    {
+      "sourceId": "genshin-kqm-ginews",
+      "noticeId": "21879",
+      "field": "content",
+      "changedFields": [
+        "ref",
+        "start",
+        "end",
+        "quote"
+      ],
+      "before": {
+        "ref": "f8f2bec8b77d21950f6e5ff1708be29237e0a4e9f8623e10fc110ff6b139ab95",
+        "start": 977,
+        "end": 988,
+        "quote": "2\nSeptember"
+      },
+      "after": {
+        "ref": "bbb96dd41870400715bc87c659d8a9191395cf23d1cacdd93230d02d0f8f8435",
+        "start": 979,
+        "end": 991,
+        "quote": "September 30"
+      },
+      "parsedValueUnchanged": true,
+      "matchingUnchanged": true
+    },
+    {
+      "sourceId": "genshin-kqm-ginews",
+      "noticeId": "21879",
+      "field": "content",
+      "changedFields": [
+        "ref",
+        "start",
+        "end",
+        "quote"
+      ],
+      "before": {
+        "ref": "7130f4ba1d45230e8ec50cfe80c4a8525ca81f1b018ade34abab593a57d4235b",
+        "start": 1031,
+        "end": 1040,
+        "quote": "1\nOctober"
+      },
+      "after": {
+        "ref": "a84f57a11a4f08f391cce2dbbd4d29a6cfd022dc42a23474b171a63e1c330c6d",
+        "start": 1033,
+        "end": 1042,
+        "quote": "October 1"
+      },
+      "parsedValueUnchanged": true,
+      "matchingUnchanged": true
+    },
+    {
+      "sourceId": "wuwa-kuro-mirror",
+      "noticeId": "5571",
+      "field": "content",
+      "changedFields": [
+        "ref",
+        "end",
+        "quote"
+      ],
+      "before": {
+        "ref": "108923f1760f22db9ea1771010b4a4301df0c4c6dbe3106182181ddfe8cf1dbc",
+        "start": 24649,
+        "end": 24670,
+        "quote": "0/17.0/17.1/17.2.</p>"
+      },
+      "after": {
+        "ref": "d2bbec6561bcdd137f521b115ef2070387685640b9af6777e574fe2c8fd9ad57",
+        "start": 24649,
+        "end": 24666,
+        "quote": "0/17.0/17.1/17.2."
+      },
+      "parsedValueUnchanged": true,
+      "matchingUnchanged": true
+    },
+    {
+      "sourceId": "zzz-steam-events-official",
+      "noticeId": "714537487845820570",
+      "field": "content",
+      "changedFields": [
+        "ref",
+        "end",
+        "quote"
+      ],
+      "before": {
+        "ref": "e64f85bea526d135ad418a4ffc2a8719d0cafb9c88b183209864794c7657fe71",
+        "start": 17159,
+        "end": 17203,
+        "quote": "00/1,500 Decibels upon entering combat.<br>•"
+      },
+      "after": {
+        "ref": "130895a64d3b6fe290dc437ec874ce44525a39e69f3f86a622196d7acfe19f4d",
+        "start": 17159,
+        "end": 17198,
+        "quote": "00/1,500 Decibels upon entering combat."
+      },
+      "parsedValueUnchanged": true,
+      "matchingUnchanged": true
+    },
+    {
+      "sourceId": "zzz-steam-events-official",
+      "noticeId": "706649847851123193",
+      "field": "content",
+      "changedFields": [
+        "ref",
+        "end",
+        "quote"
+      ],
+      "before": {
+        "ref": "eba00abdce5f9360233a7a22d161a824cd93e2684511136d1eb5642b8538305e",
+        "start": 17152,
+        "end": 17196,
+        "quote": "00/1,500 Decibels upon entering combat.<br>•"
+      },
+      "after": {
+        "ref": "0039d1289ebee913b37994b112ccfe07080c605d81cc1ab96b54218849b0b759",
+        "start": 17152,
+        "end": 17191,
+        "quote": "00/1,500 Decibels upon entering combat."
+      },
+      "parsedValueUnchanged": true,
+      "matchingUnchanged": true
+    },
+    {
+      "sourceId": "zzz-steam-events-official",
+      "noticeId": "706649847851123193",
+      "field": "content",
+      "changedFields": [
+        "ref",
+        "end",
+        "quote"
+      ],
+      "before": {
+        "ref": "29790c01135167d0175e68c0e30641f898db56418f723e002b3a988699e3b1a3",
+        "start": 17801,
+        "end": 17846,
+        "quote": "40/120.<br>• Agent Ether DMG increases by 20%"
+      },
+      "after": {
+        "ref": "f76de0bf8a4328e0f1f51fc6df4adf5237b5a1ac8bf64910fdff2db27733eb8d",
+        "start": 17801,
+        "end": 17808,
+        "quote": "40/120."
+      },
+      "parsedValueUnchanged": true,
+      "matchingUnchanged": true
+    },
+    {
+      "sourceId": "zzz-steam-events-official",
+      "noticeId": "706649847851123193",
+      "field": "content",
+      "changedFields": [
+        "ref",
+        "end",
+        "quote"
+      ],
+      "before": {
+        "ref": "aa2dc392a55831da7be3fc3982039db109254ab4c1848f8279cdb3dfe46aa761",
+        "start": 18686,
+        "end": 18730,
+        "quote": "00/1,500 Decibels upon entering combat.<br>•"
+      },
+      "after": {
+        "ref": "ee709c7acf4de32839a9ebc5f392ee2d2bd8f5e303111719af060b6c2c7c9c5b",
+        "start": 18686,
+        "end": 18725,
+        "quote": "00/1,500 Decibels upon entering combat."
+      },
+      "parsedValueUnchanged": true,
+      "matchingUnchanged": true
+    }
+  ],
+  "diagnosticChanges": [
+    {
+      "sourceId": "genshin-kqm-ginews",
+      "noticeId": "21946",
+      "before": [],
+      "after": [
+        "content:unsupported_markup"
+      ],
+      "reason": "Conservative unsupported inline Markdown marker diagnostic on the existing unclosed fiction-note emphasis."
+    }
+  ],
+  "note": "Observed report delta, not a test oracle. Existing false-positive version/fraction/relative expressions remain unresolved, with no invented years or offsets."
+}
