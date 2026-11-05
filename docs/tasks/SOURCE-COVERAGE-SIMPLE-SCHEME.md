@@ -11,6 +11,9 @@ its review findings are kept where they still apply.
 **Current implementation checkpoint (2026-11-01):** C0 is merged via
 [PR #152](https://github.com/maxvfk/game-calendar/pull/152). C1 starts with a
 bounded WuWa notice-inventory extension, not a reopening of C0.
+**Re-order (2026-11-05):** source date context
+(CTX) and the read-only C5 stage 1 probe move ahead of C2–C4, and C1b is split into
+two phases. See [Re-order 2026-11-05](#re-order-2026-11-05-context-first).
 
 ## Why a different scheme
 
@@ -107,7 +110,10 @@ run red.
   marked `processed`; Starlight Voyage is the required historical regression.
   A date alone is not proof of an in-scope event, and an ambiguous or unreadable
   span must not become a confident complete-coverage claim.
-- **C1b — GitHub Coverage Inbox (separate PR).** Integrate the read-only report
+- **C1b — GitHub Coverage Inbox (separate PR; two phases per the 2026-11-05 re-order).**
+  Phase 1 (C1b.1) notifies only on new notices that emitted zero events; the C0/C1a.0
+  inventory already supports this. Phase 2 (C1b.2) adds partially-processed notices
+  after CTX shows real-text discrimination. Integrate the read-only report
   into refresh as a best-effort side effect; the canonical baseline and ignore
   decisions live in Git, not GitHub Issue text. One pinned issue, idempotent
   updates, notify only on genuinely new items and prioritize upcoming seven-day
@@ -181,7 +187,8 @@ enough to finish or redo.
 - **CI check.** Every dated field of such a row must be covered by one entry. CI reads the date
   in each quote with the same deterministic date reader as parts 1 and 5 and requires it to
   match the named field after time-zone conversion, at the stated precision. A server-time
-  quote ("04:00 server time") needs a reviewed per-game table of server offsets; without one the
+  quote ("04:00 server time") needs a reviewed per-game table of server offsets (built in CTX,
+  with C2 adding its own stricter acceptance contract); without one the
   field stays at day precision. The reader covers the date formats our sources use, not every
   possible format. An unreadable or ambiguous quote fails CI: the row goes to `unknown` or day
   precision, or the reader is extended. It is never bypassed with a guessed exact time.
@@ -215,7 +222,8 @@ Timeline labels:
 - **The model does not compute dates.** Code does all the checks:
   - every quote must occur verbatim in the notice text;
   - the date reader parses it and converts it to UTC;
-  - a server-time quote without a reviewed offset table makes the item `unsure`;
+  - a server-time quote without a reviewed offset table makes the item `unsure` (the table and
+    the other date-context rules come from CTX; without CTX almost every real notice is `unsure`);
   - an overlap with an existing event (same period, similar title) is not published but
     reported;
   - the result passes the normal schema validation and calendar sanity checks.
@@ -265,13 +273,63 @@ rules and this scheme does not change it. Agreed with the operator on 2026-10-28
 | C0 | Event Context E1 evidence extraction for the article sources: KQM GINews and HSRNews, ZZZ and NTE Steam news | Two checks hold: (a) every item in the current snapshot is listed with its source and item ID, including items with no event; (b) every emitted event maps to its item, or fails closed with a diagnostic. Public feed files stay byte-identical |
 | C1a.0 | Extend the existing E1/C0 notice inventory to every WuWa Kuro Atom entry before classification | All WuWa entries, including zero-output, have stable IDs and source text; every emitted event has an unambiguous article link or diagnostic; prior WuWa E1 and public outputs remain unchanged |
 | C1a.1 | Part 1 offline coverage engine for five notice sources: bounded date reader, `processed`/`partially processed`/`unprocessed`/`ignored`, span ignores and notification-only baseline | Historical replay flags #119 and #130–#143 where the relevant notice is in a tracked snapshot; Starlight's earlier quest cutoff is `partially processed`, not a false `processed` |
-| C1b | Part 1 operational Coverage Inbox: one pinned issue, seven-day priority, idempotent best-effort refresh updates | Replayed output and actual refresh integration do not change public feed or turn refresh red; new-item notification is bounded; unsupported games are not shown as complete |
+| C1b.1 | Part 1 operational Coverage Inbox, phase 1: one pinned issue listing new notices that emitted **zero** events; seven-day priority, idempotent best-effort refresh updates | Replayed output and actual refresh integration do not change public feed or turn refresh red; new-item notification is bounded; unsupported games are not shown as complete |
+| CTX | Source date context for **matching only** (see below): reviewed per-game server-time table, year context, version anchors, KQM `t_lc`/`t_gl` | On the real corpus, matched spans in notices with emitted events rise well above today's 15 of 714 (target set at design review); the real frozen Starlight notice gives `partially processed` with only the main event and `processed` with both; #119 likewise; ambiguous cases stay uncertain; public files byte-identical |
+| C5.1 | Part 5 stage 1: read-only model probe | Probe report compared with the reviewed records: detection, date-to-event attribution (Starlight), duplicates, regional clocks; decides Sonnet vs Haiku |
+| C1b.2 | Part 1 inbox, phase 2: add `partially processed` notices | Notifications for partial notices on real snapshots are few and actionable, not every notice |
 | C2 | Part 3: per-field `evidence`, date reader, CI check, legacy list | Fixes #130–#143 rewritten as test cases pass; a wrong date, or a field without a quote, fails |
 | C3 | Part 2: audit prompt, audit log, due computation | One real audit run end to end for one game |
 | C4 | Part 4: dead man's switch | A deliberately skipped ping produces mail |
-| C5 | Part 5, stages 1–3, each a separate operator decision | Stage 1: probe report compared with the reviewed records. Stage 3: the measured criteria above are met |
+| C5.2–5.3 | Part 5 stages 2–3, each a separate operator decision | Stage 3: the measured criteria above are met |
 
-C0 to C4 involve no AI.
+C0 to C4 and CTX involve no AI. C5.1 is read-only and publishes nothing. C3 and C4 do
+not depend on CTX or C5.1 and can be scheduled whenever convenient.
+
+### Re-order 2026-11-05: context first
+
+**Status:** introduced by the PR that adds this section; merging it is the operator's
+acceptance of the new order. Evidence: the C1a.1 measurements and decision memo on
+[PR #161](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6647707287).
+
+**Why.** On the real snapshots the C1a.1 engine matches 15 of 714 dated spans; all 101
+notices need attention and none is `processed`. The reader is not at fault: the
+ordinary source date forms are version-anchored starts ("after the Version 7.2 update"),
+dates without a year (mostly NTE), `(server time)`/`(global)` clocks and clocks without a zone.
+The plan only resolves them in C2, after C1b. Part 5 has the same dependency: the model
+returns quotes, code converts them, and a server-time quote without the offset table is
+`unsure`. So C1b.2, C2 and C5 all wait on the same missing piece. Fixing parsers one layout
+at a time does not remove that dependency, and model extraction is the intended long-term
+answer to layout drift (Part 5), so it should be measured early rather than last.
+
+**CTX scope (matching only).**
+
+- A Git-reviewed per-game table: region → server UTC offset (and any DST rule), each row
+  citing its source. Existing knowledge to reuse and verify: Genshin's fixed
+  UTC+8 / UTC+1 / UTC−5 regional clocks used by the parser (`test/fixtures/genshin/README.md`),
+  per-parser server-time handling, and `docs/research/daily-reset-clocks.md`.
+- KQM `<t class="t_lc">` / `t_gl` tags as explicit local/global markers.
+- Year context: from the notice's publication date or explicit title/version context, as the
+  NTE parser already does, only where unambiguous; otherwise uncertain.
+- Version anchors: "after the Version X update" resolved against a reviewed version-start
+  source, otherwise uncertain.
+- Every CTX-derived match records its basis and stays visible in the report. **CTX never
+  writes published fields:** published dates still come only from parsers and reviewed rows,
+  under the `AGENTS.md` data rules.
+- High-risk work under the proposed risk-gated workflow
+  ([PR #163](https://github.com/maxvfk/game-calendar/pull/163)): read-only design review
+  before implementation. C2 later adds its own stricter evidence contract on top of CTX.
+
+**C5.1 earlier.** Stage 1 is read-only and depends only on C0/C1a.0 notice texts, the
+reviewed records as ground truth and, for date conversion, CTX. Detection and
+date-to-event attribution can be measured from the model's quotes in parallel with CTX;
+conversion metrics follow once CTX lands. The probe results decide how much precision
+C1b.2 and C2 still need, before effort goes into them.
+
+**Unchanged.** C1a.1 closes on PR #161 under its own decision. No step starts
+automatically. Stages 2–3 of Part 5 keep their separate operator GO and measured criteria.
+Sources that no notice feed covers (Endfield, CZN, events absent from tracked sources) still
+need Part 2 audits and new sources; neither CTX nor Part 5 can find events the project
+does not read.
 
 **Why C0 came first.** WuWa E1 originally associated source text with emitted
 winners but did not enumerate all zero-output Atom entries
