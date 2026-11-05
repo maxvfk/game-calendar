@@ -75,9 +75,10 @@ For each item, use this compact format:
   - **Observation:** the app has daily chores but no personal tracking for 30-day login/subscription passes such as Genshin's Blessing of the Welkin Moon.
   - **Desired behavior:** let the reader track remaining days for a daily pass in each enabled game, set or correct the remaining count, and extend an active pass by one standard period with a single action.
   - **Area:** new feature
-  - **Priority:** undecided
-  - **Status:** observed
-  - **Notes / constraints:** prefer a compact `Daily passes` surface adjacent to, but semantically separate from, today's tickable dailies. Show active/expired passes on the main surface; manage all enabled games in a detail panel. A one-tap `+30` should extend from the current expiry (or start a fresh 30-day period when expired) and offer Undo rather than a confirmation dialog. Track against each game's server-day/reset semantics rather than a naive 24-hour timer. Keep pass state profile-scoped and compatible with export/import and future sync. Consider, but do not assume, an optional local-only expiry marker on the main Timeline.
+  - **Priority:** approved for design checkpoint; implementation pending PASS-0 independent review and operator GO (2026-11-05)
+  - **Status:** scoped roadmap documented; no implementation started
+  - **Notes / constraints:** prefer a compact `Daily passes` surface adjacent to, but semantically separate from, today's tickable dailies. Show active/expired passes on the main surface; manage all enabled games in a detail panel. A one-tap `+30` should extend from the current expiry (or start a fresh 30-day period when expired) and offer Undo rather than a confirmation dialog. Track against each game's server-day/reset semantics rather than a naive 24-hour timer. Keep pass state profile-scoped and compatible with export/import and Account Sync. Do not mix with daily reward-claim marks. The minimal data model is **not predetermined**: first prove that two independent concurrent extensions survive, duplicate retries do not add extra days, Undo targets the original action, and correction conflicts never silently lose paid time. A full append-only/event-sourcing design is not an automatic requirement. Consider, but do not assume, an optional local-only expiry marker on the main Timeline.
+  - **Canonical task and phased roadmap:** [DAILY-PASSES.md](tasks/DAILY-PASSES.md) — PASS-0 (read-only independent design gate) → PASS-1A (minimal model/DB/backup) → PASS-1B (offline/Sync/export) → PASS-2 (UI/smoke). Production rollout is separately gated.
 
 - **Title:** Disambiguate mixed daily reset countdowns
   - **Observation:** the `Today's dailies` header currently shows a single `next reset in …` countdown even though enabled games can reset at different times; after one game's reset has already happened, the global-looking timer can imply that all games share the remaining countdown.
@@ -244,7 +245,7 @@ Larger feature/redesign work unless explicitly reprioritized:
 
 - event artwork / image-source and cache policy;
 - recognition-first Event Detail redesign;
-- per-game daily pass tracking;
+- per-game daily pass tracking (**design reprioritized 2026-11-05**; PASS-0 planning is authorized independently, but production implementation still requires its accepted risk-gated design and explicit operator GO; see [DAILY-PASSES.md](tasks/DAILY-PASSES.md));
 - any return to explicit Timeline type grouping unless M2 smoke produces concrete evidence that it is still needed.
 
 ## Implemented / resolved
