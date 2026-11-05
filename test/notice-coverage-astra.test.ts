@@ -70,10 +70,11 @@ for (const format of ["markdown", "html", "bbcode"] as const) test(`P1-C ${forma
   expect(read.spans.some(s => s.value.date === "2030-10-31")).toBe(false);
   gap(raw, format);
 });
-test("P1-C genuine Markdown destinations stay metadata; escaped link-looking prose stays visible", () => {
+test("P1-C date-like relative destinations stay metadata but require Option B uncertainty; escapes stay visible", () => {
   const raw = `🧭 Main: ${period}\n[Quest](archive/2030-10-31.md) [Site](https://example.org/2030-10-31)`;
   const r = coverage(raw, "markdown"); mapped(raw, r.spans);
-  expect(r.spans.some(s => s.value.date === "2030-10-31")).toBe(false); expect(r.status).toBe("processed");
+  expect(r.spans.some(s => s.value.date === "2030-10-31")).toBe(false); expect(r.status).toBe("partially processed");
+  expect(r.evaluation).toBe("uncertain"); expect(r.attention.required).toBe(true); expect(r.diagnostics).toContain("content:masked_date_like_destination");
   const escaped = String.raw`🧭 \[Quest](Claim by October 29, 2026)`;
   const read = readDateSpans(escaped); mapped(escaped, read.spans); expect(read.spans.some(s => s.value.date === "2026-10-29")).toBe(true);
 });
@@ -170,9 +171,9 @@ test("residual P1-C code positives, real link destinations and URL metadata stay
     const raw = `🧭 Main: ${period}\n${literal}\n[Quest](2026-10-29T04:00Z)\n[Site](https://example.org/2026-10-29)\n\`https://example.org/2026-10-29\``;
     const read = readDateSpans(raw); mapped(raw, read.spans);
     expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02", "2026-11-02"]);
-    expect(read.diagnostics).toEqual([]);
+    expect(read.diagnostics).toEqual(["masked_date_like_destination"]);
     const r = coverage(raw, "markdown"); mapped(raw, r.spans);
-    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+    expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("uncertain"); expect(r.attention.required).toBe(true);
   }
 });
 
@@ -275,7 +276,8 @@ test("Astra P1-C blank lines preserve code blocks, dedents restore genuine link 
   const read = readDateSpans(raw); mapped(raw, read.spans);
   expect(read.spans.map(s => s.value.instant)).toEqual(["2026-10-19T10:00:00.000Z", "2026-11-02T03:59:00.000Z", "2026-10-29T04:00:00.000Z", "2026-10-30T04:00:00.000Z"]);
   const r = coverage(raw, "markdown"); mapped(raw, r.spans);
-  expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(true); expect(r.unmatchedSpans).toHaveLength(2);
+  expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("uncertain"); expect(r.attention.required).toBe(true); expect(r.unmatchedSpans).toHaveLength(2);
+  expect(read.diagnostics).toEqual(["masked_date_like_destination"]);
 });
 test("Astra P1-C ordinary indented paragraph continuations and three-space links remain links", () => {
   for (const indent of ["    ", "\t", "  \t"]) {
@@ -283,7 +285,8 @@ test("Astra P1-C ordinary indented paragraph continuations and three-space links
     const read = readDateSpans(raw); mapped(raw, read.spans);
     expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02", "2026-11-02"]);
     const r = coverage(raw, "markdown"); mapped(raw, r.spans);
-    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+    expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("uncertain"); expect(r.attention.required).toBe(true);
+    expect(read.diagnostics).toEqual(["masked_date_like_destination"]);
   }
 });
 test("Astra P1-C indented literals after block markers fail closed without a block-parser guess", () => {
@@ -300,7 +303,8 @@ test("Astra P1-C exact covered indented code, backticks, HTML code and URL metad
   const read = readDateSpans(raw); mapped(raw, read.spans);
   expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02", "2026-11-02", "2026-11-02", "2026-11-02"]);
   const r = coverage(raw, "markdown"); mapped(raw, r.spans);
-  expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+  expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("uncertain"); expect(r.attention.required).toBe(true);
+  expect(read.diagnostics).toEqual(["masked_date_like_destination"]); expect(r.spans.every(s => s.disposition === "matched")).toBe(true);
 });
 
 const containerCases: Array<[string, string]> = [
@@ -334,9 +338,9 @@ test("container P1-C genuine paragraph, quote and list links remain destinations
     String.raw`\>     [Quest](2026-10-29T04:00Z)`, String.raw`\-     [Quest](2026-10-29T04:00Z)`,
   ]) {
     const raw = `🧭 Main: ${period}\n\n${body}`, read = readDateSpans(raw); mapped(raw, read.spans);
-    expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02"]); expect(read.diagnostics).toEqual([]);
+    expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02"]); expect(read.diagnostics).toEqual(["masked_date_like_destination"]);
     const r = coverage(raw, "markdown"); mapped(raw, r.spans);
-    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false); expect(r.unmatchedSpans).toEqual([]);
+    expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("uncertain"); expect(r.attention.required).toBe(true); expect(r.unmatchedSpans).toEqual([]);
   }
 });
 test("container P1-C blank container lines, continued code and dedents keep their contexts", () => {
@@ -344,7 +348,8 @@ test("container P1-C blank container lines, continued code and dedents keep thei
   const read = readDateSpans(raw); mapped(raw, read.spans);
   expect(read.spans.map(s => s.value.instant)).toEqual(["2026-10-19T10:00:00.000Z", "2026-11-02T03:59:00.000Z", "2026-10-29T04:00:00.000Z", "2026-10-30T04:00:00.000Z"]);
   const r = coverage(raw, "markdown"); mapped(raw, r.spans);
-  expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(true); expect(r.unmatchedSpans).toHaveLength(2);
+  expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("uncertain"); expect(r.attention.required).toBe(true); expect(r.unmatchedSpans).toHaveLength(2);
+  expect(read.diagnostics).toEqual(["masked_date_like_destination"]);
 });
 test("container P1-C covered literal dates still confirm exact event boundaries", () => {
   for (const [, body] of containerCases) {
@@ -419,9 +424,9 @@ test("block-state genuine prose and reliable list frames retain real destination
     String.raw`\* \* \*` + `\n    ${questLiteral}`,
   ]) {
     const raw = `🧭 Main: ${period}\n\n${body}`, read = readDateSpans(raw); mapped(raw, read.spans);
-    expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02"]); expect(read.diagnostics).toEqual([]);
+    expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02"]); expect(read.diagnostics).toEqual(["masked_date_like_destination"]);
     const r = coverage(raw, "markdown"); mapped(raw, r.spans);
-    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false); expect(r.unmatchedSpans).toEqual([]);
+    expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("uncertain"); expect(r.attention.required).toBe(true); expect(r.unmatchedSpans).toEqual([]);
   }
 });
 test("block-state recognized code can match covered exact boundaries without blanket uncertainty", () => {
@@ -455,9 +460,9 @@ test("remaining P1-C prefixed blanks, lazy prose and real interruptions keep gen
     `> a\nlazy\n2. foo\n\n     ${questLiteral}`, `1. a\nlazy\n\n    ${questLiteral}`,
   ]) {
     const raw = `🧭 Main: ${period}\n\n${body}`, read = readDateSpans(raw); mapped(raw, read.spans);
-    expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02"]); expect(read.diagnostics).toEqual([]);
+    expect(read.spans.map(s => s.value.date)).toEqual(["2026-10-19", "2026-11-02"]); expect(read.diagnostics).toEqual(["masked_date_like_destination"]);
     const r = coverage(raw, "markdown"); mapped(raw, r.spans);
-    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false); expect(r.unmatchedSpans).toEqual([]);
+    expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("uncertain"); expect(r.attention.required).toBe(true); expect(r.unmatchedSpans).toEqual([]);
   }
 });
 for (const [name, body] of [
@@ -481,26 +486,30 @@ const validFenceBodies = [
   `\`\`\`\ntext\n\`\`\`\n    ${questLiteral}`,
 ];
 test("remaining P1-C valid fence syntax/container closure retains only the literal deadline", () => {
-  for (const body of validFenceBodies) blockMissing(`${body}\n[Real link](2026-10-28T04:00Z)`);
+  for (const body of validFenceBodies) {
+    blockMissing(`${body}\n[Real link](2026-10-28T04:00Z)`, false);
+    expect(readDateSpans(`${body}\n[Real link](2026-10-28T04:00Z)`).diagnostics).toEqual(["masked_date_like_destination"]);
+  }
 });
 test("remaining P1-C covered valid fences still confirm exact event boundaries", () => {
   for (const body of validFenceBodies) {
     const raw = `🧭 Main: ${period}\n\n${body.replace("2026-10-29T04:00Z", "2026-11-02T03:59Z")}\n[Real link](2026-10-28T04:00Z)`;
-    const read = readDateSpans(raw); mapped(raw, read.spans); expect(read.diagnostics).toEqual([]); expect(read.spans).toHaveLength(3);
+    const read = readDateSpans(raw); mapped(raw, read.spans); expect(read.diagnostics).toEqual(["masked_date_like_destination"]); expect(read.spans).toHaveLength(3);
     const r = coverage(raw, "markdown"); mapped(raw, r.spans);
-    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+    expect(r.status).toBe("partially processed"); expect(r.evaluation).toBe("uncertain"); expect(r.attention.required).toBe(true);
+    expect(r.spans.every(s => s.disposition === "matched")).toBe(true);
   }
 });
 test("remaining P1-C inline runs, fence exits and metadata stay distinct", () => {
-  for (const body of [
-    `text \`\`a \` b\`\`\n[Real](2026-10-29T04:00Z)`, `\`\`\`code\`\`\`\n[Real](2026-10-29T04:00Z)`,
-    `> \`\`\`\n> code\n[Real](2026-10-29T04:00Z)`, `<code>[End](2026-11-02T03:59Z)</code>`,
-    `\`[End](2026-11-02T03:59Z)\``, `\`\`[End](2026-11-02T03:59Z) \` text\`\``,
-    `\`\`\` 2026-10-29\n[End](2026-11-02T03:59Z)\n\`\`\``,
-  ]) {
+  for (const [body, maskedDate] of [
+    [`text \`\`a \` b\`\`\n[Real](2026-10-29T04:00Z)`, true], [`\`\`\`code\`\`\`\n[Real](2026-10-29T04:00Z)`, true],
+    [`> \`\`\`\n> code\n[Real](2026-10-29T04:00Z)`, true], [`<code>[End](2026-11-02T03:59Z)</code>`, false],
+    [`\`[End](2026-11-02T03:59Z)\``, false], [`\`\`[End](2026-11-02T03:59Z) \` text\`\``, false],
+    [`\`\`\` 2026-10-29\n[End](2026-11-02T03:59Z)\n\`\`\``, false],
+  ] as const) {
     const raw = `🧭 Main: ${period}\n\n${body}`, read = readDateSpans(raw); mapped(raw, read.spans);
-    expect(read.spans.some(s => s.value.date === "2026-10-29")).toBe(false); expect(read.diagnostics).toEqual([]);
+    expect(read.spans.some(s => s.value.date === "2026-10-29")).toBe(false); expect(read.diagnostics).toEqual(maskedDate ? ["masked_date_like_destination"] : []);
     const r = coverage(raw, "markdown"); mapped(raw, r.spans);
-    expect(r.status).toBe("processed"); expect(r.evaluation).toBe("complete"); expect(r.attention.required).toBe(false);
+    expect(r.status).toBe(maskedDate ? "partially processed" : "processed"); expect(r.evaluation).toBe(maskedDate ? "uncertain" : "complete"); expect(r.attention.required).toBe(maskedDate);
   }
 });

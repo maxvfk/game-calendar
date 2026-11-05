@@ -25,6 +25,8 @@ const clockPattern = "(?:(?:[ \\t,T]+)\\d{1,2}:\\d{2}(?::\\d{2})?(?:[ \\t]*[AP]M
 const zonePattern = "(?:[ \\t]*(?:\\(?[ \\t]*UTC(?:[ \\t]*[+−-]\\d{1,2}(?::?\\d{2})?)?[ \\t]*\\)?|Z|[+−-]\\d{2}:?\\d{2}|\\((?:server(?: time)?|global|[A-Z]{2,5})\\)))?";
 const separator = /^[ \t*_,]*(?:[-–—~]|to|until)[ \t*_,]*$/i;
 const rangeBoundary = new RegExp(`^(?:[-–—~]|to|until)[ \\t*_,]*${datePattern}${clockPattern}${zonePattern}(?![\\p{L}\\d/])`, "iu");
+const unresolvedPattern = `${monthPattern}\\s+\\d[^\\n;]{0,80}|\\d{4}[-/.]\\d[^\\n;]{0,80}|\\d{1,2}/\\d{1,2}[^\\n;]{0,40}|\\d{1,2}\\.\\d{1,2}\\.\\d{2,4}|\\d{1,2}:\\d{2}(?::\\d{2})?|\\b(?:tomorrow|TBD|TBA|after (?:the )?(?:version \\d+\\.\\d+ (?:update|maintenance)|update|maintenance))\\b`;
+const dateLikeDestination = new RegExp(`(?:${datePattern}|${unresolvedPattern})`, "i");
 
 /** Mask markup, attributes, URL destinations and active content; never execute it.
  * Keep a source-offset map through one-pass entity decoding. Unknown entities
@@ -290,9 +292,14 @@ function visible(raw: string, format: "markdown" | "html" | "bbcode", diagnose: 
     }
     // Spaces in a bare destination are not a Markdown link. Parenthesized
     // prose in HTML/BBCode is never processed by this Markdown-only rule.
-    const links = /\[([^\[\]\r\n]{1,2048})\]\((?:<[^<>\r\n]{1,2048}>|[^\s()<>]{1,2048})(?:[ \t]+(?:"[^"\r\n]*"|'[^'\r\n]*'))?\)/g;
+    const links = /\[([^\[\]\r\n]{1,2048})\]\((<[^<>\r\n]{1,2048}>|[^\s()<>]{1,2048})(?:[ \t]+(?:"[^"\r\n]*"|'[^'\r\n]*'))?\)/g;
     for (const m of raw.matchAll(links)) if (!escaped(m.index!) && !codeContext[m.index!]) {
       const destination = m.index! + m[1]!.length + 2;
+      const target = m[2]!.startsWith("<") ? m[2]!.slice(1, -1) : m[2]!;
+      // A bounded advisory reader cannot prove every link/code context. Keep
+      // metadata masked, but never silently certify a non-URL date destination.
+      // Reuse recognized/unresolved forms; do not parse it or invent an instant.
+      if (!/^https?:\/\//i.test(target) && dateLikeDestination.test(target)) diagnose("masked_date_like_destination");
       mask(destination, m.index! + m[0].length);
     }
   }
@@ -455,7 +462,7 @@ export function readDateSpans(raw: string, format: "markdown" | "html" | "bbcode
   // coverage when a known marker fell outside the recognized language.
   const remainder = text.split("");
   for (const l of locations) for (let i = l.start; i < l.end; i++) remainder[i] = " ";
-  const unresolved = new RegExp(`${monthPattern}\\s+\\d[^\\n;]{0,80}|\\d{4}[-/.]\\d[^\\n;]{0,80}|\\d{1,2}/\\d{1,2}[^\\n;]{0,40}|\\d{1,2}\\.\\d{1,2}\\.\\d{2,4}|\\d{1,2}:\\d{2}(?::\\d{2})?|\\b(?:tomorrow|TBD|TBA|after (?:the )?(?:version \\d+\\.\\d+ (?:update|maintenance)|update|maintenance))\\b`, "gi");
+  const unresolved = new RegExp(unresolvedPattern, "gi");
   if (!spans.length) diagnose("no_recognized_dates");
   for (const m of remainder.join("").matchAll(unresolved)) {
     diagnose("unresolved_date_expression");
