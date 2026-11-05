@@ -810,6 +810,14 @@ To ensure that all Travelers have the best-possible Genshin Impact experience, o
 
 Currently, the scarf effects of the character "Mitya" can be displayed abnormally (primarily affecting C6 Mitya). This issue will be fixed in a future update.
 
+〓<t class="t_gl" contenteditable="false">2026/11/05 16:10</t> Update Details〓
+
+- Fixes an issue whereby the location of the Anecdote "Kachina: The First Step" was displayed incorrectly on the Map screen.
+
+- Fixes an issue whereby, under certain circumstances, completing a stage and navigating to the Quest menu would prevent players from exiting the current stage in "The Grand Defense: Defy the Unjust Judgment" event.
+
+Travelers affected by the above issues can log out via the Paimon Menu by selecting "Exit to Login Interface" and close the game, then log in again to resolve the issues.
+
 〓<t class="t_gl" contenteditable="false">2026/11/04 14:40</t> Update Details〓
 
 Fixes an issue whereby, under certain circumstances, teleporting or starting challenges would be prevented in the event "The Grand Defense: Defy the Unjust Judgment."
@@ -1086,30 +1094,6 @@ And complete the World Quest "Battlefield of Dice, Cats, and Cards"
 
 -----
 
-# ["Across the Frozen Wilds, Honing One's Edge" Event: New Travelers Can Invite a 5-Star Character of Your Choice From the "Wanderlust Invocation" Standard Wish](archive/21968.md)
-## Across the Frozen Wilds, Honing One's Edge
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/509f11ffc89b5f675693d10478d563f1_8275206890847569474_transformed.png)
-
-〓Event Duration〓
-
-After the Version 7.2 update and until the end of the Version 7.x
-
-〓Eligibility〓
-
-Travelers who have completed registration and unlocked the Wish feature after the Version 7.2 update
-
-〓Event Details〓
-
-● New Travelers who register after the Version 7.2 update are eligible to participate in the "Across the Frozen Wilds, Honing One's Edge" event. The event will be available within 42 days after registration.
-
-● After unlocking the Wish feature, new Travelers can invite a 5-star character of your choice from the Standard Wish "Wanderlust Invocation" to join your party via the event interface. When you invite a character, you also receive Ascension Level-Up Materials for the same character.
-
-※ For Travelers who register near the end of Version 7.x, the event duration may run shorter than 42 days. Please refer to the remaining time displayed on the event page for the exact duration.
-
-※ Travelers can invite a character only once during the event. Once the event is over, you will be unable to invite characters. Please make sure you invite them in time.
-
------
-
 # [Beware of Phishing Websites: Keep Your Account Secure](archive/22008.md)
 ## Beware of Phishing Websites: Keep Your Account Secure
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/29/a05b77dc19895db836ffa20ada9cc006_4235804805962751199_transformed.png)
@@ -1134,39 +1118,27 @@ We are committed to keeping Travelers' accounts secure. We sincerely hope to wor
 
 -----
 
-# ["To Temper Thyself and Journey Far": Rewards of Dedication](archive/21892.md)
-## To Temper Thyself and Journey Far
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/08/21/f77abe8a6f4104f1229db987e2c4280a_177291918664626977_transformed.png)
-
-〓Event Rewards〓
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/03/04/9e61fb52eb6c278d1c0c354a4cc12047_6936810366436995049_transformed.png)
+# ["Across the Frozen Wilds, Honing One's Edge" Event: New Travelers Can Invite a 5-Star Character of Your Choice From the "Wanderlust Invocation" Standard Wish](archive/21968.md)
+## Across the Frozen Wilds, Honing One's Edge
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/509f11ffc89b5f675693d10478d563f1_8275206890847569474_transformed.png)
 
 〓Event Duration〓
 
-<t class="t_lc" contenteditable="false">2026/11/02 04:00</t> ~ <t class="t_lc" contenteditable="false">2027/01/25 03:59</t>
+After the Version 7.2 update and until the end of the Version 7.x
 
 〓Eligibility〓
 
-Adventure Rank 14 or above
-
-Complete "Knights of Favonius" in Archon Quest Prologue: Act I to unlock the Wish system
-
-Complete the World Quest "Welcome to the Adventurers' Guild" to unlock the Adventurer Handbook
+Travelers who have completed registration and unlocked the Wish feature after the Version 7.2 update
 
 〓Event Details〓
 
-● During the event, claim rewards from 4 Daily Commissions and expend 120 Original Resin in a single day to complete daily training goals. Complete daily training goals 5 times in a week to complete the weekly training goal for that week. You will accumulate progress for completing weekly training goals, which can be exchanged for the corresponding stage rewards.
+● New Travelers who register after the Version 7.2 update are eligible to participate in the "Across the Frozen Wilds, Honing One's Edge" event. The event will be available within 42 days after registration.
 
-● When you complete 8 weekly training goals, you can claim the Stella Fortuna reward. Travelers can select a desired character's Stella Fortuna from the characters on the event page's roster.
+● After unlocking the Wish feature, new Travelers can invite a 5-star character of your choice from the Standard Wish "Wanderlust Invocation" to join your party via the event interface. When you invite a character, you also receive Ascension Level-Up Materials for the same character.
 
-※ Stella Fortuna cannot be obtained for characters you have not obtained, or for characters who have already obtained a Stella Fortuna from past "To Temper Thyself and Journey Far" events.
+※ For Travelers who register near the end of Version 7.x, the event duration may run shorter than 42 days. Please refer to the remaining time displayed on the event page for the exact duration.
 
-※ During each season of the "To Temper Thyself and Journey Far" event, unclaimed Stella Fortuna rewards (earned by completing objectives) can only be exchanged for characters available in the current season. The selection opportunity does not carry over to the next season, so please select your character for exchange promptly.
-
-● In the current cycle of "To Temper Thyself and Journey Far," complete 8 weekly training goals to unlock Tempered in Practice for the following week. Once unlocked, you will receive extra rewards for completing weekly training goals. This bonus resets weekly, so be sure to claim your extra rewards in time.
-
-● After the current cycle of "To Temper Thyself and Journey Far" concludes, the next cycle will begin on the following Monday at 04:00.
+※ Travelers can invite a character only once during the event. Once the event is over, you will be unable to invite characters. Please make sure you invite them in time.
 
 -----
 
@@ -1221,6 +1193,42 @@ Please refer to the official event page for the full eligibility requirements.
 Requirements: Wonderland entries must feature both "Art" and "Gameplay" as core elements. There are no restrictions on gameplay type (e.g. racing and parkour, social party games, puzzle minigames, management sims, text adventures, etc.).
 
 Please refer to the official event page for the detailed event rules.
+
+-----
+
+# ["To Temper Thyself and Journey Far": Rewards of Dedication](archive/21892.md)
+## To Temper Thyself and Journey Far
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/08/21/f77abe8a6f4104f1229db987e2c4280a_177291918664626977_transformed.png)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/03/04/9e61fb52eb6c278d1c0c354a4cc12047_6936810366436995049_transformed.png)
+
+〓Event Duration〓
+
+<t class="t_lc" contenteditable="false">2026/11/02 04:00</t> ~ <t class="t_lc" contenteditable="false">2027/01/25 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 14 or above
+
+Complete "Knights of Favonius" in Archon Quest Prologue: Act I to unlock the Wish system
+
+Complete the World Quest "Welcome to the Adventurers' Guild" to unlock the Adventurer Handbook
+
+〓Event Details〓
+
+● During the event, claim rewards from 4 Daily Commissions and expend 120 Original Resin in a single day to complete daily training goals. Complete daily training goals 5 times in a week to complete the weekly training goal for that week. You will accumulate progress for completing weekly training goals, which can be exchanged for the corresponding stage rewards.
+
+● When you complete 8 weekly training goals, you can claim the Stella Fortuna reward. Travelers can select a desired character's Stella Fortuna from the characters on the event page's roster.
+
+※ Stella Fortuna cannot be obtained for characters you have not obtained, or for characters who have already obtained a Stella Fortuna from past "To Temper Thyself and Journey Far" events.
+
+※ During each season of the "To Temper Thyself and Journey Far" event, unclaimed Stella Fortuna rewards (earned by completing objectives) can only be exchanged for characters available in the current season. The selection opportunity does not carry over to the next season, so please select your character for exchange promptly.
+
+● In the current cycle of "To Temper Thyself and Journey Far," complete 8 weekly training goals to unlock Tempered in Practice for the following week. Once unlocked, you will receive extra rewards for completing weekly training goals. This bonus resets weekly, so be sure to claim your extra rewards in time.
+
+● After the current cycle of "To Temper Thyself and Journey Far" concludes, the next cycle will begin on the following Monday at 04:00.
 
 -----
 
