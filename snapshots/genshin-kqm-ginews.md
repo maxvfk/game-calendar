@@ -810,6 +810,14 @@ To ensure that all Travelers have the best-possible Genshin Impact experience, o
 
 Currently, the scarf effects of the character "Mitya" can be displayed abnormally (primarily affecting C6 Mitya). This issue will be fixed in a future update.
 
+〓<t class="t_gl" contenteditable="false">2026/11/06 11:15</t> Update Details〓
+
+- Fixes an issue whereby, under certain circumstances, Kristallflies would disappear unexpectedly during certain puzzles involving them, preventing players from completing those puzzles.
+
+- Fixes an issue whereby, under certain circumstances, the train would disappear unexpectedly and the quest objective marker was incorrectly placed in midair during the "Go to Novokitezhgrad" objective in the World Quest "To the Kristall City" or the Archon Quest "Like Melting Snow," preventing characters from reaching the quest area.
+
+Travelers affected by the above issues can log out via the Paimon Menu by selecting "Exit to Login Interface" and close the game, then log in again to resolve the issues.
+
 〓<t class="t_gl" contenteditable="false">2026/11/05 16:10</t> Update Details〓
 
 - Fixes an issue whereby the location of the Anecdote "Kachina: The First Step" was displayed incorrectly on the Map screen.
