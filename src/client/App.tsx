@@ -16,6 +16,7 @@ import { Timeline } from "./components/Timeline.tsx";
 import { TypeFilters } from "./components/TypeFilters.tsx";
 import { Welcome } from "./components/Welcome.tsx";
 import { Colophon } from "./components/Colophon.tsx";
+import { StaleFeedNotice } from "./components/StaleFeedNotice.tsx";
 import { Legend } from "./components/Legend.tsx";
 import { Toast } from "./components/Toast.tsx";
 import { UpdateNotice } from "./components/UpdateNotice.tsx";
@@ -573,6 +574,10 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
         </div>
         {accountControl}
       </header>
+
+      {/* Offline has its own notice below, which already says how old the
+          downloaded events are; this one is for a connected reader. */}
+      {online && <StaleFeedNotice sources={state.feed.sources} now={now} />}
 
       <section id="mobile-filters" aria-label="Filters" hidden={!filtersOpen}
         className="mobile-filters-panel border-b border-hairline p-3"

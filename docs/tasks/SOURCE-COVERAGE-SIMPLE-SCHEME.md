@@ -212,6 +212,11 @@ live feed's `sources[].contentChangedAt` / `generatedAt`, or the newest successf
 deployment on `main`. It alerts when newer committed source content has not reached the live
 feed within a bounded delay, and stays quiet when sources simply did not change. It is
 independent of CTX and C5.1 and can be scheduled on its own.
+The in-page half of this check ships first as `StaleFeedNotice`: a page-wide
+notice when no source in the published feed has refreshed for
+`PUBLICATION_STALE_AFTER_MS` (30 hours, `src/shared/feed.ts`), so the operator
+sees a stalled publication where they already look. The repository-side
+comparison of committed snapshots against the live feed remains part of C4.
 
 ### Part 5 — model extraction for unprocessed notices
 

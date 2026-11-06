@@ -126,6 +126,37 @@ export interface Freshness {
 }
 
 /**
+ * The whole feed has stopped updating past this age (C4 publication freshness).
+ *
+ * Refresh runs twice a day and GitHub's scheduler routinely starts it 5–8 hours
+ * late, so the longest normal gap between two refreshes is about 15 hours.
+ * Thirty hours is at least one fully missed cycle on top of that: past it,
+ * either refresh stopped or a failing CI is holding back every deploy, as it
+ * did for ~36 hours on 2026-11-03..05 without any visible sign on the page.
+ * Deliberately shorter than `STALE_AFTER_MS`, which judges one game's sources.
+ */
+export const PUBLICATION_STALE_AFTER_MS = 30 * 60 * 60 * 1000;
+
+/**
+ * When nothing in the feed has refreshed for `PUBLICATION_STALE_AFTER_MS`.
+ *
+ * Built on `freshness().refreshedAt`, the newest `lastSuccessAt` across all
+ * sources, not on `generatedAt`: a docs-only deploy rebuilds the feed and would
+ * make stalled data look minutes old. Returns `null` while publication is
+ * current, and also when no source has ever succeeded (a fresh checkout, not a
+ * state a reader reaches), so the notice never fires on missing information.
+ */
+export function publicationStalled(
+  sources: readonly SourceHealth[],
+  now: number,
+): { refreshedAt: string; ageMs: number } | null {
+  const { refreshedAt } = freshness(sources, now);
+  if (refreshedAt === null) return null;
+  const ageMs = now - Date.parse(refreshedAt);
+  return ageMs > PUBLICATION_STALE_AFTER_MS ? { refreshedAt, ageMs } : null;
+}
+
+/**
  * How current this feed's data is, per game.
  *
  * Pure and clock-injected like everything else that a test needs to pin. One
