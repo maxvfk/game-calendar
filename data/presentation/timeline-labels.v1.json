@@ -859,6 +859,183 @@
       "rulesVersion": "v1",
       "decision": "keep_original",
       "reason": "Narrative event name is already recognizable."
+    },
+    {
+      "eventId": "zzz:deadly-assault-nov-6:2026-11-06",
+      "fingerprint": "sha256:19fe55cf3e0b511f18c76fada4d8cb164d9bd9bf932abeeac6e47926736a8e62",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode name plus rotation date already distinguishes this Deadly Assault cycle."
+    },
+    {
+      "eventId": "genshin:chanson-of-many-waters:2026-11-04",
+      "fingerprint": "sha256:c4332995b1d7a7c274db7c3288a23434959ecd4e96f9f9bc8a50dfb9a9093e61",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Official banner name; no featured character is supplied, so nothing truthful can be added."
+    },
+    {
+      "eventId": "genshin:epitome-invocation-version-7-2-phase-i:2026-11-04",
+      "fingerprint": "sha256:2c8e2da5753a8dc07cb1dcd665ffca4b3bb8891063ed1e795eb9332e9aa15fcc",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Already carries the weapon-banner mode plus version and phase identifiers."
+    },
+    {
+      "eventId": "genshin:myriad-patterns-unfold:2026-11-04",
+      "fingerprint": "sha256:7eb57f7828c43f94303ab956ce56acdf51deefaf34157111cba907a5b7cf2fce",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Distinctive official banner name; no featured character supplied to substitute."
+    },
+    {
+      "eventId": "endfield:season-of-fervor:2026-11-05",
+      "fingerprint": "sha256:618d80462ea0ad992b81cd454cc76e44704439d0d315ba37981e01ed7817012e",
+      "rulesVersion": "v1",
+      "decision": "needs_research",
+      "reason": "auto-guard: same name as an overlapping event; proposed \"Echoes of War: Season of Fervor\""
+    },
+    {
+      "eventId": "genshin:hour-of-ruin-limited-time-archon-quest-rewards:2026-11-04",
+      "fingerprint": "sha256:51d07783e955d0e75dc184463eb70a17a28642fe5c12fecca2853f4e37ed8f45",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Quest name and limited-time reward nature are already clear and informative."
+    },
+    {
+      "eventId": "zzz:shiyu-defense-critical-node-nov-13:2026-11-13",
+      "fingerprint": "sha256:c43a85e9d3b66e319fedea7bafcc473ad1709841f9048c8b68a7d7b0c03ea00c",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode, node distinction and rotation date are already explicit."
+    },
+    {
+      "eventId": "zzz:repair-drifting-art:2026-11-16",
+      "fingerprint": "sha256:c70521fac04b73898da8c6e887a4214741bc7fd1b5dd2b070b1b3d10a44adc80",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Distinctive official event name; adding the Bangboo detail is not clearly clearer."
+    },
+    {
+      "eventId": "genshin:spiral-abyss-november-2026-season:2026-11-16",
+      "fingerprint": "sha256:30f932f5489c5f80ac5c0f16259410dbc30215b01daf4eab8bf58d6cd71f2621",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode plus month/season identity keeps separate abyss cycles distinguishable."
+    },
+    {
+      "eventId": "endfield:sanity-supply-november-2026:2026-11-18",
+      "fingerprint": "sha256:6c5e16255fd61fca440bf6f66c22a5ca4743d91dd81c86ce18091bd833e01152",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Event name and month are recognizable as supplied; no clearer supported alternative."
+    },
+    {
+      "eventId": "zzz:deadly-assault-nov-20:2026-11-20",
+      "fingerprint": "sha256:057557c53e46a494c081d969f82789b887d4adacba14e2f1a1cb1df792c4a934",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode name plus rotation date already distinguishes this Deadly Assault cycle."
+    },
+    {
+      "eventId": "wuwa:whimpering-wastes-respawning-waters:2026-11-23",
+      "fingerprint": "sha256:c6e59cb73ebcefbfd2d16d842a3df1e965cecb70a389772393e51f3a40167c34",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode and phase names are genuine game terms and already specific."
+    },
+    {
+      "eventId": "zzz:data-bounty-combat-simulation:2026-11-25",
+      "fingerprint": "sha256:744411334a327dc7cf9fac56536c3d4a1078e7235f8ae1adf14c1760c6e7888f",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Event series and target mode are already clear from the current identity."
+    },
+    {
+      "eventId": "zzz:shiyu-defense-critical-node-nov-27:2026-11-27",
+      "fingerprint": "sha256:ea81a6d244d02468e21853cb3dbcf9dad9772ef35e5475414bf5d61b449deb46",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode, node distinction and rotation date are already explicit."
+    },
+    {
+      "eventId": "genshin:imaginarium-theater-december-2026-season:2026-12-01",
+      "fingerprint": "sha256:39391f8d559ec84ff7d85821283c95f41c18741c518259d87c53c36aa68e00d7",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode plus month/season identity keeps separate theater cycles distinguishable."
+    },
+    {
+      "eventId": "czn:dahlia-rate-up-rescue:2026-12-02",
+      "fingerprint": "sha256:392256a38c171b4c1f242250c0ae7d87ac96b5dfb8960312b29ede8227cb674e",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Dahlia",
+      "reason": "Featured name alone; the Timeline badge already conveys banner type, as in the Alcea example."
+    },
+    {
+      "eventId": "czn:edelyn-rate-up-rescue:2026-12-02",
+      "fingerprint": "sha256:557ce69b8714a9e858ea0b738ee25b6285ff837e7ab7d11be04e31ef8abcd4ac",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Edelyn",
+      "reason": "Featured name alone; the Timeline badge already conveys banner type, as in the Alcea example."
+    },
+    {
+      "eventId": "zzz:deadly-assault-dec-4:2026-12-04",
+      "fingerprint": "sha256:033d6c91f1aada17db58aeebe504331214e91c9a0d104d08d4454eb199f8b0ee",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode name plus rotation date already distinguishes this Deadly Assault cycle."
+    },
+    {
+      "eventId": "wuwa:tower-of-adversity-hazard-zone:2026-12-07",
+      "fingerprint": "sha256:40a9c48f54d3c507657ddb2278933315c187d18202a89ed3ee8107875f8a9e1f",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode and zone names are genuine game terms and already specific."
+    },
+    {
+      "eventId": "zzz:shiyu-defense-critical-node-dec-11:2026-12-11",
+      "fingerprint": "sha256:ececead20d9d855a672967c91f8238188db03687d73556e3443cff543eca4099",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode, node distinction and rotation date are already explicit."
+    },
+    {
+      "eventId": "genshin:spiral-abyss-december-2026-season:2026-12-16",
+      "fingerprint": "sha256:95f9b1b5122ed73ca67d16f7213795f36694253fa65a08b4b25b1f6a12e13a50",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode plus month/season identity keeps separate abyss cycles distinguishable."
+    },
+    {
+      "eventId": "zzz:deadly-assault-dec-18:2026-12-18",
+      "fingerprint": "sha256:8359ff484b31264ee0680ecafd25fad574e4a969bc5b10f34cf012c6172a9b8f",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode name plus rotation date already distinguishes this Deadly Assault cycle."
+    },
+    {
+      "eventId": "wuwa:whimpering-wastes-respawning-waters:2026-12-21",
+      "fingerprint": "sha256:20c82a474f4334d91e843ddf5a98bdba99b0c586d2fc8d15e04cb0f4c9af9407",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode and phase names are genuine game terms and already specific."
+    },
+    {
+      "eventId": "zzz:shiyu-defense-critical-node-dec-25:2026-12-25",
+      "fingerprint": "sha256:526de4aa56e68e9ddce4bf89c571e7ca2d737bb4ca625b6ba80884e2ef912269",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode, node distinction and rotation date are already explicit."
+    },
+    {
+      "eventId": "zzz:deadly-assault-jan-1:2027-01-01",
+      "fingerprint": "sha256:00b30a599855231a092cc177fd483d7b298e64394208f7abe2ae26f233b03b19",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode name plus rotation date already distinguishes this Deadly Assault cycle."
     }
   ]
 }
