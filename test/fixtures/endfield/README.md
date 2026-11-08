@@ -56,3 +56,19 @@ Its earliest opening is Oct 28 20:00 UTC, while the existing reviewed identity
 uses the Oct 29 server-calendar day. The turnover regression proves these merge
 into the existing reviewed ID with unchanged regional ends and other winners.
 Same original Event URL and attribution as above; no new request or source edit.
+
+## Season of Fervor cycle table (2026-11-08)
+
+`fervor-2026-11-08.html` keeps the page heading, the two Duration rows and the
+Season Cycles table from https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Fervor ,
+read once on 2026-11-08 after checking https://endfield.wiki.gg/robots.txt
+(`User-agent: *` allows `/`). Full response SHA-256:
+`e5b83aa7c30d96cb787a677ed59a72e7a693399045a9bdb344d36bcdc3215e59`; extract
+SHA-256: `71031ce6effc810af463e7d7ad78eb0b97c4abcd79660085203b06582336dc90`.
+Markup is verbatim; nothing else is kept. The header's Americas/Europe start
+(`2026/11/05 23:00 (UTC-5)`) contradicts both the cycle table and the official
+version notes (https://endfield.gryphline.com/en-us/news/9560 : "Nov. 5, 2026 at
+12:00 (server time)"), the same pattern as Phantasia above, so the unchanged
+parser still rejects the page. The fixture backs the reviewed Fervor cycle rows
+in `data/reviewed/endfield.json`; it is test-only, never a production fallback.
+Attribution as above (Endfield Talos Wiki contributors, CC BY-SA 4.0).

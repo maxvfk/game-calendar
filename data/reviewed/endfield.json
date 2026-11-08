@@ -112,6 +112,46 @@
       "confidence": 1
     },
     {
+      "id": "endfield:echoes-of-war-season-of-fervor-cycle-i:2026-11-05",
+      "reviewedAt": "2026-11-08T15:20:25.000Z",
+      "title": "Echoes of War: Season of Fervor — Cycle I",
+      "type": "challenge",
+      "summary": "Internal cycle deadline at 03:59 server time (Asia UTC+8; Americas/Europe UTC−5), from the wiki season's cycle table. Official notes (Sanctuary of Ink, news 9560) confirm the season opens Nov 5 12:00 server time with 3 cycles; the Phantasia cycle table on the same wiki matched the official schedule to the minute. Cycle II opens at 04:00 server time; the season continues. Start is a calendar-day anchor, not an exact regional opening.",
+      "startsAt": "2026-11-05T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-11T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-11T19:59:00.000Z",
+        "europe": "2026-11-12T08:59:00.000Z",
+        "america": "2026-11-12T08:59:00.000Z"
+      },
+      "sourceUrl": "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Fervor",
+      "provenanceStatus": "estimated",
+      "confidence": 0.85
+    },
+    {
+      "id": "endfield:echoes-of-war-season-of-fervor-cycle-ii:2026-11-12",
+      "reviewedAt": "2026-11-08T15:20:25.000Z",
+      "title": "Echoes of War: Season of Fervor — Cycle II",
+      "type": "challenge",
+      "summary": "Internal cycle deadline at 03:59 server time (Asia UTC+8; Americas/Europe UTC−5), from the wiki season's cycle table. Official notes (Sanctuary of Ink, news 9560) confirm the season opens Nov 5 12:00 server time with 3 cycles; the Phantasia cycle table on the same wiki matched the official schedule to the minute. Cycle III opens at 04:00 server time; the season continues. Start is a calendar-day anchor, not an exact regional opening.",
+      "startsAt": "2026-11-12T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-18T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-18T19:59:00.000Z",
+        "europe": "2026-11-19T08:59:00.000Z",
+        "america": "2026-11-19T08:59:00.000Z"
+      },
+      "sourceUrl": "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Fervor",
+      "provenanceStatus": "estimated",
+      "confidence": 0.85
+    },
+    {
       "id": "endfield:monumental-etching-forest-of-maras:2026-10-22",
       "title": "Monumental Etching: Forest of Maras",
       "type": "challenge",
