@@ -77,5 +77,11 @@ test("hypothetical consistent automatic recovery deduplicates under the old IDs;
     expect(conflict).toHaveLength(1);
     expect(conflict[0]).toMatchObject({ field: "endsAt", region, deltaHours: 1 / 60 });
   }
-  expect(() => parseWikiGgEchoesSeason(seasonHtml, ctx)).toThrow("Cycle I starts");
+  // The real page now parses via the narrow western header-slip rule, to the same
+  // official rows; the official reviewed rows keep precedence in the merge.
+  const real = parseWikiGgEchoesSeason(seasonHtml, ctx);
+  expect(real.map(e => [e.id, e.regionEnds])).toEqual(cycles.map(e => [e.id, e.regionEnds]));
+  const live = mergeEvents([cycles, real]);
+  expect(live.conflicts).toEqual([]);
+  expect(live.events).toEqual(cycles);
 });

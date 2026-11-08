@@ -4,6 +4,7 @@ import type { ParseContext } from "../adapters/types.ts";
 import type { SourceParser } from "./types.ts";
 
 const PERIOD = /^(\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}) [–-] (\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}) \(Server Time\)$/;
+const DAY_MS = 86_400_000;
 const SEASON_PERIOD = /^(\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}) [–-] (\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}) \(UTC([+-]\d{1,2})\)$/;
 
 function instant(parts: readonly string[], offset: number): number {
@@ -52,19 +53,31 @@ export function parseWikiGgEchoesSeason(html: string, ctx: ParseContext): Event[
     }
     return { roman, raw: row[1]!, asia: period(row[1]!, 8, false), west: period(row[1]!, -5, false) };
   });
+  // Known wiki header slip (Phantasia, Fervor): the Americas/Europe start repeats
+  // the Asia opening instant one day late (12:00 UTC+8 written as the next day's
+  // 23:00 UTC−5). Under exactly that slip, and only when the Asia header agrees
+  // with the table, the western season start is NOT compared: this exception is
+  // deadline-only. The western Cycle I opening stays unverified (for Phantasia
+  // the official opening was the version-update instant, not the table's 12:00
+  // server time; for Fervor, news 9560 states 12:00 server time). Starts are
+  // published only as calendar-day anchors, so no western opening is asserted.
+  // Every other mismatch still fails.
+  const westHeaderSlip = west[0] === asia[0] + DAY_MS && cycles[0]!.asia[0] === asia[0];
+  const startChecks: Array<readonly [string, number, number]> = [["Asia", asia[0], cycles[0]!.asia[0]]];
+  if (!westHeaderSlip) startChecks.push(["Americas/Europe", west[0], cycles[0]!.west[0]]);
   // Report a reachable but contradictory source precisely. Do not clip the
   // first cycle to the season or reinterpret a stated Server Time as UTC.
-  for (const [region, seasonStart, cycleStart] of [
-    ["Asia", asia[0], cycles[0]!.asia[0]],
-    ["Americas/Europe", west[0], cycles[0]!.west[0]],
-  ] as const) {
+  for (const [region, seasonStart, cycleStart] of startChecks) {
     if (cycleStart !== seasonStart) {
       throw new Error(`Echoes cycles conflict with the sourced season window: ${region} Cycle I starts ` +
         `${new Date(cycleStart).toISOString()}, season starts ${new Date(seasonStart).toISOString()}`);
     }
   }
+  // The Asia season end must equal Cycle III's end. The western header end only
+  // bounds the cycles: the Illusion page's western end was a day off its table.
   if (cycles[1]!.asia[0] !== cycles[0]!.asia[1] + 60_000 ||
       cycles[2]!.asia[0] !== cycles[1]!.asia[1] + 60_000 ||
+      cycles[2]!.asia[1] !== asia[1] ||
       cycles[1]!.asia[1] >= asia[1] || cycles[1]!.west[1] >= west[1] ||
       cycles[2]!.asia[0] >= asia[1] || cycles[2]!.west[0] >= west[1]) {
     throw new Error("Echoes cycles conflict with the sourced season window");
