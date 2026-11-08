@@ -4,6 +4,7 @@ import type { ParseContext } from "../adapters/types.ts";
 import type { SourceParser } from "./types.ts";
 
 const PERIOD = /^(\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}) [–-] (\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}) \(Server Time\)$/;
+const DAY_MS = 86_400_000;
 const SEASON_PERIOD = /^(\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}) [–-] (\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}) \(UTC([+-]\d{1,2})\)$/;
 
 function instant(parts: readonly string[], offset: number): number {
@@ -52,11 +53,19 @@ export function parseWikiGgEchoesSeason(html: string, ctx: ParseContext): Event[
     }
     return { roman, raw: row[1]!, asia: period(row[1]!, 8, false), west: period(row[1]!, -5, false) };
   });
+  // Known wiki header slip (Phantasia, Fervor): the Americas/Europe start repeats
+  // the Asia opening instant one day late (12:00 UTC+8 written as the next day's
+  // 23:00 UTC−5), while the cycle table and the official version notes ("12:00
+  // (server time)") open both servers at the same server-time hour. Accept only
+  // that exact slip, and only when the Asia header and the table agree; the
+  // western season start then comes from the table. Every other mismatch fails.
+  const westHeaderSlip = west[0] === asia[0] + DAY_MS && cycles[0]!.asia[0] === asia[0];
+  const westStart = westHeaderSlip ? cycles[0]!.west[0] : west[0];
   // Report a reachable but contradictory source precisely. Do not clip the
   // first cycle to the season or reinterpret a stated Server Time as UTC.
   for (const [region, seasonStart, cycleStart] of [
     ["Asia", asia[0], cycles[0]!.asia[0]],
-    ["Americas/Europe", west[0], cycles[0]!.west[0]],
+    ["Americas/Europe", westStart, cycles[0]!.west[0]],
   ] as const) {
     if (cycleStart !== seasonStart) {
       throw new Error(`Echoes cycles conflict with the sourced season window: ${region} Cycle I starts ` +

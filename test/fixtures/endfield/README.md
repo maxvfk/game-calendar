@@ -24,7 +24,11 @@ reading https://endfield.wiki.gg/robots.txt (HTTP 200; `User-agent: *` permits `
 Both live requests returned HTTP 200. The Phantasia response at 21:55:28Z has
 `Last-Modified: Sat, 17 Oct 2026 11:18:55 GMT`. It is intentionally **invalid**
 input: the west season starts Oct 15 23:00 UTC-5, while Cycle I starts Oct 15
-12:00 Server Time. The regression must reject it, not repair its dates.
+12:00 Server Time. Until 2026-11-08 the regression rejected it. Since then the
+parser excuses exactly this header slip (the western start equals the Asia
+opening instant one day late, and the Asia header agrees with the table) and
+takes the western start from the cycle table, which matches the official notes
+("12:00 (server time)"). Every other header/table disagreement still fails.
 
 Attribution: Endfield Talos Wiki contributors, wiki.gg, source page links above;
 CC BY-SA 4.0 as stated in the captured wiki footer. These are schedule/markup
@@ -68,7 +72,7 @@ SHA-256: `71031ce6effc810af463e7d7ad78eb0b97c4abcd79660085203b06582336dc90`.
 Markup is verbatim; nothing else is kept. The header's Americas/Europe start
 (`2026/11/05 23:00 (UTC-5)`) contradicts both the cycle table and the official
 version notes (https://endfield.gryphline.com/en-us/news/9560 : "Nov. 5, 2026 at
-12:00 (server time)"), the same pattern as Phantasia above, so the unchanged
-parser still rejects the page. The fixture backs the reviewed Fervor cycle rows
+12:00 (server time)"), the same slip as Phantasia above; the parser accepts it
+under the narrow header-slip rule. The fixture backs the reviewed Fervor cycle rows
 in `data/reviewed/endfield.json`; it is test-only, never a production fallback.
 Attribution as above (Endfield Talos Wiki contributors, CC BY-SA 4.0).

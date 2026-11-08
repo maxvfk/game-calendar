@@ -10,12 +10,12 @@ import { GachaEvent, Region, eventId } from "../src/shared/schema.ts";
 /**
  * Season of Fervor internal cycle deadlines (reviewed, estimated).
  *
- * The automatic Echoes source has rejected every season page since Oct 14: the
- * wiki header gives the Americas/Europe season start as 23:00 UTC−5, while its
- * own cycle table and the official version notes (news 9560: "Nov. 5, 2026 at
- * 12:00 (server time)") open the season at 12:00 server time. The cycle table is
- * what these rows restore; Phantasia's table on the same wiki matched the
- * official infographic to the minute (`phantasia-reviewed-cycles.test.ts`).
+ * The automatic Echoes source rejected every season page from Oct 14 to Nov 8:
+ * the wiki header gives the Americas/Europe season start as 23:00 UTC−5, while
+ * its own cycle table and the official version notes (news 9560: "Nov. 5, 2026
+ * at 12:00 (server time)") open the season at 12:00 server time. These rows
+ * restored the table's deadlines; the parser now accepts that exact header slip,
+ * and its rows merge with these under the same IDs.
  */
 
 const reviewed = materializeReviewedBatch(await Bun.file("data/reviewed/endfield.json").json()).events;
@@ -85,11 +85,9 @@ test("Cycle I expires precisely per region; the Asia expiry leaves the western d
   expect(clockFor(cycle, "america", Date.parse("2026-11-11T20:00:00Z")).ended).toBe(false);
 });
 
-test("the live wiki page is still rejected; a consistent header would deduplicate under the same IDs", () => {
-  // The real captured page stays fail-closed: the parser is unchanged.
-  expect(() => parseWikiGgEchoesSeason(seasonHtml, ctx)).toThrow("Cycle I starts");
-  // Test-only: the header's western start corrected to the official 12:00 server time.
-  const automatic = parseWikiGgEchoesSeason(seasonHtml.replace("2026/11/05 23:00", "2026/11/05 12:00"), ctx);
+test("the real wiki page now parses to the same IDs and deadlines, without conflicts", () => {
+  // Accepted via the narrow western header-slip rule (wikigg-echoes.ts).
+  const automatic = parseWikiGgEchoesSeason(seasonHtml, ctx);
   expect(automatic.map(e => e.id)).toEqual(cycles.map(e => e.id));
   const merged = mergeEvents([cycles, automatic]);
   expect(merged.conflicts).toEqual([]);
