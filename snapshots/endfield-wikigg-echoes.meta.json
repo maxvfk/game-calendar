@@ -1,12 +1,12 @@
 {
   "sourceId": "endfield-wikigg-echoes",
-  "url": "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Illusion",
-  "contentHash": "563cecf363e9568fa615df35b753718c81b56f0d34189ba47005d67693519a89",
-  "bytes": 150323,
+  "url": "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Fervor",
+  "contentHash": "d9b6c9e716c13aa2f218c32592699797943fac83fcb435fcede8c3ca466423e7",
+  "bytes": 146397,
   "etag": null,
-  "lastModified": "Wed, 14 Oct 2026 04:39:23 GMT",
-  "contentChangedAt": "2026-10-14T10:20:42.502Z",
-  "lastConfirmedAt": "2026-10-14T20:47:25.387Z",
+  "lastModified": "Fri, 06 Nov 2026 16:28:11 GMT",
+  "contentChangedAt": "2026-11-08T21:15:06.890Z",
+  "lastConfirmedAt": "2026-11-08T21:15:06.890Z",
   "eventCount": 2,
   "charset": "utf-8"
 }
