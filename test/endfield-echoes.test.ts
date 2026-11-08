@@ -100,10 +100,14 @@ test("October Event capture discovers Phantasia with its explicit regional seaso
   expect(echoesSeasonUrl(chosen)).toBe(phantasiaUrl);
 });
 
-test("real Phantasia page: the known western header slip is accepted from the cycle table", async () => {
+test("real Phantasia page: deadline-only acceptance under the known western header slip", async () => {
   // Header: Asia 2026/10/15 12:00 (UTC+8), Americas/Europe 2026/10/15 23:00 (UTC-5) =
-  // the Asia instant one day late. Table and official notes: 12:00 server time.
+  // the Asia instant one day late. A second, separate error: the table's generic
+  // 12:00 server-time Cycle I opening is not the official update-controlled
+  // western opening (research §17.3). Neither opening is published: starts are
+  // day anchors only, and only the explicit cycle ends become deadlines.
   const cycles = parseWikiGgEchoesSeason(phantasiaHtml, { ...ctx, sourceUrl: phantasiaUrl });
+  expect(cycles.every(e => e.startPrecision === "day" && e.startsAt.endsWith("T00:00:00.000Z"))).toBe(true);
   const reviewed = materializeReviewedBatch(await Bun.file("data/reviewed/endfield.json").json()).events
     .filter(e => e.title.startsWith("Echoes of War: Season of Phantasia — Cycle"));
   // Same IDs and the same exact regional ends as the official infographic rows.
@@ -118,8 +122,21 @@ test("only that exact slip is excused; every other header/table disagreement sti
     ["western header two days late", phantasiaHtml.replace(header, header.replace("2026/10/15 23:00", "2026/10/16 23:00"))],
     ["Asia header disagrees with the table", phantasiaHtml.replace("2026/10/15 12:00 – 2026/11/05 11:59 (UTC+8)", "2026/10/15 13:00 – 2026/11/05 11:59 (UTC+8)")],
     ["table opens at another hour", phantasiaHtml.replace("2026/10/15 12:00 – 2026/10/22 03:59 (Server Time)", "2026/10/15 11:00 – 2026/10/22 03:59 (Server Time)")],
-    ["western season end changed", phantasiaHtml.replace(header, header.replace("2026/11/05 11:59", "2026/10/29 03:00"))],
+    ["western season end earlier than the cycles", phantasiaHtml.replace(header, header.replace("2026/11/05 11:59", "2026/10/29 03:00"))],
+    ["Asia season end later than Cycle III", phantasiaHtml.replace("2026/11/05 11:59 (UTC+8)", "2026/11/06 11:59 (UTC+8)")],
+    ["Asia season end earlier than Cycle III", phantasiaHtml.replace("2026/11/05 11:59 (UTC+8)", "2026/11/05 10:59 (UTC+8)")],
   ] as const) expect(() => parseWikiGgEchoesSeason(edited, phantasia), label).toThrow();
+});
+
+test("the western season end only bounds the cycles; a later one is accepted and unpublished", () => {
+  // Illusion's real western header end (Oct 14 11:59 UTC-5) is a day off its table
+  // (Oct 15 11:59 server time), so western end equality cannot be required. The
+  // season final itself is published from the Event page, not from this parser.
+  const header = "2026/10/15 23:00 – 2026/11/05 11:59 (UTC-5)";
+  const later = phantasiaHtml.replace(header, header.replace("2026/11/05 11:59", "2026/11/06 11:59"));
+  const base = parseWikiGgEchoesSeason(phantasiaHtml, { ...ctx, sourceUrl: phantasiaUrl });
+  expect(parseWikiGgEchoesSeason(later, { ...ctx, sourceUrl: phantasiaUrl })).toEqual(base);
+  expect(parseWikiGgEchoesSeason(html, ctx)).toHaveLength(2);
 });
 
 test("contradictory new season retains last-known-good bytes, metadata and broken-source health", async () => {

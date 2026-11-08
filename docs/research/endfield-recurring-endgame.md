@@ -858,24 +858,37 @@ is delivered; hosted PR CI and merge evidence are recorded on the delivery PR.
 recheck the official announcement, then add current-season cycle deadlines with
 unchanged safety rules. Do not implement it as part of this research Work.
 
-## 18. Recurring western header slip — parser rule (2026-11-08)
+## 18. Recurring western header slip — deadline-only parser rule (2026-11-08)
 
-Season of Fervor repeated Phantasia's contradiction exactly. The wiki season header
-gives the Americas/Europe start as `2026/11/05 23:00 (UTC-5)`, which is the Asia
-opening instant (`2026/11/05 12:00 (UTC+8)`) one day late. The page's own cycle
-table (`Cycle of Fervor I 2026/11/05 12:00 … (Server Time)`) and the official
-version notes ([news 9560](https://endfield.gryphline.com/en-us/news/9560):
-"Nov. 5, 2026 at 12:00 (server time)") open both servers at 12:00 server time.
-For Phantasia, the same wiki table matched the official infographic to the
-minute (§17, `test/phantasia-reviewed-cycles.test.ts`).
+Phantasia and Fervor share one wiki **header** error: the Americas/Europe start is
+the Asia opening instant one day late (Asia `12:00 (UTC+8)` written as the next
+day's `23:00 (UTC-5)`). The two pages differ in what is known about the
+**western Cycle I opening**:
 
-`src/ingest/parsers/wikigg-echoes.ts` now excuses exactly this slip. It applies
-only when the western header start equals the Asia header start + 24 h **and** the
-Asia header agrees with the table; the western season start then comes from the
-table. Every other disagreement still fails closed: a different western offset,
-an Asia mismatch, a table opening at another hour, or changed season ends
-(`test/endfield-echoes.test.ts`). This supersedes the §16 instruction to reject the
-Phantasia page; its fixture now parses to the same IDs and regional ends as the
-official reviewed rows, which keep precedence. Fervor's estimated reviewed rows
-(PR #169) merge with the parser's rows under the same IDs without conflicts.
+| Season | Header slip | Table Cycle I opening | Official opening | Western opening from the table |
+|---|---|---|---|---|
+| Phantasia | yes | Oct 15 12:00 server time | after the version update, planned Oct 14 23:00 UTC−5 (§17.2–17.3) | **not supported** (second, separate error) |
+| Fervor | yes | Nov 5 12:00 server time | [news 9560](https://endfield.gryphline.com/en-us/news/9560): "Nov. 5, 2026 at 12:00 (server time)" | supported |
 
+Both pages' explicit cycle **ends** match the reviewed records: official for
+Phantasia, estimated for Fervor (PR #169).
+
+`src/ingest/parsers/wikigg-echoes.ts` therefore excuses the slip as a
+**deadline-only** exception. It applies only when the western header start equals the
+Asia header start + 24 h **and** the Asia header agrees with the table. In that
+case the western season start is not compared at all; it is neither replaced
+by nor validated against the table. The western Cycle I opening stays
+unverified. Starts are published only as calendar-day anchors, so no western
+opening instant is asserted; only the explicit cycle ends become deadlines.
+Every other start disagreement still fails closed.
+
+Season ends: the Asia season end must equal Cycle III's end. The western header
+end only bounds the cycles (Cycle II ends and Cycle III starts before it),
+because the real Illusion page's western end was a day off its table. A later
+western end is therefore accepted. It is never published by this parser: the
+season final comes from the Event page.
+
+This supersedes the §16 instruction to reject the Phantasia page. Its official
+reviewed rows keep precedence; Fervor's estimated rows merge with the parser's
+rows under the same IDs without conflicts (`test/endfield-echoes.test.ts`,
+`test/phantasia-reviewed-cycles.test.ts`, `test/fervor-reviewed-cycles.test.ts`).
