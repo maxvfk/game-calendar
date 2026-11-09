@@ -1,3 +1,279 @@
+# [Version 4.7 Update and Maintenance Notice](archive/1459.md)
+## Version 4.7 Update and Maintenance Notice
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/18/8173baa0748a67c9fed7f8958d3aeb30_5726935688097080347_transformed.png)
+
+Dear Trailblazers,
+
+The Version 4.7 pre-installation will begin at 2026/11/09 14:00:00 (global). Trailblazers can download some resources in advance, allowing for faster game access after the version update maintenance is complete.
+
+Additionally, the Express Crew will conduct version update maintenance on 2026/11/11 06:00:00 (global). After maintenance, the game will be updated to Version 4.7 "Now, Lay Laughter to All Stars."
+
+During the maintenance, Trailblazers will not be able to log in to the game. Please note the maintenance schedule and plan your gaming time accordingly. The game client must be updated after the maintenance. Due to the large size of the new game resources, we recommended Trailblazers to use a Wi-Fi connection to download the update.
+
+### Update Time
+
+Begins at 2026/11/11 06:00:00 (global). The update will take approximately **5** hours.
+
+### How to Update
+
+After maintenance for the version update begins, Trailblazers can follow the in-game instructions to update.
+
+- PC: Exit the game, restart the launcher, then click "Update"
+
+- Android: Enter the game and follow the instructions in the in-game pop-up window to complete the update
+
+- iOS: Enter the App Store and tap "Update"
+
+- PS5®: After entering the game, the game will automatically download and install the update
+
+### Compensation Details
+
+■ Server Maintenance Compensation
+
+Compensation: **Stellar Jade ×300**
+
+Eligible Recipients: Trailblazers with Trailblaze Level ≥ 4 before 2026/11/11 06:00:00 (global)
+
+※ The Express Crew will issue the compensation via in-game mail to Trailblazers within 5 hours after the update is complete. Please be sure to claim it before Version 4.7 ends.
+
+### Device Specifications
+
+■ Recommended Specifications:
+
+- PC:
+
+Processor: Intel i7-9700, AMD equivalent, or better
+
+RAM: 16 GB
+
+Graphics: NVIDIA GeForce GTX 1060 6GB or higher discrete graphics card
+
+System: Windows 10 64-bit or higher
+
+DirectX Version: 11
+
+- Android:
+
+Device specifications: Android devices with SoC performance equivalent to or better than Snapdragon 870 (Adreno 650), Dimensity 1300 (Mali-G77 MC9), or Kirin 9000 (Mali-G78 MP24)
+
+RAM: 6 GB or more
+
+System: Android 9 or higher
+
+- iOS:
+
+Device:
+
+iPhone 11 or later,
+
+iPad (9th generation, 2021, A13 chip) or later,
+
+iPad mini (6th generation, 2021, A15 chip) or later,
+
+iPad Pro 11-inch (3rd generation, 2021, M1 chip) or later
+
+System: iOS 13.0 or higher
+
+■ Supported Specifications
+
+- PC:
+
+Processor: Intel i5-4460, AMD equivalent, or better
+
+RAM: 8 GB
+
+Graphics: NVIDIA GeForce GTX 1050 or higher discrete graphics card
+
+System: Windows 10 64-bit or higher
+
+DirectX Version: 11
+
+- Android:
+
+Device specifications: Android devices with SoC performance equivalent to or better than Snapdragon 835 (Adreno 540), Dimensity 720 (Mali-G57 MC3), or Kirin 810 (Mali-G52 MP6)
+
+RAM: 4 GB or more
+
+System: Android 9 or higher
+
+Compatibility: Not supported by PowerVR architecture GPUs, except for the Imagination D-Series
+
+- iOS:
+
+Device:
+
+iPhone 8 Plus or later,
+
+iPad (7th generation, 2019 model, A10) or later,
+
+iPad Pro 10.5-inch (2017, A10X chip) or later
+
+System: iOS 13.0 or higher
+
+### Special Notice
+
+In version 4.8, the iOS system requirements will be adjusted to: iOS 15.0 or above. Trailblazers, please stay tuned for future notices regarding the details.
+
+-----
+
+# [Relic Recon: Participate to get 5-star +15 Relics!](archive/1451.md)
+## "Relic Recon" Event Details
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/19/f0c08ece064db93c96de4582e8cbbfb0_8349460640681460300_transformed.png)
+
+A mysterious collection vault in the Herta Space Station has opened its doors to you, filled with countless chests containing wondrous items. If you could get your hands on a special access card...
+
+### Event Period
+
+After the Version 4.7 update — 2026/12/23 03:59:00 (global)
+
+### Event Requirement
+
+Trailblaze Level ≥ 21
+
+### Event Rewards
+
+![img](https://sdk.hoyoverse.com/upload/ann/2025/10/30/62966aecacc0158d5b543bf206302b14_1425685278596364175_transformed.png)
+
+### Event Details
+
+- Obtain up to **six 5-star +15 Relics for different slots, each with 4 initial Subsidiary Stats**, through the Relic Recon event.
+
+- Obtain "Access Cards" during the event by **completing a series of missions**.
+
+- Before using an "Access Card" to obtain a Relic, Trailblazers can **designate a character**. The system will then recommend suitable Planar Ornament and Cavern Relic Sets. Alternatively, Trailblazers can customize which Relic Sets they want to obtain.
+
+- Each "Access Card" can be used to open one box, which guarantees one **5-star +15 Relic with 4 initial Subsidiary Stats**.
+
+- Obtained Relics can be temporarily stored. You can store up to 1 Relic for each slot at a time, for a total of 6 Relics.
+
+- If you obtain a new Relic for a slot that already has a stored Relic, you can choose **whether to replace** it.
+
+- Stored Relics **can be equipped on characters**. During the event, these Relics will have a special locked status in the Inventory and cannot be unlocked. This special lock will convert to a normal lock after the event ends.
+
+- Opening a certain number of boxes will trigger a **"Guarantee" Box**. The Main Stat of the Relic from this box is **guaranteed to be** the **system-recommended Main Stat** for the designated character, and it will have **at least 2** effective Subsidiary Stats.
+
+- The "Guarantee" Box prioritizes offering Relics positions that **have not been offered by** the "Guarantee" Box before.
+
+### Special Notes
+
+- The selected character affects prompts such as Relic stat compatibility and rating. It also influences the Main/Subsidiary Stats of Relics from the "Guarantee" Box.
+
+- Changing the designated character or Relic set partway through the event will only affect the results of subsequent boxes. Any Relics already stored will be unaffected.
+
+-----
+
+# [Version 4.7 New Stages](archive/1450.md)
+## Version 4.7 New Stages
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/d903dbeae3b0c8cbd92b932cc8ca8698_7142408128622324862_transformed.png)
+
+Dear Trailblazers,
+
+After the Version 4.7 update, the new stages "Echo of War: Moon of Indulgence" and "Divergent Universe: Dramatis Personae" will be added.
+
+### Echo of War: Moon of Indulgence
+
+Successfully challenge the stage to obtain the new **Trace Material "Ravenous Baby Tooth"**, **Relics** "Self-Enshrouded Recluse" and "Ever-Glorious Magical Girl," the item "Lucent Afterglow," Light Cones "Mushy Shroomy's Adventures" and "Victory In a Blink," and more.
+
+※ Early access for "Echo of War: Moon of Indulgence" will be available after 2026/11/16 04:00:00 (server).
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/10/29/e9643ce9c473a042b6d72c757755e5b5_154784365659364081_transformed.png)
+
+### Planar Ornament Extraction
+
+■ Divergent Universe: Dramatis Personae
+
+Successfully challenge the stage "Divergent Universe: Dramatis Personae," and Trailblazers can use **Trailblaze Power, Immersifiers, or Deep Immersifiers** to obtain the brand-new Planar Ornaments **"God's Moment of Joy" and "Subspace ASC Center"** via "Planar Ornament Extraction."
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/10/29/57b4223ce3b205375be1a95260a07420_6460030315442090702_transformed.png)
+
+New Planar Ornament Effects Preview:
+
+- **God's Moment of Joy**
+
+Link Rope: Moment of Joy's Magic Prop
+
+Planar Sphere: Moment of Joy's Eternal Stage
+
+2-Pc: Increases the wearer's SPD by 6%. When the wearer's Elation reaches 40% or higher, the wearer's action advances by 40% immediately when entering combat.
+
+- **Subspace ASC Center**
+
+Link Rope: ASC Negative Film
+
+Planar Sphere: ASC Dark Fissure
+
+2-Pc: Increases the wearer's SPD by 6%. When the wearer's SPD reaches 145 or higher, increases all allies' Break Effect by 18% after entering combat. This effect cannot stack.
+
+-----
+
+# ["Now, Lay Laughter to All Stars" Mission Description](archive/1449.md)
+## "Now, Lay Laughter to All Stars" Mission Description
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/18/594367f09c80c0926412e8dc054fa8dc_487455522214050056_transformed.png)
+
+In the maddening silence, a voice said: "Laugh, and let THEM hear your existence." And thus, the stars were silent no more, pouring all their radiance into a single burst of laughter.
+
+### Availability
+
+Permanently available after the Version 4.7 update
+
+### Unlock Requirement
+
+Trailblaze Level ≥ 21
+
+※ During Version 4.7, this content can be experienced in advance through the Finality's Vision function.
+
+※ It is recommended that Trailblazers complete the Trailblaze Mission "Astropolis — Dance With the Beast Before Moonrise" before experiencing this content.
+
+### Mission Rewards
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/10/29/cfbbd334e7473d4cc17adc86a4de3b42_4480389584264362434_transformed.png)
+
+※ Complete the Version 4.7 Trailblaze Mission to receive the Superimposition Lv. 5 Light Cone "See You at the World's End! (Elation)" ×1.
+
+-----
+
+# [Version 4.7 "Nameless Honor" Update](archive/1452.md)
+## Nameless Honor Update
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/18/aacaeb10e01d7922cd349ae6adae1d5b_7855367392222189577_transformed.png)
+
+Dear Trailblazers,
+
+During the event, Trailblazers can increase their Nameless Honor level to obtain rewards such as **Star Rail Passes, Self-Modeling Resins, and Tracks of Destiny**.
+
+After unlocking Nameless Glory, you will immediately obtain **Stellar Jade ×680**. In addition, increasing Nameless Honor levels will allow Trailblazers to obtain **Light Cone Memory Shard ×1, Star Rail Special Pass ×4, a 4-star Light Cone of your choice, Variable Dice ×1, Self-Modeling Resin ×2, Relic Remains, the universal Path material Tears of Dreams**, and more!
+
+If the Trailblazer unlocks the Nameless Medal, in addition to the previous rewards, they will immediately **increase their Honor level by 10**, and obtain **the avatar "Nihilux: Parade," the avatar "Aeon ★ Aha: Parade," Light Cone Memory Shard ×1, Stellar Jade ×200, and Fuel** rewards!
+
+### Start Date
+
+After the Version 4.7 update — 2026/12/21 03:59:00 (server)
+
+### Participation Requirements
+
+Trailblaze Level ≥ 12 and have completed the Trailblaze Mission "Jarilo-VI — Long Wait for the Blade's Edge"
+
+### About Nameless Honor
+
+- After Nameless Honor is unlocked, the Nameless Gift will automatically be unlocked. Trailblazers can obtain EXP and increase their Nameless Honor level via This Week's Missions and This Period's Missions. The maximum Nameless Honor level is capped at **Level 70**. Attaining specific levels will allow the Trailblazer to obtain Star Rail Passes, Self-Modeling Resin, Tracks of Destiny, and more.
+
+- This Week's Missions will reset every Monday at 04:00 (server time).
+
+- Trailblazers who have unlocked the Nameless Glory can purchase Honor Badge to upgrade to Nameless Medal.
+
+### Attention
+
+- After reaching level cap, EXP will no longer be awarded through missions during this period.
+
+- In the event of special circumstances leading to the repeated purchase of Nameless Glory or Nameless Medal, The Nameless EXP will not be accumulated, and Oneiric Shards ×750 (or Oneiric Shards ×1,410) will be refunded depending on the price of the purchase.
+
+- In the event of special circumstances leading to the repeated purchase of the Honor Badge, Oneiric Shards ×860 will be refunded.
+
+- The purchase of Nameless Glory, Nameless Medal, and Honor Badge will be closed for this period at **2026/12/21 02:59:00 (server)**. After the purchase is closed, Trailblazers can still complete the Nameless Honor missions and receive rewards. Please note the available purchase time and event period.
+
+- In the webpage top-up center, the purchase deadline for Nameless Glory, Nameless Medal, and Honor Badge will be **2026/12/20 03:59:00 (global)**. Trailblazers who top up on the webpage should pay attention to the purchase availability time.
+
+-----
+
 # [Version 4.7 Store Update](archive/1456.md)
 ## Version 4.7 Store Update
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/18/863367ff4a5539e0067a0b8bb67e048f_4543358197366884811_transformed.png)
@@ -705,48 +981,6 @@ To provide a better gaming experience, the Crew will constantly make adjustments
 - Fixes an issue where some images in "Furbobocom" — "Hot Topics" displayed abnormally under certain circumstances.
 
 - Fixes an issue in the "Store" where the "New" notification could not be removed normally on certain interfaces.
-
------
-
-# [Version 4.6 "Nameless Honor" Update](archive/1416.md)
-## Nameless Honor Update
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/09/01/8a3b1b7b12124f5f69346e233648a4ea_6117871799004999242_transformed.png)
-
-Dear Trailblazers,
-
-During the event, Trailblazers can increase their Nameless Honor level to obtain rewards such as **Star Rail Passes, Self-Modeling Resins, and Tracks of Destiny**.
-
-After unlocking Nameless Glory, you will immediately obtain **Stellar Jade ×680**. In addition, increasing Nameless Honor levels will allow Trailblazers to obtain **Light Cone Memory Shard ×1, Star Rail Special Pass ×4, a 4-star Light Cone of your choice, Variable Dice ×1, Self-Modeling Resin ×2, Relic Remains, the universal Path material Tears of Dreams**, and more!
-
-If the Trailblazer unlocks the Nameless Medal, in addition to the previous rewards, they will immediately **increase their Honor level by 10**, and obtain **the avatar "Pearl: Court," the avatar "Argenti: Court," Light Cone Memory Shard ×1, Stellar Jade ×200, and Fuel** rewards!
-
-### Start Date
-
-After the Version 4.6 update — 2026/11/09 03:59:00 (server)
-
-### Participation Requirements
-
-Trailblaze Level ≥ 12 and have completed the Trailblaze Mission "Jarilo-VI — Long Wait for the Blade's Edge"
-
-### About Nameless Honor
-
-- After Nameless Honor is unlocked, the Nameless Gift will automatically be unlocked. Trailblazers can obtain EXP and increase their Nameless Honor level via This Week's Missions and This Period's Missions. The maximum Nameless Honor level is capped at **Level 70**. Attaining specific levels will allow the Trailblazer to obtain Star Rail Passes, Self-Modeling Resin, Tracks of Destiny, and more.
-
-- This Week's Missions will reset every Monday at 04:00 (server time).
-
-- Trailblazers who have unlocked the Nameless Glory can purchase Honor Badge to upgrade to Nameless Medal.
-
-### Attention
-
-- After reaching level cap, EXP will no longer be awarded through missions during this period.
-
-- In the event of special circumstances leading to the repeated purchase of Nameless Glory or Nameless Medal, The Nameless EXP will not be accumulated, and Oneiric Shards ×750 (or Oneiric Shards ×1,410) will be refunded depending on the price of the purchase.
-
-- In the event of special circumstances leading to the repeated purchase of the Honor Badge, Oneiric Shards ×860 will be refunded.
-
-- The purchase of Nameless Glory, Nameless Medal, and Honor Badge will be closed for this period at **2026/11/09 02:59:00 (server)**. After the purchase is closed, Trailblazers can still complete the Nameless Honor missions and receive rewards. Please note the available purchase time and event period.
-
-- In the webpage top-up center, the purchase deadline for Nameless Glory, Nameless Medal, and Honor Badge will be **2026/11/08 03:59:00 (global)**. Trailblazers who top up on the webpage should pay attention to the purchase availability time.
 
 -----
 
