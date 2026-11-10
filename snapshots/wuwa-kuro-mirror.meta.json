@@ -2,12 +2,12 @@
   "contentKind": "xml",
   "sourceId": "wuwa-kuro-mirror",
   "url": "https://api.github.com/repos/TheLovinator1/wutheringwaves/contents/articles_latest.xml",
-  "contentHash": "2395a10b561897290b0797e643ab807bfe0fae5f9742c5a54d870a8ba9f78776",
-  "bytes": 112996,
-  "etag": "\"41555443f63a43c86fca7f4ffa65eb81af139f5a\"",
-  "lastModified": "Sun, 08 Nov 2026 03:24:28 GMT",
-  "contentChangedAt": "2026-11-08T21:15:02.008Z",
-  "lastConfirmedAt": "2026-11-09T14:03:51.207Z",
+  "contentHash": "8f010bce7e0befad30866034d3bac1cc78f188acccdb67b7f13e822f21ac10b2",
+  "bytes": 112863,
+  "etag": "\"72ea1b1d75d25116f898c7f1e35a29fe2946a54c\"",
+  "lastModified": "Mon, 09 Nov 2026 23:39:26 GMT",
+  "contentChangedAt": "2026-11-10T00:44:42.754Z",
+  "lastConfirmedAt": "2026-11-10T00:44:42.754Z",
   "eventCount": 11,
   "charset": "utf-8"
 }
