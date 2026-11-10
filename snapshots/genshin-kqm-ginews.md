@@ -1,3 +1,15 @@
+# [New Content Overview](archive/22011.md)
+## Version 7.2 Now Available
+
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/11/03/b1bac72df4f40970af63cf05a89a2ff4_79568859335269460.jpg)
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/11/03/195e7ffb08127b8fb50ac8b82894bf23_7131154814382550869.jpg)
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/11/03/3ca59a6168c92a52f4a7c064b648c9d0_3668195159635493936.jpg)
+
+-----
+
 # ["Polyphonic Season" Season Opening Announcement](archive/21993.md)
 ## Polyphonic Season
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/26/fc8e12c95e7b2d400c80f04aaf7d749e_5129367042064515496_transformed.jpg)
@@ -143,18 +155,6 @@ Manekin Cosmetic "Prelude to Spring" Manekina Cosmetic "Prelude to Spring" | ^
 After the Version 7.2 update, a new Elite (4-Star) Set Catalog "Drifting with the Waves" will be added to the Standard Ode "Encounter Echoes."
 
 ※ For more information, go to the Standard Ode screen and select Details in the bottom-left corner.
-
------
-
-# [New Content Overview](archive/22011.md)
-## Version 7.2 Now Available
-
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/11/03/b1bac72df4f40970af63cf05a89a2ff4_79568859335269460.jpg)
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/11/03/195e7ffb08127b8fb50ac8b82894bf23_7131154814382550869.jpg)
-
-![img](https://sdk.hoyoverse.com/upload/ann/2026/11/03/3ca59a6168c92a52f4a7c064b648c9d0_3668195159635493936.jpg)
 
 -----
 
@@ -807,6 +807,10 @@ Dear Travelers:
 To ensure that all Travelers have the best-possible Genshin Impact experience, our developers continually make optimizations and bug fixes to the game based on Travelers' feedback.
 
 〓Known Issues〓
+
+- Currently, in the open-world Time Trial Challenge "Pass through 25 Ice Rings in 90 seconds" in the "Hallowed Plain" area of " Wingspan Peak," there is a chance that the snowball will break abnormally.
+
+Travelers who encounter this issue can temporarily resolve it by entering the second special tunnel in the challenge through either of its side edges. This issue will be fixed in a future update.
 
 - After the Version 7.2 update, the collision volume of the character "Sandrone" would be abnormal when entering high-speed hover mode after using her Elemental Skill. Additionally, Fagio would clip through the environment when performing a Charged Attack under certain circumstances. These issues will be fixed in a future update.
 
