@@ -1036,6 +1036,62 @@
       "rulesVersion": "v1",
       "decision": "keep_original",
       "reason": "Mode name plus rotation date already distinguishes this Deadly Assault cycle."
+    },
+    {
+      "eventId": "endfield:echoes-of-war-season-of-fervor-cycle-i:2026-11-05",
+      "fingerprint": "sha256:249733bc3480d8a83e23e3a27f8d4dd5bf3637e083b33cb57ed08de78e5d3382",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Explicit mode prefix plus season and cycle identity is already recognizable; no clearer truthful alternative."
+    },
+    {
+      "eventId": "endfield:echoes-of-war-season-of-fervor-cycle-ii:2026-11-12",
+      "fingerprint": "sha256:bcbf9ced23a89e8ec3cec7c886e08af7851d690ffacc6183aecc0c2ca9ed4b4e",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode prefix and distinct cycle number already identify it; shortening would blur the cycle distinction."
+    },
+    {
+      "eventId": "genshin:imaginarium-theater-january-2027-season:2027-01-01",
+      "fingerprint": "sha256:05cfbfd437918e67c48605a575fbd776f2926f35166e04306e7bfb9ea5fe0fe3",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode name plus month/season already clear and informative."
+    },
+    {
+      "eventId": "wuwa:tower-of-adversity-hazard-zone:2027-01-04",
+      "fingerprint": "sha256:4a4bbfef367517a011e2362fd0e76afa4831c1ab168a92d36f747e5487ddc899",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode and zone names are both supported and recognizable as-is."
+    },
+    {
+      "eventId": "zzz:shiyu-defense-critical-node-jan-8:2027-01-08",
+      "fingerprint": "sha256:73dfa8b7eee216a87a574847a575d591146e19e7b2e94a8d30bd1097240c457d",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode name plus date qualifier distinguishes this rotation; already clear."
+    },
+    {
+      "eventId": "zzz:deadly-assault-jan-15:2027-01-15",
+      "fingerprint": "sha256:42c9fa1a3f2d2ddbe5d23fc1622f9c00fb1c68c75d77520f841453f7901b81c4",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode name with date qualifier is recognizable and needs no change."
+    },
+    {
+      "eventId": "genshin:spiral-abyss-january-2027-season:2027-01-16",
+      "fingerprint": "sha256:8a73fb619386ac53ad5290be66d5c4d555d950ce08c6005830e3e1fcd2b7af30",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode plus month/season identity is already the clearest truthful label."
+    },
+    {
+      "eventId": "wuwa:whimpering-wastes-respawning-waters:2027-01-18",
+      "fingerprint": "sha256:c35a00d0d844b0c94c8ef585bfa42828fc59198fd63fe047c02fe47e5ac10b6a",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Mode and rotation-phase names are supported and recognizable; no clearer alternative."
     }
   ]
 }
