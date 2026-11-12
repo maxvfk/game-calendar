@@ -247,10 +247,11 @@ describe("game-day arithmetic and D1 inclusive display", () => {
 describe("review fixes: calendar bounds and undo after an absorbing set", () => {
   const op = (n: number, actionDay: string, extra: Record<string, unknown>) =>
     PassOp.parse({ opId: id(n), game: "genshin", region: "asia", actionDay, createdAt: `2026-11-12T10:00:00.${String(n).padStart(3, "0")}Z`, ...extra });
-  test("P1: the UTC-normalized instant must stay in years 0001-9999", () => {
-    for (const v of ["9999-12-31T23:59:59-14:00", "9999-12-31T10:00:00-14:00", "0001-01-01T00:00:00+14:00", "0001-01-01T09:59:59.999+10:00"])
+  test("P1: the UTC-normalized instant keeps one day of margin inside years 0001-9999", () => {
+    for (const v of ["9999-12-31T23:59:59-14:00", "9999-12-31T10:00:00-14:00", "0001-01-01T00:00:00+14:00", "0001-01-01T09:59:59.999+10:00",
+      "9999-12-31T00:00:00Z", "9999-12-31T23:59:59.999Z", "0001-01-01T23:59:59.999Z", "0001-01-01T00:00:00Z", "0001-01-02T09:59:59.999+10:00"])
       expect(isPassInstant(v)).toBe(false);
-    for (const v of ["9999-12-31T23:59:59.999Z", "9999-12-31T09:59:59+14:00", "9999-12-31T13:59:59-10:00", "0001-01-01T00:00:00Z", "0001-01-01T10:00:00+10:00"])
+    for (const v of ["9999-12-30T23:59:59.999Z", "9999-12-31T09:59:59.999+10:00", "9999-12-30T13:59:59-10:00", "0001-01-02T00:00:00Z", "0001-01-02T10:00:00+10:00"])
       expect(isPassInstant(v)).toBe(true);
   });
   test("P2: an extend on 0001-01-01 reduces to an explicit value", () => {

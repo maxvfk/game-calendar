@@ -97,22 +97,30 @@ test('review P1/P2: instants and days at both calendar limits round-trip RPC →
     ({ opId: id(n), game: 'zzz', region: 'europe', kind: 'extend', actionDay: today, createdAt, days: 30, ...extra });
   const before = await opCount();
   await as(owner, async () => {
-    for (const createdAt of ['9999-12-31T23:59:59-14:00', '9999-12-31T10:00:00-14:00', '0001-01-01T00:00:00+14:00'])
+    for (const createdAt of ['9999-12-31T23:59:59-14:00', '9999-12-31T10:00:00-14:00', '0001-01-01T00:00:00+14:00', '9999-12-31T00:00:00Z', '0001-01-01T23:59:59Z'])
       await expect(apply([at(80, createdAt)])).rejects.toThrow('invalid daily pass op');
   });
   expect(await opCount()).toBe(before);
   await expect(q(`insert into public.daily_pass_ops(profile_id,op_id,game,region,kind,action_day,created_at,days)
     values($1,$2,'zzz','europe','extend',$3,'9999-12-31T23:59:59-14:00',30)`, [profile, id(81), today])).rejects.toThrow();
   await as(owner, async () => {
-    await apply([at(82, '9999-12-31T23:59:59.999Z'), at(83, '0001-01-01T10:00:00+10:00', { actionDay: '0001-01-01' }),
+    await apply([at(82, '9999-12-30T23:59:59.999Z'), at(83, '0001-01-02T10:00:00+10:00', { actionDay: '0001-01-01' }),
       { opId: id(84), game: 'zzz', region: 'europe', kind: 'set', actionDay: today, createdAt: '9999-12-31T09:59:59+14:00', lastDay: '9999-12-31', basedOn: [] }]);
   });
-  const rows = (await q("select to_jsonb(t) as row from public.daily_pass_ops t where game='zzz'")).map(r => r.row as Record<string, unknown>);
-  expect(rows.map(r => r.created_at).sort()).toEqual(['0001-01-01T00:00:00+00:00', '9999-12-30T19:59:59+00:00', '9999-12-31T23:59:59.999+00:00']);
-  const state = reducePass(rows.map(r => passOpFromRow(r)), 'zzz', 'europe');
-  expect(state).toMatchObject({ lastDay: '9999-12-31', winningSet: id(84), outOfRange: [id(82)], conflicts: [id(83)] });
-  const snap = await readPassesSnapshot(q, meta(v3.schemaSha256, v3.migrationSha256), v3.schemaSha256);
-  expect(snap.passes.daily_pass_ops.filter(o => o.game === 'zzz')).toHaveLength(3);
+  // PostgreSQL renders timestamptz in the session zone (offsets up to ±15:59): the edges
+  // must still read back as four-digit years, decode, reduce and back up in every one.
+  try {
+    for (const zone of ["interval '+15:59' hour to minute", "interval '-15:59' hour to minute", "'UTC'"]) {
+      await db.exec(`set time zone ${zone}`);
+      const rows = (await q("select to_jsonb(t) as row from public.daily_pass_ops t where game='zzz'")).map(r => r.row as Record<string, unknown>);
+      expect(rows.map(r => Date.parse(String(r.created_at))).sort()).toEqual(
+        ['0001-01-02T00:00:00Z', '9999-12-30T19:59:59Z', '9999-12-30T23:59:59.999Z'].map(Date.parse));
+      const state = reducePass(rows.map(r => passOpFromRow(r)), 'zzz', 'europe');
+      expect(state).toMatchObject({ lastDay: '9999-12-31', winningSet: id(84), outOfRange: [id(82)], conflicts: [id(83)] });
+      const snap = await readPassesSnapshot(q, meta(v3.schemaSha256, v3.migrationSha256), v3.schemaSha256);
+      expect(snap.passes.daily_pass_ops.filter(o => o.game === 'zzz')).toHaveLength(3);
+    }
+  } finally { await db.exec('reset time zone'); }
 });
 
 test('ownership, RLS and grants: other accounts, anon and the backup role cannot write or see foreign ops', async () => {

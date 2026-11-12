@@ -50,8 +50,18 @@ export const PassGameId = z.string().refine(isPassGameId, { message: "invalid pa
 /** The supported calendar: four-digit years, as day keys and `to_jsonb` timestamps need. */
 export const MIN_PASS_DAY = "0001-01-01";
 export const MAX_PASS_DAY = "9999-12-31";
-const MIN_INSTANT_MS = Date.parse("0001-01-01T00:00:00.000Z");
-const MAX_INSTANT_MS = Date.parse("9999-12-31T23:59:59.999Z");
+const MIN_DAY_MS = Date.parse(`${MIN_PASS_DAY}T00:00:00.000Z`);
+const MAX_DAY_MS = Date.parse(`${MAX_PASS_DAY}T00:00:00.000Z`);
+/**
+ * Stored instants keep one day of margin inside years 0001–9999. PostgreSQL renders
+ * a timestamptz in the session's time zone (offsets up to ±15:59), so an instant at
+ * the very edge would print as year 10000 or BC in some sessions, breaking every
+ * reader that expects a four-digit year (backups, PostgREST pulls).
+ */
+export const MIN_PASS_INSTANT = "0001-01-02T00:00:00.000Z";
+export const MAX_PASS_INSTANT = "9999-12-30T23:59:59.999Z";
+const MIN_INSTANT_MS = Date.parse(MIN_PASS_INSTANT);
+const MAX_INSTANT_MS = Date.parse(MAX_PASS_INSTANT);
 
 /** A real calendar day `YYYY-MM-DD`, year 0001–9999 (PostgreSQL `make_date`). */
 export function isPassDay(day: string): boolean {
@@ -64,9 +74,9 @@ export const PassDay = z.string().refine(isPassDay, { message: "invalid game day
 /**
  * Client clock at the click, millisecond precision with an explicit offset.
  * Used only as a tie-break and for diagnostics, never for day arithmetic.
- * The written date AND the UTC-normalized instant must both stay in years
- * 0001–9999: `9999-12-31T23:59:59-14:00` is year 10000 in UTC, which no stored
- * row may hold, because one such row would stop every backup.
+ * The written date must be real, and the UTC-normalized instant must lie in
+ * MIN_PASS_INSTANT..MAX_PASS_INSTANT: `9999-12-31T23:59:59-14:00` is year 10000
+ * in UTC, and one such stored row would stop every backup.
  */
 export function isPassInstant(value: string): boolean {
   if (
@@ -192,7 +202,7 @@ export class PassDayOutOfRange extends RangeError {
 export function addDays(day: string, n: number): string {
   if (!isPassDay(day) || !Number.isInteger(n)) throw new Error("invalid day arithmetic");
   const ms = Date.parse(`${day}T00:00:00.000Z`) + n * DAY;
-  if (!(ms >= MIN_INSTANT_MS && ms <= MAX_INSTANT_MS)) throw new PassDayOutOfRange();
+  if (!(ms >= MIN_DAY_MS && ms <= MAX_DAY_MS)) throw new PassDayOutOfRange();
   return new Date(ms).toISOString().slice(0, 10);
 }
 

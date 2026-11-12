@@ -126,16 +126,20 @@ try {
   // and the table; the edges round-trip through to_jsonb, the reducer and a v3 snapshot.
   const edge = (n: number, createdAt: string, actionDay = today) =>
     ({ opId: id(n), game: 'zzz', region: 'europe', kind: 'extend', actionDay, createdAt, days: 30 });
-  for (const createdAt of ['9999-12-31T23:59:59-14:00', '0001-01-01T00:00:00+14:00'])
+  for (const createdAt of ['9999-12-31T23:59:59-14:00', '0001-01-01T00:00:00+14:00', '9999-12-31T00:00:00Z', '0001-01-01T23:59:59Z'])
     await assert.rejects(apply(qa, [edge(70, createdAt)]), /22023/);
   await assert.rejects(q(`insert into public.daily_pass_ops(profile_id,op_id,game,region,kind,action_day,created_at,days)
     values($1,$2,'zzz','europe','extend',$3,'9999-12-31T23:59:59-14:00',30)`, [profile, id(71), today]), /23514/);
-  await apply(qa, [edge(72, '9999-12-31T23:59:59.999Z'), edge(73, '0001-01-01T10:00:00+10:00', '0001-01-01')]);
-  const edges = (await q("select to_jsonb(t) as row from public.daily_pass_ops t where game='zzz'")).map(r => r.row as Record<string, unknown>);
-  assert.deepEqual(edges.map(r => r.created_at).sort(), ['0001-01-01T00:00:00+00:00', '9999-12-31T23:59:59.999+00:00']);
-  assert.equal(reducePass(edges.map(r => passOpFromRow(r)), 'zzz', 'europe').lastDay, shift(29));
-  assert.equal((await readPassesSnapshot(q, meta(v3.schemaSha256, v3.migrationSha256), v3.schemaSha256)).passes.daily_pass_ops
-    .filter(o => o.game === 'zzz').length, 2);
+  await apply(qa, [edge(72, '9999-12-30T23:59:59.999Z'), edge(73, '0001-01-02T10:00:00+10:00', '0001-01-01')]);
+  // Rendered in the most extreme session zones PostgreSQL allows, the edges stay four-digit years.
+  for (const zone of ["interval '+15:59' hour to minute", "interval '-15:59' hour to minute", "'UTC'"]) {
+    await q(`set time zone ${zone}`);
+    const edges = (await q("select to_jsonb(t) as row from public.daily_pass_ops t where game='zzz'")).map(r => r.row as Record<string, unknown>);
+    assert.deepEqual(edges.map(r => Date.parse(String(r.created_at))).sort(), ['0001-01-02T00:00:00Z', '9999-12-30T23:59:59.999Z'].map(Date.parse));
+    assert.equal(reducePass(edges.map(r => passOpFromRow(r)), 'zzz', 'europe').lastDay, shift(29));
+    assert.equal((await readPassesSnapshot(q, meta(v3.schemaSha256, v3.migrationSha256), v3.schemaSha256)).passes.daily_pass_ops
+      .filter(o => o.game === 'zzz').length, 2);
+  }
 
   // Restricted roles and cross-profile access.
   const before = await rows();

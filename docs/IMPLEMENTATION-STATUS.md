@@ -6,8 +6,11 @@ of `23cec9e` confirmed two defects; both reproduced before the fix and corrected
 
 - **P1:** `createdAt: 9999-12-31T23:59:59-14:00` passed validation, is year 10000 in
   UTC, and one such row would stop every v3 backup. The TS schema, the RPC and a new
-  table check now require UTC years 0001–9999 (epoch bounds, so the catalog text and
-  the v3 hash do not depend on the session time zone). Backup stays fail-closed.
+  table check now require `0001-01-02T00:00:00Z`..`9999-12-30T23:59:59.999Z` (epoch
+  bounds, so the catalog text and the v3 hash do not depend on the session zone).
+  The one-day margin was added after CI at `8134193` showed a non-UTC session
+  rendering the full-range edge as year 10000; edges are now tested in sessions at
+  ±15:59. Backup stays fail-closed.
 - **P2:** an extend on `0001-01-01` threw, and an extend past `9999-12-31` produced
   `+010000-01`. The reducer evaluates `max(last, actionDay − 1) + days` as
   restart/continue without the predecessor day; out-of-calendar extends are kept,
