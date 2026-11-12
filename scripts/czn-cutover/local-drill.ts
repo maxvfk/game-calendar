@@ -5,9 +5,12 @@ import {safeQuery} from '../account-backup/cli.ts';
 import {migrationHashes} from '../account-backup/generate-contract.ts';
 import {canonical} from '../account-backup/model.ts';
 import {candidateMigration} from './contract.ts';
-import {decryptCzn} from './encryption.ts';
 import {readCznSnapshot,restoreCznSnapshot} from './backup.ts';
+import {passesMigration} from '../daily-passes/contract.ts';
+import {readPassesSnapshot,restorePassesSnapshot} from '../daily-passes/backup.ts';
+import {decryptPasses} from '../daily-passes/encryption.ts';
 import contract from '../../supabase/backup-contract.czn-v2.json';
+import v3 from '../../supabase/backup-contract.passes-v3.json';
 export function localDrillConfig(raw:string){
   const u=new URL(raw);
   if(u.protocol!=='postgres:'||!['127.0.0.1','localhost'].includes(u.hostname)||u.pathname!=='/czn_recovery_drill'||u.username!=='postgres'||!u.password||u.search||u.hash)
@@ -18,7 +21,9 @@ export async function localDrill(args:string[]){
   const {positionals,values:v}=parseArgs({args,allowPositionals:true,options:{'execute-local':{type:'boolean'},snapshot:{type:'string'},identity:{type:'string'},'project-ref':{type:'string'}}});
   if(positionals.length||!v['execute-local']||!v.snapshot||!v.identity||!v['project-ref'])throw new Error('Explicit --execute-local --snapshot --identity --project-ref required');
   const config=localDrillConfig(process.env.CZN_LOCAL_DRILL_URL??'');
-  const snapshot=await decryptCzn(v.snapshot,v.identity,v['project-ref'],contract.schemaSha256),base='base' in snapshot?snapshot.base:snapshot;
+  const snapshot=await decryptPasses(v.snapshot,v.identity,v['project-ref'],v3.schemaSha256),base='base' in snapshot?snapshot.base:snapshot;
+  // A v3 snapshot recovers into the v3 schema; v1/v2 keep the unchanged v2 drill.
+  const passes='passes' in snapshot?snapshot:null;
   const sql=new SQL(config),q=safeQuery(sql);
   try{
     const version=String((await q('show server_version'))[0]!.server_version);
@@ -34,17 +39,25 @@ export async function localDrill(args:string[]){
         grant usage on schema auth to authenticated,anon;`);
       for(const f of Object.keys(await migrationHashes()))await tx.unsafe(await Bun.file(new URL('../../supabase/migrations/'+f,import.meta.url)).text());
       await tx.unsafe((await candidateMigration()).sql);
+      if(passes)await tx.unsafe((await passesMigration()).sql);
       await tx.unsafe('insert into calendar_backup_control.project_identity(project_ref) values($1)',[v['project-ref']!]);
       for(const owner of new Set(base.data.profiles.map(p=>String(p.owner_id))))await tx.unsafe('insert into auth.users values($1)',[owner]);
     });
-    await q("set timezone='UTC'");await restoreCznSnapshot(q,snapshot,v['project-ref'],contract.schemaSha256);
-    const result=await readCznSnapshot(q,{...base,schemaSha256:contract.schemaSha256},contract.schemaSha256);
+    await q("set timezone='UTC'");
+    if(passes)await restorePassesSnapshot(q,passes,v['project-ref'],v3.schemaSha256);
+    else await restoreCznSnapshot(q,snapshot,v['project-ref'],contract.schemaSha256);
+    const result=passes?await readPassesSnapshot(q,{...base,schemaSha256:v3.schemaSha256},v3.schemaSha256):
+      await readCznSnapshot(q,{...base,schemaSha256:contract.schemaSha256},contract.schemaSha256);
     if('base' in snapshot){
       // Normalize expected timestamps with PostgreSQL to retain full microseconds.
       for(const table of ['czn_daily_policy','czn_daily_marks'] as const){
         const expected=(await q(`select to_jsonb(r) as row from jsonb_populate_recordset(null::public.${table},$1::jsonb) r`,[canonical(snapshot.extension[table])])).map(r=>canonical(r.row)).sort();
         if(canonical(result.extension[table].map(r=>canonical(r)).sort())!==canonical(expected))throw new Error('Recovered extension mismatch');
       }
+    }
+    if(passes){
+      const expected=(await q(`select to_jsonb(r) as row from jsonb_populate_recordset(null::public.daily_pass_ops,$1::jsonb) r`,[canonical(passes.passes.daily_pass_ops)])).map(r=>canonical(r.row)).sort();
+      if(!('passes' in result)||canonical(result.passes.daily_pass_ops.map(r=>canonical(r)).sort())!==canonical(expected))throw new Error('Recovered daily pass ops mismatch');
     }
     if(result.extension.czn_daily_release[0]!.enabled)throw new Error('Drill must remain disabled');
     console.log('Isolated PG17 encrypted recovery verified; local database contains personal data. Dispose of that local cluster privately. No hosted access or Auth provider restore.');

@@ -62,12 +62,20 @@ export function selectCznProfiles(input:Snapshot|CznSnapshot,selection:string[]|
     czn_daily_marks:input.extension.czn_daily_marks.filter(p=>ids.has(p.profile_id))},input.schemaSha256):selected;
 }
 /** Identical read-only planning rules are used before and inside the locked write transaction. */
-export async function planCznRecovery(query:Query,input:unknown,project:string,hash:string){
+export type CznRecoveryInput={base:Snapshot;extension:Extension|null};
+export function validateCznRecoveryInput(input:unknown,project:string,hash:string):CznRecoveryInput{
   // Legacy v1 snapshots stay readable; this never manufactures a policy from old labels.
   const isV1=(input as {format?:string})?.format==='game-calendar-personal';
-  const s=isV1?{base:validateSnapshot(input,project,legacyContract.schemaSha256),extension:null}:
+  return isV1?{base:validateSnapshot(input,project,legacyContract.schemaSha256),extension:null}:
     validateCznSnapshot(input,project,hash);
-    await assertCznTarget(query,project,hash);
+}
+export async function planCznRecovery(query:Query,input:unknown,project:string,hash:string){
+  const s=validateCznRecoveryInput(input,project,hash);
+  await assertCznTarget(query,project,hash);
+  return planValidatedCznRecovery(query,s);
+}
+/** The caller has validated the input and asserted its own exact target contract. */
+export async function planValidatedCznRecovery<S extends CznRecoveryInput>(query:Query,s:S){
     const plan=await restorePlan(query,s.base.data);
     // PostgreSQL normalizes timezone representation at microsecond precision. Do not
     // use JS Date (millisecond truncation), or compare equivalent offsets as conflicts.
@@ -105,6 +113,12 @@ export async function restoreCznSnapshot(query:Query,input:unknown,project:strin
       public.preferences,public.custom_games,public.custom_events,public.czn_daily_policy,public.czn_daily_marks
       in share row exclusive mode`);
     const {s,data}=await planCznRecovery(query,input,project,hash);
+    await writeCznRecovery(query,s,data);
+    await query('commit');
+  }catch(error){await query('rollback');throw error;}
+}
+/** Writes a plan inside the caller's locked transaction. */
+export async function writeCznRecovery(query:Query,s:CznRecoveryInput,data:Rows){
     await writeRestore(query,data);
     for(const p of s.extension?.czn_daily_policy??[])await query(`insert into public.czn_daily_policy
       select * from jsonb_populate_record(null::public.czn_daily_policy,$1::jsonb) on conflict do nothing`,[canonical(p)]);
@@ -118,6 +132,4 @@ export async function restoreCznSnapshot(query:Query,input:unknown,project:strin
         where (excluded.changed_at,excluded.mutation_id)>(czn_daily_marks.changed_at,czn_daily_marks.mutation_id)`,[canonical(row)]);
     }
     // The release switch is operational authority, not restored from an old backup.
-    await query('commit');
-  }catch(error){await query('rollback');throw error;}
 }
