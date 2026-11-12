@@ -8,24 +8,35 @@ import {assertTarget,assertBackupRole,readRows,restorePlan,writeRestore,type Que
 import {makeSnapshot,canonical,sha256,TABLES,type Snapshot} from '../account-backup/model.ts';
 import {ageEncrypt,storeEncrypted} from '../account-backup/storage.ts';
 import {assertCznTarget,assertCznBackupRole,candidateMigration} from './contract.ts';
-import {readCznSnapshot,selectCznProfiles,planCznRecovery,restoreCznSnapshot} from './backup.ts';
-import {decryptCzn,verifyCznPair} from './encryption.ts';
+import {readCznSnapshot,planCznRecovery,restoreCznSnapshot} from './backup.ts';
+import {verifyCznPair} from './encryption.ts';
 import {verifyPair} from '../account-backup/storage.ts';
 import {storeCzn} from './production-storage.ts';
 import v1 from '../../supabase/backup-contract.v1.json';
 import v2 from '../../supabase/backup-contract.czn-v2.json';
+import v3 from '../../supabase/backup-contract.passes-v3.json';
+import {PASS_TABLES,PASS_FUNCTIONS,assertPassesTarget,assertPassesBackupRole,passesMigration} from '../daily-passes/contract.ts';
+import {readPassesSnapshot,selectPassesProfiles,planPassesRecovery,restorePassesSnapshot,type PassesSnapshot} from '../daily-passes/backup.ts';
+import {decryptPasses,isPassesPair,verifyPassesPair,storePasses} from '../daily-passes/encryption.ts';
 export const PRODUCTION_PROJECT='vzzudezdigjwbwfejlsg';
 export async function detectContract(query:Query,project:string){
+  // Any trace of the daily pass candidate means v3 or nothing: v2's hash does not cover it.
+  const passes=await query(`select relname as name from pg_class where relnamespace='public'::regnamespace and relname=any($1::text[])
+    union all select proname from pg_proc where pronamespace='public'::regnamespace and proname=any($2::text[])`,[[...PASS_TABLES],[...PASS_FUNCTIONS]]);
   const present=await query("select relname from pg_class where relnamespace='public'::regnamespace and relname=any($1::text[])",[['czn_daily_release','czn_daily_policy','czn_daily_marks']]);
+  if(passes.length){
+    if(present.length!==3)throw new Error('Partial CZN migration; backup refused');
+    await assertPassesTarget(query,project,v3.schemaSha256);return 3 as const;
+  }
   if(present.length===0){await assertTarget(query,project,v1.schemaSha256);return 1 as const;}
   if(present.length!==3)throw new Error('Partial CZN migration; backup refused');
   await assertCznTarget(query,project,v2.schemaSha256);return 2 as const;
 }
-export async function assertAccess(query:Query,version:1|2){
+export async function assertAccess(query:Query,version:1|2|3){
   // Control schema intentionally has no RLS: effective schema/table privileges must deny clients.
   const policies=await query(`select schemaname,tablename,policyname,permissive,roles::text,cmd,qual,with_check
     from pg_policies where schemaname='public' and tablename=any($1::text[]) order by tablename,policyname`,[[...TABLES]]);
-  const expected=v2.contract.policies.filter(p=>(TABLES as readonly string[]).includes(p.tablename));
+  const expected=(version===3?v3:v2).contract.policies.filter(p=>(TABLES as readonly string[]).includes(p.tablename));
   if(canonical(policies)!==canonical(expected))throw new Error('Legacy owner/backup policy drift');
   for(const role of ['anon','authenticated']){
     const legacy=await query(`select relname,relrowsecurity,relforcerowsecurity,
@@ -37,13 +48,25 @@ export async function assertAccess(query:Query,version:1|2){
     const p=(await query(`select has_schema_privilege($1,'calendar_backup_control','USAGE,CREATE') as control,
       has_table_privilege($1,'calendar_backup_control.project_identity','INSERT,UPDATE,DELETE,TRUNCATE') as marker_write`,[role]))[0]!;
     if(p.control||p.marker_write)throw new Error('Exposed backup identity');
-    if(version===2){
+    if(version>=2){
       const rows=await query(`select has_schema_privilege($1,'calendar_sync_internal','USAGE,CREATE') as internal,
         exists(select 1 from pg_proc where pronamespace='calendar_sync_internal'::regnamespace and has_function_privilege($1,oid,'EXECUTE')) as helper,
         exists(select 1 from pg_class where relnamespace='public'::regnamespace and relname=any($2::text[]) and
           (not relrowsecurity or relforcerowsecurity or has_table_privilege($1,oid,'INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER'))) as unsafe`,
         [role,['czn_daily_release','czn_daily_policy','czn_daily_marks']]);
       if(Object.values(rows[0]!).some(Boolean))throw new Error('Unsafe CZN client privileges/RLS');
+    }
+    if(version===3){
+      // Clients read their own ops through RLS and write only through daily_pass_apply.
+      // authenticated EXECUTE on it may be absent: that is the documented write
+      // rollback, and backups/recovery must keep working in it. No other execute grant.
+      const rows=await query(`select exists(select 1 from pg_class where relnamespace='public'::regnamespace and relname=any($2::text[]) and
+          (not relrowsecurity or relforcerowsecurity or has_table_privilege($1,oid,'INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER')
+            or has_table_privilege($1,oid,'SELECT')<>($1='authenticated'))) as unsafe_table,
+        exists(select 1 from pg_proc where pronamespace='public'::regnamespace and proname=any($3::text[]) and
+          has_function_privilege($1,oid,'EXECUTE') and not ($1='authenticated' and proname='daily_pass_apply')) as unsafe_function`,
+        [role,[...PASS_TABLES],[...PASS_FUNCTIONS]]);
+      if(Object.values(rows[0]!).some(Boolean))throw new Error('Unsafe daily pass client privileges/RLS');
     }
   }
 }
@@ -71,10 +94,11 @@ export async function productionMain(args:string[]){
   if(positionals.length>1||!['plan','preflight','backup','validate','restore'].includes(command))throw new Error('Expected plan|preflight|backup|validate|restore');
   if(command==='plan'){
     if(Object.keys(v).length)throw new Error('Plan accepts no flags');
-    const migration=await candidateMigration();
+    const migration=await candidateMigration(),passes=await passesMigration();
     console.log(canonical({status:'awaiting-production-GO',projectRef:PRODUCTION_PROJECT,productionWrites:false,clientEnabled:false,
-      v1:v1.schemaSha256,v2:v2.schemaSha256,migration:migration.name,migrationSha256:sha256(migration.sql),
-      runbook:'docs/CZN-PRODUCTION-CUTOVER.md'}));return;
+      v1:v1.schemaSha256,v2:v2.schemaSha256,v3:v3.schemaSha256,migration:migration.name,migrationSha256:sha256(migration.sql),
+      passesMigration:passes.name,passesMigrationSha256:sha256(passes.sql),
+      runbook:'docs/CZN-PRODUCTION-CUTOVER.md',passesRunbook:'docs/tasks/DAILY-PASSES.md'}));return;
   }
   const project=v['project-ref'];if(!project||!/^[a-z]{20}$/.test(project))throw new Error('Exact --project-ref required');
   const allowed:Record<string,string[]>={preflight:['project-ref','read-only'],backup:['project-ref','confirm-project','source-revision','go-revision','execute','output'],
@@ -82,14 +106,14 @@ export async function productionMain(args:string[]){
   if(Object.keys(v).some(k=>!allowed[command]!.includes(k)))throw new Error('Unexpected operation flag');
   if(command==='validate'||command==='restore'){
     if(!v.snapshot||!v.identity)throw new Error('Encrypted --snapshot and local --identity required');
-    const snapshot=await decryptCzn(v.snapshot,v.identity,project,v2.schemaSha256);
-    if(command==='validate'){console.log('Encrypted v1/v2 snapshot validated in memory');return;}
+    const snapshot=await decryptPasses(v.snapshot,v.identity,project,v3.schemaSha256);
+    if(command==='validate'){console.log('Encrypted v1/v2/v3 snapshot validated in memory');return;}
     if(Boolean(v.profile?.length)===Boolean(v['all-profiles']))throw new Error('Choose explicit profiles OR all-profiles');
-    const selected=selectCznProfiles(snapshot,v['all-profiles']?'all':v.profile!);
+    const selected=selectPassesProfiles(snapshot,v['all-profiles']?'all':v.profile!);
     const base='base' in selected?selected.base:selected,ids=base.data.profiles.map(p=>String(p.id));
     if(v.write){
       if(v['read-only']||!v['go-file']||v['confirm-project']!==project||project!==PRODUCTION_PROJECT||!v['source-revision'])throw new Error('Write requires exact production project and independent GO file');
-      const manifest=v.snapshot.includes('.czn-v2.')?await verifyCznPair(v.snapshot):await verifyPair(v.snapshot);
+      const manifest=isPassesPair(v.snapshot)?await verifyPassesPair(v.snapshot):v.snapshot.includes('.czn-v2.')?await verifyCznPair(v.snapshot):await verifyPair(v.snapshot);
       requireRecoveryGo(JSON.parse(await readFile(v['go-file'],'utf8')),v['source-revision'],manifest.ciphertextSha256,ids);
       await assertSourceRevision(v['source-revision']);
     }else if(!v['read-only']||v['go-file']||v['confirm-project']||v['source-revision'])throw new Error('Default recovery is dry-run; explicitly use --read-only');
@@ -97,17 +121,21 @@ export async function productionMain(args:string[]){
     try{const q=safeQuery(sql);
       if(!v.write)await q('begin isolation level repeatable read read only');
       const version=await detectContract(q,project);await assertAccess(q,version);
+      const v3Input=(selected as {format?:string}).format==='game-calendar-personal-passes';
+      if(v3Input&&version!==3)throw new Error('v3 recovery requires v3 schema');
       if(v.write){
-        if(version===2)await restoreCznSnapshot(q,selected,project,v2.schemaSha256);
+        if(version===3)await restorePassesSnapshot(q,selected,project,v3.schemaSha256);
+        else if(version===2)await restoreCznSnapshot(q,selected,project,v2.schemaSha256);
         else{
           if('base' in selected)throw new Error('v2 recovery requires v2 schema');
           await sql.begin('read write',async tx=>{const tq=safeQuery(tx);await tq("set local lock_timeout='10s'");await tq("set local statement_timeout='120s'");
             await tq('lock table public.profiles,public.progress,public.daily_marks,public.ignored,public.preferences,public.custom_games,public.custom_events in share row exclusive mode');
             await assertTarget(tq,project,v1.schemaSha256);await restorePlan(tq,selected.data);await writeRestore(tq,selected.data);});
         }
-      }else{if(version===2)await planCznRecovery(q,selected,project,v2.schemaSha256);
+      }else{if(version===3)await planPassesRecovery(q,selected,project,v3.schemaSha256);
+        else if(version===2)await planCznRecovery(q,selected,project,v2.schemaSha256);
         else{if('base' in selected)throw new Error('v2 recovery requires v2 schema');await restorePlan(q,selected.data);}await q('rollback');}
-      console.log(v.write?'Selected recovery committed; fences retained':'Recovery dry-run passed; no writes');
+      console.log(v.write?'Selected recovery committed; fences and daily pass ops retained':'Recovery dry-run passed; no writes');
     }finally{await sql.close();}return;
   }
   const revision=v['source-revision'];
@@ -120,14 +148,16 @@ export async function productionMain(args:string[]){
     const snapshot=await sql.begin('isolation level repeatable read read only',async tx=>{
       const q=safeQuery(tx);await q("set local timezone='UTC'");await q("set local statement_timeout='120s'");
       const version=await detectContract(q,project);await assertAccess(q,version);
-      if(version===1)await assertBackupRole(q);else await assertCznBackupRole(q);
-      if(command==='preflight'){console.log(canonical({version,contract:version===1?v1.schemaSha256:v2.schemaSha256,verified:true,readOnly:true}));return null;}
+      if(version===1)await assertBackupRole(q);else if(version===2)await assertCznBackupRole(q);else await assertPassesBackupRole(q);
+      const contract=version===1?v1:version===2?v2:v3;
+      if(command==='preflight'){console.log(canonical({version,contract:contract.schemaSha256,verified:true,readOnly:true}));return null;}
       const createdAt=String((await q("select to_char(transaction_timestamp() at time zone 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.MS\"Z\"') as at"))[0]!.at);
-      const meta={createdAt,projectRef:project,sourceRevision:revision!,schemaSha256:v1.schemaSha256,migrationSha256:version===1?v1.migrationSha256:v2.migrationSha256};
-      return version===1?makeSnapshot(await readRows(q),meta):readCznSnapshot(q,meta,v2.schemaSha256);
+      const meta={createdAt,projectRef:project,sourceRevision:revision!,schemaSha256:v1.schemaSha256,migrationSha256:contract.migrationSha256};
+      return version===1?makeSnapshot(await readRows(q),meta):version===2?readCznSnapshot(q,meta,v2.schemaSha256):readPassesSnapshot(q,meta,v3.schemaSha256);
     });
     if(snapshot){const recipient=process.env.AGE_RECIPIENT??'';
-      if('base' in snapshot)await storeCzn(v.output!,snapshot,recipient);
+      if('passes' in snapshot)await storePasses(v.output!,snapshot as PassesSnapshot,recipient);
+      else if('base' in snapshot)await storeCzn(v.output!,snapshot,recipient);
       else await storeEncrypted(v.output!,snapshot as Snapshot,await ageEncrypt(canonical(snapshot),recipient),recipient);
       console.log('Encrypted versioned backup verified; matching namespace retention applied');}
   }finally{await sql.close();}

@@ -1,3 +1,124 @@
+## PASS-1A — REVIEWS COMPLETE, READY FOR OPERATOR MERGE GO (2026-11-12)
+
+[Focused re-review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874954971)
+of `fb692f3..fe72ad9`: the final-review P1 is closed, no new confirmed defect;
+verdict READY TO MERGE from review. Reviewed head
+`fe72ad907930f3171e1b4dc28d5b8b0a45d3903b`; exact-head CI
+[run 43222548485](https://github.com/maxvfk/game-calendar/actions/runs/43222548485) on its
+merge with main `a485d08` (README-only advance): full suite **1781 pass / 4 optional age
+skips / 0 fail**, typecheck/feed/build green; PostgreSQL 17.6 job **83 pass**, both PG17
+verifiers (including the write-rollback/encrypted-recovery block) and both encrypted
+recovery drills. v3 schema hash `9d7fdfd1…` (`supabase/backup-contract.passes-v3.json`).
+The PR is still a draft. **Next:** operator merge GO. Merge alone applies nothing;
+rollout steps 2–4 (private v3 pin, operator DDL window, PASS-1B) each need their own GO.
+
+### Earlier: final review P1 corrected
+
+[Independent final review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874755628)
+of `fb692f3`: CHANGES REQUIRED, one P1. The documented write rollback (`revoke execute
+on daily_pass_apply from authenticated`) made `detectContract`, `readPassesSnapshot`,
+`planPassesRecovery` and `restorePassesSnapshot` fail with a schema mismatch, and
+`assertAccess` fail separately, so it would have stopped every v3 backup and
+recovery. Reproduced, then corrected: the contract hashes exactly the enabled and
+writes-revoked ACLs of that function identically (any other ACL stays drift), and
+`assertAccess` allows authenticated EXECUTE to be absent but no other grant.
+Regressions: PGlite (writes fail, reads survive, preflight/backup as
+`calendar_backup`, dry-run and v1/v2/v3 recovery with ops preserved, widened grants
+still refused) and PG17 (the same under a REPEATABLE READ READ ONLY backup transaction,
+plus a real age-encrypted v3 snapshot restored with writes revoked). v3 schema hash
+changed (contract regenerated from LF bytes).
+
+### Earlier: focused re-review complete (2026-11-12)
+
+[Focused re-review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874560527)
+of `8134193..b5424d8`: the preliminary P1/P2 and the follow-up fixture P2 (implicit
+UTC in the DB test, [review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874472262))
+are addressed; no new confirmed defect. Exact-head CI for `b5424d89fb42300757e07da9975e5c8dd25b9a60`
+([run 43218648330](https://github.com/maxvfk/game-calendar/actions/runs/43218648330)):
+full suite **1780 pass / 4 optional age skips / 0 fail**, typecheck, feed and site
+build green; PostgreSQL 17 job green (82 focused tests with age, both PG17 scripts,
+both encrypted recovery drills). **Next:** the separate independent final review,
+then operator merge GO. Do not apply SQL, change the private pin or start PASS-1B.
+
+### Corrections recorded during preliminary review
+
+[Preliminary review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874229682)
+of `23cec9e` confirmed two defects; both reproduced before the fix and corrected in
+`64ddeed` + LF contract `f9e6fd5`.
+
+- **P1:** `createdAt: 9999-12-31T23:59:59-14:00` passed validation, is year 10000 in
+  UTC, and one such row would stop every v3 backup. The TS schema, the RPC and a new
+  table check now require `0001-01-02T00:00:00Z`..`9999-12-30T23:59:59.999Z` (epoch
+  bounds, so the catalog text and the v3 hash do not depend on the session zone).
+  The one-day margin was added after CI at `8134193` showed a non-UTC session
+  rendering the full-range edge as year 10000; edges are now tested in sessions at
+  ±15:59. Backup stays fail-closed.
+- **P2:** an extend on `0001-01-01` threw, and an extend past `9999-12-31` produced
+  `+010000-01`. The reducer evaluates `max(last, actionDay − 1) + days` as
+  restart/continue without the predecessor day; out-of-calendar extends are kept,
+  reported in `outOfRange` and not applied; `addDays` throws `PassDayOutOfRange`;
+  `expiresAtMs` stays defined at the maximum day.
+- **Clarification** (undo of an extend absorbed by a later `set` keeps the set's
+  value) is pinned by an expected-value test and recorded in the task notes.
+
+New explicit-value tests: instant limits both sides, minimum day, restart/continue
+edge, overflow/recovery, overflow permutation invariance, expiry for every clock,
+undo-after-set; PGlite and PG17 RPC → UTC row → reducer → v3 snapshot round trips at
+both limits, plus the table check against a direct insert. Locally: reducer/DB/backup
+52 pass + 1 age skip; LF worktree backup/contract suites 93 pass / 4 age skips; full
+suite shows only the pre-existing Windows baseline. v3 schema hash changed (contract
+regenerated from LF bytes).
+
+---
+
+## PASS-1A — Daily passes domain/DB/backup candidate IMPLEMENTED, REVIEW PENDING (2026-11-12)
+
+[PR #171](https://github.com/maxvfk/game-calendar/pull/171), draft, unmerged. Operator GO
+covered code, SQL candidate and tests only. **Nothing applied in production, private
+backup pin unchanged, no client/outbox/export/UI, no feature flag.** Branch from main
+`ec88b80`; implementation head `9837b1532ad2de853dc1a68494fd1117de15e3f9`.
+Contract: [DAILY-PASSES](tasks/DAILY-PASSES.md) (accepted PASS-0 model, invariants
+1–9, D1–D8) plus its new "PASS-1A implementation notes" for the details it fixed.
+
+- **Pure reducer** `src/shared/dailyPasses.ts`: strict wire schema mirroring SQL,
+  union by `opId` (reuse with different content refused), undo/resolve/conflict
+  rules, sort `(actionDay, createdAt, opId)`, D1 inclusive view, day-key arithmetic;
+  CZN via `cznDayKey`/`cznDayStart` (18:00 UTC), custom lanes on the regional default.
+- **SQL candidate** `supabase/daily-passes/20261112120000_daily_pass_ops.sql` (own
+  directory): insert-only `daily_pass_ops` (FK cascade, format-validated `game`
+  incl. `mygame:`, per-kind shape, update trigger), `daily_pass_apply` SECURITY
+  DEFINER with owner check, batch limits, server UTC+1 day bound, exact-replay
+  `accepted`; RLS owner read, `calendar_backup` read policy, no direct writes.
+- **Backup v3** `scripts/daily-passes/` + `production.ts`/`local-drill.ts`: contract
+  `supabase/backup-contract.passes-v3.json` (generated from LF bytes), exact v1/v2/v3
+  detection (any daily pass object forces v3), v3 snapshot/encryption/retention under
+  `snapshots/v3/`, recovery of v1/v2/v3 into v3 that only union-inserts ops. The v2
+  recovery code was split into validate/plan/write helpers without behaviour change.
+
+Tests: reducer **33** (exhaustive 720-order invariance for five 6-op scenarios plus
+12 seeded random sets, the PASS-0 counterexample = 69 in every order, undo/resolve/
+conflict/skew/concurrent sets, Asia/America, Endfield europe, CZN, exact reset, leap
+day/month/year); PGlite DB **9**; backup/production **3** (the age test runs in CI).
+Real PG17 (`scripts/daily-passes/verify-postgres17.ts`): v2→v3 transactional DDL,
+pinned v2 checks fail closed (`Uncovered child table`), first v3 snapshot equals the
+v2 data, two-connection distinct ops without a lock wait, replay/reuse/rollback with
+observed lock waits, reversed arrival, undo after ACK and before target, stale set,
+validation and batch limit, other/anon/backup boundaries, immutable rows, union-only
+v1/v2/v3 recovery, FK cascade. v3 operator drill on a separate empty PG17 cluster.
+
+Exact-head CI for `9837b15` ([run 43213346066](https://github.com/maxvfk/game-calendar/actions/runs/43213346066)):
+check/build green; PostgreSQL 17 job green with **74 pass / 0 skip** and both new PG17
+scripts; full suite **1772 pass / 4 optional age skips / 0 fail**. **No local PG17**
+(Windows, no Docker/PostgreSQL): PG17 behaviour is verified in CI only. Locally on
+Windows the same 49 pre-existing CRLF/symlink/timing failures occur on clean main and
+on this branch; in an LF worktree all backup/contract tests pass. Final-head CI after
+this docs commit is recorded in the PR.
+
+**Next:** preliminary review → independent final merge-safety review. Do not merge,
+apply SQL, change the private pin or start PASS-1B without separate operator GO.
+
+---
+
 ## C1a.1 — FINAL BOUNDED OPTION B IMPLEMENTED, INDEPENDENT CLOSURES PENDING (2026-11-05)
 
 [Operator decision](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6647933853)

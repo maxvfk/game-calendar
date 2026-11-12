@@ -1,6 +1,12 @@
 # DAILY-PASSES — lean design gate and implementation roadmap
 
-**Status (2026-11-05): PASS-0 complete; PASS-1A awaiting implementation GO.**
+**Status (2026-11-12): PASS-1A implemented as a reviewed candidate in
+[PR #171](https://github.com/maxvfk/game-calendar/pull/171); preliminary, final and focused
+reviews complete, READY TO MERGE from review at `fe72ad9`.** Operator GO covered code,
+SQL candidate and tests only: nothing applied in production, no private pin change,
+no client or feature flag. Next: operator merge GO; every rollout step needs its own GO.
+
+**Earlier status (2026-11-05): PASS-0 complete; PASS-1A awaiting implementation GO.**
 The product requirements are approved. The independent read-only PASS-0 design
 review is complete ([review](https://github.com/maxvfk/game-calendar/pull/167#issuecomment-6657157606), [D7/D8 addendum](https://github.com/maxvfk/game-calendar/pull/167#issuecomment-6657262999)), and the operator
 has settled decisions D1–D8. The accepted contract is recorded below. This
@@ -340,5 +346,48 @@ of the inclusive convention (D1).
 - No changes to C1a.1 #161, C1b, source ingestion, Timeline labels, CZN
   cutover or historic user data.
 
-**Next concrete step:** operator GO for PASS-1A on the accepted contract above;
-do not start PASS-1A before that GO.
+**Next concrete step:** operator merge GO for PR #171 (PASS-1A); then rollout step 2
+(private v3 pin) only after its own GO. Do not merge, apply the SQL, change the private pin or start PASS-1B
+without the corresponding separate operator GO.
+
+### PASS-1A implementation notes (2026-11-12)
+
+Where the contract left a detail open, PASS-1A fixed it as follows (review these):
+
+- **Undo never targets an undo.** There is no redo chain, so liveness cannot depend
+  on arrival order or form a cycle; redo is a new `extend`. An undo or resolve whose
+  target belongs to another pass, or a resolve aimed at a non-extend, is reported as
+  `ignored`. An undo/resolve whose target has not arrived stays pending.
+- **Several resolves for one extend:** the latest live one in action order wins.
+- **`days` is required on the wire** for `extend`; 30 (D2) is the client default.
+- **`basedOn` must be distinct**; the server stores it sorted, and content comparison
+  treats `createdAt` as an instant (offset spelling does not matter).
+- **Wire strictness:** canonical lowercase UUIDs, `createdAt` with ≤3 fractional
+  digits, hours 00–23 and an offset ≤ ±14:00; the TS schema mirrors the SQL.
+- **`action_day` has an upper bound only** (server UTC date + 1), as the contract says.
+- **Clock basis** (`passClockBasis`) labels `regional-default` clocks; it is not a
+  claim of independent server evidence (UI wording is PASS-2).
+- **Calendar limits (preliminary review P1/P2).** Every stored instant must lie in
+  `0001-01-02T00:00:00Z`..`9999-12-30T23:59:59.999Z` (TS schema, RPC and a table
+  check with epoch bounds, so the catalog text and contract hash do not depend on the
+  session time zone). One year-10000 row would otherwise stop every v3 backup; the
+  one-day margin keeps every rendering four-digit, because PostgreSQL prints
+  timestamptz in the session zone (offsets up to ±15:59) — CI found that a non-UTC
+  session rendered the first `9999-12-31T23:59:59.999Z` edge as year 10000. The reducer never forms the
+  day before `actionDay` (`max(last, actionDay − 1) + days` is evaluated as restart
+  or continue). An extend that would pass 9999-12-31 is retained, reported in
+  `outOfRange` and not applied; a `set` or `undo` recovers. `expiresAtMs` is the
+  next game-day's opening, computed as `dayStart(lastDay) + 1 day`, which is
+  identical for these fixed-offset clocks and stays defined at 9999-12-31.
+- **Write rollback keeps backups (final review P1).** The v3 contract treats exactly
+  two ACLs of `daily_pass_apply` as the same schema: enabled, and `authenticated`
+  EXECUTE revoked (rollback step 5). `assertAccess` allows that EXECUTE to be absent
+  but no other grant. Backup, preflight and v1/v2/v3 recovery are tested with writes
+  revoked (PGlite and PG17, encrypted round trip included); widened grants still fail.
+- **Undo after an absorbing set (review clarification).** For `extend E`, then
+  `set S` with `E` in `S.basedOn`, then `undo(E)`: E is reported in `undone`, but
+  the expiry stays `S.lastDay`, because S already absorbed E and its explicit value
+  is authoritative. The PASS-2 Undo UX must explain or avoid offering this undo.
+- **v3 backup format** is `game-calendar-personal-passes` v3 with its own encrypted
+  manifest and `snapshots/v3/` retention; `production.ts` detects v1/v2/v3, and any
+  daily pass table or function forces full v3 verification.

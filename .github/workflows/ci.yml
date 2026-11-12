@@ -129,6 +129,24 @@ jobs:
         options: >-
           --health-cmd pg_isready --health-interval 5s
           --health-timeout 5s --health-retries 10
+      # PASS-1A: separate empty clusters, because each harness refuses a non-empty one.
+      passes-postgres:
+        image: postgres:17.6
+        env:
+          POSTGRES_PASSWORD: local-disposable-test-only
+        ports: ['5434:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+      passes-recovery-postgres:
+        image: postgres:17.6
+        env:
+          POSTGRES_PASSWORD: local-disposable-test-only
+          POSTGRES_DB: czn_recovery_drill
+        ports: ['5435:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
@@ -137,7 +155,7 @@ jobs:
       - run: bun install --frozen-lockfile
       - name: Install age for mandatory synthetic encrypted recovery tests
         run: sudo apt-get update && sudo apt-get install -y age
-      - run: bun test test/czn-production.test.ts test/czn-cutover-db.test.ts test/czn-cutover-client.test.tsx test/czn-browser-dom.test.tsx
+      - run: bun test test/czn-production.test.ts test/czn-cutover-db.test.ts test/czn-cutover-client.test.tsx test/czn-browser-dom.test.tsx test/daily-passes.test.ts test/daily-passes-db.test.ts test/daily-passes-backup.test.ts
       - name: Verify independent PG17 transactions and privileges
         env:
           CZN_LOCAL_PG17_URL: postgres://postgres:local-disposable-test-only@127.0.0.1:5432/postgres
@@ -146,6 +164,14 @@ jobs:
         env:
           CZN_LOCAL_DRILL_URL: postgres://postgres:local-disposable-test-only@127.0.0.1:5433/czn_recovery_drill
         run: bun scripts/czn-cutover/verify-local-drill.ts
+      - name: Verify daily pass v3 schema, concurrency, privileges and recovery on PG17
+        env:
+          PASSES_LOCAL_PG17_URL: postgres://postgres:local-disposable-test-only@127.0.0.1:5434/postgres
+        run: bun scripts/daily-passes/verify-postgres17.ts
+      - name: Verify operator local encrypted v3 recovery drill
+        env:
+          CZN_LOCAL_DRILL_URL: postgres://postgres:local-disposable-test-only@127.0.0.1:5435/czn_recovery_drill
+        run: bun scripts/daily-passes/verify-local-drill.ts
 
   build:
     name: Build site
