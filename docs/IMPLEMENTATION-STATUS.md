@@ -1,3 +1,32 @@
+## PASS-1A — PRELIMINARY REVIEW P1/P2 CORRECTED, FOCUSED RE-REVIEW PENDING (2026-11-12)
+
+[Preliminary review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874229682)
+of `23cec9e` confirmed two defects; both reproduced before the fix and corrected in
+`64ddeed` + LF contract `f9e6fd5`.
+
+- **P1:** `createdAt: 9999-12-31T23:59:59-14:00` passed validation, is year 10000 in
+  UTC, and one such row would stop every v3 backup. The TS schema, the RPC and a new
+  table check now require UTC years 0001–9999 (epoch bounds, so the catalog text and
+  the v3 hash do not depend on the session time zone). Backup stays fail-closed.
+- **P2:** an extend on `0001-01-01` threw, and an extend past `9999-12-31` produced
+  `+010000-01`. The reducer evaluates `max(last, actionDay − 1) + days` as
+  restart/continue without the predecessor day; out-of-calendar extends are kept,
+  reported in `outOfRange` and not applied; `addDays` throws `PassDayOutOfRange`;
+  `expiresAtMs` stays defined at the maximum day.
+- **Clarification** (undo of an extend absorbed by a later `set` keeps the set's
+  value) is pinned by an expected-value test and recorded in the task notes.
+
+New explicit-value tests: instant limits both sides, minimum day, restart/continue
+edge, overflow/recovery, overflow permutation invariance, expiry for every clock,
+undo-after-set; PGlite and PG17 RPC → UTC row → reducer → v3 snapshot round trips at
+both limits, plus the table check against a direct insert. Locally: reducer/DB/backup
+52 pass + 1 age skip; LF worktree backup/contract suites 93 pass / 4 age skips; full
+suite shows only the pre-existing Windows baseline. v3 schema hash changed (contract
+regenerated from LF bytes). Exact-head CI is recorded in PR #171.
+**Next:** focused re-review of these fixes, then the independent final review.
+
+---
+
 ## PASS-1A — Daily passes domain/DB/backup candidate IMPLEMENTED, REVIEW PENDING (2026-11-12)
 
 [PR #171](https://github.com/maxvfk/game-calendar/pull/171), draft, unmerged. Operator GO
