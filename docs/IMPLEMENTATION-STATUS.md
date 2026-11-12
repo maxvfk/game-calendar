@@ -1,4 +1,18 @@
-## PASS-1A — FINAL REVIEW P1 CORRECTED, FOCUSED RE-REVIEW PENDING (2026-11-12)
+## PASS-1A — REVIEWS COMPLETE, READY FOR OPERATOR MERGE GO (2026-11-12)
+
+[Focused re-review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874954971)
+of `fb692f3..fe72ad9`: the final-review P1 is closed, no new confirmed defect;
+verdict READY TO MERGE from review. Reviewed head
+`fe72ad907930f3171e1b4dc28d5b8b0a45d3903b`; exact-head CI
+[run 43222548485](https://github.com/maxvfk/game-calendar/actions/runs/43222548485) on its
+merge with main `a485d08` (README-only advance): full suite **1781 pass / 4 optional age
+skips / 0 fail**, typecheck/feed/build green; PostgreSQL 17.6 job **83 pass**, both PG17
+verifiers (including the write-rollback/encrypted-recovery block) and both encrypted
+recovery drills. v3 schema hash `9d7fdfd1…` (`supabase/backup-contract.passes-v3.json`).
+The PR is still a draft. **Next:** operator merge GO. Merge alone applies nothing;
+rollout steps 2–4 (private v3 pin, operator DDL window, PASS-1B) each need their own GO.
+
+### Earlier: final review P1 corrected
 
 [Independent final review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874755628)
 of `fb692f3`: CHANGES REQUIRED, one P1. The documented write rollback (`revoke execute
@@ -12,8 +26,7 @@ Regressions: PGlite (writes fail, reads survive, preflight/backup as
 `calendar_backup`, dry-run and v1/v2/v3 recovery with ops preserved, widened grants
 still refused) and PG17 (the same under a REPEATABLE READ READ ONLY backup transaction,
 plus a real age-encrypted v3 snapshot restored with writes revoked). v3 schema hash
-changed (contract regenerated from LF bytes). **Next:** focused re-review of this fix,
-green exact-head checks, then operator merge GO.
+changed (contract regenerated from LF bytes).
 
 ### Earlier: focused re-review complete (2026-11-12)
 
