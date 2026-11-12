@@ -808,13 +808,47 @@ To ensure that all Travelers have the best-possible Genshin Impact experience, o
 
 〓Known Issues〓
 
+- After the Version 7.2 update, the following issues exist with the character "Mitya." These issues will be fixed after the Version 7.3 update:
+
+a. When the character performs a special Charged Attack, there is a chance that it will fail to deal DMG to enemies that only move in the vertical direction.
+
+b. In Trounce Domains, after an enemy enters a new combat phase, there is a chance that Gradient Beacons carried by the character will fail to transform the nearby area into a Polestar Field.
+
+c. At certain camera angles, there is a chance that the "Detection Core: Steady State" created by Mitya's Elemental Skill will fail to clear some destructible rocks.
+
+d. The character's appearance will display incorrectly in certain scenes.
+
+Additionally, while the character performs special Charged Attacks consecutively, there is a chance that the attacks will hit enemies behind the character when adjusting the attacking direction automatically.
+
+The development team will continue to monitor this issue. Should there be any further updates, we will inform Travelers as soon as possible through official announcements.
+
 - Currently, in the open-world Time Trial Challenge "Pass through 25 Ice Rings in 90 seconds" in the "Hallowed Plain" area of " Wingspan Peak," there is a chance that the snowball will break abnormally.
 
 Travelers who encounter this issue can temporarily resolve it by entering the second special tunnel in the challenge through either of its side edges. This issue will be fixed in a future update.
 
 - After the Version 7.2 update, the collision volume of the character "Sandrone" would be abnormal when entering high-speed hover mode after using her Elemental Skill. Additionally, Fagio would clip through the environment when performing a Charged Attack under certain circumstances. These issues will be fixed in a future update.
 
-- Currently, the scarf effects of the character "Mitya" can be displayed abnormally (primarily affecting C6 Mitya). This issue will be fixed in a future update.
+〓<t class="t_gl" contenteditable="false">2026/11/12 16:20</t> Update Details〓
+
+- Fixes an issue whereby, after the Version 7.2 update, players were occasionally unable to complete the "Meet up with the others" objective in Clorinde's Story Quest "Buried Honor," preventing further quest progress.
+
+- Fixes an issue whereby the Calamity Crystals in the quest cutscene did not fade away as intended after players completed the "Destroy the black crystal core" objective in the World Quest "Penumbral Escape."
+
+- Fixes an issue whereby the effects of Mitya's scarf would display abnormally (this issue mainly affected characters with Constellation Lv. 6 activated).
+
+- Fixes an issue whereby the acquisition descriptions were incorrect for "Construct Appearance: Snowman" for the "Prime Ice Construct: Storage Device" and "Construct Appearance: Snowflake" for the "Prime Ice Construct: Sign."
+
+- Fixes an issue whereby guidance icons would appear incorrectly when characters approached locations where certain firearm attachments had already been collected.
+
+- Adds compatibility support for iPad mini (A20 Pro) series devices.
+
+- Fixes an issue whereby enemies near a chest in the northeastern part of the Kresnik Kristall Mines in Wingspan Peak would sometimes disappear unexpectedly, preventing players from unlocking the chest.
+
+- Fixes a Japanese-language localization text error in the World Quest "Hatred, and the Throne of Those Who Hate."
+
+- Fixes an issue whereby the Japanese voice-over line "More About Vesna: IV" for Vesna under the Character > Profile > Voice-Over page was not updated to the latest version in Version 7.2, and selecting "More About Vesna: I" would play the audio of "More About Vesna: IV" instead.
+
+Travelers affected by the above issues can log out via the Paimon Menu by selecting "Exit to Login Interface" and close the game, then log in again to resolve the issues.
 
 〓<t class="t_gl" contenteditable="false">2026/11/06 11:15</t> Update Details〓
 

@@ -424,6 +424,18 @@ Fixes and optimizations in English include the following (they have no impact on
 
 -----
 
+# [EP: "Ex Nihilo"](archive/1470.md)
+## EP: "Ex Nihilo"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/11/03/a31cb3608f69ad125fffb7ed29aaf136_4113149653152038742_transformed.png)
+
+Upon the first echo of "Aha", the Elation shall be born anew.
+
+Let's dance on the edge of illusion and reality! Tonight, a miracle will be created by all!
+
+[ Watch now](https://youtu.be/C8DuPjxUaAk)
+
+-----
+
 # [Game Version 4.7 Optimization and Known Issues](archive/1488.md)
 ## Game Version 4.7 Optimization and Known Issues
 
@@ -434,11 +446,23 @@ To provide a better gaming experience, the Crew will constantly make adjustments
 
 ### Known Issues
 
+■2026/11/12
+
+- It is a known issue that the audio for some story cutscenes plays abnormally when using certain Xiaomi devices and HyperOS systems. Please wait for fixes to be officially released by the device manufacturer to resolve this issue.
+
 ■2026/11/11
 
 - There is a known issue where voice lines and subtitles are out of sync in certain cutscenes during the Trailblaze Mission "Planarcadia — Now, Lay Laughter to All Stars" when the voice-over language is set to English or Korean. This issue will be fixed in a future version.
 
 ### Game Updates and Improvements Overview
+
+■2026/11/12
+
+- Fixes an issue where "Smelting Furnace" took effect abnormally on the special equipment "Imploding Singularity" in the "Currency Wars" gameplay.
+
+- Fixes an issue where the game progress became abnormal under certain circumstances during the battle against the enemy "Divine Skull of Indulgence."
+
+- Fixes an issue in the "Currency Wars" gameplay where game progress was abnormal when the character Blade (Destruction: Wind) was in combat under specific circumstances.
 
 ■2026/11/11
 
@@ -455,6 +479,36 @@ To provide a better gaming experience, the Crew will constantly make adjustments
 - Fixes an issue where some Space Anchor names and descriptions were incorrect.
 
 - Fixes an issue where some map descriptions were incorrect.
+
+-----
+
+# [Planarcadia Brand-New OST "Let There Be Laughter (Part 3)" Now Online](archive/1464.md)
+## Planarcadia Brand-New OST "Let There Be Laughter (Part 3)" Now Online
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/11/03/1e69c4301b7a61762076c79475ee8aa6_3283176396531917610_transformed.jpg)
+
+Hello, Trailblazers!
+
+The Honkai: Star Rail Planarcadia OST, "Let There Be Laughter (Part 3)," is now officially online. The album includes 48 original tracks created by the HOYO-MiX music team for Honkai: Star Rail, including "Ex Nihilo," the combat background music for the battle against the Divine Skull of Indulgence.
+
+Please give it a listen!
+
+[ Check it out](https://bfan.link/wwehlthahap312)
+
+-----
+
+# [Razer | Honkai: Star Rail Collaboration Collection Is Officially Live](archive/1472.md)
+## Razer | Honkai: Star Rail Collaboration Collection Is Officially Live
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/11/09/c63009d5837cc33befac27b826732adb_442732141432335057_transformed.png)
+
+Ctrl + Alt + Win. Control, alter, and win the battle!
+
+Inspired by Silver Wolf Lv.999's meta-breaking spirit, the Razer | Honkai: Star Rail collaboration collection is now for sale.
+
+The gaming chair, keyboard, mouse, and headset are now available to help Trailblazers level up their combat gear and break the established rules.
+
+Purchase any product to unlock corresponding in-game rewards (Stellar Jades, credits, and Traveler's Guides) and receive merchandise such as the limited-edition Silver Wolf LV.999 collaboration sticker.
+
+[ Check it out](https://hoyo.link/FCi1iR7Sr)
 
 -----
 
