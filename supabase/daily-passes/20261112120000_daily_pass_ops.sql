@@ -39,7 +39,11 @@ create table public.daily_pass_ops (
   region text not null check (region in ('america', 'europe', 'asia')),
   kind text not null check (kind in ('extend', 'set', 'undo', 'resolve')),
   action_day text not null check (public.daily_pass_valid_day(action_day)),
-  created_at timestamptz not null check (created_at not in ('infinity', '-infinity')),
+  -- UTC years 0001-9999 only (0001-01-01T00:00:00Z .. 9999-12-31T23:59:59.999999Z):
+  -- a stored year-10000 instant would stop every backup. Epoch bounds keep the
+  -- catalog text, and so the backup contract hash, independent of the session zone.
+  created_at timestamptz not null check (extract(epoch from created_at)
+    between -62135596800 and 253402300799.999999),
   days integer check (days between 1 and 180),
   last_day text check (last_day is null or public.daily_pass_valid_day(last_day)),
   target_op uuid,
@@ -129,6 +133,11 @@ begin
     end if;
     v_id := (r->>'opId')::uuid;
     v_created := (r->>'createdAt')::timestamptz;
+    -- The written date is checked above; the UTC-normalized instant must also stay
+    -- in years 0001-9999 (9999-12-31T23:59:59-14:00 is year 10000 in UTC).
+    if extract(epoch from v_created) not between -62135596800 and 253402300799.999999 then
+      raise exception 'invalid daily pass op' using errcode = '22023';
+    end if;
     -- A device clock days in the future must not inflate an expiry.
     if (r->>'actionDay')::date > (clock_timestamp() at time zone 'UTC')::date + 1 then
       raise exception 'daily pass action day is in the future' using errcode = '22023';

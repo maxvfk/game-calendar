@@ -47,6 +47,12 @@ export function isPassGameId(id: string): boolean {
 }
 export const PassGameId = z.string().refine(isPassGameId, { message: "invalid pass game id" });
 
+/** The supported calendar: four-digit years, as day keys and `to_jsonb` timestamps need. */
+export const MIN_PASS_DAY = "0001-01-01";
+export const MAX_PASS_DAY = "9999-12-31";
+const MIN_INSTANT_MS = Date.parse("0001-01-01T00:00:00.000Z");
+const MAX_INSTANT_MS = Date.parse("9999-12-31T23:59:59.999Z");
+
 /** A real calendar day `YYYY-MM-DD`, year 0001–9999 (PostgreSQL `make_date`). */
 export function isPassDay(day: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || day.startsWith("0000")) return false;
@@ -58,13 +64,17 @@ export const PassDay = z.string().refine(isPassDay, { message: "invalid game day
 /**
  * Client clock at the click, millisecond precision with an explicit offset.
  * Used only as a tie-break and for diagnostics, never for day arithmetic.
+ * The written date AND the UTC-normalized instant must both stay in years
+ * 0001–9999: `9999-12-31T23:59:59-14:00` is year 10000 in UTC, which no stored
+ * row may hold, because one such row would stop every backup.
  */
 export function isPassInstant(value: string): boolean {
-  return (
-    /^\d{4}-\d{2}-\d{2}T([01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d{1,3})?(Z|[+-](0\d|1[0-4]):[0-5]\d)$/.test(value) &&
-    isPassDay(value.slice(0, 10)) &&
-    Number.isFinite(Date.parse(value))
-  );
+  if (
+    !/^\d{4}-\d{2}-\d{2}T([01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d{1,3})?(Z|[+-](0\d|1[0-4]):[0-5]\d)$/.test(value) ||
+    !isPassDay(value.slice(0, 10))
+  ) return false;
+  const ms = Date.parse(value);
+  return Number.isFinite(ms) && ms >= MIN_INSTANT_MS && ms <= MAX_INSTANT_MS;
 }
 export const PassInstant = z.string().refine(isPassInstant, { message: "invalid instant" });
 
@@ -168,10 +178,22 @@ export function unionPassOps(existing: readonly PassOp[], incoming: readonly unk
 // Game-day arithmetic.
 // ---------------------------------------------------------------------------
 
-/** `day + n` in UTC calendar days. No DST, no millisecond durations. */
+export class PassDayOutOfRange extends RangeError {
+  constructor() {
+    super(`day arithmetic left ${MIN_PASS_DAY}..${MAX_PASS_DAY}`);
+  }
+}
+
+/**
+ * `day + n` in UTC calendar days. No DST, no millisecond durations. A result
+ * outside years 0001–9999 throws `PassDayOutOfRange`: it is never truncated
+ * into a malformed key such as `+010000-01`.
+ */
 export function addDays(day: string, n: number): string {
   if (!isPassDay(day) || !Number.isInteger(n)) throw new Error("invalid day arithmetic");
-  return new Date(Date.parse(`${day}T00:00:00.000Z`) + n * DAY).toISOString().slice(0, 10);
+  const ms = Date.parse(`${day}T00:00:00.000Z`) + n * DAY;
+  if (!(ms >= MIN_INSTANT_MS && ms <= MAX_INSTANT_MS)) throw new PassDayOutOfRange();
+  return new Date(ms).toISOString().slice(0, 10);
 }
 
 /** Whole calendar days from `a` to `b` (`b − a`). */
@@ -238,6 +260,11 @@ export interface PassState {
   undone: string[];
   /** Undo/resolve ops that can never apply (cross-pass or wrong target kind). */
   ignored: string[];
+  /**
+   * Live extends that would carry the pass past 9999-12-31. Kept as data and
+   * reported, not applied; a `set` or an `undo` recovers. Never truncated.
+   */
+  outOfRange: string[];
 }
 
 type SortKey = { actionDay: string; createdAt: string; opId: string };
@@ -295,7 +322,7 @@ export function reducePass(allOps: readonly PassOp[], game: string, region: Regi
   let last: string | null = winner ? winner.lastDay : null;
 
   // 4–5. Extends after the set apply; earlier unseen ones are conflicts unless resolved.
-  const applied: string[] = [], conflicts: string[] = [], dismissed: string[] = [];
+  const applied: string[] = [], conflicts: string[] = [], dismissed: string[] = [], outOfRange: string[] = [];
   for (const op of sorted) {
     if (op.kind !== "extend" || seen.has(op.opId)) continue;
     if (winner && comparePassOps(op, winner) < 0) {
@@ -303,8 +330,19 @@ export function reducePass(allOps: readonly PassOp[], game: string, region: Regi
       if (r === "exclude") { dismissed.push(op.opId); continue; }
       if (r !== "include") { conflicts.push(op.opId); continue; }
     }
-    const before = addDays(op.actionDay, -1);
-    last = addDays(last === null || last < before ? before : last, op.days);
+    // last = max(last, actionDay − 1) + days, without ever forming the day
+    // before actionDay (0001-01-01 has none): a pass that ended before the
+    // previous day restarts on actionDay; otherwise it continues from `last`.
+    const restart = last === null || dayDiff(last, op.actionDay) > 1;
+    let next: string;
+    try {
+      next = restart ? addDays(op.actionDay, op.days - 1) : addDays(last!, op.days);
+    } catch (error) {
+      if (!(error instanceof PassDayOutOfRange)) throw error;
+      outOfRange.push(op.opId);
+      continue;
+    }
+    last = next;
     applied.push(op.opId);
   }
 
@@ -319,6 +357,7 @@ export function reducePass(allOps: readonly PassOp[], game: string, region: Regi
     concurrentSets: sets.filter((s) => s !== winner && !seen.has(s.opId)).map((s) => s.opId),
     undone: [...undone].sort(),
     ignored: [...ignored].sort(),
+    outOfRange,
   };
 }
 
@@ -360,6 +399,9 @@ export function passView(state: Pick<PassState, "game" | "region" | "lastDay">, 
     today,
     lastDay: state.lastDay,
     remainingDays: Math.max(0, remaining),
-    expiresAtMs: passDayStart(addDays(state.lastDay, 1), state.game, state.region),
+    // = passDayStart(lastDay + 1): every pass clock is a fixed offset from UTC
+    // midnight, so the next game-day opens exactly one day later. Written this way
+    // it stays total at 9999-12-31, which has no next day key.
+    expiresAtMs: passDayStart(state.lastDay, state.game, state.region) + DAY,
   };
 }

@@ -6,6 +6,8 @@ import {
   displayablePasses,
   isPassDay,
   isPassGameId,
+  isPassInstant,
+  PassDayOutOfRange,
   passClockBasis,
   passDay,
   passDayStart,
@@ -239,6 +241,57 @@ describe("game-day arithmetic and D1 inclusive display", () => {
     expect(passClockBasis("endfield", "asia")).toBe("regional-default");
     expect(passClockBasis("nte", "asia")).toBe("regional-default");
     expect(passClockBasis("mygame:demo", "asia")).toBe("regional-default");
+  });
+});
+
+describe("review fixes: calendar bounds and undo after an absorbing set", () => {
+  const op = (n: number, actionDay: string, extra: Record<string, unknown>) =>
+    PassOp.parse({ opId: id(n), game: "genshin", region: "asia", actionDay, createdAt: `2026-11-12T10:00:00.${String(n).padStart(3, "0")}Z`, ...extra });
+  test("P1: the UTC-normalized instant must stay in years 0001-9999", () => {
+    for (const v of ["9999-12-31T23:59:59-14:00", "9999-12-31T10:00:00-14:00", "0001-01-01T00:00:00+14:00", "0001-01-01T09:59:59.999+10:00"])
+      expect(isPassInstant(v)).toBe(false);
+    for (const v of ["9999-12-31T23:59:59.999Z", "9999-12-31T09:59:59+14:00", "9999-12-31T13:59:59-10:00", "0001-01-01T00:00:00Z", "0001-01-01T10:00:00+10:00"])
+      expect(isPassInstant(v)).toBe(true);
+  });
+  test("P2: an extend on 0001-01-01 reduces to an explicit value", () => {
+    const first = op(1, "0001-01-01", { kind: "extend", days: 30 });
+    expect(reducePass([first], "genshin", "asia").lastDay).toBe("0001-01-30");
+    expect(reducePass([first, op(2, "0001-01-01", { kind: "extend", days: 30 })], "genshin", "asia").lastDay).toBe("0001-03-01");
+    expect(() => addDays("0001-01-01", -1)).toThrow(PassDayOutOfRange);
+  });
+  test("restart vs continue at the day before the action day", () => {
+    expect(last([set(1, 1, 8), extend(2, 10)])).toBe(D(39));
+    expect(last([set(1, 1, 9), extend(2, 10)])).toBe(D(39));
+    expect(last([set(1, 1, 10), extend(2, 10)])).toBe(D(40));
+  });
+  test("P2: past 9999-12-31 an extend is reported out of range, never truncated or rebased", () => {
+    const max = op(1, "2026-11-12", { kind: "set", lastDay: "9999-12-31", basedOn: [] });
+    const plus = op(2, "2026-11-12", { kind: "extend", days: 30 });
+    const s = reducePass([max, plus, op(3, "2026-11-13", { kind: "extend", days: 30 })], "genshin", "asia");
+    expect(s).toMatchObject({ lastDay: "9999-12-31", applied: [], outOfRange: [id(2), id(3)] });
+    const near = reducePass([op(1, "2026-11-12", { kind: "set", lastDay: "9999-12-20", basedOn: [] }), plus,
+      op(3, "2026-11-13", { kind: "extend", days: 11 })], "genshin", "asia");
+    expect(near).toMatchObject({ lastDay: "9999-12-31", applied: [id(3)], outOfRange: [id(2)] });
+    // Undoing the set recovers: the retained extends apply normally again.
+    expect(reducePass([max, plus, op(4, "2026-11-12", { kind: "undo", targetOp: id(1) })], "genshin", "asia").lastDay).toBe("2026-12-11");
+    expect(() => addDays("9999-12-31", 1)).toThrow(PassDayOutOfRange);
+    const view = passView(s, Date.parse("2026-11-12T12:00:00Z"));
+    expect(view).toMatchObject({ status: "active", lastDay: "9999-12-31", expiresAtMs: Date.parse("9999-12-31T20:00:00Z") });
+  });
+  test("overflow handling is order independent", () => {
+    expectOrderIndependent([op(1, "2026-11-12", { kind: "set", lastDay: "9999-12-20", basedOn: [] }), op(2, "2026-11-12", { kind: "extend", days: 30 }),
+      op(3, "2026-11-13", { kind: "extend", days: 11 }), op(4, "2026-11-14", { kind: "extend", days: 1 }), op(5, "2026-11-14", { kind: "undo", targetOp: id(3) }),
+      op(6, "0001-01-01", { kind: "extend", days: 30 })]);
+  });
+  test("expiry is the next game-day's opening for every clock", () => {
+    for (const [game, region] of [["genshin", "asia"], ["genshin", "america"], ["endfield", "europe"], ["czn", "asia"], ["mygame:demo", "europe"]] as const) {
+      const v = passView({ game, region, lastDay: "2028-02-29" }, Date.parse("2028-02-01T00:00:00Z"));
+      expect(v.status !== "none" && v.expiresAtMs).toBe(passDayStart("2028-03-01", game, region));
+    }
+  });
+  test("contract clarification: undo of an extend a later set absorbed leaves the set's explicit value", () => {
+    const s = reducePass([extend(1, 10), set(2, 11, 40, [1]), undo(3, 12, 1)], "genshin", "asia");
+    expect(s).toMatchObject({ lastDay: D(40), winningSet: id(2), applied: [], undone: [id(1)], conflicts: [] });
   });
 });
 

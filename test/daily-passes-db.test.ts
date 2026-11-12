@@ -92,6 +92,29 @@ test('per-kind validation, future action day, game format and batch limit', asyn
   expect(await opCount()).toBe(before + 6);
 });
 
+test('review P1/P2: instants and days at both calendar limits round-trip RPC → UTC row → reducer and backup', async () => {
+  const at = (n: number, createdAt: string, extra: Record<string, unknown> = {}) =>
+    ({ opId: id(n), game: 'zzz', region: 'europe', kind: 'extend', actionDay: today, createdAt, days: 30, ...extra });
+  const before = await opCount();
+  await as(owner, async () => {
+    for (const createdAt of ['9999-12-31T23:59:59-14:00', '9999-12-31T10:00:00-14:00', '0001-01-01T00:00:00+14:00'])
+      await expect(apply([at(80, createdAt)])).rejects.toThrow('invalid daily pass op');
+  });
+  expect(await opCount()).toBe(before);
+  await expect(q(`insert into public.daily_pass_ops(profile_id,op_id,game,region,kind,action_day,created_at,days)
+    values($1,$2,'zzz','europe','extend',$3,'9999-12-31T23:59:59-14:00',30)`, [profile, id(81), today])).rejects.toThrow();
+  await as(owner, async () => {
+    await apply([at(82, '9999-12-31T23:59:59.999Z'), at(83, '0001-01-01T10:00:00+10:00', { actionDay: '0001-01-01' }),
+      { opId: id(84), game: 'zzz', region: 'europe', kind: 'set', actionDay: today, createdAt: '9999-12-31T09:59:59+14:00', lastDay: '9999-12-31', basedOn: [] }]);
+  });
+  const rows = (await q("select to_jsonb(t) as row from public.daily_pass_ops t where game='zzz'")).map(r => r.row as Record<string, unknown>);
+  expect(rows.map(r => r.created_at).sort()).toEqual(['0001-01-01T00:00:00+00:00', '9999-12-30T19:59:59+00:00', '9999-12-31T23:59:59.999+00:00']);
+  const state = reducePass(rows.map(r => passOpFromRow(r)), 'zzz', 'europe');
+  expect(state).toMatchObject({ lastDay: '9999-12-31', winningSet: id(84), outOfRange: [id(82)], conflicts: [id(83)] });
+  const snap = await readPassesSnapshot(q, meta(v3.schemaSha256, v3.migrationSha256), v3.schemaSha256);
+  expect(snap.passes.daily_pass_ops.filter(o => o.game === 'zzz')).toHaveLength(3);
+});
+
 test('ownership, RLS and grants: other accounts, anon and the backup role cannot write or see foreign ops', async () => {
   await as(other, async () => {
     expect(await q('select * from public.daily_pass_ops')).toHaveLength(0);

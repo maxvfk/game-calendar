@@ -367,6 +367,19 @@ Where the contract left a detail open, PASS-1A fixed it as follows (review these
 - **`action_day` has an upper bound only** (server UTC date + 1), as the contract says.
 - **Clock basis** (`passClockBasis`) labels `regional-default` clocks; it is not a
   claim of independent server evidence (UI wording is PASS-2).
+- **Calendar limits (preliminary review P1/P2).** Every stored instant must stay in
+  UTC years 0001–9999 (TS schema, RPC and a table check with epoch bounds, so the
+  catalog text and contract hash do not depend on the session time zone); one
+  year-10000 row would otherwise stop every v3 backup. The reducer never forms the
+  day before `actionDay` (`max(last, actionDay − 1) + days` is evaluated as restart
+  or continue). An extend that would pass 9999-12-31 is retained, reported in
+  `outOfRange` and not applied; a `set` or `undo` recovers. `expiresAtMs` is the
+  next game-day's opening, computed as `dayStart(lastDay) + 1 day`, which is
+  identical for these fixed-offset clocks and stays defined at 9999-12-31.
+- **Undo after an absorbing set (review clarification).** For `extend E`, then
+  `set S` with `E` in `S.basedOn`, then `undo(E)`: E is reported in `undone`, but
+  the expiry stays `S.lastDay`, because S already absorbed E and its explicit value
+  is authoritative. The PASS-2 Undo UX must explain or avoid offering this undo.
 - **v3 backup format** is `game-calendar-personal-passes` v3 with its own encrypted
   manifest and `snapshots/v3/` retention; `production.ts` detects v1/v2/v3, and any
   daily pass table or function forces full v3 verification.
