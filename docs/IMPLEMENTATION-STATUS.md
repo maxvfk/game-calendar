@@ -1,4 +1,16 @@
-## PASS-1A — PRELIMINARY REVIEW P1/P2 CORRECTED, FOCUSED RE-REVIEW PENDING (2026-11-12)
+## PASS-1A — FOCUSED RE-REVIEW COMPLETE, INDEPENDENT FINAL REVIEW PENDING (2026-11-12)
+
+[Focused re-review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874560527)
+of `8134193..b5424d8`: the preliminary P1/P2 and the follow-up fixture P2 (implicit
+UTC in the DB test, [review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874472262))
+are addressed; no new confirmed defect. Exact-head CI for `b5424d89fb42300757e07da9975e5c8dd25b9a60`
+([run 43218648330](https://github.com/maxvfk/game-calendar/actions/runs/43218648330)):
+full suite **1780 pass / 4 optional age skips / 0 fail**, typecheck, feed and site
+build green; PostgreSQL 17 job green (82 focused tests with age, both PG17 scripts,
+both encrypted recovery drills). **Next:** the separate independent final review,
+then operator merge GO. Do not apply SQL, change the private pin or start PASS-1B.
+
+### Corrections recorded during preliminary review
 
 [Preliminary review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874229682)
 of `23cec9e` confirmed two defects; both reproduced before the fix and corrected in
@@ -25,8 +37,7 @@ undo-after-set; PGlite and PG17 RPC → UTC row → reducer → v3 snapshot roun
 both limits, plus the table check against a direct insert. Locally: reducer/DB/backup
 52 pass + 1 age skip; LF worktree backup/contract suites 93 pass / 4 age skips; full
 suite shows only the pre-existing Windows baseline. v3 schema hash changed (contract
-regenerated from LF bytes). Exact-head CI is recorded in PR #171.
-**Next:** focused re-review of these fixes, then the independent final review.
+regenerated from LF bytes).
 
 ---
 

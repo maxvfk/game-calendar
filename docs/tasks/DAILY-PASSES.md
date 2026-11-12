@@ -1,10 +1,11 @@
 # DAILY-PASSES — lean design gate and implementation roadmap
 
 **Status (2026-11-12): PASS-1A implemented as a reviewed candidate in
-[PR #171](https://github.com/maxvfk/game-calendar/pull/171), review pending.** Operator GO
-covered code, SQL candidate and tests only: nothing applied in production, no
-private pin change, no client or feature flag. Next: preliminary review, then an
-independent final review; merge and every rollout step need separate GOs.
+[PR #171](https://github.com/maxvfk/game-calendar/pull/171); preliminary review findings
+corrected and focused re-review complete at `b5424d8`.** Operator GO covered code,
+SQL candidate and tests only: nothing applied in production, no private pin change,
+no client or feature flag. Next: the independent final review; merge and every
+rollout step need separate GOs.
 
 **Earlier status (2026-11-05): PASS-0 complete; PASS-1A awaiting implementation GO.**
 The product requirements are approved. The independent read-only PASS-0 design
@@ -346,8 +347,7 @@ of the inclusive convention (D1).
 - No changes to C1a.1 #161, C1b, source ingestion, Timeline labels, CZN
   cutover or historic user data.
 
-**Next concrete step:** preliminary and independent final review of PR #171
-(PASS-1A). Do not merge, apply the SQL, change the private pin or start PASS-1B
+**Next concrete step:** independent final review of PR #171 (PASS-1A). Do not merge, apply the SQL, change the private pin or start PASS-1B
 without the corresponding separate operator GO.
 
 ### PASS-1A implementation notes (2026-11-12)
