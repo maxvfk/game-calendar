@@ -58,11 +58,13 @@ export async function assertAccess(query:Query,version:1|2|3){
     }
     if(version===3){
       // Clients read their own ops through RLS and write only through daily_pass_apply.
+      // authenticated EXECUTE on it may be absent: that is the documented write
+      // rollback, and backups/recovery must keep working in it. No other execute grant.
       const rows=await query(`select exists(select 1 from pg_class where relnamespace='public'::regnamespace and relname=any($2::text[]) and
           (not relrowsecurity or relforcerowsecurity or has_table_privilege($1,oid,'INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER')
             or has_table_privilege($1,oid,'SELECT')<>($1='authenticated'))) as unsafe_table,
         exists(select 1 from pg_proc where pronamespace='public'::regnamespace and proname=any($3::text[]) and
-          has_function_privilege($1,oid,'EXECUTE')<>($1='authenticated' and proname='daily_pass_apply')) as unsafe_function`,
+          has_function_privilege($1,oid,'EXECUTE') and not ($1='authenticated' and proname='daily_pass_apply')) as unsafe_function`,
         [role,[...PASS_TABLES],[...PASS_FUNCTIONS]]);
       if(Object.values(rows[0]!).some(Boolean))throw new Error('Unsafe daily pass client privileges/RLS');
     }

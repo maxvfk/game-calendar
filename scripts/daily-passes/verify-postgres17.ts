@@ -10,6 +10,10 @@ import { readCznSnapshot, restoreCznSnapshot } from '../czn-cutover/backup.ts';
 import { detectContract, assertAccess, PRODUCTION_PROJECT as project } from '../czn-cutover/production.ts';
 import { passesMigration, assertPassesTarget, assertPassesBackupRole } from './contract.ts';
 import { readPassesSnapshot, restorePassesSnapshot } from './backup.ts';
+import { encryptPasses, decryptPasses } from './encryption.ts';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { passOpFromRow, reducePass } from '../../src/shared/dailyPasses.ts';
 import v1 from '../../supabase/backup-contract.v1.json';
 import v2 from '../../supabase/backup-contract.czn-v2.json';
@@ -174,5 +178,33 @@ try {
   await qa('select public.daily_pass_apply($1,$2::jsonb)', [otherProfile, JSON.stringify([extend(60)])]);
   await q('delete from public.profiles where id=$1', [otherProfile]);
   assert.equal(Number((await q('select count(*)::int as n from public.daily_pass_ops where profile_id=$1', [otherProfile]))[0]!.n), 0);
-  console.log('PG17 passed: v2→v3 transactional DDL, v2 tool fail-closed, full v2 coverage, concurrent distinct/replayed/reused/rolled-back ops on two connections with observed lock waits, reversed arrival, undo/stale correction, validation, owner/anon/backup boundaries, immutable rows, union-only v1/v2/v3 recovery and FK cascade. Hosted Auth/PostgREST not simulated.');
+  // Documented write rollback: EXECUTE revoked, reads, backups and every recovery path still work.
+  await q('revoke execute on function public.daily_pass_apply(uuid,jsonb) from authenticated');
+  await auth(a, owner);
+  await assert.rejects(apply(qa, [extend(80)]), /42501/);
+  const kept = await rows();
+  assert.ok((await qa('select * from public.daily_pass_ops')).length > 0);
+  await auth(b, '', 'calendar_backup');
+  await qb('begin isolation level repeatable read read only'); await qb("set local timezone='UTC'");
+  assert.equal(await detectContract(qb, project), 3); await assertAccess(qb, 3); await assertPassesBackupRole(qb);
+  const revokedSnap = await readPassesSnapshot(qb, meta(v3.schemaSha256, v3.migrationSha256), v3.schemaSha256);
+  await qb('commit');
+  assert.equal(revokedSnap.passes.daily_pass_ops.length, (await q('select * from public.daily_pass_ops')).length);
+  const dir = await mkdtemp(join(tmpdir(), 'passes-rollback-'));
+  try {
+    const key = join(dir, 'identity'), gen = Bun.spawn(['age-keygen', '-o', key], { stderr: 'pipe' });
+    await new Response(gen.stderr).text(); assert.equal(await gen.exited, 0);
+    const pub = Bun.spawn(['age-keygen', '-y', key], { stdout: 'pipe', stderr: 'pipe' }), recipient = (await new Response(pub.stdout).text()).trim();
+    assert.equal(await pub.exited, 0);
+    const decrypted = await decryptPasses(await encryptPasses(join(dir, 'v3'), revokedSnap, recipient), key, project, v3.schemaSha256);
+    await q('delete from public.daily_pass_ops where op_id=$1', [id(3)]);
+    for (const input of [v2snap.base, v2snap, decrypted]) await restorePassesSnapshot(q, input, project, v3.schemaSha256);
+    assert.equal(await rows(), kept);
+  } finally { await rm(dir, { recursive: true, force: true }); }
+  await q('grant execute on function public.daily_pass_apply(uuid,jsonb) to anon');
+  await assert.rejects(detectContract(q, project), /schema mismatch/); await assert.rejects(assertAccess(q, 3), /daily pass/);
+  await q('revoke execute on function public.daily_pass_apply(uuid,jsonb) from anon');
+  await q('grant execute on function public.daily_pass_apply(uuid,jsonb) to authenticated');
+  assert.equal(await detectContract(q, project), 3);
+  console.log('PG17 passed: v2→v3 transactional DDL, v2 tool fail-closed, full v2 coverage, concurrent distinct/replayed/reused/rolled-back ops on two connections with observed lock waits, reversed arrival, undo/stale correction, validation, owner/anon/backup boundaries, immutable rows, union-only v1/v2/v3 recovery, FK cascade, and backup/encrypted recovery with writes revoked (documented rollback). Hosted Auth/PostgREST not simulated.');
 } finally { await Promise.allSettled([a.close(), b.close(), admin.close()]); }

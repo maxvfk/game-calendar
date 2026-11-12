@@ -201,6 +201,49 @@ test('v3 snapshot covers every v2 table plus ops; restores union ops and never d
   await expect(restoreCznSnapshot(q, snapshot, project, v2.schemaSha256)).rejects.toThrow();
 }, 30000);
 
+test('final review P1: the documented write rollback keeps backup and recovery working; widened grants still fail', async () => {
+  const hash = v3.schemaSha256, snapshot = await readPassesSnapshot(q, meta(hash, v3.migrationSha256), hash);
+  const ops = () => q('select * from public.daily_pass_ops order by profile_id,op_id');
+  const all = canonical(await ops());
+  await q('revoke execute on function public.daily_pass_apply(uuid,jsonb) from authenticated');
+  try {
+    await as(owner, async () => {
+      await expect(apply([extend(90)])).rejects.toThrow('permission denied');
+      expect((await q('select * from public.daily_pass_ops')).length).toBeGreaterThan(0);
+    });
+    expect(await detectContract(q, project)).toBe(3);
+    await assertAccess(q, 3);
+    let during: Awaited<ReturnType<typeof readPassesSnapshot>> | undefined;
+    await as(null, async () => {
+      await assertPassesBackupRole(q);
+      during = await readPassesSnapshot(q, meta(hash, v3.migrationSha256), hash);
+    }, 'calendar_backup');
+    expect(canonical(during!.passes)).toBe(canonical(snapshot.passes));
+    expect(canonical(during!.base.data)).toBe(canonical(snapshot.base.data));
+    await q('begin read only'); await planPassesRecovery(q, snapshot, project, hash); await q('rollback');
+    const v2shaped = { format: 'game-calendar-personal-czn', formatVersion: 2, schemaVersion: 2, schemaSha256: v2.schemaSha256,
+      base: snapshot.base, extension: snapshot.extension, extensionSha256: snapshot.extensionSha256 };
+    for (const input of [snapshot.base, v2shaped, snapshot]) await restorePassesSnapshot(q, input, project, hash);
+    expect(canonical(await ops())).toBe(all);
+    // The revoked state is not a loophole: any widened grant still fails closed.
+    for (const [grant, revoke] of [
+      ['grant execute on function public.daily_pass_apply(uuid,jsonb) to anon', 'revoke execute on function public.daily_pass_apply(uuid,jsonb) from anon'],
+      ['grant execute on function public.daily_pass_apply(uuid,jsonb) to calendar_backup', 'revoke execute on function public.daily_pass_apply(uuid,jsonb) from calendar_backup'],
+      ['grant execute on function public.daily_pass_valid_day(text) to authenticated', 'revoke execute on function public.daily_pass_valid_day(text) from authenticated'],
+    ] as const) {
+      await q(grant);
+      await expect(detectContract(q, project)).rejects.toThrow('schema mismatch');
+      await expect(restorePassesSnapshot(q, snapshot, project, hash)).rejects.toThrow('schema mismatch');
+      await q(revoke);
+    }
+    await q('grant execute on function public.daily_pass_apply(uuid,jsonb) to anon');
+    await expect(assertAccess(q, 3)).rejects.toThrow('daily pass');
+    await q('revoke execute on function public.daily_pass_apply(uuid,jsonb) from anon');
+  } finally { await q('grant execute on function public.daily_pass_apply(uuid,jsonb) to authenticated'); }
+  expect(await detectContract(q, project)).toBe(3);
+  await as(owner, async () => { expect((await apply([extend(91)]))[0]!.reply).toEqual([{ opId: id(91), outcome: 'accepted' }]); });
+}, 30000);
+
 test('profile deletion cascades to its ops', async () => {
   await q('delete from public.profiles where id=$1', [otherProfile]);
   expect(Number((await q('select count(*)::int as n from public.daily_pass_ops where profile_id=$1', [otherProfile]))[0]!.n)).toBe(0);

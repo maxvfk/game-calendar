@@ -61,6 +61,9 @@ CZN_LOCAL_DRILL_URL=postgres://postgres:…@127.0.0.1:5435/czn_recovery_drill bu
    `version: 3`). Between DDL and pin switch the v2 backup fails closed by design.
 4. PASS-1B client behind its feature flag, enabled only after step 3 is verified.
 
-Rollback: `revoke execute on function public.daily_pass_apply(uuid, jsonb) from authenticated`
-stops writes; reads, backups and local ops remain. Dropping the table needs a separate
+Rollback: `revoke execute on function public.daily_pass_apply(uuid,jsonb) from authenticated`
+stops writes; reads, backups and local ops remain. The v3 contract hashes exactly two
+ACLs of that function identically (enabled, and authenticated EXECUTE revoked), and
+`assertAccess` accepts both, so backup, preflight and every recovery path keep working
+in the rollback state. Any other ACL change still fails closed as schema drift. Dropping the table needs a separate
 GO after a verified v3 backup.

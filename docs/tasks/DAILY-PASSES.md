@@ -379,6 +379,11 @@ Where the contract left a detail open, PASS-1A fixed it as follows (review these
   `outOfRange` and not applied; a `set` or `undo` recovers. `expiresAtMs` is the
   next game-day's opening, computed as `dayStart(lastDay) + 1 day`, which is
   identical for these fixed-offset clocks and stays defined at 9999-12-31.
+- **Write rollback keeps backups (final review P1).** The v3 contract treats exactly
+  two ACLs of `daily_pass_apply` as the same schema: enabled, and `authenticated`
+  EXECUTE revoked (rollback step 5). `assertAccess` allows that EXECUTE to be absent
+  but no other grant. Backup, preflight and v1/v2/v3 recovery are tested with writes
+  revoked (PGlite and PG17, encrypted round trip included); widened grants still fail.
 - **Undo after an absorbing set (review clarification).** For `extend E`, then
   `set S` with `E` in `S.basedOn`, then `undo(E)`: E is reported in `undone`, but
   the expiry stays `S.lastDay`, because S already absorbed E and its explicit value

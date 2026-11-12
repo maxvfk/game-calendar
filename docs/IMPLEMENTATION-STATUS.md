@@ -1,4 +1,21 @@
-## PASS-1A — FOCUSED RE-REVIEW COMPLETE, INDEPENDENT FINAL REVIEW PENDING (2026-11-12)
+## PASS-1A — FINAL REVIEW P1 CORRECTED, FOCUSED RE-REVIEW PENDING (2026-11-12)
+
+[Independent final review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874755628)
+of `fb692f3`: CHANGES REQUIRED, one P1. The documented write rollback (`revoke execute
+on daily_pass_apply from authenticated`) made `detectContract`, `readPassesSnapshot`,
+`planPassesRecovery` and `restorePassesSnapshot` fail with a schema mismatch, and
+`assertAccess` fail separately, so it would have stopped every v3 backup and
+recovery. Reproduced, then corrected: the contract hashes exactly the enabled and
+writes-revoked ACLs of that function identically (any other ACL stays drift), and
+`assertAccess` allows authenticated EXECUTE to be absent but no other grant.
+Regressions: PGlite (writes fail, reads survive, preflight/backup as
+`calendar_backup`, dry-run and v1/v2/v3 recovery with ops preserved, widened grants
+still refused) and PG17 (the same under a REPEATABLE READ READ ONLY backup transaction,
+plus a real age-encrypted v3 snapshot restored with writes revoked). v3 schema hash
+changed (contract regenerated from LF bytes). **Next:** focused re-review of this fix,
+green exact-head checks, then operator merge GO.
+
+### Earlier: focused re-review complete (2026-11-12)
 
 [Focused re-review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874560527)
 of `8134193..b5424d8`: the preliminary P1/P2 and the follow-up fixture P2 (implicit

@@ -26,6 +26,21 @@ export async function passesCandidateDatabase() {
   return db;
 }
 
+/**
+ * The documented write rollback (`revoke execute on function
+ * public.daily_pass_apply(uuid,jsonb) from authenticated`) must leave backups and
+ * recovery working. Exactly these two ACLs of that one function hash identically;
+ * any other ACL, on it or on any other function, stays in the hash verbatim, so a
+ * widened grant is still schema drift.
+ */
+export const APPLY_ACL_ENABLED = '{postgres=X/postgres,authenticated=X/postgres}';
+export const APPLY_ACL_WRITES_REVOKED = '{postgres=X/postgres}';
+function normalizeRollbackAcl(row: Record<string, unknown>) {
+  return row.nspname === 'public' && row.proname === 'daily_pass_apply' && row.owner === 'postgres'
+    && (row.proacl === APPLY_ACL_ENABLED || row.proacl === APPLY_ACL_WRITES_REVOKED)
+    ? { ...row, proacl: `${APPLY_ACL_ENABLED} | writes revoked: ${APPLY_ACL_WRITES_REVOKED}` } : row;
+}
+
 function replaceOnce(text: string, from: string, to: string) {
   if (text.split(from).length !== 2) throw new Error('Contract SQL shape changed; refusing a silently narrower contract');
   return text.replace(from, to);
@@ -38,10 +53,10 @@ export async function passesContract(query: Query) {
   const base = normalizeContract((await query(sql, [V3_TABLES]))[0]!.contract);
   const policies = await query(`select schemaname,tablename,policyname,permissive,roles::text,cmd,qual,with_check
     from pg_policies where schemaname='public' and tablename=any($1::text[]) order by tablename,policyname`, [V3_TABLES]);
-  const acls = await query(`select n.nspname,p.proname,p.proacl::text,pg_get_userbyid(p.proowner) as owner
+  const acls = (await query(`select n.nspname,p.proname,p.proacl::text,pg_get_userbyid(p.proowner) as owner
     from pg_proc p join pg_namespace n on n.oid=p.pronamespace
     where n.nspname='calendar_sync_internal' or (n.nspname='public' and p.proname=any($1::text[]))
-    order by n.nspname,p.proname`, [V3_FUNCTIONS]);
+    order by n.nspname,p.proname`, [V3_FUNCTIONS])).map(normalizeRollbackAcl);
   // Table ACLs stay out of the hash, as in v2: hosted default privileges (for example
   // service_role) differ from a local cluster. Effective client/backup privileges are
   // checked separately by assertAccess and assertPassesBackupRole.
