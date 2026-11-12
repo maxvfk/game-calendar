@@ -1,12 +1,12 @@
 {
   "sourceId": "endfield-wikigg-echoes",
   "url": "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Fervor",
-  "contentHash": "d9b6c9e716c13aa2f218c32592699797943fac83fcb435fcede8c3ca466423e7",
-  "bytes": 146397,
+  "contentHash": "653c7468b717cf10cf7bcf02842123f434363840e054de5ad7f4072ccbd1d2f1",
+  "bytes": 146235,
   "etag": null,
-  "lastModified": "Fri, 06 Nov 2026 16:28:11 GMT",
-  "contentChangedAt": "2026-11-08T21:15:06.890Z",
-  "lastConfirmedAt": "2026-11-12T13:52:28.535Z",
+  "lastModified": "Thu, 12 Nov 2026 19:56:40 GMT",
+  "contentChangedAt": "2026-11-12T22:47:12.037Z",
+  "lastConfirmedAt": "2026-11-12T22:47:12.037Z",
   "eventCount": 2,
   "charset": "utf-8"
 }
