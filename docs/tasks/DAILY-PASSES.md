@@ -1,6 +1,12 @@
 # DAILY-PASSES — lean design gate and implementation roadmap
 
-**Status (2026-11-05): PASS-0 complete; PASS-1A awaiting implementation GO.**
+**Status (2026-11-12): PASS-1A implemented as a reviewed candidate in
+[PR #171](https://github.com/maxvfk/game-calendar/pull/171), review pending.** Operator GO
+covered code, SQL candidate and tests only: nothing applied in production, no
+private pin change, no client or feature flag. Next: preliminary review, then an
+independent final review; merge and every rollout step need separate GOs.
+
+**Earlier status (2026-11-05): PASS-0 complete; PASS-1A awaiting implementation GO.**
 The product requirements are approved. The independent read-only PASS-0 design
 review is complete ([review](https://github.com/maxvfk/game-calendar/pull/167#issuecomment-6657157606), [D7/D8 addendum](https://github.com/maxvfk/game-calendar/pull/167#issuecomment-6657262999)), and the operator
 has settled decisions D1–D8. The accepted contract is recorded below. This
@@ -340,5 +346,27 @@ of the inclusive convention (D1).
 - No changes to C1a.1 #161, C1b, source ingestion, Timeline labels, CZN
   cutover or historic user data.
 
-**Next concrete step:** operator GO for PASS-1A on the accepted contract above;
-do not start PASS-1A before that GO.
+**Next concrete step:** preliminary and independent final review of PR #171
+(PASS-1A). Do not merge, apply the SQL, change the private pin or start PASS-1B
+without the corresponding separate operator GO.
+
+### PASS-1A implementation notes (2026-11-12)
+
+Where the contract left a detail open, PASS-1A fixed it as follows (review these):
+
+- **Undo never targets an undo.** There is no redo chain, so liveness cannot depend
+  on arrival order or form a cycle; redo is a new `extend`. An undo or resolve whose
+  target belongs to another pass, or a resolve aimed at a non-extend, is reported as
+  `ignored`. An undo/resolve whose target has not arrived stays pending.
+- **Several resolves for one extend:** the latest live one in action order wins.
+- **`days` is required on the wire** for `extend`; 30 (D2) is the client default.
+- **`basedOn` must be distinct**; the server stores it sorted, and content comparison
+  treats `createdAt` as an instant (offset spelling does not matter).
+- **Wire strictness:** canonical lowercase UUIDs, `createdAt` with ≤3 fractional
+  digits, hours 00–23 and an offset ≤ ±14:00; the TS schema mirrors the SQL.
+- **`action_day` has an upper bound only** (server UTC date + 1), as the contract says.
+- **Clock basis** (`passClockBasis`) labels `regional-default` clocks; it is not a
+  claim of independent server evidence (UI wording is PASS-2).
+- **v3 backup format** is `game-calendar-personal-passes` v3 with its own encrypted
+  manifest and `snapshots/v3/` retention; `production.ts` detects v1/v2/v3, and any
+  daily pass table or function forces full v3 verification.

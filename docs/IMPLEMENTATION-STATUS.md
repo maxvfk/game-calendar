@@ -1,3 +1,51 @@
+## PASS-1A — Daily passes domain/DB/backup candidate IMPLEMENTED, REVIEW PENDING (2026-11-12)
+
+[PR #171](https://github.com/maxvfk/game-calendar/pull/171), draft, unmerged. Operator GO
+covered code, SQL candidate and tests only. **Nothing applied in production, private
+backup pin unchanged, no client/outbox/export/UI, no feature flag.** Branch from main
+`ec88b80`; implementation head `9837b1532ad2de853dc1a68494fd1117de15e3f9`.
+Contract: [DAILY-PASSES](tasks/DAILY-PASSES.md) (accepted PASS-0 model, invariants
+1–9, D1–D8) plus its new "PASS-1A implementation notes" for the details it fixed.
+
+- **Pure reducer** `src/shared/dailyPasses.ts`: strict wire schema mirroring SQL,
+  union by `opId` (reuse with different content refused), undo/resolve/conflict
+  rules, sort `(actionDay, createdAt, opId)`, D1 inclusive view, day-key arithmetic;
+  CZN via `cznDayKey`/`cznDayStart` (18:00 UTC), custom lanes on the regional default.
+- **SQL candidate** `supabase/daily-passes/20261112120000_daily_pass_ops.sql` (own
+  directory): insert-only `daily_pass_ops` (FK cascade, format-validated `game`
+  incl. `mygame:`, per-kind shape, update trigger), `daily_pass_apply` SECURITY
+  DEFINER with owner check, batch limits, server UTC+1 day bound, exact-replay
+  `accepted`; RLS owner read, `calendar_backup` read policy, no direct writes.
+- **Backup v3** `scripts/daily-passes/` + `production.ts`/`local-drill.ts`: contract
+  `supabase/backup-contract.passes-v3.json` (generated from LF bytes), exact v1/v2/v3
+  detection (any daily pass object forces v3), v3 snapshot/encryption/retention under
+  `snapshots/v3/`, recovery of v1/v2/v3 into v3 that only union-inserts ops. The v2
+  recovery code was split into validate/plan/write helpers without behaviour change.
+
+Tests: reducer **33** (exhaustive 720-order invariance for five 6-op scenarios plus
+12 seeded random sets, the PASS-0 counterexample = 69 in every order, undo/resolve/
+conflict/skew/concurrent sets, Asia/America, Endfield europe, CZN, exact reset, leap
+day/month/year); PGlite DB **9**; backup/production **3** (the age test runs in CI).
+Real PG17 (`scripts/daily-passes/verify-postgres17.ts`): v2→v3 transactional DDL,
+pinned v2 checks fail closed (`Uncovered child table`), first v3 snapshot equals the
+v2 data, two-connection distinct ops without a lock wait, replay/reuse/rollback with
+observed lock waits, reversed arrival, undo after ACK and before target, stale set,
+validation and batch limit, other/anon/backup boundaries, immutable rows, union-only
+v1/v2/v3 recovery, FK cascade. v3 operator drill on a separate empty PG17 cluster.
+
+Exact-head CI for `9837b15` ([run 43213346066](https://github.com/maxvfk/game-calendar/actions/runs/43213346066)):
+check/build green; PostgreSQL 17 job green with **74 pass / 0 skip** and both new PG17
+scripts; full suite **1772 pass / 4 optional age skips / 0 fail**. **No local PG17**
+(Windows, no Docker/PostgreSQL): PG17 behaviour is verified in CI only. Locally on
+Windows the same 49 pre-existing CRLF/symlink/timing failures occur on clean main and
+on this branch; in an LF worktree all backup/contract tests pass. Final-head CI after
+this docs commit is recorded in the PR.
+
+**Next:** preliminary review → independent final merge-safety review. Do not merge,
+apply SQL, change the private pin or start PASS-1B without separate operator GO.
+
+---
+
 ## C1a.1 — FINAL BOUNDED OPTION B IMPLEMENTED, INDEPENDENT CLOSURES PENDING (2026-11-05)
 
 [Operator decision](https://github.com/maxvfk/game-calendar/pull/161#issuecomment-6647933853)
