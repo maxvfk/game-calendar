@@ -52,3 +52,13 @@ recorded `contentHash`:
 No source was fetched. They pin the exact 43 Steam / 20 banner counts asserted
 by the reviewed-rescue regression, so ordinary feed turnover in the production
 snapshots cannot turn CI red. Test-only; never a production fallback.
+
+Phase II (2026-11-13): `hoyolab-v3-3-phase-ii-2026-11-13.json` is a factual
+test-only extract of the publisher's HoYoLAB notice "V3.3 Limited-Time Channels
+(Phase II)" (https://www.hoyolab.com/article/47375931, author certified
+"ZZZ Official"), read once via the public post API with the research
+User-Agent. It keeps the notice identity, the stated server-time periods and the
+channel/audition headings and featured lines; `※` rule paragraphs and images are
+omitted. `responseSha256` is the SHA-256 of the full API response. The extract
+backs the reviewed Phase II rows in `data/reviewed/zzz.json`; it is not a raw
+capture and is not used by production `build:feed` fixture fallback.

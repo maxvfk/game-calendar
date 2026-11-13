@@ -613,6 +613,117 @@
       "confidence": 1,
       "firstSeenAt": "2026-10-28T14:36:54.461Z",
       "reviewedAt": "2026-10-28T14:36:54.461Z"
+    },
+    {
+      "reviewedAt": "2026-11-13T09:56:07.000Z",
+      "title": "Answers in the Wind",
+      "type": "banner",
+      "recognitionSubjects": [
+        "Severian"
+      ],
+      "summary": "Exclusive Channel featuring S-Rank Agent Severian (Wind - Attack).",
+      "startsAt": "2026-11-11T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-01T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-12-01T06:59:00.000Z",
+        "europe": "2026-12-01T13:59:00.000Z",
+        "america": "2026-12-01T19:59:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/47375931",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-11-13T09:56:07.000Z",
+      "title": "Incarcerating Grip",
+      "type": "banner",
+      "recognitionSubjects": [
+        "Incarcerating Grip"
+      ],
+      "summary": "W-Engine Channel featuring S-Rank W-Engine Incarcerating Grip (Attack).",
+      "startsAt": "2026-11-11T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-01T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-12-01T06:59:00.000Z",
+        "europe": "2026-12-01T13:59:00.000Z",
+        "america": "2026-12-01T19:59:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/47375931",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-11-13T09:56:07.000Z",
+      "title": "Outlier of Prodigies",
+      "type": "banner",
+      "recognitionSubjects": [
+        "Norma"
+      ],
+      "summary": "Exclusive Channel featuring S-Rank Agent Norma (Fire - Stun).",
+      "startsAt": "2026-11-11T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-01T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-12-01T06:59:00.000Z",
+        "europe": "2026-12-01T13:59:00.000Z",
+        "america": "2026-12-01T19:59:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/47375931",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-11-13T09:56:07.000Z",
+      "title": "Chief Sidekick",
+      "type": "banner",
+      "recognitionSubjects": [
+        "Chief Sidekick"
+      ],
+      "summary": "W-Engine Channel featuring S-Rank W-Engine Chief Sidekick (Stun).",
+      "startsAt": "2026-11-11T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-01T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-12-01T06:59:00.000Z",
+        "europe": "2026-12-01T13:59:00.000Z",
+        "america": "2026-12-01T19:59:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/47375931",
+      "provenanceStatus": "official",
+      "confidence": 1
+    },
+    {
+      "reviewedAt": "2026-11-13T09:56:07.000Z",
+      "title": "The Final Callback - Audition Stage",
+      "type": "challenge",
+      "recognitionSubjects": [
+        "Severian",
+        "Norma"
+      ],
+      "summary": "Trial stages for Severian and Norma; first clear awards stage rewards.",
+      "startsAt": "2026-11-11T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-01T06:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-12-01T06:59:00.000Z",
+        "europe": "2026-12-01T13:59:00.000Z",
+        "america": "2026-12-01T19:59:00.000Z"
+      },
+      "sourceUrl": "https://www.hoyolab.com/article/47375931",
+      "provenanceStatus": "official",
+      "confidence": 1
     }
   ]
 }

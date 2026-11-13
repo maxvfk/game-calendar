@@ -3,7 +3,7 @@ import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 
 test("reviewed ZZZ endgame preserves IDs while showing regional reset deadlines", async () => {
   const { events } = materializeReviewedBatch(await Bun.file("data/reviewed/zzz.json").json());
-  expect(events).toHaveLength(32);
+  expect(events).toHaveLength(37);
   expect(events.find(e => e.title === "Shiyu Defense: Critical Node (Sep 18)")).toMatchObject({
     id: "zzz:shiyu-defense-critical-node-sep-18:2026-09-18",
     titleRu: "Оборона Шиюй: критический узел",
@@ -41,7 +41,9 @@ test("ZZZ 3.3 emergency reviewed records use official windows and keep older cyc
     "Joyau Dore",
     "The Final Callback - Audition Stage",
   ];
-  const added = events.filter(e => e.startsAt >= "2026-10-21T00:00:00.000Z" && names.includes(e.title));
+  // Phase II reuses the audition title; its rows are covered by zzz-phase-ii-reviewed.test.ts.
+  const added = events.filter(e => e.startsAt >= "2026-10-21T00:00:00.000Z" && names.includes(e.title) &&
+    e.id !== "zzz:the-final-callback-audition-stage:2026-11-11");
   expect(added).toHaveLength(13);
   expect(names.sort()).toEqual(added.map(e => e.title).sort());
   expect(added.every(e =>

@@ -1,0 +1,30 @@
+{
+  "note": "Factual test-only extract of an official HoYoLAB notice; rule/disclaimer paragraphs (※) and images omitted. Not a raw capture.",
+  "capturedAt": "2026-11-13T09:40:00.000Z",
+  "request": "https://bbs-api-os.hoyolab.com/community/post/wapi/getPostFull?post_id=47375931&read=1 (x-rpc-language: en-us)",
+  "responseSha256": "f0833fe8850936d98b4813135d0840ab44b5ad16972c76380ba5c69575778de0",
+  "articleUrl": "https://www.hoyolab.com/article/47375931",
+  "postId": "47375931",
+  "subject": "V3.3 Limited-Time Channels (Phase II)",
+  "createdAt": 1794204005,
+  "author": {
+    "nickname": "Zenless Zone Zero",
+    "certification": "ZZZ Official"
+  },
+  "lines": [
+    "Dear Proxies,",
+    "The Agent and W-Engine Signal Search Event period is as follows: 2026/11/11 12:00 (server time) – 2026/12/01 14:59 (server time). The Signal Search Event includes the following content:",
+    "\"Answers in the Wind\" Signal Search Details",
+    "During the event, the reception rate for the limited S-Rank Agent Severian (Wind - Attack) is significantly boosted!",
+    "\"Incarcerating Grip\" Signal Search Details",
+    "During the event, the reception rate for the limited S-Rank W-Engine Incarcerating Grip (Attack) is significantly boosted!",
+    "\"Outlier of Prodigies\" Signal Search Details",
+    "During the event, the reception rate for the limited S-Rank Agent Norma (Fire - Stun) is significantly boosted!",
+    "\"Chief Sidekick\" Signal Search Details",
+    "During the event, the reception rate for the limited S-Rank W-Engine Chief Sidekick (Stun) is significantly boosted!",
+    "The Final Callback - Audition Stage Details",
+    "• Requirements: Reach Inter-Knot Lv. 8 and unlock the Event feature in the Main Story Prologue - Intermission",
+    "• Event Duration: 2026/11/11 12:00 (server time) – 2026/12/01 14:59 (server time)",
+    "• Event Details: Proxies can try out Agents Severian (Wind - Attack) and Norma (Fire - Stun) in audition stages. Upon clearing the stage for the first time, Proxies can claim rewards on the results screen."
+  ]
+}
