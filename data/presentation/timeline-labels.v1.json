@@ -1092,6 +1092,154 @@
       "rulesVersion": "v1",
       "decision": "keep_original",
       "reason": "Mode and rotation-phase names are supported and recognizable; no clearer alternative."
+    },
+    {
+      "eventId": "zzz:answers-in-the-wind:2026-11-11",
+      "fingerprint": "sha256:fbfe6db411cdfbc16224823f6cad93c59110e180a08a09078664f134a55e3453",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current identity 'Severian' is already the featured S-Rank Agent name, matching the featured-name-alone convention; the badge conveys banner type."
+    },
+    {
+      "eventId": "zzz:chief-sidekick:2026-11-11",
+      "fingerprint": "sha256:ba69a677bd936a0690e2711436ee8b622cfd0314319841603aa895a9e5502919",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current identity is already the featured S-Rank W-Engine name; no supported alternative makes it clearly easier to identify."
+    },
+    {
+      "eventId": "zzz:incarcerating-grip:2026-11-11",
+      "fingerprint": "sha256:8404b637f2ec3f4dfc9f3a518ed316786038e43550ff558d6eae9e457f597272",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current identity is already the featured S-Rank W-Engine name; no supported alternative is clearly clearer."
+    },
+    {
+      "eventId": "zzz:outlier-of-prodigies:2026-11-11",
+      "fingerprint": "sha256:96a9025f58ab41e5f8752e22f7aa1b335dd417bc1e2695bf6337a2a5d6934174",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current identity 'Norma' is already the featured S-Rank Agent name; banner type is shown by the badge."
+    },
+    {
+      "eventId": "zzz:the-final-callback-audition-stage:2026-11-11",
+      "fingerprint": "sha256:46364dcfc16c3ea2ab2a8e4f64cba691c43c9d6afc301bc7ea19daa1fad2c8c7",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "The Final Callback: Severian and Norma Trial Stages",
+      "reason": "Bare 'Severian + Norma' lacks the event name and what it is; the title and summary supply 'The Final Callback' and trial stages."
+    },
+    {
+      "eventId": "wuwa:emerald-sentence:2026-11-12",
+      "fingerprint": "sha256:46105171a2178c92d4bf9c6b8e8453fba3cf60cbd531a98dd3ca103426d74106",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary or recognition subjects supplied; the official banner title is the only supported name."
+    },
+    {
+      "eventId": "wuwa:solsworn-ciphers:2026-11-12",
+      "fingerprint": "sha256:527e78d0685d6f76ad3cd6ceea46867b0de7c122831e8f8e5112bbfa5c4f4eea",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary or recognition subjects supplied; no truthful alternative can be built from the input."
+    },
+    {
+      "eventId": "wuwa:wanderer-knows-no-far-and-near:2026-11-12",
+      "fingerprint": "sha256:b868524b2f4ac624bc8d7c4d7e4ae3b88871449570995913582ec77e824f5ca7",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary or recognition subjects supplied; the existing title is the only supported name."
+    },
+    {
+      "eventId": "wuwa:when-the-runes-glitter:2026-11-12",
+      "fingerprint": "sha256:ec6418a72ed09a053fd304f88065a784d03c7555fa7cba1329584eb383c2d032",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary or recognition subjects supplied; keep the official banner title rather than invent details."
+    },
+    {
+      "eventId": "hsr:version-4-7-nameless-honor:2026-11-11",
+      "fingerprint": "sha256:85c2d1e24bdcfdaa147e20e990bd99b8ebadc45038605da80789ddcd129c9206",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Preserves the meaningful version identity; no additional detail is supported by the input."
+    },
+    {
+      "eventId": "wuwa:second-coming-of-solaris-unwritten-dreams:2026-11-12",
+      "fingerprint": "sha256:13128f7dc66a3acf06e72ef86c53ccf3df4522ebbbc584f828826f98b66e6ad1",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary supplied; the current title is already the recognizable event name."
+    },
+    {
+      "eventId": "hsr:cosmic-aesthetics-phantasia-showstage:2026-11-11",
+      "fingerprint": "sha256:3555297a7723c214bf352bd7896b711405508295584fe24296bed4c51b3ae13a",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary or subjects supplied; the current title is specific and recognizable as-is."
+    },
+    {
+      "eventId": "hsr:interastral-peace-gala-road-to-fame:2026-11-11",
+      "fingerprint": "sha256:f3537ae00bf35c99b051b7fc84c648237b703cdd6134c358678e0f8416b0451e",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary or subjects supplied; the current title is specific and recognizable as-is."
+    },
+    {
+      "eventId": "hsr:myriad-symphony:2026-11-11",
+      "fingerprint": "sha256:9d689c7feb54ea50a37e9c4ec2c2034d197a50e1f130e7553c7f41653cece287",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary or subjects supplied; no supported alternative would improve recognition."
+    },
+    {
+      "eventId": "hsr:relic-recon:2026-11-11",
+      "fingerprint": "sha256:15d6cabf14efdab607fa7eb4a39a066d34141f1986a7dbb76e950da79abbb208",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary or subjects supplied; the short official name is already clear and does not need shortening."
+    },
+    {
+      "eventId": "hsr:the-fluffy-movie-overheated:2026-11-11",
+      "fingerprint": "sha256:019af1f6faae93df6e852032d880991dbf403efd08a3f885d97300f322ad14db",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary or subjects supplied; the current title is the only supported name."
+    },
+    {
+      "eventId": "wuwa:lahai-roi-blocks-turnabout:2026-11-19",
+      "fingerprint": "sha256:5440b97f82d8a262a92966f32a60e322a8e0a059c082c3a0982c4b7b22b2badb",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary supplied; the current title already carries the distinctive activity name and variant."
+    },
+    {
+      "eventId": "wuwa:lollo-campaign-groundwork:2026-12-03",
+      "fingerprint": "sha256:1465d8492585f99be301b5ac5e6edf65030caf5a65743ea827ea28d07d909230",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary supplied; the current title already identifies the campaign and its variant."
+    },
+    {
+      "eventId": "wuwa:dreamfield-odyssey:2026-12-03",
+      "fingerprint": "sha256:ccf9e9e8607c755fd563d1520dc7f5c794a491d916d2ae30217c11f44248042a",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "No summary or subjects supplied; the current title is a distinct, recognizable challenge name."
+    },
+    {
+      "eventId": "wuwa:whither-the-wind:2026-12-07",
+      "fingerprint": "sha256:ba8c4009b186e8323eea944eda13a2f649f98790e61e58a3d6c86b8c58830c06",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Login type is already conveyed by the badge; no summary or subjects support a clearer label."
+    },
+    {
+      "eventId": "zzz:shiyu-defense-critical-node-jan-22:2027-01-22",
+      "fingerprint": "sha256:09df7f0c70264c9ffb13b6cb102b28911fb370f3fbc0ec4574d5eefb2867898d",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current identity already names the mode, node and rotation date; adding projected dates would risk unsupported claims."
     }
   ]
 }
