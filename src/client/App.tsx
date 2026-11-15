@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { fetchFeed, type FeedState } from "./api.ts";
+import { useFeed } from "./state/useFeed.ts";
 import { Controls } from "./components/Controls.tsx";
 import { CZN_CUTOVER_ENABLED } from "../shared/cznDaily.ts";
 import { buildCznExport, importCzn, importLegacyCzn, readCzn, preserveCznLegacy } from "./account/cznProtocol.ts";
@@ -110,7 +110,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
   const filtersButton = useRef<HTMLButtonElement>(null);
   const header = useRef<HTMLElement>(null);
   const closeFilters = () => { setFiltersOpen(false); filtersButton.current?.focus(); };
-  const [state, setState] = useState<FeedState>({ status: "loading" });
+  const state = useFeed();
   const { openId, openDetail, closeDetail } = useEventDetailHistory();
   // The event most recently ignored, so it can be put back without hunting for
   // a row that just disappeared.
@@ -213,20 +213,6 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
     ignored.toggle(id);
     setLastIgnored(wasIgnored ? null : { id, title });
   };
-
-  useEffect(() => {
-    const ac = new AbortController();
-    fetchFeed(ac.signal)
-      .then((feed) => setState({ status: "ready", feed }))
-      .catch((err: unknown) => {
-        if (ac.signal.aborted) return;
-        setState({
-          status: "error",
-          message: err instanceof Error ? err.message : "Could not load events.",
-        });
-      });
-    return () => ac.abort();
-  }, []);
 
   const allRows = useMemo<RowEvent[]>(() => {
     if (state.status !== "ready") return [];
