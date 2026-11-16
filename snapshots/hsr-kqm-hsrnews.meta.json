@@ -2,12 +2,12 @@
   "contentKind": "markdown",
   "sourceId": "hsr-kqm-hsrnews",
   "url": "https://api.github.com/repos/KQM-git/HSRNews/contents/readme.md",
-  "contentHash": "ffdcc45b723391cfec111e56f80f3f76c8ad5e17622f44aad751760c31506942",
-  "bytes": 61139,
-  "etag": "\"5876fc041f3f262b7449dc24c93b4d4a6bf6faaa\"",
-  "lastModified": "Sun, 15 Nov 2026 16:00:28 GMT",
-  "contentChangedAt": "2026-11-15T21:54:08.587Z",
-  "lastConfirmedAt": "2026-11-15T21:54:08.587Z",
+  "contentHash": "485cc5a7c6d1507ea88e03ffc429db2a80b5ac0d5eef7114be1b8307b91b61d8",
+  "bytes": 59456,
+  "etag": "\"5e9f6565e8087e2c3170fbceb70846af8fc40f77\"",
+  "lastModified": "Mon, 16 Nov 2026 06:00:25 GMT",
+  "contentChangedAt": "2026-11-16T13:49:06.431Z",
+  "lastConfirmedAt": "2026-11-16T13:49:06.431Z",
   "eventCount": 6,
   "charset": "utf-8"
 }
