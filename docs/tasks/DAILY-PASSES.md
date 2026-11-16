@@ -1,10 +1,16 @@
 # DAILY-PASSES — lean design gate and implementation roadmap
 
-**Status (2026-11-12): PASS-1A implemented as a reviewed candidate in
+**Status (2026-11-16): PASS-1A in production; rollout steps 1–3 done.** PR #171 merged
+as `8adad6d`; the private backup pin runs `8adad6d`; the DDL was applied on 2026-11-16 and
+the first v3 backup was validated with the operator key and passed an isolated PG17
+recovery drill. No client uses the table yet. Next: PASS-1B only after its own operator
+GO. Details: `docs/IMPLEMENTATION-STATUS.md`.
+
+**Earlier status (2026-11-12): PASS-1A implemented as a reviewed candidate in
 [PR #171](https://github.com/maxvfk/game-calendar/pull/171); preliminary, final and focused
 reviews complete, READY TO MERGE from review at `fe72ad9`.** Operator GO covered code,
 SQL candidate and tests only: nothing applied in production, no private pin change,
-no client or feature flag. Next: operator merge GO; every rollout step needs its own GO.
+no client or feature flag.
 
 **Earlier status (2026-11-05): PASS-0 complete; PASS-1A awaiting implementation GO.**
 The product requirements are approved. The independent read-only PASS-0 design
@@ -346,9 +352,10 @@ of the inclusive convention (D1).
 - No changes to C1a.1 #161, C1b, source ingestion, Timeline labels, CZN
   cutover or historic user data.
 
-**Next concrete step:** operator merge GO for PR #171 (PASS-1A); then rollout step 2
-(private v3 pin) only after its own GO. Do not merge, apply the SQL, change the private pin or start PASS-1B
-without the corresponding separate operator GO.
+**Next concrete step:** PASS-1B (offline outbox, Account Sync, export/import, first
+login, client feature flag) only after its own operator GO. Rollout steps 1–3 are done
+(2026-11-16). From now on the private pin must never return to `b5d46b5`; the write
+rollback is `revoke execute on daily_pass_apply` (rollout step 5).
 
 ### PASS-1A implementation notes (2026-11-12)
 

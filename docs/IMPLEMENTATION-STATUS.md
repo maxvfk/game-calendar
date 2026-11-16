@@ -1,4 +1,41 @@
-## PASS-1A — REVIEWS COMPLETE, READY FOR OPERATOR MERGE GO (2026-11-12)
+## PASS-1A — IN PRODUCTION, v3 BACKUPS ACTIVE (2026-11-16)
+
+Rollout steps 1–3 of [DAILY-PASSES.md](tasks/DAILY-PASSES.md) are done, each under its
+own operator GO. The client does not use the table yet (0 rows); PASS-1B is not started.
+
+- **Merge:** [PR #171](https://github.com/maxvfk/game-calendar/pull/171) merged as
+  `8adad6d9d6a2fddc61ecec16f2f2881c1f8bb408`.
+- **Private pin:** game-calendar-backups PR #8 (squash `7903de6`) prepared the two-pin
+  GO allowlist (`b5d46b5` | `8adad6d`) and `PASSES-TRANSITION.md`. The variable
+  `CZN_BACKUP_GO_REVISION` was switched to `8adad6d` while the database was still v2.
+- **Rehearsal on v2:** the `8adad6d` pin wrote `snapshots/v2/daily/2026-11-16.czn-v2`;
+  the operator validated it with the private age identity (`production.ts validate`).
+  The pair is also kept outside retention by the operator.
+- **DDL:** `supabase/daily-passes/20261112120000_daily_pass_ops.sql`
+  (SHA256 `60a69ef6…`, bytes from `8adad6d`) applied on 2026-11-16 in one transaction
+  as `postgres`, as plain SQL (not recorded in the migration ledger). Read-only checks
+  before: CZN schema present, no `daily_pass` objects, default function privileges of
+  `postgres` only `{postgres=X/postgres}` for `public` and no global entry. After: the
+  four function bodies are byte-identical to the file (md5), `daily_pass_apply` ACL
+  `{postgres=X/postgres,authenticated=X/postgres}`, the other three owner-only, RLS
+  enabled (not forced), both read policies and the immutability trigger present.
+- **First v3 backup:** [run 43933534156](https://github.com/maxvfk/game-calendar-backups/actions/runs/43933534156)
+  (manual) committed `snapshots/v3/daily/2026-11-16` and `snapshots/v3/monthly/2026-11`
+  (private commit `b07df21`): v3 detection and the exact schema hash `9d7fdfd1…` passed.
+  The operator validated the pair with the private identity, and an isolated local
+  PostgreSQL 17.8 drill (`local-drill.ts`, empty loopback cluster) verified the full
+  recovery; the drill cluster and its data were deleted afterwards.
+- **Rollback from now on:** never return the pin to `b5d46b5` (it fails closed on v3).
+  To stop writes: `revoke execute on function public.daily_pass_apply(uuid,jsonb) from
+  authenticated`; backups and recovery keep working in that state.
+- The candidate file's first line still reads "Not installed in production". It stays
+  unchanged on purpose: the v3 contract hashes the exact file bytes.
+- Open follow-up (not blocking): `production.ts` checks the source revision with
+  `git -C <URL pathname>`, which breaks on checkout paths with spaces or `%`.
+
+**Next:** PASS-1B (client sync behind the feature flag) only after its own operator GO.
+
+### Earlier: PASS-1A reviews complete, ready for operator merge GO (2026-11-12)
 
 [Focused re-review](https://github.com/maxvfk/game-calendar/pull/171#pullrequestreview-5874954971)
 of `fb692f3..fe72ad9`: the final-review P1 is closed, no new confirmed defect;
