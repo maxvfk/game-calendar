@@ -1,10 +1,16 @@
-# Daily passes (PASS-1A) — reviewed SQL candidate, NOT installed
+# Daily passes (PASS-1A) — SQL installed in production on 2026-11-16
 
-This directory holds exactly one release candidate: `20261112120000_daily_pass_ops.sql`.
+This directory holds exactly one candidate: `20261112120000_daily_pass_ops.sql`.
+It was applied to production on 2026-11-16 as plain SQL in one transaction, after a
+v2 rehearsal of the `8adad6d` backup pin; the first v3 backup was then validated and
+drilled (see `docs/IMPLEMENTATION-STATUS.md`). Its first line still says "Not installed
+in production": the file is left byte-for-byte unchanged because the v3 backup contract
+hashes it. Never apply it again.
+
 It is deliberately outside `supabase/migrations` (production never replays it) and
 outside `supabase/czn-cutover` (whose tooling expects exactly one CZN candidate).
-Nothing here authorizes a production migration, a private backup pin change or a
-client feature flag. The contract is [docs/tasks/DAILY-PASSES.md](../../docs/tasks/DAILY-PASSES.md).
+Nothing here authorizes a client feature flag. The contract is
+[docs/tasks/DAILY-PASSES.md](../../docs/tasks/DAILY-PASSES.md).
 
 ## What the candidate adds
 
@@ -53,6 +59,9 @@ CZN_LOCAL_DRILL_URL=postgres://postgres:…@127.0.0.1:5435/czn_recovery_drill bu
 ```
 
 ## Rollout (each step needs its own operator GO)
+
+Steps 1–3 were completed on 2026-11-16 (the pin was switched before the DDL, on a v2
+rehearsal, so there was no backup gap). Step 4 has not started.
 
 1. Merge this candidate, the v3 tooling and tests. Nothing applied.
 2. Private backup repo: prepare the v3 pin to the merged revision, merged but not active.
