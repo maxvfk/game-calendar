@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test";
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { emptySyncState } from "../src/shared/sync.ts";
 import { PassOp } from "../src/shared/dailyPasses.ts";
 import { completeFirstLogin, writeAccountCache } from "../src/client/account/firstLogin.ts";
@@ -215,7 +217,13 @@ async function flagOnImport() {
     });
   } }] });
   expect(result.success).toBe(true);
-  return (await import(`data:text/javascript;base64,${Buffer.from(await result.outputs[0]!.text()).toString("base64")}`)).importProgress;
+  // A temp file, not a data: URL: older Bun on CI rejects a module specifier this long.
+  const dir = await mkdtemp(join(tmpdir(), "pass-flag-on-"));
+  try {
+    const file = join(dir, "app-flag-on.js");
+    await writeFile(file, await result.outputs[0]!.text());
+    return (await import(pathToFileURL(file).href)).importProgress;
+  } finally { await rm(dir, { recursive: true, force: true }); }
 }
 
 test("flag-on App import preserves unknown-file message and uses PROFILE_KEYS for policy imports", async () => {
