@@ -1170,6 +1170,30 @@ Adventure Rank 20 or above
 
 -----
 
+# [Beware of Phishing Websites: Keep Your Account Secure](archive/22008.md)
+## Beware of Phishing Websites: Keep Your Account Secure
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/29/a05b77dc19895db836ffa20ada9cc006_4235804805962751199_transformed.png)
+
+Dear Traveler,
+
+We have recently identified cases of Travelers' accounts being stolen through phishing websites in certain regions.
+
+To keep Travelers' accounts secure, we will continue to strengthen our security measures and take further legal action as appropriate. We would also like to remind all Travelers of the following:
+
+Always use official channels to log in and manage your account.
+
+• Please use only the official Genshin Impact client and website to log in, view, or update your account information.
+
+• Do not click links from unknown sources or enter your login details, password, or verification codes on unofficial pages. Phishing websites often lure visitors with promises of free rewards, prize draws and cashback offers, or warnings of unusual account activity. Please stay alert.
+
+• Regularly check that you still have control of the email address and phone number linked to your account. Reduce the risk of account theft by changing your password regularly, using a strong password, and strengthening your email account's security.
+
+• If you discover that the email address linked to your account has been changed to an unfamiliar one, or receive notifications of logins or changes to linked account information that you did not initiate, change your password through official channels or contact official Customer Service immediately for assistance.
+
+We are committed to keeping Travelers' accounts secure. We sincerely hope to work together with all Travelers to build and maintain a fair and welcoming gaming environment.
+
+-----
+
 # ["Genius Invokation TCG" The Forge Realm's Temper: Endless Swarm](archive/20834.md)
 ## Genius Invokation TCG - The Forge Realm's Temper
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2024/11/05/cf324597e5d687e26d86f297e59c9ebd_2179973999643752178.jpg)
@@ -1199,54 +1223,6 @@ And complete the World Quest "Battlefield of Dice, Cats, and Cards"
 ● Defeat opponents within these stages to accrue score. Defeat as many opponents as possible within the Round limit to score more points.
 
 ● After completing the challenge, points will be obtained based on the number of opponents defeated. Achieving the required scores will allow Travelers to claim the corresponding rewards.
-
------
-
-# [Beware of Phishing Websites: Keep Your Account Secure](archive/22008.md)
-## Beware of Phishing Websites: Keep Your Account Secure
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/29/a05b77dc19895db836ffa20ada9cc006_4235804805962751199_transformed.png)
-
-Dear Traveler,
-
-We have recently identified cases of Travelers' accounts being stolen through phishing websites in certain regions.
-
-To keep Travelers' accounts secure, we will continue to strengthen our security measures and take further legal action as appropriate. We would also like to remind all Travelers of the following:
-
-Always use official channels to log in and manage your account.
-
-• Please use only the official Genshin Impact client and website to log in, view, or update your account information.
-
-• Do not click links from unknown sources or enter your login details, password, or verification codes on unofficial pages. Phishing websites often lure visitors with promises of free rewards, prize draws and cashback offers, or warnings of unusual account activity. Please stay alert.
-
-• Regularly check that you still have control of the email address and phone number linked to your account. Reduce the risk of account theft by changing your password regularly, using a strong password, and strengthening your email account's security.
-
-• If you discover that the email address linked to your account has been changed to an unfamiliar one, or receive notifications of logins or changes to linked account information that you did not initiate, change your password through official channels or contact official Customer Service immediately for assistance.
-
-We are committed to keeping Travelers' accounts secure. We sincerely hope to work together with all Travelers to build and maintain a fair and welcoming gaming environment.
-
------
-
-# ["Across the Frozen Wilds, Honing One's Edge" Event: New Travelers Can Invite a 5-Star Character of Your Choice From the "Wanderlust Invocation" Standard Wish](archive/21968.md)
-## Across the Frozen Wilds, Honing One's Edge
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/509f11ffc89b5f675693d10478d563f1_8275206890847569474_transformed.png)
-
-〓Event Duration〓
-
-After the Version 7.2 update and until the end of the Version 7.x
-
-〓Eligibility〓
-
-Travelers who have completed registration and unlocked the Wish feature after the Version 7.2 update
-
-〓Event Details〓
-
-● New Travelers who register after the Version 7.2 update are eligible to participate in the "Across the Frozen Wilds, Honing One's Edge" event. The event will be available within 42 days after registration.
-
-● After unlocking the Wish feature, new Travelers can invite a 5-star character of your choice from the Standard Wish "Wanderlust Invocation" to join your party via the event interface. When you invite a character, you also receive Ascension Level-Up Materials for the same character.
-
-※ For Travelers who register near the end of Version 7.x, the event duration may run shorter than 42 days. Please refer to the remaining time displayed on the event page for the exact duration.
-
-※ Travelers can invite a character only once during the event. Once the event is over, you will be unable to invite characters. Please make sure you invite them in time.
 
 -----
 
@@ -1304,6 +1280,54 @@ Please refer to the official event page for the detailed event rules.
 
 -----
 
+# ["Across the Frozen Wilds, Honing One's Edge" Event: New Travelers Can Invite a 5-Star Character of Your Choice From the "Wanderlust Invocation" Standard Wish](archive/21968.md)
+## Across the Frozen Wilds, Honing One's Edge
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/509f11ffc89b5f675693d10478d563f1_8275206890847569474_transformed.png)
+
+〓Event Duration〓
+
+After the Version 7.2 update and until the end of the Version 7.x
+
+〓Eligibility〓
+
+Travelers who have completed registration and unlocked the Wish feature after the Version 7.2 update
+
+〓Event Details〓
+
+● New Travelers who register after the Version 7.2 update are eligible to participate in the "Across the Frozen Wilds, Honing One's Edge" event. The event will be available within 42 days after registration.
+
+● After unlocking the Wish feature, new Travelers can invite a 5-star character of your choice from the Standard Wish "Wanderlust Invocation" to join your party via the event interface. When you invite a character, you also receive Ascension Level-Up Materials for the same character.
+
+※ For Travelers who register near the end of Version 7.x, the event duration may run shorter than 42 days. Please refer to the remaining time displayed on the event page for the exact duration.
+
+※ Travelers can invite a character only once during the event. Once the event is over, you will be unable to invite characters. Please make sure you invite them in time.
+
+-----
+
+# [Game Survey](archive/21848.md)
+## Complete the Survey and Get Primogems
+![Banner](https://sdk.hoyoverse.com/upload/announcement/2022/08/17/f8c479b1eaf9c19328c56264ca38affe_8815493962934825777.jpg)
+
+Dear Travelers,
+
+A new adventure has begun! In order to better understand the gaming habits of Travelers and to bring them the best-possible Genshin Impact experience, Paimon has prepared a survey. Travelers who complete the survey will receive Primogems ×50~
+
+〓Survey Period〓
+
+Long-term
+
+〓Survey Link〓
+
+[Click here to fill out the survey.](https://webstatic.hoyoverse.com/common/event/survey-user-v2/index.html?auth_appid=survey_CNn_k-BFsx-seXZlJUP2c9jilDCgAXAuxCjVT72gll6OFBK&game_biz=hk4e_global&surveyId=39582&format=1&sign_type=2&authkey_ver=1)
+
+Travelers can also open the link via Paimon Menu > Mail > Game Survey > Survey Link to access the survey or via Paimon Menu > Survey > Select "Game Survey" to fill out the survey. After completing filling out the survey through any of the steps, you will get a prize, and you don't need to fill it in again~
+
+Survey answers cannot be changed after submission, so please fill it out carefully.
+
+We thank all Travelers for your invaluable feedback!
+
+-----
+
 # ["To Temper Thyself and Journey Far": Rewards of Dedication](archive/21892.md)
 ## To Temper Thyself and Journey Far
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/08/21/f77abe8a6f4104f1229db987e2c4280a_177291918664626977_transformed.png)
@@ -1337,30 +1361,6 @@ Complete the World Quest "Welcome to the Adventurers' Guild" to unlock the Adven
 ● In the current cycle of "To Temper Thyself and Journey Far," complete 8 weekly training goals to unlock Tempered in Practice for the following week. Once unlocked, you will receive extra rewards for completing weekly training goals. This bonus resets weekly, so be sure to claim your extra rewards in time.
 
 ● After the current cycle of "To Temper Thyself and Journey Far" concludes, the next cycle will begin on the following Monday at 04:00.
-
------
-
-# [Game Survey](archive/21848.md)
-## Complete the Survey and Get Primogems
-![Banner](https://sdk.hoyoverse.com/upload/announcement/2022/08/17/f8c479b1eaf9c19328c56264ca38affe_8815493962934825777.jpg)
-
-Dear Travelers,
-
-A new adventure has begun! In order to better understand the gaming habits of Travelers and to bring them the best-possible Genshin Impact experience, Paimon has prepared a survey. Travelers who complete the survey will receive Primogems ×50~
-
-〓Survey Period〓
-
-Long-term
-
-〓Survey Link〓
-
-[Click here to fill out the survey.](https://webstatic.hoyoverse.com/common/event/survey-user-v2/index.html?auth_appid=survey_CNn_k-BFsx-seXZlJUP2c9jilDCgAXAuxCjVT72gll6OFBK&game_biz=hk4e_global&surveyId=39582&format=1&sign_type=2&authkey_ver=1)
-
-Travelers can also open the link via Paimon Menu > Mail > Game Survey > Survey Link to access the survey or via Paimon Menu > Survey > Select "Game Survey" to fill out the survey. After completing filling out the survey through any of the steps, you will get a prize, and you don't need to fill it in again~
-
-Survey answers cannot be changed after submission, so please fill it out carefully.
-
-We thank all Travelers for your invaluable feedback!
 
 -----
 
