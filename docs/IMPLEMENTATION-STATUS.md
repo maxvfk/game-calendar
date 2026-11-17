@@ -1,3 +1,68 @@
+## PASS-1B — candidate, flag off (2026-11-17)
+
+Operator GO covers the client implementation only. Draft PR #177 starts this round
+at `0cfc645` on `passes/pass-1b`. Round-3 R1-R4 findings are fixed in the
+working tree, awaiting focused independent re-review; no new commit/push, deploy
+or activation. PASS-1A's production schema and backup tooling are unchanged. `DAILY_PASSES_ENABLED = false` in
+`src/client/account/passProtocol.ts`; activation requires a separate operator decision.
+The flag may only be enabled after PASS-2 wires D6 choices for **both import and
+first login**. Today overlapping game ops without choices throw `PassChoicesRequired`
+before any v1 migration write, leaving guest v1/pass keys unchanged; AuthRoot has no
+D6 choice UI yet. No default choice is permitted.
+
+- Profile-local append-only `:passes:` facts: one key per immutable op, accepted
+  ACK, collision and exact roll-forward intent/receipt, outside the v1 outbox.
+  Pending = op without ACK. Delayed tab propagation cannot erase another op;
+  pass-prefix storage events refresh/sync. No old single-key migration.
+  Intent/hold keys use 16-digit FNV-1a 64 hashes; full values are compared on write
+  and hash-verified on read (mismatch becomes recovery). Quota during read-time
+  roll-forward leaves every intent op pending/exportable for later materialization.
+  Validated action APIs and shared reducer/views.
+- Dedicated `daily_pass_apply` / `daily_pass_ops` transport, conservative jsonb-size
+  batching, keyset pagination, exact accepted ACKs, session checks and durable retry.
+  Pull/union before push detects collisions locally, then final pull/union gates ACK.
+  Push order is set, undo/resolve, extend, stable by opId within each group;
+  100-op/size limits remain. Partial transfers retain the source value/conflicts.
+  Runs after successful v1 sync; failures hold passes only. Content collisions retain
+  both copies and persistently hold that profile's entire pass protocol; unrelated
+  pass ops remain pending/exportable. Malformed facts are typed persistent holds,
+  exported verbatim as `passes.recovery: [{key, raw}]` alongside valid ops and
+  v1/CZN/personal data. Recovery-bearing files refuse the whole automatic import
+  before any write. Other profiles and v1/CZN continue normally.
+  Persistent holds schedule no extra retries; transient holds use 2–60 second
+  backoff, while pending v1 changes keep their 1.5 second retry. Pass work has its
+  own 10 second budget after the v1 commit; the existing 20 second v1 timeout stays.
+- Top-level passes in strict policy-export v2; no-pass exports stay v1. Disabled
+  exports retain the previous bytes. Same-profile union, D6 plan/apply for foreign
+  imports and guest first login; durable replay receipts. Empty-target transfers
+  copy source ops plus one set per lane, excluding source conflicting extends
+  from basedOn: concurrent sources compete without summing; source conflicts stay.
+  With the flag on, guest ops/held/recovery/imports all prevent automatic cloudOnly.
+  No UI or tap guard.
+- Tests: `test/daily-passes-client.test.ts`, `test/daily-passes-client-rpc.test.ts`;
+  the latter runs production RPC/RLS in `passesCandidateDatabase()` including
+  EXECUTE rollback, lost ACK, foreign access, wide batches and pagination.
+  `test/daily-passes-round1.test.ts` adds 9 regression checks for retry
+  priority, both hold messages, first login, import routing and pass timeouts.
+- Decisions, API entry points and limits: [PASS-1B notes](tasks/DAILY-PASSES.md#pass-1b-implementation-notes-2026-11-17).
+- Windows round-3 checks: frozen install, typecheck and build passed (Bun 1.4.4).
+  Full suite: 1837 pass / 1 skip / 19 fail / 1 error, 38781 assertions. All 19 failed
+  names occur in baseline (20 failures); only "the six-hour floor > holds off until
+  six hours have passed" is absent. The extra unhandled ENOENT is in the snapshot
+  reader after the existing atomic-write test fails with EPERM rename. Not green.
+  Focused domain/client/RPC/round1/round2/round3/sync/login/CZN: 137 pass / 0 fail,
+  14284 assertions / 9 files. Six round-3 tests give 1 pass / 5 fail on original HEAD;
+  the preexisting content/key mismatch rejection already passes.
+  Build: 298 events / 7 games / 1 existing conflict, build `cdaf0cd43d8d`.
+  Clean Bun 1.3.14 CI and focused independent re-review remain required;
+  platform failures were not weakened. Explicit write quota errors remain visible;
+  automatic journal pruning/repair is out of scope. Known limitation: a device clock
+  over one day ahead can yield actionDay beyond server UTC date + 1; rejected ops
+  stay pending with transient backoff until clock correction or that day arrives.
+
+**Next:** focused independent re-review of round-3 R1-R4 fixes in this working tree.
+PASS-2, rollout and activation are separate milestones; do not begin automatically.
+
 ## PASS-1A — IN PRODUCTION, v3 BACKUPS ACTIVE (2026-11-16)
 
 Rollout steps 1–3 of [DAILY-PASSES.md](tasks/DAILY-PASSES.md) are done, each under its

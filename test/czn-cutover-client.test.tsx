@@ -15,7 +15,7 @@ import {CZN_POLICY_ITEM_KEY,cznCompletedDays,cznPolicyDaily} from '../src/client
 import {metaFor} from '../src/shared/games.ts';
 import {dayKey,nextResetMs} from '../src/shared/daily.ts';
 import {dayStartMs} from '../src/shared/time.ts';
-class Store {v=new Map<string,string>();getItem(k:string){return this.v.get(k)??null;}setItem(k:string,v:string){this.v.set(k,v);}}
+class Store {get length(){return this.v.size;}key(n:number){return [...this.v.keys()][n]??null;}v=new Map<string,string>();getItem(k:string){return this.v.get(k)??null;}setItem(k:string,v:string){this.v.set(k,v);}}
 const profile='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',owner='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const at=Date.parse('2026-10-22T18:00:00Z');
 const policy:CznPolicy={policyId:CZN_POLICY,epoch:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',cutoverAt:new Date(at).toISOString()};

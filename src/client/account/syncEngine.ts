@@ -1,5 +1,6 @@
 import { compareVersions, logicalKey, mergeSyncState, type SyncMutation, type SyncState } from "../../shared/sync.ts";
 import { CZN_CUTOVER_ENABLED, CZN_SUBJECT } from "../../shared/cznDaily.ts";
+import { PassOpIdReused } from "../../shared/dailyPasses.ts";
 import { cznRemote, preserveCznLegacy, readCzn } from "./cznProtocol.ts";
 import { flushSync } from "react-dom";
 import { profileKeys } from "../state/storage.ts";
@@ -10,11 +11,12 @@ import {
 } from "./localSync.ts";
 import { applyCloudMutations, materializeCloud, pullCloud, supabase } from "./remote.ts";
 import { isRetryableTransportError } from "./transport.ts";
+import { DAILY_PASSES_ENABLED, PassDataUnreadable, passPrefix, type PassStore, passErrorMessage, readPasses, syncPasses, type PassTransport } from "./passProtocol.ts";
 
-type Store = Pick<Storage, "getItem" | "setItem">;
+type Store = PassStore;
 export type SyncStatus = { kind: "syncing" | "synced" | "pending" | "offline" | "network" |
   "error" | "auth" | "schema"; pending: number; lastSuccessfulSyncAt?: string;
-  message?: string; clockWarning?: boolean; heldCzn?: number };
+  message?: string; clockWarning?: boolean; heldCzn?: number; heldPasses?: string };
 
 function confirmed(remote: SyncState, row: SyncMutation): boolean {
   const winner = remote[row.kind][logicalKey(row)];
@@ -47,7 +49,10 @@ export async function syncProfile(store: Store, profileId: string, ownerId: stri
     },
     pull: pullCloud, push: applyCloudMutations,
     ...(CZN_CUTOVER_ENABLED ? { negotiateCzn: async (id: string) => (await cznRemote.negotiate(id, false)).policy !== null } : {}),
-  }): Promise<{ pending: number; clockWarning: boolean; at: string; heldCzn?: number }> {
+  }, passes: { enabled?: boolean; transport?: PassTransport; onV1Synced?: () => void } = {}): Promise<{
+    pending: number; clockWarning: boolean; at: string; heldCzn?: number;
+    pendingPasses?: number; heldPasses?: string; passHoldKind?: "persistent" | "transient";
+  }> {
   const ensureActive = () => {
     if (!active() || !readAccountBinding(store, profileId, ownerId)) {
       throw new Error("Account session changed during sync");
@@ -126,7 +131,36 @@ export async function syncProfile(store: Store, profileId: string, ownerId: stri
   }
   clockWarning ||= Object.values(remote).some((bucket) =>
     Object.values(bucket).some((row) => Date.parse(row.changedAt) > Date.now() + 5 * 60_000));
-  return { pending: remaining.length, clockWarning, at, ...(held.length ? { heldCzn: held.length } : {}) };
+  let passResult: { pendingPasses?: number; heldPasses?: string; passHoldKind?: "persistent" | "transient" } = {};
+  if (passes.enabled ?? DAILY_PASSES_ENABLED) {
+    // The controller's existing 20s deadline covers v1 only. Pass work gets a
+    // separate budget after that commit, even when v1 used most of its deadline.
+    passes.onV1Synced?.();
+    let passActive = true;
+    let passTimeout: ReturnType<typeof setTimeout> | undefined;
+    try {
+      await Promise.race([
+        syncPasses(store, profileId, () => {
+          try { ensureActive(); return passActive; } catch { return false; }
+        }, passes.transport, true),
+        new Promise<never>((_, reject) => { passTimeout = setTimeout(() => {
+          passActive = false;
+          reject(new Error("Daily pass sync timed out"));
+        }, 10_000); }),
+      ]);
+      passResult = { pendingPasses: readPasses(store, profileId).pending.length };
+    } catch (error) {
+      // v1 has already committed successfully. Rollback/permission, malformed
+      // replies and collisions hold this protocol only; no pass intent is removed.
+      passResult = { heldPasses: passErrorMessage(error),
+        passHoldKind: (error instanceof PassOpIdReused || error instanceof PassDataUnreadable) ? "persistent" : "transient" };
+    } finally {
+      passActive = false; // Late transport replies cannot acknowledge or write.
+      if (passTimeout !== undefined) clearTimeout(passTimeout);
+    }
+    ensureActive();
+  }
+  return { pending: remaining.length, clockWarning, at, ...(held.length ? { heldCzn: held.length } : {}), ...passResult };
 }
 
 /** One controller per active, verified profile. No network work survives an
@@ -140,10 +174,16 @@ export function startProfileSync(profileId: string, ownerId: string,
   let running = false;
   let again = false;
   let failures = 0;
+  let passFailures = 0;
   let attempt = 0;
   let timer: ReturnType<typeof setTimeout> | undefined;
   let status: SyncStatus = { kind: "pending", pending: 0 };
-  const count = () => { try { return readOutbox(store, keys).length; } catch { return 0; } };
+  const count = () => {
+    let n = 0;
+    try { n = readOutbox(store, keys).length; } catch { /* Existing error path reports invalid metadata. */ }
+    if (DAILY_PASSES_ENABLED) { try { n += readPasses(store, profileId).pending.length; } catch { /* Held on cycle. */ } }
+    return n;
+  };
   const emit = (next: SyncStatus) => { status = next; if (!stopped) publish(next); };
   const schedule = (ms: number) => {
     if (stopped) return;
@@ -163,7 +203,8 @@ export function startProfileSync(profileId: string, ownerId: string,
     let timeout: ReturnType<typeof setTimeout> | undefined;
     try {
       const result = await Promise.race([
-        cycle(store, profileId, ownerId, () => !stopped && active() && ticket === attempt),
+        cycle(store, profileId, ownerId, () => !stopped && active() && ticket === attempt,
+          undefined, { onV1Synced: () => { if (timeout !== undefined) clearTimeout(timeout); } }),
         new Promise<never>((_, reject) => { timeout = setTimeout(() => {
           attempt++; reject(new Error("Sync timed out"));
         }, 20_000); }),
@@ -172,11 +213,17 @@ export function startProfileSync(profileId: string, ownerId: string,
       failures = 0;
       // Held legacy CZN rows stay in the outbox as recovery source, but they are never
       // going to be sent: counting them as pending would show "Changes pending" forever.
-      const held = result.heldCzn ?? 0, sendable = result.pending - held;
+      const held = result.heldCzn ?? 0, sendable = result.pending - held + (result.pendingPasses ?? 0);
       emit({ kind: sendable ? "pending" : "synced", pending: sendable,
         lastSuccessfulSyncAt: result.at, clockWarning: result.clockWarning,
-        ...(held ? { heldCzn: held, message: `${held} older CZN ${held === 1 ? "change is" : "changes are"} kept on this device, not sent: they predate the 18:00 UTC CZN daily. Export CZN recovery to keep a copy; other games sync normally.` } : {}) });
+        ...(held ? { heldCzn: held, message: `${held} older CZN ${held === 1 ? "change is" : "changes are"} kept on this device, not sent: they predate the 18:00 UTC CZN daily. Export CZN recovery to keep a copy; other games sync normally.` } : {}),
+        ...(result.heldPasses ? { heldPasses: result.heldPasses,
+          ...(!held ? { message: `Daily passes are kept on this device: ${result.heldPasses}. Other data syncs normally.` } : {}) } : {}) });
+      const passRetry = result.passHoldKind === "transient" ?
+        Math.min(60_000, 2000 * 2 ** Math.min(passFailures++, 5)) : undefined;
+      if (passRetry === undefined) passFailures = 0;
       if (sendable > 0) schedule(1500);
+      else if (passRetry !== undefined) schedule(passRetry);
     } catch (error) {
       if (stopped || !active()) return;
       const message = error instanceof Error ? error.message : String(error);
@@ -217,6 +264,12 @@ export function startProfileSync(profileId: string, ownerId: string,
   };
   const onForeground = () => { if (document.visibilityState === "visible") schedule(0); };
   const onOnline = () => schedule(0);
+  const onPassStorage = (event: StorageEvent) => {
+    if (!DAILY_PASSES_ENABLED || !event.key?.startsWith(passPrefix(profileId))) return;
+    window.dispatchEvent(new CustomEvent(REMOTE_CHANGE, { detail: profileId }));
+    schedule(700);
+  };
+  if (DAILY_PASSES_ENABLED) window.addEventListener("storage", onPassStorage);
   window.addEventListener(LOCAL_CHANGE, onLocal);
   window.addEventListener("online", onOnline);
   document.addEventListener("visibilitychange", onForeground);
@@ -240,6 +293,7 @@ export function startProfileSync(profileId: string, ownerId: string,
       attempt++;
       if (timer !== undefined) clearTimeout(timer);
       clearInterval(interval);
+      if (DAILY_PASSES_ENABLED) window.removeEventListener("storage", onPassStorage);
       window.removeEventListener(LOCAL_CHANGE, onLocal);
       window.removeEventListener("online", onOnline);
       document.removeEventListener("visibilitychange", onForeground);

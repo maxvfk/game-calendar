@@ -1,6 +1,10 @@
 # DAILY-PASSES — lean design gate and implementation roadmap
 
-**Status (2026-11-16): PASS-1A in production; rollout steps 1–3 done.** PR #171 merged
+**Status (2026-11-17): PASS-1B client candidate implemented, flag OFF; independent
+review pending.** Operator GO covered implementation only. No deployment, activation,
+SQL changes, commit or push. See implementation notes below.
+
+**Earlier status (2026-11-16): PASS-1A in production; rollout steps 1–3 done.** PR #171 merged
 as `8adad6d`; the private backup pin runs `8adad6d`; the DDL was applied on 2026-11-16 and
 the first v3 backup was validated with the operator key and passed an isolated PG17
 recovery drill. No client uses the table yet. Next: PASS-1B only after its own operator
@@ -264,7 +268,8 @@ are labelled as such.
 3. Operator window: take a v2 backup, apply the DDL, switch the private pin to
    v3, then run and verify a v3 backup. Between the DDL and the pin switch, v2
    backups fail closed by design.
-4. PASS-1B client, with the feature flag on only after step 3 is verified.
+4. PASS-1B client, with the feature flag on only after step 3 is verified and
+   PASS-2 wires D6 choices for both import and first login.
 5. Rollback: `revoke execute on daily_pass_apply` stops writes while reads,
    backups and local ops remain. Ops are data, so a reducer bug is fixed
    client-side without data migration. Dropping the additive table needs a
@@ -307,10 +312,11 @@ old importers must not interpret new paid-pass exports as ordinary v1 files
 while silently dropping the pass information. Test no data loss, no duplicate
 `+30`, crash/unknown ACK, rollback and same-file re-import.
 
-Accepted-contract additions: per-profile `…:passes` local state `{ops, pending}`
-outside `compactOutbox`, never compacted; after the v1 cycle `syncProfile`
-pushes pending ops, pulls the table and unions by `op_id` (raising on content
-mismatch); a pass failure holds passes only and v1 sync continues. Export puts
+Accepted-contract additions (round 2): per-profile append-only facts under the
+`...:passes:` prefix, outside `compactOutbox`, never compacted. After the v1 cycle,
+`syncProfile` pulls/unions before pushing pending ops and pulls/unions again before
+committing accepted ACK markers (raising on content mismatch); a pass failure holds
+passes only and v1 sync continues. Export puts
 passes at the top level of `game-calendar-policy-export` with
 `formatVersion: 2`. Same-profile import is an op union; cross-profile import
 and first login follow D6. Tests also cover a v2 export run through the
@@ -352,8 +358,10 @@ of the inclusive convention (D1).
 - No changes to C1a.1 #161, C1b, source ingestion, Timeline labels, CZN
   cutover or historic user data.
 
-**Next concrete step:** PASS-1B (offline outbox, Account Sync, export/import, first
-login, client feature flag) only after its own operator GO. Rollout steps 1–3 are done
+**Next concrete step:** independent review of the PASS-1B flag-off candidate; no
+automatic PASS-2 or flag activation. The flag may only be enabled after PASS-2
+wires D6 choices for **both import and first login**, followed by separate operator
+activation GO. Rollout steps 1–3 are done
 (2026-11-16). From now on the private pin must never return to `b5d46b5`; the write
 rollback is `revoke execute on daily_pass_apply` (rollout step 5).
 
@@ -398,3 +406,189 @@ Where the contract left a detail open, PASS-1A fixed it as follows (review these
 - **v3 backup format** is `game-calendar-personal-passes` v3 with its own encrypted
   manifest and `snapshots/v3/` retention; `production.ts` detects v1/v2/v3, and any
   daily pass table or function forces full v3 verification.
+
+### PASS-1B implementation notes (2026-11-17)
+
+This is a flag-off client candidate, awaiting independent review, not rollout GO.
+**Activation precondition:** the flag may only be enabled after PASS-2 wires D6
+choices for **both import and first login**. Currently an overlapping game without
+choices throws `PassChoicesRequired` before v1 migration writes; AuthRoot has no
+choice UI yet. Guest v1 keys and guest pass facts remain unchanged. Do not infer
+a default choice or enable the flag before both entry points are wired.
+The remaining implementation choices were fixed as follows:
+
+- **Local shape (F2):** `profileKeys(profile).passes` supplies the isolated
+  `...:passes:` prefix, not a stored snapshot. Each immutable fact has its own key:
+  `op:<opId>` stores validated canonical op JSON; `ack:<opId>` stores `accepted`;
+  `hold:<hash>` stores `{opId, remote:[collidingOp]}`; and
+  `intent:<hash>` stores `{receipt, ops, imports}`. R4 uses synchronous FNV-1a 64
+  over UTF-8, rendered as 16 hex digits; full JSON lives only in the value.
+  Writes compare the complete existing value and refuse different content at the
+  same key. Reads verify the value's hash; mismatches become verbatim recovery.
+  Concurrent intents retain separate facts, including transfers of the same source;
+  a hash collision fails closed. No old-key migration is needed (never enabled).
+  `receipt` is a D6 source
+  receipt (source profile ID + canonical complete source ops), or null for a batch
+  of local actions; `imports` carries inherited same-profile D6 receipts.
+  Reads enumerate `length`/`key` and assemble strict
+  `{version:1, profileId, ops, pending, held, imports, recovery}` for callers/export.
+  Pending means op present, ACK absent; writing one paid action takes one write.
+  Identical existing ops are no-ops; different content retains both copies and holds
+  the profile. No old single-value format or migration is retained (never enabled).
+  No compaction, volatile fallback, generic outbox change or destructive recovery.
+- **Durability/ACK (F2/F3):** multi-op queue/import/D6 writes an immutable exact
+  intent first, including generated IDs and inherited receipts, then its op keys.
+  A reader best-effort rolls forward missing ops; retries find the receipt and never re-plan
+  the half-applied transfer or create another correction. Even when corruption or
+  a hold prevents writes, valid intent ops are included in recovery exports.
+  R2 keeps all intent ops/pending IDs in the returned state even if quota prevents
+  materialization, so reads and recovery exports remain available; a later successful
+  read/write materializes them. Explicit write errors still propagate; collision
+  handling is unchanged. Pull/union **before** push detects existing server ID
+  collisions locally as `PassOpIdReused`; SQLSTATE/error text is not parsed to infer
+  collisions. Push pending, validate exactly one `accepted` per sent ID, then pull
+  and union again before recording ACK markers. Existing pending ops are never
+  ACKed by pull visibility alone. New remote ops receive an ACK marker after their
+  op key; a crash in between causes a harmless replay. Lost replies, malformed ACKs
+  and failed final pulls keep pending ops. ACK writes are independent monotonic
+  facts: a crash during marker writes may acknowledge only a subset, and the rest
+  replay safely. Cross-tab stale reads cannot erase another key; pass-prefix
+  `storage` events trigger normal sync/refresh, only while the flag is enabled.
+- **Transport limits:** at most 100 ops and 256 KiB conservative jsonb upper bound:
+  UTF-8 JSON bytes plus 32 bytes per value/container/key. This accounts for binary
+  jsonb overhead instead of assuming JSON text size equals `pg_column_size`.
+  Tests also measure actual PostgreSQL jsonb sizes of wide `basedOn` batches.
+  Pull uses 500-row keyset pages by `op_id`, ending on an empty page. An insertion
+  behind the cursor is found on the next full pull; union never removes local ops.
+  Rows pass through `passOpFromRow`, with an additional profile-ID check.
+  R1 pushes `set` first, then `undo`/`resolve`, then `extend`, stable by `opId`
+  within each group, across all batches. Under the reducer a set applies even
+  before its `basedOn` ops arrive; undo/resolve with absent targets stay pending.
+  Thus a partial transfer exposes a source/protective set before raw extends,
+  preserving the source value and conflicts when a later RPC transaction fails.
+- **Failure isolation:** `syncProfile` runs passes after the successful v1 cycle.
+  Optional `{enabled, transport}` permits flag-on tests without changing the default.
+  `heldPasses` reports failure separately; v1 pending/baseline behavior is unchanged.
+  Typed `passHoldKind` distinguishes transient failures (2–60 second backoff) from
+  persistent collisions or unreadable facts (no extra retry; normal five-minute,
+  local, online and foreground triggers remain). Sendable v1 changes always retain their 1.5 second retry.
+  A separate 10 second pass budget starts after v1 commits; the controller's existing
+  20 second v1 timeout ends at that boundary. Late pass replies cannot ACK/write.
+  Simultaneous CZN/pass holds retain the CZN message and expose pass text in
+  `heldPasses`. Auth/profile
+  activity is rechecked after awaits and before writes. A detected content collision
+  persists collision facts; subsequent pass cycles stop before network. The whole
+  affected profile's pass protocol is held, including unrelated pending pass ops;
+  they remain durable/exportable. Other profiles and v1/CZN continue normally.
+  No automatic resolution/clear API is introduced: export for investigation.
+  Malformed JSON, schema-invalid facts, bad suffixes/ACKs/intents become typed
+  `PassDataUnreadable` persistent holds; no retry timer is scheduled for them.
+  Raw entries are never removed or rewritten. Reads expose them in `recovery`.
+  Network/permission errors are transient holds and retry the original pending IDs.
+- **Action API:** `extendPass` defaults to 30; `setPass` sees every op ID in exactly
+  `(game, region)`, including undo/resolve. `undoPass` and `resolvePass` find the
+  original target in that profile and reject impossible target kinds. Each creates
+  a fresh UUID, `passDay(now, game, region)` and ISO millisecond `createdAt`.
+  `readPassViews` returns shared reducer state (including conflicts) and `passView`.
+  Over 500 seen lane ops makes a set fail visibly; IDs are never truncated. No cap
+  warning, double-tap guard or rendering is part of this milestone.
+- **Export version:** `buildProfileExport` preserves the existing CZN envelope and
+  personal payload. Nonempty pass data is at top level `passes`, with
+  `formatVersion:2`; empty pass profiles still export v1. Full pass local data,
+  including collision evidence and D6 receipts, is portable. The new
+  `passes.recovery: Array<{key:string, raw:string}>` field preserves unreadable
+  entries verbatim (full localStorage key and raw string). Corruption never blocks
+  the v1/CZN/personal part of export; valid ops from interrupted intents also remain
+  included. `recovery` defaults to [] when reading earlier v2 export envelopes.
+  CZN-only recovery exports retain their existing scope/format. The current `importCzn` implementation
+  remains unchanged and rejects the whole v2 envelope before writes.
+- **Import entry points:** `planPolicyImport` strictly validates the complete v1/v2
+  envelope and is the pure snapshot planner; `preparePolicyImport` additionally
+  pulls fresh cloud ops before a foreign account import, so a cold cache cannot be
+  mistaken for an empty cloud game. It checks profile activity after the await.
+  `applyPolicyImport` applies the resulting plan. Async `importProfileData` is
+  the browser adapter and also preserves the legacy bare-export path. Guest targets
+  and same-profile union need no extra pull. Account cross-profile import cannot
+  proceed offline without establishing D6's target state. v1/legacy
+  files have no pass meaning and never touch pass facts. Exported pending flags
+  are not authority: new same-profile IDs are queued, known IDs retain their current
+  pending status. An export containing a held collision is retained for review and
+  refused by the automatic importer, never silently repaired. Nonempty recovery
+  entries likewise refuse the **whole** automatic import before any network/write,
+  including CZN/personal data. The caller gets an explicit recovery error and keeps
+  the file for review; no automatic partial import silently discards pass data.
+- **Same profile:** exact equality of stable `profileId` strings, including guest
+  `local:…` IDs; never labels, email, game or current login. v2 requires CZN/pass
+  source profile IDs to agree. Same-profile import unions ops and receipt metadata.
+  This is portable data import, not a claim of server ownership; RLS remains the
+  authority for account reads/writes.
+- **D6 API and regions:** `planPassTransfer` is pure (no IDs, time, writes or network).
+  Its `choicesRequired` is per game if *any region* of the target game has ops.
+  `applyPassTransfer` accepts `current` / `imported` choices by game. If no target
+  game ops exist, copy source ops with original IDs **and** add one set for every
+  source `(game, region)` lane, using its reduced `lastDay`. That set sees copied
+  lane ops except extends reported as source conflicts, which remain visible.
+  Concurrent empty-target imports/first logins compete as ordinary sets:
+  latest set wins, the other source's earlier unseen extends become conflicts,
+  never a silent sum. A single transfer keeps the exact source value. The planner
+  verifies the correction wins and preserves source conflicts before any write.
+  Otherwise `current` retains all current values; `imported` creates one fresh `set` per source region with
+  that region's source inclusive `lastDay` (including null) and target seen IDs.
+  Target-only regions remain untouched, consistent with region isolation. Never
+  upload the overlapping game's source extends. Source conflicts/history remain in
+  the receipt for review. Skewed target sets that would defeat the requested value,
+  or the 500-ID bound, fail before any apply write.
+- **D6 replay/staleness:** a source receipt is scoped to the target profile and the
+  complete source op set, with timestamp instants normalized. A repeat source is a
+  no-op, even after later target edits; it does not reopen choices or mint new IDs.
+  Same-profile export/restore preserves receipts. A new source op set needs a new
+  plan/choice. Receipts are local/export metadata, not new server rows: another
+  device without the receipt must make D6 choices against its pulled cloud state.
+  A changed target op set rejects a stale plan; ACK-only pending changes do not.
+- **First login:** `planFirstLoginPasses` pulls fresh account rows and unions the
+  target before testing D6. It never uploads guest ops. `completeFirstLogin` merge
+  mode prepares/applies D6 before v1 migration and leaves account ops in the isolated
+  durable pending queue for the normal sync cycle; optional plan/choices are for
+  later UI. Changed guest/source or stale target plans are rejected. Missing choices
+  throw `PassChoicesRequired` carrying the plan before migration. `cloudOnly` never
+  transfers guest passes. With the flag on, R3 considers any guest `ops`, `held`,
+  `recovery` or `imports` nonempty, preserving the explicit setup/fail-closed path.
+  Guest storage remains unchanged on success, cancellation, failure and retry.
+- **No new UI:** export/import handlers use these adapters behind the flag. With
+  the flag on, import and first login needing D6 choices fail closed until PASS-2
+  supplies them via plan/apply; wiring both is required before activation.
+  No default choice is inferred from the settings choice. First-login
+  pass planning/storage failures stop that explicit migration, preserving the guest;
+  the already-bound account's ordinary v1 sync is isolated from pass failures.
+- **Cross-store crash:** pass import commits before the existing independent CZN
+  write. There is no new transaction spanning CZN and personal hooks; if that later
+  write fails, retry sees the same ops/receipt and cannot add another +30 or set.
+- **Feature gate:** one `DAILY_PASSES_ENABLED = false` in `passProtocol.ts` gates
+  automatic sync, pass export and v2 import. Off means no pass storage access in
+  those paths, no RPC/table calls, and the previous export bytes. Local action and
+  pure planning APIs are available for PASS-2; they do not activate network work.
+  The independent CZN flag, data, keys and protocol are unchanged.
+
+Verification (round 3, base `0cfc645`): frozen install, typecheck and build passed
+on local Bun 1.4.4. Full suite: 1837 pass / 1 skip / 19 fail / 1 error (1857 tests,
+38781 assertions). All 19 failed names are in the Windows baseline (20 failures);
+only "the six-hour floor > holds off until six hours have passed" did not fail.
+The unhandled error is ENOENT in snapshots.test.ts:359's reader after the existing
+atomic-write test fails with EPERM rename. The full suite is not green.
+Focused domain/client/RPC/round1/round2/round3/sync/login/CZN: 137 pass / 0 fail,
+14284 assertions / 9 files. Six new round-3 tests cover partial >100-op transfer
+and retry, group ordering, quota recovery/export, real AuthRoot flag-on/off paths,
+bounded keys and hash/content mismatch. Against original HEAD: 1 pass / 5 fail
+(the existing key/content rejection guarantee already passes). Tests use temporary
+JS modules and Bun 1.3-compatible APIs; Bun 1.3.14 CI remains required.
+No production access or source refresh was used.
+
+Remaining limits: no automatic collision/corruption repair or journal pruning.
+Whole-profile pass holds preserve other pending pass ops without uploading them.
+Explicit write quota failures remain visible; persisted intents stay readable
+and exportable even when their op writes fail. A device clock more than one day
+ahead can produce an `actionDay` later than server UTC date + 1: the server rejects
+the op, which remains pending and retries with transient backoff until the clock
+is corrected or the day arrives. This known limitation has no code change.
+Focused independent re-review is pending;
+PASS-2 and separate activation GO remain prerequisites.

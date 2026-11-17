@@ -7,6 +7,7 @@ const recoverySchema=z.object({daily:z.string().nullable(),outbox:z.string().nul
 const stateSchema=z.object({version:z.literal(1),profileId:z.string(),policy:CznPolicy.nullable(),
   rows:z.array(CznMutation),pending:z.array(CznMutation),recovery:z.array(recoverySchema),imports:z.array(z.string())}).strict();
 export type CznLocal=z.infer<typeof stateSchema>;
+export { stateSchema as CznLocalSchema };
 export const cznStorageKey=(profile:string)=>`${profileKeys(profile).daily}:czn-policy-v1`;
 export function readCzn(store:CznStore,profileId:string):CznLocal{
   const raw=store.getItem(cznStorageKey(profileId));

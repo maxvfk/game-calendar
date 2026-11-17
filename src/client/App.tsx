@@ -2,7 +2,9 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, typ
 import { useFeed } from "./state/useFeed.ts";
 import { Controls } from "./components/Controls.tsx";
 import { CZN_CUTOVER_ENABLED } from "../shared/cznDaily.ts";
-import { buildCznExport, importCzn, importLegacyCzn, readCzn, preserveCznLegacy } from "./account/cznProtocol.ts";
+import { importCzn, importLegacyCzn, readCzn } from "./account/cznProtocol.ts";
+import { buildProfileExport, importProfileData } from "./account/passExport.ts";
+import { DAILY_PASSES_ENABLED } from "./account/passProtocol.ts";
 import { CznDailyPanel } from "./components/CznDailyPanel.tsx";
 import { useCznDaily } from "./account/useCznDaily.ts";
 import { CZN_POLICY_ITEM_KEY, cznCompletedDays, cznPolicyDaily } from "./state/cznStrip.ts";
@@ -20,7 +22,7 @@ import { StaleFeedNotice } from "./components/StaleFeedNotice.tsx";
 import { Legend } from "./components/Legend.tsx";
 import { Toast } from "./components/Toast.tsx";
 import { UpdateNotice } from "./components/UpdateNotice.tsx";
-import type { ProfileStorageKeys } from "./state/storage.ts";
+import { PROFILE_KEYS, type ProfileStorageKeys } from "./state/storage.ts";
 import { useAppUpdate } from "./state/useAppUpdate.ts";
 import { useMarkSet } from "./state/useMarkSet.ts";
 import { useProgress } from "./state/useProgress.ts";
@@ -1011,7 +1013,7 @@ function exportProgress(
 ) {
   const data = buildExportData(progress, daily, ignored, own);
   triggerDownload(
-    cznProfileId ? buildCznExport(preserveCznLegacy(localStorage, readCzn(localStorage, cznProfileId)), data) : data,
+    cznProfileId ? buildProfileExport(localStorage, cznProfileId, data) : data,
     `event-clock-progress-${new Date().toISOString().slice(0, 10)}.json`,
   );
 }
@@ -1026,7 +1028,7 @@ function exportAll(
 ) {
   const data = buildExportData(progress, daily, ignored, own, prefs);
   triggerDownload(
-    cznProfileId ? buildCznExport(preserveCznLegacy(localStorage, readCzn(localStorage, cznProfileId)), data) : data,
+    cznProfileId ? buildProfileExport(localStorage, cznProfileId, data) : data,
     `event-clock-backup-${new Date().toISOString().slice(0, 10)}.json`,
   );
 }
@@ -1042,8 +1044,15 @@ async function importProgress(
 ) {
   try {
     const text = await file.text();
-    const raw = JSON.parse(text) as { format?: string; personal?: unknown };
-    if (cznProfileId) {
+    let raw = JSON.parse(text) as { format?: string; personal?: unknown };
+    if (cznProfileId && DAILY_PASSES_ENABLED &&
+        (raw.format === "game-calendar-policy-export" || raw.format === "gacha-tracker-export")) {
+      const personal = await importProfileData(localStorage, cznProfileId, raw, {}, true, undefined,
+        () => localStorage.getItem(PROFILE_KEYS.activeProfile) === cznProfileId);
+      window.dispatchEvent(new Event("czn-policy-import"));
+      if (personal === undefined) return;
+      raw = personal as typeof raw;
+    } else if (cznProfileId) {
       const current = readCzn(localStorage, cznProfileId);
       if (raw.format === "game-calendar-policy-export") {
         importCzn(localStorage, current, raw);

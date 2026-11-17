@@ -55,6 +55,7 @@ export function profileKeys(profileId: string) {
     customEvents: `${prefix}:customEvents`,
     syncMeta: `${prefix}:syncMeta`,
     outbox: `${prefix}:outbox`,
+    passes: `${prefix}:passes`,
   } as const;
 }
 
