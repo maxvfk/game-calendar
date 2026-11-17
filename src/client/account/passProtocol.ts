@@ -46,10 +46,19 @@ function writeFact(store: PassStore, key: string, raw: string): void {
   if (old !== null) throw new PassDataUnreadable([{ key, raw: old }]);
   store.setItem(key, raw);
 }
+/** FNV-1a 64 over UTF-8: bounded synchronous fact identity in browsers/Bun.
+ * Hashes select keys only; writeFact still compares the complete stored value. */
+function factHash(raw: string): string {
+  let hash = 0xcbf29ce484222325n;
+  for (const byte of new TextEncoder().encode(raw)) {
+    hash = ((hash ^ BigInt(byte)) * 0x100000001b3n) & 0xffffffffffffffffn;
+  }
+  return hash.toString(16).padStart(16, "0");
+}
 function holdCollision(store: PassStore, profileId: string, op: PassOp): void {
   const held = { opId: op.opId, remote: [op] };
   const raw = JSON.stringify(held);
-  writeFact(store, `${passPrefix(profileId)}hold:${encodeURIComponent(raw)}`, raw);
+  writeFact(store, `${passPrefix(profileId)}hold:${factHash(raw)}`, raw);
 }
 function writeOp(store: PassStore, profileId: string, op: PassOp): void {
   const key = `${passPrefix(profileId)}op:${op.opId}`, old = store.getItem(key);
@@ -91,14 +100,14 @@ export function readPasses(store: PassStore, profileId: string): PassLocal {
         acked.add(id);
       } else if (suffix.startsWith("intent:")) {
         const intent = intentSchema.parse(JSON.parse(raw));
-        if (suffix !== `intent:${encodeURIComponent(raw)}`) throw new Error("Receipt key mismatch");
+        if (suffix !== `intent:${factHash(raw)}`) throw new Error("Receipt key mismatch");
         unionPassOps([], intent.ops);
         intents.push(intent);
         if (intent.receipt !== null) state.imports.push(intent.receipt);
         state.imports.push(...intent.imports);
       } else if (suffix.startsWith("hold:")) {
         const held = heldSchema.parse(JSON.parse(raw));
-        if (suffix !== `hold:${encodeURIComponent(raw)}`) throw new Error("Hold key mismatch");
+        if (suffix !== `hold:${factHash(raw)}`) throw new Error("Hold key mismatch");
         state.held = { opId: state.held?.opId ?? held.opId, remote: [...(state.held?.remote ?? []), ...held.remote] };
       } else throw new Error("Unknown pass fact");
     } catch { state.recovery.push({ key, raw }); }
@@ -114,11 +123,14 @@ export function readPasses(store: PassStore, profileId: string): PassLocal {
   }
   state.ops = [...byId.values()];
   if (!state.recovery.length && !state.held) {
-    for (const intent of intents) for (const op of intent.ops) {
+    replay: for (const intent of intents) for (const op of intent.ops) {
       try { writeOp(store, profileId, op); }
       catch (error) {
-        if (!(error instanceof PassOpIdReused)) throw error;
-        return readPasses(store, profileId); // Durable collision fact, no further replay.
+        if (error instanceof PassOpIdReused) return readPasses(store, profileId); // Durable collision, no further replay.
+        if (error instanceof PassDataUnreadable) throw error; // Content failure, not a failed storage write.
+        // Best effort only: the durable intent already supplies every op above.
+        // Quota/storage failure must leave reads and recovery exports available.
+        break replay;
       }
     }
   }
@@ -131,7 +143,7 @@ export function readPasses(store: PassStore, profileId: string): PassLocal {
 export function persistPassIntent(store: PassStore, profileId: string, receipt: string | null, ops: PassOp[], imports: string[] = []): void {
   const intent = intentSchema.parse({ receipt, ops: unionPassOps([], ops), imports: [...new Set(imports)].sort() });
   const raw = JSON.stringify(intent);
-  writeFact(store, `${passPrefix(profileId)}intent:${encodeURIComponent(raw)}`, raw);
+  writeFact(store, `${passPrefix(profileId)}intent:${factHash(raw)}`, raw);
   for (const op of intent.ops) writeOp(store, profileId, op);
 }
 /** Additive helper; absence in a snapshot never deletes or acknowledges a fact. */
@@ -216,7 +228,11 @@ export function passBatchBytes(ops: readonly PassOp[]): number {
 export function passBatches(ops: readonly PassOp[]): PassOp[][] {
   const batches: PassOp[][] = [];
   let batch: PassOp[] = [];
-  for (const op of unionPassOps([], ops)) {
+  const priority = (op: PassOp) => op.kind === "set" ? 0 : op.kind === "extend" ? 2 : 1;
+  // unionPassOps sorts by ID. Stable grouping protects partial multi-RPC pushes:
+  // sets apply before basedOn arrives; undo/resolve await missing targets.
+  const ordered = unionPassOps([], ops).sort((a, b) => priority(a) - priority(b));
+  for (const op of ordered) {
     if (batch.length === 100 || passBatchBytes([...batch, op]) > 256 * 1024) {
       if (batch.length) batches.push(batch);
       batch = [];

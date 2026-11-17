@@ -420,13 +420,16 @@ The remaining implementation choices were fixed as follows:
 - **Local shape (F2):** `profileKeys(profile).passes` supplies the isolated
   `...:passes:` prefix, not a stored snapshot. Each immutable fact has its own key:
   `op:<opId>` stores validated canonical op JSON; `ack:<opId>` stores `accepted`;
-  `hold:<encoded JSON>` stores `{opId, remote:[collidingOp]}`; and
-  `intent:<encoded JSON>` stores `{receipt, ops, imports}`. Full encoded intent
-  content identifies the key so concurrent, different intents cannot overwrite each
-  other, including two transfers of the same source. `receipt` is a D6 source
+  `hold:<hash>` stores `{opId, remote:[collidingOp]}`; and
+  `intent:<hash>` stores `{receipt, ops, imports}`. R4 uses synchronous FNV-1a 64
+  over UTF-8, rendered as 16 hex digits; full JSON lives only in the value.
+  Writes compare the complete existing value and refuse different content at the
+  same key. Reads verify the value's hash; mismatches become verbatim recovery.
+  Concurrent intents retain separate facts, including transfers of the same source;
+  a hash collision fails closed. No old-key migration is needed (never enabled).
+  `receipt` is a D6 source
   receipt (source profile ID + canonical complete source ops), or null for a batch
-  of local actions; `imports` carries inherited same-profile D6 receipts. Key/value
-  redundancy is deliberate: no hash collision or async crypto dependency.
+  of local actions; `imports` carries inherited same-profile D6 receipts.
   Reads enumerate `length`/`key` and assemble strict
   `{version:1, profileId, ops, pending, held, imports, recovery}` for callers/export.
   Pending means op present, ACK absent; writing one paid action takes one write.
@@ -435,10 +438,13 @@ The remaining implementation choices were fixed as follows:
   No compaction, volatile fallback, generic outbox change or destructive recovery.
 - **Durability/ACK (F2/F3):** multi-op queue/import/D6 writes an immutable exact
   intent first, including generated IDs and inherited receipts, then its op keys.
-  A reader rolls forward missing ops; retries find the receipt and never re-plan
+  A reader best-effort rolls forward missing ops; retries find the receipt and never re-plan
   the half-applied transfer or create another correction. Even when corruption or
   a hold prevents writes, valid intent ops are included in recovery exports.
-  Quota errors propagate. Pull/union **before** push detects existing server ID
+  R2 keeps all intent ops/pending IDs in the returned state even if quota prevents
+  materialization, so reads and recovery exports remain available; a later successful
+  read/write materializes them. Explicit write errors still propagate; collision
+  handling is unchanged. Pull/union **before** push detects existing server ID
   collisions locally as `PassOpIdReused`; SQLSTATE/error text is not parsed to infer
   collisions. Push pending, validate exactly one `accepted` per sent ID, then pull
   and union again before recording ACK markers. Existing pending ops are never
@@ -455,6 +461,11 @@ The remaining implementation choices were fixed as follows:
   Pull uses 500-row keyset pages by `op_id`, ending on an empty page. An insertion
   behind the cursor is found on the next full pull; union never removes local ops.
   Rows pass through `passOpFromRow`, with an additional profile-ID check.
+  R1 pushes `set` first, then `undo`/`resolve`, then `extend`, stable by `opId`
+  within each group, across all batches. Under the reducer a set applies even
+  before its `basedOn` ops arrive; undo/resolve with absent targets stay pending.
+  Thus a partial transfer exposes a source/protective set before raw extends,
+  preserving the source value and conflicts when a later RPC transaction fails.
 - **Failure isolation:** `syncProfile` runs passes after the successful v1 cycle.
   Optional `{enabled, transport}` permits flag-on tests without changing the default.
   `heldPasses` reports failure separately; v1 pending/baseline behavior is unchanged.
@@ -540,7 +551,8 @@ The remaining implementation choices were fixed as follows:
   durable pending queue for the normal sync cycle; optional plan/choices are for
   later UI. Changed guest/source or stale target plans are rejected. Missing choices
   throw `PassChoicesRequired` carrying the plan before migration. `cloudOnly` never
-  transfers guest passes. Account setup also considers a pass-only guest nonempty.
+  transfers guest passes. With the flag on, R3 considers any guest `ops`, `held`,
+  `recovery` or `imports` nonempty, preserving the explicit setup/fail-closed path.
   Guest storage remains unchanged on success, cancellation, failure and retry.
 - **No new UI:** export/import handlers use these adapters behind the flag. With
   the flag on, import and first login needing D6 choices fail closed until PASS-2
@@ -557,22 +569,26 @@ The remaining implementation choices were fixed as follows:
   pure planning APIs are available for PASS-2; they do not activate network work.
   The independent CZN flag, data, keys and protocol are unchanged.
 
-Verification (round 2): frozen install, typecheck and build passed on local
-Bun 1.4.4. Full suite: 1830 pass / 1 skip / 20 fail / 1 error (1851 tests,
-38665 assertions). First run's 20 failed names exactly match the Windows baseline
-(1775 pass / 1 skip / 20 fail); the additional unhandled error is EPERM rename in
-snapshots.ts:179, the same writer already failing in baseline. A repeat has the
-same counts, with one flaky six-hour-floor snapshot failure moving from
-"holds off until six hours have passed" to "a failed attempt still counts as an
-attempt"; all other 19 failed names match. Neither run is represented as green.
-Focused domain/client/RPC/round1/round2/sync/login/CZN: 131 pass / 0 fail,
-14171 assertions across 8 files. Eleven round-2 tests fail against original HEAD
-(0 pass / 11 fail); two new real-RPC and two controller regressions also pass.
-New tests use temporary JS modules, not data: module URLs; Bun 1.3.14 CI remains
-required. No production access or source refresh was used.
+Verification (round 3, base `0cfc645`): frozen install, typecheck and build passed
+on local Bun 1.4.4. Full suite: 1837 pass / 1 skip / 19 fail / 1 error (1857 tests,
+38781 assertions). All 19 failed names are in the Windows baseline (20 failures);
+only "the six-hour floor > holds off until six hours have passed" did not fail.
+The unhandled error is ENOENT in snapshots.test.ts:359's reader after the existing
+atomic-write test fails with EPERM rename. The full suite is not green.
+Focused domain/client/RPC/round1/round2/round3/sync/login/CZN: 137 pass / 0 fail,
+14284 assertions / 9 files. Six new round-3 tests cover partial >100-op transfer
+and retry, group ordering, quota recovery/export, real AuthRoot flag-on/off paths,
+bounded keys and hash/content mismatch. Against original HEAD: 1 pass / 5 fail
+(the existing key/content rejection guarantee already passes). Tests use temporary
+JS modules and Bun 1.3-compatible APIs; Bun 1.3.14 CI remains required.
+No production access or source refresh was used.
 
 Remaining limits: no automatic collision/corruption repair or journal pruning.
 Whole-profile pass holds preserve other pending pass ops without uploading them.
-Full encoded intent keys use extra storage; quota failures remain visible and
-persisted intents remain recoverable. Focused independent re-review is pending;
+Explicit write quota failures remain visible; persisted intents stay readable
+and exportable even when their op writes fail. A device clock more than one day
+ahead can produce an `actionDay` later than server UTC date + 1: the server rejects
+the op, which remains pending and retries with transient backoff until the clock
+is corrected or the day arrives. This known limitation has no code change.
+Focused independent re-review is pending;
 PASS-2 and separate activation GO remain prerequisites.

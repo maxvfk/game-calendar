@@ -130,8 +130,9 @@ export async function resolveAccount(guest: Guest, canActivate: () => boolean): 
   const cloud = await pullCloud(profileId);
   if (!canActivate()) throw new Error("Account session changed during setup");
   const resumable = pendingPlan(localStorage, profileId, ownerId, guest.profileId) !== null;
+  const passes = DAILY_PASSES_ENABLED ? readPasses(localStorage, guest.profileId) : null;
   if (!resumable && !hasGuestData(local) &&
-      !(DAILY_PASSES_ENABLED && readPasses(localStorage, guest.profileId).ops.length)) {
+      !(passes && (passes.ops.length || passes.held || passes.recovery.length || passes.imports.length))) {
     await completeFirstLogin(localStorage, profileId, ownerId, guest.profileId,
       local, cloud, "cloudOnly", "cloud", canActivate);
     return { kind: "account", profileId, ownerId, email, guest };
