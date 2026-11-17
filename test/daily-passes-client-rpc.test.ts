@@ -1,7 +1,8 @@
 import { beforeAll, afterAll, expect, test } from "bun:test";
 import type { PGlite } from "@electric-sql/pglite";
 import { passesCandidateDatabase } from "../scripts/daily-passes/contract.ts";
-import { PassOp, addDays, passDay } from "../src/shared/dailyPasses.ts";
+import { PassOp, addDays, passDay, reducePass } from "../src/shared/dailyPasses.ts";
+import { applyPassTransfer, planPassTransfer } from "../src/client/account/passTransfer.ts";
 import { defaults } from "../src/client/state/usePrefs.ts";
 import { writeAccountCache } from "../src/client/account/firstLogin.ts";
 import { initializeAccountProfile, captureAccountWrite, readOutbox } from "../src/client/account/localSync.ts";
@@ -15,6 +16,8 @@ import {
 
 class Store {
   values = new Map<string, string>();
+  get length() { return this.values.size; }
+  key(n: number) { return [...this.values.keys()][n] ?? null; }
   getItem(key: string) { return this.values.get(key) ?? null; }
   setItem(key: string, value: string) { this.values.set(key, value); }
 }
@@ -154,7 +157,7 @@ test("PASS-1B real batches: >500 paged rows, >100 writes and wide basedOn fit se
   expect(readPasses(store, otherProfile).pending).toEqual([]);
   expect(ownRemote.requests.length).toBeGreaterThan(6);
   expect(ownRemote.requests.every(r => r.count <= 100 && r.bytes <= 262144)).toBe(true);
-  expect(ownRemote.pages.length).toBe(3); // 500 + 40 + terminal empty page
+  expect(ownRemote.pages.length).toBe(4); // Pre-pull empty; post-pull 500 + 40 + terminal empty
   for (const batch of [many.slice(0, 100), wide.slice(0, 2)]) {
     const size = Number((await db.query<{ n: number }>("select pg_column_size($1::jsonb) as n", [JSON.stringify(batch)])).rows[0]!.n);
     expect(passBatchBytes(batch)).toBeGreaterThanOrEqual(size);
@@ -165,3 +168,42 @@ test("PASS-1B real batches: >500 paged rows, >100 writes and wide basedOn fit se
   expect(readPasses(store, otherProfile).ops).toHaveLength(540);
   expect(remote.requests).toHaveLength(0);
 }, 20000);
+
+
+test("F1 real RPC: simultaneous imports to empty game compete as sets, never sum", async () => {
+  const a = device(), b = device(), remote = transport();
+  const sources = [30, 60].map((days, i) => ({ profileId: `local:rpc-source${i}`, ops: [PassOp.parse({
+    opId: id(8000 + i), game: "wuwa", region: "asia", kind: "extend", days,
+    actionDay: day, createdAt: new Date(now).toISOString(),
+  })] }));
+  for (const [i, store] of [a, b].entries()) {
+    applyPassTransfer(store, planPassTransfer(readPasses(store, profile), sources[i]!), {}, now + i + 1);
+    expect(reducePass(readPasses(store, profile).ops, "wuwa", "asia").lastDay).toBe(addDays(day, i ? 59 : 29));
+  }
+  for (const store of [a, b, a]) await syncPasses(store, profile, () => true, remote.api, true);
+  expect(reducePass(readPasses(a, profile).ops, "wuwa", "asia")).toMatchObject({
+    lastDay: addDays(day, 59), conflicts: [id(8000)],
+  });
+  expect(readPasses(a, profile).ops).toEqual(readPasses(b, profile).ops);
+});
+
+test("F3 real RPC 22023 collision becomes local persistent hold before any push; v1 succeeds", async () => {
+  const remote = transport(), store = device(), v1 = legacy();
+  const x = PassOp.parse({ opId: id(8100), game: "endfield", region: "asia", kind: "extend", days: 30,
+    actionDay: day, createdAt: new Date(now).toISOString() });
+  await remote.api.push(profile, [x]);
+  const local = PassOp.parse({ ...x, days: 31 });
+  await expect(remote.api.push(profile, [local])).rejects.toMatchObject({ code: "22023" });
+  remote.requests.length = 0;
+  queuePassOps(store, profile, [local, PassOp.parse({ ...x, opId: id(8101) })]);
+  captureAccountWrite(store, profile, "prefs", { ...defaults(), theme: "light" });
+  const result = await syncProfile(store, profile, owner, () => true, v1.api, { enabled: true, transport: remote.api });
+  expect(result.passHoldKind).toBe("persistent"); expect(result.pending).toBe(0);
+  expect(v1.pushes()).toBe(1); expect(remote.requests).toEqual([]);
+  expect(readPasses(store, profile).held).toEqual({ opId: x.opId, remote: [x] });
+  expect(readPasses(store, profile).pending).toEqual([id(8100), id(8101)]);
+  const pages = remote.pages.length;
+  const again = await syncProfile(store, profile, owner, () => true, v1.api, { enabled: true, transport: remote.api });
+  expect(again.passHoldKind).toBe("persistent"); expect(remote.pages).toHaveLength(pages);
+  expect(remote.requests).toEqual([]);
+});

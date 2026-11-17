@@ -8,7 +8,7 @@ import { captureAccountWrite, initializeAccountProfile, readOutbox } from "../sr
 import { syncProfile } from "../src/client/account/syncEngine.ts";
 import {
   DAILY_PASSES_ENABLED, acceptedPassIds, extendPass, mergePulledPasses, passBatchBytes, passBatches,
-  queuePassOps, readPasses, readPassViews, resolvePass, savePasses, setPass, syncPasses, undoPass,
+  queuePassOps, readPasses, readPassViews, resolvePass, setPass, syncPasses, undoPass,
   type PassTransport,
 } from "../src/client/account/passProtocol.ts";
 import { applyPassTransfer, PassChoicesRequired, planFirstLoginPasses, planPassTransfer } from "../src/client/account/passTransfer.ts";
@@ -18,6 +18,8 @@ import { buildExportData } from "../src/client/state/export.ts";
 
 class Store {
   values = new Map<string, string>();
+  get length() { return this.values.size; }
+  key(n: number) { return [...this.values.keys()][n] ?? null; }
   writes = 0;
   getItem(key: string) { return this.values.get(key) ?? null; }
   setItem(key: string, value: string) { this.writes++; this.values.set(key, value); }
@@ -51,7 +53,7 @@ function v1() {
   return { sent, transport: { authenticate: async () => owner, pull: async () => state,
     push: async (_p: string, rows: SyncMutation[]) => { sent.push(rows); for (const row of rows) state = applyMutation(state, row).state; } } };
 }
-const raw = (s: Store, p = profile) => s.getItem(profileKeys(p).passes);
+const raw = (s: Store, p = profile) => JSON.stringify([...s.values].filter(([k]) => k.startsWith(`${profileKeys(p).passes}:`)).sort());
 
 describe("PASS-1B offline journal / ACK / isolated sync", () => {
   test("two distinct offline +30 on two devices converge to +60; replay adds zero (1,2,3)", async () => {
@@ -101,11 +103,11 @@ describe("PASS-1B offline journal / ACK / isolated sync", () => {
 
   test("ACK followed by failed pull or failed local write retains pending for replay (3)", async () => {
     const store = device(), server = cloud(); queuePassOps(store, profile, [op(1)]);
-    const before = raw(store);
+    const before = raw(store); let pulls = 0;
     await expect(syncPasses(store, profile, () => true, { ...server.transport,
-      pull: async () => { throw new TypeError("network"); } }, true)).rejects.toThrow();
+      pull: async () => { if (++pulls === 1) return []; throw new TypeError("network"); } }, true)).rejects.toThrow();
     expect(raw(store)).toBe(before);
-    const failing = { getItem: (key: string) => store.getItem(key), setItem: () => { throw new Error("quota"); } };
+    const failing = { get length() { return store.length; }, key: (n: number) => store.key(n), getItem: (key: string) => store.getItem(key), setItem: () => { throw new Error("quota"); } };
     await expect(syncPasses(failing, profile, () => true, server.transport, true)).rejects.toThrow("quota");
     expect(raw(store)).toBe(before);
     await syncPasses(store, profile, () => true, server.transport, true);
@@ -119,7 +121,7 @@ describe("PASS-1B offline journal / ACK / isolated sync", () => {
       const before = raw(store), other = raw(store, otherProfile), local = raw(store, guest);
       await expect(syncPasses(store, profile, () => active, {
         push: async (p, ops) => { const reply = await server.transport.push(p, ops); if (phase === "push") active = false; return reply; },
-        pull: async p => { active = false; return server.transport.pull(p); },
+        pull: async p => { if (phase === "pull") active = false; return server.transport.pull(p); },
       }, true)).rejects.toThrow("session changed");
       expect(raw(store)).toBe(before); expect(raw(store, otherProfile)).toBe(other); expect(raw(store, guest)).toBe(local);
       await syncPasses(store, profile, () => true, server.transport, true);
@@ -177,9 +179,10 @@ describe("PASS-1B offline journal / ACK / isolated sync", () => {
 
   test("edits made during push/pull survive; pull alone never ACKs a pending op (3)", async () => {
     const store = device(), server = cloud(); queuePassOps(store, profile, [op(1)]);
+    let pulls = 0;
     await syncPasses(store, profile, () => true, { ...server.transport, push: async (p, rows) => {
       queuePassOps(store, profile, [op(2)]); return server.transport.push(p, rows);
-    }, pull: async p => { queuePassOps(store, profile, [op(3)]); return server.transport.pull(p); } }, true);
+    }, pull: async p => { if (++pulls === 2) queuePassOps(store, profile, [op(3)]); return server.transport.pull(p); } }, true);
     expect(readPasses(store, profile).pending).toEqual([id(2), id(3)]);
     mergePulledPasses(store, profile, [op(2), op(3)]);
     expect(readPasses(store, profile).pending).toEqual([id(2), id(3)]);
@@ -190,12 +193,13 @@ describe("PASS-1B offline journal / ACK / isolated sync", () => {
     queuePassOps(store, guest, [op(1)]);
     await expect(syncPasses(store, guest, () => true, server.transport, true)).rejects.toThrow("Guest");
     expect(server.sent).toHaveLength(0);
-    store.setItem(profileKeys(profile).passes, raw(store, guest)!);
-    expect(() => readPasses(store, profile)).toThrow("profile mismatch");
-    store.setItem(profileKeys(profile).passes, "{");
-    const result = await syncProfile(deviceWithCorruption(), profile, owner, () => true, v1().transport, { enabled: true, transport: server.transport });
-    expect(result.heldPasses).toBeDefined(); expect(server.sent).toHaveLength(0);
-    function deviceWithCorruption() { const d = device(); d.setItem(profileKeys(profile).passes, "{"); return d; }
+    // An op copied under another op ID is a typed data hold; raw bytes survive.
+    const badKey = `${profileKeys(profile).passes}:op:${id(9)}`;
+    store.setItem(badKey, JSON.stringify(op(1)));
+    expect(readPasses(store, profile).recovery).toEqual([{ key: badKey, raw: JSON.stringify(op(1)) }]);
+    const corrupt = device(); corrupt.setItem(badKey, "{");
+    const result = await syncProfile(corrupt, profile, owner, () => true, v1().transport, { enabled: true, transport: server.transport });
+    expect(result.passHoldKind).toBe("persistent"); expect(server.sent).toHaveLength(0);
   });
 
   test("flag off: no pass storage reads or network; all v1 bytes/behaviour retained (6,8,9)", async () => {
@@ -205,7 +209,7 @@ describe("PASS-1B offline journal / ACK / isolated sync", () => {
     let calls = 0;
     const transport: PassTransport = { push: async () => { calls++; throw new Error("unexpected"); }, pull: async () => { calls++; return []; } };
     await syncProfile(store, profile, owner, () => true, legacy.transport, { transport });
-    const inaccessible = { getItem: () => { throw new Error("pass read while disabled"); }, setItem: () => { throw new Error("write"); } };
+    const inaccessible = { get length(): number { throw new Error("pass enumeration while disabled"); }, key: (_n: number): string | null => { throw new Error("pass key while disabled"); }, getItem: () => { throw new Error("pass read while disabled"); }, setItem: () => { throw new Error("write"); } };
     await syncPasses(inaccessible, profile, () => true, transport);
     expect(await planFirstLoginPasses(inaccessible, profile, guest, () => true, transport)).toBeNull();
     expect(calls).toBe(0); expect(raw(store)).toBe(before);
@@ -269,7 +273,7 @@ describe("PASS-1B action API and D6 transfer", () => {
 
   test("quota prevents publishing an action or partial D6 intent; retry stores it once (3,D6)", () => {
     const store = new Store(); queuePassOps(store, guest, [op(1)]); queuePassOps(store, profile, [op(2)]);
-    const denied = { getItem: (key: string) => store.getItem(key), setItem: () => { throw new Error("quota"); } };
+    const denied = { get length() { return store.length; }, key: (n: number) => store.key(n), getItem: (key: string) => store.getItem(key), setItem: () => { throw new Error("quota"); } };
     const before = new Map(store.values);
     expect(() => extendPass(denied, guest, "genshin", "asia", undefined, now)).toThrow("quota");
     const plan = planPassTransfer(readPasses(store, profile), { profileId: guest, ops: readPasses(store, guest).ops });
@@ -290,7 +294,7 @@ describe("PASS-1B action API and D6 transfer", () => {
     expect(readPasses(store, profile).ops).toEqual([]);
     applyPassTransfer(store, plan!, {}, now);
     await syncPasses(store, profile, () => true, server.transport, true);
-    expect(server.ops()).toEqual([op(1)]); expect(raw(store, guest)).toBe(before);
+    expect(server.ops()).toContainEqual(op(1)); expect(server.ops().filter(o => o.kind === "set")).toHaveLength(1); expect(raw(store, guest)).toBe(before);
   });
 
   test("first login D6 both choices: fresh cloud is checked per game, never sum (D6,7)", async () => {
@@ -371,7 +375,8 @@ describe("PASS-1B versioned export / import", () => {
     await importProfileData(target, "local:other-guest", file, {}, true, {
       push: async () => { throw new Error("unexpected network"); }, pull: async () => { throw new Error("unexpected network"); },
     });
-    expect(readPasses(target, "local:other-guest").ops).toEqual([op(1)]);
+    expect(readPasses(target, "local:other-guest").ops).toContainEqual(op(1));
+    expect(readPassViews(target, "local:other-guest", now)[0]?.view).toMatchObject({ remainingDays: 30 });
   });
 
   test("v2 top-level passes is refused WHOLE by main's current importCzn (8)", () => {
@@ -450,7 +455,8 @@ describe("PASS-1B versioned export / import", () => {
       expect(store.values).toEqual(before);
     }
     const clash = buildProfileExport(store, profile, undefined, true);
-    savePasses(store, { ...readPasses(store, profile), ops: [op(1, { days: 31 })] });
+    // Seed another device with the conflicting immutable op.
+    store.values.clear(); queuePassOps(store, profile, [op(1, { days: 31 })]);
     const before = new Map(store.values);
     await expect(importProfileData(store, profile, clash, {}, true)).rejects.toThrow("reused");
     expect(store.values).toEqual(before);
@@ -461,8 +467,8 @@ describe("PASS-1B versioned export / import", () => {
     queuePassOps(source, guest, [op(1)]); queuePassOps(target, profile, [op(2, { days: 60 })]);
     const file = buildProfileExport(source, guest, undefined, true);
     const plan = planPolicyImport(target, profile, file, true);
-    const failing = { getItem: (key: string) => target.getItem(key), setItem: (key: string, value: string) => {
-      if (key !== profileKeys(profile).passes) throw new Error("CZN quota");
+    const failing = { get length() { return target.length; }, key: (n: number) => target.key(n), getItem: (key: string) => target.getItem(key), setItem: (key: string, value: string) => {
+      if (!key.startsWith(`${profileKeys(profile).passes}:`)) throw new Error("CZN quota");
       target.setItem(key, value);
     } };
     expect(() => applyPolicyImport(failing, profile, plan, { genshin: "imported" }, true, now + 1)).toThrow("CZN quota");

@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { emptySyncState } from "../src/shared/sync.ts";
+import { applyMutation, emptySyncState } from "../src/shared/sync.ts";
 import { PassOp } from "../src/shared/dailyPasses.ts";
 import { completeFirstLogin, writeAccountCache } from "../src/client/account/firstLogin.ts";
 import { initializeAccountProfile, captureAccountWrite, readOutbox } from "../src/client/account/localSync.ts";
@@ -20,6 +20,8 @@ const op = (n: number, days = 30) => PassOp.parse({ opId: `cccccccc-cccc-4ccc-8c
 const blank = () => ({ progress: {}, daily: {}, ignored: {}, customGames: {}, customEvents: {}, prefs: defaults() });
 class Store {
   values = new Map<string, string>();
+  get length() { return this.values.size; }
+  key(n: number) { return [...this.values.keys()][n] ?? null; }
   writes: string[] = [];
   getItem(key: string) { return this.values.get(key) ?? null; }
   setItem(key: string, value: string) { this.writes.push(key); this.values.set(key, value); }
@@ -151,7 +153,7 @@ test("first-login overlap without D6 choices throws before any v1 migration writ
   await expect(completeFirstLogin(store, profile, owner, guest, personal, emptySyncState(), "merge", "cloud", () => true,
     { enabled: true, transport: { pull: async () => [op(2)], push: async () => { pushes++; return []; } } }))
     .rejects.toBeInstanceOf(PassChoicesRequired);
-  expect(store.writes).toEqual([keys.passes]); // Fresh cloud cache only; no migration plan/cache/binding/activation.
+  expect(store.writes).toEqual([`${keys.passes}:op:${op(2).opId}`, `${keys.passes}:ack:${op(2).opId}`]); // Fresh cloud cache only; no migration plan/cache/binding/activation.
   expect(pushes).toBe(0);
   for (const [key, value] of before) expect(store.getItem(key)).toBe(value);
   expect(store.getItem(`${keys.syncMeta}:firstLoginPlan`)).toBeNull();
@@ -161,6 +163,7 @@ test("hung pass push/pull gets its own budget after slow successful v1; late rep
   for (const phase of ["push", "pull"] as const) await withClock(async clock => {
     const store = device(); queuePassOps(store, profile, [op(1)]);
     captureAccountWrite(store, profile, "prefs", { ...defaults(), theme: "light" });
+    let passPulls = 0;
     let remote = emptySyncState(), resolveLate!: (value: never) => void;
     const never = new Promise<never>(resolve => { resolveLate = resolve; });
     const statuses: SyncStatus[] = [];
@@ -172,7 +175,7 @@ test("hung pass push/pull gets its own budget after slow successful v1; late rep
           for (const row of rows) remote = applyMutation(remote, row).state; },
       }, { ...options, enabled: true, transport: {
         push: async () => phase === "push" ? never : [{ opId: op(1).opId, outcome: "accepted" }],
-        pull: async () => never,
+        pull: async () => ++passPulls === 1 ? [] : never,
       } }));
     try {
       await clock.advance(19_500);
@@ -183,9 +186,9 @@ test("hung pass push/pull gets its own budget after slow successful v1; late rep
       expect(statuses.at(-1)?.heldPasses).toContain("timed out");
       expect(statuses.some(s => s.kind === "network" || s.kind === "error")).toBe(false);
       expect(clock.delays()).toEqual([2000]);
-      const before = store.getItem(keys.passes);
+      const before = new Map(store.values);
       resolveLate((phase === "push" ? [{ opId: op(1).opId, outcome: "accepted" }] : [op(1)]) as never);
-      await settle(); expect(store.getItem(keys.passes)).toBe(before);
+      await settle(); expect(store.values).toEqual(before);
     } finally { controller.stop(); }
   });
 });
@@ -249,4 +252,69 @@ test("flag-on App import preserves unknown-file message and uses PROFILE_KEYS fo
       if (descriptor) Object.defineProperty(globalThis, name, descriptor); else Reflect.deleteProperty(globalThis, name);
     }
   }
+});
+
+
+test("F3 corrupt pass facts are persistent without retry timers; v1 still commits", async () => {
+  for (const raw of ["{broken", JSON.stringify({ version: 9 })]) await withClock(async clock => {
+    const store = device(); store.setItem(`${keys.passes}:op:${op(1).opId}`, raw);
+    captureAccountWrite(store, profile, "prefs", { ...defaults(), theme: "light" });
+    let passCalls = 0, remote = emptySyncState();
+    const legacy = { ...v1, pull: async () => remote, push: async (_p: string, rows: Parameters<typeof applyMutation>[1][]) => {
+      for (const row of rows) remote = applyMutation(remote, row).state;
+    } };
+    const statuses: SyncStatus[] = [];
+    const controller = startProfileSync(profile, owner, () => true, s => statuses.push(s), store,
+      (s, p, o, active, _t, options) => syncProfile(s, p, o, active, legacy, { ...options, enabled: true,
+        transport: { pull: async () => { passCalls++; return []; }, push: async () => { passCalls++; return []; } } }));
+    try {
+      await clock.advance(0);
+      expect(statuses.at(-1)).toMatchObject({ kind: "synced", pending: 0 });
+      expect(statuses.at(-1)?.heldPasses).toContain("unreadable");
+      expect(readOutbox(store, keys)).toEqual([]);
+      expect(clock.delays()).toEqual([]); expect(passCalls).toBe(0);
+      controller.retry(); await clock.advance(0);
+      expect(clock.delays()).toEqual([]); expect(passCalls).toBe(0);
+    } finally { controller.stop(); }
+  });
+});
+
+async function flagOnSyncController() {
+  const result = await Bun.build({ entrypoints: [resolve("src/client/account/syncEngine.ts")], target: "bun", plugins: [{ name: "flag-on-sync-test", setup(build) {
+    build.onLoad({ filter: /passProtocol\.ts$/ }, async ({ path }) => ({
+      contents: (await readFile(path, "utf8")).replace("DAILY_PASSES_ENABLED = false", "DAILY_PASSES_ENABLED = true"), loader: "ts",
+    }));
+  } }] });
+  expect(result.success).toBe(true);
+  const dir = await mkdtemp(join(tmpdir(), "pass-storage-event-"));
+  try {
+    const file = join(dir, "sync-flag-on.js"); await writeFile(file, await result.outputs[0]!.text());
+    return (await import(pathToFileURL(file).href)).startProfileSync as typeof startProfileSync;
+  } finally { await rm(dir, { recursive: true, force: true }); }
+}
+
+test("F2 storage events for pass prefix refresh and sync another tab; flag-off remains idle", async () => {
+  const flagOn = await flagOnSyncController();
+  for (const enabled of [false, true]) await withClock(async clock => {
+    const store = device(); let cycles = 0, refreshes = 0;
+    const refresh = () => { refreshes++; };
+    window.addEventListener("account-sync-remote-change", refresh);
+    const controller = (enabled ? flagOn : startProfileSync)(profile, owner, () => true, () => {}, store,
+      async () => { cycles++; return { pending: 0, at: new Date().toISOString(), clockWarning: false }; });
+    const changed = (key: string) => window.dispatchEvent(Object.assign(new Event("storage"), { key }));
+    try {
+      await clock.advance(0); expect(cycles).toBe(1);
+      changed(`${profileKeys(guest).passes}:op:${op(1).opId}`);
+      changed(keys.prefs); expect(clock.delays()).toEqual([]);
+      queuePassOps(store, profile, [op(1)]);
+      // Test the other tab's storage event independently of this tab's local notification.
+      await clock.advance(700); const before = cycles;
+      changed(`${keys.passes}:op:${op(1).opId}`);
+      expect(clock.delays()).toEqual(enabled ? [700] : []);
+      expect(refreshes).toBe(enabled ? 1 : 0);
+      await clock.advance(700); expect(cycles).toBe(before + (enabled ? 1 : 0));
+      controller.stop(); changed(`${keys.passes}:op:${op(2).opId}`);
+      expect(clock.delays()).toEqual([]); expect(refreshes).toBe(enabled ? 1 : 0);
+    } finally { controller.stop(); window.removeEventListener("account-sync-remote-change", refresh); }
+  });
 });

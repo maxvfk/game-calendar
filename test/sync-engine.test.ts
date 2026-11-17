@@ -13,6 +13,8 @@ import { mergeProgress } from "../src/client/state/useProgress.ts";
 
 class Store {
   values = new Map<string, string>();
+  get length() { return this.values.size; }
+  key(n: number) { return [...this.values.keys()][n] ?? null; }
   getItem(key: string) { return this.values.get(key) ?? null; }
   setItem(key: string, value: string) { this.values.set(key, value); }
 }

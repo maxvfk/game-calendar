@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { PassOp, reducePass, reducePasses, unionPassOps } from "../../shared/dailyPasses.ts";
 import {
-  DAILY_PASSES_ENABLED, createPassSet, mergePulledPasses, passRemote, readPasses, savePasses,
+  DAILY_PASSES_ENABLED, createPassSet, mergePulledPasses, passRemote, readPasses, persistPassIntent, assertPassWritable,
   type PassLocal, type PassStore, type PassTransport,
 } from "./passProtocol.ts";
 import { profileKeys } from "../state/storage.ts";
@@ -22,10 +22,12 @@ export type PassTransferPlan = {
 /** Pure planning: no writes, clock reads, IDs or network. Same-profile means exact
  * equality of the stable profile IDs, never a name, email or current Auth session. */
 export function planPassTransfer(target: PassLocal, input: PassSource): PassTransferPlan {
+  assertPassWritable(target);
   const source = sourceSchema.parse(input); profileKeys(source.profileId);
   source.ops = unionPassOps([], source.ops);
   const same = target.profileId === source.profileId;
-  const alreadyApplied = !same && target.imports.includes(receipt(source));
+  const alreadyApplied = target.imports.includes(receipt(source)) &&
+    (!same || (source.imports ?? []).every(r => target.imports.includes(r)));
   return { targetProfileId: target.profileId, targetOps: canonicalOps(target.ops), source, alreadyApplied,
     choicesRequired: same || alreadyApplied ? [] : [...new Set(source.ops.map(op => op.game))]
       .filter(game => target.ops.some(op => op.game === game)).sort() };
@@ -33,7 +35,7 @@ export function planPassTransfer(target: PassLocal, input: PassSource): PassTran
 export class PassChoicesRequired extends Error {
   constructor(readonly plan: PassTransferPlan) { super("Pass import requires a choice for each existing game"); }
 }
-/** Persist the whole D6 result and receipt in ONE write before any transport.
+/** Persist an exact D6 intent before any op keys or transport; reads roll forward.
  * A stale plan is rejected; retries of an applied source return without minting IDs.
  * Target-only regions remain intact. Source regions become explicit values, never sums. */
 export function applyPassTransfer(store: PassStore, plan: PassTransferPlan, choices: PassChoices,
@@ -55,7 +57,19 @@ export function applyPassTransfer(store: PassStore, plan: PassTransferPlan, choi
     const games = [...new Set(fresh.source.ops.map(op => op.game))].sort();
     for (const game of games) {
       const sourceOps = fresh.source.ops.filter(op => op.game === game);
-      if (!target.ops.some(op => op.game === game)) added.push(...sourceOps);
+      if (!target.ops.some(op => op.game === game)) {
+        added.push(...sourceOps);
+        for (const state of reducePasses(sourceOps).values()) {
+          const seen = sourceOps.filter(op => !state.conflicts.includes(op.opId));
+          const op = createPassSet(seen, game, state.region, state.lastDay, now);
+          const result = reducePass([...sourceOps, op], game, state.region);
+          if (result.winningSet !== op.opId || result.lastDay !== state.lastDay ||
+              result.conflicts.join() !== state.conflicts.join()) {
+            throw new Error("Pass correction cannot win at this clock; review the source ops");
+          }
+          added.push(op);
+        }
+      }
       else if (choices[game] === "imported") {
         for (const state of reducePasses(sourceOps).values()) {
           const op = createPassSet(target.ops, game, state.region, state.lastDay, now);
@@ -69,16 +83,14 @@ export function applyPassTransfer(store: PassStore, plan: PassTransferPlan, choi
       }
     }
   }
-  const ops = unionPassOps(target.ops, added);
-  const missing = ops.filter(op => !target.ops.some(old => old.opId === op.opId));
-  const next = { ...target, ops, pending: [...target.pending, ...missing.map(op => op.opId)],
-    imports: target.profileId === fresh.source.profileId ? [...new Set([...target.imports, ...(fresh.source.imports ?? [])])] :
-      !fresh.source.ops.length ? target.imports : [...target.imports, receipt(fresh.source)] };
-  if (JSON.stringify(next) !== JSON.stringify(target)) {
-    savePasses(store, next);
-    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("account-sync-local-change", { detail: target.profileId }));
+  unionPassOps(target.ops, added); // Fail before writing an intent on an ID collision.
+  const imports = target.profileId === fresh.source.profileId ? fresh.source.imports ?? [] : [];
+  if (added.length || imports.some(r => !target.imports.includes(r)) ||
+      (target.profileId !== fresh.source.profileId && fresh.source.ops.length)) {
+    persistPassIntent(store, target.profileId, receipt(fresh.source), added, imports);
   }
-  return next;
+  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("account-sync-local-change", { detail: target.profileId }));
+  return readPasses(store, target.profileId);
 }
 
 /** First login uses a fresh cloud pull before testing D6's "no ops for this game".
@@ -94,6 +106,6 @@ export async function planFirstLoginPasses(store: PassStore, profileId: string, 
   if (!active()) throw new Error("Pass account session changed");
   const target = mergePulledPasses(store, profileId, remote);
   const source = readPasses(store, guestId);
-  if (source.held) throw new Error("Guest pass profile is held");
+  assertPassWritable(source);
   return planPassTransfer(target, { profileId: guestId, ops: source.ops });
 }

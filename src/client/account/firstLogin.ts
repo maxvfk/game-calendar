@@ -5,7 +5,7 @@ import { PreferenceKey, SyncMutation, type SyncState } from "../../shared/sync.t
 import { PROFILE_KEYS, profileKeys } from "../state/storage.ts";
 import type { PersonalState } from "./remote.ts";
 import { materializeCloud, pullCloud, applyCloudMutations } from "./remote.ts";
-import { DAILY_PASSES_ENABLED, type PassTransport } from "./passProtocol.ts";
+import { DAILY_PASSES_ENABLED, type PassStore, type PassTransport } from "./passProtocol.ts";
 import { applyPassTransfer, planFirstLoginPasses, type PassChoices, type PassTransferPlan } from "./passTransfer.ts";
 
 type Store = Pick<Storage, "getItem" | "setItem">;
@@ -133,7 +133,7 @@ export function writeAccountCache(store: Store, profileId: string, ownerId: stri
   store.setItem("gacha-tracker:v2:activeProfile", profileId);
 }
 
-export async function completeFirstLogin(store: Store, profileId: string, ownerId: string,
+export async function completeFirstLogin(store: PassStore, profileId: string, ownerId: string,
   guestId: string, guest: PersonalState, cloud: SyncState,
   mode: "cloudOnly" | "merge", settings: SettingsChoice = "cloud",
   canActivate: () => boolean = () => true,

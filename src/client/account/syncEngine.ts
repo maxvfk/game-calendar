@@ -11,9 +11,9 @@ import {
 } from "./localSync.ts";
 import { applyCloudMutations, materializeCloud, pullCloud, supabase } from "./remote.ts";
 import { isRetryableTransportError } from "./transport.ts";
-import { DAILY_PASSES_ENABLED, passErrorMessage, readPasses, syncPasses, type PassTransport } from "./passProtocol.ts";
+import { DAILY_PASSES_ENABLED, PassDataUnreadable, passPrefix, type PassStore, passErrorMessage, readPasses, syncPasses, type PassTransport } from "./passProtocol.ts";
 
-type Store = Pick<Storage, "getItem" | "setItem">;
+type Store = PassStore;
 export type SyncStatus = { kind: "syncing" | "synced" | "pending" | "offline" | "network" |
   "error" | "auth" | "schema"; pending: number; lastSuccessfulSyncAt?: string;
   message?: string; clockWarning?: boolean; heldCzn?: number; heldPasses?: string };
@@ -153,7 +153,7 @@ export async function syncProfile(store: Store, profileId: string, ownerId: stri
       // v1 has already committed successfully. Rollback/permission, malformed
       // replies and collisions hold this protocol only; no pass intent is removed.
       passResult = { heldPasses: passErrorMessage(error),
-        passHoldKind: error instanceof PassOpIdReused ? "persistent" : "transient" };
+        passHoldKind: (error instanceof PassOpIdReused || error instanceof PassDataUnreadable) ? "persistent" : "transient" };
     } finally {
       passActive = false; // Late transport replies cannot acknowledge or write.
       if (passTimeout !== undefined) clearTimeout(passTimeout);
@@ -264,6 +264,12 @@ export function startProfileSync(profileId: string, ownerId: string,
   };
   const onForeground = () => { if (document.visibilityState === "visible") schedule(0); };
   const onOnline = () => schedule(0);
+  const onPassStorage = (event: StorageEvent) => {
+    if (!DAILY_PASSES_ENABLED || !event.key?.startsWith(passPrefix(profileId))) return;
+    window.dispatchEvent(new CustomEvent(REMOTE_CHANGE, { detail: profileId }));
+    schedule(700);
+  };
+  if (DAILY_PASSES_ENABLED) window.addEventListener("storage", onPassStorage);
   window.addEventListener(LOCAL_CHANGE, onLocal);
   window.addEventListener("online", onOnline);
   document.addEventListener("visibilitychange", onForeground);
@@ -287,6 +293,7 @@ export function startProfileSync(profileId: string, ownerId: string,
       attempt++;
       if (timer !== undefined) clearTimeout(timer);
       clearInterval(interval);
+      if (DAILY_PASSES_ENABLED) window.removeEventListener("storage", onPassStorage);
       window.removeEventListener(LOCAL_CHANGE, onLocal);
       window.removeEventListener("online", onOnline);
       document.removeEventListener("visibilitychange", onForeground);

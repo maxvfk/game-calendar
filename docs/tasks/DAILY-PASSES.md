@@ -312,10 +312,11 @@ old importers must not interpret new paid-pass exports as ordinary v1 files
 while silently dropping the pass information. Test no data loss, no duplicate
 `+30`, crash/unknown ACK, rollback and same-file re-import.
 
-Accepted-contract additions: per-profile `…:passes` local state `{ops, pending}`
-outside `compactOutbox`, never compacted; after the v1 cycle `syncProfile`
-pushes pending ops, pulls the table and unions by `op_id` (raising on content
-mismatch); a pass failure holds passes only and v1 sync continues. Export puts
+Accepted-contract additions (round 2): per-profile append-only facts under the
+`...:passes:` prefix, outside `compactOutbox`, never compacted. After the v1 cycle,
+`syncProfile` pulls/unions before pushing pending ops and pulls/unions again before
+committing accepted ACK markers (raising on content mismatch); a pass failure holds
+passes only and v1 sync continues. Export puts
 passes at the top level of `game-calendar-policy-export` with
 `formatVersion: 2`. Same-profile import is an op union; cross-profile import
 and first login follow D6. Tests also cover a v2 export run through the
@@ -412,26 +413,41 @@ This is a flag-off client candidate, awaiting independent review, not rollout GO
 **Activation precondition:** the flag may only be enabled after PASS-2 wires D6
 choices for **both import and first login**. Currently an overlapping game without
 choices throws `PassChoicesRequired` before v1 migration writes; AuthRoot has no
-choice UI yet. Guest v1 keys and the guest pass key remain unchanged. Do not infer
+choice UI yet. Guest v1 keys and guest pass facts remain unchanged. Do not infer
 a default choice or enable the flag before both entry points are wired.
 The remaining implementation choices were fixed as follows:
 
-- **Local shape:** `profileKeys(profile).passes` is the isolated `…:passes` key.
-  Strict `{version:1, profileId, ops, pending, held, imports}`; `pending` contains
-  distinct op IDs referencing `ops`. `held` is null or `{opId, remote}` and retains
-  the entire colliding pull alongside the unchanged local ops. `imports` contains
-  D6 source receipts (serialized profile ID + canonical source ops), also retaining
-  the source's complete reduced/unreduced history. No compaction, expiry register,
-  generic outbox changes, volatile fallback or destructive corruption recovery.
-  A corrupt store holds passes, rather than being replaced by empty data.
-- **Durability/ACK:** action + pending ID, or D6 result + receipt, use one storage
-  write. Quota errors propagate. Push pending first, then pull and union. Validate
-  every ACK as exactly one `accepted` per sent ID, in any order; missing, duplicate,
-  foreign IDs and unknown outcomes reject the batch. Commit pending removal only
-  after *all* batches and the full pull/union succeed. This deliberately retries
-  already accepted batches after any later failure; the production RPC accepts exact
-  replay. Pull visibility alone is never an ACK. Concurrent clicks in the same JS
-  context are included by rereading local state after awaits.
+- **Local shape (F2):** `profileKeys(profile).passes` supplies the isolated
+  `...:passes:` prefix, not a stored snapshot. Each immutable fact has its own key:
+  `op:<opId>` stores validated canonical op JSON; `ack:<opId>` stores `accepted`;
+  `hold:<encoded JSON>` stores `{opId, remote:[collidingOp]}`; and
+  `intent:<encoded JSON>` stores `{receipt, ops, imports}`. Full encoded intent
+  content identifies the key so concurrent, different intents cannot overwrite each
+  other, including two transfers of the same source. `receipt` is a D6 source
+  receipt (source profile ID + canonical complete source ops), or null for a batch
+  of local actions; `imports` carries inherited same-profile D6 receipts. Key/value
+  redundancy is deliberate: no hash collision or async crypto dependency.
+  Reads enumerate `length`/`key` and assemble strict
+  `{version:1, profileId, ops, pending, held, imports, recovery}` for callers/export.
+  Pending means op present, ACK absent; writing one paid action takes one write.
+  Identical existing ops are no-ops; different content retains both copies and holds
+  the profile. No old single-value format or migration is retained (never enabled).
+  No compaction, volatile fallback, generic outbox change or destructive recovery.
+- **Durability/ACK (F2/F3):** multi-op queue/import/D6 writes an immutable exact
+  intent first, including generated IDs and inherited receipts, then its op keys.
+  A reader rolls forward missing ops; retries find the receipt and never re-plan
+  the half-applied transfer or create another correction. Even when corruption or
+  a hold prevents writes, valid intent ops are included in recovery exports.
+  Quota errors propagate. Pull/union **before** push detects existing server ID
+  collisions locally as `PassOpIdReused`; SQLSTATE/error text is not parsed to infer
+  collisions. Push pending, validate exactly one `accepted` per sent ID, then pull
+  and union again before recording ACK markers. Existing pending ops are never
+  ACKed by pull visibility alone. New remote ops receive an ACK marker after their
+  op key; a crash in between causes a harmless replay. Lost replies, malformed ACKs
+  and failed final pulls keep pending ops. ACK writes are independent monotonic
+  facts: a crash during marker writes may acknowledge only a subset, and the rest
+  replay safely. Cross-tab stale reads cannot erase another key; pass-prefix
+  `storage` events trigger normal sync/refresh, only while the flag is enabled.
 - **Transport limits:** at most 100 ops and 256 KiB conservative jsonb upper bound:
   UTF-8 JSON bytes plus 32 bytes per value/container/key. This accounts for binary
   jsonb overhead instead of assuming JSON text size equals `pg_column_size`.
@@ -443,15 +459,20 @@ The remaining implementation choices were fixed as follows:
   Optional `{enabled, transport}` permits flag-on tests without changing the default.
   `heldPasses` reports failure separately; v1 pending/baseline behavior is unchanged.
   Typed `passHoldKind` distinguishes transient failures (2–60 second backoff) from
-  persistent collisions (no extra retry; normal five-minute/local/online/foreground
-  triggers remain). Sendable v1 changes always retain their 1.5 second retry.
+  persistent collisions or unreadable facts (no extra retry; normal five-minute,
+  local, online and foreground triggers remain). Sendable v1 changes always retain their 1.5 second retry.
   A separate 10 second pass budget starts after v1 commits; the controller's existing
   20 second v1 timeout ends at that boundary. Late pass replies cannot ACK/write.
   Simultaneous CZN/pass holds retain the CZN message and expose pass text in
   `heldPasses`. Auth/profile
   activity is rechecked after awaits and before writes. A detected content collision
-  persists `held`; subsequent pass cycles stop before network. No automatic collision
-  resolution/clear API is introduced: export both copies for explicit investigation.
+  persists collision facts; subsequent pass cycles stop before network. The whole
+  affected profile's pass protocol is held, including unrelated pending pass ops;
+  they remain durable/exportable. Other profiles and v1/CZN continue normally.
+  No automatic resolution/clear API is introduced: export for investigation.
+  Malformed JSON, schema-invalid facts, bad suffixes/ACKs/intents become typed
+  `PassDataUnreadable` persistent holds; no retry timer is scheduled for them.
+  Raw entries are never removed or rewritten. Reads expose them in `recovery`.
   Network/permission errors are transient holds and retry the original pending IDs.
 - **Action API:** `extendPass` defaults to 30; `setPass` sees every op ID in exactly
   `(game, region)`, including undo/resolve. `undoPass` and `resolvePass` find the
@@ -463,8 +484,12 @@ The remaining implementation choices were fixed as follows:
 - **Export version:** `buildProfileExport` preserves the existing CZN envelope and
   personal payload. Nonempty pass data is at top level `passes`, with
   `formatVersion:2`; empty pass profiles still export v1. Full pass local data,
-  including collision evidence and D6 receipts, is portable. CZN-only recovery
-  exports retain their existing scope/format. The current `importCzn` implementation
+  including collision evidence and D6 receipts, is portable. The new
+  `passes.recovery: Array<{key:string, raw:string}>` field preserves unreadable
+  entries verbatim (full localStorage key and raw string). Corruption never blocks
+  the v1/CZN/personal part of export; valid ops from interrupted intents also remain
+  included. `recovery` defaults to [] when reading earlier v2 export envelopes.
+  CZN-only recovery exports retain their existing scope/format. The current `importCzn` implementation
   remains unchanged and rejects the whole v2 envelope before writes.
 - **Import entry points:** `planPolicyImport` strictly validates the complete v1/v2
   envelope and is the pure snapshot planner; `preparePolicyImport` additionally
@@ -474,10 +499,13 @@ The remaining implementation choices were fixed as follows:
   the browser adapter and also preserves the legacy bare-export path. Guest targets
   and same-profile union need no extra pull. Account cross-profile import cannot
   proceed offline without establishing D6's target state. v1/legacy
-  files have no pass meaning and never touch the pass key. Exported pending flags
+  files have no pass meaning and never touch pass facts. Exported pending flags
   are not authority: new same-profile IDs are queued, known IDs retain their current
   pending status. An export containing a held collision is retained for review and
-  refused by the automatic importer, never silently repaired.
+  refused by the automatic importer, never silently repaired. Nonempty recovery
+  entries likewise refuse the **whole** automatic import before any network/write,
+  including CZN/personal data. The caller gets an explicit recovery error and keeps
+  the file for review; no automatic partial import silently discards pass data.
 - **Same profile:** exact equality of stable `profileId` strings, including guest
   `local:…` IDs; never labels, email, game or current login. v2 requires CZN/pass
   source profile IDs to agree. Same-profile import unions ops and receipt metadata.
@@ -486,8 +514,14 @@ The remaining implementation choices were fixed as follows:
 - **D6 API and regions:** `planPassTransfer` is pure (no IDs, time, writes or network).
   Its `choicesRequired` is per game if *any region* of the target game has ops.
   `applyPassTransfer` accepts `current` / `imported` choices by game. If no target
-  game ops exist, take source ops with original IDs. Otherwise `current` retains
-  all current values; `imported` creates one fresh `set` per source region with
+  game ops exist, copy source ops with original IDs **and** add one set for every
+  source `(game, region)` lane, using its reduced `lastDay`. That set sees copied
+  lane ops except extends reported as source conflicts, which remain visible.
+  Concurrent empty-target imports/first logins compete as ordinary sets:
+  latest set wins, the other source's earlier unseen extends become conflicts,
+  never a silent sum. A single transfer keeps the exact source value. The planner
+  verifies the correction wins and preserves source conflicts before any write.
+  Otherwise `current` retains all current values; `imported` creates one fresh `set` per source region with
   that region's source inclusive `lastDay` (including null) and target seen IDs.
   Target-only regions remain untouched, consistent with region isolation. Never
   upload the overlapping game's source extends. Source conflicts/history remain in
@@ -523,11 +557,22 @@ The remaining implementation choices were fixed as follows:
   pure planning APIs are available for PASS-2; they do not activate network work.
   The independent CZN flag, data, keys and protocol are unchanged.
 
-Verification: new client and real-RPC tests, existing reducer/first-login/CZN/sync
-regressions, then all four required commands. Windows round-1 frozen install,
-typecheck and build passed; tests were 1815 pass / 1 skip / 20 fail.
-All 20 failed tests match the baseline (1775 pass / 1 skip / 20 fail).
-The 9 round-1 tests cover held-pass retry priority, both hold messages, first-login
-D6 preflight, flag-on App imports and a hung pass transport after slow v1 success.
-Focused client/RPC/domain/sync/login tests: 103 pass / 0 fail. No production access
-was used.
+Verification (round 2): frozen install, typecheck and build passed on local
+Bun 1.4.4. Full suite: 1830 pass / 1 skip / 20 fail / 1 error (1851 tests,
+38665 assertions). First run's 20 failed names exactly match the Windows baseline
+(1775 pass / 1 skip / 20 fail); the additional unhandled error is EPERM rename in
+snapshots.ts:179, the same writer already failing in baseline. A repeat has the
+same counts, with one flaky six-hour-floor snapshot failure moving from
+"holds off until six hours have passed" to "a failed attempt still counts as an
+attempt"; all other 19 failed names match. Neither run is represented as green.
+Focused domain/client/RPC/round1/round2/sync/login/CZN: 131 pass / 0 fail,
+14171 assertions across 8 files. Eleven round-2 tests fail against original HEAD
+(0 pass / 11 fail); two new real-RPC and two controller regressions also pass.
+New tests use temporary JS modules, not data: module URLs; Bun 1.3.14 CI remains
+required. No production access or source refresh was used.
+
+Remaining limits: no automatic collision/corruption repair or journal pruning.
+Whole-profile pass holds preserve other pending pass ops without uploading them.
+Full encoded intent keys use extra storage; quota failures remain visible and
+persisted intents remain recoverable. Focused independent re-review is pending;
+PASS-2 and separate activation GO remain prerequisites.

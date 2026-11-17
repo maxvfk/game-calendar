@@ -15,7 +15,7 @@ export function addPassExport(store: PassStore, profileId: string, base: ReturnT
   if (!enabled) return base;
   if (base.state.profileId !== profileId) throw new Error("Export profile mismatch");
   const passes = readPasses(store, profileId);
-  if (!passes.ops.length && !passes.held && !passes.imports.length) return base;
+  if (!passes.ops.length && !passes.held && !passes.imports.length && !passes.recovery.length) return base;
   return { ...base, formatVersion: 2 as const, passes };
 }
 export function buildProfileExport(store: PassStore, profileId: string, personal?: unknown,
@@ -35,6 +35,7 @@ export function planPolicyImport(store: PassStore, profileId: string, input: unk
     const source = validatePassLocal(parsed.passes, parsed.passes.profileId);
     if (parsed.state.profileId !== source.profileId) throw new Error("Export profile mismatch");
     // Collision recovery is portable, but not an instruction to resolve it implicitly.
+    if (source.recovery.length) throw new Error("Pass export contains recovery entries; automatic import refused for the whole file");
     if (source.held) throw new Error("Pass export contains a collision; preserve it for review");
     return { czn: { format: parsed.format, formatVersion: 1, state: parsed.state,
       ...(parsed.personal === undefined ? {} : { personal: parsed.personal }) },
