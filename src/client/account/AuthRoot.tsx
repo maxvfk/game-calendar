@@ -16,6 +16,7 @@ import { initializeAccountProfile } from "./localSync.ts";
 import { startProfileSync, type SyncStatus } from "./syncEngine.ts";
 import { localBoundProfile, localSessionOwner, storedSessionOwner } from "./offline.ts";
 import { isRetryableTransportError } from "./transport.ts";
+import { DAILY_PASSES_ENABLED, readPasses } from "./passProtocol.ts";
 
 type Guest = ReturnType<typeof bootstrapLocalProfile>;
 type Choice = { ownerId: string; email: string; profileId: string; guest: Guest;
@@ -129,7 +130,8 @@ export async function resolveAccount(guest: Guest, canActivate: () => boolean): 
   const cloud = await pullCloud(profileId);
   if (!canActivate()) throw new Error("Account session changed during setup");
   const resumable = pendingPlan(localStorage, profileId, ownerId, guest.profileId) !== null;
-  if (!resumable && !hasGuestData(local)) {
+  if (!resumable && !hasGuestData(local) &&
+      !(DAILY_PASSES_ENABLED && readPasses(localStorage, guest.profileId).ops.length)) {
     await completeFirstLogin(localStorage, profileId, ownerId, guest.profileId,
       local, cloud, "cloudOnly", "cloud", canActivate);
     return { kind: "account", profileId, ownerId, email, guest };

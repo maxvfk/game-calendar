@@ -1,3 +1,42 @@
+## PASS-1B — candidate, flag off (2026-11-17)
+
+Operator GO covers the client implementation only. Independent Claude Code review is
+pending; nothing committed, pushed, deployed or enabled. PASS-1A's production schema
+and backup tooling are unchanged. `DAILY_PASSES_ENABLED = false` in
+`src/client/account/passProtocol.ts`; activation requires a separate operator decision.
+The flag may only be enabled after PASS-2 wires D6 choices for **both import and
+first login**. Today overlapping game ops without choices throw `PassChoicesRequired`
+before any v1 migration write, leaving guest v1/pass keys unchanged; AuthRoot has no
+D6 choice UI yet. No default choice is permitted.
+
+- Profile-local `:passes` journal (`ops`, pending IDs, collision recovery and D6
+  receipts), outside the v1 outbox. Validated action APIs and shared reducer/views.
+- Dedicated `daily_pass_apply` / `daily_pass_ops` transport, conservative jsonb-size
+  batching, keyset pagination, exact accepted ACKs, session checks and durable retry.
+  Runs after successful v1 sync; failures hold passes only. Content collisions retain
+  both copies and persistently hold that profile's passes.
+  Persistent holds schedule no extra retries; transient holds use 2–60 second
+  backoff, while pending v1 changes keep their 1.5 second retry. Pass work has its
+  own 10 second budget after the v1 commit; the existing 20 second v1 timeout stays.
+- Top-level passes in strict policy-export v2; no-pass exports stay v1. Disabled
+  exports retain the previous bytes. Same-profile union, D6 plan/apply for foreign
+  imports and guest first login; durable replay receipts. No UI or tap guard.
+- Tests: `test/daily-passes-client.test.ts`, `test/daily-passes-client-rpc.test.ts`;
+  the latter runs production RPC/RLS in `passesCandidateDatabase()` including
+  EXECUTE rollback, lost ACK, foreign access, wide batches and pagination.
+  `test/daily-passes-round1.test.ts` adds 9 regression checks for retry
+  priority, both hold messages, first login, import routing and pass timeouts.
+- Decisions, API entry points and limits: [PASS-1B notes](tasks/DAILY-PASSES.md#pass-1b-implementation-notes-2026-11-17).
+- Windows round-1 checks: frozen install, typecheck and build passed. Full tests:
+  1815 pass / 1 skip / 20 fail; baseline: 1775 pass / 1 skip /
+  20 fail. The failure sets match (age-keygen/symlink/UNC/rename permissions
+  and static-server tests; one snapshot rename test is flaky); no new failures. Focused client/RPC/domain/sync/login
+  checks: 103 pass / 0 fail. Build: 298 events / 7 games / 1 existing conflict.
+  The full suite needs a clean CI run; platform failures were not weakened.
+
+**Next:** independent review of this working tree. PASS-2, rollout and activation are
+separate milestones; do not begin automatically.
+
 ## PASS-1A — IN PRODUCTION, v3 BACKUPS ACTIVE (2026-11-16)
 
 Rollout steps 1–3 of [DAILY-PASSES.md](tasks/DAILY-PASSES.md) are done, each under its
