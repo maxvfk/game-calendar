@@ -159,6 +159,7 @@ export async function completeFirstLogin(store: PassStore, profileId: string, ow
       const choices = passes.choices ?? {};
       applyPassTransfer(store, fresh, choices, undefined, {
         rejectAlreadyApplied: passes.plan !== undefined && Object.keys(choices).length > 0,
+        revalidateGuest: true,
       });
     }
     const plan = pendingPlan(store, profileId, ownerId, guestId) ??

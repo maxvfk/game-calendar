@@ -25,7 +25,7 @@ accepted D1–D8 decisions cover the design. [PASS-0 review and amendment](https
   passed the full app smoke at 360×800 and 1440×900 with a synthetic account and
   isolated flag-on/off bundles. Frozen install, typecheck and build passed on
   Windows Bun 1.4.4. The focused client, DOM, import, offline and CZN suites
-  passed (74 tests). The full Windows suite reported 1,804 pass, 1 skip, 54 fail
+  passed (77 tests). The full Windows suite reported 1,807 pass, 1 skip, 54 fail
   and 1 error, versus 1,792 pass, 1 skip, 54 fail and 1 error on main. Failed test
   names matched. Causes include CRLF-sensitive fixture/SQL hashes, symlink/rename
   behavior and missing shell tools. Exact-head Linux CI is recorded on the draft PR.
@@ -44,8 +44,17 @@ that receipt at the apply-time read and returns the saved state before writing
 a legacy migration plan or binding the account. The regression exercises that
 interleaving and a subsequent resume with the same receipt and pass operations.
 
-**Next:** focused re-review of the competing-confirmation fix and independent
-final review on the draft PR, then
+The independent final review of `111babf` confirmed two D6 blockers.
+Foreign import now rejects a competing receipt after a dialog confirmation,
+including when the receipt arrives just before apply. The rejected attempt stops
+before CZN or personal import. A fresh import with an existing receipt remains
+idempotent. First login now re-reads the guest journal synchronously at apply.
+A guest change returns a refreshed decision before a pass intent, legacy plan,
+or account binding is written. The three targeted cases fail on the reviewed
+head and pass with the fixes.
+[Astra final review](https://github.com/maxvfk/game-calendar/pull/178#issuecomment-6980360494)
+
+**Next:** focused independent re-review of these two D6 fixes on the draft PR, then
 [Android/PC acceptance](tasks/DAILY-PASSES-SMOKE.md), including per-game inclusive
 count and actual reset observations. The Chromium smoke used synthetic data.
 Production activation requires a separate operator GO after review and manual

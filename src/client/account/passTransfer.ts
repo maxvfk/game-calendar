@@ -40,7 +40,9 @@ export class PassChoicesRequired extends Error {
   constructor(readonly plan: PassTransferPlan) { super("Pass import requires a choice for each existing game"); }
 }
 export class PassPlanChanged extends Error {
-  constructor(readonly plan: PassTransferPlan, message = "Pass import plan is stale; review the updated values") {
+  constructor(readonly plan: PassTransferPlan, message = plan.alreadyApplied
+    ? "Daily pass choices for this transfer were already saved."
+    : "Pass import plan is stale; review the updated values") {
     super(message);
   }
 }
@@ -50,18 +52,28 @@ export function samePassTransferSnapshot(a: PassTransferPlan, b: PassTransferPla
     receipt(a.source) === receipt(b.source);
 }
 
+function readGuestPassSource(store: PassStore, guestId: string): PassSource {
+  const guest = readPasses(store, guestId);
+  assertPassWritable(guest);
+  return { profileId: guestId, ops: guest.ops };
+}
+
 /** Persist an exact D6 intent before any op keys or transport; reads roll forward.
  * A stale plan is rejected; retries of an applied source return without minting IDs.
- * An explicit first-login confirmation can reject a receipt already present at apply time.
+ * Explicit confirmations can reject a competing receipt at apply time.
  * Target-only regions remain intact. Source regions become explicit values, never sums. */
 export function applyPassTransfer(store: PassStore, plan: PassTransferPlan, choices: PassChoices,
-  now = Date.now(), { rejectAlreadyApplied = false }: { rejectAlreadyApplied?: boolean } = {}): PassLocal {
+  now = Date.now(), { rejectAlreadyApplied = false, revalidateGuest = false }:
+    { rejectAlreadyApplied?: boolean; revalidateGuest?: boolean } = {}): PassLocal {
   const target = readPasses(store, plan.targetProfileId);
-  const fresh = planPassTransfer(target, plan.source);
+  // A guest edit can land while the first-login planner's result crosses await.
+  const source = revalidateGuest ? readGuestPassSource(store, plan.source.profileId) : plan.source;
+  const fresh = planPassTransfer(target, source);
+  if (revalidateGuest && receipt(fresh.source) !== receipt(plan.source)) {
+    throw new PassPlanChanged(fresh, "Daily passes changed during setup. Review the updated values.");
+  }
   if (fresh.alreadyApplied) {
-    if (rejectAlreadyApplied) {
-      throw new PassPlanChanged(fresh, "Daily pass choices for these device values were already saved.");
-    }
+    if (rejectAlreadyApplied) throw new PassPlanChanged(fresh);
     return target;
   }
   if (fresh.targetOps !== plan.targetOps) throw new PassPlanChanged(fresh);
@@ -126,7 +138,5 @@ export async function planFirstLoginPasses(store: PassStore, profileId: string, 
   const remote = unionPassOps([], await transport.pull(profileId));
   if (!active()) throw new Error("Pass account session changed");
   const target = mergePulledPasses(store, profileId, remote);
-  const source = readPasses(store, guestId);
-  assertPassWritable(source);
-  return planPassTransfer(target, { profileId: guestId, ops: source.ops });
+  return planPassTransfer(target, readGuestPassSource(store, guestId));
 }

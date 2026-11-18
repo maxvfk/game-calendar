@@ -12,9 +12,10 @@ import {
   queuePassOps, readPasses, readPassViews, resolvePass, setPass, syncPasses, undoPass,
   type PassTransport,
 } from "../src/client/account/passProtocol.ts";
-import { applyPassTransfer, PassChoicesRequired, PassPlanChanged, planFirstLoginPasses, planPassTransfer } from "../src/client/account/passTransfer.ts";
+import { applyPassTransfer, PassChoicesRequired, PassPlanChanged, planFirstLoginPasses, planPassTransfer,
+  type PassChoices } from "../src/client/account/passTransfer.ts";
 import { addPassExport, applyPolicyImport, buildProfileExport, importProfileData, importWithPassChoices, planPolicyImport, preparePolicyImport } from "../src/client/account/passExport.ts";
-import { buildCznExport, cznRemote, importCzn, readCzn, preserveCznLegacy } from "../src/client/account/cznProtocol.ts";
+import { buildCznExport, cznRemote, cznStorageKey, importCzn, readCzn, preserveCznLegacy } from "../src/client/account/cznProtocol.ts";
 import { buildExportData } from "../src/client/state/export.ts";
 
 class Store {
@@ -547,6 +548,56 @@ describe("PASS-2 D6 confirmation", () => {
     }
   });
 
+  for (const timing of ["before revalidation", "at apply"] as const) {
+    test(`foreign import rejects a competing dialog receipt seen ${timing}`, async () => {
+      const source = new Store(), target = new Store(), server = cloud();
+      const cloudOp = op(2, { days: 60 });
+      queuePassOps(source, guest, [op(1)]);
+      await server.transport.push(profile, [cloudOp]);
+      const personal = buildExportData({}, {}, {}, { games: {}, events: {} });
+      const file = buildProfileExport(source, guest, personal, true);
+      const read = spyOn(target, "getItem");
+      let pulls = 0;
+      const transport = { ...server.transport, pull: async () => { pulls++; return server.ops(); } };
+      const openDialog = () => {
+        const opened = Promise.withResolvers<void>(), choice = Promise.withResolvers<PassChoices>();
+        const result = importWithPassChoices(target, profile, file, () => true, plan => {
+          expect(plan.choicesRequired).toEqual(["genshin"]);
+          opened.resolve();
+          return choice.promise;
+        }, transport);
+        return { opened: opened.promise, choose: choice.resolve, result };
+      };
+      const winner = openDialog(), competing = openDialog();
+      const rejected = competing.result.catch((error: unknown) => error);
+      await Promise.all([winner.opened, competing.opened]);
+      winner.choose({ genshin: "current" });
+      // Resolving both in the same turn lets both planners finish before apply.
+      if (timing === "at apply") competing.choose({ genshin: "imported" });
+      expect(await winner.result).toEqual({ personal });
+      if (timing === "before revalidation") competing.choose({ genshin: "imported" });
+      const conflict = await rejected;
+      expect(conflict).toBeInstanceOf(PassPlanChanged);
+      expect(conflict).toMatchObject({
+        message: "Daily pass choices for this transfer were already saved.", plan: { alreadyApplied: true },
+      });
+      expect(pulls).toBe(timing === "at apply" ? 4 : 3);
+      expect(read.mock.calls.filter(([key]) => key === cznStorageKey(profile))).toHaveLength(1);
+      read.mockRestore();
+      const saved = readPasses(target, profile);
+      expect(saved.ops).toEqual([cloudOp]);
+      expect(saved.imports).toHaveLength(1);
+
+      const repeat = await importWithPassChoices(target, profile, file, () => true, async () => {
+        throw new Error("A replay must not open another dialog");
+      }, transport);
+      expect(repeat).toEqual({ personal });
+      expect(pulls).toBe(timing === "at apply" ? 4 : 3);
+      expect(readPasses(target, profile)).toEqual(saved);
+      expect(readCzn(target, profile).imports).toHaveLength(1);
+    });
+  }
+
   test("first login rejects stale target and guest choices before durable writes; refreshed choices apply exactly once", async () => {
     const legacy = stubFirstLoginLegacy();
     try {
@@ -617,6 +668,45 @@ describe("PASS-2 D6 confirmation", () => {
       expect(readAccountBinding(store, profile, owner)).toBe(true);
       expect(raw(store)).toBe(savedFacts);
       expect(raw(store, guest)).toBe(guestBefore);
+    } finally { legacy.restore(); }
+  });
+
+  test("first login reopens D6 when the guest adds +30 after planning but before apply", async () => {
+    const store = new Store(), server = cloud(), legacy = stubFirstLoginLegacy();
+    const cloudOp = op(2, { days: 90 }), lateGuestOp = op(3);
+    try {
+      queuePassOps(store, guest, [op(1)]);
+      await server.transport.push(profile, [cloudOp]);
+      const active = () => true;
+      const displayed = (await planFirstLoginPasses(store, profile, guest, active, server.transport, true))!;
+      const concurrentTransport: PassTransport = { ...server.transport, pull: async () => {
+        // Write the second +30 after the planner's guest read and before apply resumes.
+        queueMicrotask(() => queueMicrotask(() => { queuePassOps(store, guest, [lateGuestOp]); }));
+        return server.ops();
+      } };
+      const finish = (plan: typeof displayed, transport: PassTransport) =>
+        completeFirstLogin(store, profile, owner, guest, blank(), emptySyncState(), "merge", "cloud", active,
+          { enabled: true, transport, plan, choices: { genshin: "imported" } });
+      const conflict = await finish(displayed, concurrentTransport).catch((error: unknown) => error);
+      expect(conflict).toBeInstanceOf(PassPlanChanged);
+      const refreshed = (conflict as PassPlanChanged).plan;
+      expect(refreshed).toMatchObject({
+        alreadyApplied: false, choicesRequired: ["genshin"], source: { ops: [op(1), lateGuestOp] },
+      });
+      expect(readAccountBinding(store, profile, owner)).toBe(false);
+      expect(pendingPlan(store, profile, owner, guest)).toBeNull();
+      expect(legacy.negotiate).not.toHaveBeenCalled();
+      expect(legacy.rpc).not.toHaveBeenCalled();
+      expect(readPasses(store, profile)).toMatchObject({ ops: [cloudOp], imports: [] });
+      const guestFacts = raw(store, guest);
+
+      await finish(refreshed, server.transport);
+      const applied = readPasses(store, profile);
+      expect(readAccountBinding(store, profile, owner)).toBe(true);
+      expect(reducePass(applied.ops, "genshin", "asia").lastDay).toBe(addDays(day, 59));
+      expect(applied.imports).toHaveLength(1);
+      expect(JSON.parse(applied.imports[0]!).ops).toEqual([op(1), lateGuestOp]);
+      expect(raw(store, guest)).toBe(guestFacts);
     } finally { legacy.restore(); }
   });
 });
