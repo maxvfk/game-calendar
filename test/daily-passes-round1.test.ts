@@ -4,10 +4,11 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { applyMutation, emptySyncState } from "../src/shared/sync.ts";
-import { PassOp } from "../src/shared/dailyPasses.ts";
+import { PassOp, reducePass } from "../src/shared/dailyPasses.ts";
 import { completeFirstLogin, writeAccountCache } from "../src/client/account/firstLogin.ts";
 import { initializeAccountProfile, captureAccountWrite, readOutbox } from "../src/client/account/localSync.ts";
-import { PassChoicesRequired } from "../src/client/account/passTransfer.ts";
+import { PassChoicesRequired, type PassTransferPlan } from "../src/client/account/passTransfer.ts";
+import { buildProfileExport } from "../src/client/account/passExport.ts";
 import { queuePassOps, readPasses, savePasses } from "../src/client/account/passProtocol.ts";
 import { startProfileSync, syncProfile, type SyncStatus } from "../src/client/account/syncEngine.ts";
 import { KEYS, PROFILE_KEYS, profileKeys } from "../src/client/state/storage.ts";
@@ -254,6 +255,45 @@ test("flag-on App import preserves unknown-file message and uses PROFILE_KEYS fo
   }
 });
 
+test("flag-on App import routes v2 through D6 before importing personal progress", async () => {
+  const handler = await flagOnImport();
+  const store = new Store(), source = new Store();
+  store.setItem("test:active-profile", guest);
+  queuePassOps(store, guest, [op(1, 60)]);
+  queuePassOps(source, "local:other", [op(2)]);
+  const progress = { milestone: { status: "done", at: "2026-11-17T12:00:00.000Z" } };
+  const file = buildProfileExport(source, "local:other", { format: "gacha-tracker-export", version: 1, progress }, true);
+  const alerts: string[] = [], merged: unknown[] = [];
+  const globals = { localStorage: store, window: new EventTarget(), alert: (message: string) => alerts.push(message) };
+  const prior = Object.keys(globals).map(name => [name, Object.getOwnPropertyDescriptor(globalThis, name)] as const);
+  for (const [name, value] of Object.entries(globals)) Object.defineProperty(globalThis, name, { configurable: true, value });
+  const run = (cancel: boolean) => handler({ text: async () => JSON.stringify(file) },
+    (value: unknown) => merged.push(value), () => {}, () => {}, () => {}, undefined, guest, {
+      active: () => store.getItem("test:active-profile") === guest,
+      choose: async (plan: PassTransferPlan) => {
+        expect(plan.choicesRequired).toEqual(["genshin"]);
+        return cancel ? null : { genshin: "imported" };
+      },
+      finish: () => {},
+    });
+  try {
+    await run(true);
+    expect(readPasses(store, guest).ops).toEqual([op(1, 60)]);
+    expect(merged).toEqual([]);
+    await run(false);
+    expect(merged).toEqual([progress]);
+    const after = readPasses(store, guest);
+    expect(after.ops).toHaveLength(2);
+    expect(reducePass(after.ops, "genshin", "asia").lastDay).toBe("2026-12-16");
+    await run(false);
+    expect(readPasses(store, guest)).toEqual(after);
+    expect(alerts).toEqual([]);
+  } finally {
+    for (const [name, descriptor] of prior) {
+      if (descriptor) Object.defineProperty(globalThis, name, descriptor); else Reflect.deleteProperty(globalThis, name);
+    }
+  }
+});
 
 test("F3 corrupt pass facts are persistent without retry timers; v1 still commits", async () => {
   for (const raw of ["{broken", JSON.stringify({ version: 9 })]) await withClock(async clock => {

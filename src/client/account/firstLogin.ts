@@ -6,7 +6,10 @@ import { PROFILE_KEYS, profileKeys } from "../state/storage.ts";
 import type { PersonalState } from "./remote.ts";
 import { materializeCloud, pullCloud, applyCloudMutations } from "./remote.ts";
 import { DAILY_PASSES_ENABLED, type PassStore, type PassTransport } from "./passProtocol.ts";
-import { applyPassTransfer, planFirstLoginPasses, type PassChoices, type PassTransferPlan } from "./passTransfer.ts";
+import {
+  applyPassTransfer, PassPlanChanged, planFirstLoginPasses, samePassTransferSnapshot,
+  type PassChoices, type PassTransferPlan,
+} from "./passTransfer.ts";
 
 type Store = Pick<Storage, "getItem" | "setItem">;
 export type SettingsChoice = "cloud" | "local";
@@ -142,12 +145,22 @@ export async function completeFirstLogin(store: PassStore, profileId: string, ow
   if (mode === "merge") {
     if (passes.enabled ?? DAILY_PASSES_ENABLED) {
       const fresh = await planFirstLoginPasses(store, profileId, guestId, canActivate, passes.transport, true);
+      if (!canActivate()) throw new Error("Account session changed during setup");
       if (!fresh) throw new Error("Pass first-login plan unavailable");
-      if (passes.plan && (passes.plan.targetProfileId !== profileId || passes.plan.source.profileId !== guestId ||
-          JSON.stringify(passes.plan.source) !== JSON.stringify(fresh.source))) {
-        throw new Error("Pass first-login source changed; plan again");
+      if (passes.plan) {
+        if (passes.plan.targetProfileId !== profileId || passes.plan.source.profileId !== guestId) {
+          throw new Error("Pass first-login profile changed");
+        }
+        if (!samePassTransferSnapshot(passes.plan, fresh) &&
+            (!fresh.alreadyApplied || JSON.stringify(passes.plan.source) !== JSON.stringify(fresh.source))) {
+          throw new PassPlanChanged(fresh, "Daily passes changed during setup. Review the updated values.");
+        }
       }
-      applyPassTransfer(store, passes.plan ?? fresh, passes.choices ?? {});
+      const choices = passes.choices ?? {};
+      applyPassTransfer(store, fresh, choices, undefined, {
+        rejectAlreadyApplied: passes.plan !== undefined && Object.keys(choices).length > 0,
+        revalidateGuest: true,
+      });
     }
     const plan = pendingPlan(store, profileId, ownerId, guestId) ??
       guestMutations(guest, settings, cloud, new Date().toISOString());

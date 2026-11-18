@@ -16,7 +16,8 @@ import { DAILY_PASSES_ENABLED, PassDataUnreadable, passPrefix, type PassStore, p
 type Store = PassStore;
 export type SyncStatus = { kind: "syncing" | "synced" | "pending" | "offline" | "network" |
   "error" | "auth" | "schema"; pending: number; lastSuccessfulSyncAt?: string;
-  message?: string; clockWarning?: boolean; heldCzn?: number; heldPasses?: string };
+  message?: string; clockWarning?: boolean; heldCzn?: number; heldPasses?: string;
+  passHoldKind?: "persistent" | "transient" };
 
 function confirmed(remote: SyncState, row: SyncMutation): boolean {
   const winner = remote[row.kind][logicalKey(row)];
@@ -218,6 +219,7 @@ export function startProfileSync(profileId: string, ownerId: string,
         lastSuccessfulSyncAt: result.at, clockWarning: result.clockWarning,
         ...(held ? { heldCzn: held, message: `${held} older CZN ${held === 1 ? "change is" : "changes are"} kept on this device, not sent: they predate the 18:00 UTC CZN daily. Export CZN recovery to keep a copy; other games sync normally.` } : {}),
         ...(result.heldPasses ? { heldPasses: result.heldPasses,
+          ...(result.passHoldKind ? { passHoldKind: result.passHoldKind } : {}),
           ...(!held ? { message: `Daily passes are kept on this device: ${result.heldPasses}. Other data syncs normally.` } : {}) } : {}) });
       const passRetry = result.passHoldKind === "transient" ?
         Math.min(60_000, 2000 * 2 ** Math.min(passFailures++, 5)) : undefined;

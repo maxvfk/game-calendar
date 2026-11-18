@@ -2,7 +2,8 @@ import { z } from "zod";
 import { CznLocalSchema, buildCznExport, importCzn, importLegacyCzn, preserveCznLegacy, readCzn } from "./cznProtocol.ts";
 import { DAILY_PASSES_ENABLED, PassLocalSchema, mergePulledPasses, passRemote, readPasses, validatePassLocal,
   type PassStore, type PassTransport } from "./passProtocol.ts";
-import { applyPassTransfer, planPassTransfer, type PassChoices, type PassTransferPlan } from "./passTransfer.ts";
+import { applyPassTransfer, PassPlanChanged, planPassTransfer, samePassTransferSnapshot,
+  type PassChoices, type PassTransferPlan } from "./passTransfer.ts";
 
 const envelope = z.object({ format: z.literal("game-calendar-policy-export"),
   formatVersion: z.literal(1), state: CznLocalSchema, personal: z.unknown().optional() }).strict();
@@ -63,11 +64,12 @@ export async function preparePolicyImport(store: PassStore, profileId: string, i
 /** The pass result is durable before the independent CZN write. On quota/crash a
  * retry unions the same ops or finds its D6 receipt; it cannot double-extend. */
 export function applyPolicyImport(store: PassStore, profileId: string, plan: PassImportPlan,
-  choices: PassChoices = {}, enabled = DAILY_PASSES_ENABLED, now = Date.now()): unknown {
+  choices: PassChoices = {}, enabled = DAILY_PASSES_ENABLED, now = Date.now(),
+  { rejectAlreadyApplied = false }: { rejectAlreadyApplied?: boolean } = {}): unknown {
   if (plan.passes) {
     if (!enabled) throw new Error("Pass imports are disabled");
     if (plan.passes.targetProfileId !== profileId) throw new Error("Pass import profile changed");
-    applyPassTransfer(store, plan.passes, choices, now);
+    applyPassTransfer(store, plan.passes, choices, now, { rejectAlreadyApplied });
   }
   importCzn(store, readCzn(store, profileId), plan.czn);
   return plan.czn.personal;
@@ -85,4 +87,41 @@ export async function importProfileData(store: PassStore, profileId: string, inp
   }
   importLegacyCzn(store, readCzn(store, profileId), input);
   return input;
+}
+
+/** Re-pull after confirmation, and ask again if any operation changed. A receipt
+ * that wins during confirmation rejects that attempt before importing other data. */
+export async function importWithPassChoices(store: PassStore, profileId: string, input: unknown,
+  active: () => boolean,
+  choose: (transfer: PassTransferPlan, updated: boolean) => Promise<PassChoices | null>,
+  transport: PassTransport = passRemote,
+): Promise<{ personal: unknown } | null> {
+  let plan = await preparePolicyImport(store, profileId, input, active, transport, true);
+  let updated = false;
+  while (active()) {
+    let choices: PassChoices = {};
+    let confirmed = false;
+    if (plan.passes && !plan.passes.alreadyApplied && (updated || plan.passes.choicesRequired.length)) {
+      const selected = await choose(plan.passes, updated);
+      if (!selected || !active()) return null;
+      const fresh = await preparePolicyImport(store, profileId, input, active, transport, true);
+      if (!fresh.passes) throw new Error("Pass import plan unavailable");
+      if (fresh.passes.alreadyApplied) throw new PassPlanChanged(fresh.passes);
+      const changed = !samePassTransferSnapshot(plan.passes, fresh.passes);
+      plan = fresh;
+      if (changed) { updated = true; continue; }
+      choices = selected;
+      confirmed = true;
+    }
+    if (!active()) return null;
+    try {
+      return { personal: applyPolicyImport(store, profileId, plan, choices, true, undefined,
+        { rejectAlreadyApplied: confirmed }) };
+    } catch (error) {
+      if (!(error instanceof PassPlanChanged) || error.plan.alreadyApplied) throw error;
+      plan = { ...plan, passes: error.plan };
+      updated = true;
+    }
+  }
+  return null;
 }

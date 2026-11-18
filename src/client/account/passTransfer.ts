@@ -14,6 +14,11 @@ const canonicalOps = (ops: readonly PassOp[]) => JSON.stringify(unionPassOps([],
   .map(op => ({ ...op, createdAt: new Date(op.createdAt).toISOString() })));
 const receipt = (source: PassSource) => JSON.stringify({ profileId: source.profileId, ops: JSON.parse(canonicalOps(source.ops)) });
 
+export function hasPassTransferReceipt(target: Pick<PassLocal, "profileId" | "imports">, source: PassSource): boolean {
+  return target.imports.includes(receipt(source)) &&
+    (target.profileId !== source.profileId || (source.imports ?? []).every(r => target.imports.includes(r)));
+}
+
 export type PassTransferPlan = {
   targetProfileId: string; targetOps: string; source: PassSource;
   /** D6 decides per GAME, even if the existing ops belong to another region. */
@@ -26,8 +31,7 @@ export function planPassTransfer(target: PassLocal, input: PassSource): PassTran
   const source = sourceSchema.parse(input); profileKeys(source.profileId);
   source.ops = unionPassOps([], source.ops);
   const same = target.profileId === source.profileId;
-  const alreadyApplied = target.imports.includes(receipt(source)) &&
-    (!same || (source.imports ?? []).every(r => target.imports.includes(r)));
+  const alreadyApplied = hasPassTransferReceipt(target, source);
   return { targetProfileId: target.profileId, targetOps: canonicalOps(target.ops), source, alreadyApplied,
     choicesRequired: same || alreadyApplied ? [] : [...new Set(source.ops.map(op => op.game))]
       .filter(game => target.ops.some(op => op.game === game)).sort() };
@@ -35,15 +39,44 @@ export function planPassTransfer(target: PassLocal, input: PassSource): PassTran
 export class PassChoicesRequired extends Error {
   constructor(readonly plan: PassTransferPlan) { super("Pass import requires a choice for each existing game"); }
 }
+export class PassPlanChanged extends Error {
+  constructor(readonly plan: PassTransferPlan, message = plan.alreadyApplied
+    ? "Daily pass choices for this transfer were already saved."
+    : "Pass import plan is stale; review the updated values") {
+    super(message);
+  }
+}
+
+export function samePassTransferSnapshot(a: PassTransferPlan, b: PassTransferPlan): boolean {
+  return a.targetProfileId === b.targetProfileId && a.targetOps === b.targetOps &&
+    receipt(a.source) === receipt(b.source);
+}
+
+function readGuestPassSource(store: PassStore, guestId: string): PassSource {
+  const guest = readPasses(store, guestId);
+  assertPassWritable(guest);
+  return { profileId: guestId, ops: guest.ops };
+}
+
 /** Persist an exact D6 intent before any op keys or transport; reads roll forward.
  * A stale plan is rejected; retries of an applied source return without minting IDs.
+ * Explicit confirmations can reject a competing receipt at apply time.
  * Target-only regions remain intact. Source regions become explicit values, never sums. */
 export function applyPassTransfer(store: PassStore, plan: PassTransferPlan, choices: PassChoices,
-  now = Date.now()): PassLocal {
+  now = Date.now(), { rejectAlreadyApplied = false, revalidateGuest = false }:
+    { rejectAlreadyApplied?: boolean; revalidateGuest?: boolean } = {}): PassLocal {
   const target = readPasses(store, plan.targetProfileId);
-  const fresh = planPassTransfer(target, plan.source);
-  if (fresh.alreadyApplied) return target;
-  if (canonicalOps(target.ops) !== plan.targetOps) throw new Error("Pass import plan is stale; plan again");
+  // A guest edit can land while the first-login planner's result crosses await.
+  const source = revalidateGuest ? readGuestPassSource(store, plan.source.profileId) : plan.source;
+  const fresh = planPassTransfer(target, source);
+  if (revalidateGuest && receipt(fresh.source) !== receipt(plan.source)) {
+    throw new PassPlanChanged(fresh, "Daily passes changed during setup. Review the updated values.");
+  }
+  if (fresh.alreadyApplied) {
+    if (rejectAlreadyApplied) throw new PassPlanChanged(fresh);
+    return target;
+  }
+  if (fresh.targetOps !== plan.targetOps) throw new PassPlanChanged(fresh);
   if (target.held) throw new Error("Pass profile is held; export recovery before importing");
   if (fresh.choicesRequired.some(game => choices[game] !== "current" && choices[game] !== "imported")) {
     throw new PassChoicesRequired(fresh);
@@ -105,7 +138,5 @@ export async function planFirstLoginPasses(store: PassStore, profileId: string, 
   const remote = unionPassOps([], await transport.pull(profileId));
   if (!active()) throw new Error("Pass account session changed");
   const target = mergePulledPasses(store, profileId, remote);
-  const source = readPasses(store, guestId);
-  assertPassWritable(source);
-  return planPassTransfer(target, { profileId: guestId, ops: source.ops });
+  return planPassTransfer(target, readGuestPassSource(store, guestId));
 }

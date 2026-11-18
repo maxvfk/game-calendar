@@ -1,4 +1,66 @@
-## PASS-1B — candidate, flag off (2026-11-17)
+## PASS-2 — flag-off implementation candidate (2026-11-18)
+
+Started from current main `c6f05873364ed77275abac5e5939bb81a649cae5`, with
+PASS-1B merged in [PR #177](https://github.com/maxvfk/game-calendar/pull/177).
+`DAILY_PASSES_ENABLED = false`. The existing independent PASS-0 review and
+accepted D1–D8 decisions cover the design. [PASS-0 review and amendment](https://github.com/maxvfk/game-calendar/pull/167#issuecomment-6657157606)
+
+- Checklist now shows regional pass status, inclusive game-days and reset-based
+  expiry beside Today's dailies. Management covers enabled built-in games and
+  all three regions. It offers +30 with a one-second same-lane tap guard,
+  cancellation of individual actions with a remaining effect, corrections by last
+  active day or duration, conflict inclusion and dismissal, and a non-blocking
+  180-day Welkin warning. Undo is offered for actions in the current Checklist
+  session, including after server acknowledgement.
+- Both first login and foreign v2 import require an explicit value per overlapping
+  game. The decision displays regional values and a stable game ID for any
+  unlisted game involved in the transfer. The profile and journal are rechecked
+  before apply. Changed operations reset the choices, and PASS-1B receipts make
+  exact repeats idempotent. Custom passes remain outside everyday management.
+- The panel reports local pending operations, acknowledged operations, offline
+  and retryable errors, persistent recovery holds, and pass conflicts.
+- Regressions cover the display boundary for all 21 shipped game/region pairs,
+  action/ACK and recovery states, D6 choice/cancellation/staleness/replay, the real
+  flag-on App import route, and existing flag-off and legacy paths. Local Chromium
+  passed the full app smoke at 360×800 and 1440×900 with a synthetic account and
+  isolated flag-on/off bundles. Frozen install, typecheck and build passed on
+  Windows Bun 1.4.4. The focused client, DOM, import, offline and CZN suites
+  passed (77 tests). The full Windows suite reported 1,807 pass, 1 skip, 54 fail
+  and 1 error, versus 1,792 pass, 1 skip, 54 fail and 1 error on main. Failed test
+  names matched. Causes include CRLF-sensitive fixture/SQL hashes, symlink/rename
+  behavior and missing shell tools. Exact-head Linux CI is recorded on the draft PR.
+
+The focused preliminary review confirmed a P2 in first-login retry. The wizard
+now recognizes the exact durable pass receipt after a later setup failure and
+offers to continue setup with the saved choices. A repeat submission of an
+editable choice for that receipt is rejected. The regression covers a failure
+before the receipt, failure while saving the legacy migration plan, and failure
+at CZN negotiation. A resumed setup retains the original pass mutation intent.
+Chromium also exercised the saved-choice retry after a simulated CZN failure.
+
+Focused re-review confirmed that a competing confirmation could write the exact
+receipt between planning and apply. The first-login confirmation now rejects
+that receipt at the apply-time read and returns the saved state before writing
+a legacy migration plan or binding the account. The regression exercises that
+interleaving and a subsequent resume with the same receipt and pass operations.
+
+The independent final review of `111babf` confirmed two D6 blockers.
+Foreign import now rejects a competing receipt after a dialog confirmation,
+including when the receipt arrives just before apply. The rejected attempt stops
+before CZN or personal import. A fresh import with an existing receipt remains
+idempotent. First login now re-reads the guest journal synchronously at apply.
+A guest change returns a refreshed decision before a pass intent, legacy plan,
+or account binding is written. The three targeted cases fail on the reviewed
+head and pass with the fixes.
+[Astra final review](https://github.com/maxvfk/game-calendar/pull/178#issuecomment-6980360494)
+
+**Next:** focused independent re-review of these two D6 fixes on the draft PR, then
+[Android/PC acceptance](tasks/DAILY-PASSES-SMOKE.md), including per-game inclusive
+count and actual reset observations. The Chromium smoke used synthetic data.
+Production activation requires a separate operator GO after review and manual
+acceptance.
+
+## PASS-1B — pre-merge verification record (2026-11-17)
 
 Operator GO covers the client implementation only. Draft PR #177 starts this round
 at `0cfc645` on `passes/pass-1b`. Round-3 R1-R4 findings are fixed in the
