@@ -120,7 +120,7 @@ test('real legacy sync engine holds CZN false despite newer cloud same-label tru
   store.setItem(keys.outbox,JSON.stringify([held,other]));
   let cloud=applyMutation(emptySyncState(),{...held,completed:true,changedAt:'2026-10-23T12:00:00Z',mutationId:'33333333-3333-4333-8333-333333333333'}).state;
   const result=await syncProfile(store,profile,owner,()=>true,{authenticate:async()=>owner,negotiateCzn:async()=>true,pull:async()=>cloud,
-    push:async(_p,rows)=>{expect(rows).toEqual([other]);cloud=applyMutation(cloud,other).state;}});
+    push:async(_p,rows)=>{expect(rows).toEqual([other]);cloud=applyMutation(cloud,other).state;}},{enabled:false});
   expect(JSON.parse(store.getItem(keys.outbox)!)).toEqual([held]);expect(result.heldCzn).toBe(1);expect(result.pending).toBe(1);
   expect(readCzn(store,profile).recovery[0]!.outbox).toBe(JSON.stringify([held,other]));
 });
@@ -155,7 +155,7 @@ test('failed capability negotiation holds only CZN while real legacy engine sync
   store.setItem(keys.outbox,JSON.stringify([held,other]));let cloud=emptySyncState();
   const result=await syncProfile(store,profile,owner,()=>true,{authenticate:async()=>owner,
     negotiateCzn:async()=>{throw new Error('capability offline');},pull:async()=>cloud,
-    push:async(_p,rows)=>{expect(rows).toEqual([other]);cloud=applyMutation(cloud,other).state;}});
+    push:async(_p,rows)=>{expect(rows).toEqual([other]);cloud=applyMutation(cloud,other).state;}},{enabled:false});
   expect(result.heldCzn).toBe(1);expect(JSON.parse(store.getItem(keys.outbox)!)).toEqual([held]);
 });
 

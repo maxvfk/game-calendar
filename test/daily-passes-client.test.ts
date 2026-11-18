@@ -8,7 +8,7 @@ import { supabase } from "../src/client/account/remote.ts";
 import { captureAccountWrite, initializeAccountProfile, readOutbox } from "../src/client/account/localSync.ts";
 import { syncProfile } from "../src/client/account/syncEngine.ts";
 import {
-  DAILY_PASSES_ENABLED, acceptedPassIds, extendPass, mergePulledPasses, passBatchBytes, passBatches,
+  acceptedPassIds, extendPass, mergePulledPasses, passBatchBytes, passBatches,
   queuePassOps, readPasses, readPassViews, resolvePass, setPass, syncPasses, undoPass,
   type PassTransport,
 } from "../src/client/account/passProtocol.ts";
@@ -213,23 +213,22 @@ describe("PASS-1B offline journal / ACK / isolated sync", () => {
   });
 
   test("flag off: no pass storage reads or network; all v1 bytes/behaviour retained (6,8,9)", async () => {
-    expect(DAILY_PASSES_ENABLED).toBe(false);
     const store = device(), legacy = v1(); queuePassOps(store, profile, [op(1)]);
     const before = raw(store);
     let calls = 0;
     const transport: PassTransport = { push: async () => { calls++; throw new Error("unexpected"); }, pull: async () => { calls++; return []; } };
-    await syncProfile(store, profile, owner, () => true, legacy.transport, { transport });
+    await syncProfile(store, profile, owner, () => true, legacy.transport, { enabled: false, transport });
     const inaccessible = { get length(): number { throw new Error("pass enumeration while disabled"); }, key: (_n: number): string | null => { throw new Error("pass key while disabled"); }, getItem: () => { throw new Error("pass read while disabled"); }, setItem: () => { throw new Error("write"); } };
-    await syncPasses(inaccessible, profile, () => true, transport);
-    expect(await planFirstLoginPasses(inaccessible, profile, guest, () => true, transport)).toBeNull();
+    await syncPasses(inaccessible, profile, () => true, transport, false);
+    expect(await planFirstLoginPasses(inaccessible, profile, guest, () => true, transport, false)).toBeNull();
     expect(calls).toBe(0); expect(raw(store)).toBe(before);
     const personal = buildExportData({}, {}, {}, { games: {}, events: {} });
     const old = buildCznExport(preserveCznLegacy(store, readCzn(store, profile)), personal);
-    expect(JSON.stringify(buildProfileExport(store, profile, personal))).toBe(JSON.stringify(old));
-    expect(addPassExport(inaccessible, profile, old)).toBe(old);
+    expect(JSON.stringify(buildProfileExport(store, profile, personal, false))).toBe(JSON.stringify(old));
+    expect(addPassExport(inaccessible, profile, old, false)).toBe(old);
     const v2 = addPassExport(store, profile, old, true);
     const snapshot = new Map(store.values);
-    await expect(importProfileData(store, profile, v2)).rejects.toThrow();
+    await expect(importProfileData(store, profile, v2, {}, false, transport)).rejects.toThrow();
     expect(store.values).toEqual(snapshot);
   });
 

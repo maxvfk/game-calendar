@@ -109,10 +109,10 @@ describe("S5 durable local-first sync", () => {
     const imported = { ...defaults(), region: "asia" as const };
     captureAccountWrite(b, profile, "prefs", imported);
     captureAccountWrite(b, profile, "progress", { "opaque:event": { status: "doing", at } });
-    await syncProfile(a, profile, owner, () => true, cloud.transport);
-    await syncProfile(b, profile, owner, () => true, cloud.transport);
-    await syncProfile(a, profile, owner, () => true, cloud.transport);
-    await syncProfile(b, profile, owner, () => true, cloud.transport);
+    await syncProfile(a, profile, owner, () => true, cloud.transport, { enabled: false });
+    await syncProfile(b, profile, owner, () => true, cloud.transport, { enabled: false });
+    await syncProfile(a, profile, owner, () => true, cloud.transport, { enabled: false });
+    await syncProfile(b, profile, owner, () => true, cloud.transport, { enabled: false });
     expect(readOutbox(a, keys)).toEqual([]);
     expect(readOutbox(b, keys)).toEqual([]);
     const x = readPersonalState(keys, a), y = readPersonalState(keys, b);
@@ -130,14 +130,14 @@ describe("S5 durable local-first sync", () => {
     captureAccountWrite(a, profile, "daily", { "dailies:zzz": { days: ["2026-09-20"], at } });
     captureAccountWrite(a, profile, "ignored", { "opaque:event": { at } });
     captureAccountWrite(a, profile, "customGames", { [game.id]: game });
-    await syncProfile(a, profile, owner, () => true, cloud.transport);
-    await syncProfile(b, profile, owner, () => true, cloud.transport);
+    await syncProfile(a, profile, owner, () => true, cloud.transport, { enabled: false });
+    await syncProfile(b, profile, owner, () => true, cloud.transport, { enabled: false });
     expect(readPersonalState(keys, b).customGames[game.id]?.name).toBe("Mine");
     captureAccountWrite(b, profile, "daily", {});
     captureAccountWrite(b, profile, "ignored", {});
     captureAccountWrite(b, profile, "customGames", {});
-    await syncProfile(b, profile, owner, () => true, cloud.transport);
-    await syncProfile(a, profile, owner, () => true, cloud.transport);
+    await syncProfile(b, profile, owner, () => true, cloud.transport, { enabled: false });
+    await syncProfile(a, profile, owner, () => true, cloud.transport, { enabled: false });
     expect(readPersonalState(keys, a).daily).toEqual({});
     expect(readPersonalState(keys, a).ignored).toEqual({});
     expect(readPersonalState(keys, a).customGames).toEqual({});
@@ -184,7 +184,7 @@ describe("S5 durable local-first sync", () => {
     await expect(syncProfile(store, profile, owner, () => true, {
       ...cloud.transport,
       push: async (id, rows) => { await cloud.transport.push(id, rows); throw new Error("connection lost"); },
-    })).rejects.toThrow("connection lost");
+    }, { enabled: false })).rejects.toThrow("connection lost");
     expect(readOutbox(store, keys)).toEqual(first);
     await syncProfile(store, profile, owner, () => true, {
       ...cloud.transport,
@@ -193,10 +193,10 @@ describe("S5 durable local-first sync", () => {
         await cloud.transport.push(id, rows);
         captureAccountWrite(store, profile, "prefs", { ...defaults(), theme: "light" });
       },
-    });
+    }, { enabled: false });
     expect(readOutbox(store, keys)).toHaveLength(1);
     expect(readOutbox(store, keys)[0]?.kind).toBe("preference");
-    await syncProfile(store, profile, owner, () => true, cloud.transport);
+    await syncProfile(store, profile, owner, () => true, cloud.transport, { enabled: false });
     expect(readOutbox(store, keys)).toEqual([]);
   });
 
@@ -218,9 +218,9 @@ describe("S5 durable local-first sync", () => {
     const store = device(), cloud = server();
     captureAccountWrite(store, profile, "ignored", { "opaque:event": { at } });
     await expect(syncProfile(store, profile, "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
-      () => true, cloud.transport)).rejects.toThrow("session changed");
+      () => true, cloud.transport, { enabled: false })).rejects.toThrow("session changed");
     await expect(syncProfile(store, profile, owner, () => false,
-      cloud.transport)).rejects.toThrow("session changed");
+      cloud.transport, { enabled: false })).rejects.toThrow("session changed");
     expect(cloud.sent).toEqual([]);
     expect(readOutbox(store, keys)).toHaveLength(1);
   });

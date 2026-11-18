@@ -9,7 +9,7 @@ import { completeFirstLogin, pendingPlan, readAccountBinding } from "../src/clie
 import { cznRemote } from "../src/client/account/cznProtocol.ts";
 import { supabase } from "../src/client/account/remote.ts";
 import {
-  DAILY_PASSES_ENABLED, extendPass, mergePulledPasses, passPrefix, readPasses, setPass, syncPasses,
+  extendPass, mergePulledPasses, passPrefix, readPasses, setPass, syncPasses,
 } from "../src/client/account/passProtocol.ts";
 import {
   PassChoicesRequired, PassPlanChanged, planPassTransfer, type PassChoices, type PassTransferPlan,
@@ -62,7 +62,6 @@ async function dom(run: (screen: {
 
 test("PASS-2 display uses the inclusive count and expires exactly at every shipped regional boundary", async () => {
   await dom(async ({ win, host, render, click, button }) => {
-    expect(DAILY_PASSES_ENABLED).toBe(false);
     const expiries = { asia: "2026-11-17T20:00:00.000Z", america: "2026-11-18T09:00:00.000Z",
       europe: "2026-11-18T03:00:00.000Z" };
     const region = "europe";
@@ -82,7 +81,7 @@ test("PASS-2 display uses the inclusive count and expires exactly at every shipp
       expect(host.textContent).toContain("Expired · 0 game-days left");
     }
     await click("Manage daily passes");
-    expect(button("Close daily passes").getAttribute("aria-expanded")).toBe("true");
+    expect(button("Done managing").getAttribute("aria-expanded")).toBe("true");
     const selectors = host.querySelectorAll("select");
     expect(selectors[0]!.options.length).toBe(games.length);
     expect(selectors[1]!.options.length).toBe(3);
@@ -92,6 +91,9 @@ test("PASS-2 display uses the inclusive count and expires exactly at every shipp
     });
     expect(button("Manage daily passes").getAttribute("aria-expanded")).toBe("false");
     expect(win.document.activeElement).toBe(button("Manage daily passes"));
+    await click("Manage daily passes");
+    await click("Done managing");
+    expect(button("Manage daily passes").getAttribute("aria-expanded")).toBe("false");
   });
 });
 
