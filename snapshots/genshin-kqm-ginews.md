@@ -872,6 +872,36 @@ Fixes an issue whereby, under certain circumstances, teleporting or starting cha
 
 -----
 
+# ["Stress Block Smashing Project" Event: Digging Challenge](archive/21978.md)
+## Stress Block Smashing Project
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/26e63efacb631860bb8d404707efe35e_390885997757580082_transformed.png)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/09/24/b435108dd89097d0561bd15289f5a235_5056201843503228723_transformed.png)
+
+〓Event Duration〓
+
+<t class="t_lc" contenteditable="false">2026/11/20 10:00</t> – <t class="t_lc" contenteditable="false">2026/11/30 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 20 or above
+
+Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
+
+※Complete Archon Quests Chapter VII: Act VI "A Yesterday Sent From Beyond" and Story Quest "Tapirus Somniator Chapter: Act I" first to get the best experience from this event.
+
+〓Event Details〓
+
+● During the event, Travelers need to operate the "Diggytron" to dig up various blocks within the area.
+
+● Dig up blocks to earn score. Once your score reaches specified thresholds, you can claim the corresponding rewards.
+
+● There are a total of 5 stages and a new stage will be unlocked each day for the first 5 days of the event.
+
+-----
+
 # [Stygian Onslaught Event: Disturbance-affected Ley Line challenges](archive/21168.md)
 ## Stygian Onslaught
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2025/10/23/40da7ab1ce17afd008e7a10c6ee6e67b_3372052251159312794_transformed.jpg)
