@@ -155,6 +155,9 @@ export async function completeFirstLogin(store: PassStore, profileId: string, ow
             (!fresh.alreadyApplied || JSON.stringify(passes.plan.source) !== JSON.stringify(fresh.source))) {
           throw new PassPlanChanged(fresh, "Daily passes changed during setup. Review the updated values.");
         }
+        if (fresh.alreadyApplied && Object.keys(passes.choices ?? {}).length > 0) {
+          throw new PassPlanChanged(fresh, "Daily pass choices for these device values were already saved.");
+        }
       }
       applyPassTransfer(store, fresh, passes.choices ?? {});
     }

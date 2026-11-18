@@ -14,6 +14,11 @@ const canonicalOps = (ops: readonly PassOp[]) => JSON.stringify(unionPassOps([],
   .map(op => ({ ...op, createdAt: new Date(op.createdAt).toISOString() })));
 const receipt = (source: PassSource) => JSON.stringify({ profileId: source.profileId, ops: JSON.parse(canonicalOps(source.ops)) });
 
+export function hasPassTransferReceipt(target: Pick<PassLocal, "profileId" | "imports">, source: PassSource): boolean {
+  return target.imports.includes(receipt(source)) &&
+    (target.profileId !== source.profileId || (source.imports ?? []).every(r => target.imports.includes(r)));
+}
+
 export type PassTransferPlan = {
   targetProfileId: string; targetOps: string; source: PassSource;
   /** D6 decides per GAME, even if the existing ops belong to another region. */
@@ -26,8 +31,7 @@ export function planPassTransfer(target: PassLocal, input: PassSource): PassTran
   const source = sourceSchema.parse(input); profileKeys(source.profileId);
   source.ops = unionPassOps([], source.ops);
   const same = target.profileId === source.profileId;
-  const alreadyApplied = target.imports.includes(receipt(source)) &&
-    (!same || (source.imports ?? []).every(r => target.imports.includes(r)));
+  const alreadyApplied = hasPassTransferReceipt(target, source);
   return { targetProfileId: target.profileId, targetOps: canonicalOps(target.ops), source, alreadyApplied,
     choicesRequired: same || alreadyApplied ? [] : [...new Set(source.ops.map(op => op.game))]
       .filter(game => target.ops.some(op => op.game === game)).sort() };

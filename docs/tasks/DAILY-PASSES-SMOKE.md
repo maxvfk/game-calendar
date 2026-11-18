@@ -27,6 +27,9 @@ in-game observations, use an existing pass if available.
    a separate attempt and verify the guest data is still available. Repeat with a
    foreign v2 backup, then import the same file again and check the values.
    Confirm the usual v1/CZN and personal import controls work.
+   In a failure-injection build, fail account setup after the pass receipt is
+   saved. Confirm the wizard shows the saved status and continues with that
+   choice when the remaining setup succeeds.
 5. On Android, check touch targets, scrolling and the date picker. On PC, use
    Tab, Shift+Tab, Space and Escape through management and the import dialog.
    Check focus returns on close and that Timeline and the daily checklist still

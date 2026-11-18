@@ -17,7 +17,9 @@ import { startProfileSync, type SyncStatus } from "./syncEngine.ts";
 import { localBoundProfile, localSessionOwner, storedSessionOwner } from "./offline.ts";
 import { isRetryableTransportError } from "./transport.ts";
 import { DAILY_PASSES_ENABLED, readPasses } from "./passProtocol.ts";
-import { PassChoicesRequired, PassPlanChanged, type PassChoices, type PassTransferPlan } from "./passTransfer.ts";
+import {
+  hasPassTransferReceipt, PassChoicesRequired, PassPlanChanged, type PassChoices, type PassTransferPlan,
+} from "./passTransfer.ts";
 import { PassDecisions } from "../components/PassDecisions.tsx";
 
 type Guest = ReturnType<typeof bootstrapLocalProfile>;
@@ -154,7 +156,9 @@ export function SetupPrompt({ choice, onComplete, onCancel }: {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [resumable, setResumable] = useState(choice.resumable);
-  const [passDecision, setPassDecision] = useState<{ plan: PassTransferPlan; settings: SettingsChoice; revision: number } | null>(null);
+  const [passDecision, setPassDecision] = useState<{
+    plan: PassTransferPlan; settings: SettingsChoice; revision: number; saved: boolean;
+  } | null>(null);
   const passHeading = useRef<HTMLHeadingElement>(null);
   useEffect(() => { if (passDecision) passHeading.current?.focus(); }, [passDecision]);
   const counts = personalCounts(choice.local);
@@ -166,16 +170,27 @@ export function SetupPrompt({ choice, onComplete, onCancel }: {
     setBusy(true);
     setError(null);
     try {
-      await onComplete(mode, preference, passDecision && choices ? { plan: passDecision.plan, choices } : undefined);
+      await onComplete(mode, preference, passDecision ? { plan: passDecision.plan, choices: choices ?? {} } : undefined);
     }
     catch (cause) {
       if (cause instanceof PassChoicesRequired || cause instanceof PassPlanChanged) {
-        setPassDecision(previous => ({ plan: cause.plan, settings: preference, revision: (previous?.revision ?? 0) + 1 }));
+        setPassDecision(previous => ({
+          plan: cause.plan, settings: preference, revision: (previous?.revision ?? 0) + 1,
+          saved: cause.plan.alreadyApplied,
+        }));
         if (cause instanceof PassPlanChanged) setError(cause.message);
         setBusy(false);
         return;
       }
       setError(errorText(cause));
+      if (passDecision && !passDecision.saved) {
+        try {
+          // The pass intent is durable before the separate legacy migration plan.
+          if (hasPassTransferReceipt(readPasses(localStorage, choice.profileId), passDecision.plan.source)) {
+            setPassDecision({ ...passDecision, saved: true });
+          }
+        } catch { /* The setup error remains visible. A retry still revalidates the receipt. */ }
+      }
       try {
         setResumable(pendingPlan(localStorage, choice.profileId, choice.ownerId,
           choice.guest.profileId) !== null);
@@ -189,9 +204,15 @@ export function SetupPrompt({ choice, onComplete, onCancel }: {
     <p className="mt-2 text-sm text-faint">Signed in as {choice.email}.</p>
     <section role="dialog" aria-label="Local data migration" className="mt-6 rounded-xl border border-hairline p-5">
       {passDecision ? <>
-        <h2 ref={passHeading} tabIndex={-1} className="font-semibold">Choose daily pass values</h2>
-        <PassDecisions key={passDecision.revision} login plan={passDecision.plan} busy={busy} cancel={onCancel}
-          submit={choices => void submit("merge", passDecision.settings, choices)} />
+        <h2 ref={passHeading} tabIndex={-1} className="font-semibold">
+          {passDecision.saved ? "Daily pass choices saved" : "Choose daily pass values"}
+        </h2>
+        {passDecision.saved ? <>
+          <p className="mt-2 text-sm">Your daily pass choices are saved on this device. Continue to finish account setup.</p>
+          <button type="button" disabled={busy} className="mt-4 rounded-md border border-hairline px-3 py-2"
+            onClick={() => void submit("merge", passDecision.settings)}>Continue account setup</button>
+        </> : <PassDecisions key={passDecision.revision} login plan={passDecision.plan} busy={busy} cancel={onCancel}
+          submit={choices => void submit("merge", passDecision.settings, choices)} />}
       </> : resumable ? <>
         <h2 className="font-semibold">Finish importing local data</h2>
         <p className="mt-2 text-sm">An earlier import was interrupted. Retry sends the same mutation IDs; it will not start a second import.</p>

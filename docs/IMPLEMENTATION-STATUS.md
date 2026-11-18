@@ -25,12 +25,21 @@ accepted D1–D8 decisions cover the design. [PASS-0 review and amendment](https
   passed the full app smoke at 360×800 and 1440×900 with a synthetic account and
   isolated flag-on/off bundles. Frozen install, typecheck and build passed on
   Windows Bun 1.4.4. The focused client, DOM, import, offline and CZN suites
-  passed (71 tests). The full Windows suite reported 1,801 pass, 1 skip, 54 fail
+  passed (73 tests). The full Windows suite reported 1,803 pass, 1 skip, 54 fail
   and 1 error, versus 1,792 pass, 1 skip, 54 fail and 1 error on main. Failed test
   names matched. Causes include CRLF-sensitive fixture/SQL hashes, symlink/rename
   behavior and missing shell tools. Exact-head Linux CI is recorded on the draft PR.
 
-**Next:** preliminary and independent final review on the draft PR, then
+The focused preliminary review confirmed a P2 in first-login retry. The wizard
+now recognizes the exact durable pass receipt after a later setup failure and
+offers to continue setup with the saved choices. A repeat submission of an
+editable choice for that receipt is rejected. The regression covers a failure
+before the receipt, failure while saving the legacy migration plan, and failure
+at CZN negotiation. A resumed setup retains the original pass mutation intent.
+Chromium also exercised the saved-choice retry after a simulated CZN failure.
+
+**Next:** focused re-review of the retry fix and independent final review on the
+draft PR, then
 [Android/PC acceptance](tasks/DAILY-PASSES-SMOKE.md), including per-game inclusive
 count and actual reset observations. The Chromium smoke used synthetic data.
 Production activation requires a separate operator GO after review and manual

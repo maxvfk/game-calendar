@@ -1,16 +1,21 @@
-import { expect, test } from "bun:test";
+import { expect, spyOn, test } from "bun:test";
 import { Window, type HTMLInputElement as HappyInput } from "happy-dom";
 import { act, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { DailyPasses } from "../src/client/components/DailyPasses.tsx";
 import { PassImportDialog } from "../src/client/components/PassDecisions.tsx";
 import { SetupPrompt } from "../src/client/account/AuthRoot.tsx";
+import { completeFirstLogin, pendingPlan, readAccountBinding } from "../src/client/account/firstLogin.ts";
+import { cznRemote } from "../src/client/account/cznProtocol.ts";
+import { supabase } from "../src/client/account/remote.ts";
 import {
   DAILY_PASSES_ENABLED, extendPass, mergePulledPasses, passPrefix, readPasses, setPass, syncPasses,
 } from "../src/client/account/passProtocol.ts";
-import { PassChoicesRequired, PassPlanChanged, planPassTransfer } from "../src/client/account/passTransfer.ts";
+import {
+  PassChoicesRequired, PassPlanChanged, planPassTransfer, type PassChoices, type PassTransferPlan,
+} from "../src/client/account/passTransfer.ts";
 import { addDays, passDay, reducePass, unionPassOps, type PassOp } from "../src/shared/dailyPasses.ts";
-import { emptySyncState } from "../src/shared/sync.ts";
+import { emptySyncState, type SyncMutation } from "../src/shared/sync.ts";
 import { profileKeys } from "../src/client/state/storage.ts";
 import { defaults } from "../src/client/state/usePrefs.ts";
 import type { Region, GameId } from "../src/shared/schema.ts";
@@ -240,3 +245,83 @@ test("PASS-2 first-login prompt requires explicit radio choices and clears stale
     expect(button("Import backup").hasAttribute("disabled")).toBe(true);
   });
 });
+
+for (const failure of ["migration plan storage", "CZN negotiation"] as const) {
+  test(`PASS-2 first-login retry locks saved choices after ${failure} fails`, async () => {
+    await dom(async ({ win, host, render, click }) => {
+      const store = win.localStorage, at = Date.now() - 10_000, owner = "owner";
+      const guestOp = extendPass(store, guest, "genshin", "asia", 30, at);
+      const cloudOp = extendPass(store, profile, "genshin", "asia", 60, at);
+      const cloud = emptySyncState();
+      const local = { prefs: defaults(), daily: {}, progress: {}, ignored: {}, customEvents: {}, customGames: {} };
+      const choice = { profileId: profile, ownerId: owner, email: "test@example.test",
+        guest: { profileId: guest, keys: profileKeys(guest) }, resumable: false, cloud, local };
+      let rejectIntent = true, rejectLegacy = true;
+      const guardedStore = {
+        get length() { return store.length; },
+        key: (index: number) => store.key(index),
+        getItem: (key: string) => store.getItem(key),
+        setItem(key: string, value: string) {
+          if (rejectIntent && key.startsWith(`${passPrefix(profile)}intent:`)) {
+            rejectIntent = false;
+            throw new Error("Could not save the pass receipt");
+          }
+          if (rejectLegacy && failure === "migration plan storage" && key.endsWith(":firstLoginPlan")) {
+            rejectLegacy = false;
+            throw new Error("Could not save the migration plan");
+          }
+          store.setItem(key, value);
+        },
+      };
+      const query = { select: () => query, eq: () => query, order: () => query,
+        range: async () => ({ data: [], error: null }) };
+      const from = spyOn(supabase, "from").mockReturnValue(query as never);
+      const rpc = spyOn(supabase, "rpc").mockImplementation(((_name: string, args: { p_mutations: SyncMutation[] }) =>
+        Promise.resolve({ data: args.p_mutations.map(row => ({ mutationId: row.mutationId, outcome: "accepted" })),
+          error: null })) as never);
+      const negotiate = spyOn(cznRemote, "negotiate").mockImplementation(async () => {
+        if (rejectLegacy && failure === "CZN negotiation") {
+          rejectLegacy = false;
+          throw new Error("CZN request failed");
+        }
+        return { protocol: 2, enabled: false, policy: null };
+      });
+      const transport = { pull: async () => [cloudOp], push: async () => [] };
+      const submitted: { plan: PassTransferPlan; choices: PassChoices }[] = [];
+      const finish = (passes?: { plan: PassTransferPlan; choices: PassChoices }) =>
+        completeFirstLogin(guardedStore, profile, owner, guest, local, cloud, "merge", "cloud", always,
+          { enabled: true, transport, ...passes });
+      try {
+        await render(<SetupPrompt choice={choice} onComplete={async (_mode, _settings, passes) => {
+          if (passes) submitted.push(passes);
+          await finish(passes);
+        }} onCancel={() => { throw new Error("Unexpected cancellation"); }} />);
+        await click("Save local data");
+        await act(async () => (host.querySelector('input[value="imported"]') as HappyInput).click());
+        await click("Continue account setup");
+        expect(host.querySelector('[role="alert"]')?.textContent).toBe("Could not save the pass receipt");
+        expect(readPasses(store, profile).imports).toEqual([]);
+        expect(host.querySelectorAll('input[type="radio"]')).toHaveLength(2);
+        await click("Continue account setup");
+
+        expect(host.textContent).toContain("Daily pass choices saved");
+        expect(host.querySelectorAll('input[type="radio"]')).toHaveLength(0);
+        expect([...host.querySelectorAll("button")].map(button => button.textContent)).toEqual(["Continue account setup"]);
+        expect(readAccountBinding(store, profile, owner)).toBe(false);
+        expect(pendingPlan(store, profile, owner, guest) === null).toBe(failure === "migration plan storage");
+        const committed = readPasses(store, profile);
+        expect(committed.imports).toHaveLength(1);
+        expect(reducePass(committed.ops, "genshin", "asia").lastDay)
+          .toBe(reducePass([guestOp], "genshin", "asia").lastDay);
+
+        await expect(finish({ plan: submitted[0]!.plan, choices: { genshin: "current" } }))
+          .rejects.toMatchObject({ plan: { alreadyApplied: true } });
+        await click("Continue account setup");
+        expect(submitted.at(-1)).toEqual({ plan: submitted[0]!.plan, choices: {} });
+        expect(readAccountBinding(store, profile, owner)).toBe(true);
+        expect(readPasses(store, profile)).toEqual(committed);
+        expect(readPasses(store, guest).ops).toEqual([guestOp]);
+      } finally { from.mockRestore(); rpc.mockRestore(); negotiate.mockRestore(); }
+    });
+  });
+}
