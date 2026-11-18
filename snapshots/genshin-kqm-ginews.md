@@ -1128,36 +1128,6 @@ After the Version 7.2 update – <t class="t_lc" contenteditable="false">2027/01
 
 -----
 
-# ["Adventurer's Booster Bundles" - Round 53 Available for a Limited Time](archive/21973.md)
-## Adventurer's Booster Bundles
-![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/7315906b39d517cbdc148e650c926c65_5837513735044723651_transformed.png)
-
-Round 53 of Adventurer's Booster Bundles is available for a limited time in the Shop!
-
-〓Adventurer's Instructional Bundle〓
-
-Duration: After the Version 7.2 update – <t class="t_lc" contenteditable="false">2026/11/18 23:59</t>
-
-Purchase Requirements: Adventure Rank 25 or above
-
-Bundle Contents: Virtuous Share Bundle ×25, Mora ×150,000
-
-Bundle Price: Now 10% off for a limited time! The price after discount is 680 Genesis Crystals. Can be purchased up to three times in total.
-
-※ Virtuous Share Bundle: After usage, you can select any one 3-star Talent Level-Up Material from all the options available in the current Version.
-
-〓Adventurer's Jumbo Ore Bundle〓
-
-Duration: After the Version 7.2 update – <t class="t_lc" contenteditable="false">2026/11/18 23:59</t>
-
-Purchase Requirements: Adventure Rank 25 or above
-
-Bundle Contents: Mystic Enhancement Ore ×100, Mora ×100,000
-
-Bundle Price: Now 10% off for a limited time! The price after discount is 680 Genesis Crystals. Can be purchased up to five times in total.
-
------
-
 # [Repertoire of Myriad Melodies Update - Encounter: Interlude of the Long Journey](archive/21972.md)
 ## Encounter: Interlude of the Long Journey
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/22/537714f9a2caf9483166a9145e1998fe_2394825375141082324_transformed.png)
