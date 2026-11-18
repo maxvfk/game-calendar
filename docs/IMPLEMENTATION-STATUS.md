@@ -1,8 +1,22 @@
-## PASS-2 — flag-off implementation candidate (2026-11-18)
+## Daily Passes activation candidate (2026-11-18)
+
+The activation branch enables Daily Passes and labels the management toggle
+**Done managing** while the controls are open. The operator accepted the guest UI
+in a local preview. Authenticated production sync and live in-game rollover
+observations were outside that preview. The [acceptance checklist](tasks/DAILY-PASSES-SMOKE.md)
+records how to verify them with disposable profiles and existing passes.
+
+The candidate retains explicit flag-off regression coverage for legacy sync,
+exports and imports, first login, and cross-tab behavior. The next step is exact
+commit CI and operator review of the activation PR before merging.
+
+## PASS-2 — flag-off release (2026-11-18)
 
 Started from current main `c6f05873364ed77275abac5e5939bb81a649cae5`, with
 PASS-1B merged in [PR #177](https://github.com/maxvfk/game-calendar/pull/177).
-`DAILY_PASSES_ENABLED = false`. The existing independent PASS-0 review and
+PASS-2 merged with `DAILY_PASSES_ENABLED = false` in
+[PR #178](https://github.com/maxvfk/game-calendar/pull/178) at `ff48d05`.
+The independent PASS-0 review and
 accepted D1–D8 decisions cover the design. [PASS-0 review and amendment](https://github.com/maxvfk/game-calendar/pull/167#issuecomment-6657157606)
 
 - Checklist now shows regional pass status, inclusive game-days and reset-based
@@ -54,11 +68,8 @@ or account binding is written. The three targeted cases fail on the reviewed
 head and pass with the fixes.
 [Astra final review](https://github.com/maxvfk/game-calendar/pull/178#issuecomment-6980360494)
 
-**Next:** focused independent re-review of these two D6 fixes on the draft PR, then
-[Android/PC acceptance](tasks/DAILY-PASSES-SMOKE.md), including per-game inclusive
-count and actual reset observations. The Chromium smoke used synthetic data.
-Production activation requires a separate operator GO after review and manual
-acceptance.
+The [focused independent re-review](https://github.com/maxvfk/game-calendar/pull/178#issuecomment-6980916836)
+closed both D6 findings for the flag-off release.
 
 ## PASS-1B — pre-merge verification record (2026-11-17)
 

@@ -8,7 +8,7 @@ import { profileKeys } from "../state/storage.ts";
 import { supabase } from "./remote.ts";
 
 /** Operator activation is a separate release decision. No pass network/export/import when off. */
-export const DAILY_PASSES_ENABLED = false;
+export const DAILY_PASSES_ENABLED = true;
 export function passErrorMessage(error: unknown): string {
   return typeof error === "object" && error !== null && "message" in error ? String(error.message) : String(error);
 }

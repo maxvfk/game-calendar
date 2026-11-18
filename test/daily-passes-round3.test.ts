@@ -104,7 +104,7 @@ async function authBundle(enabled: boolean) {
       build.onLoad({ filter: /(?:AuthRoot\.tsx|passProtocol\.ts)$/ }, async ({ path }) => {
         let contents = await readFile(path, "utf8");
         if (path.endsWith("AuthRoot.tsx")) contents += "\nexport { supabase };\n";
-        else if (enabled) contents = contents.replace("DAILY_PASSES_ENABLED = false", "DAILY_PASSES_ENABLED = true");
+        else contents = contents.replace(/DAILY_PASSES_ENABLED = (?:true|false)/, `DAILY_PASSES_ENABLED = ${enabled}`);
         return { contents, loader: path.endsWith(".tsx") ? "tsx" : "ts" };
       });
     } }] });

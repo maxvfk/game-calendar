@@ -145,7 +145,7 @@ export function DailyPasses({ profileId, games, focus, region, now, online, sync
           setError(null);
           if (!open) setSelection(null);
           setOpen(!open);
-        }}>{open ? "Close daily passes" : "Manage daily passes"}</button>
+        }}>{open ? "Done managing" : "Manage daily passes"}</button>
     </div>
     {local && (summaryGames.length ? <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs">
       {summaryGames.map(game => <li key={game}>

@@ -170,12 +170,12 @@ describe("S5.1 offline account lifecycle", () => {
             push: async (_id: string, rows: typeof pending) => {
               for (const row of rows) remote = applyMutation(remote, row).state;
             } };
-          await syncProfile(store, profile, owner, () => true, transport);
+          await syncProfile(store, profile, owner, () => true, transport, { enabled: false });
           expect(readOutbox(store, keys)).toEqual([]);
           expect(remote.progress["opaque:event"]?.payload?.status).toBe("doing");
           expect(remote.progress["opaque:event"]?.mutationId).toBe(pending[0]?.mutationId);
           const second = established();
-          await syncProfile(second, profile, owner, () => true, transport);
+          await syncProfile(second, profile, owner, () => true, transport, { enabled: false });
           expect(readPersonalState(keys, second).progress["opaque:event"]?.status).toBe("doing");
         } finally { stopReconnect(); bootstrap.stop(); }
       });

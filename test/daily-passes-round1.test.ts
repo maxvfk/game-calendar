@@ -215,7 +215,7 @@ async function flagOnImport() {
     build.onLoad({ filter: /(?:App\.tsx|passProtocol\.ts|storage\.ts)$/ }, async ({ path }) => {
       let contents = await readFile(path, "utf8");
       if (path.endsWith("App.tsx")) contents += "\nexport { importProgress };\n";
-      if (path.endsWith("passProtocol.ts")) contents = contents.replace("DAILY_PASSES_ENABLED = false", "DAILY_PASSES_ENABLED = true");
+      if (path.endsWith("passProtocol.ts")) contents = contents.replace(/DAILY_PASSES_ENABLED = (?:true|false)/, "DAILY_PASSES_ENABLED = true");
       if (path.endsWith("storage.ts")) contents = contents.replace('activeProfile: `${V2}:activeProfile`', 'activeProfile: "test:active-profile"');
       return { contents, loader: path.endsWith(".tsx") ? "tsx" : "ts" };
     });
@@ -319,42 +319,44 @@ test("F3 corrupt pass facts are persistent without retry timers; v1 still commit
   });
 });
 
-async function flagOnSyncController() {
-  const result = await Bun.build({ entrypoints: [resolve("src/client/account/syncEngine.ts")], target: "bun", plugins: [{ name: "flag-on-sync-test", setup(build) {
+async function syncControllerBundle(enabled: boolean) {
+  const result = await Bun.build({ entrypoints: [resolve("src/client/account/syncEngine.ts")], target: "bun", plugins: [{ name: "pass-flag-sync-test", setup(build) {
     build.onLoad({ filter: /passProtocol\.ts$/ }, async ({ path }) => ({
-      contents: (await readFile(path, "utf8")).replace("DAILY_PASSES_ENABLED = false", "DAILY_PASSES_ENABLED = true"), loader: "ts",
+      contents: (await readFile(path, "utf8")).replace(/DAILY_PASSES_ENABLED = (?:true|false)/, `DAILY_PASSES_ENABLED = ${enabled}`), loader: "ts",
     }));
   } }] });
   expect(result.success).toBe(true);
   const dir = await mkdtemp(join(tmpdir(), "pass-storage-event-"));
   try {
-    const file = join(dir, "sync-flag-on.js"); await writeFile(file, await result.outputs[0]!.text());
+    const file = join(dir, "sync.js"); await writeFile(file, await result.outputs[0]!.text());
     return (await import(pathToFileURL(file).href)).startProfileSync as typeof startProfileSync;
   } finally { await rm(dir, { recursive: true, force: true }); }
 }
 
 test("F2 storage events for pass prefix refresh and sync another tab; flag-off remains idle", async () => {
-  const flagOn = await flagOnSyncController();
-  for (const enabled of [false, true]) await withClock(async clock => {
-    const store = device(); let cycles = 0, refreshes = 0;
-    const refresh = () => { refreshes++; };
-    window.addEventListener("account-sync-remote-change", refresh);
-    const controller = (enabled ? flagOn : startProfileSync)(profile, owner, () => true, () => {}, store,
-      async () => { cycles++; return { pending: 0, at: new Date().toISOString(), clockWarning: false }; });
-    const changed = (key: string) => window.dispatchEvent(Object.assign(new Event("storage"), { key }));
-    try {
-      await clock.advance(0); expect(cycles).toBe(1);
-      changed(`${profileKeys(guest).passes}:op:${op(1).opId}`);
-      changed(keys.prefs); expect(clock.delays()).toEqual([]);
-      queuePassOps(store, profile, [op(1)]);
-      // Test the other tab's storage event independently of this tab's local notification.
-      await clock.advance(700); const before = cycles;
-      changed(`${keys.passes}:op:${op(1).opId}`);
-      expect(clock.delays()).toEqual(enabled ? [700] : []);
-      expect(refreshes).toBe(enabled ? 1 : 0);
-      await clock.advance(700); expect(cycles).toBe(before + (enabled ? 1 : 0));
-      controller.stop(); changed(`${keys.passes}:op:${op(2).opId}`);
-      expect(clock.delays()).toEqual([]); expect(refreshes).toBe(enabled ? 1 : 0);
-    } finally { controller.stop(); window.removeEventListener("account-sync-remote-change", refresh); }
-  });
+  for (const enabled of [false, true]) {
+    const start = await syncControllerBundle(enabled);
+    await withClock(async clock => {
+      const store = device(); let cycles = 0, refreshes = 0;
+      const refresh = () => { refreshes++; };
+      window.addEventListener("account-sync-remote-change", refresh);
+      const controller = start(profile, owner, () => true, () => {}, store,
+        async () => { cycles++; return { pending: 0, at: new Date().toISOString(), clockWarning: false }; });
+      const changed = (key: string) => window.dispatchEvent(Object.assign(new Event("storage"), { key }));
+      try {
+        await clock.advance(0); expect(cycles).toBe(1);
+        changed(`${profileKeys(guest).passes}:op:${op(1).opId}`);
+        changed(keys.prefs); expect(clock.delays()).toEqual([]);
+        queuePassOps(store, profile, [op(1)]);
+        // Test the other tab's storage event independently of this tab's local notification.
+        await clock.advance(700); const before = cycles;
+        changed(`${keys.passes}:op:${op(1).opId}`);
+        expect(clock.delays()).toEqual(enabled ? [700] : []);
+        expect(refreshes).toBe(enabled ? 1 : 0);
+        await clock.advance(700); expect(cycles).toBe(before + (enabled ? 1 : 0));
+        controller.stop(); changed(`${keys.passes}:op:${op(2).opId}`);
+        expect(clock.delays()).toEqual([]); expect(refreshes).toBe(enabled ? 1 : 0);
+      } finally { controller.stop(); window.removeEventListener("account-sync-remote-change", refresh); }
+    });
+  }
 });
