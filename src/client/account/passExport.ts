@@ -2,7 +2,8 @@ import { z } from "zod";
 import { CznLocalSchema, buildCznExport, importCzn, importLegacyCzn, preserveCznLegacy, readCzn } from "./cznProtocol.ts";
 import { DAILY_PASSES_ENABLED, PassLocalSchema, mergePulledPasses, passRemote, readPasses, validatePassLocal,
   type PassStore, type PassTransport } from "./passProtocol.ts";
-import { applyPassTransfer, planPassTransfer, type PassChoices, type PassTransferPlan } from "./passTransfer.ts";
+import { applyPassTransfer, PassPlanChanged, planPassTransfer, samePassTransferSnapshot,
+  type PassChoices, type PassTransferPlan } from "./passTransfer.ts";
 
 const envelope = z.object({ format: z.literal("game-calendar-policy-export"),
   formatVersion: z.literal(1), state: CznLocalSchema, personal: z.unknown().optional() }).strict();
@@ -85,4 +86,37 @@ export async function importProfileData(store: PassStore, profileId: string, inp
   }
   importLegacyCzn(store, readCzn(store, profileId), input);
   return input;
+}
+
+/** Re-pull after confirmation, and ask again if any operation changed. An ACK
+ * changes delivery status only; a durable receipt makes an exact retry a no-op. */
+export async function importWithPassChoices(store: PassStore, profileId: string, input: unknown,
+  active: () => boolean,
+  choose: (transfer: PassTransferPlan, updated: boolean) => Promise<PassChoices | null>,
+  transport: PassTransport = passRemote,
+): Promise<{ personal: unknown } | null> {
+  let plan = await preparePolicyImport(store, profileId, input, active, transport, true);
+  let updated = false;
+  while (active()) {
+    let choices: PassChoices = {};
+    if (plan.passes && !plan.passes.alreadyApplied && (updated || plan.passes.choicesRequired.length)) {
+      const selected = await choose(plan.passes, updated);
+      if (!selected || !active()) return null;
+      const fresh = await preparePolicyImport(store, profileId, input, active, transport, true);
+      if (!fresh.passes) throw new Error("Pass import plan unavailable");
+      const changed = !samePassTransferSnapshot(plan.passes, fresh.passes);
+      plan = fresh;
+      if (changed && !fresh.passes.alreadyApplied) { updated = true; continue; }
+      choices = selected;
+    }
+    if (!active()) return null;
+    try {
+      return { personal: applyPolicyImport(store, profileId, plan, choices, true) };
+    } catch (error) {
+      if (!(error instanceof PassPlanChanged)) throw error;
+      plan = { ...plan, passes: error.plan };
+      updated = true;
+    }
+  }
+  return null;
 }

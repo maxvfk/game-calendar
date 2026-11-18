@@ -17,6 +17,8 @@ import { startProfileSync, type SyncStatus } from "./syncEngine.ts";
 import { localBoundProfile, localSessionOwner, storedSessionOwner } from "./offline.ts";
 import { isRetryableTransportError } from "./transport.ts";
 import { DAILY_PASSES_ENABLED, readPasses } from "./passProtocol.ts";
+import { PassChoicesRequired, PassPlanChanged, type PassChoices, type PassTransferPlan } from "./passTransfer.ts";
+import { PassDecisions } from "../components/PassDecisions.tsx";
 
 type Guest = ReturnType<typeof bootstrapLocalProfile>;
 type Choice = { ownerId: string; email: string; profileId: string; guest: Guest;
@@ -141,9 +143,10 @@ export async function resolveAccount(guest: Guest, canActivate: () => boolean): 
     local, cloud, resumable } };
 }
 
-function SetupPrompt({ choice, onComplete, onCancel }: {
+export function SetupPrompt({ choice, onComplete, onCancel }: {
   choice: Choice;
-  onComplete: (mode: "cloudOnly" | "merge", settings?: SettingsChoice) => Promise<void>;
+  onComplete: (mode: "cloudOnly" | "merge", settings?: SettingsChoice,
+    passes?: { plan: PassTransferPlan; choices: PassChoices }) => Promise<void>;
   onCancel: () => void;
 }) {
   const [step, setStep] = useState<"choose" | "settings">("choose");
@@ -151,16 +154,27 @@ function SetupPrompt({ choice, onComplete, onCancel }: {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [resumable, setResumable] = useState(choice.resumable);
+  const [passDecision, setPassDecision] = useState<{ plan: PassTransferPlan; settings: SettingsChoice; revision: number } | null>(null);
+  const passHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => { if (passDecision) passHeading.current?.focus(); }, [passDecision]);
   const counts = personalCounts(choice.local);
   const cloudExists = hasCloudData(choice.cloud);
   const settingsDiffer = Object.keys(choice.cloud.preference).length > 0 &&
     JSON.stringify(choice.local.prefs) !== JSON.stringify(materializeCloud(choice.cloud).prefs);
 
-  async function submit(mode: "cloudOnly" | "merge", preference: SettingsChoice = "cloud") {
+  async function submit(mode: "cloudOnly" | "merge", preference: SettingsChoice = "cloud", choices?: PassChoices) {
     setBusy(true);
     setError(null);
-    try { await onComplete(mode, preference); }
+    try {
+      await onComplete(mode, preference, passDecision && choices ? { plan: passDecision.plan, choices } : undefined);
+    }
     catch (cause) {
+      if (cause instanceof PassChoicesRequired || cause instanceof PassPlanChanged) {
+        setPassDecision(previous => ({ plan: cause.plan, settings: preference, revision: (previous?.revision ?? 0) + 1 }));
+        if (cause instanceof PassPlanChanged) setError(cause.message);
+        setBusy(false);
+        return;
+      }
       setError(errorText(cause));
       try {
         setResumable(pendingPlan(localStorage, choice.profileId, choice.ownerId,
@@ -174,7 +188,11 @@ function SetupPrompt({ choice, onComplete, onCancel }: {
     <h1 className="font-display text-xl font-bold">Account setup</h1>
     <p className="mt-2 text-sm text-faint">Signed in as {choice.email}.</p>
     <section role="dialog" aria-label="Local data migration" className="mt-6 rounded-xl border border-hairline p-5">
-      {resumable ? <>
+      {passDecision ? <>
+        <h2 ref={passHeading} tabIndex={-1} className="font-semibold">Choose daily pass values</h2>
+        <PassDecisions key={passDecision.revision} login plan={passDecision.plan} busy={busy} cancel={onCancel}
+          submit={choices => void submit("merge", passDecision.settings, choices)} />
+      </> : resumable ? <>
         <h2 className="font-semibold">Finish importing local data</h2>
         <p className="mt-2 text-sm">An earlier import was interrupted. Retry sends the same mutation IDs; it will not start a second import.</p>
         <button disabled={busy} className="mt-4 rounded-md border border-hairline px-3 py-2" onClick={() => void submit("merge")}>Retry import</button>
@@ -241,7 +259,7 @@ export function AuthRoot({ guest }: { guest: Guest }) {
     const { data: listener } = supabase.auth.onAuthStateChange(bootstrap.onAuth);
     const stopReconnect = watchAuthReconnect(bootstrap.retry,
       () => recoverOnReconnect.current);
-    return () => { bootstrap.stop(); listener.subscription.unsubscribe();
+    return () => { authEpoch.current++; bootstrap.stop(); listener.subscription.unsubscribe();
       stopReconnect(); };
   }, [guest]);
 
@@ -271,17 +289,22 @@ export function AuthRoot({ guest }: { guest: Guest }) {
     if (error) { setActionError(error.message); return; }
     setView({ kind: "guest", guest: bootstrapLocalProfile() });
   }
-  async function finish(mode: "cloudOnly" | "merge", settings?: SettingsChoice) {
+  const renderedEpoch = authEpoch.current;
+  async function finish(mode: "cloudOnly" | "merge", settings?: SettingsChoice,
+    passes?: { plan: PassTransferPlan; choices: PassChoices }) {
     if (view.kind !== "choice") return;
     const { choice } = view;
-    const epoch = authEpoch.current;
+    const epoch = renderedEpoch;
+    if (authEpoch.current !== epoch) throw new Error("Account session changed during setup");
     await completeFirstLogin(localStorage, choice.profileId, choice.ownerId,
       choice.guest.profileId, choice.local, choice.cloud, mode, settings,
-      () => authEpoch.current === epoch);
+      () => authEpoch.current === epoch, passes);
+    if (authEpoch.current !== epoch) return;
     try { initializeAccountProfile(localStorage, choice.profileId, choice.ownerId); }
     catch { /* The account remains local; the status UI reports sync failure. */ }
     const { data, error } = await supabase.auth.getUser();
-    if (authEpoch.current !== epoch || error || data.user?.id !== choice.ownerId) {
+    if (authEpoch.current !== epoch) return;
+    if (error || data.user?.id !== choice.ownerId) {
       setView({ kind: "guest", guest: bootstrapLocalProfile(),
         message: "Account session changed; sign in again" });
       return;
@@ -291,9 +314,11 @@ export function AuthRoot({ guest }: { guest: Guest }) {
   }
 
   if (view.kind === "loading") return <main role="status" className="mx-auto max-w-xl p-6">Opening calendar…</main>;
-  if (view.kind === "choice") return <SetupPrompt choice={view.choice} onComplete={finish}
-    onCancel={() => setView({ kind: "deferred", guest: view.choice.guest,
-      email: view.choice.email })} />;
+  if (view.kind === "choice") return <SetupPrompt key={view.choice.profileId} choice={view.choice} onComplete={finish}
+    onCancel={() => {
+      authEpoch.current++;
+      setView({ kind: "deferred", guest: view.choice.guest, email: view.choice.email });
+    }} />;
   const account = view.kind === "account";
   const active = account ? profileKeys(view.profileId) : view.guest.keys;
   const displayedStatus = offlineAccount && syncStatus !== null &&
@@ -348,6 +373,8 @@ export function AuthRoot({ guest }: { guest: Guest }) {
   return <>
     <div className="desktop-account mx-auto max-w-7xl px-4 py-2">{accountActions}</div>
     <App key={account ? view.profileId : view.guest.profileId} storageKeys={active}
+      passSessionCurrent={() => authEpoch.current === renderedEpoch}
+      passSyncStatus={account ? displayedStatus : null}
       accountControl={<AccountDisclosure cue={cue}>{accountActions}</AccountDisclosure>} />
   </>;
 }

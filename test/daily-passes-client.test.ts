@@ -1,9 +1,10 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, spyOn, test } from "bun:test";
 import { addDays, PassOp, PassOpIdReused, passDay, reducePass, unionPassOps } from "../src/shared/dailyPasses.ts";
 import { emptySyncState, applyMutation, type SyncMutation } from "../src/shared/sync.ts";
 import { profileKeys } from "../src/client/state/storage.ts";
 import { defaults } from "../src/client/state/usePrefs.ts";
-import { writeAccountCache } from "../src/client/account/firstLogin.ts";
+import { completeFirstLogin, readAccountBinding, writeAccountCache } from "../src/client/account/firstLogin.ts";
+import { supabase } from "../src/client/account/remote.ts";
 import { captureAccountWrite, initializeAccountProfile, readOutbox } from "../src/client/account/localSync.ts";
 import { syncProfile } from "../src/client/account/syncEngine.ts";
 import {
@@ -11,9 +12,9 @@ import {
   queuePassOps, readPasses, readPassViews, resolvePass, setPass, syncPasses, undoPass,
   type PassTransport,
 } from "../src/client/account/passProtocol.ts";
-import { applyPassTransfer, PassChoicesRequired, planFirstLoginPasses, planPassTransfer } from "../src/client/account/passTransfer.ts";
-import { addPassExport, applyPolicyImport, buildProfileExport, importProfileData, planPolicyImport, preparePolicyImport } from "../src/client/account/passExport.ts";
-import { buildCznExport, importCzn, readCzn, preserveCznLegacy } from "../src/client/account/cznProtocol.ts";
+import { applyPassTransfer, PassChoicesRequired, PassPlanChanged, planFirstLoginPasses, planPassTransfer } from "../src/client/account/passTransfer.ts";
+import { addPassExport, applyPolicyImport, buildProfileExport, importProfileData, importWithPassChoices, planPolicyImport, preparePolicyImport } from "../src/client/account/passExport.ts";
+import { buildCznExport, cznRemote, importCzn, readCzn, preserveCznLegacy } from "../src/client/account/cznProtocol.ts";
 import { buildExportData } from "../src/client/state/export.ts";
 
 class Store {
@@ -476,5 +477,105 @@ describe("PASS-1B versioned export / import", () => {
     applyPolicyImport(target, profile, plan, { genshin: "imported" }, true, now + 2);
     expect(raw(target)).toBe(durable);
     expect(readPassViews(target, profile, now)[0]?.view).toMatchObject({ remainingDays: 30 });
+  });
+});
+
+describe("PASS-2 D6 confirmation", () => {
+  test("foreign import re-pulls after confirmation, clears stale decisions and honors a repeat receipt", async () => {
+    const source = new Store(), target = new Store(), server = cloud();
+    queuePassOps(source, guest, [op(1), op(2, { game: "czn", region: "europe" })]);
+    await server.transport.push(profile, [op(3, { days: 60 }), op(4, { game: "czn", region: "europe", days: 60 })]);
+    const personal = buildExportData({}, {}, {}, { games: {}, events: {} });
+    const file = buildProfileExport(source, guest, personal, true);
+    const requests: boolean[] = [];
+    const result = await importWithPassChoices(target, profile, file, () => true, async (plan, updated) => {
+      expect(plan.choicesRequired).toEqual(["czn", "genshin"]);
+      requests.push(updated);
+      if (!updated) {
+        await server.transport.push(profile, [op(5)]);
+        return { genshin: "imported", czn: "current" };
+      }
+      return { genshin: "current", czn: "imported" };
+    }, server.transport);
+    expect(result).toEqual({ personal });
+    expect(requests).toEqual([false, true]);
+    const applied = readPasses(target, profile);
+    expect(reducePass(applied.ops, "genshin", "asia").lastDay).toBe(addDays(day, 89));
+    expect(reducePass(applied.ops, "czn", "europe").lastDay).toBe(addDays(day, 29));
+    expect(applied.ops.some(row => row.opId === id(1) || row.opId === id(2))).toBe(false);
+    expect(applied.imports).toHaveLength(1);
+    const repeat = await importWithPassChoices(target, profile, file, () => true, async () => {
+      throw new Error("A replay must not ask for a fresh decision");
+    }, { ...server.transport, pull: async () => { throw new Error("A replay must not need a cloud pull"); } });
+    expect(repeat).toEqual({ personal });
+    expect(readPasses(target, profile)).toEqual(applied);
+    expect(readPasses(source, guest).ops).toEqual([op(1), op(2, { game: "czn", region: "europe" })]);
+  });
+
+  test("cancel, offline revalidation, and a session switch during import leave no transfer or personal import", async () => {
+    const source = new Store(); queuePassOps(source, guest, [op(1)]);
+    const file = buildProfileExport(source, guest, { version: 1 }, true);
+    for (const outcome of ["cancel", "offline", "switch"] as const) {
+      const target = new Store(), server = cloud(); let active = true;
+      await server.transport.push(profile, [op(2)]);
+      let pullCount = 0;
+      const transport = { ...server.transport, pull: async () => {
+        if (++pullCount === 2) {
+          if (outcome === "offline") throw new Error("Network unavailable");
+          active = false;
+          return [op(2), op(3)];
+        }
+        return server.ops();
+      } };
+      const imported = importWithPassChoices(target, profile, file, () => active, async () =>
+        outcome === "cancel" ? null : { genshin: "imported" }, transport);
+      if (outcome === "cancel") expect(await imported).toBeNull();
+      else await expect(imported).rejects.toThrow(outcome === "offline" ? "Network unavailable" : "profile changed");
+      const result = readPasses(target, profile);
+      expect(result.ops).toEqual([op(2)]);
+      expect(result.pending).toEqual([]);
+      expect(result.imports).toEqual([]);
+      expect(readCzn(target, profile).imports).toEqual([]);
+    }
+  });
+
+  test("first login rejects stale target and guest choices before durable writes; refreshed choices apply exactly once", async () => {
+    const query = { select: () => query, eq: () => query, order: () => query, range: async () => ({ data: [], error: null }) };
+    const from = spyOn(supabase, "from").mockReturnValue(query as never);
+    const rpc = spyOn(supabase, "rpc").mockImplementation(((_name: string, args: { p_mutations: SyncMutation[] }) =>
+      Promise.resolve({ data: args.p_mutations.map(row => ({ mutationId: row.mutationId, outcome: "accepted" })), error: null })) as never);
+    const negotiate = spyOn(cznRemote, "negotiate").mockResolvedValue({ protocol: 2, enabled: false, policy: null });
+    try {
+      for (const selection of ["current", "imported"] as const) {
+        const store = new Store(), server = cloud(); queuePassOps(store, guest, [op(1)]);
+        await server.transport.push(profile, [op(2, { days: 60 })]);
+        let active = true;
+        const finish = (plan?: NonNullable<Awaited<ReturnType<typeof planFirstLoginPasses>>>, transport = server.transport) =>
+          completeFirstLogin(store, profile, owner, guest, blank(), emptySyncState(), "merge", "cloud",
+            () => active, { enabled: true, transport, ...(plan ? { plan, choices: { genshin: selection } } : {}) });
+        await expect(finish()).rejects.toBeInstanceOf(PassChoicesRequired);
+        const original = (await planFirstLoginPasses(store, profile, guest, () => true, server.transport, true))!;
+        await server.transport.push(profile, [op(3)]);
+        await expect(finish(original)).rejects.toBeInstanceOf(PassPlanChanged);
+        const revised = (await planFirstLoginPasses(store, profile, guest, () => true, server.transport, true))!;
+        queuePassOps(store, guest, [op(4, { days: 10 })]);
+        await expect(finish(revised)).rejects.toBeInstanceOf(PassPlanChanged);
+        const guestBefore = raw(store, guest);
+        const confirmed = (await planFirstLoginPasses(store, profile, guest, () => true, server.transport, true))!;
+        await expect(finish(confirmed, { ...server.transport, pull: async () => {
+          active = false; return [...server.ops(), op(5)];
+        } })).rejects.toThrow("session changed");
+        expect(readAccountBinding(store, profile, owner)).toBe(false);
+        expect(readPasses(store, profile).imports).toEqual([]);
+        expect(readPasses(store, profile).ops.map(row => row.opId)).toEqual([id(2), id(3)]);
+        expect(readCzn(store, profile).imports).toEqual([]);
+        active = true;
+        await finish(confirmed);
+        expect(readAccountBinding(store, profile, owner)).toBe(true);
+        expect(reducePass(readPasses(store, profile).ops, "genshin", "asia").lastDay)
+          .toBe(addDays(day, selection === "current" ? 89 : 39));
+        expect(raw(store, guest)).toBe(guestBefore);
+      }
+    } finally { from.mockRestore(); rpc.mockRestore(); negotiate.mockRestore(); }
   });
 });

@@ -3,8 +3,12 @@ import { useFeed } from "./state/useFeed.ts";
 import { Controls } from "./components/Controls.tsx";
 import { CZN_CUTOVER_ENABLED } from "../shared/cznDaily.ts";
 import { importCzn, importLegacyCzn, readCzn } from "./account/cznProtocol.ts";
-import { buildProfileExport, importProfileData } from "./account/passExport.ts";
+import { buildProfileExport, importProfileData, importWithPassChoices } from "./account/passExport.ts";
 import { DAILY_PASSES_ENABLED } from "./account/passProtocol.ts";
+import { usePassImport, type PassImportRequest } from "./account/usePassImport.ts";
+import type { SyncStatus } from "./account/syncEngine.ts";
+import { DailyPasses } from "./components/DailyPasses.tsx";
+import { PassImportDialog } from "./components/PassDecisions.tsx";
 import { CznDailyPanel } from "./components/CznDailyPanel.tsx";
 import { useCznDaily } from "./account/useCznDaily.ts";
 import { CZN_POLICY_ITEM_KEY, cznCompletedDays, cznPolicyDaily } from "./state/cznStrip.ts";
@@ -54,6 +58,7 @@ import {
   type LaneId,
 } from "../shared/custom.ts";
 import { metaFor } from "../shared/games.ts";
+import { GameId } from "../shared/schema.ts";
 
 /**
  * How many deadlines the headline carries.
@@ -107,7 +112,12 @@ function useNow(intervalMs = 1000): number {
   return now;
 }
 
-export function App({ storageKeys, accountControl }: { storageKeys: ProfileStorageKeys; accountControl?: ReactNode }) {
+export function App({ storageKeys, accountControl, passSessionCurrent = () => true, passSyncStatus = null }: {
+  storageKeys: ProfileStorageKeys;
+  accountControl?: ReactNode;
+  passSessionCurrent?: () => boolean;
+  passSyncStatus?: SyncStatus | null;
+}) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const filtersButton = useRef<HTMLButtonElement>(null);
   const header = useRef<HTMLElement>(null);
@@ -143,6 +153,8 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
   const prog = useProgress(storageKeys.progress);
   const daily = useDailyLog(storageKeys.daily);
   const cznProfileId = CZN_CUTOVER_ENABLED ? storageKeys.daily.slice("gacha-tracker:v2:profile:".length, -":daily".length) : undefined;
+  const passProfileId = DAILY_PASSES_ENABLED ? storageKeys.passes.slice("gacha-tracker:v2:profile:".length, -":passes".length) : undefined;
+  const passImport = usePassImport(passProfileId, passSessionCurrent);
   const custom = useCustom(now, storageKeys);
   // Colour only: which ground the page is drawn on, written to the document by
   // the hook. Nothing else in the app asks what it is — the tokens in
@@ -288,6 +300,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
   // bottom. The stored value is left alone so switching the game back on
   // restores where they were.
   const focus = resolveFocus(prefs.focusGame, enabled);
+  const passGames = passProfileId ? enabled.filter((game): game is GameId => GameId.safeParse(game).success) : [];
 
   // CZN's 18:00 UTC policy chip lives in the dailies strip like every other chore. One
   // controller for the chip and its details; inert (no I/O) whenever CZN is not on screen.
@@ -636,6 +649,10 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
             daysFor={stripDaysFor}
             onToggleDay={stripToggleDay}
           />
+          {passProfileId && <DailyPasses key={passProfileId} profileId={passProfileId} games={passGames}
+            focus={passGames.find(game => game === focus) ?? null} region={prefs.region} now={now} online={online}
+            sync={passSyncStatus}
+            active={() => passSessionCurrent() && localStorage.getItem(PROFILE_KEYS.activeProfile) === passProfileId} />}
             </div>
           </aside>
 
@@ -762,7 +779,7 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
             daily.merge,
             ignored.merge,
             custom.merge,
-            undefined, cznProfileId,
+            undefined, cznProfileId, passImport.begin(),
           )
         }
         onExportAll={() =>
@@ -779,10 +796,11 @@ export function App({ storageKeys, accountControl }: { storageKeys: ProfileStora
             ignored.merge,
             custom.merge,
             restorePrefs,
-            cznProfileId,
+            cznProfileId, passImport.begin(),
           )
         }
       />
+      {passImport.prompt && <PassImportDialog key={passImport.prompt.revision} {...passImport.prompt} />}
 
       {!online && (
         <p className="border-t border-hairline px-4 py-3 text-xs leading-relaxed text-soon">
@@ -1041,17 +1059,24 @@ async function importProgress(
   mergeCustom: (games: unknown, events: unknown) => void,
   restorePrefs?: ((prefs: unknown) => void) | undefined,
   cznProfileId?: string,
+  passImport?: PassImportRequest,
 ) {
+  let dailyPassBackup = false;
   try {
     const text = await file.text();
-    let raw = JSON.parse(text) as { format?: string; personal?: unknown };
+    if (passImport && !passImport.active()) return;
+    let raw = JSON.parse(text) as { format?: string; formatVersion?: unknown; personal?: unknown };
+    dailyPassBackup = raw.format === "game-calendar-policy-export" && raw.formatVersion === 2;
     if (cznProfileId && DAILY_PASSES_ENABLED &&
         (raw.format === "game-calendar-policy-export" || raw.format === "gacha-tracker-export")) {
-      const personal = await importProfileData(localStorage, cznProfileId, raw, {}, true, undefined,
-        () => localStorage.getItem(PROFILE_KEYS.activeProfile) === cznProfileId);
+      const active = passImport?.active ?? (() => localStorage.getItem(PROFILE_KEYS.activeProfile) === cznProfileId);
+      const result = passImport && dailyPassBackup ?
+        await importWithPassChoices(localStorage, cznProfileId, raw, active, passImport.choose) :
+        { personal: await importProfileData(localStorage, cznProfileId, raw, {}, true, undefined, active) };
+      if (!result || !active()) return;
       window.dispatchEvent(new Event("czn-policy-import"));
-      if (personal === undefined) return;
-      raw = personal as typeof raw;
+      if (result.personal === undefined) return;
+      raw = result.personal as typeof raw;
     } else if (cznProfileId) {
       const current = readCzn(localStorage, cznProfileId);
       if (raw.format === "game-calendar-policy-export") {
@@ -1082,7 +1107,10 @@ async function importProgress(
         alert("Progress was imported, but this file did not include settings.");
       }
     }
-  } catch {
-    alert("That file couldn't be read. Export a fresh copy and try again.");
-  }
+  } catch (error) {
+    if (passImport && !passImport.active()) return;
+    if (passImport && dailyPassBackup) {
+      alert(`Daily pass import could not finish. Keep the backup file and try again. ${error instanceof Error ? error.message : String(error)}`);
+    } else alert("That file couldn't be read. Export a fresh copy and try again.");
+  } finally { passImport?.finish(); }
 }

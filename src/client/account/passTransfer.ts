@@ -35,6 +35,17 @@ export function planPassTransfer(target: PassLocal, input: PassSource): PassTran
 export class PassChoicesRequired extends Error {
   constructor(readonly plan: PassTransferPlan) { super("Pass import requires a choice for each existing game"); }
 }
+export class PassPlanChanged extends Error {
+  constructor(readonly plan: PassTransferPlan, message = "Pass import plan is stale; review the updated values") {
+    super(message);
+  }
+}
+
+export function samePassTransferSnapshot(a: PassTransferPlan, b: PassTransferPlan): boolean {
+  return a.targetProfileId === b.targetProfileId && a.targetOps === b.targetOps &&
+    receipt(a.source) === receipt(b.source);
+}
+
 /** Persist an exact D6 intent before any op keys or transport; reads roll forward.
  * A stale plan is rejected; retries of an applied source return without minting IDs.
  * Target-only regions remain intact. Source regions become explicit values, never sums. */
@@ -43,7 +54,7 @@ export function applyPassTransfer(store: PassStore, plan: PassTransferPlan, choi
   const target = readPasses(store, plan.targetProfileId);
   const fresh = planPassTransfer(target, plan.source);
   if (fresh.alreadyApplied) return target;
-  if (canonicalOps(target.ops) !== plan.targetOps) throw new Error("Pass import plan is stale; plan again");
+  if (fresh.targetOps !== plan.targetOps) throw new PassPlanChanged(fresh);
   if (target.held) throw new Error("Pass profile is held; export recovery before importing");
   if (fresh.choicesRequired.some(game => choices[game] !== "current" && choices[game] !== "imported")) {
     throw new PassChoicesRequired(fresh);
