@@ -3,7 +3,7 @@ import { addDays, PassOp, PassOpIdReused, passDay, reducePass, unionPassOps } fr
 import { emptySyncState, applyMutation, type SyncMutation } from "../src/shared/sync.ts";
 import { profileKeys } from "../src/client/state/storage.ts";
 import { defaults } from "../src/client/state/usePrefs.ts";
-import { completeFirstLogin, readAccountBinding, writeAccountCache } from "../src/client/account/firstLogin.ts";
+import { completeFirstLogin, pendingPlan, readAccountBinding, writeAccountCache } from "../src/client/account/firstLogin.ts";
 import { supabase } from "../src/client/account/remote.ts";
 import { captureAccountWrite, initializeAccountProfile, readOutbox } from "../src/client/account/localSync.ts";
 import { syncProfile } from "../src/client/account/syncEngine.ts";
@@ -53,6 +53,14 @@ function v1() {
   let state = emptySyncState(); const sent: SyncMutation[][] = [];
   return { sent, transport: { authenticate: async () => owner, pull: async () => state,
     push: async (_p: string, rows: SyncMutation[]) => { sent.push(rows); for (const row of rows) state = applyMutation(state, row).state; } } };
+}
+function stubFirstLoginLegacy() {
+  const query = { select: () => query, eq: () => query, order: () => query, range: async () => ({ data: [], error: null }) };
+  const from = spyOn(supabase, "from").mockReturnValue(query as never);
+  const rpc = spyOn(supabase, "rpc").mockImplementation(((_name: string, args: { p_mutations: SyncMutation[] }) =>
+    Promise.resolve({ data: args.p_mutations.map(row => ({ mutationId: row.mutationId, outcome: "accepted" })), error: null })) as never);
+  const negotiate = spyOn(cznRemote, "negotiate").mockResolvedValue({ protocol: 2, enabled: false, policy: null });
+  return { rpc, negotiate, restore: () => { from.mockRestore(); rpc.mockRestore(); negotiate.mockRestore(); } };
 }
 const raw = (s: Store, p = profile) => JSON.stringify([...s.values].filter(([k]) => k.startsWith(`${profileKeys(p).passes}:`)).sort());
 
@@ -540,11 +548,7 @@ describe("PASS-2 D6 confirmation", () => {
   });
 
   test("first login rejects stale target and guest choices before durable writes; refreshed choices apply exactly once", async () => {
-    const query = { select: () => query, eq: () => query, order: () => query, range: async () => ({ data: [], error: null }) };
-    const from = spyOn(supabase, "from").mockReturnValue(query as never);
-    const rpc = spyOn(supabase, "rpc").mockImplementation(((_name: string, args: { p_mutations: SyncMutation[] }) =>
-      Promise.resolve({ data: args.p_mutations.map(row => ({ mutationId: row.mutationId, outcome: "accepted" })), error: null })) as never);
-    const negotiate = spyOn(cznRemote, "negotiate").mockResolvedValue({ protocol: 2, enabled: false, policy: null });
+    const legacy = stubFirstLoginLegacy();
     try {
       for (const selection of ["current", "imported"] as const) {
         const store = new Store(), server = cloud(); queuePassOps(store, guest, [op(1)]);
@@ -576,6 +580,43 @@ describe("PASS-2 D6 confirmation", () => {
           .toBe(addDays(day, selection === "current" ? 89 : 39));
         expect(raw(store, guest)).toBe(guestBefore);
       }
-    } finally { from.mockRestore(); rpc.mockRestore(); negotiate.mockRestore(); }
+    } finally { legacy.restore(); }
+  });
+
+  test("first login sees a competing receipt at apply and waits for a no-choice resume", async () => {
+    const store = new Store(), server = cloud(), legacy = stubFirstLoginLegacy();
+    const cloudOp = op(2, { days: 60 });
+    try {
+      queuePassOps(store, guest, [op(1)]);
+      await server.transport.push(profile, [cloudOp]);
+      const active = () => true;
+      const displayed = (await planFirstLoginPasses(store, profile, guest, active, server.transport, true))!;
+      expect(displayed.choicesRequired).toEqual(["genshin"]);
+      const guestBefore = raw(store, guest);
+      const concurrentTransport: PassTransport = { ...server.transport, pull: async () => {
+        // The planner reads the target first. The other confirmation writes its
+        // receipt before completeFirstLogin resumes with the returned snapshot.
+        queueMicrotask(() => queueMicrotask(() => { applyPassTransfer(store, displayed, { genshin: "current" }, now); }));
+        return server.ops();
+      } };
+      const confirmation = completeFirstLogin(store, profile, owner, guest, blank(), emptySyncState(), "merge", "cloud", active,
+        { enabled: true, transport: concurrentTransport, plan: displayed, choices: { genshin: "imported" } });
+      await expect(confirmation).rejects.toBeInstanceOf(PassPlanChanged);
+      await expect(confirmation).rejects.toMatchObject({ plan: { alreadyApplied: true, choicesRequired: [] } });
+      expect(readAccountBinding(store, profile, owner)).toBe(false);
+      expect(pendingPlan(store, profile, owner, guest)).toBeNull();
+      expect(legacy.negotiate).not.toHaveBeenCalled();
+      expect(legacy.rpc).not.toHaveBeenCalled();
+      const saved = readPasses(store, profile);
+      expect(saved.ops).toEqual([cloudOp]);
+      expect(saved.imports).toHaveLength(1);
+      const savedFacts = raw(store);
+
+      await completeFirstLogin(store, profile, owner, guest, blank(), emptySyncState(), "merge", "cloud", active,
+        { enabled: true, transport: server.transport, plan: displayed, choices: {} });
+      expect(readAccountBinding(store, profile, owner)).toBe(true);
+      expect(raw(store)).toBe(savedFacts);
+      expect(raw(store, guest)).toBe(guestBefore);
+    } finally { legacy.restore(); }
   });
 });

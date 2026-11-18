@@ -52,12 +52,18 @@ export function samePassTransferSnapshot(a: PassTransferPlan, b: PassTransferPla
 
 /** Persist an exact D6 intent before any op keys or transport; reads roll forward.
  * A stale plan is rejected; retries of an applied source return without minting IDs.
+ * An explicit first-login confirmation can reject a receipt already present at apply time.
  * Target-only regions remain intact. Source regions become explicit values, never sums. */
 export function applyPassTransfer(store: PassStore, plan: PassTransferPlan, choices: PassChoices,
-  now = Date.now()): PassLocal {
+  now = Date.now(), { rejectAlreadyApplied = false }: { rejectAlreadyApplied?: boolean } = {}): PassLocal {
   const target = readPasses(store, plan.targetProfileId);
   const fresh = planPassTransfer(target, plan.source);
-  if (fresh.alreadyApplied) return target;
+  if (fresh.alreadyApplied) {
+    if (rejectAlreadyApplied) {
+      throw new PassPlanChanged(fresh, "Daily pass choices for these device values were already saved.");
+    }
+    return target;
+  }
   if (fresh.targetOps !== plan.targetOps) throw new PassPlanChanged(fresh);
   if (target.held) throw new Error("Pass profile is held; export recovery before importing");
   if (fresh.choicesRequired.some(game => choices[game] !== "current" && choices[game] !== "imported")) {
