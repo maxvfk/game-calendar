@@ -1,14 +1,37 @@
-## Daily Passes activation candidate (2026-11-18)
+## Daily Passes UX polish (2026-11-19)
 
-The activation branch enables Daily Passes and labels the management toggle
-**Done managing** while the controls are open. The operator accepted the guest UI
+The Checklist and management counters match the in-game count by excluding
+today. The last active game-day shows **Active · 0 game-days left**. After
+reset, the pass shows **Expired · 0 game-days left** and stays in the summary
+for its region. **Not configured** identifies an unset pass.
+
+**Correct expiration** defaults to the in-game days left, with 0 for the final
+active game-day. It uses the selected game and region's reset clock at save
+time. The exact last active game-day is still available. The internal D1
+model keeps the inclusive `lastDay` and `PassView.remainingDays`.
+
+Each summary row offers **+30** with management closed, including expired
+passes and the focused game's unconfigured pass. The action shares the
+management extension's one-second lane guard and Welkin warning. The summary
+also shows action-specific Undo, storage and sync feedback, and errors.
+
+Local verification passed the frozen install, typecheck, all 1,876 tests
+with synthetic encryption keys, and the production build. The built app
+passed the Daily Passes Chromium smoke at 320×800, 360×800 and 1440×900.
+Exact revision CI and operator review are tracked on the draft PR.
+
+## Daily Passes activation (2026-11-18)
+
+Daily Passes went live with the management toggle labelled **Done managing**
+while the controls are open. [PR #179](https://github.com/maxvfk/game-calendar/pull/179)
+
+The operator accepted the guest UI
 in a local preview. Authenticated production sync and live in-game rollover
-observations were outside that preview. The [acceptance checklist](tasks/DAILY-PASSES-SMOKE.md)
-records how to verify them with disposable profiles and existing passes.
+observations were outside that preview. The activation checklist records how
+to verify them with disposable profiles and existing passes. [Activation checklist](tasks/DAILY-PASSES-SMOKE.md)
 
-The candidate retains explicit flag-off regression coverage for legacy sync,
-exports and imports, first login, and cross-tab behavior. The next step is exact
-commit CI and operator review of the activation PR before merging.
+The activation retains explicit flag-off regression coverage for legacy sync,
+exports and imports, first login, and cross-tab behavior.
 
 ## PASS-2 — flag-off release (2026-11-18)
 

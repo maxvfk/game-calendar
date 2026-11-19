@@ -1,8 +1,12 @@
 # DAILY-PASSES — lean design gate and implementation roadmap
 
-**Status (2026-11-17): PASS-1B client candidate implemented, flag OFF; independent
-review pending.** Operator GO covered implementation only. No deployment, activation,
-SQL changes, commit or push. See implementation notes below.
+**Status (2026-11-19): Daily Passes is active in production.** The presentation
+notes below include the follow-up change to the in-game count and summary
+extension. [Activation PR #179](https://github.com/maxvfk/game-calendar/pull/179)
+
+**Earlier status (2026-11-17): PASS-1B client candidate implemented, flag OFF.**
+Independent review was pending and operator GO covered implementation only.
+See the implementation notes below.
 
 **Earlier status (2026-11-16): PASS-1A in production; rollout steps 1–3 done.** PR #171 merged
 as `8adad6d`; the private backup pin runs `8adad6d`; the DDL was applied on 2026-11-16 and
@@ -33,10 +37,15 @@ not a mandate to implement its proposed schema.
 ## User contract (fixed)
 
 - Personal paid daily pass for each enabled game, e.g. Genshin Welkin.
-- Show **remaining game-days**, distinguishing active and expired.
-- Manually set/correct duration or expiration; one-tap `+30`.
-- Active `+30` continues from the existing expiry; expired `+30` begins
-  on the current game server-day, not the later network-delivery date.
+- Show **game-days left excluding today**. Keep configured expired passes in
+  the current-region summary. Show **Active · 0 game-days left** on the final
+  active game-day, **Expired · 0 game-days left** after reset, and
+  **Not configured** for an unset pass.
+- Default manual correction to the number shown in game. Enter 0 for today
+  as the last active game-day or choose an exact last active date.
+- Offer `+30` in the summary and management. Active `+30` continues from the
+  existing expiry. For an expired or unset pass it starts on the current
+  game server-day.
 - Offer **Undo**, not a mandatory confirmation dialog. Undo targets the
   actual user action, not an unrelated later change.
 - Small `Daily passes` block next to, but independent from, `Today's dailies`;
@@ -209,8 +218,9 @@ no profile lock: union is commutative.
 5. Earlier-than-`S`, unseen, unresolved extends are **conflicts**: shown, not
    applied (D3). A live `set` not in the winner's `based_on` is reported as a
    concurrent correction.
-6. Display: `today = passDay(now, game, region)`; active while `today ≤ last`;
-   remaining = `last − today + 1` (inclusive, D1); expires at `dayStart(last + 1)`.
+6. The derived view is active while `today ≤ last`, with
+   `today = passDay(now, game, region)`, inclusive remaining days
+   `last − today + 1` while active, and expiry at `dayStart(last + 1)` (D1).
 
 **Day arithmetic on day keys, never milliseconds.** `passDay` is
 `dayKey(…, region, game)`, except CZN, which reuses `cznDayKey`/`cznDayStart`
@@ -242,15 +252,21 @@ are labelled as such.
 
 **Operator decisions (2026-11-05):**
 
-- **D1** Inclusive: the purchase day is day 1 and the remaining count includes
-  today. One constant; per-game in-game confirmation is a PASS-2 smoke item.
+- **D1** The internal purchase day is day 1, `lastDay` is inclusive, and
+  `PassView.remainingDays` includes today while active. In the UI, active passes
+  show `max(0, remainingDays − 1)`. The default correction sets
+  `lastDay = addDays(today, enteredDays)` using the game and region day at save
+  time. Active 0 remains active until the next reset. Expired and unset passes
+  start with a blank numeric field.
 - **D2** Standard period per game, default 30. Caps such as Genshin Welkin's
   180 days **warn, not block**.
 - **D3** A manual `set` wins over an unseen *earlier* extension, which is shown
   as a conflict with one-tap include/dismiss and never silently dropped.
-- **D4** The main surface shows the current region's pass; other regions'
-  passes are kept and visible in details.
-- **D5** A second `+30` tap within ~1 s is the same intent and is ignored.
+- **D4** The summary shows configured passes in the current region, including
+  expired passes, and shows an unset pass when its game is focused. Other
+  regions' passes are kept and visible in management.
+- **D5** A second `+30` tap in the same game and region within ~1 s is ignored
+  across the summary and management buttons.
 - **D6** Guest→account first login and cross-profile import never sum. Per game:
   if the cloud has no ops, guest ops are uploaded; otherwise the user chooses
   "keep cloud / use this device's value" (as a `set`).
@@ -337,8 +353,8 @@ a real server-reset boundary when practical.
 Accepted-contract additions: conflict include/dismiss UI (D3), cap warning
 (D2), current-region display with other regions in details (D4), ~1 s
 double-tap guard (D5), passes for built-in games only, with ops of deleted
-custom games hidden (D7). The smoke checklist includes a per-game in-game check
-of the inclusive convention (D1).
+custom games hidden (D7). For an in-game smoke check (D1), compare the displayed
+count excluding today and check that an active 0 becomes expired at reset.
 
 ## Gates and boundaries
 

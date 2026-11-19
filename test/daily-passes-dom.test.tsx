@@ -60,7 +60,7 @@ async function dom(run: (screen: {
   }
 }
 
-test("PASS-2 display uses the inclusive count and expires exactly at every shipped regional boundary", async () => {
+test("Daily Passes displays active 0 until the reset and expired 0 afterward in every shipped lane", async () => {
   await dom(async ({ win, host, render, click, button }) => {
     const expiries = { asia: "2026-11-17T20:00:00.000Z", america: "2026-11-18T09:00:00.000Z",
       europe: "2026-11-18T03:00:00.000Z" };
@@ -75,7 +75,7 @@ test("PASS-2 display uses the inclusive count and expires exactly at every shipp
       const boundary = Date.parse(expiry);
       await act(async () => { setPass(win.localStorage, guest, game, region, "2026-11-17", boundary - 60_000); });
       await render(panel(game, region, boundary - 1));
-      expect(host.textContent).toContain("Active · 1 game-day left");
+      expect(host.textContent).toContain("Active · 0 game-days left");
       expect(host.querySelector("time")?.getAttribute("datetime")).toBe(expiry);
       await render(panel(game, region, boundary));
       expect(host.textContent).toContain("Expired · 0 game-days left");
@@ -109,7 +109,7 @@ test("PASS-2 +30 duplicate taps, Undo before and after ACK, and profile-scoped o
     await click("+30 days");
     await click("+30 days");
     expect(readPasses(store, profile).pending).toHaveLength(1);
-    expect(host.textContent).toContain("30 game-days left");
+    expect(host.textContent).toContain("29 game-days left");
     expect(host.textContent).toContain("Offline. Pass changes are saved");
     expect(host.textContent).not.toContain("acknowledged");
     await click("Undo adding 30 days");
@@ -155,16 +155,12 @@ test("PASS-2 cap warning allows saves, correction absorbs earlier Undo, and D3 o
     await click("Manage daily passes");
     expect(host.textContent).toContain("may exceed Welkin");
     await click("+30 days");
-    expect(host.textContent).toContain("200 game-days left");
+    expect(host.textContent).toContain("199 game-days left");
     expect(host.textContent).toContain("Undo adding 30 days");
     await click("Correct expiration");
     const form = host.querySelector("form")!;
-    const method = form.querySelector("select")!;
-    await act(async () => {
-      method.value = "duration";
-      method.dispatchEvent(new win.Event("change", { bubbles: true }));
-    });
-    expect(form.querySelector("input")?.value).toBe("200");
+    expect(form.querySelector("select")?.value).toBe("duration");
+    expect(form.querySelector("input")?.value).toBe("199");
     expect(form.textContent).toContain("This correction may exceed Welkin");
     await click("Save correction");
     expect(host.textContent).not.toContain("Undo adding 30 days");
@@ -199,6 +195,7 @@ test("PASS-2 keeps persistent recovery visible and refuses writes on that accoun
     await render(<DailyPasses profileId={profile} games={games} focus="genshin" region="asia"
       now={at} online sync={null} active={always} store={store} />);
     expect(host.querySelector('[role="alert"]')?.textContent).toContain("IDs conflict");
+    expect(button("+30").hasAttribute("disabled")).toBe(true);
     await click("Manage daily passes");
     expect(button("+30 days").hasAttribute("disabled")).toBe(true);
     const key = `${passPrefix(profile)}op:broken`;
@@ -209,6 +206,193 @@ test("PASS-2 keeps persistent recovery visible and refuses writes on that accoun
     expect(host.querySelector('[role="alert"]')?.textContent).toContain("unreadable");
     expect(store.getItem(key)).toBe("unreadable");
     expect(readPasses(store, profile).pending).toEqual([op.opId]);
+  });
+});
+
+test("Daily Passes numeric correction uses the game's displayed count and accepts an exact date", async () => {
+  await dom(async ({ win, host, render, click }) => {
+    const at = Date.parse("2026-11-18T18:00:00.000Z");
+    const clock = spyOn(Date, "now").mockReturnValue(at);
+    const store = win.localStorage;
+    try {
+      await render(<DailyPasses profileId={guest} games={games} focus="czn" region="europe"
+        now={at - 1} online sync={null} active={always} store={store} />);
+      await click("Manage daily passes");
+      await click("Correct expiration");
+      const form = host.querySelector("form")!;
+      const field = () => form.querySelector("input")!;
+      const write = (value: string) => act(async () => {
+        // A standalone run loads React before the test DOM, enabling its legacy input event path.
+        const input = Object.assign(field(), { attachEvent() {}, detachEvent() {} });
+        input.focus();
+        const setter = Object.getOwnPropertyDescriptor(win.HTMLInputElement.prototype, "value")!.set!;
+        setter.call(input, value);
+        input.dispatchEvent(new win.Event("input", { bubbles: true }));
+        input.dispatchEvent(new win.KeyboardEvent("keyup", { bubbles: true }));
+        input.blur();
+      });
+      // Dispatch submit directly to also cover the JS checks behind native validation.
+      const submit = () => act(async () => { form.dispatchEvent(new win.Event("submit", { bubbles: true, cancelable: true })); });
+      expect(form.textContent).toContain("excluding today");
+      expect(field().type).toBe("number");
+      expect(field().value).toBe("");
+      for (const invalid of ["", "-1", "1.5", "9007199254740992", "9007199254740991"]) {
+        await write(invalid);
+        await submit();
+        expect(readPasses(store, guest).ops).toEqual([]);
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain(
+          invalid === "9007199254740991" ? "9999-12-31" : "whole number",
+        );
+      }
+      clock.mockReturnValue(at - 1);
+      await write("0");
+      await submit();
+      expect(readPasses(store, guest).ops).toContainEqual(expect.objectContaining({
+        kind: "set", game: "czn", region: "europe", actionDay: "2026-11-17", lastDay: "2026-11-17",
+      }));
+      clock.mockReturnValue(at);
+      for (const [days, lastDay] of [["0", "2026-11-18"], ["1", "2026-11-19"], ["29", "2026-12-17"]]) {
+        await write(days!);
+        await submit();
+        expect(readPasses(store, guest).ops).toContainEqual(expect.objectContaining({
+          kind: "set", game: "czn", region: "europe", actionDay: "2026-11-18", lastDay,
+        }));
+        clock.mockReturnValue(Date.now() + 1);
+        await render(<DailyPasses profileId={guest} games={games} focus="czn" region="europe"
+          now={at} online sync={null} active={always} store={store} />);
+        expect(host.textContent).toContain(`Active · ${days} game-${days === "1" ? "day" : "days"} left`);
+        await click("Correct expiration");
+        await click("Correct expiration");
+        expect(field().value).toBe(days!);
+      }
+      const method = form.querySelector("select")!;
+      await act(async () => {
+        method.value = "date";
+        method.dispatchEvent(new win.Event("change", { bubbles: true }));
+      });
+      expect(field().type).toBe("date");
+      await write("2026-11-17");
+      await submit();
+      expect(reducePass(readPasses(store, guest).ops, "czn", "europe").lastDay).toBe("2026-11-17");
+      await render(<DailyPasses profileId={guest} games={games} focus="czn" region="europe"
+        now={at} online sync={null} active={always} store={store} />);
+      await click("Correct expiration");
+      await click("Correct expiration");
+      expect(field().value).toBe("");
+      expect(host.textContent).toContain("Expired · 0 game-days left");
+    } finally { clock.mockRestore(); }
+  });
+});
+
+test("Daily Passes renews an expired summary lane and can Undo it while management is closed", async () => {
+  await dom(async ({ win, host, render, click, button }) => {
+    const at = Date.parse("2026-11-18T09:00:00.000Z");
+    const clock = spyOn(Date, "now").mockReturnValue(at);
+    const store = win.localStorage;
+    try {
+      setPass(store, profile, "genshin", "america", "2026-11-17", at - 1);
+      setPass(store, profile, "hsr", "asia", "2026-12-01", at - 1);
+      await render(<DailyPasses profileId={profile} games={games} focus={null} region="america"
+        now={at} online={false} sync={null} active={always} store={store} />);
+      expect(host.textContent).toContain("Expired · 0 game-days left");
+      expect(host.querySelectorAll("li")).toHaveLength(1);
+      expect(button("+30").getAttribute("aria-label")).toBe("Add 30 days to Genshin Impact, America");
+      await click("+30");
+      expect(button("Manage daily passes").getAttribute("aria-expanded")).toBe("false");
+      expect(host.textContent).toContain("Active · 29 game-days left");
+      expect(host.textContent).toContain("pending sync");
+      const after = readPasses(store, profile);
+      const extension = after.ops.find(op => op.kind === "extend")!;
+      expect(extension).toMatchObject({ game: "genshin", region: "america", actionDay: "2026-11-18", days: 30 });
+      expect(reducePass(after.ops, "genshin", "america").lastDay).toBe("2026-12-17");
+      await click("Undo adding 30 days");
+      expect(host.textContent).toContain("Expired · 0 game-days left");
+      expect(readPasses(store, profile).ops).toContainEqual(expect.objectContaining({ kind: "undo", targetOp: extension.opId }));
+      expect(readPasses(store, guest).ops).toEqual([]);
+    } finally { clock.mockRestore(); }
+  });
+});
+
+test("Daily Passes shares the +30 guard across buttons while allowing separate lanes and intentional repeats", async () => {
+  await dom(async ({ win, host, render, click }) => {
+    const at = Date.parse("2026-11-18T03:00:00.000Z");
+    const clock = spyOn(Date, "now").mockReturnValue(at);
+    const taps = spyOn(performance, "now").mockReturnValue(1000);
+    const store = win.localStorage;
+    const panel = (id: string) => <DailyPasses key={id} profileId={id} games={games} focus="genshin"
+      region="europe" now={at} online sync={null} active={always} store={store} />;
+    try {
+      setPass(store, guest, "hsr", "asia", "2026-11-18", at - 1);
+      await render(panel(guest));
+      expect(host.textContent).toContain("Not configured");
+      await click("+30");
+      expect(host.textContent).toContain("Active · 29 game-days left");
+      await click("Manage daily passes");
+      await click("+30 days");
+      expect(readPasses(store, guest).ops).toHaveLength(2);
+      const select = (index: number, value: string) => act(async () => {
+        const field = host.querySelectorAll("select")[index]!;
+        field.value = value;
+        field.dispatchEvent(new win.Event("change", { bubbles: true }));
+      });
+      await select(0, "hsr");
+      await select(1, "asia");
+      await click("+30 days");
+      expect(readPasses(store, guest).ops).toHaveLength(3);
+      taps.mockReturnValue(2000);
+      await select(0, "genshin");
+      await select(1, "europe");
+      await click("+30 days");
+      await click("+30");
+      expect(readPasses(store, guest).ops).toHaveLength(4);
+      taps.mockReturnValue(3000);
+      await select(0, "hsr");
+      await select(1, "asia");
+      await click("+30");
+      const { ops } = readPasses(store, guest);
+      expect(ops).toHaveLength(5);
+      expect(reducePass(ops, "genshin", "europe").lastDay).toBe("2027-02-15");
+      expect(reducePass(ops, "hsr", "asia").lastDay).toBe("2026-12-18");
+      await render(panel(profile));
+      expect(host.textContent).toContain("Not configured");
+      expect(host.textContent).not.toContain("Undo adding 30 days");
+      await click("+30");
+      expect(readPasses(store, profile).ops).toHaveLength(1);
+      expect(readPasses(store, guest).ops).toEqual(ops);
+    } finally { taps.mockRestore(); clock.mockRestore(); }
+  });
+});
+
+test("Daily Passes shows the quick Welkin warning and write errors with management closed", async () => {
+  await dom(async ({ win, host, render, click, button }) => {
+    const at = Date.parse("2026-11-18T03:00:00.000Z");
+    const clock = spyOn(Date, "now").mockReturnValue(at);
+    const taps = spyOn(performance, "now").mockReturnValue(1000);
+    const store = win.localStorage;
+    const panel = (active: () => boolean, sync: SyncStatus | null = null) => <DailyPasses profileId={profile}
+      games={games} focus="genshin" region="europe" now={at} online sync={sync} active={active} store={store} />;
+    try {
+      setPass(store, profile, "genshin", "europe", addDays(passDay(at, "genshin", "europe"), 149), at - 1);
+      await render(panel(always));
+      expect(button("+30").getAttribute("aria-describedby")).toBeNull();
+      await click("+30");
+      expect(host.textContent).toContain("Active · 179 game-days left");
+      const warningId = button("+30").getAttribute("aria-describedby")!;
+      expect(win.document.getElementById(warningId)?.textContent).toContain("180-day in-game limit");
+      taps.mockReturnValue(2000);
+      await click("+30");
+      expect(host.textContent).toContain("Active · 209 game-days left");
+      expect(host.textContent).toContain("3 pass changes pending sync");
+      await render(panel(() => false));
+      taps.mockReturnValue(3000);
+      await click("+30");
+      expect(host.querySelector('[role="alert"]')?.textContent).toContain("active profile changed");
+      expect(readPasses(store, profile).ops).toHaveLength(3);
+      await render(panel(always, { kind: "error", pending: 3, heldPasses: "Recovery required", passHoldKind: "persistent" }));
+      expect(button("+30").hasAttribute("disabled")).toBe(true);
+      expect(button("Undo adding 30 days").hasAttribute("disabled")).toBe(true);
+      expect(button("Manage daily passes").getAttribute("aria-expanded")).toBe("false");
+    } finally { taps.mockRestore(); clock.mockRestore(); }
   });
 });
 
