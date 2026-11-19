@@ -157,9 +157,10 @@ test("PASS-2 cap warning allows saves, correction absorbs earlier Undo, and D3 o
     await click("+30 days");
     expect(host.textContent).toContain("199 game-days left");
     expect(host.textContent).toContain("Undo adding 30 days");
-    await click("Correct expiration");
     const form = host.querySelector("form")!;
+    expect(form.hasAttribute("hidden")).toBe(false);
     expect(form.querySelector("select")?.value).toBe("duration");
+    // The expanded correction must reflect +30, not the pre-extension draft.
     expect(form.querySelector("input")?.value).toBe("199");
     expect(form.textContent).toContain("This correction may exceed Welkin");
     await click("Save correction");
@@ -218,8 +219,10 @@ test("Daily Passes numeric correction uses the game's displayed count and accept
       await render(<DailyPasses profileId={guest} games={games} focus="czn" region="europe"
         now={at - 1} online sync={null} active={always} store={store} />);
       await click("Manage daily passes");
-      await click("Correct expiration");
       const form = host.querySelector("form")!;
+      expect(form.hasAttribute("hidden")).toBe(false);
+      const correctionToggle = [...host.querySelectorAll("button")].find(b => b.textContent === "Correct expiration")!;
+      expect(correctionToggle.getAttribute("aria-expanded")).toBe("true");
       const field = () => form.querySelector("input")!;
       const write = (value: string) => act(async () => {
         // A standalone run loads React before the test DOM, enabling its legacy input event path.
@@ -236,6 +239,11 @@ test("Daily Passes numeric correction uses the game's displayed count and accept
       expect(form.textContent).toContain("excluding today");
       expect(field().type).toBe("number");
       expect(field().value).toBe("");
+      await click("Correct expiration");
+      expect(form.hasAttribute("hidden")).toBe(true);
+      expect(correctionToggle.getAttribute("aria-expanded")).toBe("false");
+      await click("Correct expiration");
+      expect(form.hasAttribute("hidden")).toBe(false);
       for (const invalid of ["", "-1", "1.5", "9007199254740992", "9007199254740991"]) {
         await write(invalid);
         await submit();
