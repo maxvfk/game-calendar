@@ -1,3 +1,12 @@
+## Daily Passes correction disclosure (2026-11-19)
+
+The **Correct expiration** form now starts expanded whenever **Manage daily passes**
+is opened, retaining manual collapse. It pre-fills the active game's in-game
+remaining-day count (excluding today) and refreshes that field after +30, Undo
+or a game-day reset without overwriting an unchanged draft. Expired/unset passes
+still start with a blank numeric field. The internal inclusive day model, stored
+operations and Account Sync are unchanged.
+
 ## Daily Passes UX polish (2026-11-19)
 
 The Checklist and management counters match the in-game count by excluding
