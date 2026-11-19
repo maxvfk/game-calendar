@@ -216,7 +216,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.page_url || steps.deploy_retry.outputs.page_url }}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -227,4 +227,13 @@ jobs:
         with:
           path: public
       - id: deploy
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+      # Artifact metadata can lag behind a successful upload. Retry only the
+      # deployment action: re-uploading creates duplicate github-pages artifacts.
+      - name: Wait for artifact indexing if deployment failed
+        if: steps.deploy.outcome == 'failure'
+        run: sleep 20
+      - id: deploy_retry
+        if: steps.deploy.outcome == 'failure'
         uses: actions/deploy-pages@v4
