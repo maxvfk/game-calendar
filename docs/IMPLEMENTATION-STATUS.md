@@ -7,6 +7,20 @@ or a game-day reset without overwriting an unchanged draft. Expired/unset passes
 still start with a blank numeric field. The internal inclusive day model, stored
 operations and Account Sync are unchanged.
 
+## Daily Passes visual hierarchy (2026-11-19)
+
+The Checklist and regional management summaries emphasize the displayed
+number with semibold tabular figures. Days left use red for 0–2, amber for
+3–7, and green for 8 or more. The count stays with its neutral label when
+the row wraps. Active, Expired, and Not configured remain explicit, and
+expiry details use muted text.
+
+Checklist game names take their hue from the shared game metadata. A
+Daily Passes dark-theme tint keeps small game names readable over the
+page gradient. Local verification passed the frozen install, typecheck,
+all 1,877 tests, and the build. Chromium verified both themes at
+320×800, 360×800, and 1440×900.
+
 ## Daily Passes UX polish (2026-11-19)
 
 The Checklist and management counters match the in-game count by excluding

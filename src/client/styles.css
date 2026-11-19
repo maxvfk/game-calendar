@@ -43,6 +43,8 @@
   --color-near: #5b8def;
   --color-soon: #e8b33c;
   --color-critical: #ff4d6a;
+  /* Low urgency for the Daily Passes count. */
+  --color-positive: #62c58c;
 
   --font-display: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Public Sans", ui-sans-serif, system-ui, sans-serif;
@@ -105,6 +107,7 @@
   --color-near: #2b62c6;
   --color-soon: #8a6008;
   --color-critical: #c81e3c;
+  --color-positive: #17623b;
 
   --color-type-banner: #6d28d9;
   --color-type-event: #0e6478;
@@ -164,6 +167,16 @@ body {
 .tnum {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
+}
+
+.pass-game {
+  color: var(--game-hue);
+}
+
+/* Lift small game names over the dark page gradient. The light hue is
+   already adapted by the game metadata provider. */
+:root[data-theme="dark"] .pass-game {
+  color: color-mix(in srgb, var(--game-hue), var(--color-ink) 20%);
 }
 
 /* Eyebrow labels: the utility voice of the interface. */
