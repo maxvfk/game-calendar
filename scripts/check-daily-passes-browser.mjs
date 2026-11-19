@@ -66,7 +66,8 @@ try {
 
     await manage.click();
     await section.getByRole("combobox", { name: /^Game/ }).selectOption("genshin");
-    await section.getByRole("button", { name: "Correct expiration" }).click();
+    const correction = section.getByRole("button", { name: "Correct expiration" });
+    assert.equal(await correction.getAttribute("aria-expanded"), "true");
     const numeric = section.getByRole("spinbutton", { name: /excluding today/ });
     assert.equal(await numeric.inputValue(), "");
     await numeric.fill("0");

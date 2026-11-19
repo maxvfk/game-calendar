@@ -293,14 +293,18 @@ function PassCorrection({ game, view, disabled, save }: {
   disabled: boolean;
   save: (getDay: (today: string) => string) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [duration, setDuration] = useState(true);
-  const [value, setValue] = useState("");
+  const prefillDays = view.status === "active" ? String(displayedDays(view)) : "";
+  const [value, setValue] = useState(prefillDays);
   const id = useId();
+  // Keep an already-open correction in sync with +30, Undo and server-day rollover.
+  // An unchanged underlying pass does not overwrite the user's draft input.
+  const prefill = duration ? prefillDays : view.status === "none" ? "" : view.lastDay;
+  useEffect(() => { setValue(prefill); }, [prefill]);
   const days = value.trim() ? Number(value) : NaN;
   const validDays = Number.isSafeInteger(days) && days >= 0;
   const inclusiveCount = duration ? (validDays ? days + 1 : 0) : isPassDay(value) ? dayDiff(view.today, value) + 1 : 0;
-  const prefillDays = view.status === "active" ? String(displayedDays(view)) : "";
   function submit(event: FormEvent) {
     event.preventDefault();
     if (disabled) return;
