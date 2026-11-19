@@ -1,3 +1,159 @@
+# [Event Wish "Harmonious Abundance" - Boosted Drop Rate for "White Horse's Fleeting Spring" Zibai (Geo)!](archive/21980.md)
+## Event Wish "Harmonious Abundance"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/11/10/e2c619b94dd87549d0d47868b71b60ef_6572500111887862760_transformed.png)
+
+Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
+
+〓Event Wish Details〓
+
+Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
+--- | --- | ---
+<t class="t_lc" contenteditable="false">2026/11/24 18:00</t> - <t class="t_lc" contenteditable="false">2026/12/15 14:59</t> | "White Horse's Fleeting Spring" Zibai (Geo) | "Nightmare's Burning Heart" Illuga (Geo)
+^ | ^ | "Clinky-Clank Gadgets-A-Gogo"  Aino (Hydro)
+^ | ^ | "Eclipsing Star" Ningguang (Geo)
+
+● During this event wish, the event-exclusive 5-star character "White Horse's Fleeting Spring" Zibai (Geo) will receive a huge drop-rate boost!
+
+● During this event wish, the 4-star characters "Nightmare's Burning Heart" Illuga (Geo), "Clinky-Clank Gadgets-A-Gogo" Aino (Hydro), and "Eclipsing Star" Ningguang (Geo) will receive a huge drop-rate boost!
+
+※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
+
+※ This is for "Character Event Wish." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
+
+※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
+
+※ For more information, go to the Wish screen and select Details in the bottom-left corner.
+
+-----
+
+# [Event Wish "Ya-hoho! Compendium" - Boosted Drop Rate for "Augur of Wonders" Linnea (Geo)!](archive/21981.md)
+## Event Wish "Ya-hoho! Compendium"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/11/10/265a5b94d4bb4c579478a2af5074649c_574905966576030019_transformed.png)
+
+Travelers, stock up on weapons and characters in the event wish to make your party stronger in combat!
+
+〓Event Wish Details〓
+
+Event Wish Duration | Promotional Character (5-Star) | Featured Characters (4-Star)
+--- | --- | ---
+<t class="t_lc" contenteditable="false">2026/11/24 18:00</t> - <t class="t_lc" contenteditable="false">2026/12/15 14:59</t> | "Augur of Wonders" Linnea (Geo) | "Nightmare's Burning Heart" Illuga (Geo)
+^ | ^ | "Clinky-Clank Gadgets-A-Gogo" Aino (Hydro)
+^ | ^ | "Eclipsing Star" Ningguang (Geo)
+
+● During this Event Wish, the event-exclusive 5-star character "Augur of Wonders" Linnea (Geo) will receive a huge drop rate boost!
+
+● During this event wish, the 4-star characters "Nightmare's Burning Heart" Illuga (Geo), "Clinky-Clank Gadgets-A-Gogo" Aino (Hydro), and "Eclipsing Star" Ningguang (Geo) will receive a huge drop-rate boost!
+
+※ Of the above characters, the event-exclusive character will not be available in the standard wish "Wanderlust Invocation."
+
+※ This is for "Character Event Wish-2." The wish guarantee count for "Character Event Wish" and "Character Event Wish-2" is shared, and is accumulated between both "Character Event Wish" and "Character Event Wish-2." This wish guarantee count is independent of the guarantee counts of other types of wishes.
+
+※ The "Test Run" trial event will be open during this event wish. Travelers may use fixed lineups containing the selected trial characters to enter specific stages and test them out. Travelers who complete the challenges will receive the corresponding rewards!
+
+※ For more information, go to the Wish screen and select Details in the bottom-left corner.
+
+-----
+
+# [Event Wish "Epitome Invocation" - Boosted Drop Rate for Lightbearing Moonshard (Sword) and Golden Frostbound Oath (Bow)!](archive/21982.md)
+## Event Wish "Epitome Invocation"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/11/10/15fb09b86109a9517beb9183e89e1906_4296343326285390127_transformed.png)
+
+Travelers, stock up on weapons and characters in "Epitome Invocation" to make your party stronger in combat!
+
+〓Event Wish Details〓
+
+Event Wish Duration | Promotional Weapons (5-Star) | Featured Weapons (4-Star)
+--- | --- | ---
+<t class="t_lc" contenteditable="false">2026/11/24 18:00</t> - <t class="t_lc" contenteditable="false">2026/12/15 14:59</t> | Lightbearing Moonshard (Sword)   Golden Frostbound Oath (Bow) | Portable Power Saw (Claymore)
+^ | ^ | Range Gauge (Bow)
+^ | ^ | Sacrificial Sword (Sword)
+^ | ^ | Favonius Lance (Polearm)
+^ | ^ | Eye of Perception (Catalyst)
+
+● During this event wish, the event-exclusive 5-star weapons Lightbearing Moonshard (Sword) and Golden Frostbound Oath (Bow) will receive a huge drop-rate boost!
+
+● During the event, the event-exclusive 4-star weapons Portable Power Saw (Claymore) and Range Gauge (Bow), as well as the 4-star weapons Sacrificial Sword (Sword), Favonius Lance (Polearm), and Eye of Perception (Catalyst) will receive a huge drop rate boost!
+
+● During this event wish, use Epitomized Path to chart a course towards a promotional 5-star weapon, such as Lightbearing Moonshard (Sword) or Golden Frostbound Oath (Bow). For more information on Epitomized Path, go to the Wish screen and select Details in the bottom-left corner.
+
+※ Of the above weapons, the event-exclusive weapons will not be available in the standard wish "Wanderlust Invocation."
+
+※ For more information, go to the Wish screen and select Details in the bottom-left corner.
+
+-----
+
+# [Event Wish "Names Forged Beneath Blazing Skies" - Chronicled Wish Now Available!](archive/21983.md)
+## Event Wish "Names Forged Beneath Blazing Skies"
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/11/10/cd78c33a1e5fc32fec8f2879ed0e582b_8764352741366149233_transformed.png)
+
+Travelers, stock up on weapons and characters in the Chronicled Wish to make your party stronger in combat!
+
+〓Event Wish Details〓
+
+Event Wish Duration | Designatable 5-Star Characters | Designatable 5-Star Weapons
+--- | --- | ---
+<t class="t_lc" contenteditable="false">2026/11/24 18:00</t> - <t class="t_lc" contenteditable="false">2026/12/15 14:59</t> | "Strength in Serenity" Varesa (Electro)  "Skyborne Arbiter" Chasca (Anemo)  "Ardent Flames Forge the Soul" Xilonen (Geo)   "Splish-Splash Wavechaser" Mualani (Hydro)  "Turnfire Hunt" Kinich (Dendro) | Vivid Notions (Catalyst)
+^ | ^ | Astral Vulture's Crimson Plumage (Bow)
+^ | ^ | Peak Patrol Song (Sword) 
+^ | ^ | Surf's Up (Catalyst)
+^ | ^ | Fang of the Mountain King (Claymore)
+
+● During this Event Wish, you can freely select and chart a course towards your chosen boosted 5-star character or weapon amongst all 5-star items in the "Names Forged Beneath Blazing Skies" Event Wish of this period!
+
+● During this event, the event-exclusive 5-star Characters "Strength in Serenity" Varesa (Electro), "Skyborne Arbiter" Chasca (Anemo), "Ardent Flames Forge the Soul" Xilonen (Geo), "Splish-Splash Wavechaser" Mualani" (Hydro), "Turnfire Hunt" Kinich (Dendro), as well as the event-exclusive 5-star Weapons Vivid Notions (Catalyst), Astral Vulture's Crimson Plumage (Bow), Peak Patrol Song (Sword), Surf's Up (Catalyst), Fang of the Mountain King (Claymore), and event-exclusive 4-star Weapons Sturdy Bone (Sword), Fruitful Hook (Claymore), Mountain-Bracing Bolt (Polearm), Waveriding Whirl (Catalyst), and Flower-Wreathed Feathers (Bow) will be available for a limited time only.
+
+● All 5-star and 4-star items in this Chronicled Wish:
+
+5-Star Characters: Varesa/Chasca/Xilonen/Mualani/Kinich
+
+5-Star Weapons: Vivid Notions/Astral Vulture's Crimson Plumage/Peak Patrol Song/Surf's Up/Fang of the Mountain King
+
+4-Star Characters: Ifa/Iansan/Ororon/Kachina
+
+4-Star Weapons: Flower-Wreathed Feathers/Waveriding Whirl/Mountain-Bracing Bolt/Fruitful Hook/Sturdy Bone/Rust/Sacrificial Bow/The Stringless/Favonius Warbow/Eye of Perception/Sacrificial Fragments/The Widsith/Favonius Codex/Favonius Lance/Dragon's Bane/Rainslasher/Sacrificial Greatsword/The Bell/Favonius Greatsword/Lion's Roar/Sacrificial Sword/The Flute/Favonius Sword
+
+※ This is for "Chronicled Wish." The wish guarantee count for "Chronicled Wish" and "Lightrace Wish" is shared, and is accumulated between both "Chronicled Wish" and "Lightrace Wish." This wish guarantee count is independent of the guarantee counts of other types of wishes.
+
+※ For more information, go to the Wish screen and select Details in the bottom-left corner.
+
+-----
+
+# ["Genius Invokation TCG" Heated Battle Mode: Sprinting Stratagems](archive/20663.md)
+## Genius Invokation TCG - Heated Battle Mode
+![Banner](https://sdk.hoyoverse.com/upload/ann/2024/08/15/84e7290fb24b81ac89b7e1809c4b26ed_1559196153906586455.jpg)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2024/07/26/77bc8ce33030bc36a950e3ef25faf437_2595749569127770563.png)
+
+〓Special Rules〓
+
+During the Roll Phase: Receive 4 Omni Dice and 4 different random Elemental Dice.
+
+The first Action Card played each Round will cost 2 fewer Elemental Dice.
+
+Switching Character Cards is always a Fast Action.
+
+〓Event Duration〓
+
+<t class="t_lc" contenteditable="false">2026/11/21 10:00</t> - <t class="t_lc" contenteditable="false">2026/12/07 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 32 or above
+
+Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
+
+And complete the World Quest "Battlefield of Dice, Cats, and Cards"
+
+〓Event Details〓
+
+● After the event starts, Travelers can go to the Invitation Board of The Cat's Tail to participate in "Genius Invokation TCG" duels under the special rules of "Heated Battle Mode."
+
+● Travelers can invite teammates or participate in duels via match-making after reaching Player Level 4.
+
+-----
+
 # [New Content Overview](archive/22011.md)
 ## Version 7.2 Now Available
 
@@ -822,11 +978,15 @@ Additionally, while the character performs special Charged Attacks consecutively
 
 The development team will continue to monitor this issue. Should there be any further updates, we will inform Travelers as soon as possible through official announcements.
 
-- Currently, in the open-world Time Trial Challenge "Pass through 25 Ice Rings in 90 seconds" in the "Hallowed Plain" area of " Wingspan Peak," there is a chance that the snowball will break abnormally.
-
-Travelers who encounter this issue can temporarily resolve it by entering the second special tunnel in the challenge through either of its side edges. This issue will be fixed in a future update.
-
 - After the Version 7.2 update, the collision volume of the character "Sandrone" would be abnormal when entering high-speed hover mode after using her Elemental Skill. Additionally, Fagio would clip through the environment when performing a Charged Attack under certain circumstances. These issues will be fixed in a future update.
+
+〓<t class="t_gl" contenteditable="false">2026/11/19 16:20</t> Update Details〓
+
+- Updates resources related to subsequent events.
+
+- Fixes an issue in the Open World Time Trial Challenge "Pass through 25 Ice Rings in 90 seconds" in the "Hallowed Plain" area of "Wingspan Peak" where the snowball could unexpectedly break apart.
+
+Travelers affected by the above issues can log out via the Paimon Menu by selecting "Exit to Login Interface" and close the game, then log in again to resolve the issues.
 
 〓<t class="t_gl" contenteditable="false">2026/11/12 16:20</t> Update Details〓
 
