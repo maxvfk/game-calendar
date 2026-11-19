@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import {
   addDays, dayDiff, DEFAULT_PASS_DAYS, isPassDay, MAX_PASS_DAY, MIN_PASS_DAY, passClockBasis, passDay, passKey,
   passView, reducePass, reducePasses, type PassOp, type PassState, type PassView,
@@ -12,6 +12,7 @@ import {
   readPasses, resolvePass, undoPass, type PassLocal, type PassStore,
 } from "../account/passProtocol.ts";
 import type { SyncStatus } from "../account/syncEngine.ts";
+import { useGameMeta } from "../state/gameMeta.tsx";
 
 const controlStyle = "rounded-md border border-hairline px-2.5 py-1.5 text-sm disabled:opacity-50";
 const control = `min-h-10 ${controlStyle}`;
@@ -29,14 +30,20 @@ function warnsOnExtension(game: GameId, view: PassView): boolean {
 }
 
 function PassSummary({ view, game, region }: { view: PassView; game: GameId; region: Region }) {
-  if (view.status === "none") return <span className="text-faint">Not configured</span>;
+  if (view.status === "none") return <span className="text-muted">Not configured</span>;
   const days = displayedDays(view);
+  const tone = days <= 2 ? "text-critical" : days <= 7 ? "text-soon" : "text-positive";
   const expires = new Date(view.expiresAtMs).toISOString();
   const [date, time] = expires.split("T") as [string, string];
   const estimated = passClockBasis(game, region) === "regional-default";
   return <>
-    <span>{view.status === "expired" ? "Expired" : "Active"} · {days} game-{days === 1 ? "day" : "days"} left</span>
-    <span className="block text-faint">
+    <span>
+      {view.status === "expired" ? "Expired" : "Active"} ·{" "}
+      <span className="whitespace-nowrap">
+        <span className={`tnum font-semibold ${tone}`}>{days}</span>{` game-${days === 1 ? "day" : "days"} left`}
+      </span>
+    </span>
+    <span className="block text-muted">
       {estimated ? "Estimated expiry " : "Expiry "}
       <time dateTime={expires}>{date} {time.slice(0, 5)} UTC</time>
     </span>
@@ -85,6 +92,7 @@ export function DailyPasses({ profileId, games, focus, region, now, online, sync
   active: () => boolean;
   store?: PassStore;
 }) {
+  const gameMeta = useGameMeta();
   const [snapshot, setSnapshot] = useState(() => readLocal(store, profileId));
   const [open, setOpen] = useState(false);
   const [selection, setSelection] = useState<{ game: GameId; region: Region } | null>(null);
@@ -190,6 +198,7 @@ export function DailyPasses({ profileId, games, focus, region, now, online, sync
     </div>
     {local && (summaryGames.length ? <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs">
       {summaryGames.map(game => {
+        const { short, hue } = gameMeta(game);
         const pass = states.get(passKey(game, region));
         const summaryView = passView(pass ?? { game, region, lastDay: null }, now);
         const warningId = warnsOnExtension(game, summaryView) ? `${viewId}-${game}-cap` : undefined;
@@ -199,7 +208,7 @@ export function DailyPasses({ profileId, games, focus, region, now, online, sync
               aria-label={`Add 30 days to ${GAMES[game].name}, ${REGION_LABEL[region]}`}
               aria-describedby={warningId} onClick={() => extend(game, region, true)}>+30</button>
             <div className="min-w-0">
-              <span className="font-semibold">{GAMES[game].short} · </span>
+              <span className="pass-game font-semibold" style={{ "--game-hue": hue } as CSSProperties}>{short}</span>{" · "}
               <PassSummary view={summaryView} game={game} region={region} />
             </div>
           </div>

@@ -97,6 +97,40 @@ test("Daily Passes displays active 0 until the reset and expired 0 afterward in 
   });
 });
 
+test("Daily Passes colors only the displayed count with the same thresholds in both summaries", async () => {
+  await dom(async ({ win, host, render, click }) => {
+    const now = Date.parse("2026-11-18T03:00:00.000Z");
+    const store = win.localStorage;
+    const today = passDay(now, "genshin", "europe");
+    await render(<DailyPasses profileId={guest} games={games} focus="genshin" region="europe"
+      now={now} online sync={null} active={always} store={store} />);
+    await click("Manage daily passes");
+    const summary = host.querySelector("ul li")!;
+    const regional = [...host.querySelectorAll('ul[aria-label="Passes by region"] li')]
+      .find(row => row.textContent?.startsWith("Europe"))!;
+    const cases = [
+      [-1, "text-critical"], [0, "text-critical"], [1, "text-critical"], [2, "text-critical"],
+      [3, "text-soon"], [7, "text-soon"], [8, "text-positive"], [30, "text-positive"],
+    ] as const;
+    for (const row of [summary, regional]) {
+      expect(row.textContent).toContain("Not configured");
+      expect(row.querySelector(".tnum")).toBeNull();
+    }
+    for (const [i, [offset, tone]] of cases.entries()) {
+      await act(async () => { setPass(store, guest, "genshin", "europe", addDays(today, offset), now - 60_000 + i); });
+      const days = Math.max(0, offset);
+      const status = offset < 0 ? "Expired" : "Active";
+      for (const row of [summary, regional]) {
+        const number = row.querySelector(".tnum")!;
+        expect(number.textContent).toBe(String(days));
+        expect(number.classList.contains(tone)).toBe(true);
+        expect([...row.querySelectorAll(".text-critical, .text-soon, .text-positive")]).toEqual([number]);
+        expect(row.textContent).toContain(`${status} · ${days} game-${days === 1 ? "day" : "days"} left`);
+      }
+    }
+  });
+});
+
 test("PASS-2 +30 duplicate taps, Undo before and after ACK, and profile-scoped offline delivery", async () => {
   await dom(async ({ win, host, render, click }) => {
     const at = Date.now(), store = win.localStorage;
