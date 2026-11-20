@@ -144,6 +144,21 @@ For each item, use this compact format:
   - **Notes / constraints:** Steps 3–5 of `TIMELINE-READABILITY-UX-RESEARCH.md` rejected category bands for Candidate A′ because of vertical cost and because grouping conflicts with the semantics of `Ending soonest`. Do not add a grouping toggle or category sub-hierarchy in M2. Candidate C remains a fallback only if post-implementation evidence justifies it.
 
 
+## Watchlist
+
+Problems the operator has seen but has not decided how to solve. Do not
+implement any of these without a fresh operator decision; record new
+occurrences under the item instead.
+
+- **Title:** Timeline label can hide the event's official name
+  - **Observation:** 2026-11-15, phone. The ZZZ event `zzz:cyber-miracle-healer-on-duty:2026-10-28` (in-game RU "Будни киберлекаря") showed only the automatic label "Antivirus Log: Bangboo Repair" on the Timeline. The operator could not match it to the in-game event list and did not notice the small "Original title: Cyber Miracle Healer, on Duty!" line in Event Detail. The label was built from the reviewed summary ("daily Antivirus Log stages"), which the label preferences allow.
+  - **Desired behavior:** undecided. A descriptive label is sometimes better than the name: the operator approved "Standard Wish 5-Star Character Invitation" for Genshin's "Across the Frozen Wilds, Honing One's Edge". It is unclear when an event must keep its official name so it can be found in game.
+  - **Area:** Timeline labels / data clarity
+  - **Priority:** undecided
+  - **Status:** watch
+  - **Notes / constraints:** Scale on 2026-11-15: 3 of 28 published labels on non-banner events share no word with the official title: the ZZZ event above, HSR "Fate Contract: Renewal" → "Login: Limited Collaboration Character", and the Genshin example. Banner labels that keep only the featured name (CZN "Sig", "Rossweisse") are recognizable and out of scope. Options discussed and **not adopted**: (1) a preference that non-banner labels keep the official name and append a description, e.g. "Cyber Miracle Healer: Bangboo Repair"; (2) a deterministic accept guard that turns a non-banner label with no word from the title into `needs_research`; (3) making "Original title" more prominent in Event Detail. The operator rejected (3) for now as clutter, and (1)–(2) because the Genshin case shows the name is not always needed. Automation never rewrites a decided label, so any rule change also needs manual overrides for existing labels. Rules: `data/presentation/timeline-label-preferences.v1.json`, accept guard: `src/presentation/timeline-label-accept.ts`.
+
+
 ## Separate feature tasks
 
 These are larger product/data features and should not be bundled with the small
