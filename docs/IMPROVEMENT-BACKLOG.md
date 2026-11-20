@@ -1,6 +1,10 @@
 # Improvement backlog
 
-Last full coordination review: **2026-10-19**. Account/User S6a is complete; S6b remains separate/non-blocking. Timeline M1 is now eligible to start from CURRENT `main`.
+Last backlog reconciliation: **2026-11-20**, against current `main` `3fecc57853` and merged PRs. Earlier observations and the 2026-10-06 sequencing decision are retained as historical rationale, not a current implementation queue.
+
+**Current next planned milestone:** [Source Coverage C1b.1 — zero-output Coverage Inbox](tasks/SOURCE-COVERAGE-SIMPLE-SCHEME.md) (C0, C1a.0 and C1a.1 are merged). C4 publication freshness is independent and can be prioritized separately. CTX and the read-only C5.1 probe follow the accepted 2026-11-05 re-order; C1b.2/C2 wait for evidence. Do not start milestones automatically.
+
+**Deferred / non-blocking:** Account/User S6b, Google OAuth publishing before open public sign-in, event artwork, recognition-first Event Detail, independent critical audit and maintenance guide after audit. Timeline v2 cutover [PR #115](https://github.com/maxvfk/game-calendar/pull/115) remains draft/NO GO. The observed official-name/AI-label mismatch is proposed in [PR #175](https://github.com/maxvfk/game-calendar/pull/175); that PR is **open and unmerged**, so this reconciliation does not duplicate or resolve its Watchlist item.
 
 Intake for observations from normal use on phone and desktop. Discuss and
 refine feedback in ChatGPT before moving an item into an implementation group.
@@ -23,16 +27,16 @@ For each item, use this compact format:
   - **Observation:** operator's in-game screenshot (2026-10-22) shows `Сезон фантазий` 14.10–05.11.2026 and `Цикл фантазий` with **9h08 until the next cycle**, but the upcoming cycle transition is not visible in the calendar. This is not the Nov 5 season-end deadline.
   - **Desired behavior:** current, independently sourced Endfield cycle deadlines visible as Endgame/challenge rows without inventing recurrence or discarding contradicting timestamps.
   - **Area:** source ingestion / event coverage / time-sensitive endgame
-  - **Priority:** observed, time-sensitive source-coverage gap; distinct from daily reset clock audit
-  - **Status:** open / investigation queued; no runtime fix
+  - **Priority:** WATCH: recheck only a newly confirmed missing cycle; do not reopen historical October deadlines
+  - **Status:** historical cycle I/II corrected in [PR #58](https://github.com/maxvfk/game-calendar/pull/58); a western recurring Echoes wiki header slip was fixed in [PR #170](https://github.com/maxvfk/game-calendar/pull/170); future recurrence/source coverage remains evidence-gated
   - **Notes / constraints:** existing `docs/research/endfield-recurring-endgame.md` §16 confirms Phantasia's western Cycle I source contradiction and safe `rejected`/LKG behavior. New user screenshot is first-hand evidence of cycle-rotation impact, not proof of an exact UTC boundary; it contains user-identifying account UI and was not uploaded publicly. Focused follow-up: `docs/tasks/ENDFIELD-ECHOES-PHANTASIA-CYCLE-COVERAGE.md`. Do not weaken source-health or synthesize 7-day periods.
 
 - **Title:** Audit real per-game daily reset clocks and regional server mappings
-  - **Observation:** after PR #44, the operator confirmed nearest-game attribution works but reports that actual Daily Reset countdown times appear wrong. No particular game's actual timestamp has been verified yet. Current shared reset logic defaults to 04:00 server-local with fixed UTC offsets and sparse exceptions; NTE/CZN have no game-specific reset overrides.
+  - **Observation:** Historical 2026-10-21 report of disputed reset countdowns. The subsequent CZN GO 1–3 established and verified its separate 18:00 UTC reset; the seven-game clock research identified remaining game/region evidence gaps, notably NTE. Do not treat the old claim that CZN lacks a reset rule as current.
   - **Desired behavior:** verify authoritative per-game daily reset instants for shipped games and relevant regions, compare to calculated app times, distinguish known vs unknown and DST, then propose a separate safe correction.
   - **Area:** reset scheduling / data correctness / personal daily keys
   - **Priority:** operator-observed follow-up; research-first, separate from UI-polish
-  - **Status:** observed / investigation task ready; no reset fixes yet
+  - **Status:** research completed 2026-10-22 and CZN reset corrected/accepted; unverified clocks/regions remain WATCH, with no blanket reset migration approved
   - **Notes / constraints:** `docs/tasks/DAILY-RESET-CLOCK-AUDIT.md`. `dayKey` feeds persisted daily logs/streaks and account sync: changing clock constants without analyzing existing data can shift historic day keys. Do not guess unverified hours or mix event banner boundaries with daily-task resets.
 
 - **Title:** Timeline Ending soonest hides titles rather than truncating on phone
@@ -47,17 +51,17 @@ For each item, use this compact format:
   - **Observation:** after accepted Timeline M2, a phone screenshot showed that the independent account/sync text strip, live/upcoming subtitle, horizontal type-filter strip and Focus strip consume much of the usable viewport.
   - **Desired behavior:** use one compact phone header with small EVENTCLOCK logo, Filters toggle, Checklist/Timeline selector and truthful account/sync-status button at far right. Keep filters collapsed by default; expanded panel shows all type and enabled-game Focus chips with wrapping, a Reset filters control and an explicit collapse button. The header toggle must close it too.
   - **Area:** mobile UI / interaction / auth-status presentation
-  - **Priority:** approved pre-Astra UI-polish, separate bounded Work
-  - **Status:** approved / task ready
-  - **Notes / constraints:** authoritative task: `docs/tasks/UI-POLISH-MOBILE-HEADER-FILTERS.md`. Reset only type categories and single-game focus, never game enablement/order or Upcoming. Include the `All types` select-all/clear-all fix in this task (avoid duplicate implementation in the later small UI-fix batch). Desktop, account/sync mechanics, event IDs, and M2 viewport semantics must remain intact. Layout mockups from coordination were illustrative; code must fit real 320–390px widths.
+  - **Priority:** complete
+  - **Status:** resolved in [PR #39](https://github.com/maxvfk/game-calendar/pull/39) and [PR #40](https://github.com/maxvfk/game-calendar/pull/40); implemented and browser-validated
+  - **Notes / constraints:** Implemented compact mobile header, collapsible wrapped filters and account disclosure. The separate `All types` toggle was already completed in PR #37. Preserve existing behavior; the linked task is historical, not an instruction to reimplement.
 
 
 - **Title:** Audit date/time precision downgrades against exact source timestamps
   - **Observation:** CZN Sereniel/Peko exposed day-only deadlines despite candidate machine clocks. Historical Oct 21 00:00Z end is now independently confirmed by official banner + maintenance notices; generic Prydwen timestamps still contain real conflicts.
   - **Desired behavior:** enrich only independently verified event boundaries, preserving conservative handling of ambiguous machine/server clocks.
   - **Area:** source ingestion / time precision / data clarity
-  - **Priority:** confirmed upcoming CZN and Genshin banner deadlines first
-  - **Status:** research complete 2026-10-22 / bounded fixes prepared; no runtime correction yet
+  - **Priority:** verified individual corrections complete; further changes require fresh dated evidence
+  - **Status:** CZN six verified boundaries fixed in [PR #59](https://github.com/maxvfk/game-calendar/pull/59), two Genshin regional Phase II ends in [PR #60](https://github.com/maxvfk/game-calendar/pull/60); unverified source-time cases remain WATCH
   - **Task:** [EVENT-TIME-PRECISION-AUDIT](tasks/EVENT-TIME-PRECISION-AUDIT.md); [full seven-game findings](research/event-time-precision-audit.md).
   - **Implementation handoffs:** [CZN verified banner precision](tasks/CZN-VERIFIED-BANNER-TIME-PRECISION.md), then independent [Genshin Phase II ends](tasks/GENSHIN-PHASE-II-VERIFIED-END-PRECISION.md). Exact Nine/Alcea and Tiphera/Tiana UTC periods, Rossweisse/Sig opening, and two Genshin regional ends confirmed. No blanket hidden-timestamp promotion.
   - **Notes / constraints:** historical Sereniel/Peko have left today's feed; do not resurrect them. Regional starts lack regionStarts representation; NTE server mapping and other Genshin tags remain evidence gaps. Preserve IDs/marks, provenance, per-row review times, source-health/LKG and Account Sync; no Daily Reset or Phantasia changes. Recognition metadata is separate scope.
@@ -66,8 +70,8 @@ For each item, use this compact format:
   - **Observation:** adjacent weeks are not visually distinct enough when scanning the daily Timeline.
   - **Desired behavior:** make the boundary between Sunday and Monday more visible than ordinary day separators, for example with a slightly thicker and/or more contrasting divider.
   - **Area:** UI
-  - **Priority:** approved pre-Astra UI fix
-  - **Status:** implemented / browser-validated 2026-10-21; operator real-device smoke pending
+  - **Priority:** complete
+  - **Status:** implemented and browser-validated in [PR #44](https://github.com/maxvfk/game-calendar/pull/44); no separately documented final per-fix real-device smoke
   - **Notes / constraints:** operator explicitly requested implementation on 2026-10-21. Emphasize the Sunday→Monday local day boundary using a modest stronger grid line, while keeping it subordinate to TODAY and without adding mobile clutter, changing event/calendar geometry or interfering with M2 inspected-time preservation.
   - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — implemented with reset attribution and Event Detail dismissal; see IMPLEMENTATION-STATUS and browser evidence.
 
@@ -75,17 +79,17 @@ For each item, use this compact format:
   - **Observation:** the app has daily chores but no personal tracking for 30-day login/subscription passes such as Genshin's Blessing of the Welkin Moon.
   - **Desired behavior:** let the reader track remaining days for a daily pass in each enabled game, set or correct the remaining count, and extend an active pass by one standard period with a single action.
   - **Area:** new feature
-  - **Priority:** approved; PASS-1A in production (2026-11-16), PASS-1B pending operator GO
-  - **Status:** PASS-1A (reducer, server op table and RPC, v3 backup) merged in #171 and rolled out 2026-11-16; no client sync or UI yet
-  - **Notes / constraints:** prefer a compact `Daily passes` surface adjacent to, but semantically separate from, today's tickable dailies. Show active/expired passes on the main surface; manage all enabled games in a detail panel. A one-tap `+30` should extend from the current expiry (or start a fresh 30-day period when expired) and offer Undo rather than a confirmation dialog. Track against each game's server-day/reset semantics rather than a naive 24-hour timer. Keep pass state profile-scoped and compatible with export/import and Account Sync. Do not mix with daily reward-claim marks. The minimal data model is **not predetermined**: first prove that two independent concurrent extensions survive, duplicate retries do not add extra days, Undo targets the original action, and correction conflicts never silently lose paid time. A full append-only/event-sourcing design is not an automatic requirement. Consider, but do not assume, an optional local-only expiry marker on the main Timeline.
+  - **Priority:** complete; normal-use bug reports only
+  - **Status:** PASS-1A [#171](https://github.com/maxvfk/game-calendar/pull/171), PASS-1B [#177](https://github.com/maxvfk/game-calendar/pull/177), PASS-2 [#178](https://github.com/maxvfk/game-calendar/pull/178), production activation [#179](https://github.com/maxvfk/game-calendar/pull/179) and UI polish [#180](https://github.com/maxvfk/game-calendar/pull/180), [#182](https://github.com/maxvfk/game-calendar/pull/182), [#183](https://github.com/maxvfk/game-calendar/pull/183) merged by 2026-11-19
+  - **Notes / constraints:** Implemented profile-scoped, region-specific pass operations with +30, Undo, correction, export/import and Account Sync. The displayed countdown was adjusted to match the in-game number excluding today while preserving inclusive internal day semantics. No need to repeat PASS-0/PASS-2; a Timeline expiry visualization is a separate unapproved idea. Live in-game rollover evidence and authenticated production behavior were outside the original flag-on guest preview; investigate concrete issues during use.
   - **Canonical task and phased roadmap:** [DAILY-PASSES.md](tasks/DAILY-PASSES.md) — PASS-0 (read-only independent design gate) → PASS-1A (minimal model/DB/backup) → PASS-1B (offline/Sync/export) → PASS-2 (UI/smoke). Production rollout is separately gated.
 
 - **Title:** Disambiguate mixed daily reset countdowns
   - **Observation:** the `Today's dailies` header currently shows a single `next reset in …` countdown even though enabled games can reset at different times; after one game's reset has already happened, the global-looking timer can imply that all games share the remaining countdown.
   - **Desired behavior:** keep the compact nearest-reset countdown but identify which game or reset group it belongs to, for example `next: Genshin · 4h 25m` or `next: Genshin +2 · 4h 25m` when several games reset together.
   - **Area:** UI / data clarity
-  - **Priority:** undecided
-  - **Status:** implemented / browser-validated 2026-10-21; operator real-device smoke pending
+  - **Priority:** complete
+  - **Status:** implemented/browser-validated in [PR #44](https://github.com/maxvfk/game-calendar/pull/44); dedicated final real-device smoke not separately recorded
   - **Notes / constraints:** avoid adding a full per-game timer row to the collapsed dailies strip; the goal is to remove ambiguity without making the section taller. Per-game server/reset semantics already exist and should remain the source of truth.
   - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — implemented; see IMPLEMENTATION-STATUS and browser evidence.
 
@@ -93,8 +97,8 @@ For each item, use this compact format:
   - **Observation:** event details currently have no visible close control. On touch devices the reader must tap the backdrop, which can be awkward on a large bottom sheet; the browser/system Back button navigates away instead of dismissing the open details.
   - **Desired behavior:** add a clear close button inside the detail sheet and make browser/system Back dismiss the currently open event detail before normal page navigation resumes.
   - **Area:** interaction / UI
-  - **Priority:** undecided
-  - **Status:** implemented / browser-validated 2026-10-21; operator real-device smoke pending
+  - **Priority:** complete
+  - **Status:** implemented/browser-validated in [PR #44](https://github.com/maxvfk/game-calendar/pull/44); dedicated final real-device smoke not separately recorded
   - **Notes / constraints:** preserve backdrop tap and Escape as secondary dismissal paths. The close control needs a comfortable mobile touch target and must remain visible/reachable when the sheet content scrolls. Opening/closing details should integrate with history without creating duplicate or sticky history entries.
   - **Task:** `docs/tasks/UI-POLISH-SMALL-FIXES.md` — implemented; see IMPLEMENTATION-STATUS and browser evidence.
 
@@ -113,9 +117,9 @@ For each item, use this compact format:
   - **Observation:** official banner/campaign names are poor recognition cues in the calendar. Readers usually identify a banner by the featured character/item, not by the marketing title, and the official title becomes even less useful when the game UI and calendar use different languages.
   - **Desired behavior:** use reliable featured subject names as the primary compact recognition label where appropriate, with the official title as fallback/secondary information.
   - **Area:** UI / data clarity
-  - **Priority:** approved direction; implementation deferred until Account/User S6 is complete/cleared
-  - **Status:** approved
-  - **Notes / constraints:** the accepted semantic contract is `recognitionSubjects?: string[]`, with ordered co-headliners and item/weapon/Light Cone/W-Engine equivalents supported; never infer subjects heuristically from arbitrary marketing titles. `docs/tasks/TIMELINE-READABILITY-M1-RECOGNITION-METADATA.md` implements the data contract, and M2 consumes it on Timeline. **Next Up/checklist are not covered by M2 and remain an explicit follow-up after M1; do not mark this backlog item fully resolved when Timeline M2 lands.** Preserve existing event IDs, dates, provenance and completion state.
+  - **Priority:** Timeline portion complete; Next Up/checklist follow-up not prioritized
+  - **Status:** M1 `recognitionSubjects` contract and M2 recognition-first Timeline completed and operator-accepted 2026-10-21; Next Up/checklist surface behavior remains an independent deferred decision
+  - **Notes / constraints:** M1 adds trusted ordered featured subjects with title fallback; M2 uses them on Timeline. Do not infer subjects from arbitrary marketing text. Additional use in Next Up/checklist requires its own scope; do not restart M1/M2 or change event IDs.
 
 
 
@@ -123,17 +127,17 @@ For each item, use this compact format:
   - **Observation:** the daily Timeline currently places today near the center of the visible range. That spends roughly half of the immediately visible space on past days even though the main calendar task is understanding upcoming events and deadlines.
   - **Desired behavior:** position today closer to the left side of the default Timeline viewport so that most of the visible range shows future days. Keep a small amount of recent-past context rather than removing past days entirely.
   - **Area:** UI / data clarity
-  - **Priority:** undecided
-  - **Status:** approved
-  - **Notes / constraints:** resolved by the accepted Candidate A′ spec: anchor the actual current moment at about 20% from the left on phone and 25% on desktop, only on initial Timeline opening and explicit `Jump to today`; filters/group/upcoming/refresh must not re-anchor. Implementation is deferred in `docs/tasks/TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md` until Account/User S6 is complete/cleared.
+  - **Priority:** complete
+  - **Status:** resolved in Timeline M2, with operator Android/PC acceptance 2026-10-21
+  - **Notes / constraints:** M2 anchors the actual current moment at about 20% from the left on phone and 25% on desktop on initial opening or explicit Jump to today. Filter/group changes preserve inspected time where geometry allows; no reimplementation.
 
 - **Title:** Show event deadlines directly on Timeline bars
   - **Observation:** identifying an event is not enough; the calendar's primary question is what ends first, but users currently have to infer or open details to read the relevant deadline.
   - **Desired behavior:** show the event's end date directly on its Timeline representation when space permits. Prefer an end-focused compact form such as `→ Oct 21`; when there is enough room, a start-to-end range such as `Sep 30 → Oct 21` may be shown.
   - **Area:** UI / data clarity
-  - **Priority:** undecided
-  - **Status:** approved
-  - **Notes / constraints:** accepted Candidate A′ makes deadline/end state part of sticky readable bar content, with exact/day/unknown semantics and mode-specific degradation. Implementation is deferred in `docs/tasks/TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md` until Account/User S6 is complete/cleared.
+  - **Priority:** complete
+  - **Status:** resolved in Timeline M2, with operator Android/PC acceptance 2026-10-21
+  - **Notes / constraints:** The accepted Candidate A′ sticky bars show exact/day/unknown end semantics when space permits, preserving accessible labels and constrained-width degradation. No new milestone is needed for the already shipped behavior.
 
 - **Title:** Group event types inside game-sorted Timeline views
   - **Observation:** when the Timeline is organized by game, a game's banners, normal events, endgame, login events and other rows can still be difficult to scan as one undifferentiated set.
@@ -170,9 +174,9 @@ pre-Astra interaction and visual polish items above.
 
 ## Coordinating decision — 2026-10-06
 
-The coordinating project chat accepted the eight-point recognition/readability set as the product direction.
+The coordinating project chat accepted the eight-point recognition/readability set as the product direction. **This is the historical 2026-10-06 decision, not the current queue.** M1/M2, the mobile/small UI batch, and Daily Passes are now implemented. S6a is complete; S6b remains optional. The operator has not authorized the event-artwork redesign or the full independent audit.
 
-Agreed sequencing before the independent Astra audit:
+Agreed sequencing recorded at that time:
 
 1. complete Account/User **S6**;
 2. implement Timeline Readability **M1 — Recognition Metadata Contract**;
@@ -220,47 +224,46 @@ The separate feedback chat's original eight recognition/readability observations
 7. **Rewards as another recognition cue** → retained inside the deferred recognition-first Event Detail redesign, not added to dense Timeline bars.
 8. **Clear Event Detail hierarchy** → preserved as the separate deferred Event Detail redesign milestone.
 
-Small-feedback implementation state updated 2026-10-21:
+Historical snapshot from 2026-10-21, reconciled 2026-11-20:
 
-- mixed daily-reset attribution, sticky Event Detail Close/Back-first dismissal,
-  and stronger Monday Timeline lines are implemented and browser-validated;
-  final operator Android/PC smoke is pending (see IMPLEMENTATION-STATUS);
-- `All types` select-all/clear-all was completed separately in PR #37;
-- per-game daily passes: PASS-1A server side and v3 backup in production (2026-11-16); client (PASS-1B) and UI (PASS-2) not started.
+- mixed daily-reset attribution, Event Detail Close/Back dismissal, Monday separators: implemented in PR #44; final per-fix real-device smoke was not separately recorded;
+- `All types` select-all/clear-all: completed in PR #37;
+- Daily Passes: complete and activated in PRs #171–#183 (excluding unrelated #181); original pre-client status is obsolete.
 
-## Candidates before Astra audit
+## Current source-coverage queue (2026-11-20)
 
-Approved and now unblocked by completed Account/User S6a:
+The earlier pre-Astra Timeline M1/M2 candidate list is closed: both milestones and operator phone/PC acceptance were completed on 2026-10-21. The compact mobile header and small UI batch were implemented in PRs #39/#40/#44.
 
-- **Timeline Readability M1 — Recognition Metadata Contract**  
-  `docs/tasks/TIMELINE-READABILITY-M1-RECOGNITION-METADATA.md`
-- **Timeline Readability M2 — Sticky Semantic Timeline**  
-  `docs/tasks/TIMELINE-READABILITY-M2-STICKY-SEMANTIC-TIMELINE.md`
+- **Done:** [C0](https://github.com/maxvfk/game-calendar/pull/152), [C1a.0](https://github.com/maxvfk/game-calendar/pull/159), [C1a.1](https://github.com/maxvfk/game-calendar/pull/161). The previous C1a.1 `Next` entry in `IMPLEMENTATION-STATUS.md` is a historical pre-merge record.
+- **Next planned:** **C1b.1 — new zero-output Coverage Inbox**, constrained to the five inventoried notice sources, best effort, with no published-data mutations. [Current canonical sequence](tasks/SOURCE-COVERAGE-SIMPLE-SCHEME.md).
+- **Then, separately authorized:** CTX source-scoped date semantics and C5.1 read-only model probe; after evidence gates, C1b.2 and C2. Subsequent C3 and C5.2–5.3 remain independent milestones.
+- **Independent candidate worth prioritizing early:** C4 publication freshness/refresh liveness. The on-page `StaleFeedNotice` is already present ([PR #168](https://github.com/maxvfk/game-calendar/pull/168)), but the independent committed-source vs deployed-feed comparison and dead-man heartbeat remain unimplemented.
+- **Before the large independent Astra audit:** take an explicit decision about its timing and baseline. That audit is a proposed next quality gate, not an approved automatic run.
 
-The three approved small fixes are implemented/browser-validated; final operator real-device smoke remains. All types was completed separately. Do not restart these fixes or other milestones automatically.
+## Deferred or awaiting product decision
 
-## Deferred until after Astra audit
-
-Larger feature/redesign work unless explicitly reprioritized:
-
-- event artwork / image-source and cache policy;
-- recognition-first Event Detail redesign;
-- per-game daily pass tracking (**design reprioritized 2026-11-05**; PASS-1A in production 2026-11-16, PASS-1B requires its own operator GO; see [DAILY-PASSES.md](tasks/DAILY-PASSES.md));
-- any return to explicit Timeline type grouping unless M2 smoke produces concrete evidence that it is still needed.
+- **Event artwork:** first define asset provenance, permission, fallback, PWA cache/offline strategy, then decide whether to show it in Event Detail.
+- **Recognition-first Event Detail redesign:** separate UX/data milestone; preserve all source/date/provenance transparency.
+- **Timeline event-type grouping:** deferred pending a demonstrated remaining usability issue after M2.
+- **Daily Passes on Timeline:** discussed as a personal expiry bar or marker; **not approved or scoped for implementation**. Keep separate from completed Daily Passes.
+- **Featured-subject recognition in Next Up/checklist:** M1/M2 do not automatically cover these surfaces.
+- **Account/User S6b:** backup monitoring and cache-cleanup hardening, separate and non-blocking.
+- **Google OAuth publish-app gate:** only before open sign-in by arbitrary users; preserve existing user identities.
+- **Timeline v2 editorial registry cutover [PR #115](https://github.com/maxvfk/game-calendar/pull/115):** remains draft/NO GO, not part of automatic coverage or summary rollout.
+- **Official-name vs AI Timeline label:** observed problem and proposed Watchlist write-up in **open** [PR #175](https://github.com/maxvfk/game-calendar/pull/175). Keep the product decision open; do not duplicate that text or merge #175 implicitly.
 
 ## Implemented / resolved
 
-No items yet. Link each finished item to its commit and verification result.
+- **Timeline M1/M2, semantic bars, viewport and label truncation:** completed and accepted 2026-10-21 (M2 [PR #34](https://github.com/maxvfk/game-calendar/pull/34); truncation [PR #46](https://github.com/maxvfk/game-calendar/pull/46)).
+- **Compact mobile header/filters:** [PR #39](https://github.com/maxvfk/game-calendar/pull/39), [PR #40](https://github.com/maxvfk/game-calendar/pull/40); `All types` [PR #37](https://github.com/maxvfk/game-calendar/pull/37).
+- **Reset-attribution, Event Detail close and weekly separators:** [PR #44](https://github.com/maxvfk/game-calendar/pull/44); browser-validated, dedicated real-device smoke not separately documented.
+- **Verified date precision:** CZN [PR #59](https://github.com/maxvfk/game-calendar/pull/59), Genshin [PR #60](https://github.com/maxvfk/game-calendar/pull/60); other unsourced clocks remain WATCH.
+- **Daily Passes:** PASS-1A/1B/2, production activation and UI refinements, [PR #171](https://github.com/maxvfk/game-calendar/pull/171), [#177](https://github.com/maxvfk/game-calendar/pull/177)–[#183](https://github.com/maxvfk/game-calendar/pull/183) (with #181 being unrelated Pages CI repair).
+- **Source Coverage preliminary stages:** C0/C1a.0/C1a.1, [PR #152](https://github.com/maxvfk/game-calendar/pull/152), [#159](https://github.com/maxvfk/game-calendar/pull/159), [#161](https://github.com/maxvfk/game-calendar/pull/161). Do not repeat the completed seven-game October audit/recovery wave without a new observed gap.
 
 ## Sequence
 
-1. Collect feedback through normal use; discuss and refine it in ChatGPT.
-2. Split agreed items into pre-Astra polish and post-Astra improvements.
-3. Work implements approved pre-Astra items as short, separate commits, then
-   performs a focused smoke check and freezes the implementation baseline.
-4. Astra performs a separate critical audit. Work addresses confirmed findings
-   in separate milestones before taking up deferred improvements.
-5. After the audit and fixes, create `docs/MAINTENANCE.md` for the verified
-   architecture: scheduled refresh, source health, stale/broken sources,
-   reviewed data, conflicts, incidents, human intervention and recommended
-   Work/Codex maintenance prompts. Do not write that final guide beforehand.
+1. Keep this backlog as an intake and priority ledger; use current `main` and `docs/IMPLEMENTATION-STATUS.md` for implementation truth. Reconcile individual historical lines when new facts warrant it; don't rerun completed milestones.
+2. **Next concrete step:** separately authorize and implement **C1b.1** as one bounded PR, then verify exact-head CI and published behavior. C4 publication freshness may be reprioritized independently.
+3. After C1b.1, reassess CTX/C5.1 against the canonical Source Coverage order; do not infer that current coverage reports prove completeness.
+4. Decide when to freeze a baseline for an independent critical Astra audit. Only after audit findings and fixes write the final `docs/MAINTENANCE.md`; keep artwork/Detail redesign and other deferred products as separate decisions.
