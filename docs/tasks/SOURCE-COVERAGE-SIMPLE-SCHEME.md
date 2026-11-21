@@ -14,6 +14,14 @@ bounded WuWa notice-inventory extension, not a reopening of C0.
 **Re-order (2026-11-05):** source date context
 (CTX) and the read-only C5 stage 1 probe move ahead of C2–C4, and C1b is split into
 two phases. See [Re-order 2026-11-05](#re-order-2026-11-05-context-first).
+**Status update (2026-11-21 — FROZEN / SUPERSEDED):** Remaining unbuilt stages
+(`C1b.1`, `CTX`, `C1b.2`, `C2`, `C5.3`) are frozen following the 2026-11-21
+strategic review. Completed `C0`, `C1a.0`, and `C1a.1` remain intact as offline
+diagnostic tooling. Active work follows the 4-step practical plan in
+[`PRACTICAL-PARSER-LABELS-PLAN.md`](PRACTICAL-PARSER-LABELS-PLAN.md)
+(PR #0 daily auto-labels & docs → PR #1 parser context for auto-labels →
+PR #2 parser template generalization & stale sources → PR #3 minimal C4 liveness →
+optional read-only `C5.1-lite` probe). The design below is retained as historical record.
 
 ## Why a different scheme
 

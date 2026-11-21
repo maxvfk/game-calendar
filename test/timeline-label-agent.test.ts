@@ -67,8 +67,8 @@ const record = await Bun.file("scripts/timeline-label-agent/record.sh").text();
 describe("timeline labels workflow (M3.5, M4)", () => {
   const [, propose = "", recordJob = ""] = workflow.split(/\n  (?:propose|record):\n/);
 
-  test("runs Tue and Sat 07:23 Moscow; manual runs default to the rehearsal branch", () => {
-    expect(workflow).toContain('- cron: "23 4 * * 2,6"');
+  test("runs daily 07:23 Moscow; manual runs default to the rehearsal branch", () => {
+    expect(workflow).toContain('- cron: "23 4 * * *"');
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).toMatch(/options: \[rehearsal, main\]\n\s+default: rehearsal/);
     expect(workflow).toContain("TARGET_BRANCH: ${{ (github.event_name == 'schedule' || inputs.target == 'main') && 'main' || 'timeline-labels/rehearsal' }}");

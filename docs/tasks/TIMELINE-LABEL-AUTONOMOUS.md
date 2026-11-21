@@ -165,8 +165,8 @@ RE-Factor Headhunting #1). Criterion 3 is met.
 
 ## Enabling and operating (M4)
 
-- **Schedule:** Tue and Sat 07:23 Moscow (04:23 UTC). Morning, so a usage window spent in the
-  evening has reset; Saturday is after the weekly reset (Sat 04:00). GitHub can delay or drop a
+- **Schedule:** Daily 07:23 Moscow (04:23 UTC). Morning, so a usage window spent in the
+  evening has reset; an empty queue makes zero model calls. GitHub can delay or drop a
   scheduled run; the next one picks up the same queue.
 - **Switch on:** GitHub → Settings → Secrets and variables → Actions → Variables →
   `TIMELINE_LABELS_AUTO` = `on`. Switch off the same way (`off`); scheduled runs then skip.
