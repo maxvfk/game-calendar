@@ -425,4 +425,23 @@ describe("PR #1 review regressions — fail-safe context extraction", () => {
     expect(evTomorrow.recognitionSubjects).toBeUndefined();
     expect(evTomorrow.summary).toBeNull();
   });
+
+  test("WuWa treats unknown HTML headings before duration as section boundaries and omits context", async () => {
+    const ctx = { now: NOW, sourceUrl: "https://example.test", sourceId: "wuwa-kuro-mirror", game: "wuwa" as const };
+    const raw = (await Bun.file("test/fixtures/wuwa/evidence-2026-10-21.xml").text()).replace(/\r\n/g, "\n");
+    const base = parseWuwaKuroAtom(raw, ctx);
+    const lucillaLine = "<p>During the event, 5-Star Resonator: Lucilla, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!</p>";
+    const lynaeLine = "<p>During the event, 5-Star Resonator: Lynae, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!</p>";
+    const mutated = raw.replace(lucillaLine, `<h2>Undefined Spectrum</h2>${lynaeLine}`);
+    const parsed = parseWuwaKuroAtom(mutated, ctx);
+    expect(invariantDigest(parsed)).toBe(invariantDigest(base));
+    const tomorrow = parsed.find(e => e.title === "Tomorrow in the Frame")!;
+    expect(tomorrow.recognitionSubjects).toBeUndefined();
+    expect(tomorrow.summary).toBeNull();
+    expect(originalTimelineIdentity(tomorrow)).toBe("Tomorrow in the Frame");
+
+    const evTomorrow = wuwaEventSections(mutated, ctx, true).find(s => s.event.title === "Tomorrow in the Frame")!.event;
+    expect(evTomorrow.recognitionSubjects).toBeUndefined();
+    expect(evTomorrow.summary).toBeNull();
+  });
 });

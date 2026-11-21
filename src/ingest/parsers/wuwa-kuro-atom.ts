@@ -14,6 +14,7 @@ type Article = {
   lines: string[];
   content: string;
   headings: string[];
+  headingBoundaries: string[];
   evidenceLines: string[];
   lineToEvidence: number[];
 };
@@ -72,7 +73,12 @@ export function discoverWuwaArticles(raw: string): Article[] {
     const lineToEvidence = aligned ? rawLinks : lines.map(() => -1);
     const headings = [...content.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)]
       .map(m => decodeEntities(m[1]!.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim());
-    return { sourceUrl: link, id, title: decodeEntities(title), lines, content, headings, evidenceLines, lineToEvidence };
+    const headingBoundaries = [...new Set([
+      ...headings,
+      ...[...content.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)]
+        .flatMap(m => textLines(m[1]!.replace(/[\r\n]/g, " ").replace(/<\/?(?:span|strong|b|em|i|a)\b[^>]*>/gi, ""))),
+    ])].filter(Boolean);
+    return { sourceUrl: link, id, title: decodeEntities(title), lines, content, headings, headingBoundaries, evidenceLines, lineToEvidence };
   });
 }
 
@@ -153,11 +159,28 @@ function period(line: string, updates: Map<string, string>) {
   } };
 }
 
-function sectionContext(lines: string[], type: EventType): { recognitionSubjects?: string[]; summary: string | null } {
-  const stop = /^(?:Duration\b|20\d{2}-|Version \d+\.\d+ [Uu]pdate|Eligibility\b|Notes\b|Convene Rules\b|New Merch\b|Maintenance\b|For more details\b|\[)/i;
+const CONDITIONAL_REWARD = /^\[Log in for \d+ days? in total\]:\s*.+/i;
+const DURATION_LINE = /^(?:✦?Duration\b|20\d{2}-|Version \d+\.\d+ [Uu]pdate)/i;
+const SECTION_BOUNDARY = /^\[[^\]]+\]|^(?:New |Convene Rules|Eligibility|Notes\b|Maintenance\b|For more details)/i;
+
+function sectionContext(
+  lines: string[],
+  type: EventType,
+  heading: string,
+  articleHeadings: readonly string[],
+): { recognitionSubjects?: string[]; summary: string | null } {
+  const unknownHeading = (line: string) =>
+    articleHeadings.includes(line) && !/^(?:Duration|Rewards)$/i.test(line);
+  const firstDuration = lines.findIndex(line => /\(server time\)/i.test(line) && DURATION_LINE.test(line));
+  const firstBoundary = lines.findIndex(line => (SECTION_BOUNDARY.test(line) && !CONDITIONAL_REWARD.test(line)) || unknownHeading(line));
+  // Fail closed when the duration line is absent or preceded by an unrecognized
+  // HTML/section heading (same boundary contract as E1 evidence extraction).
+  if (firstDuration < 0 || (firstBoundary >= 0 && firstBoundary < firstDuration)) {
+    return { summary: null };
+  }
   const intro: string[] = [];
-  for (const line of lines) {
-    if (stop.test(line)) break;
+  for (const line of lines.slice(0, firstDuration)) {
+    if (DURATION_LINE.test(line)) break;
     if (/^(?:Rewards)$/i.test(line)) continue;
     intro.push(line);
   }
@@ -166,8 +189,12 @@ function sectionContext(lines: string[], type: EventType): { recognitionSubjects
     if (featuredLines.length > 1) return { summary: null };
     const featuredLine = featuredLines[0];
     if (featuredLine) {
-      const m = /^During the event,\s*5-Star\s+(?:Resonator|Weapon):\s*([^,!.]+?)(?:,|\s+receive boosted drop rates)/i.exec(featuredLine);
-      const recognitionSubjects = sanitizeRecognitionSubjects(m?.[1] ? [m[1]] : undefined);
+      const expectedKind = /Featured Weapon Convene/i.test(heading) ? "Weapon"
+        : /Featured Resonator Convene/i.test(heading) ? "Resonator" : null;
+      const kindPattern = expectedKind ?? "(?:Resonator|Weapon)";
+      const m = new RegExp(`^During the event,\\s*5-Star\\s+${kindPattern}:\\s*([^,!.]+?)(?:,|\\s+receive boosted drop rates)`, "i").exec(featuredLine);
+      if (!m) return { summary: null };
+      const recognitionSubjects = sanitizeRecognitionSubjects(m[1] ? [m[1]] : undefined);
       return {
         ...(recognitionSubjects ? { recognitionSubjects } : {}),
         summary: clipSummary(featuredLine),
@@ -178,10 +205,19 @@ function sectionContext(lines: string[], type: EventType): { recognitionSubjects
   return { summary: clipSummary(intro.slice(0, 2).join(" ")) };
 }
 
-function candidate(article: Article, title: string, type: EventType, line: string, updates: Map<string, string>, ctx: ParseContext, contextLines: string[]): GachaEvent | null {
+function candidate(
+  article: Article,
+  title: string,
+  type: EventType,
+  line: string,
+  updates: Map<string, string>,
+  ctx: ParseContext,
+  contextLines: string[],
+  heading: string,
+): GachaEvent | null {
   const dates = period(line, updates);
   if (!dates) return null;
-  const { recognitionSubjects, summary } = sectionContext(contextLines, type);
+  const { recognitionSubjects, summary } = sectionContext(contextLines, type, heading, article.headingBoundaries);
   return GachaEvent.parse({
     id: eventId("wuwa", title, dates.start), game: "wuwa", title, type,
     ...(recognitionSubjects ? { recognitionSubjects } : {}),
@@ -241,7 +277,7 @@ export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhites
           const evNext = evFollowing.findIndex(line => identity(line) !== null);
           contextLines = evNext < 0 ? evFollowing : evFollowing.slice(0, evNext);
         }
-        const event = candidate(article, item.title, item.type, duration, scoped?.updates ?? updates, ctx, contextLines);
+        const event = candidate(article, item.title, item.type, duration, scoped?.updates ?? updates, ctx, contextLines, candidates[i]!);
         if (event) {
           const following = candidates.slice(i + 1);
           const next = following.findIndex(line => identity(line) !== null);
