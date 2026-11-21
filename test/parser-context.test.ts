@@ -384,4 +384,45 @@ describe("PR #1 review regressions — fail-safe context extraction", () => {
     expect(parsed.find(e => e.title === "Freeze Frame")?.recognitionSubjects).toEqual(["Freeze Frame"]);
     expect(parsed.find(e => e.title === "Undefined Spectrum")?.recognitionSubjects).toEqual(["Lynae"]);
   });
+
+  test("WuWa structural block linking resists decoy split headings with equal occurrence counts", async () => {
+    const ctx = { now: NOW, sourceUrl: "https://example.test", sourceId: "wuwa-kuro-mirror", game: "wuwa" as const };
+    const raw = (await Bun.file("test/fixtures/wuwa/evidence-2026-10-21.xml").text()).replace(/\r\n/g, "\n");
+    const base = parseWuwaKuroAtom(raw, ctx);
+    const lynaeLine = "<p>During the event, 5-Star Resonator: Lynae, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!</p>";
+    const decoySection = `<p>[Tomorrow in the Frame] Featured\nResonator Convene</p>${lynaeLine}<p>2026-10-22 10:00 - 2026-11-10 11:59 (server time)</p>`;
+    const mutated = raw
+      .replace(
+        "<p>[Tomorrow in the Frame] Featured Resonator Convene</p>",
+        "<p>[Tomorrow in the Frame] Featured Resonator Convene\n(Phase II)</p>",
+      )
+      .replace(
+        "<p>[Undefined Spectrum] Featured Resonator Convene</p>",
+        `${decoySection}<p>[Undefined Spectrum] Featured Resonator Convene</p>`,
+      );
+    const parsed = parseWuwaKuroAtom(mutated, ctx);
+    expect(invariantDigest(parsed)).toBe(invariantDigest(base));
+    const tomorrow = parsed.find(e => e.title === "Tomorrow in the Frame")!;
+    expect(tomorrow.endsAt).toBe("2026-11-11T03:59:00.000Z");
+    expect(tomorrow.recognitionSubjects).toBeUndefined();
+    expect(tomorrow.summary).toBeNull();
+  });
+
+  test("WuWa omits banner recognitionSubjects and summary when a section contains conflicting featured lines", async () => {
+    const ctx = { now: NOW, sourceUrl: "https://example.test", sourceId: "wuwa-kuro-mirror", game: "wuwa" as const };
+    const raw = (await Bun.file("test/fixtures/wuwa/evidence-2026-10-21.xml").text()).replace(/\r\n/g, "\n");
+    const base = parseWuwaKuroAtom(raw, ctx);
+    const lynaeLine = "<p>During the event, 5-Star Resonator: Lynae, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!</p>";
+    const lucillaLine = "<p>During the event, 5-Star Resonator: Lucilla, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!</p>";
+    const mutated = raw.replace(lucillaLine, `${lynaeLine}${lucillaLine}`);
+    const parsed = parseWuwaKuroAtom(mutated, ctx);
+    expect(invariantDigest(parsed)).toBe(invariantDigest(base));
+    const tomorrow = parsed.find(e => e.title === "Tomorrow in the Frame")!;
+    expect(tomorrow.recognitionSubjects).toBeUndefined();
+    expect(tomorrow.summary).toBeNull();
+
+    const evTomorrow = wuwaEventSections(mutated, ctx, true).find(s => s.event.title === "Tomorrow in the Frame")!.event;
+    expect(evTomorrow.recognitionSubjects).toBeUndefined();
+    expect(evTomorrow.summary).toBeNull();
+  });
 });

@@ -6,7 +6,17 @@ import type { SourceParser } from "./types.ts";
 
 const ENTRY = /<entry>([\s\S]*?)<\/entry>/g;
 const DATE = /(20\d{2})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})/g;
-type Article = { sourceUrl: string; id: string; title: string; lines: string[]; content: string; headings: string[]; evidenceLines: string[] };
+const BLOCK_BREAK = /<\/(?:p|li|h[1-6]|div)>|<br\s*\/?\s*>/gi;
+type Article = {
+  sourceUrl: string;
+  id: string;
+  title: string;
+  lines: string[];
+  content: string;
+  headings: string[];
+  evidenceLines: string[];
+  lineToEvidence: number[];
+};
 
 function day(match: RegExpMatchArray): string {
   const date = `${match[1]}-${match[2]}-${match[3]}`;
@@ -41,9 +51,28 @@ export function discoverWuwaArticles(raw: string): Article[] {
       .split("\n").map(s => s.replace(/\s+/g, " ").trim()).filter(Boolean);
     const lines = textLines(content);
     const evidenceLines = textLines(content.replace(/[\r\n]/g, " ").replace(/<\/?(?:span|strong|b|em|i|a)\b[^>]*>/gi, ""));
+    const chunkLines: string[] = [];
+    const chunkEvLines: string[] = [];
+    const rawLinks: number[] = [];
+    for (const chunk of content.split(BLOCK_BREAK)) {
+      const rawChunk = textLines(chunk);
+      const evChunk = textLines(chunk.replace(/[\r\n]/g, " ").replace(/<\/?(?:span|strong|b|em|i|a)\b[^>]*>/gi, ""));
+      const evBase = chunkEvLines.length;
+      for (const l of evChunk) chunkEvLines.push(l);
+      // Link a raw line to an evidence line only when the same HTML block yields
+      // one identical line in both views; otherwise fail closed (-1).
+      const exactLink = rawChunk.length === 1 && evChunk.length === 1 && rawChunk[0] === evChunk[0] ? evBase : -1;
+      for (const l of rawChunk) {
+        chunkLines.push(l);
+        rawLinks.push(exactLink);
+      }
+    }
+    const aligned = chunkLines.length === lines.length && chunkEvLines.length === evidenceLines.length &&
+      chunkLines.every((l, idx) => l === lines[idx]) && chunkEvLines.every((l, idx) => l === evidenceLines[idx]);
+    const lineToEvidence = aligned ? rawLinks : lines.map(() => -1);
     const headings = [...content.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)]
       .map(m => decodeEntities(m[1]!.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim());
-    return { sourceUrl: link, id, title: decodeEntities(title), lines, content, headings, evidenceLines };
+    return { sourceUrl: link, id, title: decodeEntities(title), lines, content, headings, evidenceLines, lineToEvidence };
   });
 }
 
@@ -133,7 +162,9 @@ function sectionContext(lines: string[], type: EventType): { recognitionSubjects
     intro.push(line);
   }
   if (type === "banner") {
-    const featuredLine = intro.find(l => /^During the event,\s*5-Star\s+(?:Resonator|Weapon):/i.test(l));
+    const featuredLines = intro.filter(l => /^During the event,\s*5-Star\s+(?:Resonator|Weapon):/i.test(l));
+    if (featuredLines.length > 1) return { summary: null };
+    const featuredLine = featuredLines[0];
     if (featuredLine) {
       const m = /^During the event,\s*5-Star\s+(?:Resonator|Weapon):\s*([^,!.]+?)(?:,|\s+receive boosted drop rates)/i.exec(featuredLine);
       const recognitionSubjects = sanitizeRecognitionSubjects(m?.[1] ? [m[1]] : undefined);
@@ -177,6 +208,12 @@ export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhites
     const prefix = standalone ? [`[${standalone}] ${/Convene/i.test(article.title) ? "Featured Resonator Convene" : "Combat Event"}`] : [];
     const candidates = [...prefix, ...articleLines];
     const evidenceCandidates = [...prefix, ...article.evidenceLines];
+    const candidateToEvidence = evidenceWhitespace
+      ? candidates.map((_, idx) => idx)
+      : [
+          ...prefix.map((_, idx) => idx),
+          ...article.lineToEvidence.map(idx => (idx >= 0 ? idx + prefix.length : -1)),
+        ];
     for (let i = 0; i < candidates.length; i++) {
       const item = identity(candidates[i]!);
       if (!item) continue;
@@ -198,22 +235,9 @@ export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhites
         (/^Duration:/i.test(s) || /^20\d{2}-/.test(s) || /^Version \d+\.\d+ [Uu]pdate/i.test(s)));
       if (duration) {
         let contextLines: string[] = [];
-        let evStart = -1;
-        if (evidenceWhitespace) {
-          evStart = i + 1;
-        } else {
-          const headingLine = candidates[i]!;
-          const candIndices: number[] = [];
-          const evIndices: number[] = [];
-          for (let j = 0; j < candidates.length; j++) if (candidates[j] === headingLine) candIndices.push(j);
-          for (let j = 0; j < evidenceCandidates.length; j++) if (evidenceCandidates[j] === headingLine) evIndices.push(j);
-          if (candIndices.length === evIndices.length) {
-            const pos = candIndices.indexOf(i);
-            if (pos >= 0) evStart = evIndices[pos]! + 1;
-          }
-        }
-        if (evStart >= 0) {
-          const evFollowing = evidenceCandidates.slice(evStart);
+        const evIdx = candidateToEvidence[i] ?? -1;
+        if (evIdx >= 0) {
+          const evFollowing = evidenceCandidates.slice(evIdx + 1);
           const evNext = evFollowing.findIndex(line => identity(line) !== null);
           contextLines = evNext < 0 ? evFollowing : evFollowing.slice(0, evNext);
         }
