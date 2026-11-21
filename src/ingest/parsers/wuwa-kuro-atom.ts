@@ -238,10 +238,17 @@ export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhites
   const scopedPatchDays = new Map<string, string>();
   const result: Array<{ event: GachaEvent; heading: string; lines: string[]; content: string; headings: string[]; repeatedHeading: boolean }> = [];
   for (const article of archive) {
-    const standalone = /\[([^\]]+)\]\s+(?:Combat Event|Featured (?:Resonator|Weapon) Convene)/i.exec(article.title)?.[1];
+    const standaloneMatch = /\[([^\]]+)\]\s+(Combat Event|Featured (?:Resonator|Weapon) Convene)/i.exec(article.title);
+    const standalone = standaloneMatch?.[1];
     // Preserve legacy parser line splitting; evidence normalizes soft newlines inside HTML blocks.
     const articleLines = evidenceWhitespace ? article.evidenceLines : article.lines;
-    const prefix = standalone ? [`[${standalone}] ${/Convene/i.test(article.title) ? "Featured Resonator Convene" : "Combat Event"}`] : [];
+    // Keep the banner kind stated by the Atom title (Resonator vs Weapon); the
+    // identity/ID only uses the bracketed name, so this never moves an event ID.
+    const standaloneKind = standaloneMatch
+      ? /Weapon Convene/i.test(standaloneMatch[2]!) ? "Featured Weapon Convene"
+        : /Convene/i.test(standaloneMatch[2]!) ? "Featured Resonator Convene" : "Combat Event"
+      : null;
+    const prefix = standalone && standaloneKind ? [`[${standalone}] ${standaloneKind}`] : [];
     const candidates = [...prefix, ...articleLines];
     const evidenceCandidates = [...prefix, ...article.evidenceLines];
     const candidateToEvidence = evidenceWhitespace

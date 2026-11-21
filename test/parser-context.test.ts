@@ -444,4 +444,40 @@ describe("PR #1 review regressions — fail-safe context extraction", () => {
     expect(evTomorrow.recognitionSubjects).toBeUndefined();
     expect(evTomorrow.summary).toBeNull();
   });
+
+  test("WuWa standalone Atom announcements keep their stated banner kind (weapon and resonator)", () => {
+    const ctx = { now: NOW, sourceUrl: "https://example.test", sourceId: "wuwa-kuro-mirror", game: "wuwa" as const };
+    const period = "<p>2026-10-22 10:00 - 2026-11-11 11:59 (server time)</p>";
+    const entry = (title: string, featured: string) => [
+      '<feed xmlns="http://www.w3.org/2005/Atom">',
+      `<entry><id>urn:article:5668</id><title>${title}</title>`,
+      '<link href="https://wutheringwaves.kurogames.com/en/main/news/detail/5668"/>',
+      `<content type="html"><![CDATA[<p>${featured}</p>${period}]]></content></entry></feed>`,
+    ].join("\n");
+    const expected = {
+      startsAt: "2026-10-22T00:00:00.000Z",
+      endsAt: "2026-11-11T03:59:00.000Z",
+      regionEnds: { asia: "2026-11-11T03:59:00.000Z", europe: "2026-11-11T10:59:00.000Z", america: "2026-11-11T16:59:00.000Z" },
+    };
+
+    const weaponLine = "During the event, 5-Star Weapon: Freeze Frame, 4-Star Weapons: Overture, Relativistic Jet, Amity Accord receive boosted drop rates!";
+    const weaponRaw = entry("[Freeze Frame] Featured Weapon Convene", weaponLine);
+    for (const weapon of [parseWuwaKuroAtom(weaponRaw, ctx)[0]!, wuwaEventSections(weaponRaw, ctx, true)[0]!.event]) {
+      expect(weapon).toMatchObject({ id: "wuwa:freeze-frame:2026-10-22", title: "Freeze Frame", type: "banner", ...expected });
+      expect(weapon.recognitionSubjects).toEqual(["Freeze Frame"]);
+      expect(weapon.summary).toBe(weaponLine);
+    }
+
+    const resonatorLine = "During the event, 5-Star Resonator: Lucilla, 4-Star Resonators: Lumi, Danjin, and Chixia receive boosted drop rates!";
+    const resonatorRaw = entry("[Tomorrow in the Frame] Featured Resonator Convene", resonatorLine);
+    const resonator = parseWuwaKuroAtom(resonatorRaw, ctx)[0]!;
+    expect(resonator).toMatchObject({ id: "wuwa:tomorrow-in-the-frame:2026-10-22", type: "banner", ...expected });
+    expect(resonator.recognitionSubjects).toEqual(["Lucilla"]);
+
+    // A lineup line of the wrong kind is still refused rather than published.
+    const mismatched = parseWuwaKuroAtom(entry("[Freeze Frame] Featured Weapon Convene", resonatorLine), ctx)[0]!;
+    expect(mismatched).toMatchObject({ id: "wuwa:freeze-frame:2026-10-22", ...expected });
+    expect(mismatched.recognitionSubjects).toBeUndefined();
+    expect(mismatched.summary).toBeNull();
+  });
 });
