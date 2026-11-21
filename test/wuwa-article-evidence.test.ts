@@ -133,10 +133,19 @@ test("pre-existing E1 extraction, excerpts/hashes, refused records and diagnosti
   const original = await Bun.file("test/fixtures/wuwa/evidence-2026-10-21.xml").text();
   expect(new Bun.CryptoHasher("sha256").update(original).digest("hex")).toBe(golden.inputSha256);
   const e1 = extractWuwaEvidence(original, ctx, capture);
-  expect(e1).toEqual(golden.extraction);
-  const inventory = extractArticleEvidence(original, ctx, capture, adapter.parse(original, ctx));
+  // PR #1 enriches canonical summary/recognitionSubjects; strip those to match pre-PR#1 golden event fields and check exact source excerpts/parsed alignment.
+  expect({
+    ...e1,
+    candidates: e1.candidates.map(c => {
+      const { recognitionSubjects: _rs, ...rest } = c.event;
+      return { ...c, event: { ...rest, summary: null } };
+    }),
+  }).toEqual(golden.extraction);
+  const parsed = adapter.parse(original, ctx);
+  for (const c of e1.candidates) expect(c.event).toEqual(parsed.find(e => e.id === c.event.id)!);
+  const inventory = extractArticleEvidence(original, ctx, capture, parsed);
   const ex = combine(e1, inventory);
-  const side = buildEvidenceSidecar(ex, adapter.parse(original, ctx));
+  const side = buildEvidenceSidecar(ex, parsed);
   expect(side.entries).toEqual(golden.entries);
   expect(side.unattached).toEqual(golden.unattached);
   expect(side.diagnostics).toEqual(golden.diagnostics);

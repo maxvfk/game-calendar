@@ -235,7 +235,7 @@ export type NoteLevel = "repaired" | "dropped";
 export interface SanitizeNote {
   level: NoteLevel;
   sourceId: string;
-  field: "title" | "summary" | "sourceUrl" | "id";
+  field: "title" | "summary" | "recognitionSubjects" | "sourceUrl" | "id";
   /** Human-readable, already truncated — safe to print to a log. */
   message: string;
 }
@@ -329,7 +329,54 @@ export function sanitizeEvent(
     }
   }
 
-  return { event: { ...event, id, title, summary, sourceUrl }, notes };
+  let recognitionSubjects = event.recognitionSubjects;
+  if (recognitionSubjects !== undefined) {
+    const rawSubjects = recognitionSubjects;
+    const cleaned: string[] = [];
+    const seen = new Set<string>();
+    for (const rawSubject of rawSubjects) {
+      const s = sanitizeText(rawSubject, { maxLength: LIMITS.title });
+      if (s.length === 0 || seen.has(s)) continue;
+      seen.add(s);
+      cleaned.push(s);
+    }
+    const changed =
+      cleaned.length !== rawSubjects.length ||
+      cleaned.some((s, i) => s !== rawSubjects[i]);
+    if (changed) {
+      note(
+        "repaired",
+        "recognitionSubjects",
+        `subjects cleaned (${rawSubjects.length} → ${cleaned.length})`,
+      );
+    }
+    recognitionSubjects = cleaned.length > 0 ? cleaned : undefined;
+  }
+
+  const out: GachaEvent = { ...event, id, title, summary, sourceUrl };
+  if (recognitionSubjects === undefined) delete out.recognitionSubjects;
+  else out.recognitionSubjects = recognitionSubjects;
+  return { event: out, notes };
+}
+
+/**
+ * Strip markdown/HTML/BBCode formatting from factual source prose and clip to
+ * a clean single-line summary (`<= LIMITS.summary`, default 450).
+ */
+export function clipSummary(
+  raw: string | null | undefined,
+  max = 450,
+): string | null {
+  if (typeof raw !== "string") return null;
+  const stripped = raw
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/\*\*([^\s*][^*\r\n]*?[^\s*]|[^\s*])\*\*/g, "$1")
+    .replace(/\[img[^\]]*\][\s\S]*?\[\/img\]/gi, " ")
+    .replace(/\[\/?(?:p|b|i|u|s|strike|url|color|font|size|list|quote|code|spoiler|h[1-6]|\*)(?:=[^\]]*)?\]/gi, " ");
+  const cap = Math.max(1, Math.min(max, LIMITS.summary));
+  const cleaned = sanitizeText(stripped, { maxLength: cap });
+  return cleaned.length === 0 ? null : cleaned;
 }
 
 export interface SanitizeEventsResult {

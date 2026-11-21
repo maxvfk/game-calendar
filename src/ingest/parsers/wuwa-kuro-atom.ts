@@ -1,6 +1,7 @@
 import { eventId, GachaEvent, type EventType } from "../../shared/schema.ts";
 import type { ParseContext } from "../adapters/types.ts";
 import { decodeEntities } from "../html.ts";
+import { clipSummary } from "../sanitize.ts";
 import type { SourceParser } from "./types.ts";
 
 const ENTRY = /<entry>([\s\S]*?)<\/entry>/g;
@@ -123,11 +124,37 @@ function period(line: string, updates: Map<string, string>) {
   } };
 }
 
-function candidate(article: Article, title: string, type: EventType, line: string, updates: Map<string, string>, ctx: ParseContext): GachaEvent | null {
+function sectionContext(lines: string[], type: EventType): { recognitionSubjects?: string[]; summary: string | null } {
+  const stop = /^(?:Duration\b|20\d{2}-|Version \d+\.\d+ [Uu]pdate|Eligibility\b|Notes\b|Convene Rules\b|New Merch\b|Maintenance\b|For more details\b|\[)/i;
+  const intro: string[] = [];
+  for (const line of lines) {
+    if (stop.test(line)) break;
+    if (/^(?:Rewards)$/i.test(line)) continue;
+    intro.push(line);
+  }
+  if (type === "banner") {
+    const featuredLine = intro.find(l => /^During the event,\s*5-Star\s+(?:Resonator|Weapon):/i.test(l));
+    if (featuredLine) {
+      const m = /^During the event,\s*5-Star\s+(?:Resonator|Weapon):\s*([^,!.]+?)(?:,|\s+receive boosted drop rates)/i.exec(featuredLine);
+      const subject = m?.[1]?.trim();
+      return {
+        ...(subject ? { recognitionSubjects: [subject] } : {}),
+        summary: clipSummary(featuredLine),
+      };
+    }
+    return { summary: clipSummary(intro.slice(0, 2).join(" ")) };
+  }
+  return { summary: clipSummary(intro.slice(0, 2).join(" ")) };
+}
+
+function candidate(article: Article, title: string, type: EventType, line: string, updates: Map<string, string>, ctx: ParseContext, contextLines: string[]): GachaEvent | null {
   const dates = period(line, updates);
   if (!dates) return null;
+  const { recognitionSubjects, summary } = sectionContext(contextLines, type);
   return GachaEvent.parse({
-    id: eventId("wuwa", title, dates.start), game: "wuwa", title, type, summary: null,
+    id: eventId("wuwa", title, dates.start), game: "wuwa", title, type,
+    ...(recognitionSubjects ? { recognitionSubjects } : {}),
+    summary,
     startsAt: dates.start, startPrecision: "day", endsAt: dates.endsAt, endPrecision: "exact",
     regionScoped: true, regionEnds: dates.regionEnds,
     sourceUrl: `https://wutheringwaves.kurogames.com/en/main/news/detail/${article.id}`,
@@ -147,7 +174,9 @@ export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhites
     const standalone = /\[([^\]]+)\]\s+(?:Combat Event|Featured (?:Resonator|Weapon) Convene)/i.exec(article.title)?.[1];
     // Preserve legacy parser line splitting; evidence normalizes soft newlines inside HTML blocks.
     const articleLines = evidenceWhitespace ? article.evidenceLines : article.lines;
-    const candidates = standalone ? [`[${standalone}] ${/Convene/i.test(article.title) ? "Featured Resonator Convene" : "Combat Event"}`, ...articleLines] : articleLines;
+    const prefix = standalone ? [`[${standalone}] ${/Convene/i.test(article.title) ? "Featured Resonator Convene" : "Combat Event"}`] : [];
+    const candidates = [...prefix, ...articleLines];
+    const evidenceCandidates = [...prefix, ...article.evidenceLines];
     for (let i = 0; i < candidates.length; i++) {
       const item = identity(candidates[i]!);
       if (!item) continue;
@@ -168,7 +197,17 @@ export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhites
       const duration = scoped?.line ?? near.find(s => /\(server time\)/i.test(s) &&
         (/^Duration:/i.test(s) || /^20\d{2}-/.test(s) || /^Version \d+\.\d+ [Uu]pdate/i.test(s)));
       if (duration) {
-        const event = candidate(article, item.title, item.type, duration, scoped?.updates ?? updates, ctx);
+        let evStart = i + 1;
+        if (!evidenceWhitespace) {
+          const occurrence = candidates.slice(0, i).filter(line => line === candidates[i]).length;
+          let seen = 0;
+          const idx = evidenceCandidates.findIndex(line => line === candidates[i] && seen++ === occurrence);
+          evStart = idx >= 0 ? idx + 1 : i + 1;
+        }
+        const evFollowing = evidenceCandidates.slice(evStart);
+        const evNext = evFollowing.findIndex(line => identity(line) !== null);
+        const contextLines = evNext < 0 ? evFollowing : evFollowing.slice(0, evNext);
+        const event = candidate(article, item.title, item.type, duration, scoped?.updates ?? updates, ctx, contextLines);
         if (event) {
           const following = candidates.slice(i + 1);
           const next = following.findIndex(line => identity(line) !== null);

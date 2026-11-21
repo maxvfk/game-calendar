@@ -1,6 +1,7 @@
 import { eventId, GachaEvent, type EventType } from "../../shared/schema.ts";
 import type { ParseContext } from "../adapters/types.ts";
 import { decodeEntities } from "../html.ts";
+import { clipSummary } from "../sanitize.ts";
 import type { SourceParser } from "./types.ts";
 
 export const ZZZ_STEAM_RSS_URL = "https://steamcommunity.com/games/4162040/rss/";
@@ -141,9 +142,13 @@ function parsePost(post: Post, ctx: ParseContext): GachaEvent[] {
       asia: instant(end, 8), europe: instant(end, 1), america: instant(end, -5),
     } : null;
     const type: EventType = block.body.some(line => /\b(?:log in|check in) for a total of \d+ days\b/i.test(line)) ? "login" : "other";
+    const durationIndex = block.body.findIndex(line => /^Event Duration:\s*/.test(line));
+    const proseLines = (durationIndex >= 0 ? block.body.slice(0, durationIndex) : block.body)
+      .filter(line => !/^(?:Requirements|Eligibility):/i.test(line));
+    const summary = clipSummary(proseLines.join(" "));
     const event = GachaEvent.parse({
       id: eventId("zzz", block.title, startsAt), game: "zzz", title: block.title, type,
-      summary: null, startsAt, startPrecision: relativeStart || start.zone === "server time" ? "day" : "exact",
+      summary, startsAt, startPrecision: relativeStart || start.zone === "server time" ? "day" : "exact",
       endsAt: regionEnds?.asia ?? instant(end, 8), endPrecision: "exact",
       regionScoped: regionEnds !== null, regionEnds,
       sourceUrl: post.url, sourceId: ctx.sourceId, provenanceStatus: "official",
