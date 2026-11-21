@@ -869,24 +869,26 @@
     },
     {
       "eventId": "genshin:chanson-of-many-waters:2026-11-04",
-      "fingerprint": "sha256:c4332995b1d7a7c274db7c3288a23434959ecd4e96f9f9bc8a50dfb9a9093e61",
+      "fingerprint": "sha256:9c3ce06a78d9937043419817bada807fb6ea3a837a66fe1bae1d9ce24715de7f",
       "rulesVersion": "v1",
-      "decision": "keep_original",
-      "reason": "Official banner name; no featured character is supplied, so nothing truthful can be added."
+      "decision": "label",
+      "timelineTitle": "Furina",
+      "reason": "The featured character Furina is clearly easier to recognize than the decorative banner title."
     },
     {
       "eventId": "genshin:epitome-invocation-version-7-2-phase-i:2026-11-04",
-      "fingerprint": "sha256:2c8e2da5753a8dc07cb1dcd665ffca4b3bb8891063ed1e795eb9332e9aa15fcc",
+      "fingerprint": "sha256:7c43ccd7916ba2533bf0659c31e665cf4440b609d03ae37710888cfba1596720",
       "rulesVersion": "v1",
-      "decision": "keep_original",
-      "reason": "Already carries the weapon-banner mode plus version and phase identifiers."
+      "decision": "needs_research",
+      "reason": "auto-guard: lost Version 7.2, Phase I; proposed \"Epitome Invocation: Starsealed Edict and Splendor of Tranquil Waters\""
     },
     {
       "eventId": "genshin:myriad-patterns-unfold:2026-11-04",
-      "fingerprint": "sha256:7eb57f7828c43f94303ab956ce56acdf51deefaf34157111cba907a5b7cf2fce",
+      "fingerprint": "sha256:05b80b0e2a32953d6973956c7c9003f6dabce914cbc036d259ff6021bc76ddbf",
       "rulesVersion": "v1",
-      "decision": "keep_original",
-      "reason": "Distinctive official banner name; no featured character supplied to substitute."
+      "decision": "label",
+      "timelineTitle": "Mitya",
+      "reason": "The featured character Mitya is clearer than the decorative banner title."
     },
     {
       "eventId": "endfield:season-of-fervor:2026-11-05",
@@ -897,10 +899,10 @@
     },
     {
       "eventId": "genshin:hour-of-ruin-limited-time-archon-quest-rewards:2026-11-04",
-      "fingerprint": "sha256:51d07783e955d0e75dc184463eb70a17a28642fe5c12fecca2853f4e37ed8f45",
+      "fingerprint": "sha256:b6429ff018ef9e7b36e394d122fbc7f05aa2492adf4ee6a6dc2d23db62bd9e0f",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "Quest name and limited-time reward nature are already clear and informative."
+      "reason": "The title already states the quest and limited-time reward context."
     },
     {
       "eventId": "zzz:shiyu-defense-critical-node-nov-13:2026-11-13",
@@ -1131,108 +1133,112 @@
     },
     {
       "eventId": "wuwa:emerald-sentence:2026-11-12",
-      "fingerprint": "sha256:46105171a2178c92d4bf9c6b8e8453fba3cf60cbd531a98dd3ca103426d74106",
+      "fingerprint": "sha256:c1155c324349dfcb4098d73c48ceaff19ad9554fad07fb951cb3a0775d419b05",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "No summary or recognition subjects supplied; the official banner title is the only supported name."
+      "reason": "The title is the featured 5-star weapon name and is already recognizable."
     },
     {
       "eventId": "wuwa:solsworn-ciphers:2026-11-12",
-      "fingerprint": "sha256:527e78d0685d6f76ad3cd6ceea46867b0de7c122831e8f8e5112bbfa5c4f4eea",
+      "fingerprint": "sha256:92b5540476bc7472651ab6dfda011ff30b07fc9c74d4044cb58d9433b5c37fb5",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "No summary or recognition subjects supplied; no truthful alternative can be built from the input."
+      "reason": "The title is the featured 5-star weapon name and is already recognizable."
     },
     {
       "eventId": "wuwa:wanderer-knows-no-far-and-near:2026-11-12",
-      "fingerprint": "sha256:b868524b2f4ac624bc8d7c4d7e4ae3b88871449570995913582ec77e824f5ca7",
+      "fingerprint": "sha256:969adc848fe748c98a24ee1349996e8a65257a6f90921e7054afeea5113b6aeb",
       "rulesVersion": "v1",
-      "decision": "keep_original",
-      "reason": "No summary or recognition subjects supplied; the existing title is the only supported name."
+      "decision": "label",
+      "timelineTitle": "Qiuyuan",
+      "reason": "The featured Resonator Qiuyuan is clearer than the decorative banner title."
     },
     {
       "eventId": "wuwa:when-the-runes-glitter:2026-11-12",
-      "fingerprint": "sha256:ec6418a72ed09a053fd304f88065a784d03c7555fa7cba1329584eb383c2d032",
+      "fingerprint": "sha256:8b7e9c4469117cc918572d55d9811612f75398df2b0c2d850321bc63236ba2cf",
       "rulesVersion": "v1",
-      "decision": "keep_original",
-      "reason": "No summary or recognition subjects supplied; keep the official banner title rather than invent details."
+      "decision": "label",
+      "timelineTitle": "Sigrika",
+      "reason": "The featured Resonator Sigrika is clearer than the decorative banner title."
     },
     {
       "eventId": "hsr:version-4-7-nameless-honor:2026-11-11",
-      "fingerprint": "sha256:85c2d1e24bdcfdaa147e20e990bd99b8ebadc45038605da80789ddcd129c9206",
+      "fingerprint": "sha256:0029a51795c40ed2842124c11b0e582bfee6746879f09f575d0dd75f1bdca4cd",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "Preserves the meaningful version identity; no additional detail is supported by the input."
+      "reason": "The versioned battle-pass name is already clear and distinctive."
     },
     {
       "eventId": "wuwa:second-coming-of-solaris-unwritten-dreams:2026-11-12",
-      "fingerprint": "sha256:13128f7dc66a3acf06e72ef86c53ccf3df4522ebbbc584f828826f98b66e6ad1",
+      "fingerprint": "sha256:a6f3b3cdf47740ba215295b61f29d05f0993fe19603542dd29db374392cb6efc",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "No summary supplied; the current title is already the recognizable event name."
+      "reason": "The official title names the series and entry without an opaque decorative name."
     },
     {
       "eventId": "hsr:cosmic-aesthetics-phantasia-showstage:2026-11-11",
-      "fingerprint": "sha256:3555297a7723c214bf352bd7896b711405508295584fe24296bed4c51b3ae13a",
+      "fingerprint": "sha256:ed80573c6e329f1c0415c48264b1b77fd747758f697de359cf2732b1dd52f243",
       "rulesVersion": "v1",
-      "decision": "keep_original",
-      "reason": "No summary or subjects supplied; the current title is specific and recognizable as-is."
+      "decision": "label",
+      "timelineTitle": "Phantasia Showstage: Star Lotto Outfit",
+      "reason": "Names the draw event and its headline outfit instead of the decorative prefix."
     },
     {
       "eventId": "hsr:interastral-peace-gala-road-to-fame:2026-11-11",
-      "fingerprint": "sha256:f3537ae00bf35c99b051b7fc84c648237b703cdd6134c358678e0f8416b0451e",
+      "fingerprint": "sha256:ca14f62c58d1d078a1114e838f32b7944326ae61dbc026058be26c1b1e99b500",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "No summary or subjects supplied; the current title is specific and recognizable as-is."
+      "reason": "The official gala title is distinctive; the summary offers no clearer supported alternative."
     },
     {
       "eventId": "hsr:myriad-symphony:2026-11-11",
-      "fingerprint": "sha256:9d689c7feb54ea50a37e9c4ec2c2034d197a50e1f130e7553c7f41653cece287",
+      "fingerprint": "sha256:75bde016236c9fcab368e9ba2fcbd939479c10927bbd566c092134366faf026b",
       "rulesVersion": "v1",
-      "decision": "keep_original",
-      "reason": "No summary or subjects supplied; no supported alternative would improve recognition."
+      "decision": "label",
+      "timelineTitle": "Myriad Symphony: Affinitive Eidolons",
+      "reason": "Adds the claimable reward to the otherwise opaque event title."
     },
     {
       "eventId": "hsr:relic-recon:2026-11-11",
-      "fingerprint": "sha256:15d6cabf14efdab607fa7eb4a39a066d34141f1986a7dbb76e950da79abbb208",
+      "fingerprint": "sha256:425ddd90ac17bcad69f7a425b777abaf2bf6c8df6f562ea82d682fc9bde964c8",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "No summary or subjects supplied; the short official name is already clear and does not need shortening."
+      "reason": "Relic Recon is already a concise, distinctive event name."
     },
     {
       "eventId": "hsr:the-fluffy-movie-overheated:2026-11-11",
-      "fingerprint": "sha256:019af1f6faae93df6e852032d880991dbf403efd08a3f885d97300f322ad14db",
+      "fingerprint": "sha256:345c9fc86095072aef43a51bf6787cb3d3b5745a47d5d1df3f6adbd4622630e9",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "No summary or subjects supplied; the current title is the only supported name."
+      "reason": "The official title is distinctive and the summary does not supply a clearer reward label."
     },
     {
       "eventId": "wuwa:lahai-roi-blocks-turnabout:2026-11-19",
-      "fingerprint": "sha256:5440b97f82d8a262a92966f32a60e322a8e0a059c082c3a0982c4b7b22b2badb",
+      "fingerprint": "sha256:1d63abfb30b69e32bb015de2765de3c0fd4fc622d236497af582c13caee9b16a",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "No summary supplied; the current title already carries the distinctive activity name and variant."
+      "reason": "The official minigame title is already distinctive and informative."
     },
     {
       "eventId": "wuwa:lollo-campaign-groundwork:2026-12-03",
-      "fingerprint": "sha256:1465d8492585f99be301b5ac5e6edf65030caf5a65743ea827ea28d07d909230",
+      "fingerprint": "sha256:339655b200a909c71a0fab51e50899b79fb2cb135af4c340fef270e48f7e8e7a",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "No summary supplied; the current title already identifies the campaign and its variant."
+      "reason": "The official campaign title is already distinctive and informative."
     },
     {
       "eventId": "wuwa:dreamfield-odyssey:2026-12-03",
-      "fingerprint": "sha256:ccf9e9e8607c755fd563d1520dc7f5c794a491d916d2ae30217c11f44248042a",
+      "fingerprint": "sha256:2e2b5ac5f7d24c0ecff6a59c3ed3d60154639e140162cd40159f662a0a2828e9",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "No summary or subjects supplied; the current title is a distinct, recognizable challenge name."
+      "reason": "Dreamfield Odyssey is already a distinctive challenge title."
     },
     {
       "eventId": "wuwa:whither-the-wind:2026-12-07",
-      "fingerprint": "sha256:ba8c4009b186e8323eea944eda13a2f649f98790e61e58a3d6c86b8c58830c06",
+      "fingerprint": "sha256:358d0773fa545f270c82d0d8e9c781192db1bee68efd9037d84785d6040b5355",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "Login type is already conveyed by the badge; no summary or subjects support a clearer label."
+      "reason": "The official event name is the clearest supported identity; the summary provides no distinctive reward name."
     },
     {
       "eventId": "zzz:shiyu-defense-critical-node-jan-22:2027-01-22",
@@ -1240,6 +1246,44 @@
       "rulesVersion": "v1",
       "decision": "keep_original",
       "reason": "Current identity already names the mode, node and rotation date; adding projected dates would risk unsupported claims."
+    },
+    {
+      "eventId": "genshin:stress-block-smashing-project:2026-11-20",
+      "fingerprint": "sha256:773d7bc07dc3d47ba80a2648be7ff9e7969eea091960eb7e5745ac2b25753c10",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "The official event name is distinctive and fully supported by the summary."
+    },
+    {
+      "eventId": "genshin:harmonious-abundance:2026-11-24",
+      "fingerprint": "sha256:2b63a1a238969139a85b452a290cc52f6bbd95982f466b12d2fead46cab8fd0b",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Zibai",
+      "reason": "The featured character Zibai is clearer than the decorative banner title."
+    },
+    {
+      "eventId": "genshin:names-forged-beneath-blazing-skies:2026-11-24",
+      "fingerprint": "sha256:7a91d26724b5fbf9d7f150535f387bc63769d1b0a00b38b9840b9de66e3e10e6",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Chronicled Wish: Varesa, Chasca, Xilonen, Mualani, Kinich",
+      "reason": "Lists the selectable 5-star characters that the decorative banner title omits."
+    },
+    {
+      "eventId": "genshin:ya-hoho-compendium:2026-11-24",
+      "fingerprint": "sha256:7ffac49478d9592370544289e181db054aba60072f72ad24e16c33bb34d6e0bb",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Linnea",
+      "reason": "The featured character Linnea is clearer than the decorative banner title."
+    },
+    {
+      "eventId": "zzz:deadly-assault-jan-29:2027-01-29",
+      "fingerprint": "sha256:c2a819f42ca75af17f484992900c19e10b7fd351dd7d7b58ef6c5c1826fa7b0c",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "The mode and date already distinguish this rotation."
     }
   ]
 }
