@@ -2,12 +2,12 @@
   "contentKind": "json",
   "sourceId": "zzz-zenlessgg-banners",
   "url": "https://zenless.gg/news/updates/feed/",
-  "contentHash": "143f4eb5944029e8ef3778d7ef38ef0a22d863950203b34d44efe268e9c4defc",
-  "bytes": 22257,
-  "etag": "W/\"1118556bdc3720daf4a1ef94e0bd4945\"",
-  "lastModified": "Thu, 05 Nov 2026 01:00:00 GMT",
-  "contentChangedAt": "2026-11-07T20:59:09.548Z",
-  "lastConfirmedAt": "2026-11-11T12:49:15.877Z",
+  "contentHash": "1aa0ff33e0de6861210b392026748c547435cdccb3e70b03d379d625e8f694c9",
+  "bytes": 22289,
+  "etag": "W/\"b867e6c8cc92e4efbc74feec39512c8f\"",
+  "lastModified": "Fri, 20 Nov 2026 01:00:00 GMT",
+  "contentChangedAt": "2026-11-21T22:14:37.859Z",
+  "lastConfirmedAt": "2026-11-21T22:14:37.859Z",
   "eventCount": 20,
   "charset": "utf-8"
 }
