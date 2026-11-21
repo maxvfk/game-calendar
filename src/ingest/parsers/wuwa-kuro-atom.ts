@@ -1,7 +1,7 @@
 import { eventId, GachaEvent, type EventType } from "../../shared/schema.ts";
 import type { ParseContext } from "../adapters/types.ts";
 import { decodeEntities } from "../html.ts";
-import { clipSummary } from "../sanitize.ts";
+import { clipSummary, sanitizeRecognitionSubjects } from "../sanitize.ts";
 import type { SourceParser } from "./types.ts";
 
 const ENTRY = /<entry>([\s\S]*?)<\/entry>/g;
@@ -136,9 +136,9 @@ function sectionContext(lines: string[], type: EventType): { recognitionSubjects
     const featuredLine = intro.find(l => /^During the event,\s*5-Star\s+(?:Resonator|Weapon):/i.test(l));
     if (featuredLine) {
       const m = /^During the event,\s*5-Star\s+(?:Resonator|Weapon):\s*([^,!.]+?)(?:,|\s+receive boosted drop rates)/i.exec(featuredLine);
-      const subject = m?.[1]?.trim();
+      const recognitionSubjects = sanitizeRecognitionSubjects(m?.[1] ? [m[1]] : undefined);
       return {
-        ...(subject ? { recognitionSubjects: [subject] } : {}),
+        ...(recognitionSubjects ? { recognitionSubjects } : {}),
         summary: clipSummary(featuredLine),
       };
     }
@@ -197,16 +197,26 @@ export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhites
       const duration = scoped?.line ?? near.find(s => /\(server time\)/i.test(s) &&
         (/^Duration:/i.test(s) || /^20\d{2}-/.test(s) || /^Version \d+\.\d+ [Uu]pdate/i.test(s)));
       if (duration) {
-        let evStart = i + 1;
-        if (!evidenceWhitespace) {
-          const occurrence = candidates.slice(0, i).filter(line => line === candidates[i]).length;
-          let seen = 0;
-          const idx = evidenceCandidates.findIndex(line => line === candidates[i] && seen++ === occurrence);
-          evStart = idx >= 0 ? idx + 1 : i + 1;
+        let contextLines: string[] = [];
+        let evStart = -1;
+        if (evidenceWhitespace) {
+          evStart = i + 1;
+        } else {
+          const headingLine = candidates[i]!;
+          const candIndices: number[] = [];
+          const evIndices: number[] = [];
+          for (let j = 0; j < candidates.length; j++) if (candidates[j] === headingLine) candIndices.push(j);
+          for (let j = 0; j < evidenceCandidates.length; j++) if (evidenceCandidates[j] === headingLine) evIndices.push(j);
+          if (candIndices.length === evIndices.length) {
+            const pos = candIndices.indexOf(i);
+            if (pos >= 0) evStart = evIndices[pos]! + 1;
+          }
         }
-        const evFollowing = evidenceCandidates.slice(evStart);
-        const evNext = evFollowing.findIndex(line => identity(line) !== null);
-        const contextLines = evNext < 0 ? evFollowing : evFollowing.slice(0, evNext);
+        if (evStart >= 0) {
+          const evFollowing = evidenceCandidates.slice(evStart);
+          const evNext = evFollowing.findIndex(line => identity(line) !== null);
+          contextLines = evNext < 0 ? evFollowing : evFollowing.slice(0, evNext);
+        }
         const event = candidate(article, item.title, item.type, duration, scoped?.updates ?? updates, ctx, contextLines);
         if (event) {
           const following = candidates.slice(i + 1);

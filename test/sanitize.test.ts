@@ -6,6 +6,7 @@ import {
   clipSummary,
   sanitizeEvent,
   sanitizeEvents,
+  sanitizeRecognitionSubjects,
   sanitizeText,
   sanitizeUrl,
   type SanitizeNote,
@@ -592,5 +593,26 @@ describe("the adapter seam", () => {
       expect(notes.map((n) => `${n.field}: ${n.message}`), adapter.id).toEqual([]);
       expect(events.map((e) => e.id), adapter.id).toEqual(raw.map((e) => e.id));
     }
+  });
+});
+
+describe("sanitizeRecognitionSubjects", () => {
+  test("cleans valid subjects and deduplicates while preserving order", () => {
+    expect(sanitizeRecognitionSubjects(["  Furina  ", "<b>Neuvillette</b>", "Furina"])).toEqual([
+      "Furina",
+      "Neuvillette",
+    ]);
+    expect(sanitizeRecognitionSubjects(["a".repeat(LIMITS.title)])).toEqual(["a".repeat(LIMITS.title)]);
+  });
+
+  test("omits doubtful blank, tag-only, or overlong captures instead of truncating", () => {
+    expect(sanitizeRecognitionSubjects(undefined)).toBeUndefined();
+    expect(sanitizeRecognitionSubjects([])).toBeUndefined();
+    expect(sanitizeRecognitionSubjects(["   "])).toBeUndefined();
+    expect(sanitizeRecognitionSubjects(["<b></b>"])).toBeUndefined();
+    expect(sanitizeRecognitionSubjects(["a".repeat(LIMITS.title + 1)])).toBeUndefined();
+    expect(sanitizeRecognitionSubjects(["word ".repeat(60)])).toBeUndefined();
+    expect(sanitizeRecognitionSubjects(["Valid", "   "])).toBeUndefined();
+    expect(sanitizeRecognitionSubjects(["Valid", "a".repeat(LIMITS.title + 1)])).toBeUndefined();
   });
 });

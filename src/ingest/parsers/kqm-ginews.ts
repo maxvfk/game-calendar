@@ -1,6 +1,6 @@
 import { eventId, GachaEvent, type EventType } from "../../shared/schema.ts";
 import type { ParseContext } from "../adapters/types.ts";
-import { clipSummary } from "../sanitize.ts";
+import { clipSummary, sanitizeRecognitionSubjects } from "../sanitize.ts";
 import type { SourceParser } from "./types.ts";
 
 // The Markdown is an extraction surface for in-game notices, not publisher
@@ -89,13 +89,13 @@ function period(line: string, update: Map<string, string>): { start: string; end
 function bannerSubjects(article: Article, type: EventType): string[] | undefined {
   if (type !== "banner") return undefined;
   const weapon = /Boosted\s+Drop\s+Rates?\s+for\s+(.+?)\s*\((?:Sword|Claymore|Polearm|Bow|Catalyst)\)\s+and\s+(.+?)\s*\((?:Sword|Claymore|Polearm|Bow|Catalyst)\)/i.exec(article.heading);
-  if (weapon) return [weapon[1]!.trim(), weapon[2]!.trim()];
+  if (weapon) return sanitizeRecognitionSubjects([weapon[1]!, weapon[2]!]);
   const character = /Boosted\s+Drop\s+Rates?\s+for\s+(?:"[^"]+"\s+)?([^(]+?)\s*\((?:Pyro|Hydro|Anemo|Electro|Dendro|Cryo|Geo)\)/i.exec(article.heading);
-  if (character) return [character[1]!.trim()];
+  if (character) return sanitizeRecognitionSubjects([character[1]!]);
   return undefined;
 }
 
-function noticeSummary(article: Article, type: EventType): string | null {
+function noticeSummary(article: Article, type: EventType, allowHeadingFallback = true): string | null {
   const rows = article.body.split("\n").map(s => s.trim());
   if (type === "banner") {
     const suffix = /^Event Wish\s+"[^"]+"\s*[-–—]\s*(.+)$/i.exec(article.heading)?.[1];
@@ -124,15 +124,23 @@ function noticeSummary(article: Article, type: EventType): string | null {
     if (/^〓(?:Event Duration|Specified Duration|Eligibility)〓$/i.test(line)) break;
     if (/^〓/.test(line)) continue;
     if (/^(?:Event Duration|Event Gameplay Phases|After (?:the )?Version \d+\.\d+|Adventure Rank|<t\b|\d{4}\/)/.test(line)) continue;
-    intro.push(line.replace(/^●\s*/, ""));
+    if (/^Eligibility:/i.test(line) || line.includes("|")) continue;
+    intro.push(line.replace(/^(?:●\s*|Event Details:\s*)/i, ""));
     if (intro.length >= 2) break;
   }
   if (intro.length > 0) return clipSummary(intro.join(" "));
+  if (!allowHeadingFallback) return null;
   const subtitle = /^"[^"]+"\s+Event:\s*(.+)$/i.exec(article.heading)?.[1];
   return clipSummary(subtitle);
 }
 
-function candidate(article: Article, item: { title: string; type: EventType }, update: Map<string, string>, ctx: ParseContext): GachaEvent | null {
+function candidate(
+  article: Article,
+  item: { title: string; type: EventType },
+  update: Map<string, string>,
+  ctx: ParseContext,
+  summaryOverride?: string | null,
+): GachaEvent | null {
   const rows = article.body.split("\n").map(s => s.trim());
   // A single gameplay table has three unlock phases and one event end.
   const row = rows.find(s => /^(?:Event Duration:\s*|Event Gameplay Phases \| Phase I \||After (?:the )?Version \d+\.\d+ [Uu]pdate\s*[–—-]|<t class="t_(?:lc|gl)"[^>]*>20\d{2}\/)/.test(s));
@@ -143,10 +151,11 @@ function candidate(article: Article, item: { title: string; type: EventType }, u
   const dates = period(row, update);
   if (!dates) return null;
   const recognitionSubjects = bannerSubjects(article, item.type);
+  const summary = summaryOverride !== undefined ? summaryOverride : noticeSummary(article, item.type);
   return GachaEvent.parse({
     id: eventId("genshin", item.title, dates.start), game: "genshin", ...item,
     ...(recognitionSubjects ? { recognitionSubjects } : {}),
-    summary: noticeSummary(article, item.type), startsAt: dates.start, startPrecision: "day",
+    summary, startsAt: dates.start, startPrecision: "day",
     endsAt: dates.end, endPrecision: dates.end ? "day" : "unknown",
     regionScoped: false, regionEnds: null,
     sourceUrl: `https://github.com/KQM-git/GINews/blob/master/archive/${article.id}.md`,
@@ -276,7 +285,8 @@ export function parseKqmGinNews(raw: string, ctx: ParseContext): GachaEvent[] {
         if (!block) throw new Error(`KQM GINews login subsection missing: ${title}`);
         const line = /^Event Duration:\s*(.+)$/mi.exec(block)?.[1];
         if (!line) throw new Error(`KQM GINews login duration missing: ${title}`);
-        add(candidate({ ...article, body: line }, { title, type: "login" }, update, ctx));
+        const summary = noticeSummary({ ...article, body: block }, "login", false);
+        add(candidate({ ...article, body: line }, { title, type: "login" }, update, ctx, summary));
       }
       continue;
     }

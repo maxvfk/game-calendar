@@ -97,13 +97,24 @@ function item(article: Article, title: string, type: EventType, line: string, up
 function proseSummary(rows: readonly string[], stopPattern: RegExp): string | null {
   const picked: string[] = [];
   for (const row of rows) {
-    if (!row || /^(?:##|!\[|---)/.test(row)) continue;
+    if (!row) continue;
     if (stopPattern.test(row)) break;
+    if (/^(?:##|!\[|---)/.test(row)) continue;
     if (/^(?:Dear Trailblazers,?$|20\d{2}\/)/.test(row)) continue;
     picked.push(row.replace(/^-\s*/, ""));
     if (picked.length >= 2) break;
   }
   return clipSummary(picked.join(" "));
+}
+
+function standaloneSummary(rows: readonly string[]): string | null {
+  const intro = proseSummary(
+    rows,
+    /^###\s*(?:Event Period|Participation Requirements?|Event Requirements?|Unlock Requirements?|Eligibility|Event Details)\b/i,
+  );
+  if (intro) return intro;
+  const detailsIdx = rows.findIndex(row => /^###\s*Event Details\b/i.test(row));
+  return detailsIdx >= 0 ? proseSummary(rows.slice(detailsIdx + 1), /^###\s/) : null;
 }
 
 export function parseKqmHsrNews(raw: string, ctx: ParseContext): GachaEvent[] {
@@ -127,7 +138,7 @@ export function parseKqmHsrNews(raw: string, ctx: ParseContext): GachaEvent[] {
       const index = rows.indexOf("### Event Period");
       if (index >= 0) add(item(article, standalone, "other",
         rows.slice(index + 1).find(Boolean) ?? "", updates, ctx,
-        proseSummary(rows, /^###\s*(?:Event Period|Participation Requirements|Eligibility)\b/i)));
+        standaloneSummary(rows)));
     }
     if (/Version \d+\.\d+ .*Update Details/i.test(article.heading)) {
       let inEvents = false;
@@ -216,7 +227,7 @@ export function parseKqmHsrNews(raw: string, ctx: ParseContext): GachaEvent[] {
       if (index < 0) throw new Error("KQM HSRNews Nameless Honor main period missing");
       add(item(article, `Version ${bp[1]} Nameless Honor`, "other",
         rows.slice(index + 1).find(Boolean) ?? "", updates, ctx,
-        proseSummary(rows, /^###\s*(?:Start Date|Unlock Requirements|Participation Requirements)\b/i)));
+        proseSummary(rows, /^###\s*(?:Start Date|Unlock Requirements?|Participation Requirements?|Eligibility)\b/i)));
     }
   }
   if (!seen.size) throw new Error("KQM HSRNews no dated calendar notices");

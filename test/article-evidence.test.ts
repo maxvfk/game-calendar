@@ -228,7 +228,7 @@ test("offline builder retains baseline-main public bytes with all four article s
     const bytes = await Promise.all(paths.map(p => Bun.file(join(dir, "public/data", p)).text()));
     // PR #1 parser-context baseline: retains exact IDs/dates/review outputs while enriching summary/recognitionSubjects.
     expect(bytes.map(b => new Bun.CryptoHasher("sha256").update(b).digest("hex"))).toEqual([
-      "3800e3568c31296d30c96fbecc09582efcd08f23cb4fe0844b1fc17011d1e82a", "9d7d588ad5e5e7aba4ea6c4f88dd488047c9da9841db1e056cb66790e2b9fbf7", "ca53471691968edf61e288815dc8c20f5796c4d1253b86c075329618a650e2ef", "c5145a101b013586a16381e6866dbf8de1430982c953d0c60d49d96cc7bd5bb0",
+      "f2b17d653ff61f3e448c4ef372d3e03ee8b05f0d3b53956a1ce1cf7d30d60a25", "9d7d588ad5e5e7aba4ea6c4f88dd488047c9da9841db1e056cb66790e2b9fbf7", "f106c2661b5dea7281f1cda2d9f596655fb2167b24d69de0c43b265fb1928dbf", "5e84c84da10e827ccf0f8002fb1b8960277208bab0c3cbcda1c0bf75baa6b247",
     ]);
     const side = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
     expect(new Set(side.notices.map(n => n.sourceId)).size).toBe(4);

@@ -1,4 +1,4 @@
-import { eventId, type GachaEvent } from "../shared/schema.ts";
+import { eventId, RecognitionSubjects, type GachaEvent } from "../shared/schema.ts";
 import { decodeEntities } from "./html.ts";
 
 /**
@@ -357,6 +357,31 @@ export function sanitizeEvent(
   if (recognitionSubjects === undefined) delete out.recognitionSubjects;
   else out.recognitionSubjects = recognitionSubjects;
   return { event: out, notes };
+}
+
+/**
+ * Clean and validate extracted `recognitionSubjects` before `GachaEvent.parse()`.
+ *
+ * Doubtful, blank, or overlong (> `LIMITS.title`) captures omit context
+ * (`undefined`) rather than throwing inside a parser or inventing a truncated
+ * character/weapon name.
+ */
+export function sanitizeRecognitionSubjects(
+  raw: readonly string[] | null | undefined,
+): string[] | undefined {
+  if (!raw || raw.length === 0) return undefined;
+  const cleaned: string[] = [];
+  const seen = new Set<string>();
+  for (const item of raw) {
+    if (typeof item !== "string") return undefined;
+    const s = collapse(toFixedPoint(item));
+    if (s.length === 0 || s.length > LIMITS.title) return undefined;
+    if (seen.has(s)) continue;
+    seen.add(s);
+    cleaned.push(s);
+  }
+  const parsed = RecognitionSubjects.safeParse(cleaned);
+  return parsed.success ? parsed.data : undefined;
 }
 
 /**

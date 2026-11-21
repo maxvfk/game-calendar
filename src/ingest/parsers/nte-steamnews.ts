@@ -2,7 +2,7 @@ import { z } from "zod";
 import { eventId, GachaEvent, type EventType } from "../../shared/schema.ts";
 import type { ParseContext } from "../adapters/types.ts";
 import { decodeEntities } from "../html.ts";
-import { clipSummary } from "../sanitize.ts";
+import { clipSummary, sanitizeRecognitionSubjects } from "../sanitize.ts";
 import type { SourceParser } from "./types.ts";
 
 const Feed = z.object({ appnews: z.object({
@@ -103,19 +103,21 @@ function nteContext(
     if (isArc) {
       const guide = body.find(l => /^Research Guide:\s*/i.test(l))?.replace(/^Research Guide:\s*/i, "")
         ?? body.find(l => /^Details:\s*/i.test(l))?.replace(/^Details:\s*/i, "");
+      const recognitionSubjects = sanitizeRecognitionSubjects([title]);
       return {
-        recognitionSubjects: [title],
+        ...(recognitionSubjects ? { recognitionSubjects } : {}),
         summary: clipSummary(guide),
       };
     }
     const boardLine = body.find(l => /^Board Details:\s*/i.test(l));
     const charMatch = boardLine && /features\s+the\s+(?:(?:limited|exclusive|returning)\s+)*S-Class\s+(?:character|resonator)\s+([^,!.]+?)(?:,|\.|!|\s+along\s+with|\s+and\b|$)/i.exec(boardLine);
     const headingMatch = /S-Class Character(?:\s+Rerun)?:\s*"?([^"\n]+?)"?$/i.exec(heading);
-    const subject = (charMatch?.[1] ?? headingMatch?.[1])?.trim();
+    const rawSubject = charMatch?.[1] ?? headingMatch?.[1];
+    const recognitionSubjects = sanitizeRecognitionSubjects(rawSubject ? [rawSubject] : undefined);
     const summaryText = boardLine?.replace(/^Board Details:\s*/i, "")
       ?? body.find(l => /^Details:\s*/i.test(l))?.replace(/^Details:\s*/i, "");
     return {
-      ...(subject ? { recognitionSubjects: [subject] } : {}),
+      ...(recognitionSubjects ? { recognitionSubjects } : {}),
       summary: clipSummary(summaryText),
     };
   }
