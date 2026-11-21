@@ -1,5 +1,6 @@
 import { eventId, GachaEvent, type EventType } from "../../shared/schema.ts";
 import type { ParseContext } from "../adapters/types.ts";
+import { clipSummary } from "../sanitize.ts";
 import type { SourceParser } from "./types.ts";
 
 const ARTICLE = /^# \[([^\n]+)\]\(archive\/(\d+)\.md\)\s*$/gm;
@@ -79,11 +80,11 @@ function period(line: string, updates: Map<string, string>) {
   } as const;
 }
 
-function item(article: Article, title: string, type: EventType, line: string, updates: Map<string, string>, ctx: ParseContext): GachaEvent | null {
+function item(article: Article, title: string, type: EventType, line: string, updates: Map<string, string>, ctx: ParseContext, summary: string | null = null): GachaEvent | null {
   const dates = period(line, updates);
   if (!dates) return null;
   return GachaEvent.parse({
-    id: eventId("hsr", title, dates.start), game: "hsr", title, type, summary: null,
+    id: eventId("hsr", title, dates.start), game: "hsr", title, type, summary,
     startsAt: dates.start, startPrecision: dates.startPrecision,
     endsAt: dates.end, endPrecision: "exact", regionScoped: dates.regionEnds !== null,
     regionEnds: dates.regionEnds,
@@ -91,6 +92,29 @@ function item(article: Article, title: string, type: EventType, line: string, up
     sourceId: ctx.sourceId, status: "published", confidence: 0.8,
     extractionMethod: "parser", version: 1, firstSeenAt: ctx.now, updatedAt: ctx.now,
   });
+}
+
+function proseSummary(rows: readonly string[], stopPattern: RegExp): string | null {
+  const picked: string[] = [];
+  for (const row of rows) {
+    if (!row) continue;
+    if (stopPattern.test(row)) break;
+    if (/^(?:##|!\[|---)/.test(row)) continue;
+    if (/^(?:Dear Trailblazers,?$|20\d{2}\/)/.test(row)) continue;
+    picked.push(row.replace(/^-\s*/, ""));
+    if (picked.length >= 2) break;
+  }
+  return clipSummary(picked.join(" "));
+}
+
+function standaloneSummary(rows: readonly string[]): string | null {
+  const intro = proseSummary(
+    rows,
+    /^###\s*(?:Event Period|Participation Requirements?|Event Requirements?|Unlock Requirements?|Eligibility|Event Details)\b/i,
+  );
+  if (intro) return intro;
+  const detailsIdx = rows.findIndex(row => /^###\s*Event Details\b/i.test(row));
+  return detailsIdx >= 0 ? proseSummary(rows.slice(detailsIdx + 1), /^###\s/) : null;
 }
 
 export function parseKqmHsrNews(raw: string, ctx: ParseContext): GachaEvent[] {
@@ -113,7 +137,8 @@ export function parseKqmHsrNews(raw: string, ctx: ParseContext): GachaEvent[] {
     if (standalone) {
       const index = rows.indexOf("### Event Period");
       if (index >= 0) add(item(article, standalone, "other",
-        rows.slice(index + 1).find(Boolean) ?? "", updates, ctx));
+        rows.slice(index + 1).find(Boolean) ?? "", updates, ctx,
+        standaloneSummary(rows)));
     }
     if (/Version \d+\.\d+ .*Update Details/i.test(article.heading)) {
       let inEvents = false;
@@ -184,7 +209,16 @@ export function parseKqmHsrNews(raw: string, ctx: ParseContext): GachaEvent[] {
         const line = event ? near.find(s => /^- Event Period:/.test(s)) : near.find(s => /^20\d{2}\//.test(s));
         if (!line) continue; // Gift of Odyssey has no announced schedule.
         const name = event?.[1] ?? mode![1]!;
-        add(item(article, name, mode || /^(?:Overdrive|Minuscule)/.test(name) ? "challenge" : "other", line, updates, ctx));
+        let summary: string | null = null;
+        if (event) {
+          const desc: string[] = [];
+          for (const row of near) {
+            if (/^-\s*(?:Event Period|Availability|Claim Period|Participation Requirements|Unlock Requirements):/i.test(row)) break;
+            if (row.startsWith("- ")) desc.push(row.slice(2));
+          }
+          summary = clipSummary(desc.join(" "));
+        }
+        add(item(article, name, mode || /^(?:Overdrive|Minuscule)/.test(name) ? "challenge" : "other", line, updates, ctx, summary));
       }
     }
     const bp = /^Version (\d+\.\d+) "Nameless Honor" Update/i.exec(article.heading);
@@ -192,7 +226,8 @@ export function parseKqmHsrNews(raw: string, ctx: ParseContext): GachaEvent[] {
       const index = rows.indexOf("### Start Date");
       if (index < 0) throw new Error("KQM HSRNews Nameless Honor main period missing");
       add(item(article, `Version ${bp[1]} Nameless Honor`, "other",
-        rows.slice(index + 1).find(Boolean) ?? "", updates, ctx));
+        rows.slice(index + 1).find(Boolean) ?? "", updates, ctx,
+        proseSummary(rows, /^###\s*(?:Start Date|Unlock Requirements?|Participation Requirements?|Eligibility)\b/i)));
     }
   }
   if (!seen.size) throw new Error("KQM HSRNews no dated calendar notices");

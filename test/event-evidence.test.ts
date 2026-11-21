@@ -44,7 +44,11 @@ test("four simultaneous banners retain their own 5/4-star characters and weapons
     expect(r.source.sourceUrl).toEndWith("/5668");
   }
   expect(text(rows.find(r => r.event.title === "Echo Erase")!)).toContain("tapping Echo Pieces away");
-  expect(rows.every(r => r.event.summary === null && r.event.recognitionSubjects === undefined && r.event.timelineTitle === undefined)).toBe(true);
+  // PR #1 populates parser recognitionSubjects/summary on canonical events while timelineTitle remains absent.
+  expect(rows.every(r => r.event.timelineTitle === undefined)).toBe(true);
+  expect(rows.find(r => r.event.title === "Tomorrow in the Frame")?.event.recognitionSubjects).toEqual(["Lucilla"]);
+  expect(rows.find(r => r.event.title === "Freeze Frame")?.event.recognitionSubjects).toEqual(["Freeze Frame"]);
+  expect(rows.find(r => r.event.title === "Echo Erase")?.event.summary).toContain("tapping Echo Pieces away");
 });
 
 test("snapshot uses the same sections/identity as parser and yields bounded independent context", async () => {
@@ -218,15 +222,13 @@ test("offline builder uses same fixture/snapshot, creates only internal sidecar;
     let run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);
     const publicPaths = ["events.v1.json", "timeline-label-queue.v1.json", "timeline-label-agent-input.v1.json"];
     const before = await Promise.all(publicPaths.map(p => Bun.file(join(dir, "public/data", p)).text()));
-    // Original baseline: main 25ee442. New ZZZ registration/recurrence is now
-    // present in the isolated build. Excluding only ZZZ reproduces original
-    // non-ZZZ feed bytes; the new full-output goldens below include those cycles.
+    // PR #1 parser-context baseline: enriches summary/recognitionSubjects while keeping IDs/dates/E1 isolation identical.
     const withoutZzz = JSON.parse(before[0]!);
     withoutZzz.events = withoutZzz.events.filter((e: { game: string }) => e.game !== "zzz");
     withoutZzz.sources = withoutZzz.sources.filter((s: { sourceId: string }) => s.sourceId !== "zzz-steam-events-official" && s.sourceId !== "zzz-zenlessgg-banners");
     expect(new Bun.CryptoHasher("sha256").update(JSON.stringify(withoutZzz, null, 2) + "\n").digest("hex"))
-      .toBe("743eafd2bdc6503f1630f9204e5d7166b2f36f4e74af49ac26304556ee13304c");
-    const baselineHashes = ["5a4a572f059346bdbd1d73c4c2c9bae199b00c079fea015dde2922f2fbedcd0f", "5666c8df89862cfc76373aa45ab35fd9ca995e6d31c8bbcbf4ba89c3bb1b8590", "7b98f1cb1a2e61382dcbae60fc76890cced2a28bb2e9c0abc83b8001d1c2ee4c"];
+      .toBe("adda751596ea808da076b01a1882f0f61e542af130f3473344d3df08d24cea8c");
+    const baselineHashes = ["0ce7657c88c9419574c812e65ab4641c7faa7209bf35b07db371fd1e6e542fe5", "4f140ef04b80795afcaf1eed4fbc6c52ab8345635389dd7496c9b1d0e6441fbb", "ba2c63074b7d81f72075f3e10daf83d17ce6547f63739e60a5dd789aadc9f8fd"];
     expect(before.map(bytes => new Bun.CryptoHasher("sha256").update(bytes).digest("hex"))).toEqual(baselineHashes);
     let side = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
     expect(side.notices.map(n => n.noticeId)).toEqual(["5668", "5571"]);
@@ -234,19 +236,21 @@ test("offline builder uses same fixture/snapshot, creates only internal sidecar;
     expect(side.notices.every(n => n.capturedAt === null && n.fixtureCaptureDay === "2026-10-21")).toBe(true);
     expect(side.entries).toHaveLength(5); expect(side.entries[0]!.sources[0]!.capturedAt).toBeNull();
     expect(side.entries[0]!.sources[0]!.fixtureCaptureDay).toBe("2026-10-21");
-    // Changing source context, but no canonical fields, must change only evidence.
-    await Bun.write(join(dir, "snapshots/wuwa-kuro-mirror.xml"), raw.replace("Lucilla", "Another Character"));
+    // Changing E1-only post-Duration rewards, with no canonical fields changed, must change only evidence.
+    const withRewards = raw.replace("Duration: 2026-10-22 10:00 - 2026-11-09 03:59 (server time)</p>", "Duration: 2026-10-22 10:00 - 2026-11-09 03:59 (server time)</p><p>Rewards</p><p>Astrite x100</p>");
+    await Bun.write(join(dir, "snapshots/wuwa-kuro-mirror.xml"), withRewards);
     const meta = await Bun.file(join(root, "snapshots/wuwa-kuro-mirror.meta.json")).json();
     await Bun.write(join(dir, "snapshots/wuwa-kuro-mirror.meta.json"), JSON.stringify(meta));
     run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);
     // Snapshot capture metadata legitimately differs from fixture freshness; equalize it for the byte comparison.
     const snapBefore = await Promise.all(publicPaths.map(p => Bun.file(join(dir, "public/data", p)).text()));
-    const hashAfterChange = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json()).entries.find(e => e.eventId === base.event.id)!.evidenceHash;
+    const echoId = "wuwa:echo-erase:2026-10-22";
+    const hashAfterChange = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json()).entries.find(e => e.eventId === echoId)!.evidenceHash;
     await Bun.write(join(dir, "snapshots/wuwa-kuro-mirror.xml"), raw);
     run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);
     expect(await Promise.all(publicPaths.map(p => Bun.file(join(dir, "public/data", p)).text()))).toEqual(snapBefore);
     side = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
-    expect(side.entries.find(e => e.eventId === base.event.id)!.evidenceHash).not.toBe(hashAfterChange);
+    expect(side.entries.find(e => e.eventId === echoId)!.evidenceHash).not.toBe(hashAfterChange);
     expect(side.entries[0]!.sources[0]!.capturedAt).toBe(meta.contentChangedAt);
     // Fixture and snapshot canonical event payloads agree even with truthful different capture metadata.
     expect(JSON.parse(snapBefore[0]!).events).toEqual(JSON.parse(before[0]!).events);

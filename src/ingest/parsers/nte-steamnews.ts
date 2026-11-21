@@ -2,6 +2,7 @@ import { z } from "zod";
 import { eventId, GachaEvent, type EventType } from "../../shared/schema.ts";
 import type { ParseContext } from "../adapters/types.ts";
 import { decodeEntities } from "../html.ts";
+import { clipSummary, sanitizeRecognitionSubjects } from "../sanitize.ts";
 import type { SourceParser } from "./types.ts";
 
 const Feed = z.object({ appnews: z.object({
@@ -89,6 +90,46 @@ function entity(heading: string, section: string): Entity | null {
   return null;
 }
 
+function nteContext(
+  heading: string,
+  title: string,
+  type: EventType,
+  body: readonly string[],
+  maintenance: boolean,
+): { recognitionSubjects?: string[]; summary: string | null } {
+  if (maintenance) return { summary: "Scheduled maintenance; actual completion may vary." };
+  if (type === "banner") {
+    const isArc = /S-Class Arc|Limited Arc|Arc Research/i.test(heading);
+    if (isArc) {
+      const guide = body.find(l => /^Research Guide:\s*/i.test(l))?.replace(/^Research Guide:\s*/i, "")
+        ?? body.find(l => /^Details:\s*/i.test(l))?.replace(/^Details:\s*/i, "");
+      const recognitionSubjects = sanitizeRecognitionSubjects([title]);
+      return {
+        ...(recognitionSubjects ? { recognitionSubjects } : {}),
+        summary: clipSummary(guide),
+      };
+    }
+    const boardLine = body.find(l => /^Board Details:\s*/i.test(l));
+    const charMatch = boardLine && /features\s+the\s+(?:(?:limited|exclusive|returning)\s+)*S-Class\s+(?:character|resonator)\s+([^,!.]+?)(?:,|\.|!|\s+along\s+with|\s+and\b|$)/i.exec(boardLine);
+    const headingMatch = /S-Class Character(?:\s+Rerun)?:\s*"?([^"\n]+?)"?$/i.exec(heading);
+    const rawSubject = charMatch?.[1] ?? headingMatch?.[1];
+    const recognitionSubjects = sanitizeRecognitionSubjects(rawSubject ? [rawSubject] : undefined);
+    const summaryText = boardLine?.replace(/^Board Details:\s*/i, "")
+      ?? body.find(l => /^Details:\s*/i.test(l))?.replace(/^Details:\s*/i, "");
+    return {
+      ...(recognitionSubjects ? { recognitionSubjects } : {}),
+      summary: clipSummary(summaryText),
+    };
+  }
+  const details = body.find(l => /^Details:\s*/i.test(l))?.replace(/^Details:\s*/i, "");
+  if (details) return { summary: clipSummary(details) };
+  const prose = body.find(l =>
+    !/^(?:●\s*)?(?:Event\s+)?(?:Available|Duration|Period|Unlock\s+Requirement|Requirements?|Eligibility|※|\*For full details|\[img)/i.test(l) &&
+    !/^(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}\b/i.test(l),
+  );
+  return { summary: clipSummary(prose) };
+}
+
 // A publisher reward-release template already present in the approved feed.
 // Keep this lane limited to the confirmed gameplay rewards; admitting the whole
 // release would also backfill historical banners, paid boxes and web events.
@@ -143,10 +184,11 @@ function candidates(post: Post, ctx: ParseContext): Candidate[] {
     if (!period) continue;
     // Permanent unlocks never became entities above. A genuine limited item
     // with an announced start but missing end may retain an unknown end.
+    const context = nteContext(section.heading, item.title, item.type, section.body, maintenance);
     const event = GachaEvent.parse({
       id: eventId("nte", item.title, period.start.at), game: "nte", ...item,
       ...(rewardRelease && item.title === "Terminal Depths" ? { type: "challenge" } : {}),
-      summary: maintenance ? "Scheduled maintenance; actual completion may vary." : null,
+      ...context,
       startsAt: period.start.at, startPrecision: period.start.precision,
       endsAt: period.end?.at ?? null, endPrecision: period.end?.precision ?? "unknown",
       regionScoped: false, regionEnds: null,

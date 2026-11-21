@@ -1,11 +1,23 @@
 import { eventId, GachaEvent, type EventType } from "../../shared/schema.ts";
 import type { ParseContext } from "../adapters/types.ts";
 import { decodeEntities } from "../html.ts";
+import { clipSummary, sanitizeRecognitionSubjects } from "../sanitize.ts";
 import type { SourceParser } from "./types.ts";
 
 const ENTRY = /<entry>([\s\S]*?)<\/entry>/g;
 const DATE = /(20\d{2})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})/g;
-type Article = { sourceUrl: string; id: string; title: string; lines: string[]; content: string; headings: string[]; evidenceLines: string[] };
+const BLOCK_BREAK = /<\/(?:p|li|h[1-6]|div)>|<br\s*\/?\s*>/gi;
+type Article = {
+  sourceUrl: string;
+  id: string;
+  title: string;
+  lines: string[];
+  content: string;
+  headings: string[];
+  headingBoundaries: string[];
+  evidenceLines: string[];
+  lineToEvidence: number[];
+};
 
 function day(match: RegExpMatchArray): string {
   const date = `${match[1]}-${match[2]}-${match[3]}`;
@@ -40,9 +52,33 @@ export function discoverWuwaArticles(raw: string): Article[] {
       .split("\n").map(s => s.replace(/\s+/g, " ").trim()).filter(Boolean);
     const lines = textLines(content);
     const evidenceLines = textLines(content.replace(/[\r\n]/g, " ").replace(/<\/?(?:span|strong|b|em|i|a)\b[^>]*>/gi, ""));
+    const chunkLines: string[] = [];
+    const chunkEvLines: string[] = [];
+    const rawLinks: number[] = [];
+    for (const chunk of content.split(BLOCK_BREAK)) {
+      const rawChunk = textLines(chunk);
+      const evChunk = textLines(chunk.replace(/[\r\n]/g, " ").replace(/<\/?(?:span|strong|b|em|i|a)\b[^>]*>/gi, ""));
+      const evBase = chunkEvLines.length;
+      for (const l of evChunk) chunkEvLines.push(l);
+      // Link a raw line to an evidence line only when the same HTML block yields
+      // one identical line in both views; otherwise fail closed (-1).
+      const exactLink = rawChunk.length === 1 && evChunk.length === 1 && rawChunk[0] === evChunk[0] ? evBase : -1;
+      for (const l of rawChunk) {
+        chunkLines.push(l);
+        rawLinks.push(exactLink);
+      }
+    }
+    const aligned = chunkLines.length === lines.length && chunkEvLines.length === evidenceLines.length &&
+      chunkLines.every((l, idx) => l === lines[idx]) && chunkEvLines.every((l, idx) => l === evidenceLines[idx]);
+    const lineToEvidence = aligned ? rawLinks : lines.map(() => -1);
     const headings = [...content.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)]
       .map(m => decodeEntities(m[1]!.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim());
-    return { sourceUrl: link, id, title: decodeEntities(title), lines, content, headings, evidenceLines };
+    const headingBoundaries = [...new Set([
+      ...headings,
+      ...[...content.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)]
+        .flatMap(m => textLines(m[1]!.replace(/[\r\n]/g, " ").replace(/<\/?(?:span|strong|b|em|i|a)\b[^>]*>/gi, ""))),
+    ])].filter(Boolean);
+    return { sourceUrl: link, id, title: decodeEntities(title), lines, content, headings, headingBoundaries, evidenceLines, lineToEvidence };
   });
 }
 
@@ -123,11 +159,69 @@ function period(line: string, updates: Map<string, string>) {
   } };
 }
 
-function candidate(article: Article, title: string, type: EventType, line: string, updates: Map<string, string>, ctx: ParseContext): GachaEvent | null {
+const CONDITIONAL_REWARD = /^\[Log in for \d+ days? in total\]:\s*.+/i;
+const DURATION_LINE = /^(?:✦?Duration\b|20\d{2}-|Version \d+\.\d+ [Uu]pdate)/i;
+const SECTION_BOUNDARY = /^\[[^\]]+\]|^(?:New |Convene Rules|Eligibility|Notes\b|Maintenance\b|For more details)/i;
+
+function sectionContext(
+  lines: string[],
+  type: EventType,
+  heading: string,
+  articleHeadings: readonly string[],
+): { recognitionSubjects?: string[]; summary: string | null } {
+  const unknownHeading = (line: string) =>
+    articleHeadings.includes(line) && !/^(?:Duration|Rewards)$/i.test(line);
+  const firstDuration = lines.findIndex(line => /\(server time\)/i.test(line) && DURATION_LINE.test(line));
+  const firstBoundary = lines.findIndex(line => (SECTION_BOUNDARY.test(line) && !CONDITIONAL_REWARD.test(line)) || unknownHeading(line));
+  // Fail closed when the duration line is absent or preceded by an unrecognized
+  // HTML/section heading (same boundary contract as E1 evidence extraction).
+  if (firstDuration < 0 || (firstBoundary >= 0 && firstBoundary < firstDuration)) {
+    return { summary: null };
+  }
+  const intro: string[] = [];
+  for (const line of lines.slice(0, firstDuration)) {
+    if (DURATION_LINE.test(line)) break;
+    if (/^(?:Rewards)$/i.test(line)) continue;
+    intro.push(line);
+  }
+  if (type === "banner") {
+    const featuredLines = intro.filter(l => /^During the event,\s*5-Star\s+(?:Resonator|Weapon):/i.test(l));
+    if (featuredLines.length > 1) return { summary: null };
+    const featuredLine = featuredLines[0];
+    if (featuredLine) {
+      const expectedKind = /Featured Weapon Convene/i.test(heading) ? "Weapon"
+        : /Featured Resonator Convene/i.test(heading) ? "Resonator" : null;
+      const kindPattern = expectedKind ?? "(?:Resonator|Weapon)";
+      const m = new RegExp(`^During the event,\\s*5-Star\\s+${kindPattern}:\\s*([^,!.]+?)(?:,|\\s+receive boosted drop rates)`, "i").exec(featuredLine);
+      if (!m) return { summary: null };
+      const recognitionSubjects = sanitizeRecognitionSubjects(m[1] ? [m[1]] : undefined);
+      return {
+        ...(recognitionSubjects ? { recognitionSubjects } : {}),
+        summary: clipSummary(featuredLine),
+      };
+    }
+    return { summary: clipSummary(intro.slice(0, 2).join(" ")) };
+  }
+  return { summary: clipSummary(intro.slice(0, 2).join(" ")) };
+}
+
+function candidate(
+  article: Article,
+  title: string,
+  type: EventType,
+  line: string,
+  updates: Map<string, string>,
+  ctx: ParseContext,
+  contextLines: string[],
+  heading: string,
+): GachaEvent | null {
   const dates = period(line, updates);
   if (!dates) return null;
+  const { recognitionSubjects, summary } = sectionContext(contextLines, type, heading, article.headingBoundaries);
   return GachaEvent.parse({
-    id: eventId("wuwa", title, dates.start), game: "wuwa", title, type, summary: null,
+    id: eventId("wuwa", title, dates.start), game: "wuwa", title, type,
+    ...(recognitionSubjects ? { recognitionSubjects } : {}),
+    summary,
     startsAt: dates.start, startPrecision: "day", endsAt: dates.endsAt, endPrecision: "exact",
     regionScoped: true, regionEnds: dates.regionEnds,
     sourceUrl: `https://wutheringwaves.kurogames.com/en/main/news/detail/${article.id}`,
@@ -144,10 +238,25 @@ export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhites
   const scopedPatchDays = new Map<string, string>();
   const result: Array<{ event: GachaEvent; heading: string; lines: string[]; content: string; headings: string[]; repeatedHeading: boolean }> = [];
   for (const article of archive) {
-    const standalone = /\[([^\]]+)\]\s+(?:Combat Event|Featured (?:Resonator|Weapon) Convene)/i.exec(article.title)?.[1];
+    const standaloneMatch = /\[([^\]]+)\]\s+(Combat Event|Featured (?:Resonator|Weapon) Convene)/i.exec(article.title);
+    const standalone = standaloneMatch?.[1];
     // Preserve legacy parser line splitting; evidence normalizes soft newlines inside HTML blocks.
     const articleLines = evidenceWhitespace ? article.evidenceLines : article.lines;
-    const candidates = standalone ? [`[${standalone}] ${/Convene/i.test(article.title) ? "Featured Resonator Convene" : "Combat Event"}`, ...articleLines] : articleLines;
+    // Keep the banner kind stated by the Atom title (Resonator vs Weapon); the
+    // identity/ID only uses the bracketed name, so this never moves an event ID.
+    const standaloneKind = standaloneMatch
+      ? /Weapon Convene/i.test(standaloneMatch[2]!) ? "Featured Weapon Convene"
+        : /Convene/i.test(standaloneMatch[2]!) ? "Featured Resonator Convene" : "Combat Event"
+      : null;
+    const prefix = standalone && standaloneKind ? [`[${standalone}] ${standaloneKind}`] : [];
+    const candidates = [...prefix, ...articleLines];
+    const evidenceCandidates = [...prefix, ...article.evidenceLines];
+    const candidateToEvidence = evidenceWhitespace
+      ? candidates.map((_, idx) => idx)
+      : [
+          ...prefix.map((_, idx) => idx),
+          ...article.lineToEvidence.map(idx => (idx >= 0 ? idx + prefix.length : -1)),
+        ];
     for (let i = 0; i < candidates.length; i++) {
       const item = identity(candidates[i]!);
       if (!item) continue;
@@ -168,7 +277,14 @@ export function wuwaEventSections(raw: string, ctx: ParseContext, evidenceWhites
       const duration = scoped?.line ?? near.find(s => /\(server time\)/i.test(s) &&
         (/^Duration:/i.test(s) || /^20\d{2}-/.test(s) || /^Version \d+\.\d+ [Uu]pdate/i.test(s)));
       if (duration) {
-        const event = candidate(article, item.title, item.type, duration, scoped?.updates ?? updates, ctx);
+        let contextLines: string[] = [];
+        const evIdx = candidateToEvidence[i] ?? -1;
+        if (evIdx >= 0) {
+          const evFollowing = evidenceCandidates.slice(evIdx + 1);
+          const evNext = evFollowing.findIndex(line => identity(line) !== null);
+          contextLines = evNext < 0 ? evFollowing : evFollowing.slice(0, evNext);
+        }
+        const event = candidate(article, item.title, item.type, duration, scoped?.updates ?? updates, ctx, contextLines, candidates[i]!);
         if (event) {
           const following = candidates.slice(i + 1);
           const next = following.findIndex(line => identity(line) !== null);

@@ -3,8 +3,10 @@ import { adapterById, ADAPTERS } from "../src/ingest/adapters/index.ts";
 import { parserById } from "../src/ingest/parsers/index.ts";
 import {
   LIMITS,
+  clipSummary,
   sanitizeEvent,
   sanitizeEvents,
+  sanitizeRecognitionSubjects,
   sanitizeText,
   sanitizeUrl,
   type SanitizeNote,
@@ -403,6 +405,36 @@ describe("sanitizeEvent", () => {
     expect(out?.summary).toBeNull();
   });
 
+  test("cleans recognitionSubjects, drops blank/duplicate entries, and omits empty lists", () => {
+    const { event: cleaned, notes } = sanitizeEvent(
+      event({ recognitionSubjects: [" <b>Furina</b> ", "Furina", "\u202e\u200b", `A${"b".repeat(300)}`] }),
+    );
+    expect(cleaned?.recognitionSubjects).toHaveLength(2);
+    expect(cleaned?.recognitionSubjects?.[0]).toBe("Furina");
+    expect(cleaned?.recognitionSubjects?.[1]?.length).toBeLessThanOrEqual(LIMITS.title);
+    expect(notes.some((n) => n.field === "recognitionSubjects" && n.level === "repaired")).toBe(true);
+    expect(GachaEvent.safeParse(cleaned).success).toBe(true);
+
+    const { event: emptied } = sanitizeEvent(event({ recognitionSubjects: ["<span> </span>"] }));
+    expect(emptied?.recognitionSubjects).toBeUndefined();
+    expect(GachaEvent.safeParse(emptied).success).toBe(true);
+
+    const { notes: cleanNotes } = sanitizeEvent(event({ recognitionSubjects: ["Furina", "Mitya"] }));
+    expect(cleanNotes).toEqual([]);
+  });
+
+  test("clipSummary strips markdown/BBCode/HTML and truncates cleanly", () => {
+    expect(clipSummary(null)).toBeNull();
+    expect(clipSummary("![img](https://x/y.png) [b]Event[/b] <t class=\"t_lc\">2026/11/21</t> [Click](https://x)!")).toBe(
+      "Event 2026/11/21 Click!",
+    );
+    const clipped = clipSummary("Word ".repeat(150), 120);
+    expect(clipped).not.toBeNull();
+    expect(clipped!.length).toBeLessThanOrEqual(120);
+    expect(clipped!.endsWith("...")).toBe(true);
+    expect(sanitizeText(clipped!, { maxLength: LIMITS.summary })).toBe(clipped!);
+  });
+
   test("falls back to the source's own URL when the scraped one is hostile", () => {
     const dirty = event({ sourceUrl: "javascript:alert(1)" });
     const { event: out, notes } = sanitizeEvent(dirty, {
@@ -561,5 +593,26 @@ describe("the adapter seam", () => {
       expect(notes.map((n) => `${n.field}: ${n.message}`), adapter.id).toEqual([]);
       expect(events.map((e) => e.id), adapter.id).toEqual(raw.map((e) => e.id));
     }
+  });
+});
+
+describe("sanitizeRecognitionSubjects", () => {
+  test("cleans valid subjects and deduplicates while preserving order", () => {
+    expect(sanitizeRecognitionSubjects(["  Furina  ", "<b>Neuvillette</b>", "Furina"])).toEqual([
+      "Furina",
+      "Neuvillette",
+    ]);
+    expect(sanitizeRecognitionSubjects(["a".repeat(LIMITS.title)])).toEqual(["a".repeat(LIMITS.title)]);
+  });
+
+  test("omits doubtful blank, tag-only, or overlong captures instead of truncating", () => {
+    expect(sanitizeRecognitionSubjects(undefined)).toBeUndefined();
+    expect(sanitizeRecognitionSubjects([])).toBeUndefined();
+    expect(sanitizeRecognitionSubjects(["   "])).toBeUndefined();
+    expect(sanitizeRecognitionSubjects(["<b></b>"])).toBeUndefined();
+    expect(sanitizeRecognitionSubjects(["a".repeat(LIMITS.title + 1)])).toBeUndefined();
+    expect(sanitizeRecognitionSubjects(["word ".repeat(60)])).toBeUndefined();
+    expect(sanitizeRecognitionSubjects(["Valid", "   "])).toBeUndefined();
+    expect(sanitizeRecognitionSubjects(["Valid", "a".repeat(LIMITS.title + 1)])).toBeUndefined();
   });
 });
