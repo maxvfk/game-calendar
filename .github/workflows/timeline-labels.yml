@@ -8,10 +8,10 @@ name: Timeline labels
 # disposable timeline-labels/rehearsal branch unless "main" is chosen, which needs the
 # same switch. Pages deploys only from main, so a rehearsal never reaches the site.
 on:
-  # Tue and Sat 07:23 Moscow (04:23 UTC): after the night, so an evening's usage window
-  # has reset, and on Saturday after the weekly reset at 04:00.
+  # Daily 07:23 Moscow (04:23 UTC): after the night, so an evening's usage window
+  # has reset. An empty queue makes zero model calls.
   schedule:
-    - cron: "23 4 * * 2,6"
+    - cron: "23 4 * * *"
   workflow_dispatch:
     inputs:
       target:

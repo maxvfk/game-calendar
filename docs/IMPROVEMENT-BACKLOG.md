@@ -1,8 +1,8 @@
 # Improvement backlog
 
-Last backlog reconciliation: **2026-11-20**, against current `main` `3fecc57853` and merged PRs. Earlier observations and the 2026-10-06 sequencing decision are retained as historical rationale, not a current implementation queue.
+Last backlog reconciliation: **2026-11-21**, against current `main` `9436ff1` and merged PRs. Earlier observations and the 2026-10-06 sequencing decision are retained as historical rationale, not a current implementation queue.
 
-**Current next planned milestone:** [Source Coverage C1b.1 — zero-output Coverage Inbox](tasks/SOURCE-COVERAGE-SIMPLE-SCHEME.md) (C0, C1a.0 and C1a.1 are merged). C4 publication freshness is independent and can be prioritized separately. CTX and the read-only C5.1 probe follow the accepted 2026-11-05 re-order; C1b.2/C2 wait for evidence. Do not start milestones automatically.
+**Current next planned milestone:** **PR #1 — Parser context (`recognitionSubjects` + `summary`) for Timeline auto-labels**, following [`PRACTICAL-PARSER-LABELS-PLAN.md`](tasks/PRACTICAL-PARSER-LABELS-PLAN.md) (PR #0 freezes `C1b.1 / CTX / C1b.2 / C2 / C5.3` and moves `timeline-labels.yml` to daily runs; completed `C0`, `C1a.0`, and `C1a.1` remain intact offline). Do not start milestones automatically.
 
 **Deferred / non-blocking:** Account/User S6b, Google OAuth publishing before open public sign-in, event artwork, recognition-first Event Detail, independent critical audit and maintenance guide after audit. Timeline v2 cutover [PR #115](https://github.com/maxvfk/game-calendar/pull/115) remains draft/NO GO. The observed official-name/AI-label mismatch is proposed in [PR #175](https://github.com/maxvfk/game-calendar/pull/175); that PR is **open and unmerged**, so this reconciliation does not duplicate or resolve its Watchlist item.
 
@@ -230,14 +230,18 @@ Historical snapshot from 2026-10-21, reconciled 2026-11-20:
 - `All types` select-all/clear-all: completed in PR #37;
 - Daily Passes: complete and activated in PRs #171–#183 (excluding unrelated #181); original pre-client status is obsolete.
 
-## Current source-coverage queue (2026-11-20)
+## Current source-coverage & parser queue (2026-11-21)
 
 The earlier pre-Astra Timeline M1/M2 candidate list is closed: both milestones and operator phone/PC acceptance were completed on 2026-10-21. The compact mobile header and small UI batch were implemented in PRs #39/#40/#44.
 
 - **Done:** [C0](https://github.com/maxvfk/game-calendar/pull/152), [C1a.0](https://github.com/maxvfk/game-calendar/pull/159), [C1a.1](https://github.com/maxvfk/game-calendar/pull/161). The previous C1a.1 `Next` entry in `IMPLEMENTATION-STATUS.md` is a historical pre-merge record.
-- **Next planned:** **C1b.1 — new zero-output Coverage Inbox**, constrained to the five inventoried notice sources, best effort, with no published-data mutations. [Current canonical sequence](tasks/SOURCE-COVERAGE-SIMPLE-SCHEME.md).
-- **Then, separately authorized:** CTX source-scoped date semantics and C5.1 read-only model probe; after evidence gates, C1b.2 and C2. Subsequent C3 and C5.2–5.3 remain independent milestones.
-- **Independent candidate worth prioritizing early:** C4 publication freshness/refresh liveness. The on-page `StaleFeedNotice` is already present ([PR #168](https://github.com/maxvfk/game-calendar/pull/168)), but the independent committed-source vs deployed-feed comparison and dead-man heartbeat remain unimplemented.
+- **Frozen (2026-11-21):** `C1b.1`, `CTX`, `C1b.2`, `C2`, and `C5.3` in [`SOURCE-COVERAGE-SIMPLE-SCHEME.md`](tasks/SOURCE-COVERAGE-SIMPLE-SCHEME.md) are frozen after the 2026-11-21 strategic review (disproportionate negative-proof complexity vs real failure modes: ZZZ CDN hash oscillation, noise ignores, stale feeds, and parser context/template gaps).
+- **Active practical plan ([`PRACTICAL-PARSER-LABELS-PLAN.md`](tasks/PRACTICAL-PARSER-LABELS-PLAN.md)):**
+  - **PR #0 (current):** record plan, freeze heavy queue, switch `timeline-labels.yml` to daily (`23 4 * * *`).
+  - **PR #1 (next):** populate `recognitionSubjects` and concise factual `summary` in the 5 article parsers without altering `eventId` or dates, unlocking useful Timeline auto-labels.
+  - **PR #2:** replace one-off October parser hardcodes with general structural templates and resolve stale sources (`zzz-zenlessgg-banners`, `endfield-wikigg-echoes`).
+  - **PR #3:** minimal `C4` liveness (dead-man ping at end of `ci.yml` `pages` job gated on `publicationStalled() === false`, plus >48h per-source stale visibility).
+  - **Optional Step 4:** 1-day read-only `C5.1-lite` DeepSeek probe for missed notices; no autonomous event commits to `main`.
 - **Before the large independent Astra audit:** take an explicit decision about its timing and baseline. That audit is a proposed next quality gate, not an approved automatic run.
 
 ## Deferred or awaiting product decision
@@ -263,7 +267,7 @@ The earlier pre-Astra Timeline M1/M2 candidate list is closed: both milestones a
 
 ## Sequence
 
-1. Keep this backlog as an intake and priority ledger; use current `main` and `docs/IMPLEMENTATION-STATUS.md` for implementation truth. Reconcile individual historical lines when new facts warrant it; don't rerun completed milestones.
-2. **Next concrete step:** separately authorize and implement **C1b.1** as one bounded PR, then verify exact-head CI and published behavior. C4 publication freshness may be reprioritized independently.
-3. After C1b.1, reassess CTX/C5.1 against the canonical Source Coverage order; do not infer that current coverage reports prove completeness.
+1. Keep this backlog as an intake and priority ledger; use current `main`, `docs/IMPLEMENTATION-STATUS.md`, and `docs/tasks/PRACTICAL-PARSER-LABELS-PLAN.md` for implementation truth. Reconcile individual historical lines when new facts warrant it; don't rerun completed milestones.
+2. **Next concrete step (after PR #0):** implement **PR #1 — Parser context (`recognitionSubjects` + `summary`) for Timeline auto-labels** with strict ID/date invariance tests.
+3. Follow with **PR #2** (generalize repeating parser templates + resolve stale `zzz-zenlessgg-banners` / `endfield-wikigg-echoes`) and **PR #3** (minimal `C4` liveness), keeping `C1b.1 / CTX / C1b.2 / C2 / C5.3` frozen unless reopened by explicit operator decision.
 4. Decide when to freeze a baseline for an independent critical Astra audit. Only after audit findings and fixes write the final `docs/MAINTENANCE.md`; keep artwork/Detail redesign and other deferred products as separate decisions.
