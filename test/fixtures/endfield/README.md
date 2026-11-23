@@ -78,3 +78,13 @@ version notes (https://endfield.gryphline.com/en-us/news/9560 : "Nov. 5, 2026 at
 accepts it under the deadline-only header-slip rule. The fixture backs the reviewed Fervor cycle rows
 in `data/reviewed/endfield.json`; it is test-only, never a production fallback.
 Attribution as above (Endfield Talos Wiki contributors, CC BY-SA 4.0).
+
+## November Sanity Supply source disagreement
+
+`sanity-supply-2026-11-22.html` preserves the Sanity Supply `mp-event` block
+from this repository's Event snapshot at `0708fcebe4c98b85b60833543ade7ad2fba84143`,
+with only the image removed. Full body SHA-256
+`af09d9ab440844876679ba4868932e71149568b7b1c3abb8bddd6496439b18f3`.
+The original URL and attribution are the same as the October Event captures.
+The two timer ends are one minute earlier than the announced regional cutoffs.
+[Official version notes](https://endfield.gryphline.com/en-us/news/9560)

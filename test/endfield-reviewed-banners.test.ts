@@ -74,18 +74,59 @@ test("Shadow Marked preserves the official 04:00 server end, identity and discov
   ]);
 });
 
-test("current Endfield snapshot merges without conflicts or duplicate IDs and retains reviewed winners", async () => {
-  const wiki = parseWikiGgEventsPage(await Bun.file("snapshots/endfield-wikigg-events.html").text(), {
-    game: "endfield", sourceId: "endfield-wikigg-events", sourceUrl: "https://endfield.wiki.gg/wiki/Event",
-    now: "2026-10-17T21:55:00.000Z",
-  });
+const novemberWikiContext = {
+  game: "endfield", sourceId: "endfield-wikigg-events", sourceUrl: "https://endfield.wiki.gg/wiki/Event",
+  now: "2026-11-22T13:27:32.877Z",
+} as const;
+
+const sanitySupplyConflict = {
+  field: "endsAt", region: "asia", deltaHours: 1 / 60,
+  kept: {
+    id: "endfield:sanity-supply-november-2026:2026-11-18",
+    sourceId: "reviewed-endfield", sourceUrl: "https://endfield.gryphline.com/en-us/news/9560",
+    provenanceStatus: "official", extractionMethod: "manual", confidence: 1,
+    startsAt: "2026-11-18T00:00:00.000Z", startPrecision: "day",
+    endsAt: "2026-11-24T20:00:00.000Z", endPrecision: "exact",
+    regionEnds: { asia: "2026-11-24T20:00:00.000Z", europe: "2026-11-24T22:00:00.000Z", america: "2026-11-24T22:00:00.000Z" },
+  },
+  rejected: {
+    id: "endfield:sanity-supply:2026-11-17",
+    sourceId: "endfield-wikigg-events", sourceUrl: "https://endfield.wiki.gg/wiki/Sanity_Supply",
+    extractionMethod: "parser", confidence: 0.95,
+    startsAt: "2026-11-17T20:00:00.000Z", startPrecision: "exact",
+    endsAt: "2026-11-24T19:59:00.000Z", endPrecision: "exact",
+    regionEnds: { asia: "2026-11-24T19:59:00.000Z", europe: "2026-11-24T21:59:00.000Z", america: "2026-11-24T21:59:00.000Z" },
+  },
+};
+
+test("captured November Sanity Supply disagreement remains visible and keeps the official ID and dates", async () => {
+  const html = await Bun.file("test/fixtures/endfield/sanity-supply-2026-11-22.html").text();
+  const wiki = parseWikiGgEventsPage(html, novemberWikiContext);
+  expect(wiki).toHaveLength(1);
+  const { events: reviewed } = materializeReviewedBatch(await Bun.file("data/reviewed/endfield.json").json());
+  const official = reviewed.find(e => e.id === sanitySupplyConflict.kept.id)!;
+  for (const groups of [[wiki, [official]], [[official], wiki]]) {
+    const merged = mergeEvents(groups);
+    expect(merged.conflicts).toMatchObject([sanitySupplyConflict]);
+    expect(merged.events).toEqual([official]);
+  }
+});
+
+test("current Endfield snapshot exposes only known conflicts and keeps stable IDs and reviewed winners", async () => {
+  const html = await Bun.file("snapshots/endfield-wikigg-events.html").text();
+  const wiki = parseWikiGgEventsPage(html, novemberWikiContext);
   const { events: reviewed } = materializeReviewedBatch(await Bun.file("data/reviewed/endfield.json").json());
   expect(wiki.length).toBeGreaterThan(0);
   const merged = mergeEvents([wiki, reviewed]);
-  expect(merged.conflicts).toHaveLength(0);
-  // The wiki can add an already reviewed event under a UTC-day ID. Those
-  // aliases must resolve to the existing reviewed identity, not join its ID set.
+  // The live page can drop the row or reconcile its dates on a later refresh.
+  // While it disagrees, match the entire conflict list, including all regional ends.
+  if (merged.conflicts.length > 0) {
+    expect(merged.conflicts).toMatchObject([sanitySupplyConflict]);
+  }
+
+  // UTC-day aliases must resolve to the existing reviewed identity.
   const wikiOnly = wiki.filter(e => !reviewed.some(r => r.id === e.id ||
+    (r.id === sanitySupplyConflict.kept.id && e.id === sanitySupplyConflict.rejected.id) ||
     (r.title === e.title && Math.abs(Date.parse(r.startsAt) - Date.parse(e.startsAt)) <= 24 * 3_600_000)));
   const expected = new Map([...wikiOnly, ...reviewed].map(e => [e.id, e]));
   expect(merged.events.map(e => e.id).sort()).toEqual([...expected.keys()].sort());
