@@ -1,3 +1,44 @@
+## Endfield snapshot CI recovery (2026-11-23)
+
+The November 22 refresh (`0708fce`) added a WikiGG Sanity Supply timer to the
+mutable Event snapshot. Its UTC-day ID `endfield:sanity-supply:2026-11-17`
+matches the reviewed `endfield:sanity-supply-november-2026:2026-11-18`.
+On November 24 UTC, the wiki timers end at 19:59 for Asia and 21:59 for Europe
+and America. Gryphline confirms the reviewed cutoff of 20:00 for Asia and
+22:00 for Europe and America. WikiGG's parser reads the captured values
+directly. The merge reports the first exact disagreement (`endsAt`, Asia,
+one minute) and keeps the official reviewed row. The test's zero-conflict
+expectation on the live snapshot blocked CI and Timeline label recording.
+[Gryphline version notes](https://endfield.gryphline.com/en-us/news/9560)
+[Failed CI](https://github.com/maxvfk/game-calendar/actions/runs/45078576827)
+
+`test/endfield-reviewed-banners.test.ts` checks the captured disagreement and
+reviewed winner in both merge orders. The live check still verifies the full
+event ID set, absence of duplicate IDs and equality of the reviewed winners.
+It accepts an empty conflict list as the snapshot rolls forward or the one
+captured pair with its exact provenance and regional ends. Extra or changed
+conflicts fail. The new `test/fixtures/endfield/sanity-supply-2026-11-22.html`
+and its attribution in `test/fixtures/endfield/README.md` preserve the observed
+parser input. The historical no-conflict and unrelated exact-disagreement
+tests still pass.
+
+Local Linux Bun 1.3.14 passed the frozen install, typecheck, build, and
+25 focused tests. The full suite passed with loopback available (1,890 passed,
+4 skipped for `age`, 0 failed). A fixed-clock build on the same snapshots
+produced byte-identical feed, review and Timeline queue files before and after
+the fix. The feed has 297 events across seven games and reports both existing
+source disagreements. The feed sanity check found zero broken sources.
+
+Pages recovery awaits an operator-approved merge and a successful `main` CI
+deployment. The last successful deployment was November 21 at `82a75dc`.
+After merge, confirm the `Deploy to Pages` job ran for the merged revision and
+compare the live feed's `generatedAt`, source health and Endfield rows with
+that run's `site` artifact. If the five accepted Timeline decisions are still
+pending, revalidate the saved proposals from run `45199576017` against fresh
+`main` with the deterministic accept command. Replaying the artifact uses no
+model calls. [Last Pages deployment](https://github.com/maxvfk/game-calendar/actions/runs/44955738875)
+[Timeline labels run](https://github.com/maxvfk/game-calendar/actions/runs/45199576017)
+
 ## Daily Passes correction disclosure (2026-11-19)
 
 The **Correct expiration** form now starts expanded whenever **Manage daily passes**
