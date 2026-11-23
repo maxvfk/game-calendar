@@ -1284,6 +1284,43 @@
       "rulesVersion": "v1",
       "decision": "keep_original",
       "reason": "The mode and date already distinguish this rotation."
+    },
+    {
+      "eventId": "endfield:shroomy-gathering:2026-11-21",
+      "fingerprint": "sha256:ad7ddde14d10377a42e76bebc7232a2c1e0ecf9a111ce0e7b2a069bf1bf4ddb3",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "The current identity is a distinctive event name; adding generic sign-in wording would be redundant."
+    },
+    {
+      "eventId": "hsr:planar-fissure:2026-11-23",
+      "fingerprint": "sha256:457c3c546f97c4bba68caa60ebac6d6f6838f0f556f57c47da85f074927a82fa",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Planar Fissure: Double Rewards",
+      "reason": "Adds the supported double-reward purpose to the official event name."
+    },
+    {
+      "eventId": "endfield:season-of-scattering:2026-11-25",
+      "fingerprint": "sha256:ba761250024d48eacb9d00f9abd7fd2db7827bceb017af55586375cea189b19f",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Echoes of War: Season of Scattering",
+      "reason": "Adds the explicit Echoes of War mode prefix while preserving the season name."
+    },
+    {
+      "eventId": "genshin:imaginarium-theater-february-2027-season:2027-02-01",
+      "fingerprint": "sha256:dd7b94b66bfba48228a2589a476b0ac314f59293f0d2b825dd69843159347af7",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current title already identifies the mode and preserved season."
+    },
+    {
+      "eventId": "wuwa:tower-of-adversity-hazard-zone:2027-02-01",
+      "fingerprint": "sha256:1e2e62925796e4535c0e2a45e9ca6441fd2d5c889b1aaa13ddd39fbb19fdf8f2",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Current title already identifies the tower and Hazard Zone distinction."
     }
   ]
 }
