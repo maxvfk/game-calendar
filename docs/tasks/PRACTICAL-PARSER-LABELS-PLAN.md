@@ -1,6 +1,8 @@
 # Practical Parser & Auto-Labels Plan
 
-**Status:** ACTIVE DIRECTION (adopted by operator on 2026-11-21).
+**Status:** ACTIVE DIRECTION (adopted by operator on 2026-11-21; **revised 2026-11-24**, see
+[Revision 2026-11-24](#revision-2026-11-24-current-order) — it sets the current order; the
+2026-11-21 step list below is kept as the original record).
 **Supersedes / freezes:** the remaining unbuilt stages (`C1b.1`, `CTX`, `C1b.2`, `C2`, `C5.3`) of [`SOURCE-COVERAGE-SIMPLE-SCHEME.md`](SOURCE-COVERAGE-SIMPLE-SCHEME.md). Completed [`C0`](https://github.com/maxvfk/game-calendar/pull/152), [`C1a.0`](https://github.com/maxvfk/game-calendar/pull/159), and [`C1a.1`](https://github.com/maxvfk/game-calendar/pull/161) remain intact as offline diagnostic tooling and are not reopened. Does **not** require Timeline Registry v2 cutover (draft [PR #115](https://github.com/maxvfk/game-calendar/pull/115)).
 **Unchanged rules:** `AGENTS.md` data safety (never guess missing year, time, or end date; preserve `eventId` and `localStorage` keys; keep `official` / `estimated` / `datamined` / `leak` separate).
 
@@ -20,27 +22,89 @@ An independent strategic review of the Source Coverage roadmap against `main` (`
    - `C1a.1` + `CTX` + `C1b.2` builds a High-Risk reporting-only negative-proof engine (15/714 spans matched on Nov 5; 0 spans detected on `genshin 21969`) that still cannot certify multi-event patch notes without heavy manual span ignoring.
    - `C5.3` autonomous event commits to `main` carry unacceptable risk to deadline accuracy and `localStorage` `eventId` stability for ~3–5 missed notices/week.
 
-## Practical 4-step plan
+## Revision 2026-11-24 (current order)
+
+Review of this plan against `main` `66b0f29`, the committed snapshot metadata, the Timeline
+label ledger and November workflow runs. The direction and the freeze stand. What changed:
+
+**Done or no longer true.**
+- PR #0 merged as [#185](https://github.com/maxvfk/game-calendar/pull/185) and PR #1 as
+  [#186](https://github.com/maxvfk/game-calendar/pull/186) (2026-11-21).
+- `zzz-zenlessgg-banners` is healthy again (confirmed 2026-11-24). Only
+  `endfield-wikigg-echoes` is stale: last confirmed 2026-11-14, last content change
+  2026-11-12.
+
+**Why the order changes.**
+1. *Publication liveness is the most frequent observed failure.* A test that pinned the live,
+   mutable Endfield snapshot turned CI red and stopped Pages from 2026-11-21 to 2026-11-23
+   ([#187](https://github.com/maxvfk/game-calendar/pull/187)); the same failure made the
+   2026-11-23 `timeline-labels` run fail to record. Pages/CI stalls also occurred in #168 and
+   #181. GitHub's scheduler is late: the `23 4 * * *` labels job started at 12:41 and 14:56 UTC
+   on 2026-11-22/23. An external dead-man check is the right tool, and it is cheaper than
+   PR #2.
+2. *The label policy must be decided before labels get more material.* The ledger holds 185
+   decisions (134 `keep_original`, 39 `label`, 12 `needs_research`). PR #1 grew the eligible
+   queue from 5 to 24 events and gives the model more text to rewrite with. Open
+   [#175](https://github.com/maxvfk/game-calendar/pull/175) records that a label can hide the
+   official name (3 of 28 non-banner labels share no word with it). This plan has no
+   measure of label quality yet.
+3. *Most manual rescue work is outside the five article feeds* (finding 3 above: all November
+   rescues, 32 of 35 reviewed entries in ZZZ, CZN and Endfield), yet the old PR #2 targets
+   those feeds. ZZZ, CZN and Endfield need an explicit routine, not only a default.
+4. *Daily Passes production acceptance is still open.* Authenticated production sync and an
+   in-game reset were not observed ([`DAILY-PASSES-SMOKE.md`](DAILY-PASSES-SMOKE.md)); the
+   feature handles paid days.
+
+**Current order** (each step a small PR or an operator action; none starts automatically):
+
+1. **Liveness (was PR #3), widened.**
+   - Dead-man ping at the end of `ci.yml`'s `pages` job, gated on
+     `publicationStalled() === false`, as planned.
+   - Per-source `lastConfirmedAt > 48h` visible continuously, as planned.
+   - Tests that compare against live, mutable snapshots report drift without blocking the
+     deploy; fixture-based tests stay blocking.
+   - A success ping from the private encrypted-backup workflow, so a stopped backup is
+     noticed (the narrow part of deferred S6b).
+2. **Label policy decision** on the [#175](https://github.com/maxvfk/game-calendar/pull/175)
+   case before further label work. Candidate: featured-subject labels for banners only,
+   official names kept for other events. Define one measurable acceptance check (for example,
+   share of non-banner labels sharing no word with the official name).
+3. **Daily Passes production acceptance** (operator, manual) with
+   [`DAILY-PASSES-SMOKE.md`](DAILY-PASSES-SMOKE.md), including authenticated sync and one real
+   reset boundary.
+4. **Narrowed PR #2.**
+   - Repair, replace or retire `endfield-wikigg-echoes`.
+   - Generalize the repeating templates listed under PR #2 below.
+   - Record a per-version/phase check for ZZZ, CZN and Endfield (what to look at and where it
+     lands in `data/reviewed/*.json`), or a targeted clean source where one exists.
+5. **Optional `C5.1-lite` probe**, unchanged, and use it to measure real missed notices per
+   week; the "3–5 per week" figure in finding 4 is an estimate, not a measurement.
+
+The 2026-10-28 scheme said "summaries come after C4" because a missing event breaks the
+calendar's main question and wording does not. PR #1 already shipped; this revision restores
+that priority for the remaining steps.
+
+## Practical 4-step plan (original, 2026-11-21)
 
 Goal: **working, resilient parsers + informative daily Timeline auto-labels with minimal development and manual maintenance.** Each step is a small, independent PR.
 
-### PR #0 (this PR) — Freeze heavy queue & run auto-labels daily
+### PR #0 (merged as #185) — Freeze heavy queue & run auto-labels daily
 - Freeze `C1b.1`, `CTX`, `C1b.2`, `C2`, and `C5.3`; record this plan in `docs/`.
 - Switch `.github/workflows/timeline-labels.yml` from `23 4 * * 2,6` (Tue/Sat) to `23 4 * * *` (daily 07:23 Moscow / 04:23 UTC). An empty queue makes zero API calls.
 
-### PR #1 — Revive Timeline auto-labels via parser context
+### PR #1 (merged as #186) — Revive Timeline auto-labels via parser context
 - Populate `recognitionSubjects` (for banners: featured character/weapon names from headings/intro lines) and concise factual `summary` (1–2 source lines describing activity/rewards) in `kqm-ginews.ts`, `wuwa-kuro-atom.ts`, `kqm-hsrnews.ts`, `nte-steamnews.ts`, and `zzz-steam-rss.ts`.
 - **Hard invariant:** `eventId`, `startsAt`, `endsAt`, `regionEnds`, `startPrecision`, `endPrecision`, and `regionScoped` remain byte-for-byte identical on all existing fixtures and snapshots, verified by dedicated invariance tests.
 - Changing `summary` / `recognitionSubjects` updates `semanticFingerprint()` automatically, allowing `timeline-labels.yml` to re-label existing active events and immediately show character/item names on banners.
 - *Risk-gated note:* Operator-authorized scope on `src/ingest/parsers/*` under the explicit invariance contract (zero date/ID changes).
 
-### PR #2 — Generalize repeating parser templates + resolve stale sources
+### PR #2 — Generalize repeating parser templates + resolve stale sources (narrowed, now step 4)
 - Replace one-off October hardcodes in `kqm-ginews.ts`, `wuwa-kuro-atom.ts`, and `nte-steamnews.ts` with general structural matchers for repeating templates:
   - Genshin: Phase II `Epitome Invocation` weapon table, Battle Pass `"..." Event Details`, `Stygian Onslaught` + secondary `Disturbance Outbreak` cutoff, and similar repeating structured notices.
   - NTE: unquoted `... Limited-Time Event` headers (`City Logistics`).
 - Inspect live behavior of the two currently stale sources (`zzz-zenlessgg-banners` since `2026-11-11`, `endfield-wikigg-echoes` since `2026-11-14`) and either repair, replace, or cleanly retire broken external feeds.
 
-### PR #3 — Minimal liveness (simplified `C4`)
+### PR #3 — Minimal liveness (simplified `C4`; widened, now step 1)
 - Move the external dead-man heartbeat ping to the end of `ci.yml`'s `pages` job, gated on `publicationStalled() === false` (from `src/shared/feed.ts`), so one ping verifies refresh + CI + Pages deployment without relying on noisy `contentChangedAt` diffs or false-fresh docs-only deploys.
 - Surface any individual scheduled source with `lastConfirmedAt > 48h` continuously (not just on the single `newlyBroken` transition).
 

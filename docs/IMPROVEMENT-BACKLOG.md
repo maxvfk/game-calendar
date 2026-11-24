@@ -1,8 +1,8 @@
 # Improvement backlog
 
-Last backlog reconciliation: **2026-11-21**, against current `main` `9436ff1` and merged PRs. Earlier observations and the 2026-10-06 sequencing decision are retained as historical rationale, not a current implementation queue.
+Last backlog reconciliation: **2026-11-24**, against current `main` `66b0f29` and merged PRs. Earlier observations and the 2026-10-06 sequencing decision are retained as historical rationale, not a current implementation queue.
 
-**Current next planned milestone:** **PR #1 — Parser context (`recognitionSubjects` + `summary`) for Timeline auto-labels**, following [`PRACTICAL-PARSER-LABELS-PLAN.md`](tasks/PRACTICAL-PARSER-LABELS-PLAN.md) (PR #0 freezes `C1b.1 / CTX / C1b.2 / C2 / C5.3` and moves `timeline-labels.yml` to daily runs; completed `C0`, `C1a.0`, and `C1a.1` remain intact offline). Do not start milestones automatically.
+**Current next planned milestone:** **liveness (widened former PR #3)**, following the [2026-11-24 revision](tasks/PRACTICAL-PARSER-LABELS-PLAN.md#revision-2026-11-24-current-order) of the practical plan. PR #0 ([#185](https://github.com/maxvfk/game-calendar/pull/185)) and PR #1 ([#186](https://github.com/maxvfk/game-calendar/pull/186)) are merged; `C1b.1 / CTX / C1b.2 / C2 / C5.3` stay frozen; completed `C0`, `C1a.0`, and `C1a.1` remain intact offline. Do not start milestones automatically.
 
 **Deferred / non-blocking:** Account/User S6b, Google OAuth publishing before open public sign-in, event artwork, recognition-first Event Detail, independent critical audit and maintenance guide after audit. Timeline v2 cutover [PR #115](https://github.com/maxvfk/game-calendar/pull/115) remains draft/NO GO. The observed official-name/AI-label mismatch is proposed in [PR #175](https://github.com/maxvfk/game-calendar/pull/175); that PR is **open and unmerged**, so this reconciliation does not duplicate or resolve its Watchlist item.
 
@@ -230,18 +230,19 @@ Historical snapshot from 2026-10-21, reconciled 2026-11-20:
 - `All types` select-all/clear-all: completed in PR #37;
 - Daily Passes: complete and activated in PRs #171–#183 (excluding unrelated #181); original pre-client status is obsolete.
 
-## Current source-coverage & parser queue (2026-11-21)
+## Current source-coverage & parser queue (2026-11-21, revised 2026-11-24)
 
 The earlier pre-Astra Timeline M1/M2 candidate list is closed: both milestones and operator phone/PC acceptance were completed on 2026-10-21. The compact mobile header and small UI batch were implemented in PRs #39/#40/#44.
 
 - **Done:** [C0](https://github.com/maxvfk/game-calendar/pull/152), [C1a.0](https://github.com/maxvfk/game-calendar/pull/159), [C1a.1](https://github.com/maxvfk/game-calendar/pull/161). The previous C1a.1 `Next` entry in `IMPLEMENTATION-STATUS.md` is a historical pre-merge record.
 - **Frozen (2026-11-21):** `C1b.1`, `CTX`, `C1b.2`, `C2`, and `C5.3` in [`SOURCE-COVERAGE-SIMPLE-SCHEME.md`](tasks/SOURCE-COVERAGE-SIMPLE-SCHEME.md) are frozen after the 2026-11-21 strategic review (disproportionate negative-proof complexity vs real failure modes: ZZZ CDN hash oscillation, noise ignores, stale feeds, and parser context/template gaps).
-- **Active practical plan ([`PRACTICAL-PARSER-LABELS-PLAN.md`](tasks/PRACTICAL-PARSER-LABELS-PLAN.md)):**
-  - **PR #0 (current):** record plan, freeze heavy queue, switch `timeline-labels.yml` to daily (`23 4 * * *`).
-  - **PR #1 (next):** populate `recognitionSubjects` and concise factual `summary` in the 5 article parsers without altering `eventId` or dates, unlocking useful Timeline auto-labels.
-  - **PR #2:** replace one-off October parser hardcodes with general structural templates and resolve stale sources (`zzz-zenlessgg-banners`, `endfield-wikigg-echoes`).
-  - **PR #3:** minimal `C4` liveness (dead-man ping at end of `ci.yml` `pages` job gated on `publicationStalled() === false`, plus >48h per-source stale visibility).
-  - **Optional Step 4:** 1-day read-only `C5.1-lite` DeepSeek probe for missed notices; no autonomous event commits to `main`.
+- **Active practical plan ([`PRACTICAL-PARSER-LABELS-PLAN.md`](tasks/PRACTICAL-PARSER-LABELS-PLAN.md), order revised 2026-11-24):**
+  - **Done:** PR #0 ([#185](https://github.com/maxvfk/game-calendar/pull/185): freeze, daily `timeline-labels.yml`) and PR #1 ([#186](https://github.com/maxvfk/game-calendar/pull/186): `recognitionSubjects` + `summary` in the 5 article parsers, IDs/dates unchanged).
+  - **1. Liveness (former PR #3, widened):** dead-man ping at the end of `ci.yml`'s `pages` job gated on `publicationStalled() === false`; >48h per-source stale visibility; live-snapshot drift tests stop blocking deploys (fixture tests stay blocking); a success ping from the private backup workflow.
+  - **2. Label policy decision** on the case in open [PR #175](https://github.com/maxvfk/game-calendar/pull/175) before more label work, with one measurable acceptance check.
+  - **3. Daily Passes production acceptance** (operator, manual) with [`DAILY-PASSES-SMOKE.md`](tasks/DAILY-PASSES-SMOKE.md): authenticated sync and one real reset boundary.
+  - **4. Narrowed PR #2:** repair, replace or retire `endfield-wikigg-echoes` (stale since 2026-11-14; `zzz-zenlessgg-banners` recovered); generalize the repeating templates; record a per-version check for ZZZ, CZN and Endfield.
+  - **5. Optional:** 1-day read-only `C5.1-lite` DeepSeek probe, also to measure real missed notices per week; no autonomous event commits to `main`.
 - **Before the large independent Astra audit:** take an explicit decision about its timing and baseline. That audit is a proposed next quality gate, not an approved automatic run.
 
 ## Deferred or awaiting product decision
@@ -268,6 +269,6 @@ The earlier pre-Astra Timeline M1/M2 candidate list is closed: both milestones a
 ## Sequence
 
 1. Keep this backlog as an intake and priority ledger; use current `main`, `docs/IMPLEMENTATION-STATUS.md`, and `docs/tasks/PRACTICAL-PARSER-LABELS-PLAN.md` for implementation truth. Reconcile individual historical lines when new facts warrant it; don't rerun completed milestones.
-2. **Next concrete step (after PR #0):** implement **PR #1 — Parser context (`recognitionSubjects` + `summary`) for Timeline auto-labels** with strict ID/date invariance tests.
-3. Follow with **PR #2** (generalize repeating parser templates + resolve stale `zzz-zenlessgg-banners` / `endfield-wikigg-echoes`) and **PR #3** (minimal `C4` liveness), keeping `C1b.1 / CTX / C1b.2 / C2 / C5.3` frozen unless reopened by explicit operator decision.
+2. **Next concrete step:** **liveness** (widened former PR #3), per the [2026-11-24 revision](tasks/PRACTICAL-PARSER-LABELS-PLAN.md#revision-2026-11-24-current-order).
+3. Then the label-policy decision ([PR #175](https://github.com/maxvfk/game-calendar/pull/175) case), Daily Passes production acceptance, the narrowed **PR #2** (`endfield-wikigg-echoes`, templates, per-version check for ZZZ/CZN/Endfield) and the optional `C5.1-lite` probe, keeping `C1b.1 / CTX / C1b.2 / C2 / C5.3` frozen unless reopened by explicit operator decision.
 4. Decide when to freeze a baseline for an independent critical Astra audit. Only after audit findings and fixes write the final `docs/MAINTENANCE.md`; keep artwork/Detail redesign and other deferred products as separate decisions.
