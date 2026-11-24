@@ -18,8 +18,8 @@ import {
   type SourceConfirmation,
 } from "../src/ingest/liveness.ts";
 import { SnapshotStore } from "../src/ingest/snapshots.ts";
-import { STALE_AFTER_MS, type SourceHealth } from "../src/shared/feed.ts";
-import { publicationVerdict } from "../scripts/publication-liveness.ts";
+import { STALE_AFTER_MS } from "../src/shared/feed.ts";
+import { heartbeatVerdict } from "../scripts/publication-liveness.ts";
 
 const NOW = Date.parse("2026-11-24T18:00:00.000Z");
 const HOUR = 3_600_000;
@@ -409,44 +409,75 @@ describe("the single stale-source issue", () => {
 });
 
 describe("dead-man heartbeat verdict", () => {
-  const scheduled = new Set(["genshin-kqm-ginews", "hsr-kqm-hsrnews"]);
-  const health = (sourceId: string, lastSuccessAt: string | null) => ({
-    sourceId, game: "genshin", url: "https://example.test/", lastSuccessAt,
-    lastConfirmedAt: null, contentChangedAt: null, eventCount: 1, parsedCount: 1, statesNoEvents: false,
-  }) as SourceHealth;
+  // Reads the same records as the stale-source issue: committed meta plus cached state.
+  let root: string;
+  beforeEach(async () => { root = await mkdtemp(join(tmpdir(), "heartbeat-")); });
+  afterEach(async () => { await rm(root, { recursive: true, force: true }); });
 
-  test("pings only while a scheduled source is current", () => {
-    expect(publicationVerdict([health("genshin-kqm-ginews", at(2))], NOW, scheduled).current).toBe(true);
-    expect(publicationVerdict([health("genshin-kqm-ginews", at(31))], NOW, scheduled).current).toBe(false);
+  const scheduled = ["genshin-kqm-ginews", "zzz-zenlessgg-banners"];
+  const meta = (dir: string, sourceId: string, contentChangedAt: string, lastConfirmedAt: string | null) => Bun.write(
+    join(dir, `${sourceId}.meta.json`),
+    JSON.stringify({
+      sourceId, url: "https://example.test/", contentHash: "x", bytes: 1, etag: null,
+      lastModified: null, contentChangedAt, lastConfirmedAt, eventCount: 1,
+    }),
+  );
+
+  test("pings only while a scheduled source was confirmed within 30 hours", async () => {
+    await meta(root, "genshin-kqm-ginews", at(500), at(2));
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(true);
+    await meta(root, "genshin-kqm-ginews", at(500), at(31));
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(false);
   });
 
-  test("a future date is not evidence of life; a really fresh source still is", () => {
-    // Confirmation a week ahead, real content change four days ago: the build put the
-    // future date into lastSuccessAt, which used to read as current.
-    const ahead = {
-      ...health("genshin-kqm-ginews", at(-7 * 24)),
-      lastConfirmedAt: at(-7 * 24),
-      contentChangedAt: at(96),
-    } as SourceHealth;
-    expect(publicationVerdict([ahead], NOW, scheduled)).toMatchObject({ current: false });
-    expect(publicationVerdict([ahead], NOW, scheduled).message).toContain(at(96));
-    expect(publicationVerdict([health("genshin-kqm-ginews", at(-1))], NOW, scheduled).current).toBe(false);
-    expect(publicationVerdict([ahead, health("hsr-kqm-hsrnews", at(2))], NOW, scheduled).current).toBe(true);
+  test("a real HTTP 304 survives a content-change date in the future", async () => {
+    // The feed builder folds these into one row, where the future date displaced
+    // the confirmation; the records keep both, and the future one is discarded.
+    await meta(root, "zzz-zenlessgg-banners", at(-7 * 24), null);
+    await new SnapshotStore(root).recordCheck("zzz-zenlessgg-banners", { at: at(2), status: 304, ok: true });
+    const verdict = await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW);
+    expect(verdict).toMatchObject({ current: true });
+    expect(verdict.message).toContain(at(2));
   });
 
-  test("a fresh manual review does not stand in for a stopped schedule", () => {
-    const feed = [
-      health("genshin-kqm-ginews", at(96)),
-      health("hsr-kqm-hsrnews", at(96)),
-      health("reviewed-genshin", at(1)),
-    ];
-    expect(publicationVerdict(feed, NOW, scheduled).current).toBe(false);
+  test("a future date alone is not evidence of life; another fresh source still is", async () => {
+    await meta(root, "zzz-zenlessgg-banners", at(-7 * 24), at(-7 * 24));
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(false);
+    await meta(root, "genshin-kqm-ginews", at(500), at(2));
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(true);
   });
 
-  test("no data is not proof of life", () => {
-    expect(publicationVerdict([health("genshin-kqm-ginews", null)], NOW, scheduled).current).toBe(false);
-    expect(publicationVerdict([health("reviewed-genshin", at(1))], NOW, scheduled).current).toBe(false);
-    expect(publicationVerdict([], NOW, scheduled).current).toBe(false);
+  test("only scheduled sources count; no data is not proof of life", async () => {
+    // A fresh record for anything off the schedule (or a reviewed-* row, which has
+    // no snapshot at all) cannot keep the heartbeat going.
+    await meta(root, "not-scheduled", at(500), at(1));
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(false);
+    expect((await heartbeatVerdict(new SnapshotStore(root), [], NOW)).current).toBe(false);
+  });
+
+  test("the real entrypoint writes the verdict the pages job reads", async () => {
+    // End to end through the script the build job runs, on the real clock: a 304
+    // two hours ago with a future content-change date pings; a future date alone does not.
+    const run = async (dir: string) => {
+      const output = join(dir, "github-output");
+      const result = Bun.spawnSync(
+        [process.execPath, "scripts/publication-liveness.ts", "--snapshots", join(dir, "snapshots")],
+        { env: { ...process.env, GITHUB_OUTPUT: output }, stdout: "pipe", stderr: "pipe" },
+      );
+      expect(result.exitCode).toBe(0);
+      return (await Bun.file(output).text()).trim();
+    };
+    const hoursAgo = (h: number) => new Date(Date.now() - h * HOUR).toISOString();
+
+    const fresh = join(root, "fresh");
+    await meta(join(fresh, "snapshots"), "zzz-zenlessgg-banners", hoursAgo(-7 * 24), null);
+    await new SnapshotStore(join(fresh, "snapshots"))
+      .recordCheck("zzz-zenlessgg-banners", { at: hoursAgo(2), status: 304, ok: true });
+    expect(await run(fresh)).toBe("current=true");
+
+    const future = join(root, "future");
+    await meta(join(future, "snapshots"), "zzz-zenlessgg-banners", hoursAgo(-7 * 24), hoursAgo(-7 * 24));
+    expect(await run(future)).toBe("current=false");
   });
 });
 

@@ -439,9 +439,12 @@ run turned red. So two further signals read outcomes rather than errors:
   The step runs after every completed cycle on `main`, including one where every source failed and
   the runner exited 1; it is advisory and never fails the refresh. Rules: `src/ingest/liveness.ts`.
 - **Dead-man heartbeat.** `ci.yml`'s `build` job runs `scripts/publication-liveness.ts`, which passes
-  only when some *scheduled* source has a recorded success inside [now − 30 hours, now], the
-  threshold of `publicationStalled()`. A time after `now` is not evidence of life: for each source
-  the newest of its recorded times that is not in the future is used. The `reviewed-<game>` rows are left out: their date is a manual review, and one
+  only when some *scheduled* source has a confirmed fetch inside [now − 30 hours, now], the
+  threshold of `publicationStalled()`. It reads the same records as the stale-source issue (committed
+  metadata plus the restored state) rather than the published rows: the feed builder folds a
+  source's dates into one value, where a future content-change date displaced a real HTTP 304. Here
+  a future date is discarded before the newest is chosen, so it neither counts nor hides a real
+  confirmation. The `reviewed-<game>` rows are left out: their date is a manual review, and one
   fresh review must not keep the heartbeat alive while the schedule has stopped. With no scheduled
   source ever succeeding there is no ping. `pages` then pings the URL in the `DEADMAN_PING_URL` secret after a
   successful deploy. An external monitor alerts when pings stop, which covers a stopped refresh, a

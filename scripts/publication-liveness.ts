@@ -1,60 +1,56 @@
 // Decide whether this build may send the dead-man heartbeat. Writes
 // `current=true|false` to $GITHUB_OUTPUT for the `pages` job.
 //
-// The heartbeat vouches for the *automatic* pipeline, so it reads only the
-// scheduled sources. The feed also carries `reviewed-<game>` rows whose
-// `lastSuccessAt` is the date of a manual review; counting them would let one
-// fresh review keep the ping going while the refresh schedule has stopped. The
-// page's own freshness notice still reads every row, as it should.
+// It reads the same records as the stale-source issue — the committed snapshot
+// metadata plus the refresh state restored from the Actions cache — through
+// `collectConfirmations`, and only for the scheduled adapters:
 //
-// It applies the threshold of `publicationStalled()` (30 hours) with one more
-// rule: only a time inside [now − 30 h, now] is evidence of life. A timestamp
-// from the future would otherwise read as fresh forever, so for each source the
-// newest of its recorded times that is not after `now` is used instead.
+// - Scheduled only: the feed's `reviewed-<game>` rows carry the date of a manual
+//   review, and one fresh review must not keep the ping going while the refresh
+//   schedule has stopped. A fixture fallback has no snapshot and counts for nothing.
+// - Records, not the published rows: the feed builder folds a source's dates into
+//   one "fresh as of" value, and a content-change date in the future displaces a
+//   real HTTP 304 confirmation there. Here a future date is discarded before the
+//   newest is chosen, so the real confirmation survives and the future one never
+//   counts.
+//
+// The threshold is `publicationStalled()`'s: a confirmation inside
+// [now − 30 h, now] is evidence of life, and no data is not.
+//
+// Usage: bun scripts/publication-liveness.ts [--snapshots <dir>]
 import { appendFile } from "node:fs/promises";
 import { ADAPTERS } from "../src/ingest/adapters/index.ts";
-import { PUBLICATION_STALE_AFTER_MS, type SourceHealth } from "../src/shared/feed.ts";
+import { collectConfirmations, type ConfirmationStore } from "../src/ingest/liveness.ts";
+import { SnapshotStore } from "../src/ingest/snapshots.ts";
+import { PUBLICATION_STALE_AFTER_MS } from "../src/shared/feed.ts";
 
-const FEED = "public/data/events.v1.json";
-
-/** The newest of a source's recorded times that parses and is not after `now`. */
-function lastSuccessUpTo(source: SourceHealth, now: number): string | null {
-  let best: string | null = null;
-  for (const time of [source.lastSuccessAt, source.lastConfirmedAt, source.contentChangedAt]) {
-    if (typeof time !== "string") continue;
-    const at = Date.parse(time);
-    if (Number.isNaN(at) || at > now) continue;
-    if (best === null || at > Date.parse(best)) best = time;
-  }
-  return best;
-}
-
-export function publicationVerdict(
-  sources: readonly SourceHealth[],
+export async function heartbeatVerdict(
+  store: ConfirmationStore,
+  scheduledIds: readonly string[],
   now: number,
-  scheduledIds: ReadonlySet<string> = new Set(ADAPTERS.map((a) => a.id)),
-): { current: boolean; message: string } {
+): Promise<{ current: boolean; message: string }> {
   let newest: string | null = null;
-  for (const source of sources) {
-    if (!scheduledIds.has(source.sourceId)) continue;
-    const at = lastSuccessUpTo(source, now);
+  for (const confirmation of await collectConfirmations(store, scheduledIds, now)) {
+    const at = confirmation.lastConfirmedAt;
     if (at !== null && (newest === null || Date.parse(at) > Date.parse(newest))) newest = at;
   }
-  // No data is not proof of life.
   if (newest === null) {
-    return { current: false, message: "no scheduled source has a success on record up to now" };
+    return { current: false, message: "no scheduled source has a confirmed fetch on record up to now" };
   }
   const ageMs = now - Date.parse(newest);
-  if (ageMs <= PUBLICATION_STALE_AFTER_MS) return { current: true, message: "scheduled sources are current" };
+  if (ageMs <= PUBLICATION_STALE_AFTER_MS) {
+    return { current: true, message: `scheduled sources are current (newest confirmation ${newest})` };
+  }
   return {
     current: false,
-    message: `publication stalled: newest scheduled source success ${newest} (${Math.round(ageMs / 3_600_000)} h ago)`,
+    message: `publication stalled: newest scheduled confirmation ${newest} (${Math.round(ageMs / 3_600_000)} h ago)`,
   };
 }
 
 if (import.meta.main) {
-  const feed = (await Bun.file(FEED).json()) as { sources: SourceHealth[] };
-  const verdict = publicationVerdict(feed.sources, Date.now());
+  const flag = process.argv.indexOf("--snapshots");
+  const root = flag === -1 ? "snapshots" : process.argv[flag + 1]!;
+  const verdict = await heartbeatVerdict(new SnapshotStore(root), ADAPTERS.map((a) => a.id), Date.now());
   console.log(verdict.current ? verdict.message : `::warning::${verdict.message}; no heartbeat will be sent`);
   const outputPath = process.env["GITHUB_OUTPUT"];
   if (outputPath) await appendFile(outputPath, `current=${verdict.current}\n`);

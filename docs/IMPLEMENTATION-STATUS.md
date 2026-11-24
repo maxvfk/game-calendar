@@ -1,8 +1,9 @@
 ## Liveness step 1 — dead-man ping and stale-source issue (2026-11-24)
 
 `ci.yml` sends a heartbeat to the `DEADMAN_PING_URL` secret after each successful
-Pages deploy when a scheduled source has a success within the last 30 hours and
-not in the future, the threshold of `publicationStalled()` (manual
+Pages deploy when a scheduled source has a confirmed fetch within the last 30
+hours and not in the future, the threshold of `publicationStalled()`, read from
+the same snapshot records as the stale-source issue (manual
 `reviewed-*` rows do not count); without the secret the step does nothing.
 `refresh.yml` on `main` keeps one labelled "Stale sources" issue in step with the
 scheduled sources that have had no confirmed fetch for over 48 hours, including
