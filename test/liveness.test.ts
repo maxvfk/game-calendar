@@ -415,13 +415,19 @@ describe("dead-man heartbeat verdict", () => {
   afterEach(async () => { await rm(root, { recursive: true, force: true }); });
 
   const scheduled = ["genshin-kqm-ginews", "zzz-zenlessgg-banners"];
-  const meta = (dir: string, sourceId: string, contentChangedAt: string, lastConfirmedAt: string | null) => Bun.write(
-    join(dir, `${sourceId}.meta.json`),
-    JSON.stringify({
-      sourceId, url: "https://example.test/", contentHash: "x", bytes: 1, etag: null,
-      lastModified: null, contentChangedAt, lastConfirmedAt, eventCount: 1,
-    }),
-  );
+  /** A stored snapshot: metadata and, unless `body` is false, the body the builder needs. */
+  const meta = async (
+    dir: string, sourceId: string, contentChangedAt: string, lastConfirmedAt: string | null, body = true,
+  ) => {
+    await Bun.write(
+      join(dir, `${sourceId}.meta.json`),
+      JSON.stringify({
+        sourceId, url: "https://example.test/", contentHash: "x", bytes: 1, etag: null,
+        lastModified: null, contentChangedAt, lastConfirmedAt, eventCount: 1,
+      }),
+    );
+    if (body) await Bun.write(join(dir, `${sourceId}.html`), "<html></html>");
+  };
 
   test("pings only while a scheduled source was confirmed within 30 hours", async () => {
     await meta(root, "genshin-kqm-ginews", at(500), at(2));
@@ -447,6 +453,17 @@ describe("dead-man heartbeat verdict", () => {
     expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(true);
   });
 
+  test("fresh records beside a missing body published nothing fresh", async () => {
+    // The builder reads a snapshot only through SnapshotStore.read, which needs the
+    // body; without it the source falls back to a fixture, so the fresh dates in its
+    // metadata and state never reached the feed.
+    await meta(root, "genshin-kqm-ginews", at(500), at(2), false);
+    await new SnapshotStore(root).recordCheck("genshin-kqm-ginews", { at: at(1), status: 304, ok: true });
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(false);
+    await Bun.write(join(root, "genshin-kqm-ginews.html"), "<html></html>");
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(true);
+  });
+
   test("only scheduled sources count; no data is not proof of life", async () => {
     // A fresh record for anything off the schedule (or a reviewed-* row, which has
     // no snapshot at all) cannot keep the heartbeat going.
@@ -458,11 +475,14 @@ describe("dead-man heartbeat verdict", () => {
   test("the real entrypoint writes the verdict the pages job reads", async () => {
     // End to end through the script the build job runs, on the real clock: a 304
     // two hours ago with a future content-change date pings; a future date alone does not.
-    const run = async (dir: string) => {
-      const output = join(dir, "github-output");
+    const run = async (dir: string, how: { flag?: string; env?: string } = { flag: join(dir, "snapshots") }) => {
+      const output = join(dir, `github-output-${Math.random().toString(36).slice(2)}`);
+      const env: Record<string, string | undefined> = { ...process.env, GITHUB_OUTPUT: output };
+      delete env["SNAPSHOT_DIR"];
+      if (how.env !== undefined) env["SNAPSHOT_DIR"] = how.env;
       const result = Bun.spawnSync(
-        [process.execPath, "scripts/publication-liveness.ts", "--snapshots", join(dir, "snapshots")],
-        { env: { ...process.env, GITHUB_OUTPUT: output }, stdout: "pipe", stderr: "pipe" },
+        [process.execPath, "scripts/publication-liveness.ts", ...(how.flag === undefined ? [] : ["--snapshots", how.flag])],
+        { env, stdout: "pipe", stderr: "pipe" },
       );
       expect(result.exitCode).toBe(0);
       return (await Bun.file(output).text()).trim();
@@ -478,6 +498,39 @@ describe("dead-man heartbeat verdict", () => {
     const future = join(root, "future");
     await meta(join(future, "snapshots"), "zzz-zenlessgg-banners", hoursAgo(-7 * 24), hoursAgo(-7 * 24));
     expect(await run(future)).toBe("current=false");
+
+    // Fresh metadata and state, but no body: the builder published a fixture instead.
+    const bodiless = join(root, "bodiless");
+    await meta(join(bodiless, "snapshots"), "zzz-zenlessgg-banners", hoursAgo(500), hoursAgo(2), false);
+    await new SnapshotStore(join(bodiless, "snapshots"))
+      .recordCheck("zzz-zenlessgg-banners", { at: hoursAgo(1), status: 304, ok: true });
+    expect(await run(bodiless)).toBe("current=false");
+  });
+
+  test("the entrypoint reads the builder's directory: --snapshots, else SNAPSHOT_DIR", async () => {
+    const hoursAgo = (h: number) => new Date(Date.now() - h * HOUR).toISOString();
+    const fresh = join(root, "fresh");
+    const old = join(root, "old");
+    await meta(fresh, "zzz-zenlessgg-banners", hoursAgo(500), hoursAgo(2));
+    await meta(old, "zzz-zenlessgg-banners", hoursAgo(500), hoursAgo(96));
+    const run = (how: { flag?: string; env?: string }) => {
+      const output = join(root, `github-output-${Math.random().toString(36).slice(2)}`);
+      const env: Record<string, string | undefined> = { ...process.env, GITHUB_OUTPUT: output };
+      delete env["SNAPSHOT_DIR"];
+      if (how.env !== undefined) env["SNAPSHOT_DIR"] = how.env;
+      const result = Bun.spawnSync(
+        [process.execPath, "scripts/publication-liveness.ts", ...(how.flag === undefined ? [] : ["--snapshots", how.flag])],
+        { env, stdout: "pipe", stderr: "pipe" },
+      );
+      expect(result.exitCode).toBe(0);
+      return Bun.file(output).text().then((text) => text.trim());
+    };
+    // Whatever the repository's own snapshots say, one of these two would disagree
+    // with it if SNAPSHOT_DIR were ignored.
+    expect(await run({ env: fresh })).toBe("current=true");
+    expect(await run({ env: old })).toBe("current=false");
+    // The flag wins over the environment.
+    expect(await run({ flag: fresh, env: old })).toBe("current=true");
   });
 });
 

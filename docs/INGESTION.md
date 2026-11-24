@@ -444,7 +444,9 @@ run turned red. So two further signals read outcomes rather than errors:
   metadata plus the restored state) rather than the published rows: the feed builder folds a
   source's dates into one value, where a future content-change date displaced a real HTTP 304. Here
   a future date is discarded before the newest is chosen, so it neither counts nor hides a real
-  confirmation. The `reviewed-<game>` rows are left out: their date is a manual review, and one
+  confirmation. Only snapshots the builder could use count: the same `SnapshotStore.read` (metadata
+  and body) from the same directory (`--snapshots`, else `SNAPSHOT_DIR`, else `snapshots`), so fresh
+  metadata beside a missing body, which the build replaced with a fixture, does not ping. The `reviewed-<game>` rows are left out: their date is a manual review, and one
   fresh review must not keep the heartbeat alive while the schedule has stopped. With no scheduled
   source ever succeeding there is no ping. `pages` then pings the URL in the `DEADMAN_PING_URL` secret after a
   successful deploy. An external monitor alerts when pings stop, which covers a stopped refresh, a

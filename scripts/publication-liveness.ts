@@ -13,6 +13,12 @@
 //   real HTTP 304 confirmation there. Here a future date is discarded before the
 //   newest is chosen, so the real confirmation survives and the future one never
 //   counts.
+// - Published snapshots only: the builder uses a snapshot only when
+//   `SnapshotStore.read` returns it (metadata *and* body); otherwise it falls back
+//   to a fixture. Fresh metadata beside a missing body published nothing fresh,
+//   so the same predicate decides what counts here.
+// - The same directory as the builder: `--snapshots`, else `SNAPSHOT_DIR`, else
+//   `snapshots` — the builder reads `SNAPSHOT_DIR ?? "snapshots"`.
 //
 // The threshold is `publicationStalled()`'s: a confirmation inside
 // [now − 30 h, now] is evidence of life, and no data is not.
@@ -24,18 +30,25 @@ import { collectConfirmations, type ConfirmationStore } from "../src/ingest/live
 import { SnapshotStore } from "../src/ingest/snapshots.ts";
 import { PUBLICATION_STALE_AFTER_MS } from "../src/shared/feed.ts";
 
+/** What the heartbeat reads: the confirmation records, and whether the builder could use the snapshot. */
+export type HeartbeatStore = ConfirmationStore & Pick<SnapshotStore, "read">;
+
 export async function heartbeatVerdict(
-  store: ConfirmationStore,
+  store: HeartbeatStore,
   scheduledIds: readonly string[],
   now: number,
 ): Promise<{ current: boolean; message: string }> {
+  const published: string[] = [];
+  for (const id of scheduledIds) {
+    if ((await store.read(id)) !== null) published.push(id);
+  }
   let newest: string | null = null;
-  for (const confirmation of await collectConfirmations(store, scheduledIds, now)) {
+  for (const confirmation of await collectConfirmations(store, published, now)) {
     const at = confirmation.lastConfirmedAt;
     if (at !== null && (newest === null || Date.parse(at) > Date.parse(newest))) newest = at;
   }
   if (newest === null) {
-    return { current: false, message: "no scheduled source has a confirmed fetch on record up to now" };
+    return { current: false, message: "no published scheduled snapshot has a confirmed fetch on record up to now" };
   }
   const ageMs = now - Date.parse(newest);
   if (ageMs <= PUBLICATION_STALE_AFTER_MS) {
@@ -49,7 +62,7 @@ export async function heartbeatVerdict(
 
 if (import.meta.main) {
   const flag = process.argv.indexOf("--snapshots");
-  const root = flag === -1 ? "snapshots" : process.argv[flag + 1]!;
+  const root = flag === -1 ? (process.env["SNAPSHOT_DIR"] ?? "snapshots") : process.argv[flag + 1]!;
   const verdict = await heartbeatVerdict(new SnapshotStore(root), ADAPTERS.map((a) => a.id), Date.now());
   console.log(verdict.current ? verdict.message : `::warning::${verdict.message}; no heartbeat will be sent`);
   const outputPath = process.env["GITHUB_OUTPUT"];
