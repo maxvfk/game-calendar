@@ -38,12 +38,16 @@ export interface SourceConfirmation {
   failingSince: string | null;
   /** From the cached state: first cycle with this source on the schedule, if valid. */
   firstSeenAt: string | null;
-  /** From the cached state; null when that state was not restored or no request was made yet. */
+  /**
+   * Whether the refresh state read for this run records any request. False when the
+   * source was never asked (robots, say) and equally when the cache was not restored;
+   * the state alone cannot tell those apart, so neither is claimed.
+   */
+  requestOnRecord: boolean;
+  /** Last HTTP status; null with a request on record means the attempt got no response. */
   lastStatus: number | null;
-  /** From the cached state; null when that state was not restored or no request was made yet. */
+  /** Current failure streak; null when no request is on record. */
   consecutiveFailures: number | null;
-  /** The state is present but records no request: on the schedule, never asked (e.g. robots). */
-  neverRequested: boolean;
 }
 
 export interface UnconfirmedSource extends SourceConfirmation {
@@ -106,9 +110,9 @@ export async function collectConfirmations(
       ),
       failingSince: notAfter(state.failingSince, now),
       firstSeenAt,
+      requestOnRecord: stateKnown,
       lastStatus: stateKnown ? state.lastStatus : null,
       consecutiveFailures: stateKnown ? state.consecutiveFailures : null,
-      neverRequested: !stateKnown && firstSeenAt !== null,
     });
   }
   return confirmations;
@@ -193,10 +197,12 @@ function lastConfirmedCell(s: SourceConfirmation): string {
   return since.length > 0 ? `never; ${since.join(", ")}` : "no record in this run";
 }
 
+const NO_REQUEST = "no request on record";
+
 function row(s: SourceConfirmation, ageText: string): string {
-  const missing = s.neverRequested ? "no request yet" : "unknown";
-  return `| \`${s.sourceId}\` | ${lastConfirmedCell(s)} | ${ageText} | ` +
-    `${s.lastStatus ?? missing} | ${s.consecutiveFailures ?? missing} |`;
+  const status = !s.requestOnRecord ? NO_REQUEST : (s.lastStatus ?? "no HTTP response");
+  const failures = !s.requestOnRecord ? NO_REQUEST : (s.consecutiveFailures ?? NO_REQUEST);
+  return `| \`${s.sourceId}\` | ${lastConfirmedCell(s)} | ${ageText} | ${status} | ${failures} |`;
 }
 
 export function staleIssueBody(
@@ -218,8 +224,11 @@ export function staleIssueBody(
     "| --- | --- | --- | --- | --- |",
     ...rows,
     "",
-    `Checked at ${new Date(now).toISOString()}. "unknown" means the refresh bookkeeping cache was not restored;`,
-    `"no request yet" means the source is on the schedule but has never been asked (for example, robots forbids it).`,
+    `Checked at ${new Date(now).toISOString()}.`,
+    `"${NO_REQUEST}": the refresh state read for this run holds no request for the source, either because`,
+    "it has never been asked (for example, robots forbids it) or because the bookkeeping cache was not restored;",
+    "a last-confirmed date in the same row comes from the committed snapshot metadata.",
+    `"no HTTP response": the last attempt failed before any response (for example, a network error or timeout).`,
     "A listed source stays listed until a fetch is confirmed, even when its age can no longer be measured.",
     "",
   ].join("\n");

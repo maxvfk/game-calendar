@@ -426,7 +426,9 @@ run turned red. So two further signals read outcomes rather than errors:
   always forbids is dated) and the first attempt of its failure streak (`failingSince`). So a new
   source that only ever fails, or is never asked, still reaches the issue after 48 hours (a failed
   write of that record is a warning for its source, never the end of the cycle). With none of
-  these, or only unparseable or future-dated ones, the age is unknown and the issue does not open;
+  these, or only unparseable or future-dated ones, the age is unknown and the issue does not open.
+  A stored start is carried into the next record only if it is not later than that record, so a
+  future date restarts the clock instead of freezing it;
   a future date is discarded before the newest is chosen, so it cannot outvote a real one. Recovery has
   its own test: only a valid confirmation within 48 hours takes a listed source off the issue, so a
   cache miss that restarts a failure streak keeps it listed. A closing
@@ -437,8 +439,9 @@ run turned red. So two further signals read outcomes rather than errors:
   The step runs after every completed cycle on `main`, including one where every source failed and
   the runner exited 1; it is advisory and never fails the refresh. Rules: `src/ingest/liveness.ts`.
 - **Dead-man heartbeat.** `ci.yml`'s `build` job runs `scripts/publication-liveness.ts`, which passes
-  only when `publicationStalled()` says the newest `lastSuccessAt` among the *scheduled* sources is
-  under 30 hours old. The `reviewed-<game>` rows are left out: their date is a manual review, and one
+  only when some *scheduled* source has a recorded success inside [now − 30 hours, now], the
+  threshold of `publicationStalled()`. A time after `now` is not evidence of life: for each source
+  the newest of its recorded times that is not in the future is used. The `reviewed-<game>` rows are left out: their date is a manual review, and one
   fresh review must not keep the heartbeat alive while the schedule has stopped. With no scheduled
   source ever succeeding there is no ping. `pages` then pings the URL in the `DEADMAN_PING_URL` secret after a
   successful deploy. An external monitor alerts when pings stop, which covers a stopped refresh, a

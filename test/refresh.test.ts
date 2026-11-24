@@ -545,9 +545,9 @@ describe("robots", () => {
     expect(action.kind).toBe("open");
     expect((action as { body: string }).body).toContain(
       `| \`${id}\` | never; on the schedule since ${new Date(start).toISOString()} | 3 d 0 h | ` +
-        "no request yet | no request yet |",
+        "no request on record | no request on record |",
     );
-    // The cache was fine; the table must not blame it.
+    // The table states what the state shows and does not guess at a cause.
     expect((action as { body: string }).body).not.toContain("| unknown |");
   });
 

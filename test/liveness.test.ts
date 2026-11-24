@@ -26,7 +26,7 @@ const HOUR = 3_600_000;
 const at = (hoursAgo: number) => new Date(NOW - hoursAgo * HOUR).toISOString();
 const source = (sourceId: string, lastConfirmedAt: string | null): SourceConfirmation => ({
   sourceId, lastConfirmedAt, failingSince: null, firstSeenAt: null, lastStatus: 200, consecutiveFailures: 0,
-  neverRequested: false,
+  requestOnRecord: true,
 });
 const stale = (ids: string[]) => unconfirmedSources(ids.map((id) => source(id, at(100))), NOW);
 const unknown = (ids: string[]) => ids.map((id) => source(id, null));
@@ -82,7 +82,7 @@ describe("per-source liveness", () => {
       const [confirmation] = await collectConfirmations(new SnapshotStore(root), ["cache-miss"], NOW);
       expect(confirmation).toEqual({
         sourceId: "cache-miss", lastConfirmedAt: at(3), failingSince: null, firstSeenAt: null,
-        lastStatus: null, consecutiveFailures: null, neverRequested: false,
+        lastStatus: null, consecutiveFailures: null, requestOnRecord: false,
       });
       expect(unconfirmedSources([confirmation!], NOW)).toEqual([]);
     });
@@ -153,7 +153,7 @@ describe("per-source liveness", () => {
       const confirmations = await collectConfirmations(new SnapshotStore(root), ["brand-new"], NOW);
       expect(confirmations).toEqual([{
         sourceId: "brand-new", lastConfirmedAt: null, failingSince: null, firstSeenAt: null,
-        lastStatus: null, consecutiveFailures: null, neverRequested: false,
+        lastStatus: null, consecutiveFailures: null, requestOnRecord: false,
       }]);
       expect(planStaleIssue(null, livenessReport(confirmations, NOW), NOW)).toEqual({ kind: "none" });
     });
@@ -243,6 +243,56 @@ describe("per-source liveness", () => {
       });
       const action = planStaleIssue(null, livenessReport(await collectConfirmations(store, ["corrupt"], NOW), NOW), NOW);
       expect(action.kind).toBe("open");
+    });
+
+    test("a future firstSeenAt or failingSince restarts the clock instead of freezing it", async () => {
+      // A cached first sighting a week ahead used to survive every write, and was
+      // discarded on every read, so the 48-hour count never began.
+      await Bun.write(join(root, "ahead.state.json"), JSON.stringify({
+        sourceId: "ahead", lastCheckedAt: null, lastConfirmedAt: null, lastStatus: null,
+        consecutiveFailures: 0, firstSeenAt: at(-7 * 24),
+      }));
+      const store = new SnapshotStore(root);
+      const start = NOW - 72 * HOUR;
+      await store.recordSeen("ahead", new Date(start).toISOString());
+      expect((await store.readState("ahead")).firstSeenAt).toBe(new Date(start).toISOString());
+      const plan = async (when: number) =>
+        planStaleIssue(null, livenessReport(await collectConfirmations(store, ["ahead"], when), when), when);
+      expect(await plan(start + 48 * HOUR)).toEqual({ kind: "none" });
+      expect((await plan(start + 48 * HOUR + 1)).kind).toBe("open");
+
+      // The same for a failure streak dated in the future.
+      await Bun.write(join(root, "streak.state.json"), JSON.stringify({
+        sourceId: "streak", lastCheckedAt: at(80), lastConfirmedAt: null, lastStatus: 503,
+        consecutiveFailures: 2, failingSince: at(-7 * 24), firstSeenAt: at(-7 * 24),
+      }));
+      await store.recordCheck("streak", { at: new Date(start).toISOString(), status: 503, ok: false });
+      expect(await store.readState("streak")).toMatchObject({
+        consecutiveFailures: 3,
+        failingSince: new Date(start).toISOString(),
+        firstSeenAt: new Date(start).toISOString(),
+      });
+    });
+
+    test("the table says what the state shows: no request on record, or no HTTP response", async () => {
+      // Cache lost, then this cycle's first sighting: the committed meta proves an
+      // earlier request, so the row must not claim the source was never asked.
+      await meta("cache-lost", at(100), at(100));
+      const store = new SnapshotStore(root);
+      await store.recordSeen("cache-lost", at(1));
+      // Seven attempts that never got an HTTP response.
+      for (let i = 0; i <= 6; i++) {
+        await store.recordCheck("no-response", { at: at(72 - i * 12), status: null, ok: false });
+      }
+      const body = bodyOf(planStaleIssue(
+        null, livenessReport(await collectConfirmations(store, ["cache-lost", "no-response"], NOW), NOW), NOW,
+      ));
+      expect(body).toContain(
+        `| \`cache-lost\` | ${at(100)} | 4 d 4 h | no request on record | no request on record |`,
+      );
+      expect(body).toContain(`| \`no-response\` | never; failing since ${at(72)} | 3 d 0 h | no HTTP response | 7 |`);
+      expect(body).not.toContain("no request yet");
+      expect(body).not.toContain("| unknown |");
     });
 
     test("every source failing for days, with old confirmations, opens the issue", async () => {
@@ -368,6 +418,20 @@ describe("dead-man heartbeat verdict", () => {
   test("pings only while a scheduled source is current", () => {
     expect(publicationVerdict([health("genshin-kqm-ginews", at(2))], NOW, scheduled).current).toBe(true);
     expect(publicationVerdict([health("genshin-kqm-ginews", at(31))], NOW, scheduled).current).toBe(false);
+  });
+
+  test("a future date is not evidence of life; a really fresh source still is", () => {
+    // Confirmation a week ahead, real content change four days ago: the build put the
+    // future date into lastSuccessAt, which used to read as current.
+    const ahead = {
+      ...health("genshin-kqm-ginews", at(-7 * 24)),
+      lastConfirmedAt: at(-7 * 24),
+      contentChangedAt: at(96),
+    } as SourceHealth;
+    expect(publicationVerdict([ahead], NOW, scheduled)).toMatchObject({ current: false });
+    expect(publicationVerdict([ahead], NOW, scheduled).message).toContain(at(96));
+    expect(publicationVerdict([health("genshin-kqm-ginews", at(-1))], NOW, scheduled).current).toBe(false);
+    expect(publicationVerdict([ahead, health("hsr-kqm-hsrnews", at(2))], NOW, scheduled).current).toBe(true);
   });
 
   test("a fresh manual review does not stand in for a stopped schedule", () => {

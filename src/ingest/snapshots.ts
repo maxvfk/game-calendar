@@ -74,9 +74,13 @@ export interface SnapshotState {
   firstSeenAt?: string | null;
 }
 
-/** A stored time worth carrying forward: a string that parses. Anything else restarts the clock. */
-function validTime(time: unknown): time is string {
-  return typeof time === "string" && !Number.isNaN(Date.parse(time));
+/**
+ * A stored start worth carrying forward into a record made at `at`: a string that
+ * parses and is not later than `at`. Anything else — empty, malformed, or from the
+ * future — restarts the clock, or the age it dates could never begin.
+ */
+function carriedTime(time: unknown, at: string): time is string {
+  return typeof time === "string" && !Number.isNaN(Date.parse(time)) && Date.parse(time) <= Date.parse(at);
 }
 
 export interface Snapshot {
@@ -394,10 +398,10 @@ export class SnapshotStore {
       consecutiveFailures: check.ok ? 0 : previous.consecutiveFailures + 1,
       failingSince: check.ok
         ? null
-        : previous.consecutiveFailures > 0 && validTime(previous.failingSince)
+        : previous.consecutiveFailures > 0 && carriedTime(previous.failingSince, check.at)
         ? previous.failingSince
         : check.at,
-      firstSeenAt: validTime(previous.firstSeenAt) ? previous.firstSeenAt : check.at,
+      firstSeenAt: carriedTime(previous.firstSeenAt, check.at) ? previous.firstSeenAt : check.at,
     };
 
     await mkdir(this.root, { recursive: true });
@@ -421,7 +425,7 @@ export class SnapshotStore {
    */
   async recordSeen(sourceId: string, at: string): Promise<void> {
     const previous = await this.readState(sourceId);
-    if (validTime(previous.firstSeenAt)) return;
+    if (carriedTime(previous.firstSeenAt, at)) return;
     await mkdir(this.root, { recursive: true });
     await writeAtomic(this.statePath(sourceId), `${JSON.stringify({ ...previous, firstSeenAt: at }, null, 2)}\n`);
   }
