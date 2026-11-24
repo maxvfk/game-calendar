@@ -62,25 +62,32 @@ label ledger and November workflow runs. The direction and the freeze stand. Wha
 
 1. **Liveness in this repo (was PR #3, widened).**
    - Dead-man ping at the end of `ci.yml`'s `pages` job, gated on
-     `publicationStalled() === false` (evaluated in `build` and passed to `pages` without
-     adding checkout/Bun to `pages`; clean up stale Gitea comments in `ci.yml` at the same
-     time).
+     `publicationStalled()` returning `null` (it returns `null` while publication is current
+     and an object when stalled; evaluated in `build` and passed to `pages` without adding
+     checkout/Bun to `pages`; clean up stale Gitea comments in `ci.yml` at the same time).
    - Continuous per-source `lastConfirmedAt > 48h` alerting through a low-noise operator
      channel (for example, a single self-updating GitHub Issue that opens/updates on stale
      sources and auto-closes on recovery, or an external monitor ping — never failing Pages
-     deploys and never buried only in build logs).
+     deploys and never buried only in build logs). `lastConfirmedAt` lives in the gitignored
+     `snapshots/*.state.json`, which GitHub CI only restores from cache; on a cache miss every
+     source looks stale. Evaluate the alert where that state is written (`refresh.yml`), or
+     treat a cache miss as "unknown", never as "stale".
    - Decouple `bun test` from content/conflict assertions on mutable `snapshots/*`: move those
      assertions to immutable `test/fixtures/` (as in #187), while live `snapshots/*` remain
-     checked by `build:feed`, `Feed sanity`, and non-blocking drift reporting.
+     checked by `build:feed`, `Feed sanity`, and non-blocking drift reporting. Start with an
+     inventory: about 13 test files read `snapshots/*`, and some (for example
+     `test/refresh.test.ts`) may read them on purpose; move only assertions on mutable content.
 2. **Resolve `endfield-wikigg-echoes` (micro-PR).**
    - Repair, replace, or cleanly retire `endfield-wikigg-echoes` immediately after step 1 so
      the `>48h` stale-source alert starts at zero red sources.
 3. **Label policy decision on the [#175](https://github.com/maxvfk/game-calendar/pull/175)
    case (and close/supersede #175).**
    - Primary candidate: featured subject(s) for banners; for non-banners, either
-     `keep_original` or preserve the official name as a prefix (`Official Name: <what it is>`),
-     checked by a deterministic guard/warning in `labelDiagnostics()`
-     (`src/presentation/timeline-labels.ts`).
+     `keep_original` or preserve the official name, usually as a prefix
+     (`Official Name: <what it is>`), checked by a deterministic guard/warning in
+     `labelDiagnostics()` (`src/presentation/timeline-labels.ts`). The guard should check that
+     the label *contains* the official name, not that it starts with it: accepted labels such
+     as `Echoes of War: Season of Scattering` put a category first.
    - Alternative candidate: featured-subject labels for banners only, official names kept
      verbatim for all non-banner events.
 4. **Narrowed PR #2 (recurring templates + ZZZ/CZN/Endfield routine).**
@@ -127,7 +134,7 @@ Goal: **working, resilient parsers + informative daily Timeline auto-labels with
 - Inspect live behavior of the two currently stale sources (`zzz-zenlessgg-banners` since `2026-11-11`, `endfield-wikigg-echoes` since `2026-11-14`) and either repair, replace, or cleanly retire broken external feeds.
 
 ### PR #3 — Minimal liveness (simplified `C4`; widened, now step 1)
-- Move the external dead-man heartbeat ping to the end of `ci.yml`'s `pages` job, gated on `publicationStalled() === false` (from `src/shared/feed.ts`), so one ping verifies refresh + CI + Pages deployment without relying on noisy `contentChangedAt` diffs or false-fresh docs-only deploys.
+- Move the external dead-man heartbeat ping to the end of `ci.yml`'s `pages` job, gated on `publicationStalled()` returning `null` (from `src/shared/feed.ts`), so one ping verifies refresh + CI + Pages deployment without relying on noisy `contentChangedAt` diffs or false-fresh docs-only deploys.
 - Surface any individual scheduled source with `lastConfirmedAt > 48h` continuously (not just on the single `newlyBroken` transition).
 
 ### Step 4 (optional 1-day read-only probe) — `C5.1-lite`
