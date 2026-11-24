@@ -106,7 +106,7 @@ test("historical Sereniel/Peko midnight is independently promotable, generic fut
 });
 
 // A rolling source may legitimately retire historical cards; validate those it still carries.
-liveSnapshotTest("[live snapshots] rolling CZN capture preserves reviewed precedence without requiring expired cards", async () => {
+liveSnapshotTest("rolling CZN capture preserves reviewed precedence without requiring expired cards", async () => {
   const current = parsePrydwenCzn(await Bun.file("snapshots/czn-prydwen-banners.html").text(), ctx);
   const result = mergeEvents([reviewed, current]);
   expect(result.conflicts).toEqual([]);

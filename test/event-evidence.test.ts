@@ -73,7 +73,7 @@ test("snapshot uses the same sections/identity as parser and yields bounded inde
   }
 });
 
-liveSnapshotTest("[live snapshots] WuWa evidence uses current parser identities and omits unrelated context", async () => {
+liveSnapshotTest("WuWa evidence uses current parser identities and omits unrelated context", async () => {
   const { events } = checkSnapshotEvidence(await Bun.file("snapshots/wuwa-kuro-mirror.xml").text());
   expect(events.length).toBeGreaterThan(0);
 });

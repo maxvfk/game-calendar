@@ -291,7 +291,7 @@ for (const i of [0, 1]) test(`${cases[i]![0]}: partial heading drift fails the i
 for (const [i, path] of [
   [0, "snapshots/genshin-kqm-ginews.md"],
   [1, "snapshots/hsr-kqm-hsrnews.md"],
-] as const) liveSnapshotTest(`[live snapshots] ${cases[i]![0]}: current valid snapshot passes the boundary guard`, async () => {
+] as const) liveSnapshotTest(`${cases[i]![0]}: current valid snapshot passes the boundary guard`, async () => {
   // Smoke check only; stable identities and drift outcomes use frozen inputs above.
   const raw = await Bun.file(path).text();
   const extraction = extractArticleEvidence(raw, context(i), capture, []);

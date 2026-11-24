@@ -54,7 +54,7 @@ function parseBanners(body: string) {
     sourceUrl: "https://www.prydwen.gg/chaos-zero-nightmare/banners" });
 }
 
-liveSnapshotTest("[live snapshots] CZN yields only banners and is nonempty", async () => {
+liveSnapshotTest("CZN yields only banners and is nonempty", async () => {
   const parsed = parseBanners(await Bun.file("snapshots/czn-prydwen-banners.html").text());
   expect(parsed.length).toBeGreaterThan(0);
   expect(parsed.every(e => e.type === "banner")).toBe(true);

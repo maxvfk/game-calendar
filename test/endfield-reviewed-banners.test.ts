@@ -113,7 +113,7 @@ test("captured November Sanity Supply disagreement remains visible and keeps the
   }
 });
 
-liveSnapshotTest("[live snapshots] current Endfield snapshot exposes only known conflicts and keeps stable IDs and reviewed winners", async () => {
+liveSnapshotTest("current Endfield snapshot exposes only known conflicts and keeps stable IDs and reviewed winners", async () => {
   const html = await Bun.file("snapshots/endfield-wikigg-events.html").text();
   const wiki = parseWikiGgEventsPage(html, novemberWikiContext);
   const { events: reviewed } = materializeReviewedBatch(await Bun.file("data/reviewed/endfield.json").json());

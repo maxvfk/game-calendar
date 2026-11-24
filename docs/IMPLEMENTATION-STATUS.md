@@ -2,7 +2,9 @@
 
 Offline regressions use pinned inputs under `test/fixtures/`, with source and
 capture hashes recorded in each game's README. `bun run test:live` checks the
-rolling snapshots separately. CI annotates drift in a non-blocking step.
+rolling snapshots separately. CI annotates drift in a non-blocking step and lists
+the failing checks in the run summary. A blocking guard keeps `test:live` from
+going silently empty.
 
 ## Endfield snapshot CI recovery (2026-11-23)
 

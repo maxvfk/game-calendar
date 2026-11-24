@@ -74,7 +74,7 @@ test("both legacy completion identities survive export/import and refreshed offi
   expect(JSON.stringify(progress)).toBe(serialized);
 });
 
-liveSnapshotTest("[live snapshots] rolling Genshin capture keeps reviewed winners when old notices rotate out", async () => {
+liveSnapshotTest("rolling Genshin capture keeps reviewed winners when old notices rotate out", async () => {
   const current = parseKqmGinNews(await Bun.file("snapshots/genshin-kqm-ginews.md").text(), ctx);
   const result = mergeEvents([reviewed, current]);
   expect(result.conflicts).toEqual([]);

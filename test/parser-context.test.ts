@@ -255,7 +255,7 @@ describe("PR #1 parser context — recognitionSubjects and factual summaries", (
     expect(evCanonical.find(e => e.title === "Echo Erase")?.summary).toContain("tapping Echo Pieces away");
   });
 
-  liveSnapshotTest("[live snapshots] WuWa parser and evidence sections agree", async () => {
+  liveSnapshotTest("WuWa parser and evidence sections agree", async () => {
     const ctx = { now: NOW, sourceUrl: "https://api.github.com/repos/TheLovinator1/wutheringwaves/contents/articles_latest.xml", sourceId: "wuwa-kuro-mirror", game: "wuwa" as const };
     const snap = (await Bun.file("snapshots/wuwa-kuro-mirror.xml").text()).replace(/\r\n/g, "\n");
     const canonical = parseWuwaKuroAtom(snap, ctx);
@@ -292,7 +292,7 @@ describe("PR #1 parser context — recognitionSubjects and factual summaries", (
     expect(lwEvents.filter(e => e.type === "challenge").every(e => e.summary === null)).toBe(true);
   });
 
-  liveSnapshotTest("[live snapshots] HSR parser context and Nameless Honor summary stay clean", async () => {
+  liveSnapshotTest("HSR parser context and Nameless Honor summary stay clean", async () => {
     const ctx = { now: NOW, sourceUrl: "https://api.github.com/repos/KQM-git/HSRNews/contents/readme.md", sourceId: "hsr-kqm-hsrnews", game: "hsr" as const };
     const snap = (await Bun.file("snapshots/hsr-kqm-hsrnews.md").text()).replace(/\r\n/g, "\n");
     const events = parseKqmHsrNews(snap, ctx);
@@ -333,7 +333,7 @@ describe("PR #1 parser context — recognitionSubjects and factual summaries", (
     ["genshin", "genshin-kqm-ginews", "https://api.github.com/repos/KQM-git/GINews/contents/readme.md", "md", parseKqmGinNews],
     ["zzz", "zzz-steam-events-official", "https://steamcommunity.com/games/4162040/rss/", "xml", parseZzzSteamRss],
     ["nte", "nte-steamnews-official", "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/", "json", parseNteSteamNews],
-  ] as const) liveSnapshotTest(`[live snapshots] ${sourceId} yields events with clean parser context`, async () => {
+  ] as const) liveSnapshotTest(`${sourceId} yields events with clean parser context`, async () => {
     const snap = (await Bun.file(`snapshots/${sourceId}.${extension}`).text()).replace(/\r\n/g, "\n");
     const events = parse(snap, { now: NOW, sourceUrl, sourceId, game });
     expect(events.length).toBeGreaterThan(0);
@@ -344,7 +344,7 @@ describe("PR #1 parser context — recognitionSubjects and factual summaries", (
 
 // The full-feed regressions use frozen inputs for these sources too.
 for (const sourceId of ["endfield-wikigg-echoes", "nte-ntebuild-btr", "zzz-zenlessgg-banners"]) {
-  liveSnapshotTest(`[live snapshots] ${sourceId} still parses through its adapter`, async () => {
+  liveSnapshotTest(`${sourceId} still parses through its adapter`, async () => {
     const adapter = adapterById(sourceId)!;
     const snapshot = await new SnapshotStore("snapshots").read(sourceId);
     expect(snapshot).not.toBeNull();
