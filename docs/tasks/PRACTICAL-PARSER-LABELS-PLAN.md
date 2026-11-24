@@ -38,47 +38,69 @@ label ledger and November workflow runs. The direction and the freeze stand. Wha
 1. *Publication liveness is the most frequent observed failure.* A test that pinned the live,
    mutable Endfield snapshot turned CI red and stopped Pages from 2026-11-21 to 2026-11-23
    ([#187](https://github.com/maxvfk/game-calendar/pull/187)); the same failure made the
-   2026-11-23 `timeline-labels` run fail to record. Pages/CI stalls also occurred in #168 and
-   #181. GitHub's scheduler is late: the `23 4 * * *` labels job started at 12:41 and 14:56 UTC
-   on 2026-11-22/23. An external dead-man check is the right tool, and it is cheaper than
-   PR #2.
-2. *The label policy must be decided before labels get more material.* The ledger holds 185
+   2026-11-23 `timeline-labels` run fail to record. Several other tests still assert live
+   snapshot content/conflicts (for example `test/genshin-phase-ii-precision.test.ts`). Pages/CI
+   stalls also occurred in #168 and #181, and GitHub's scheduler is late: the `23 4 * * *`
+   labels job started at 12:41 and 14:56 UTC on 2026-11-22/23. Decoupling `bun test` from
+   mutable snapshots plus an external dead-man check is cheaper and higher-impact than PR #2.
+2. *A new stale-source alert must start from a clean green baseline.* Launching continuous
+   `lastConfirmedAt > 48h` alerting while `endfield-wikigg-echoes` is already 10+ days stale
+   would cause immediate alert fatigue, so resolving `endfield-wikigg-echoes` belongs right
+   after liveness rather than waiting behind template refactors.
+3. *The label policy needs a clear rule before further label work.* The ledger holds 185
    decisions (134 `keep_original`, 39 `label`, 12 `needs_research`). PR #1 grew the eligible
-   queue from 5 to 24 events and gives the model more text to rewrite with. Open
-   [#175](https://github.com/maxvfk/game-calendar/pull/175) records that a label can hide the
-   official name (3 of 28 non-banner labels share no word with it). This plan has no
-   measure of label quality yet.
-3. *Most manual rescue work is outside the five article feeds* (finding 3 above: all November
+   queue from 5 to 24 events. Open [#175](https://github.com/maxvfk/game-calendar/pull/175)
+   records that a label can hide the official name (3 of 28 non-banner labels share no word
+   with it, though most recent non-banner labels already use the `Official Name: <what it is>`
+   pattern). A deterministic guard fits this better than an open-ended watchlist item.
+4. *Most manual rescue work is outside the five article feeds* (finding 3 above: all November
    rescues, 32 of 35 reviewed entries in ZZZ, CZN and Endfield), yet the old PR #2 targets
-   those feeds. ZZZ, CZN and Endfield need an explicit routine, not only a default.
-4. *Daily Passes production acceptance is still open.* Authenticated production sync and an
-   in-game reset were not observed ([`DAILY-PASSES-SMOKE.md`](DAILY-PASSES-SMOKE.md)); the
-   feature handles paid days.
+   those feeds. ZZZ, CZN and Endfield need an explicit routine, while parser template work
+   should stay strictly scoped to recurring patch templates.
 
 **Current order** (each step a small PR or an operator action; none starts automatically):
 
-1. **Liveness (was PR #3), widened.**
+1. **Liveness in this repo (was PR #3, widened).**
    - Dead-man ping at the end of `ci.yml`'s `pages` job, gated on
-     `publicationStalled() === false`, as planned.
-   - Per-source `lastConfirmedAt > 48h` visible continuously, as planned.
-   - Tests that compare against live, mutable snapshots report drift without blocking the
-     deploy; fixture-based tests stay blocking.
-   - A success ping from the private encrypted-backup workflow, so a stopped backup is
-     noticed (the narrow part of deferred S6b).
-2. **Label policy decision** on the [#175](https://github.com/maxvfk/game-calendar/pull/175)
-   case before further label work. Candidate: featured-subject labels for banners only,
-   official names kept for other events. Define one measurable acceptance check (for example,
-   share of non-banner labels sharing no word with the official name).
-3. **Daily Passes production acceptance** (operator, manual) with
-   [`DAILY-PASSES-SMOKE.md`](DAILY-PASSES-SMOKE.md), including authenticated sync and one real
-   reset boundary.
-4. **Narrowed PR #2.**
-   - Repair, replace or retire `endfield-wikigg-echoes`.
-   - Generalize the repeating templates listed under PR #2 below.
+     `publicationStalled() === false` (evaluated in `build` and passed to `pages` without
+     adding checkout/Bun to `pages`; clean up stale Gitea comments in `ci.yml` at the same
+     time).
+   - Continuous per-source `lastConfirmedAt > 48h` alerting through a low-noise operator
+     channel (for example, a single self-updating GitHub Issue that opens/updates on stale
+     sources and auto-closes on recovery, or an external monitor ping — never failing Pages
+     deploys and never buried only in build logs).
+   - Decouple `bun test` from content/conflict assertions on mutable `snapshots/*`: move those
+     assertions to immutable `test/fixtures/` (as in #187), while live `snapshots/*` remain
+     checked by `build:feed`, `Feed sanity`, and non-blocking drift reporting.
+2. **Resolve `endfield-wikigg-echoes` (micro-PR).**
+   - Repair, replace, or cleanly retire `endfield-wikigg-echoes` immediately after step 1 so
+     the `>48h` stale-source alert starts at zero red sources.
+3. **Label policy decision on the [#175](https://github.com/maxvfk/game-calendar/pull/175)
+   case (and close/supersede #175).**
+   - Primary candidate: featured subject(s) for banners; for non-banners, either
+     `keep_original` or preserve the official name as a prefix (`Official Name: <what it is>`),
+     checked by a deterministic guard/warning in `labelDiagnostics()`
+     (`src/presentation/timeline-labels.ts`).
+   - Alternative candidate: featured-subject labels for banners only, official names kept
+     verbatim for all non-banner events.
+4. **Narrowed PR #2 (recurring templates + ZZZ/CZN/Endfield routine).**
+   - Generalize **only** the 3–4 templates that repeat every patch (Genshin Phase II
+     `Epitome Invocation` weapon table, Genshin Battle Pass `"..." Event Details`, Genshin
+     `Stygian Onslaught` + `Disturbance Outbreak`, NTE unquoted `... Limited-Time Event`). Do
+     not chase one-off prose notices (`The Grand Defense`, HSR `1451`/`1480`, WuWa `5786`);
+     handle those via `data/reviewed/*.json` or optional `C5.1-lite`.
    - Record a per-version/phase check for ZZZ, CZN and Endfield (what to look at and where it
      lands in `data/reviewed/*.json`), or a targeted clean source where one exists.
 5. **Optional `C5.1-lite` probe**, unchanged, and use it to measure real missed notices per
    week; the "3–5 per week" figure in finding 4 is an estimate, not a measurement.
+
+**Parallel operator / external-infra actions** (independent workstreams; do not block steps 1–5):
+- **Daily Passes production acceptance** (operator, manual) with
+  [`DAILY-PASSES-SMOKE.md`](DAILY-PASSES-SMOKE.md), adapting pre-activation flag-on/off steps
+  to live production — authenticated sync and one real in-game reset boundary.
+- **Private encrypted-backup workflow success ping** (the narrow monitoring part of deferred
+  S6b, living outside this public repo's `ci.yml`), so a stopped backup is noticed without
+  coupling step 1's PR to private backup infra.
 
 The 2026-10-28 scheme said "summaries come after C4" because a missing event breaks the
 calendar's main question and wording does not. PR #1 already shipped; this revision restores
@@ -98,7 +120,7 @@ Goal: **working, resilient parsers + informative daily Timeline auto-labels with
 - Changing `summary` / `recognitionSubjects` updates `semanticFingerprint()` automatically, allowing `timeline-labels.yml` to re-label existing active events and immediately show character/item names on banners.
 - *Risk-gated note:* Operator-authorized scope on `src/ingest/parsers/*` under the explicit invariance contract (zero date/ID changes).
 
-### PR #2 — Generalize repeating parser templates + resolve stale sources (narrowed, now step 4)
+### PR #2 — Generalize repeating parser templates + resolve stale sources (split into steps 2 and 4)
 - Replace one-off October hardcodes in `kqm-ginews.ts`, `wuwa-kuro-atom.ts`, and `nte-steamnews.ts` with general structural matchers for repeating templates:
   - Genshin: Phase II `Epitome Invocation` weapon table, Battle Pass `"..." Event Details`, `Stygian Onslaught` + secondary `Disturbance Outbreak` cutoff, and similar repeating structured notices.
   - NTE: unquoted `... Limited-Time Event` headers (`City Logistics`).

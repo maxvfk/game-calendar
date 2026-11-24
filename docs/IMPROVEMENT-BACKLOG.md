@@ -238,11 +238,12 @@ The earlier pre-Astra Timeline M1/M2 candidate list is closed: both milestones a
 - **Frozen (2026-11-21):** `C1b.1`, `CTX`, `C1b.2`, `C2`, and `C5.3` in [`SOURCE-COVERAGE-SIMPLE-SCHEME.md`](tasks/SOURCE-COVERAGE-SIMPLE-SCHEME.md) are frozen after the 2026-11-21 strategic review (disproportionate negative-proof complexity vs real failure modes: ZZZ CDN hash oscillation, noise ignores, stale feeds, and parser context/template gaps).
 - **Active practical plan ([`PRACTICAL-PARSER-LABELS-PLAN.md`](tasks/PRACTICAL-PARSER-LABELS-PLAN.md), order revised 2026-11-24):**
   - **Done:** PR #0 ([#185](https://github.com/maxvfk/game-calendar/pull/185): freeze, daily `timeline-labels.yml`) and PR #1 ([#186](https://github.com/maxvfk/game-calendar/pull/186): `recognitionSubjects` + `summary` in the 5 article parsers, IDs/dates unchanged).
-  - **1. Liveness (former PR #3, widened):** dead-man ping at the end of `ci.yml`'s `pages` job gated on `publicationStalled() === false`; >48h per-source stale visibility; live-snapshot drift tests stop blocking deploys (fixture tests stay blocking); a success ping from the private backup workflow.
-  - **2. Label policy decision** on the case in open [PR #175](https://github.com/maxvfk/game-calendar/pull/175) before more label work, with one measurable acceptance check.
-  - **3. Daily Passes production acceptance** (operator, manual) with [`DAILY-PASSES-SMOKE.md`](tasks/DAILY-PASSES-SMOKE.md): authenticated sync and one real reset boundary.
-  - **4. Narrowed PR #2:** repair, replace or retire `endfield-wikigg-echoes` (stale since 2026-11-14; `zzz-zenlessgg-banners` recovered); generalize the repeating templates; record a per-version check for ZZZ, CZN and Endfield.
+  - **1. Liveness in this repo (former PR #3, widened):** dead-man ping at the end of `ci.yml`'s `pages` job gated on `publicationStalled() === false` (passed from `build`); continuous `>48h` per-source stale alert (e.g., single self-updating issue or external ping, non-blocking); decouple `bun test` content/conflict assertions from live `snapshots/*` into immutable `test/fixtures/`.
+  - **2. Resolve `endfield-wikigg-echoes` (micro-PR):** repair, replace, or retire the only stale source (since 2026-11-14; `zzz-zenlessgg-banners` recovered) so the new `>48h` alert starts green.
+  - **3. Label policy decision** on the case in open [PR #175](https://github.com/maxvfk/game-calendar/pull/175) (primary candidate: `Official Name: <what it is>` for non-banners + deterministic `labelDiagnostics()` guard; alternative: banners only) and close/supersede #175.
+  - **4. Narrowed PR #2:** generalize only the 3–4 templates that repeat every patch (skip one-off prose notices); record a per-version check for ZZZ, CZN and Endfield.
   - **5. Optional:** 1-day read-only `C5.1-lite` DeepSeek probe, also to measure real missed notices per week; no autonomous event commits to `main`.
+  - **Parallel (non-blocking):** operator Daily Passes production acceptance ([`DAILY-PASSES-SMOKE.md`](tasks/DAILY-PASSES-SMOKE.md): authenticated sync + one real reset boundary) and a success ping in the private encrypted-backup workflow.
 - **Before the large independent Astra audit:** take an explicit decision about its timing and baseline. That audit is a proposed next quality gate, not an approved automatic run.
 
 ## Deferred or awaiting product decision
@@ -252,7 +253,7 @@ The earlier pre-Astra Timeline M1/M2 candidate list is closed: both milestones a
 - **Timeline event-type grouping:** deferred pending a demonstrated remaining usability issue after M2.
 - **Daily Passes on Timeline:** discussed as a personal expiry bar or marker; **not approved or scoped for implementation**. Keep separate from completed Daily Passes.
 - **Featured-subject recognition in Next Up/checklist:** M1/M2 do not automatically cover these surfaces.
-- **Account/User S6b:** backup monitoring and cache-cleanup hardening, separate and non-blocking.
+- **Account/User S6b:** backup monitoring and cache-cleanup hardening, separate and non-blocking (narrow private backup-workflow success ping tracked as a parallel infra item alongside the practical plan).
 - **Google OAuth publish-app gate:** only before open sign-in by arbitrary users; preserve existing user identities.
 - **Timeline v2 editorial registry cutover [PR #115](https://github.com/maxvfk/game-calendar/pull/115):** remains draft/NO GO, not part of automatic coverage or summary rollout.
 - **Official-name vs AI Timeline label:** observed problem and proposed Watchlist write-up in **open** [PR #175](https://github.com/maxvfk/game-calendar/pull/175). Keep the product decision open; do not duplicate that text or merge #175 implicitly.
