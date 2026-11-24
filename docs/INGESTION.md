@@ -421,8 +421,12 @@ run turned red. So two further signals read outcomes rather than errors:
   opened when the first source goes stale, its body refreshed silently every run, a comment when the
   set changes, closed when every source recovers. The confirmation time is the newest of the
   committed `.meta.json` and the cached `.state.json`, so a cache miss cannot make a healthy source
-  stale. A source with no record at all has an unknown age: that never opens the issue, and a listed
-  source whose age becomes unknown stays listed until it is confirmed. The issue is the bot's open
+  stale. A source never once confirmed is aged from the first attempt of its failure streak
+  (`failingSince` in the state), so a new source that only ever fails still reaches the issue after
+  48 hours. With neither date, or only unparseable ones, the age is unknown: that never opens the
+  issue, and a listed source whose age becomes unknown stays listed until it is confirmed. A closing
+  comment claims only what was checked, names sources not judged yet, and reports a source taken
+  off the schedule as no longer monitored rather than recovered. The issue is the bot's open
   issue with the `liveness-stale-sources` label, never matched by title. On an update the comment is
   sent before the body edit, because the body's hidden marker is what records a change as reported.
   The step runs after every completed cycle on `main`, including one where every source failed and

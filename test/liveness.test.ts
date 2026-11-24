@@ -5,6 +5,8 @@ import { join } from "node:path";
 import {
   applyStaleIssue,
   collectConfirmations,
+  type LivenessReport,
+  livenessReport,
   type OpenIssue,
   planStaleIssue,
   staleIdsFromBody,
@@ -23,13 +25,20 @@ const NOW = Date.parse("2026-11-24T18:00:00.000Z");
 const HOUR = 3_600_000;
 const at = (hoursAgo: number) => new Date(NOW - hoursAgo * HOUR).toISOString();
 const source = (sourceId: string, lastConfirmedAt: string | null): SourceConfirmation => ({
-  sourceId, lastConfirmedAt, lastStatus: 200, consecutiveFailures: 0,
+  sourceId, lastConfirmedAt, failingSince: null, lastStatus: 200, consecutiveFailures: 0,
 });
 const stale = (ids: string[]) => unconfirmedSources(ids.map((id) => source(id, at(100))), NOW);
 const unknown = (ids: string[]) => ids.map((id) => source(id, null));
+/** A report in which every id named is tracked, unless `tracked` says otherwise. */
+const report = (
+  staleIds: string[],
+  unknownIds: string[] = [],
+  tracked: string[] = [...staleIds, ...unknownIds, "a", "b", "c"],
+): LivenessReport => ({ stale: stale(staleIds), unknown: unknown(unknownIds), tracked });
+const bodyOf = (action: StaleIssueAction) => (action as { body: string }).body;
 
 describe("per-source liveness", () => {
-  test("flags only confirmed sources past 48h; no record is unknown, not stale", () => {
+  test("flags only sources past 48h; no record is unknown, not stale", () => {
     const confirmations = [
       source("b-old", at(240)),
       source("a-fresh", at(2)),
@@ -64,7 +73,7 @@ describe("per-source liveness", () => {
       await meta("cache-miss", at(3));
       const [confirmation] = await collectConfirmations(new SnapshotStore(root), ["cache-miss"]);
       expect(confirmation).toEqual({
-        sourceId: "cache-miss", lastConfirmedAt: at(3), lastStatus: null, consecutiveFailures: null,
+        sourceId: "cache-miss", lastConfirmedAt: at(3), failingSince: null, lastStatus: null, consecutiveFailures: null,
       });
       expect(unconfirmedSources([confirmation!], NOW)).toEqual([]);
     });
@@ -85,14 +94,64 @@ describe("per-source liveness", () => {
       expect(byId["legacy-meta"]!.lastConfirmedAt).toBe(at(6));
     });
 
+    test("an unparseable date is skipped, not compared: valid older dates still count", async () => {
+      // Valid JSON, empty lastConfirmedAt. Compared as NaN it used to discard both
+      // valid dates, so the source was neither stale nor unknown and the issue closed.
+      await meta("blank", "", at(96));
+      await state("blank", at(96), 4);
+      const confirmations = await collectConfirmations(new SnapshotStore(root), ["blank"]);
+      expect(confirmations[0]!.lastConfirmedAt).toBe(at(96));
+      const open = { number: 7, body: staleIssueBody(stale(["blank"]), [], NOW - HOUR) };
+      expect(planStaleIssue(open, livenessReport(confirmations, NOW), NOW))
+        .toMatchObject({ kind: "update", comment: null });
+    });
+
+    test("with no valid date at all, the age is unknown and an open alert stays open", async () => {
+      await meta("garbled", "not a date", "also not a date");
+      const confirmations = await collectConfirmations(new SnapshotStore(root), ["garbled"]);
+      expect(confirmations[0]!.lastConfirmedAt).toBeNull();
+      const open = { number: 7, body: staleIssueBody(stale(["garbled"]), [], NOW - HOUR) };
+      const action = planStaleIssue(open, livenessReport(confirmations, NOW), NOW);
+      expect(action).toMatchObject({ kind: "update", comment: null });
+      expect(staleIdsFromBody(bodyOf(action))).toEqual(["garbled"]);
+    });
+
     test("a source added minutes ago, with no meta and no cache, does not open the alert", async () => {
       const confirmations = await collectConfirmations(new SnapshotStore(root), ["brand-new"]);
-      expect(confirmations).toEqual([
-        { sourceId: "brand-new", lastConfirmedAt: null, lastStatus: null, consecutiveFailures: null },
-      ]);
-      expect(planStaleIssue(
-        null, unconfirmedSources(confirmations, NOW), unknownSources(confirmations), NOW,
-      )).toEqual({ kind: "none" });
+      expect(confirmations).toEqual([{
+        sourceId: "brand-new", lastConfirmedAt: null, failingSince: null, lastStatus: null, consecutiveFailures: null,
+      }]);
+      expect(planStaleIssue(null, livenessReport(confirmations, NOW), NOW)).toEqual({ kind: "none" });
+    });
+
+    test("a new source that has only ever failed reaches the alert after 48 hours", async () => {
+      // Seven 503s, twelve hours apart, through the real bookkeeping. It was never
+      // confirmed, so only the start of the streak can age it.
+      const store = new SnapshotStore(root);
+      const start = NOW - 72 * HOUR;
+      await store.recordCheck("new-and-failing", { at: new Date(start).toISOString(), status: 503, ok: false });
+      const first = await collectConfirmations(store, ["new-and-failing"]);
+      expect(first[0]).toMatchObject({ lastConfirmedAt: null, failingSince: new Date(start).toISOString() });
+      expect(planStaleIssue(null, livenessReport(first, start), start)).toEqual({ kind: "none" });
+
+      for (let i = 1; i <= 6; i++) {
+        await store.recordCheck("new-and-failing", {
+          at: new Date(start + i * 12 * HOUR).toISOString(), status: 503, ok: false,
+        });
+      }
+      const later = await collectConfirmations(store, ["new-and-failing"]);
+      expect(later[0]).toMatchObject({
+        lastConfirmedAt: null, failingSince: new Date(start).toISOString(), consecutiveFailures: 7,
+      });
+      const action = planStaleIssue(null, livenessReport(later, NOW), NOW);
+      expect(action.kind).toBe("open");
+      expect(bodyOf(action)).toContain(
+        `| \`new-and-failing\` | never; failing since ${new Date(start).toISOString()} | 3 d 0 h | 503 | 7 |`,
+      );
+
+      // One success ends the streak.
+      await store.recordCheck("new-and-failing", { at: new Date(NOW).toISOString(), status: 200, ok: true });
+      expect((await store.readState("new-and-failing")).failingSince).toBeNull();
     });
 
     test("every source failing for days, with old confirmations, opens the issue", async () => {
@@ -103,56 +162,80 @@ describe("per-source liveness", () => {
         await state(id, at(60), 5);
       }
       const confirmations = await collectConfirmations(new SnapshotStore(root), ["a", "b", "c"]);
-      const action = planStaleIssue(null, unconfirmedSources(confirmations, NOW), unknownSources(confirmations), NOW);
+      const action = planStaleIssue(null, livenessReport(confirmations, NOW), NOW);
       expect(action.kind).toBe("open");
-      expect(staleIdsFromBody((action as { body: string }).body)).toEqual(["a", "b", "c"]);
-      expect((action as { body: string }).body).toContain("| `a` | " + at(60) + " | 2 d 12 h | 503 | 5 |");
+      expect(staleIdsFromBody(bodyOf(action))).toEqual(["a", "b", "c"]);
+      expect(bodyOf(action)).toContain("| `a` | " + at(60) + " | 2 d 12 h | 503 | 5 |");
     });
   });
 });
 
 describe("the single stale-source issue", () => {
   test("nothing stale and no issue: nothing to do", () => {
-    expect(planStaleIssue(null, [], [], NOW)).toEqual({ kind: "none" });
+    expect(planStaleIssue(null, report([]), NOW)).toEqual({ kind: "none" });
   });
 
   test("opens with a body that records which sources are stale", () => {
-    const action = planStaleIssue(null, stale(["endfield-wikigg-echoes"]), [], NOW);
+    const action = planStaleIssue(null, report(["endfield-wikigg-echoes"]), NOW);
     expect(action.kind).toBe("open");
-    const body = (action as { body: string }).body;
-    expect(staleIdsFromBody(body)).toEqual(["endfield-wikigg-echoes"]);
-    expect(body).toContain("| `endfield-wikigg-echoes` | " + at(100) + " | 4 d 4 h | 200 | 0 |");
+    expect(staleIdsFromBody(bodyOf(action))).toEqual(["endfield-wikigg-echoes"]);
+    expect(bodyOf(action)).toContain("| `endfield-wikigg-echoes` | " + at(100) + " | 4 d 4 h | 200 | 0 |");
   });
 
   test("an unchanged set updates the body silently; a changed set comments", () => {
     const open = { number: 7, body: staleIssueBody(stale(["a", "b"]), [], NOW - HOUR) };
-    expect(planStaleIssue(open, stale(["a", "b"]), [], NOW)).toMatchObject({ kind: "update", number: 7, comment: null });
-    expect(planStaleIssue(open, stale(["b", "c"]), [], NOW)).toMatchObject({
-      kind: "update", number: 7, comment: "Now stale: `c`. Recovered: `a`.",
+    expect(planStaleIssue(open, report(["a", "b"]), NOW)).toMatchObject({ kind: "update", number: 7, comment: null });
+    expect(planStaleIssue(open, report(["b", "c"]), NOW)).toMatchObject({
+      kind: "update", number: 7, comment: "Now stale: `c`. Recovered with a confirmed fetch: `a`.",
     });
   });
 
-  test("closes once every source recovers", () => {
+  test("closes once every source recovers, claiming only what was checked", () => {
     const open = { number: 7, body: staleIssueBody(stale(["a"]), [], NOW) };
-    expect(planStaleIssue(open, [], [], NOW)).toMatchObject({ kind: "close", number: 7 });
+    const action = planStaleIssue(open, report([]), NOW);
+    expect(action).toMatchObject({ kind: "close", number: 7 });
+    const comment = (action as { comment: string }).comment;
+    expect(comment).toStartWith("No monitored scheduled source is past 48 hours without a confirmed fetch");
+    expect(comment).toContain("Recovered with a confirmed fetch: `a`.");
+    expect(comment).not.toContain("Every scheduled source");
+  });
+
+  test("a close names sources still unjudged instead of vouching for them", () => {
+    const open = { number: 7, body: staleIssueBody(stale(["a"]), [], NOW) };
+    const comment = (planStaleIssue(open, report([], ["b"]), NOW) as { comment: string }).comment;
+    expect(comment).toContain("Recovered with a confirmed fetch: `a`.");
+    expect(comment).toContain("Not judged yet, age unknown: `b`.");
+  });
+
+  test("a source taken off the schedule is no longer monitored, not recovered", () => {
+    // The `endfield-wikigg-echoes` case: retired while another source stays stale.
+    const open = { number: 7, body: staleIssueBody(stale(["a", "retired"]), [], NOW - HOUR) };
+    expect(planStaleIssue(open, report(["a"], [], ["a", "b"]), NOW)).toMatchObject({
+      kind: "update", comment: "No longer monitored (left the schedule): `retired`.",
+    });
+    const onlyRetired = { number: 8, body: staleIssueBody(stale(["retired"]), [], NOW - HOUR) };
+    const close = planStaleIssue(onlyRetired, report([], [], ["a", "b"]), NOW) as { kind: string; comment: string };
+    expect(close.kind).toBe("close");
+    expect(close.comment).toContain("No longer monitored (left the schedule): `retired`.");
+    expect(close.comment).not.toContain("Recovered");
   });
 
   test("a listed source whose age became unknown is not declared recovered", () => {
     const open = { number: 7, body: staleIssueBody(stale(["a", "b"]), [], NOW - HOUR) };
-    const onlyUnknown = planStaleIssue(open, [], unknown(["a"]), NOW);
-    expect(onlyUnknown).toMatchObject({ kind: "update", number: 7, comment: "Recovered: `b`." });
-    expect(staleIdsFromBody((onlyUnknown as { body: string }).body)).toEqual(["a"]);
-    expect((onlyUnknown as { body: string }).body).toContain("| `a` | no record in this run | unknown |");
+    const onlyUnknown = planStaleIssue(open, report([], ["a"]), NOW);
+    expect(onlyUnknown).toMatchObject({ kind: "update", number: 7, comment: "Recovered with a confirmed fetch: `b`." });
+    expect(staleIdsFromBody(bodyOf(onlyUnknown))).toEqual(["a"]);
+    expect(bodyOf(onlyUnknown)).toContain("| `a` | no record in this run | unknown |");
     // Still listed, still unknown: silent; and nothing closes on unknown alone.
-    const next = { number: 7, body: (onlyUnknown as { body: string }).body };
-    expect(planStaleIssue(next, [], unknown(["a"]), NOW)).toMatchObject({ kind: "update", comment: null });
+    const next = { number: 7, body: bodyOf(onlyUnknown) };
+    expect(planStaleIssue(next, report([], ["a"]), NOW)).toMatchObject({ kind: "update", comment: null });
     // An unknown source that was never listed is not added.
-    expect(planStaleIssue(null, [], unknown(["z"]), NOW)).toEqual({ kind: "none" });
+    expect(planStaleIssue(null, report([], ["z"]), NOW)).toEqual({ kind: "none" });
   });
 
   test("an open issue without a marker is treated as listing nothing", () => {
     expect(staleIdsFromBody("edited by hand")).toBeNull();
-    expect(planStaleIssue({ number: 3, body: "edited by hand" }, stale(["a"]), [], NOW))
+    expect(planStaleIssue({ number: 3, body: "edited by hand" }, report(["a"]), NOW))
       .toMatchObject({ kind: "update", comment: "Now stale: `a`." });
   });
 
@@ -170,7 +253,7 @@ describe("the single stale-source issue", () => {
       },
       close: () => { throw new Error("not expected"); },
     };
-    const run = (): StaleIssueAction => planStaleIssue({ ...issue }, stale(["a", "b"]), [], NOW);
+    const run = (): StaleIssueAction => planStaleIssue({ ...issue }, report(["a", "b"]), NOW);
 
     expect(() => applyStaleIssue(run(), client)).toThrow("GitHub 502");
     expect(staleIdsFromBody(issue.body)).toEqual(["a"]);

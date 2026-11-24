@@ -14,16 +14,21 @@
  * `lastConfirmedAt`, which moves with every confirmed cycle, and its
  * `contentChangedAt`, itself a confirmed fetch) and the gitignored `.state.json`,
  * which comes back only from the Actions cache. A cache miss therefore cannot make
- * a healthy source look stale. With no record at all — a source added minutes ago —
- * the age is unknown: that never opens the alert, and never closes it either.
+ * a healthy source look stale. A source never once confirmed is aged from the first
+ * attempt of its failure streak (`failingSince` in the state), so a new source that
+ * has only ever failed still reaches the alert after 48 hours. With neither — a
+ * source added minutes ago, or a cache miss — the age is unknown: that never opens
+ * the alert, and never closes it either. Unparseable dates are no record at all.
  */
 import { STALE_AFTER_MS } from "../shared/feed.ts";
 import type { SnapshotMeta, SnapshotState } from "./snapshots.ts";
 
 export interface SourceConfirmation {
   sourceId: string;
-  /** Newest confirmed fetch on record; null when there is no record at all. */
+  /** Newest valid confirmed fetch on record; null when there is none. */
   lastConfirmedAt: string | null;
+  /** From the cached state: first attempt of the current failure streak, if valid. */
+  failingSince: string | null;
   /** From the cached state; null when that state was not restored. */
   lastStatus: number | null;
   /** From the cached state; null when that state was not restored. */
@@ -31,7 +36,7 @@ export interface SourceConfirmation {
 }
 
 export interface UnconfirmedSource extends SourceConfirmation {
-  lastConfirmedAt: string;
+  /** Since the last confirmation or, for a source never confirmed, since its streak began. */
   ageMs: number;
 }
 
@@ -40,10 +45,12 @@ export interface ConfirmationStore {
   readState(sourceId: string): Promise<SnapshotState>;
 }
 
-function newest(...times: (string | null | undefined)[]): string | null {
+/** The newest of the parseable times; an empty or malformed value is ignored, never compared. */
+function newest(...times: unknown[]): string | null {
   let best: string | null = null;
   for (const time of times) {
-    if (time != null && (best === null || Date.parse(time) > Date.parse(best))) best = time;
+    if (typeof time !== "string" || Number.isNaN(Date.parse(time))) continue;
+    if (best === null || Date.parse(time) > Date.parse(best)) best = time;
   }
   return best;
 }
@@ -62,6 +69,7 @@ export async function collectConfirmations(
     confirmations.push({
       sourceId,
       lastConfirmedAt: newest(meta?.lastConfirmedAt, meta?.contentChangedAt, state.lastConfirmedAt),
+      failingSince: stateKnown ? newest(state.failingSince) : null,
       lastStatus: stateKnown ? state.lastStatus : null,
       consecutiveFailures: stateKnown ? state.consecutiveFailures : null,
     });
@@ -69,7 +77,12 @@ export async function collectConfirmations(
   return confirmations;
 }
 
-/** Sources confirmed, but not within `thresholdMs`, by source id. Exactly at the threshold is still current. */
+/** Where a source's age is measured from, or null when it is unknown. */
+function ageFrom(source: SourceConfirmation): string | null {
+  return newest(source.lastConfirmedAt) ?? newest(source.failingSince);
+}
+
+/** Sources past `thresholdMs` without a confirmed fetch, by source id. Exactly at the threshold is still current. */
 export function unconfirmedSources(
   sources: readonly SourceConfirmation[],
   now: number,
@@ -77,16 +90,33 @@ export function unconfirmedSources(
 ): UnconfirmedSource[] {
   const stale: UnconfirmedSource[] = [];
   for (const source of sources) {
-    if (source.lastConfirmedAt === null) continue;
-    const ageMs = now - Date.parse(source.lastConfirmedAt);
-    if (ageMs > thresholdMs) stale.push({ ...source, lastConfirmedAt: source.lastConfirmedAt, ageMs });
+    const from = ageFrom(source);
+    if (from === null) continue;
+    const ageMs = now - Date.parse(from);
+    if (ageMs > thresholdMs) stale.push({ ...source, ageMs });
   }
   return stale.sort((a, b) => a.sourceId.localeCompare(b.sourceId));
 }
 
-/** Sources with no confirmation on record: their age is unknown, not over the threshold. */
+/** Sources with nothing to age them from: unknown, not over the threshold. */
 export function unknownSources(sources: readonly SourceConfirmation[]): SourceConfirmation[] {
-  return sources.filter((s) => s.lastConfirmedAt === null).sort((a, b) => a.sourceId.localeCompare(b.sourceId));
+  return sources.filter((s) => ageFrom(s) === null).sort((a, b) => a.sourceId.localeCompare(b.sourceId));
+}
+
+/** One refresh's verdict over the scheduled sources it tracks. */
+export interface LivenessReport {
+  stale: readonly UnconfirmedSource[];
+  unknown: readonly SourceConfirmation[];
+  /** Every scheduled source id this run judged; a listed id outside it is no longer monitored. */
+  tracked: readonly string[];
+}
+
+export function livenessReport(sources: readonly SourceConfirmation[], now: number): LivenessReport {
+  return {
+    stale: unconfirmedSources(sources, now),
+    unknown: unknownSources(sources),
+    tracked: sources.map((s) => s.sourceId),
+  };
 }
 
 /** The issue is found by this label and by its author, never by title alone. */
@@ -108,7 +138,7 @@ export function staleIssueBody(
   const ids = [...stale, ...carried].map((s) => s.sourceId).sort();
   const rows = [
     ...stale.map((s) =>
-      `| \`${s.sourceId}\` | ${s.lastConfirmedAt} | ${age(s.ageMs)} | ` +
+      `| \`${s.sourceId}\` | ${s.lastConfirmedAt ?? `never; failing since ${s.failingSince}`} | ${age(s.ageMs)} | ` +
         `${s.lastStatus ?? "unknown"} | ${s.consecutiveFailures ?? "unknown"} |`),
     ...carried.map((s) => `| \`${s.sourceId}\` | no record in this run | unknown | unknown | unknown |`),
   ];
@@ -145,42 +175,51 @@ export type StaleIssueAction =
   | { kind: "update"; number: number; body: string; comment: string | null }
   | { kind: "close"; number: number; comment: string };
 
+function codes(ids: readonly string[]): string {
+  return ids.map((id) => `\`${id}\``).join(", ");
+}
+
 /**
  * What to do with the single stale-source issue.
  *
  * Opening and closing notify the owner; a body edit does not. So the body is
  * refreshed silently every run (the ages move), and a comment is added only when
  * the listed set changes, which is the news worth an email. A listed source whose
- * age has become unknown stays listed: only a confirmation recovers it.
+ * age has become unknown stays listed: only a confirmation recovers it. A listed
+ * source that left the schedule is reported as no longer monitored, not as
+ * recovered, and a close claims only what was checked.
  */
-export function planStaleIssue(
-  open: OpenIssue | null,
-  stale: readonly UnconfirmedSource[],
-  unknown: readonly SourceConfirmation[],
-  now: number,
-): StaleIssueAction {
+export function planStaleIssue(open: OpenIssue | null, report: LivenessReport, now: number): StaleIssueAction {
+  const { stale, unknown, tracked } = report;
   const before = open === null ? [] : (staleIdsFromBody(open.body) ?? []);
   const carried = unknown.filter((s) => before.includes(s.sourceId));
   const listed = [...stale, ...carried].map((s) => s.sourceId);
 
+  const added = listed.filter((id) => !before.includes(id)).sort();
+  const dropped = before.filter((id) => !listed.includes(id));
+  const recovered = dropped.filter((id) => tracked.includes(id)).sort();
+  const unmonitored = dropped.filter((id) => !tracked.includes(id)).sort();
+  const changes = [
+    ...(added.length > 0 ? [`Now stale: ${codes(added)}.`] : []),
+    ...(recovered.length > 0 ? [`Recovered with a confirmed fetch: ${codes(recovered)}.`] : []),
+    ...(unmonitored.length > 0 ? [`No longer monitored (left the schedule): ${codes(unmonitored)}.`] : []),
+  ];
+
   if (listed.length === 0) {
-    return open === null
-      ? { kind: "none" }
-      : {
-        kind: "close",
-        number: open.number,
-        comment: `Every scheduled source has a confirmed fetch within 48 hours as of ${new Date(now).toISOString()}.`,
-      };
+    if (open === null) return { kind: "none" };
+    const pending = unknown.map((s) => s.sourceId);
+    return {
+      kind: "close",
+      number: open.number,
+      comment: [
+        `No monitored scheduled source is past 48 hours without a confirmed fetch as of ${new Date(now).toISOString()}.`,
+        ...changes,
+        ...(pending.length > 0 ? [`Not judged yet, age unknown: ${codes(pending)}.`] : []),
+      ].join(" "),
+    };
   }
   const body = staleIssueBody(stale, carried, now);
   if (open === null) return { kind: "open", body };
-
-  const added = listed.filter((id) => !before.includes(id)).sort();
-  const recovered = before.filter((id) => !listed.includes(id)).sort();
-  const changes = [
-    ...(added.length > 0 ? [`Now stale: ${added.map((id) => `\`${id}\``).join(", ")}.`] : []),
-    ...(recovered.length > 0 ? [`Recovered: ${recovered.map((id) => `\`${id}\``).join(", ")}.`] : []),
-  ];
   return { kind: "update", number: open.number, body, comment: changes.length > 0 ? changes.join(" ") : null };
 }
 

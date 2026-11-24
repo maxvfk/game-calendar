@@ -59,6 +59,12 @@ export interface SnapshotState {
   lastConfirmedAt: string | null;
   lastStatus: number | null;
   consecutiveFailures: number;
+  /**
+   * First attempt of the current failure streak; null while the source answers.
+   * Lets liveness age a source that has never once been confirmed. Optional:
+   * state written before it existed starts the streak at its next failure.
+   */
+  failingSince?: string | null;
 }
 
 export interface Snapshot {
@@ -374,6 +380,11 @@ export class SnapshotStore {
       lastConfirmedAt: check.ok ? check.at : previous.lastConfirmedAt,
       lastStatus: check.status,
       consecutiveFailures: check.ok ? 0 : previous.consecutiveFailures + 1,
+      failingSince: check.ok
+        ? null
+        : previous.consecutiveFailures > 0
+        ? (previous.failingSince ?? check.at)
+        : check.at,
     };
 
     await mkdir(this.root, { recursive: true });

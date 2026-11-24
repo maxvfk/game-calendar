@@ -7,12 +7,11 @@ import { ADAPTERS } from "../src/ingest/adapters/index.ts";
 import {
   applyStaleIssue,
   collectConfirmations,
+  livenessReport,
   type OpenIssue,
   planStaleIssue,
   STALE_ISSUE_LABEL,
   type StaleIssueClient,
-  unconfirmedSources,
-  unknownSources,
 } from "../src/ingest/liveness.ts";
 import { SnapshotStore } from "../src/ingest/snapshots.ts";
 
@@ -72,11 +71,13 @@ async function main(): Promise<number> {
   const dryRun = process.argv.includes("--dry-run");
   const now = Date.now();
   const confirmations = await collectConfirmations(new SnapshotStore("snapshots"), ADAPTERS.map((a) => a.id));
-  const stale = unconfirmedSources(confirmations, now);
-  const unknown = unknownSources(confirmations);
+  const report = livenessReport(confirmations, now);
+  const { stale, unknown } = report;
 
   console.log(`${stale.length} of ${confirmations.length} scheduled source(s) unconfirmed for over 48h`);
-  for (const s of stale) console.log(`  ${s.sourceId.padEnd(28)} last confirmed ${s.lastConfirmedAt}`);
+  for (const s of stale) {
+    console.log(`  ${s.sourceId.padEnd(28)} last confirmed ${s.lastConfirmedAt ?? `never; failing since ${s.failingSince}`}`);
+  }
   for (const s of unknown) console.log(`  ${s.sourceId.padEnd(28)} no record yet; age unknown`);
   if (stale.length > 0) {
     console.log(`::warning::${stale.length} source(s) without a confirmed fetch for over 48h: ${stale.map((s) => s.sourceId).join(", ")}`);
@@ -85,10 +86,10 @@ async function main(): Promise<number> {
   if (outputPath) await appendFile(outputPath, `stale=${stale.length}\n`);
 
   if (dryRun) {
-    console.log(`dry run: would ${planStaleIssue(null, stale, unknown, now).kind} (open issue not looked up)`);
+    console.log(`dry run: would ${planStaleIssue(null, report, now).kind} (open issue not looked up)`);
     return 0;
   }
-  console.log(applyStaleIssue(planStaleIssue(findOpenIssue(), stale, unknown, now), client));
+  console.log(applyStaleIssue(planStaleIssue(findOpenIssue(), report, now), client));
   return 0;
 }
 
