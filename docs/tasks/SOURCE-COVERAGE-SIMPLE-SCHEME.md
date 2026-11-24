@@ -22,6 +22,9 @@ diagnostic tooling. Active work follows the 4-step practical plan in
 (PR #0 daily auto-labels & docs → PR #1 parser context for auto-labels →
 PR #2 parser template generalization & stale sources → PR #3 minimal C4 liveness →
 optional read-only `C5.1-lite` probe). The design below is retained as historical record.
+**Order revised (2026-11-24):** liveness (C4, widened) is now the next step, ahead of the
+remaining parser work; see the plan's
+[Revision 2026-11-24](PRACTICAL-PARSER-LABELS-PLAN.md#revision-2026-11-24-current-order).
 
 ## Why a different scheme
 
