@@ -88,3 +88,18 @@ with only the image removed. Full body SHA-256
 The original URL and attribution are the same as the October Event captures.
 The two timer ends are one minute earlier than the announced regional cutoffs.
 [Official version notes](https://endfield.gryphline.com/en-us/news/9560)
+
+## Offline feed replay at `418d518`
+
+`snapshots-418d518/` pins the source input from this repository's Git history. The matching `.meta.json` files are complete copies from the same commit and keep the recorded capture times and source URLs. SHA-256 below refers to the committed bytes. The production fallback does not use these files.
+
+- `snapshots/endfield-wikigg-echoes.html` from https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Fervor.
+  Full-body SHA-256 `653c7468b717cf10cf7bcf02842123f434363840e054de5ad7f4072ccbd1d2f1`.
+  The page heading, both complete Duration rows, and the Season Cycles heading and complete table, in source order. Only intervening or surrounding bytes were omitted. Extract SHA-256 `10c21cd10dbc668a0c23d85c7e2d2dc1a7261503f3ae85ad43704d48be7e04d9`.
+  Metadata SHA-256 `0a4e827ae016d03997308bc326cb6beb43ec75c2c6de49a65609070d66c1fe48`.
+- `snapshots/endfield-wikigg-events.html` from https://endfield.wiki.gg/wiki/Event.
+  Full-body SHA-256 `257ae1925b683719f58fa5caa0e662800b8543574627e8adba26ba7878769a80`.
+  All eleven complete `mp-event` blocks, through their closing div, in source order. Only intervening or surrounding bytes were omitted. Extract SHA-256 `5c98467035c784d51d905a51775a32af94dd2f9683c4720c0f84aaf181dd009f`.
+  Metadata SHA-256 `9a0bd1bbf6118ce5b275348a41924c091f0f72c9cf0b8bbc8d2ecd0b53a4617f`.
+
+Attribution: Endfield Talos Wiki contributors, wiki.gg, CC BY-SA 4.0 as documented above. Source material remains subject to its original terms as stated in `NOTICE`.

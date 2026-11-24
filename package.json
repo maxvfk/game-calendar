@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "bun test",
+    "test:live": "bun scripts/test-live-snapshots.ts",
     "typecheck": "tsc --noEmit",
     "parse": "bun run scripts/parse-fixture.ts",
     "coverage:report": "bun scripts/notice-coverage-report.ts",

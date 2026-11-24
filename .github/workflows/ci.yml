@@ -55,6 +55,27 @@ jobs:
         # the code changed, never that a source was unreachable.
         run: bun test
 
+      - name: Live snapshot drift (non-blocking)
+        continue-on-error: true
+        # Drift is advisory: a refresh must never block Pages. Failures land in the
+        # run summary as well as the log, so they are seen without opening the step.
+        run: |
+          log="$RUNNER_TEMP/live-snapshots.log"
+          bun run test:live 2>&1 | tee "$log"
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            echo "::warning::Live snapshot drift checks failed. See the run summary."
+            failed=$(sed 's/\x1b\[[0-9;]*m//g' "$log" | grep -E '^\(fail\)' | sort -u | sed 's/^/- /')
+            {
+              echo "### Live snapshot drift (non-blocking)"
+              echo
+              echo "\`bun run test:live\` exited with $status. Failing checks:"
+              echo
+              echo "${failed:-- none parsed; see the step log}"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$status"
+
       - name: Build feed
         run: bun run build:feed
 

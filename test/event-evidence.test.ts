@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { liveSnapshotTest } from "./helpers/live-snapshots.ts";
 import { mkdtempSync, mkdirSync, symlinkSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -51,11 +52,17 @@ test("four simultaneous banners retain their own 5/4-star characters and weapons
   expect(rows.find(r => r.event.title === "Echo Erase")?.event.summary).toContain("tapping Echo Pieces away");
 });
 
-test("snapshot uses the same sections/identity as parser and yields bounded independent context", async () => {
-  const snapshot = await Bun.file("snapshots/wuwa-kuro-mirror.xml").text();
+function checkSnapshotEvidence(snapshot: string) {
   const events = parseWuwaKuroAtom(snapshot, ctx);
   const result = extractWuwaEvidence(snapshot, ctx, capture);
   for (const row of result.candidates) expect(row.event).toEqual(events.find(e => e.id === row.event.id)!);
+  expect(JSON.stringify(result.candidates)).not.toMatch(/guaranteed at least|Convene Rules|Maintenance Compensation/);
+  return { events, result };
+}
+
+test("snapshot uses the same sections/identity as parser and yields bounded independent context", async () => {
+  const snapshot = await Bun.file("test/fixtures/wuwa/kuro-mirror-2026-10-28.xml").text();
+  const { events, result } = checkSnapshotEvidence(snapshot);
   const tomorrow = result.candidates.find(r => r.event.id === base.event.id);
   if (tomorrow) expect(tomorrow.source.excerpts).toEqual(base.source.excerpts);
   const beyond = result.candidates.find(r => r.event.id === "wuwa:beyond-the-waves-land-of-xuanfang:2026-10-29");
@@ -64,7 +71,11 @@ test("snapshot uses the same sections/identity as parser and yields bounded inde
     expect(codes(result)).toContain("no_useful_context");
     expect(result.candidates.some(r => /Artisan/.test(r.event.title))).toBe(false);
   }
-  expect(JSON.stringify(result.candidates)).not.toMatch(/guaranteed at least|Convene Rules|Maintenance Compensation/);
+});
+
+liveSnapshotTest("WuWa evidence uses current parser identities and omits unrelated context", async () => {
+  const { events } = checkSnapshotEvidence(await Bun.file("snapshots/wuwa-kuro-mirror.xml").text());
+  expect(events.length).toBeGreaterThan(0);
 });
 
 test("unknown/eligibility-only descriptions produce no invented evidence", () => {
@@ -218,7 +229,9 @@ test("offline builder uses same fixture/snapshot, creates only internal sidecar;
     symlinkSync(join(root, "data/presentation/timeline-label-preferences.v1.json"), join(dir, "data/presentation/timeline-label-preferences.v1.json"));
     const preload = join(dir, "clock.ts");
     await Bun.write(preload, `const Original = Date; globalThis.Date = class extends Original { constructor(v?: string | number) { super(v ?? ${JSON.stringify(ctx.now)}); } static now() { return Original.parse(${JSON.stringify(ctx.now)}); } } as DateConstructor;`);
-    const build = () => Bun.spawnSync([process.execPath, "--preload", preload, join(root, "scripts/build-feed.ts")], { cwd: dir });
+    const build = () => Bun.spawnSync([process.execPath, "--preload", preload, join(root, "scripts/build-feed.ts")], {
+      cwd: dir, env: { ...process.env, SNAPSHOT_DIR: join(dir, "snapshots") },
+    });
     let run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);
     const publicPaths = ["events.v1.json", "timeline-label-queue.v1.json", "timeline-label-agent-input.v1.json"];
     const before = await Promise.all(publicPaths.map(p => Bun.file(join(dir, "public/data", p)).text()));
@@ -239,7 +252,7 @@ test("offline builder uses same fixture/snapshot, creates only internal sidecar;
     // Changing E1-only post-Duration rewards, with no canonical fields changed, must change only evidence.
     const withRewards = raw.replace("Duration: 2026-10-22 10:00 - 2026-11-09 03:59 (server time)</p>", "Duration: 2026-10-22 10:00 - 2026-11-09 03:59 (server time)</p><p>Rewards</p><p>Astrite x100</p>");
     await Bun.write(join(dir, "snapshots/wuwa-kuro-mirror.xml"), withRewards);
-    const meta = await Bun.file(join(root, "snapshots/wuwa-kuro-mirror.meta.json")).json();
+    const meta = await Bun.file(join(root, "test/fixtures/wuwa/snapshots-418d518/wuwa-kuro-mirror.meta.json")).json();
     await Bun.write(join(dir, "snapshots/wuwa-kuro-mirror.meta.json"), JSON.stringify(meta));
     run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);
     // Snapshot capture metadata legitimately differs from fixture freshness; equalize it for the byte comparison.

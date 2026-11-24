@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { liveSnapshotTest } from "./helpers/live-snapshots.ts";
 import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 import { mergeEvents } from "../src/ingest/merge.ts";
 import { parseKqmGinNews } from "../src/ingest/parsers/kqm-ginews.ts";
@@ -73,7 +74,7 @@ test("both legacy completion identities survive export/import and refreshed offi
   expect(JSON.stringify(progress)).toBe(serialized);
 });
 
-test("rolling Genshin capture keeps reviewed winners when old notices rotate out", async () => {
+liveSnapshotTest("rolling Genshin capture keeps reviewed winners when old notices rotate out", async () => {
   const current = parseKqmGinNews(await Bun.file("snapshots/genshin-kqm-ginews.md").text(), ctx);
   const result = mergeEvents([reviewed, current]);
   expect(result.conflicts).toEqual([]);

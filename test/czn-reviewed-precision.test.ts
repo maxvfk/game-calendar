@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { liveSnapshotTest } from "./helpers/live-snapshots.ts";
 import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 import { mergeEvents } from "../src/ingest/merge.ts";
 import { parsePrydwenCzn } from "../src/ingest/parsers/prydwen-czn.ts";
@@ -105,7 +106,7 @@ test("historical Sereniel/Peko midnight is independently promotable, generic fut
 });
 
 // A rolling source may legitimately retire historical cards; validate those it still carries.
-test("rolling CZN capture preserves reviewed precedence without requiring expired cards", async () => {
+liveSnapshotTest("rolling CZN capture preserves reviewed precedence without requiring expired cards", async () => {
   const current = parsePrydwenCzn(await Bun.file("snapshots/czn-prydwen-banners.html").text(), ctx);
   const result = mergeEvents([reviewed, current]);
   expect(result.conflicts).toEqual([]);

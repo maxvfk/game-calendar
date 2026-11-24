@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { liveSnapshotTest } from "./helpers/live-snapshots.ts";
 import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -222,7 +223,10 @@ test("offline builder retains baseline-main public bytes with all four article s
     await Bun.write(join(dir, "data/presentation/timeline-label-preferences.v1.json"), await Bun.file(frozen + "label-preferences.json").text());
     const clock = join(dir, "clock.ts");
     await Bun.write(clock, `const Original = Date; globalThis.Date = class extends Original { constructor(v?: string | number) { super(v ?? ${JSON.stringify(now)}); } static now() { return Original.parse(${JSON.stringify(now)}); } } as DateConstructor;`);
-    const run = Bun.spawnSync([process.execPath, "--preload", clock, join(root, "scripts/build-feed.ts")], { cwd: dir });
+    const build = () => Bun.spawnSync([process.execPath, "--preload", clock, join(root, "scripts/build-feed.ts")], {
+      cwd: dir, env: { ...process.env, SNAPSHOT_DIR: join(dir, "snapshots") },
+    });
+    const run = build();
     expect(run.exitCode, run.stderr.toString()).toBe(0);
     const paths = ["events.v1.json", "review.v1.json", "timeline-label-queue.v1.json", "timeline-label-agent-input.v1.json"];
     const bytes = await Promise.all(paths.map(p => Bun.file(join(dir, "public/data", p)).text()));
@@ -239,7 +243,7 @@ test("offline builder retains baseline-main public bytes with all four article s
     // A demoted zero-output archive heading changes only optional evidence.
     const ginPath = join(dir, fixtures[0]![1]!);
     await Bun.write(ginPath, await Bun.file(ginPath).text() + "\n## [Unparsed layout drift](archive/99999.md)\nOpaque notice body.\n");
-    const failedRun = Bun.spawnSync([process.execPath, "--preload", clock, join(root, "scripts/build-feed.ts")], { cwd: dir });
+    const failedRun = build();
     expect(failedRun.exitCode, failedRun.stderr.toString()).toBe(0);
     expect(failedRun.stderr.toString()).toContain("genshin-kqm-ginews: article_extraction_failed");
     expect(await Promise.all(paths.map(p => Bun.file(join(dir, "public/data", p)).text()))).toEqual(bytes);
@@ -251,7 +255,7 @@ test("offline builder retains baseline-main public bytes with all four article s
       .toMatchObject({ available: false, noticeCount: 0, attributedEvents: 0, confirmedFinalAssociations: 0 });
     // No document is distinct from failed extraction; both remain visible.
     rmSync(ginPath);
-    const unavailableRun = Bun.spawnSync([process.execPath, "--preload", clock, join(root, "scripts/build-feed.ts")], { cwd: dir });
+    const unavailableRun = build();
     expect(unavailableRun.exitCode, unavailableRun.stderr.toString()).toBe(0);
     const unavailable = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
     expect(unavailable.diagnostics.filter(d => d.code === "source_unavailable").every(d => d.sourceId)).toBe(true);
@@ -287,7 +291,7 @@ for (const i of [0, 1]) test(`${cases[i]![0]}: partial heading drift fails the i
 for (const [i, path] of [
   [0, "snapshots/genshin-kqm-ginews.md"],
   [1, "snapshots/hsr-kqm-hsrnews.md"],
-] as const) test(`${cases[i]![0]}: current valid snapshot passes the boundary guard`, async () => {
+] as const) liveSnapshotTest(`${cases[i]![0]}: current valid snapshot passes the boundary guard`, async () => {
   // Smoke check only; stable identities and drift outcomes use frozen inputs above.
   const raw = await Bun.file(path).text();
   const extraction = extractArticleEvidence(raw, context(i), capture, []);

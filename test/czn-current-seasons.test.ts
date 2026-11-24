@@ -34,7 +34,7 @@ test("old Full Scale ID and discovery/provenance survive with historical warning
 });
 
 test("healthy banner-only source cannot replace the distinct reviewed seasons or alter other winners", async () => {
-  const parsed = parsePrydwenCzn(await Bun.file("snapshots/czn-prydwen-banners.html").text(), {
+  const parsed = parsePrydwenCzn(await Bun.file("test/fixtures/czn/snapshots-418d518/czn-prydwen-banners.html").text(), {
     now: "2026-10-28T12:00:00.000Z", game: "czn", sourceId: "czn-prydwen-banners", sourceUrl: "https://www.prydwen.gg/chaos-zero-nightmare/banners" });
   expect(parsed.every(e => e.type === "banner")).toBe(true);
   const before = mergeEvents([reviewed.filter(e => !ids.includes(e.id)), parsed]);

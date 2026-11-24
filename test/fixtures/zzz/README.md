@@ -62,3 +62,18 @@ channel/audition headings and featured lines; `※` rule paragraphs and images a
 omitted. `responseSha256` is the SHA-256 of the full API response. The extract
 backs the reviewed Phase II rows in `data/reviewed/zzz.json`; it is not a raw
 capture and is not used by production `build:feed` fixture fallback.
+
+## Offline feed replay at `418d518`
+
+`snapshots-418d518/` pins the source input from this repository's Git history. The matching `.meta.json` files are complete copies from the same commit and keep the recorded capture times and source URLs. SHA-256 below refers to the committed bytes. The production fallback does not use these files.
+
+- `snapshots/zzz-steam-events-official.xml` from https://steamcommunity.com/games/4162040/rss/.
+  Full-body SHA-256 `0a6a53085ec53f792aa9b23f63f87ed63f727df1d86d328e6d7b1952bfe18435`.
+  Complete body.
+  Metadata SHA-256 `0ccdb26a669a70e7d7d1905a568d073d2939e7a330a2a3ea684ebad6baaa4739`.
+- `snapshots/zzz-zenlessgg-banners.json` from https://zenless.gg/news/updates/feed/.
+  Full-body SHA-256 `1aa0ff33e0de6861210b392026748c547435cdccb3e70b03d379d625e8f694c9`.
+  Complete body.
+  Metadata SHA-256 `a6457205b3d86e02673f8b61b86eec46c94be98a4afa3b9bec991ad1fc9fdbbc`.
+
+Attribution: the publisher for the official Steam RSS and Zenless.gg for the banner capture, as documented above. Source material remains subject to its original terms as stated in `NOTICE`.

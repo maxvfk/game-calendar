@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { stageSnapshotFixtures } from "./helpers/snapshot-fixtures.ts";
 import { mkdtempSync, mkdirSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -92,7 +93,8 @@ test("current offline feed build retains representative reviewed subjects and al
   const root = fileURLToPath(new URL("../", import.meta.url));
   const directory = mkdtempSync(join(tmpdir(), "recognition-feed-"));
   try {
-    for (const path of ["data", "fixtures", "snapshots"]) symlinkSync(join(root, path), join(directory, path));
+    for (const path of ["data", "fixtures"]) symlinkSync(join(root, path), join(directory, path));
+    stageSnapshotFixtures(join(directory, "snapshots"));
     mkdirSync(join(directory, "public/data"), { recursive: true });
     const result = Bun.spawnSync([process.execPath, "run", join(root, "scripts/build-feed.ts")], {
       cwd: directory, env: { ...process.env, SNAPSHOT_DIR: join(directory, "snapshots") },
