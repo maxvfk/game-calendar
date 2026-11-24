@@ -419,12 +419,19 @@ run turned red. So two further signals read outcomes rather than errors:
 - **Stale-source issue.** After every refresh, `scripts/stale-source-issue.ts` lists the scheduled
   sources with no confirmed fetch (200 or 304) for over 48 hours and keeps one GitHub issue in step:
   opened when the first source goes stale, its body refreshed silently every run, a comment when the
-  set changes, closed when every source recovers. The confirmation time is the newer of the committed
-  `.meta.json` and the cached `.state.json`, so a cache miss reads as unknown, never as stale. The
-  step is advisory and never fails the refresh. Rules: `src/ingest/liveness.ts`.
+  set changes, closed when every source recovers. The confirmation time is the newest of the
+  committed `.meta.json` and the cached `.state.json`, so a cache miss cannot make a healthy source
+  stale. A source with no record at all has an unknown age: that never opens the issue, and a listed
+  source whose age becomes unknown stays listed until it is confirmed. The issue is the bot's open
+  issue with the `liveness-stale-sources` label, never matched by title. On an update the comment is
+  sent before the body edit, because the body's hidden marker is what records a change as reported.
+  The step runs after every completed cycle on `main`, including one where every source failed and
+  the runner exited 1; it is advisory and never fails the refresh. Rules: `src/ingest/liveness.ts`.
 - **Dead-man heartbeat.** `ci.yml`'s `build` job runs `scripts/publication-liveness.ts`, which passes
-  only when `publicationStalled()` says the newest `lastSuccessAt` is under 30 hours old (and some
-  source has succeeded at all). `pages` then pings the URL in the `DEADMAN_PING_URL` secret after a
+  only when `publicationStalled()` says the newest `lastSuccessAt` among the *scheduled* sources is
+  under 30 hours old. The `reviewed-<game>` rows are left out: their date is a manual review, and one
+  fresh review must not keep the heartbeat alive while the schedule has stopped. With no scheduled
+  source ever succeeding there is no ping. `pages` then pings the URL in the `DEADMAN_PING_URL` secret after a
   successful deploy. An external monitor alerts when pings stop, which covers a stopped refresh, a
   red CI holding back deploys and a failed Pages deploy alike. Without the secret the step is a
   no-op. Operator setup: a healthchecks.io check with period 12 hours and grace about 18 hours, so it
