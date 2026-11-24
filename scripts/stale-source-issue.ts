@@ -71,7 +71,7 @@ const client: StaleIssueClient = {
 async function main(): Promise<number> {
   const dryRun = process.argv.includes("--dry-run");
   const now = Date.now();
-  const confirmations = await collectConfirmations(new SnapshotStore("snapshots"), ADAPTERS.map((a) => a.id));
+  const confirmations = await collectConfirmations(new SnapshotStore("snapshots"), ADAPTERS.map((a) => a.id), now);
   const report = livenessReport(confirmations, now);
   const { stale } = report;
   const unknown = unknownSources(confirmations);

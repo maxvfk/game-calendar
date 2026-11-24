@@ -20,7 +20,8 @@
  * attempt of its failure streak (`failingSince`). So a new source that only ever
  * fails, or is never asked, still reaches the alert after 48 hours. With none of
  * these — a source added minutes ago, or a cache miss — the age is unknown, which
- * never opens the alert. Unparseable dates are no record at all.
+ * never opens the alert. Unparseable dates, and dates later than the check itself,
+ * are no record at all: a timestamp from the future must not outvote a real one.
  *
  * Recovery has its own, stricter test: only a valid confirmation within 48 hours
  * takes a listed source off the issue. A young failure streak after a cache miss
@@ -37,10 +38,12 @@ export interface SourceConfirmation {
   failingSince: string | null;
   /** From the cached state: first cycle with this source on the schedule, if valid. */
   firstSeenAt: string | null;
-  /** From the cached state; null when that state was not restored. */
+  /** From the cached state; null when that state was not restored or no request was made yet. */
   lastStatus: number | null;
-  /** From the cached state; null when that state was not restored. */
+  /** From the cached state; null when that state was not restored or no request was made yet. */
   consecutiveFailures: number | null;
+  /** The state is present but records no request: on the schedule, never asked (e.g. robots). */
+  neverRequested: boolean;
 }
 
 export interface UnconfirmedSource extends SourceConfirmation {
@@ -75,9 +78,16 @@ function oldest(...times: unknown[]): string | null {
   return best;
 }
 
+/** The time itself when it parses and is not later than `now`; otherwise nothing. */
+function notAfter(time: unknown, now: number): string | null {
+  return valid(time) && Date.parse(time) <= now ? time : null;
+}
+
+/** Reads every source's records as of `now`; anything dated after `now` is discarded first. */
 export async function collectConfirmations(
   store: ConfirmationStore,
   sourceIds: readonly string[],
+  now: number,
 ): Promise<SourceConfirmation[]> {
   const confirmations: SourceConfirmation[] = [];
   for (const sourceId of sourceIds) {
@@ -86,13 +96,19 @@ export async function collectConfirmations(
     // `readState` returns an empty record on a cache miss; a run that never
     // checked says nothing about the failure streak.
     const stateKnown = state.lastCheckedAt !== null;
+    const firstSeenAt = notAfter(state.firstSeenAt, now);
     confirmations.push({
       sourceId,
-      lastConfirmedAt: newest(meta?.lastConfirmedAt, meta?.contentChangedAt, state.lastConfirmedAt),
-      failingSince: newest(state.failingSince),
-      firstSeenAt: newest(state.firstSeenAt),
+      lastConfirmedAt: newest(
+        notAfter(meta?.lastConfirmedAt, now),
+        notAfter(meta?.contentChangedAt, now),
+        notAfter(state.lastConfirmedAt, now),
+      ),
+      failingSince: notAfter(state.failingSince, now),
+      firstSeenAt,
       lastStatus: stateKnown ? state.lastStatus : null,
       consecutiveFailures: stateKnown ? state.consecutiveFailures : null,
+      neverRequested: !stateKnown && firstSeenAt !== null,
     });
   }
   return confirmations;
@@ -131,7 +147,11 @@ export function confirmedSources(
   thresholdMs: number = STALE_AFTER_MS,
 ): SourceConfirmation[] {
   return sources
-    .filter((s) => s.lastConfirmedAt !== null && now - Date.parse(s.lastConfirmedAt) <= thresholdMs)
+    .filter((s) => {
+      if (s.lastConfirmedAt === null) return false;
+      const ageMs = now - Date.parse(s.lastConfirmedAt);
+      return ageMs >= 0 && ageMs <= thresholdMs;
+    })
     .sort((a, b) => a.sourceId.localeCompare(b.sourceId));
 }
 
@@ -174,8 +194,9 @@ function lastConfirmedCell(s: SourceConfirmation): string {
 }
 
 function row(s: SourceConfirmation, ageText: string): string {
+  const missing = s.neverRequested ? "no request yet" : "unknown";
   return `| \`${s.sourceId}\` | ${lastConfirmedCell(s)} | ${ageText} | ` +
-    `${s.lastStatus ?? "unknown"} | ${s.consecutiveFailures ?? "unknown"} |`;
+    `${s.lastStatus ?? missing} | ${s.consecutiveFailures ?? missing} |`;
 }
 
 export function staleIssueBody(
@@ -197,7 +218,8 @@ export function staleIssueBody(
     "| --- | --- | --- | --- | --- |",
     ...rows,
     "",
-    `Checked at ${new Date(now).toISOString()}. "unknown" means the refresh bookkeeping cache was not restored.`,
+    `Checked at ${new Date(now).toISOString()}. "unknown" means the refresh bookkeeping cache was not restored;`,
+    `"no request yet" means the source is on the schedule but has never been asked (for example, robots forbids it).`,
     "A listed source stays listed until a fetch is confirmed, even when its age can no longer be measured.",
     "",
   ].join("\n");

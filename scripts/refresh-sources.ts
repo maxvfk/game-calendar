@@ -223,7 +223,15 @@ export async function runRefresh(
   for (const candidate of selected) {
     // Before any skip: a source robots forbids, or one with nothing to ask, is
     // still on the schedule, and liveness ages a never-confirmed source from here.
-    if (!options.dryRun) await options.store.recordSeen(candidate.id, options.now().toISOString());
+    // Bookkeeping only: a write failure here is reported for this source and must
+    // not cost the others their turn, nor the cycle its summary.
+    if (!options.dryRun) {
+      try {
+        await options.store.recordSeen(candidate.id, options.now().toISOString());
+      } catch (error) {
+        summary.warnings.push(`${candidate.id}: could not record schedule bookkeeping: ${String(error)}`);
+      }
+    }
     let adapter = candidate;
     if (candidate.id === ECHOES_SOURCE_ID) {
       const eventPage = await options.store.read(ECHOES_EVENT_SOURCE_ID);

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -530,7 +530,7 @@ describe("robots", () => {
       expect((await runRefresh(opts)).outcomes[0]?.result).toBe("skipped_robots");
       fetched += calls.length;
       if (i === 0) {
-        const first = await collectConfirmations(store, [id]);
+        const first = await collectConfirmations(store, [id], at);
         expect(planStaleIssue(null, livenessReport(first, at), at)).toEqual({ kind: "none" });
       }
     }
@@ -540,12 +540,31 @@ describe("robots", () => {
     expect(state).toMatchObject({
       firstSeenAt: new Date(start).toISOString(), lastCheckedAt: null, consecutiveFailures: 0,
     });
-    const confirmations = await collectConfirmations(store, [id]);
+    const confirmations = await collectConfirmations(store, [id], NOW.getTime());
     const action = planStaleIssue(null, livenessReport(confirmations, NOW.getTime()), NOW.getTime());
     expect(action.kind).toBe("open");
     expect((action as { body: string }).body).toContain(
-      `| \`${id}\` | never; on the schedule since ${new Date(start).toISOString()} | 3 d 0 h |`,
+      `| \`${id}\` | never; on the schedule since ${new Date(start).toISOString()} | 3 d 0 h | ` +
+        "no request yet | no request yet |",
     );
+    // The cache was fine; the table must not blame it.
+    expect((action as { body: string }).body).not.toContain("| unknown |");
+  });
+
+  test("a bookkeeping write failure stays with its source; the cycle still runs and reports", async () => {
+    // The first source's state path is taken by a directory, so its atomic write
+    // fails. The second source must still get its turn, and the cycle its summary.
+    const first = adapter({ id: "first" });
+    const second = adapter({ id: "second", url: "https://example.test/second" });
+    await mkdir(join(root, "first.state.json"), { recursive: true });
+    const { opts } = options({ adapters: [first, second] });
+
+    const summary = await runRefresh(opts);
+
+    expect(summary.warnings.some((w) => w.startsWith("first: could not record schedule bookkeeping:"))).toBe(true);
+    expect(summary.outcomes.map((o) => o.sourceId)).toEqual(["first", "second"]);
+    expect(summary.outcomes[1]?.result).toBe("fetched");
+    expect((await store.readState("second")).firstSeenAt).toBe(NOW.toISOString());
   });
 
   test("a dry run records nothing, not even that a source was on the schedule", async () => {

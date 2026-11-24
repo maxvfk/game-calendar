@@ -26,6 +26,7 @@ const HOUR = 3_600_000;
 const at = (hoursAgo: number) => new Date(NOW - hoursAgo * HOUR).toISOString();
 const source = (sourceId: string, lastConfirmedAt: string | null): SourceConfirmation => ({
   sourceId, lastConfirmedAt, failingSince: null, firstSeenAt: null, lastStatus: 200, consecutiveFailures: 0,
+  neverRequested: false,
 });
 const stale = (ids: string[]) => unconfirmedSources(ids.map((id) => source(id, at(100))), NOW);
 const unknown = (ids: string[]) => ids.map((id) => source(id, null));
@@ -78,10 +79,10 @@ describe("per-source liveness", () => {
 
     test("a cache miss is unknown, never stale: the committed meta still counts", async () => {
       await meta("cache-miss", at(3));
-      const [confirmation] = await collectConfirmations(new SnapshotStore(root), ["cache-miss"]);
+      const [confirmation] = await collectConfirmations(new SnapshotStore(root), ["cache-miss"], NOW);
       expect(confirmation).toEqual({
         sourceId: "cache-miss", lastConfirmedAt: at(3), failingSince: null, firstSeenAt: null,
-        lastStatus: null, consecutiveFailures: null,
+        lastStatus: null, consecutiveFailures: null, neverRequested: false,
       });
       expect(unconfirmedSources([confirmation!], NOW)).toEqual([]);
     });
@@ -93,7 +94,7 @@ describe("per-source liveness", () => {
       await state("meta-newer", at(80), 7);
       await meta("legacy-meta", null, at(6));
       const byId = Object.fromEntries((await collectConfirmations(
-        new SnapshotStore(root), ["state-newer", "meta-newer", "legacy-meta"],
+        new SnapshotStore(root), ["state-newer", "meta-newer", "legacy-meta"], NOW,
       )).map((c) => [c.sourceId, c]));
       expect(byId["state-newer"]!.lastConfirmedAt).toBe(at(5));
       expect(byId["meta-newer"]!.lastConfirmedAt).toBe(at(4));
@@ -107,16 +108,40 @@ describe("per-source liveness", () => {
       // valid dates, so the source was neither stale nor unknown and the issue closed.
       await meta("blank", "", at(96));
       await state("blank", at(96), 4);
-      const confirmations = await collectConfirmations(new SnapshotStore(root), ["blank"]);
+      const confirmations = await collectConfirmations(new SnapshotStore(root), ["blank"], NOW);
       expect(confirmations[0]!.lastConfirmedAt).toBe(at(96));
       const open = { number: 7, body: staleIssueBody(stale(["blank"]), [], NOW - HOUR) };
       expect(planStaleIssue(open, livenessReport(confirmations, NOW), NOW))
         .toMatchObject({ kind: "update", comment: null });
     });
 
+    test("a date from the future is discarded before it can outvote a real one", async () => {
+      // A real confirmation four days old in the state; a mistaken one a week ahead
+      // in the meta. Chosen as "newest", the future date read as a recovery.
+      await meta("future", at(-7 * 24), at(-7 * 24));
+      await state("future", at(96), 4);
+      const confirmations = await collectConfirmations(new SnapshotStore(root), ["future"], NOW);
+      expect(confirmations[0]!.lastConfirmedAt).toBe(at(96));
+      const open = { number: 7, body: staleIssueBody(stale(["future"]), [], NOW - HOUR) };
+      expect(planStaleIssue(open, livenessReport(confirmations, NOW), NOW))
+        .toMatchObject({ kind: "update", comment: null });
+    });
+
+    test("with only a future date, the age is unknown and an open alert stays open", async () => {
+      await meta("only-future", at(-24), at(-24));
+      const confirmations = await collectConfirmations(new SnapshotStore(root), ["only-future"], NOW);
+      expect(confirmations[0]!.lastConfirmedAt).toBeNull();
+      const report = livenessReport(confirmations, NOW);
+      expect(report.confirmed).toEqual([]);
+      const open = { number: 7, body: staleIssueBody(stale(["only-future"]), [], NOW - HOUR) };
+      const action = planStaleIssue(open, report, NOW);
+      expect(action).toMatchObject({ kind: "update", comment: null });
+      expect(staleIdsFromBody(bodyOf(action))).toEqual(["only-future"]);
+    });
+
     test("with no valid date at all, the age is unknown and an open alert stays open", async () => {
       await meta("garbled", "not a date", "also not a date");
-      const confirmations = await collectConfirmations(new SnapshotStore(root), ["garbled"]);
+      const confirmations = await collectConfirmations(new SnapshotStore(root), ["garbled"], NOW);
       expect(confirmations[0]!.lastConfirmedAt).toBeNull();
       const open = { number: 7, body: staleIssueBody(stale(["garbled"]), [], NOW - HOUR) };
       const action = planStaleIssue(open, livenessReport(confirmations, NOW), NOW);
@@ -125,10 +150,10 @@ describe("per-source liveness", () => {
     });
 
     test("a source added minutes ago, with no meta and no cache, does not open the alert", async () => {
-      const confirmations = await collectConfirmations(new SnapshotStore(root), ["brand-new"]);
+      const confirmations = await collectConfirmations(new SnapshotStore(root), ["brand-new"], NOW);
       expect(confirmations).toEqual([{
         sourceId: "brand-new", lastConfirmedAt: null, failingSince: null, firstSeenAt: null,
-        lastStatus: null, consecutiveFailures: null,
+        lastStatus: null, consecutiveFailures: null, neverRequested: false,
       }]);
       expect(planStaleIssue(null, livenessReport(confirmations, NOW), NOW)).toEqual({ kind: "none" });
     });
@@ -139,7 +164,7 @@ describe("per-source liveness", () => {
       const store = new SnapshotStore(root);
       const start = NOW - 72 * HOUR;
       await store.recordCheck("new-and-failing", { at: new Date(start).toISOString(), status: 503, ok: false });
-      const first = await collectConfirmations(store, ["new-and-failing"]);
+      const first = await collectConfirmations(store, ["new-and-failing"], start);
       expect(first[0]).toMatchObject({ lastConfirmedAt: null, failingSince: new Date(start).toISOString() });
       expect(planStaleIssue(null, livenessReport(first, start), start)).toEqual({ kind: "none" });
 
@@ -148,7 +173,7 @@ describe("per-source liveness", () => {
           at: new Date(start + i * 12 * HOUR).toISOString(), status: 503, ok: false,
         });
       }
-      const later = await collectConfirmations(store, ["new-and-failing"]);
+      const later = await collectConfirmations(store, ["new-and-failing"], NOW);
       expect(later[0]).toMatchObject({
         lastConfirmedAt: null, failingSince: new Date(start).toISOString(), consecutiveFailures: 7,
       });
@@ -170,7 +195,7 @@ describe("per-source liveness", () => {
       for (let i = 0; i <= 6; i++) {
         await store.recordCheck("never-ok", { at: new Date(start + i * 12 * HOUR).toISOString(), status: 503, ok: false });
       }
-      const opened = planStaleIssue(null, livenessReport(await collectConfirmations(store, ["never-ok"]), NOW), NOW);
+      const opened = planStaleIssue(null, livenessReport(await collectConfirmations(store, ["never-ok"], NOW), NOW), NOW);
       expect(opened.kind).toBe("open");
       const issue = { number: 9, body: bodyOf(opened) };
 
@@ -181,7 +206,7 @@ describe("per-source liveness", () => {
         const missed = new SnapshotStore(missRoot);
         const next = NOW + 12 * HOUR;
         await missed.recordCheck("never-ok", { at: new Date(next).toISOString(), status: 503, ok: false });
-        const afterMiss = planStaleIssue(issue, livenessReport(await collectConfirmations(missed, ["never-ok"]), next), next);
+        const afterMiss = planStaleIssue(issue, livenessReport(await collectConfirmations(missed, ["never-ok"], next), next), next);
         expect(afterMiss).toMatchObject({ kind: "update", number: 9, comment: null });
         expect(staleIdsFromBody(bodyOf(afterMiss))).toEqual(["never-ok"]);
 
@@ -190,7 +215,7 @@ describe("per-source liveness", () => {
         await missed.recordCheck("never-ok", { at: new Date(later).toISOString(), status: 200, ok: true });
         const closed = planStaleIssue(
           { number: 9, body: bodyOf(afterMiss) },
-          livenessReport(await collectConfirmations(missed, ["never-ok"]), later),
+          livenessReport(await collectConfirmations(missed, ["never-ok"], later), later),
           later,
         );
         expect(closed).toMatchObject({ kind: "close", number: 9 });
@@ -216,7 +241,7 @@ describe("per-source liveness", () => {
         failingSince: new Date(start).toISOString(),
         firstSeenAt: new Date(start).toISOString(),
       });
-      const action = planStaleIssue(null, livenessReport(await collectConfirmations(store, ["corrupt"]), NOW), NOW);
+      const action = planStaleIssue(null, livenessReport(await collectConfirmations(store, ["corrupt"], NOW), NOW), NOW);
       expect(action.kind).toBe("open");
     });
 
@@ -227,7 +252,7 @@ describe("per-source liveness", () => {
         await meta(id, at(60));
         await state(id, at(60), 5);
       }
-      const confirmations = await collectConfirmations(new SnapshotStore(root), ["a", "b", "c"]);
+      const confirmations = await collectConfirmations(new SnapshotStore(root), ["a", "b", "c"], NOW);
       const action = planStaleIssue(null, livenessReport(confirmations, NOW), NOW);
       expect(action.kind).toBe("open");
       expect(staleIdsFromBody(bodyOf(action))).toEqual(["a", "b", "c"]);

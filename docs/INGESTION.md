@@ -424,8 +424,10 @@ run turned red. So two further signals read outcomes rather than errors:
   stale. A source never once confirmed is aged from the earliest of two state records: the first
   cycle it was on the schedule (`firstSeenAt`, written before any request, so even a source robots
   always forbids is dated) and the first attempt of its failure streak (`failingSince`). So a new
-  source that only ever fails, or is never asked, still reaches the issue after 48 hours. With none
-  of these, or only unparseable ones, the age is unknown and the issue does not open. Recovery has
+  source that only ever fails, or is never asked, still reaches the issue after 48 hours (a failed
+  write of that record is a warning for its source, never the end of the cycle). With none of
+  these, or only unparseable or future-dated ones, the age is unknown and the issue does not open;
+  a future date is discarded before the newest is chosen, so it cannot outvote a real one. Recovery has
   its own test: only a valid confirmation within 48 hours takes a listed source off the issue, so a
   cache miss that restarts a failure streak keeps it listed. A closing
   comment claims only what was checked, names sources not judged yet, and reports a source taken
