@@ -1321,6 +1321,27 @@
       "rulesVersion": "v1",
       "decision": "keep_original",
       "reason": "Current title already identifies the tower and Hazard Zone distinction."
+    },
+    {
+      "eventId": "endfield:caps-shrooms-fungi:2026-11-25",
+      "fingerprint": "sha256:9f5434eaffec4210c3e24cf89c8a5204d1c0b0b1d2eeeace32a628268fd78562",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Distinctive official title; the summary only identifies the event type and supports no clearer truthful alternative."
+    },
+    {
+      "eventId": "endfield:array-building-mend-the-old-gash:2026-11-25",
+      "fingerprint": "sha256:4d8c355c30c5f16e7e1d3e3e62936261046624158126125af1520242a56313da",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Already includes the recognizable Array Building mode prefix and a distinctive event name."
+    },
+    {
+      "eventId": "endfield:i-dream-of-honey-waffles:2026-11-25",
+      "fingerprint": "sha256:089ca4bf99fb93122263592c41fd76391650474cbb6f65371efb86862e60bdf1",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "Distinctive official title; the generic Narrative Event summary provides no clearer truthful label."
     }
   ]
 }
