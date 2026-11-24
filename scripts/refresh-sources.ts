@@ -221,6 +221,9 @@ export async function runRefresh(
   }
 
   for (const candidate of selected) {
+    // Before any skip: a source robots forbids, or one with nothing to ask, is
+    // still on the schedule, and liveness ages a never-confirmed source from here.
+    if (!options.dryRun) await options.store.recordSeen(candidate.id, options.now().toISOString());
     let adapter = candidate;
     if (candidate.id === ECHOES_SOURCE_ID) {
       const eventPage = await options.store.read(ECHOES_EVENT_SOURCE_ID);

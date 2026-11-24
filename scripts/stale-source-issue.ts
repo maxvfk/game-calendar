@@ -12,6 +12,7 @@ import {
   planStaleIssue,
   STALE_ISSUE_LABEL,
   type StaleIssueClient,
+  unknownSources,
 } from "../src/ingest/liveness.ts";
 import { SnapshotStore } from "../src/ingest/snapshots.ts";
 
@@ -72,11 +73,12 @@ async function main(): Promise<number> {
   const now = Date.now();
   const confirmations = await collectConfirmations(new SnapshotStore("snapshots"), ADAPTERS.map((a) => a.id));
   const report = livenessReport(confirmations, now);
-  const { stale, unknown } = report;
+  const { stale } = report;
+  const unknown = unknownSources(confirmations);
 
   console.log(`${stale.length} of ${confirmations.length} scheduled source(s) unconfirmed for over 48h`);
   for (const s of stale) {
-    console.log(`  ${s.sourceId.padEnd(28)} last confirmed ${s.lastConfirmedAt ?? `never; failing since ${s.failingSince}`}`);
+    console.log(`  ${s.sourceId.padEnd(28)} last confirmed ${s.lastConfirmedAt ?? "never"}`);
   }
   for (const s of unknown) console.log(`  ${s.sourceId.padEnd(28)} no record yet; age unknown`);
   if (stale.length > 0) {

@@ -65,6 +65,18 @@ export interface SnapshotState {
    * state written before it existed starts the streak at its next failure.
    */
   failingSince?: string | null;
+  /**
+   * First cycle in which the runner had this source on its schedule, whether or
+   * not it was asked (robots can forbid every request). Lets liveness age a source
+   * that has never been confirmed nor even fetched. Kept once set; optional like
+   * `failingSince`.
+   */
+  firstSeenAt?: string | null;
+}
+
+/** A stored time worth carrying forward: a string that parses. Anything else restarts the clock. */
+function validTime(time: unknown): time is string {
+  return typeof time === "string" && !Number.isNaN(Date.parse(time));
 }
 
 export interface Snapshot {
@@ -382,9 +394,10 @@ export class SnapshotStore {
       consecutiveFailures: check.ok ? 0 : previous.consecutiveFailures + 1,
       failingSince: check.ok
         ? null
-        : previous.consecutiveFailures > 0
-        ? (previous.failingSince ?? check.at)
+        : previous.consecutiveFailures > 0 && validTime(previous.failingSince)
+        ? previous.failingSince
         : check.at,
+      firstSeenAt: validTime(previous.firstSeenAt) ? previous.firstSeenAt : check.at,
     };
 
     await mkdir(this.root, { recursive: true });
@@ -399,6 +412,18 @@ export class SnapshotStore {
     }
 
     return state;
+  }
+
+  /**
+   * Note that a scheduled source was due for judgement in this cycle, before any
+   * request. Sets `firstSeenAt` once and touches nothing else, so the interval
+   * floor and the failure streak read exactly what they did.
+   */
+  async recordSeen(sourceId: string, at: string): Promise<void> {
+    const previous = await this.readState(sourceId);
+    if (validTime(previous.firstSeenAt)) return;
+    await mkdir(this.root, { recursive: true });
+    await writeAtomic(this.statePath(sourceId), `${JSON.stringify({ ...previous, firstSeenAt: at }, null, 2)}\n`);
   }
 
   /** Remove one source's cache entirely. Used by tests and by hand. */

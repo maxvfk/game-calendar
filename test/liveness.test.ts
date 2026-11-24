@@ -25,16 +25,23 @@ const NOW = Date.parse("2026-11-24T18:00:00.000Z");
 const HOUR = 3_600_000;
 const at = (hoursAgo: number) => new Date(NOW - hoursAgo * HOUR).toISOString();
 const source = (sourceId: string, lastConfirmedAt: string | null): SourceConfirmation => ({
-  sourceId, lastConfirmedAt, failingSince: null, lastStatus: 200, consecutiveFailures: 0,
+  sourceId, lastConfirmedAt, failingSince: null, firstSeenAt: null, lastStatus: 200, consecutiveFailures: 0,
 });
 const stale = (ids: string[]) => unconfirmedSources(ids.map((id) => source(id, at(100))), NOW);
 const unknown = (ids: string[]) => ids.map((id) => source(id, null));
-/** A report in which every id named is tracked, unless `tracked` says otherwise. */
+/**
+ * A report over `staleIds` (100 h old), `unknownIds` (no record) and, confirmed two
+ * hours ago, every other id in `scheduled`. An id in none of them left the schedule.
+ */
 const report = (
   staleIds: string[],
   unknownIds: string[] = [],
-  tracked: string[] = [...staleIds, ...unknownIds, "a", "b", "c"],
-): LivenessReport => ({ stale: stale(staleIds), unknown: unknown(unknownIds), tracked });
+  scheduled: string[] = ["a", "b", "c"],
+): LivenessReport => livenessReport([
+  ...staleIds.map((id) => source(id, at(100))),
+  ...unknown(unknownIds),
+  ...scheduled.filter((id) => !staleIds.includes(id) && !unknownIds.includes(id)).map((id) => source(id, at(2))),
+], NOW);
 const bodyOf = (action: StaleIssueAction) => (action as { body: string }).body;
 
 describe("per-source liveness", () => {
@@ -73,7 +80,8 @@ describe("per-source liveness", () => {
       await meta("cache-miss", at(3));
       const [confirmation] = await collectConfirmations(new SnapshotStore(root), ["cache-miss"]);
       expect(confirmation).toEqual({
-        sourceId: "cache-miss", lastConfirmedAt: at(3), failingSince: null, lastStatus: null, consecutiveFailures: null,
+        sourceId: "cache-miss", lastConfirmedAt: at(3), failingSince: null, firstSeenAt: null,
+        lastStatus: null, consecutiveFailures: null,
       });
       expect(unconfirmedSources([confirmation!], NOW)).toEqual([]);
     });
@@ -119,7 +127,8 @@ describe("per-source liveness", () => {
     test("a source added minutes ago, with no meta and no cache, does not open the alert", async () => {
       const confirmations = await collectConfirmations(new SnapshotStore(root), ["brand-new"]);
       expect(confirmations).toEqual([{
-        sourceId: "brand-new", lastConfirmedAt: null, failingSince: null, lastStatus: null, consecutiveFailures: null,
+        sourceId: "brand-new", lastConfirmedAt: null, failingSince: null, firstSeenAt: null,
+        lastStatus: null, consecutiveFailures: null,
       }]);
       expect(planStaleIssue(null, livenessReport(confirmations, NOW), NOW)).toEqual({ kind: "none" });
     });
@@ -152,6 +161,63 @@ describe("per-source liveness", () => {
       // One success ends the streak.
       await store.recordCheck("new-and-failing", { at: new Date(NOW).toISOString(), status: 200, ok: true });
       expect((await store.readState("new-and-failing")).failingSince).toBeNull();
+    });
+
+    test("a cache miss restarts the streak but recovers nothing; only a confirmation closes", async () => {
+      // Seven 503s over 72 hours open the issue.
+      const store = new SnapshotStore(root);
+      const start = NOW - 72 * HOUR;
+      for (let i = 0; i <= 6; i++) {
+        await store.recordCheck("never-ok", { at: new Date(start + i * 12 * HOUR).toISOString(), status: 503, ok: false });
+      }
+      const opened = planStaleIssue(null, livenessReport(await collectConfirmations(store, ["never-ok"]), NOW), NOW);
+      expect(opened.kind).toBe("open");
+      const issue = { number: 9, body: bodyOf(opened) };
+
+      // Next cycle: the Actions cache missed, and the source failed again. Its new
+      // streak is minutes old, so it is not stale, but nothing was confirmed.
+      const missRoot = await mkdtemp(join(tmpdir(), "liveness-miss-"));
+      try {
+        const missed = new SnapshotStore(missRoot);
+        const next = NOW + 12 * HOUR;
+        await missed.recordCheck("never-ok", { at: new Date(next).toISOString(), status: 503, ok: false });
+        const afterMiss = planStaleIssue(issue, livenessReport(await collectConfirmations(missed, ["never-ok"]), next), next);
+        expect(afterMiss).toMatchObject({ kind: "update", number: 9, comment: null });
+        expect(staleIdsFromBody(bodyOf(afterMiss))).toEqual(["never-ok"]);
+
+        // A real confirmation is what recovers it.
+        const later = next + 12 * HOUR;
+        await missed.recordCheck("never-ok", { at: new Date(later).toISOString(), status: 200, ok: true });
+        const closed = planStaleIssue(
+          { number: 9, body: bodyOf(afterMiss) },
+          livenessReport(await collectConfirmations(missed, ["never-ok"]), later),
+          later,
+        );
+        expect(closed).toMatchObject({ kind: "close", number: 9 });
+        expect((closed as { comment: string }).comment).toContain("Recovered with a confirmed fetch: `never-ok`.");
+      } finally {
+        await rm(missRoot, { recursive: true, force: true });
+      }
+    });
+
+    test("a corrupt failingSince restarts the streak instead of being carried forever", async () => {
+      await Bun.write(join(root, "corrupt.state.json"), JSON.stringify({
+        sourceId: "corrupt", lastCheckedAt: at(84), lastConfirmedAt: null, lastStatus: 503,
+        consecutiveFailures: 1, failingSince: "", firstSeenAt: "",
+      }));
+      const store = new SnapshotStore(root);
+      const start = NOW - 72 * HOUR;
+      for (let i = 0; i <= 6; i++) {
+        await store.recordCheck("corrupt", { at: new Date(start + i * 12 * HOUR).toISOString(), status: 503, ok: false });
+      }
+      const state = await store.readState("corrupt");
+      expect(state).toMatchObject({
+        consecutiveFailures: 8,
+        failingSince: new Date(start).toISOString(),
+        firstSeenAt: new Date(start).toISOString(),
+      });
+      const action = planStaleIssue(null, livenessReport(await collectConfirmations(store, ["corrupt"]), NOW), NOW);
+      expect(action.kind).toBe("open");
     });
 
     test("every source failing for days, with old confirmations, opens the issue", async () => {
@@ -204,7 +270,7 @@ describe("the single stale-source issue", () => {
     const open = { number: 7, body: staleIssueBody(stale(["a"]), [], NOW) };
     const comment = (planStaleIssue(open, report([], ["b"]), NOW) as { comment: string }).comment;
     expect(comment).toContain("Recovered with a confirmed fetch: `a`.");
-    expect(comment).toContain("Not judged yet, age unknown: `b`.");
+    expect(comment).toContain("Not confirmed yet, under 48 hours or age unknown: `b`.");
   });
 
   test("a source taken off the schedule is no longer monitored, not recovered", () => {
@@ -225,7 +291,7 @@ describe("the single stale-source issue", () => {
     const onlyUnknown = planStaleIssue(open, report([], ["a"]), NOW);
     expect(onlyUnknown).toMatchObject({ kind: "update", number: 7, comment: "Recovered with a confirmed fetch: `b`." });
     expect(staleIdsFromBody(bodyOf(onlyUnknown))).toEqual(["a"]);
-    expect(bodyOf(onlyUnknown)).toContain("| `a` | no record in this run | unknown |");
+    expect(bodyOf(onlyUnknown)).toContain("| `a` | no record in this run | not confirmed since | 200 | 0 |");
     // Still listed, still unknown: silent; and nothing closes on unknown alone.
     const next = { number: 7, body: bodyOf(onlyUnknown) };
     expect(planStaleIssue(next, report([], ["a"]), NOW)).toMatchObject({ kind: "update", comment: null });

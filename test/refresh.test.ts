@@ -17,6 +17,7 @@ import {
 import type { Adapter, ParseContext } from "../src/ingest/adapters/types.ts";
 import { ADAPTERS, ALL_ADAPTERS, adapterById } from "../src/ingest/adapters/index.ts";
 import { SnapshotStore } from "../src/ingest/snapshots.ts";
+import { collectConfirmations, livenessReport, planStaleIssue } from "../src/ingest/liveness.ts";
 import type { GachaEvent } from "../src/shared/schema.ts";
 
 const SIX_HOURS_MS = 6 * 60 * 60 * 1000;
@@ -514,6 +515,42 @@ describe("robots", () => {
     expect(calls).toHaveLength(0);
     expect(summary.outcomes[0]?.result).toBe("skipped_robots");
     expect(summary.warnings).toHaveLength(1);
+  });
+
+  test("a source robots always forbids still ages into the stale-source issue", async () => {
+    // Never asked, so never confirmed and never failing: only the schedule itself
+    // can date it. Seven cycles twelve hours apart, not one request among them.
+    const forbid = { allows: async () => ({ allowed: false, reason: "disallowed by robots" }) };
+    const start = NOW.getTime() - 72 * 60 * 60 * 1000;
+    const id = adapter().id;
+    let fetched = 0;
+    for (let i = 0; i <= 6; i++) {
+      const at = start + i * 12 * 60 * 60 * 1000;
+      const { opts, calls } = options({ robots: forbid, now: () => new Date(at) });
+      expect((await runRefresh(opts)).outcomes[0]?.result).toBe("skipped_robots");
+      fetched += calls.length;
+      if (i === 0) {
+        const first = await collectConfirmations(store, [id]);
+        expect(planStaleIssue(null, livenessReport(first, at), at)).toEqual({ kind: "none" });
+      }
+    }
+    expect(fetched).toBe(0);
+
+    const state = await store.readState(id);
+    expect(state).toMatchObject({
+      firstSeenAt: new Date(start).toISOString(), lastCheckedAt: null, consecutiveFailures: 0,
+    });
+    const confirmations = await collectConfirmations(store, [id]);
+    const action = planStaleIssue(null, livenessReport(confirmations, NOW.getTime()), NOW.getTime());
+    expect(action.kind).toBe("open");
+    expect((action as { body: string }).body).toContain(
+      `| \`${id}\` | never; on the schedule since ${new Date(start).toISOString()} | 3 d 0 h |`,
+    );
+  });
+
+  test("a dry run records nothing, not even that a source was on the schedule", async () => {
+    await runRefresh(options({ dryRun: true }).opts);
+    expect((await store.readState(adapter().id)).firstSeenAt).toBeUndefined();
   });
 
   test("fetching on an assumed robots permission is named in the summary", async () => {

@@ -14,11 +14,17 @@
  * `lastConfirmedAt`, which moves with every confirmed cycle, and its
  * `contentChangedAt`, itself a confirmed fetch) and the gitignored `.state.json`,
  * which comes back only from the Actions cache. A cache miss therefore cannot make
- * a healthy source look stale. A source never once confirmed is aged from the first
- * attempt of its failure streak (`failingSince` in the state), so a new source that
- * has only ever failed still reaches the alert after 48 hours. With neither — a
- * source added minutes ago, or a cache miss — the age is unknown: that never opens
- * the alert, and never closes it either. Unparseable dates are no record at all.
+ * a healthy source look stale. A source never once confirmed is aged from the
+ * earliest of two state records: the first cycle it was on the schedule
+ * (`firstSeenAt`, written even when robots forbids every request) and the first
+ * attempt of its failure streak (`failingSince`). So a new source that only ever
+ * fails, or is never asked, still reaches the alert after 48 hours. With none of
+ * these — a source added minutes ago, or a cache miss — the age is unknown, which
+ * never opens the alert. Unparseable dates are no record at all.
+ *
+ * Recovery has its own, stricter test: only a valid confirmation within 48 hours
+ * takes a listed source off the issue. A young failure streak after a cache miss
+ * is not stale, but it is not a recovery either.
  */
 import { STALE_AFTER_MS } from "../shared/feed.ts";
 import type { SnapshotMeta, SnapshotState } from "./snapshots.ts";
@@ -29,6 +35,8 @@ export interface SourceConfirmation {
   lastConfirmedAt: string | null;
   /** From the cached state: first attempt of the current failure streak, if valid. */
   failingSince: string | null;
+  /** From the cached state: first cycle with this source on the schedule, if valid. */
+  firstSeenAt: string | null;
   /** From the cached state; null when that state was not restored. */
   lastStatus: number | null;
   /** From the cached state; null when that state was not restored. */
@@ -36,7 +44,7 @@ export interface SourceConfirmation {
 }
 
 export interface UnconfirmedSource extends SourceConfirmation {
-  /** Since the last confirmation or, for a source never confirmed, since its streak began. */
+  /** Since the last confirmation or, for a source never confirmed, since it was first on record. */
   ageMs: number;
 }
 
@@ -45,12 +53,24 @@ export interface ConfirmationStore {
   readState(sourceId: string): Promise<SnapshotState>;
 }
 
+function valid(time: unknown): time is string {
+  return typeof time === "string" && !Number.isNaN(Date.parse(time));
+}
+
 /** The newest of the parseable times; an empty or malformed value is ignored, never compared. */
 function newest(...times: unknown[]): string | null {
   let best: string | null = null;
   for (const time of times) {
-    if (typeof time !== "string" || Number.isNaN(Date.parse(time))) continue;
-    if (best === null || Date.parse(time) > Date.parse(best)) best = time;
+    if (valid(time) && (best === null || Date.parse(time) > Date.parse(best))) best = time;
+  }
+  return best;
+}
+
+/** The oldest of the parseable times, on the same terms. */
+function oldest(...times: unknown[]): string | null {
+  let best: string | null = null;
+  for (const time of times) {
+    if (valid(time) && (best === null || Date.parse(time) < Date.parse(best))) best = time;
   }
   return best;
 }
@@ -69,7 +89,8 @@ export async function collectConfirmations(
     confirmations.push({
       sourceId,
       lastConfirmedAt: newest(meta?.lastConfirmedAt, meta?.contentChangedAt, state.lastConfirmedAt),
-      failingSince: stateKnown ? newest(state.failingSince) : null,
+      failingSince: newest(state.failingSince),
+      firstSeenAt: newest(state.firstSeenAt),
       lastStatus: stateKnown ? state.lastStatus : null,
       consecutiveFailures: stateKnown ? state.consecutiveFailures : null,
     });
@@ -79,7 +100,7 @@ export async function collectConfirmations(
 
 /** Where a source's age is measured from, or null when it is unknown. */
 function ageFrom(source: SourceConfirmation): string | null {
-  return newest(source.lastConfirmedAt) ?? newest(source.failingSince);
+  return newest(source.lastConfirmedAt) ?? oldest(source.failingSince, source.firstSeenAt);
 }
 
 /** Sources past `thresholdMs` without a confirmed fetch, by source id. Exactly at the threshold is still current. */
@@ -103,19 +124,31 @@ export function unknownSources(sources: readonly SourceConfirmation[]): SourceCo
   return sources.filter((s) => ageFrom(s) === null).sort((a, b) => a.sourceId.localeCompare(b.sourceId));
 }
 
+/** Sources with a valid confirmed fetch within `thresholdMs`: the only ones that count as recovered. */
+export function confirmedSources(
+  sources: readonly SourceConfirmation[],
+  now: number,
+  thresholdMs: number = STALE_AFTER_MS,
+): SourceConfirmation[] {
+  return sources
+    .filter((s) => s.lastConfirmedAt !== null && now - Date.parse(s.lastConfirmedAt) <= thresholdMs)
+    .sort((a, b) => a.sourceId.localeCompare(b.sourceId));
+}
+
 /** One refresh's verdict over the scheduled sources it tracks. */
 export interface LivenessReport {
+  /** Every scheduled source this run judged; a listed id outside it is no longer monitored. */
+  sources: readonly SourceConfirmation[];
   stale: readonly UnconfirmedSource[];
-  unknown: readonly SourceConfirmation[];
-  /** Every scheduled source id this run judged; a listed id outside it is no longer monitored. */
-  tracked: readonly string[];
+  /** Ids confirmed within 48 hours. */
+  confirmed: readonly string[];
 }
 
 export function livenessReport(sources: readonly SourceConfirmation[], now: number): LivenessReport {
   return {
+    sources: [...sources].sort((a, b) => a.sourceId.localeCompare(b.sourceId)),
     stale: unconfirmedSources(sources, now),
-    unknown: unknownSources(sources),
-    tracked: sources.map((s) => s.sourceId),
+    confirmed: confirmedSources(sources, now).map((s) => s.sourceId),
   };
 }
 
@@ -130,6 +163,21 @@ function age(ms: number): string {
   return `${Math.floor(hours / 24)} d ${hours % 24} h`;
 }
 
+/** The "Last confirmed" cell. */
+function lastConfirmedCell(s: SourceConfirmation): string {
+  if (s.lastConfirmedAt !== null) return s.lastConfirmedAt;
+  const since = [
+    ...(s.firstSeenAt !== null && s.firstSeenAt !== s.failingSince ? [`on the schedule since ${s.firstSeenAt}`] : []),
+    ...(s.failingSince !== null ? [`failing since ${s.failingSince}`] : []),
+  ];
+  return since.length > 0 ? `never; ${since.join(", ")}` : "no record in this run";
+}
+
+function row(s: SourceConfirmation, ageText: string): string {
+  return `| \`${s.sourceId}\` | ${lastConfirmedCell(s)} | ${ageText} | ` +
+    `${s.lastStatus ?? "unknown"} | ${s.consecutiveFailures ?? "unknown"} |`;
+}
+
 export function staleIssueBody(
   stale: readonly UnconfirmedSource[],
   carried: readonly SourceConfirmation[],
@@ -137,10 +185,8 @@ export function staleIssueBody(
 ): string {
   const ids = [...stale, ...carried].map((s) => s.sourceId).sort();
   const rows = [
-    ...stale.map((s) =>
-      `| \`${s.sourceId}\` | ${s.lastConfirmedAt ?? `never; failing since ${s.failingSince}`} | ${age(s.ageMs)} | ` +
-        `${s.lastStatus ?? "unknown"} | ${s.consecutiveFailures ?? "unknown"} |`),
-    ...carried.map((s) => `| \`${s.sourceId}\` | no record in this run | unknown | unknown | unknown |`),
+    ...stale.map((s) => row(s, age(s.ageMs))),
+    ...carried.map((s) => row(s, "not confirmed since")),
   ];
   return [
     `<!-- stale-sources: ${ids.join(",")} -->`,
@@ -151,8 +197,8 @@ export function staleIssueBody(
     "| --- | --- | --- | --- | --- |",
     ...rows,
     "",
-    `Checked at ${new Date(now).toISOString()}. "unknown" means the refresh bookkeeping cache was not restored,`,
-    "or the source has no record at all; a source with unknown age stays listed until it is confirmed.",
+    `Checked at ${new Date(now).toISOString()}. "unknown" means the refresh bookkeeping cache was not restored.`,
+    "A listed source stays listed until a fetch is confirmed, even when its age can no longer be measured.",
     "",
   ].join("\n");
 }
@@ -184,16 +230,21 @@ function codes(ids: readonly string[]): string {
  *
  * Opening and closing notify the owner; a body edit does not. So the body is
  * refreshed silently every run (the ages move), and a comment is added only when
- * the listed set changes, which is the news worth an email. A listed source whose
- * age has become unknown stays listed: only a confirmation recovers it. A listed
+ * the listed set changes, which is the news worth an email. A listed source stays
+ * listed until a valid confirmation within 48 hours, whatever else its age does:
+ * unknown after a cache miss, or a young failure streak restarted by one. A listed
  * source that left the schedule is reported as no longer monitored, not as
  * recovered, and a close claims only what was checked.
  */
 export function planStaleIssue(open: OpenIssue | null, report: LivenessReport, now: number): StaleIssueAction {
-  const { stale, unknown, tracked } = report;
+  const { sources, stale, confirmed } = report;
+  const tracked = sources.map((s) => s.sourceId);
+  const staleIds = stale.map((s) => s.sourceId);
   const before = open === null ? [] : (staleIdsFromBody(open.body) ?? []);
-  const carried = unknown.filter((s) => before.includes(s.sourceId));
-  const listed = [...stale, ...carried].map((s) => s.sourceId);
+  const carried = sources.filter((s) =>
+    before.includes(s.sourceId) && !staleIds.includes(s.sourceId) && !confirmed.includes(s.sourceId)
+  );
+  const listed = [...staleIds, ...carried.map((s) => s.sourceId)];
 
   const added = listed.filter((id) => !before.includes(id)).sort();
   const dropped = before.filter((id) => !listed.includes(id));
@@ -207,14 +258,14 @@ export function planStaleIssue(open: OpenIssue | null, report: LivenessReport, n
 
   if (listed.length === 0) {
     if (open === null) return { kind: "none" };
-    const pending = unknown.map((s) => s.sourceId);
+    const pending = tracked.filter((id) => !confirmed.includes(id));
     return {
       kind: "close",
       number: open.number,
       comment: [
         `No monitored scheduled source is past 48 hours without a confirmed fetch as of ${new Date(now).toISOString()}.`,
         ...changes,
-        ...(pending.length > 0 ? [`Not judged yet, age unknown: ${codes(pending)}.`] : []),
+        ...(pending.length > 0 ? [`Not confirmed yet, under 48 hours or age unknown: ${codes(pending)}.`] : []),
       ].join(" "),
     };
   }

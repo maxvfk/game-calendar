@@ -5,10 +5,11 @@ Pages deploy whose scheduled sources are current by `publicationStalled()` (manu
 `reviewed-*` rows do not count); without the secret the step does nothing.
 `refresh.yml` on `main` keeps one labelled "Stale sources" issue in step with the
 scheduled sources that have had no confirmed fetch for over 48 hours, including
-after a cycle where every source failed, and closes it on recovery. A source never
-confirmed is aged from the start of its failure streak (new `failingSince` in the
-refresh state); with no valid date its age is unknown and it neither opens nor
-closes the issue. Both are
+after a cycle where every source failed, and closes it only on a confirmed fetch
+within 48 hours. A source never confirmed is aged from its first cycle on the
+schedule or the start of its failure streak (new `firstSeenAt` and `failingSince`
+in the refresh state); with no valid date its age is unknown and it does not open
+the issue. Both are
 advisory. `endfield-wikigg-echoes` is stale since
 2026-11-14, so the issue opens on the first run. Details: `docs/INGESTION.md`.
 Operator step: create the healthchecks.io check (period 12 h, grace about 18 h) and

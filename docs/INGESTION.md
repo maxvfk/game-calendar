@@ -421,10 +421,13 @@ run turned red. So two further signals read outcomes rather than errors:
   opened when the first source goes stale, its body refreshed silently every run, a comment when the
   set changes, closed when every source recovers. The confirmation time is the newest of the
   committed `.meta.json` and the cached `.state.json`, so a cache miss cannot make a healthy source
-  stale. A source never once confirmed is aged from the first attempt of its failure streak
-  (`failingSince` in the state), so a new source that only ever fails still reaches the issue after
-  48 hours. With neither date, or only unparseable ones, the age is unknown: that never opens the
-  issue, and a listed source whose age becomes unknown stays listed until it is confirmed. A closing
+  stale. A source never once confirmed is aged from the earliest of two state records: the first
+  cycle it was on the schedule (`firstSeenAt`, written before any request, so even a source robots
+  always forbids is dated) and the first attempt of its failure streak (`failingSince`). So a new
+  source that only ever fails, or is never asked, still reaches the issue after 48 hours. With none
+  of these, or only unparseable ones, the age is unknown and the issue does not open. Recovery has
+  its own test: only a valid confirmation within 48 hours takes a listed source off the issue, so a
+  cache miss that restarts a failure streak keeps it listed. A closing
   comment claims only what was checked, names sources not judged yet, and reports a source taken
   off the schedule as no longer monitored rather than recovered. The issue is the bot's open
   issue with the `liveness-stale-sources` label, never matched by title. On an update the comment is
