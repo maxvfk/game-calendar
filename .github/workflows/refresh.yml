@@ -34,6 +34,7 @@ jobs:
     permissions:
       contents: write
       actions: write
+      issues: write
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
@@ -106,6 +107,17 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           BRANCH: ${{ github.ref_name }}
         run: gh workflow run ci.yml --ref "$BRANCH"
+
+      # One self-updating issue while any scheduled source has gone more than
+      # 48h without a confirmed fetch; closed when every source recovers. It reads
+      # the committed metadata as well as the cached state, so a cache miss cannot
+      # make a healthy source look stale. Advisory: it never fails the refresh.
+      - name: Stale-source issue
+        if: always() && steps.refresh.outcome == 'success' && inputs.dry_run != true
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bun scripts/stale-source-issue.ts
 
       - name: Report source health
         if: always()

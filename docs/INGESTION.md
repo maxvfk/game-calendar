@@ -394,8 +394,9 @@ annotated on the run page, listed in the job summary with its status code, and c
 conduct for why that ordering is load-bearing.
 
 **Built: `scripts/refresh-sources.ts`** (`bun run refresh`), scheduled by
-`.gitea/workflows/refresh.yml`. Scheduled fetching and data refresh run exclusively on Gitea
-Actions; GitHub Actions only builds and serves, and never refreshes data sources. The runner
+`.github/workflows/refresh.yml`, which commits the snapshots and then dispatches `ci.yml` to build
+and deploy. `ci.yml` itself never fetches sources. The `.gitea/workflows` copies are retained, not
+live. The runner
 takes its adapters, store, robots gate, fetch and clock by injection, so the whole runner is
 tested offline against a fake fetch. A fetched body is *rejected* — the previous snapshot survives
 — when it fails `canParse`, throws, or yields zero events; storing an empty parse would make the feed
@@ -409,6 +410,25 @@ a lane that is correctly empty, while the snapshot it is holding goes on ageing.
 the page's statement and never a row count, so a redesign still rejects, and the run says which of
 the two it saw: `0 events — the page states it currently lists none`. One source down is a warning and exit 0; every source failing is exit 1, so CI never
 commits a cycle that learned nothing.
+
+**Liveness is judged on outcomes, continuously.** `broken` fires once, on the transition, and only
+for a source that is *failing*. A source can also stop being asked without failing: the Endfield
+Echoes lane went quiet on 2026-11-14 because its season selector found nothing to ask about, and no
+run turned red. So two further signals read outcomes rather than errors:
+
+- **Stale-source issue.** After every refresh, `scripts/stale-source-issue.ts` lists the scheduled
+  sources with no confirmed fetch (200 or 304) for over 48 hours and keeps one GitHub issue in step:
+  opened when the first source goes stale, its body refreshed silently every run, a comment when the
+  set changes, closed when every source recovers. The confirmation time is the newer of the committed
+  `.meta.json` and the cached `.state.json`, so a cache miss reads as unknown, never as stale. The
+  step is advisory and never fails the refresh. Rules: `src/ingest/liveness.ts`.
+- **Dead-man heartbeat.** `ci.yml`'s `build` job runs `scripts/publication-liveness.ts`, which passes
+  only when `publicationStalled()` says the newest `lastSuccessAt` is under 30 hours old (and some
+  source has succeeded at all). `pages` then pings the URL in the `DEADMAN_PING_URL` secret after a
+  successful deploy. An external monitor alerts when pings stop, which covers a stopped refresh, a
+  red CI holding back deploys and a failed Pages deploy alike. Without the secret the step is a
+  no-op. Operator setup: a healthchecks.io check with period 12 hours and grace about 18 hours, so it
+  alerts after roughly 30 hours without a ping, the same threshold as `publicationStalled()`.
 
 **The fact has to reach the feed, because the runner is not the only thing that judges a zero.**
 `scripts/build-feed.ts` parses the same snapshot again and records a `SourceHealth` per source, and
