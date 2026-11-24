@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { cp, mkdir, mkdtemp, rm, symlink } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, symlink } from "node:fs/promises";
+import { stageSnapshotFixtures } from "./helpers/snapshot-fixtures.ts";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { ADAPTERS, adapterById } from "../src/ingest/adapters/index.ts";
@@ -257,7 +258,7 @@ test("actual offline full feed preserves unrelated events/conflicts and every re
   try {
     await mkdir(join(dir, "data"));
     for (const path of ["fixtures", "data/reviewed", "data/presentation"]) await symlink(join(root, path), join(dir, path));
-    await cp(join(root, "snapshots"), join(dir, "snapshots"), { recursive: true });
+    stageSnapshotFixtures(join(dir, "snapshots"));
     for (const suffix of ["xml", "meta.json", "state.json"]) await rm(join(dir, "snapshots", `${adapter.id}.${suffix}`), { force: true });
     const clock = join(dir, "clock.ts");
     await Bun.write(clock, `const Original=Date; globalThis.Date=class extends Original { constructor(v?:string|number) { super(v??${JSON.stringify(now)}); } static now() { return Original.parse(${JSON.stringify(now)}); } } as DateConstructor;`);

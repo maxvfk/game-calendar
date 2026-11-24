@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { stageSnapshotFixtures } from "./helpers/snapshot-fixtures.ts";
 import { mkdtempSync, mkdirSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -280,9 +281,12 @@ test("actual offline build includes queue, rejects malformed registry, applies s
   try {
     mkdirSync(join(dir, "data/presentation"), { recursive: true });
     mkdirSync(join(dir, "public/data"), { recursive: true });
-    for (const path of ["fixtures", "snapshots", "data/reviewed", "data/presentation/timeline-label-preferences.v1.json"]) symlinkSync(join(root, path), join(dir, path));
+    for (const path of ["fixtures", "data/reviewed", "data/presentation/timeline-label-preferences.v1.json"]) symlinkSync(join(root, path), join(dir, path));
+    stageSnapshotFixtures(join(dir, "snapshots"));
     const path = join(dir, "data/presentation/timeline-labels.v1.json");
-    const build = () => Bun.spawnSync([process.execPath, join(root, "scripts/build-feed.ts")], { cwd: dir });
+    const build = () => Bun.spawnSync([process.execPath, join(root, "scripts/build-feed.ts")], {
+      cwd: dir, env: { ...process.env, SNAPSHOT_DIR: join(dir, "snapshots") },
+    });
     await Bun.write(path, JSON.stringify(empty));
     let run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);
     const original = EventFeed.parse(await Bun.file(join(dir, "public/data/events.v1.json")).json());

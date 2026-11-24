@@ -4,9 +4,12 @@ import { parseKqmHsrNews } from "../src/ingest/parsers/kqm-hsrnews.ts";
 import { parseNteSteamNews } from "../src/ingest/parsers/nte-steamnews.ts";
 import { parseWuwaKuroAtom, wuwaEventSections } from "../src/ingest/parsers/wuwa-kuro-atom.ts";
 import { parseZzzSteamRss } from "../src/ingest/parsers/zzz-steam-rss.ts";
+import { adapterById } from "../src/ingest/adapters/index.ts";
 import { LIMITS, sanitizeEvents } from "../src/ingest/sanitize.ts";
+import { SnapshotStore } from "../src/ingest/snapshots.ts";
 import type { GachaEvent } from "../src/shared/schema.ts";
 import { originalTimelineIdentity } from "../src/shared/timelineIdentity.ts";
+import { liveSnapshotTest } from "./helpers/live-snapshots.ts";
 
 const NOW = "2026-11-21T12:00:00.000Z";
 
@@ -40,6 +43,20 @@ function assertCleanContext(events: readonly GachaEvent[], sourceId: string) {
       expect(e.summary).not.toMatch(/<\/?[a-z][^>]*>|\[\/?(?:p|b|i|u|url|img)\b|!\[[^\]]*\]\(/i);
     }
   }
+}
+
+function assertGenshinPhaseIContext(events: readonly GachaEvent[]) {
+  const furina = events.find(e => e.title === "Chanson of Many Waters");
+  if (furina) expect(furina.recognitionSubjects).toEqual(["Furina"]);
+  const weapon = events.find(e => e.title === "Epitome Invocation — Version 7.2 Phase I");
+  if (weapon) expect(weapon.recognitionSubjects).toEqual(["Starsealed Edict", "Splendor of Tranquil Waters"]);
+  const chronicled = events.find(e => e.title === "Names Forged Beneath Blazing Skies");
+  if (chronicled) {
+    expect(chronicled.recognitionSubjects).toBeUndefined();
+    expect(chronicled.summary).toContain("Varesa");
+  }
+  const archon = events.find(e => e.title === "Hour of Ruin — Limited-Time Archon Quest Rewards");
+  if (archon) expect(archon.summary).toContain("Archon Quest");
 }
 
 describe("PR #1 parser context — baseline ID/date/precision invariance", () => {
@@ -219,20 +236,10 @@ describe("PR #1 parser context — recognitionSubjects and factual summaries", (
     expect(missive.summary).not.toContain("Intertwined Fate");
     expect(starlight.summary).toBeNull();
 
-    const snap = (await Bun.file("snapshots/genshin-kqm-ginews.md").text()).replace(/\r\n/g, "\n");
-    const snapEvents = parseKqmGinNews(snap, ctx);
+    const capture = (await Bun.file("test/fixtures/genshin/snapshots-418d518/genshin-kqm-ginews.md").text()).replace(/\r\n/g, "\n");
+    const snapEvents = parseKqmGinNews(capture, ctx);
     assertCleanContext(snapEvents, ctx.sourceId);
-    const furina = snapEvents.find(e => e.title === "Chanson of Many Waters");
-    if (furina) expect(furina.recognitionSubjects).toEqual(["Furina"]);
-    const weapon = snapEvents.find(e => e.title === "Epitome Invocation — Version 7.2 Phase I");
-    if (weapon) expect(weapon.recognitionSubjects).toEqual(["Starsealed Edict", "Splendor of Tranquil Waters"]);
-    const chronicled = snapEvents.find(e => e.title === "Names Forged Beneath Blazing Skies");
-    if (chronicled) {
-      expect(chronicled.recognitionSubjects).toBeUndefined();
-      expect(chronicled.summary).toContain("Varesa");
-    }
-    const archon = snapEvents.find(e => e.title === "Hour of Ruin — Limited-Time Archon Quest Rewards");
-    if (archon) expect(archon.summary).toContain("Archon Quest");
+    assertGenshinPhaseIContext(snapEvents);
   });
 
   test("WuWa Kuro Atom extracts banner subjects and non-banner summaries identically across canonical/evidence modes", async () => {
@@ -246,9 +253,13 @@ describe("PR #1 parser context — recognitionSubjects and factual summaries", (
     expect(evCanonical.find(e => e.title === "Spectrum Blaster")?.recognitionSubjects).toEqual(["Spectrum Blaster"]);
     expect(originalTimelineIdentity(evCanonical.find(e => e.title === "Tomorrow in the Frame")!)).toBe("Lucilla");
     expect(evCanonical.find(e => e.title === "Echo Erase")?.summary).toContain("tapping Echo Pieces away");
+  });
 
+  liveSnapshotTest("[live snapshots] WuWa parser and evidence sections agree", async () => {
+    const ctx = { now: NOW, sourceUrl: "https://api.github.com/repos/TheLovinator1/wutheringwaves/contents/articles_latest.xml", sourceId: "wuwa-kuro-mirror", game: "wuwa" as const };
     const snap = (await Bun.file("snapshots/wuwa-kuro-mirror.xml").text()).replace(/\r\n/g, "\n");
     const canonical = parseWuwaKuroAtom(snap, ctx);
+    expect(canonical.length).toBeGreaterThan(0);
     assertCleanContext(canonical, ctx.sourceId);
     const sections = wuwaEventSections(snap, ctx, true);
     for (const row of canonical) {
@@ -279,9 +290,13 @@ describe("PR #1 parser context — recognitionSubjects and factual summaries", (
     const lwEvents = parseKqmHsrNews(lightwardRaw, ctx);
     assertCleanContext(lwEvents, ctx.sourceId);
     expect(lwEvents.filter(e => e.type === "challenge").every(e => e.summary === null)).toBe(true);
+  });
 
+  liveSnapshotTest("[live snapshots] HSR parser context and Nameless Honor summary stay clean", async () => {
+    const ctx = { now: NOW, sourceUrl: "https://api.github.com/repos/KQM-git/HSRNews/contents/readme.md", sourceId: "hsr-kqm-hsrnews", game: "hsr" as const };
     const snap = (await Bun.file("snapshots/hsr-kqm-hsrnews.md").text()).replace(/\r\n/g, "\n");
     const events = parseKqmHsrNews(snap, ctx);
+    expect(events.length).toBeGreaterThan(0);
     assertCleanContext(events, ctx.sourceId);
     const nh = events.find(e => e.title.includes("Nameless Honor"));
     if (nh) {
@@ -297,9 +312,6 @@ describe("PR #1 parser context — recognitionSubjects and factual summaries", (
     assertCleanContext(fixEvents, ctx.sourceId);
     expect(fixEvents.find(e => e.title === "Trails of the Hobbling Crow")?.summary).toContain("Nightfall, poison");
     expect(fixEvents.find(e => e.title === "The Great En-Nah Giveaway!")?.summary).toContain("Encrypted Master Tape");
-
-    const snap = (await Bun.file("snapshots/zzz-steam-events-official.xml").text()).replace(/\r\n/g, "\n");
-    assertCleanContext(parseZzzSteamRss(snap, ctx), ctx.sourceId);
   });
 
   test("NTE Steam News extracts board character subjects, Arc subjects, and event details", async () => {
@@ -315,11 +327,31 @@ describe("PR #1 parser context — recognitionSubjects and factual summaries", (
     expect(originalTimelineIdentity(events.find(e => e.title === "The Ichi-daime")!)).toBe("Nanally");
     expect(events.find(e => e.title === "Volley Star")?.summary).toContain("Summer Glow");
     expect(events.find(e => e.type === "maintenance")?.summary).toBe("Scheduled maintenance; actual completion may vary.");
+  });
 
-    const snap = await Bun.file("snapshots/nte-steamnews-official.json").text();
-    assertCleanContext(parseNteSteamNews(snap, ctx), ctx.sourceId);
+  for (const [game, sourceId, sourceUrl, extension, parse] of [
+    ["genshin", "genshin-kqm-ginews", "https://api.github.com/repos/KQM-git/GINews/contents/readme.md", "md", parseKqmGinNews],
+    ["zzz", "zzz-steam-events-official", "https://steamcommunity.com/games/4162040/rss/", "xml", parseZzzSteamRss],
+    ["nte", "nte-steamnews-official", "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/", "json", parseNteSteamNews],
+  ] as const) liveSnapshotTest(`[live snapshots] ${sourceId} yields events with clean parser context`, async () => {
+    const snap = (await Bun.file(`snapshots/${sourceId}.${extension}`).text()).replace(/\r\n/g, "\n");
+    const events = parse(snap, { now: NOW, sourceUrl, sourceId, game });
+    expect(events.length).toBeGreaterThan(0);
+    assertCleanContext(events, sourceId);
+    if (game === "genshin") assertGenshinPhaseIContext(events);
   });
 });
+
+// The full-feed regressions use frozen inputs for these sources too.
+for (const sourceId of ["endfield-wikigg-echoes", "nte-ntebuild-btr", "zzz-zenlessgg-banners"]) {
+  liveSnapshotTest(`[live snapshots] ${sourceId} still parses through its adapter`, async () => {
+    const adapter = adapterById(sourceId)!;
+    const snapshot = await new SnapshotStore("snapshots").read(sourceId);
+    expect(snapshot).not.toBeNull();
+    const events = adapter.parse(snapshot!.html, { game: adapter.game, sourceId, sourceUrl: snapshot!.meta.url, now: NOW });
+    expect(events.length).toBeGreaterThan(0);
+  });
+}
 
 describe("PR #1 review regressions — fail-safe context extraction", () => {
   test("blank or >200-char recognitionSubjects omit context instead of failing GachaEvent.parse()", async () => {

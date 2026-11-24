@@ -37,3 +37,14 @@ No source was fetched. This pins the existing historical parser assertions
 their expected dates, IDs or fail-closed behavior. It is test-only, never a
 production fallback. The four failures also reproduced on unchanged current
 main before this fixture pin.
+
+## Offline feed replay at `418d518`
+
+`snapshots-418d518/` pins the source input from this repository's Git history. The matching `.meta.json` files are complete copies from the same commit and keep the recorded capture times and source URLs. SHA-256 below refers to the committed bytes. The production fallback does not use these files.
+
+- `snapshots/genshin-kqm-ginews.md` from https://api.github.com/repos/KQM-git/GINews/contents/readme.md.
+  Full-body SHA-256 `62446ca5ddf65d81839ce9ddc1dee2f775673f681902dcbaa52d78663ad05b14`.
+  Complete body.
+  Metadata SHA-256 `a99db574f5f0d519107a161feaa9c8cc67b3abd6acafc7e29af1a9eb1942c258`.
+
+Attribution: HoYoverse in-game notices via the KQM GINews archive. The mirror declares no licence. See `docs/research/coverage-genshin.md`. Source material remains subject to its original terms as stated in `NOTICE`.

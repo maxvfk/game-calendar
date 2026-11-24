@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { liveSnapshotTest } from "./helpers/live-snapshots.ts";
 import { mergeEvents } from "../src/ingest/merge.ts";
 import { parseWikiGgEventsPage } from "../src/ingest/parsers/wikigg.ts";
 import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
@@ -112,7 +113,7 @@ test("captured November Sanity Supply disagreement remains visible and keeps the
   }
 });
 
-test("current Endfield snapshot exposes only known conflicts and keeps stable IDs and reviewed winners", async () => {
+liveSnapshotTest("[live snapshots] current Endfield snapshot exposes only known conflicts and keeps stable IDs and reviewed winners", async () => {
   const html = await Bun.file("snapshots/endfield-wikigg-events.html").text();
   const wiki = parseWikiGgEventsPage(html, novemberWikiContext);
   const { events: reviewed } = materializeReviewedBatch(await Bun.file("data/reviewed/endfield.json").json());

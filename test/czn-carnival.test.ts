@@ -32,7 +32,7 @@ test('Carnival carries the free-attempt warning once; Aether retains its earlier
 });
 
 test('healthy banner-only source keeps the two reviewed reward windows once and other winners unchanged', async () => {
-  const parsed=parsePrydwenCzn(await Bun.file('snapshots/czn-prydwen-banners.html').text(), {game:'czn',sourceId:'czn-prydwen-banners',sourceUrl:'https://www.prydwen.gg/chaos-zero-nightmare/banners',now:'2026-10-28T12:00:00.000Z'});
+  const parsed=parsePrydwenCzn(await Bun.file('test/fixtures/czn/snapshots-418d518/czn-prydwen-banners.html').text(), {game:'czn',sourceId:'czn-prydwen-banners',sourceUrl:'https://www.prydwen.gg/chaos-zero-nightmare/banners',now:'2026-10-28T12:00:00.000Z'});
   expect(parsed.every(e=>e.type==='banner')).toBe(true);
   const before=mergeEvents([reviewed.filter(e=>!ids.includes(e.id)),parsed]);
   const after=mergeEvents([reviewed,parsed,cards]);

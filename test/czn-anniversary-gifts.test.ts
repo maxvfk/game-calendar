@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { liveSnapshotTest } from "./helpers/live-snapshots.ts";
 import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 import { parsePrydwenCzn } from "../src/ingest/parsers/prydwen-czn.ts";
 import { mergeEvents } from "../src/ingest/merge.ts";
@@ -47,10 +48,20 @@ test("every claim expires globally at its source minute, independent of the 18:0
   }
 });
 
-test("healthy banner-only source cannot remove reviewed gifts, alter old winners or duplicate claims", async () => {
-  const parsed = parsePrydwenCzn(await Bun.file("snapshots/czn-prydwen-banners.html").text(), {
+function parseBanners(body: string) {
+  return parsePrydwenCzn(body, {
     now: "2026-10-28T12:00:00.000Z", sourceId: "czn-prydwen-banners", game: "czn",
     sourceUrl: "https://www.prydwen.gg/chaos-zero-nightmare/banners" });
+}
+
+liveSnapshotTest("[live snapshots] CZN yields only banners and is nonempty", async () => {
+  const parsed = parseBanners(await Bun.file("snapshots/czn-prydwen-banners.html").text());
+  expect(parsed.length).toBeGreaterThan(0);
+  expect(parsed.every(e => e.type === "banner")).toBe(true);
+});
+
+test("healthy banner-only source cannot remove reviewed gifts, alter old winners or duplicate claims", async () => {
+  const parsed = parseBanners(await Bun.file("test/fixtures/czn/snapshots-418d518/czn-prydwen-banners.html").text());
   expect(parsed.length).toBeGreaterThan(0);
   expect(parsed.every(e => e.type === "banner")).toBe(true);
   const before = mergeEvents([reviewed.filter(e => !ids.has(e.id)), parsed]);

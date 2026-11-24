@@ -27,3 +27,14 @@ Source: https://api.github.com/repos/TheLovinator1/wutheringwaves/contents/artic
 No source was fetched. `articles_latest` is a rolling window, so this pins
 notice 5571 and the 11-event / 7-baseline counts against turnover. Test-only;
 never a production fallback.
+
+## Offline feed replay at `418d518`
+
+`snapshots-418d518/` pins the source input from this repository's Git history. The matching `.meta.json` files are complete copies from the same commit and keep the recorded capture times and source URLs. SHA-256 below refers to the committed bytes. The production fallback does not use these files.
+
+- `snapshots/wuwa-kuro-mirror.xml` from https://api.github.com/repos/TheLovinator1/wutheringwaves/contents/articles_latest.xml.
+  Full-body SHA-256 `501571fde04119c017c7234c7435bf1e0f45a74737bcfa943a0ce2635318c675`.
+  Complete body.
+  Metadata SHA-256 `cd85ad3a22db9ac90d277893a3f7d3f39f92c20e3b867dcd42a7f0eaa2dda866`.
+
+Attribution: Kuro Games for the original notices, linked in the Atom entries, and TheLovinator1 for the mirror. The mirror declares no licence. See `docs/research/coverage-wuwa.md`. Source material remains subject to its original terms as stated in `NOTICE`.

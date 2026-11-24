@@ -55,6 +55,17 @@ jobs:
         # the code changed, never that a source was unreachable.
         run: bun test
 
+      - name: Live snapshot drift (non-blocking)
+        continue-on-error: true
+        run: |
+          if bun run test:live; then
+            exit 0
+          else
+            status=$?
+            echo "::warning::Live snapshot drift checks failed. See the test output for details."
+            exit "$status"
+          fi
+
       - name: Build feed
         run: bun run build:feed
 

@@ -34,7 +34,7 @@ test("UTC expiry is identical in all regions; gift mail06:00 and daily18:00 stay
 });
 
 test("healthy incomplete banner source retains Overdrive once, reviewed priority and all prior winners", async () => {
-  const parsed = parsePrydwenCzn(await Bun.file("snapshots/czn-prydwen-banners.html").text(), {
+  const parsed = parsePrydwenCzn(await Bun.file("test/fixtures/czn/snapshots-418d518/czn-prydwen-banners.html").text(), {
     now: "2026-10-28T12:00:00.000Z", sourceId: "czn-prydwen-banners", game: "czn", sourceUrl: "https://www.prydwen.gg/chaos-zero-nightmare/banners" });
   expect(parsed.every(e => e.type === "banner")).toBe(true);
   expect(parsed.some(e => e.id === id)).toBe(false);

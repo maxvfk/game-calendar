@@ -18,3 +18,14 @@ and `snapshots/` and cannot become feed fallbacks. No new network refresh was ru
 Original transport: https://api.github.com/repos/KQM-git/HSRNews/contents/readme.md
 and attributed dated archive links within the captures. The turnover test proves
 that this new announcement adds one event without changing historical winners.
+
+## Offline feed replay at `418d518`
+
+`snapshots-418d518/` pins the source input from this repository's Git history. The matching `.meta.json` files are complete copies from the same commit and keep the recorded capture times and source URLs. SHA-256 below refers to the committed bytes. The production fallback does not use these files.
+
+- `snapshots/hsr-kqm-hsrnews.md` from https://api.github.com/repos/KQM-git/HSRNews/contents/readme.md.
+  Full-body SHA-256 `57448bf3563ab0a12eba2c35ecf216f0cacb13d4eeaa1fda9fe3916ed7b0aa6e`.
+  Complete body.
+  Metadata SHA-256 `d6a48a90fafd5ff994caeca2a5512b574b3126ed851e6b8376acee742358685f`.
+
+Attribution: HoYoverse in-game notices via the KQM HSRNews archive. The mirror declares no licence. See `docs/research/coverage-hsr.md`. Source material remains subject to its original terms as stated in `NOTICE`.

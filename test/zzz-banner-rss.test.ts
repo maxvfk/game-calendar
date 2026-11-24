@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
-import { cp, mkdir, mkdtemp, rm, symlink, unlink } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, symlink, unlink } from "node:fs/promises";
+import { stageSnapshotFixtures } from "./helpers/snapshot-fixtures.ts";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { ADAPTERS, adapterById } from "../src/ingest/adapters/index.ts";
@@ -164,7 +165,7 @@ test("full offline build preserves Steam E1, Shiyu/Deadly and every other prior 
   try {
     await mkdir(join(dir,"data"));
     for(const path of ["fixtures","data/reviewed","data/presentation"])await symlink(join(root,path),join(dir,path));
-    await cp(join(root,"snapshots"),join(dir,"snapshots"),{recursive:true});
+    stageSnapshotFixtures(join(dir,"snapshots"));
     for(const suffix of ["json","meta.json","state.json"])await rm(join(dir,"snapshots",`${ID}.${suffix}`),{force:true});
     const clock=join(dir,"clock.ts");
     await Bun.write(clock,`const Original=Date;globalThis.Date=class extends Original{constructor(v?:string|number){super(v??${JSON.stringify(NOW)});}static now(){return Original.parse(${JSON.stringify(NOW)});}} as DateConstructor;`);

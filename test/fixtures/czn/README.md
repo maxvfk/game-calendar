@@ -20,3 +20,14 @@ this repository at `12d29a7cf40634f4b1bc0a9dc601b1fb9d3c9bae`,
 `snapshots/czn-prydwen-banners.html`, full-body SHA-256
 `206ef748464eaeeca38a6ab143b7e9664dce25df53e4c6baafb299a31347eb6c`. Historical identity/precision assertions
 must not require cards to remain in rolling production snapshots after expiry.
+
+## Offline feed replay at `418d518`
+
+`snapshots-418d518/` pins the source input from this repository's Git history. The matching `.meta.json` files are complete copies from the same commit and keep the recorded capture times and source URLs. SHA-256 below refers to the committed bytes. The production fallback does not use these files.
+
+- `snapshots/czn-prydwen-banners.html` from https://www.prydwen.gg/chaos-zero-nightmare/banners.
+  Full-body SHA-256 `0a076103a240f4dabd14ea2fe41bf1e480d63c788e34ea7f01c4ab2bd71c832b`.
+  All eight complete <code>article[data-banner-card="true"]</code> blocks, in source order. Only intervening or surrounding bytes were omitted. Extract SHA-256 `fee5ead165dd5d9a907d0ba0181523d8a15b274227f8c222113b1510f8f8b5a2`.
+  Metadata SHA-256 `ece103a7bb817141f2ca93a06a0e7007723656a849b39365796635ce58c048d5`.
+
+Attribution: Prydwen, with game content attributed to its publisher as in `NOTICE`. Source material remains subject to its original terms as stated in `NOTICE`.

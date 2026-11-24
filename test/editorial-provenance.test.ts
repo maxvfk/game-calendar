@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { stageSnapshotFixtures } from "./helpers/snapshot-fixtures.ts";
 import { mkdtempSync, rmSync, mkdirSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -296,13 +297,16 @@ test("actual offline feed build and rollback rehearsal preserve every public JSO
   const dir = mkdtempSync(join(tmpdir(), "editorial-migration-build-"));
   try {
     for (const p of ["data/presentation", "public/data"]) mkdirSync(join(dir, p), { recursive: true });
-    for (const p of ["fixtures", "snapshots", "data/reviewed"]) symlinkSync(join(root, p), join(dir, p));
+    for (const p of ["fixtures", "data/reviewed"]) symlinkSync(join(root, p), join(dir, p));
+    stageSnapshotFixtures(join(dir, "snapshots"));
     symlinkSync(join(root, "data/presentation/timeline-label-preferences.v1.json"), join(dir, "data/presentation/timeline-label-preferences.v1.json"));
     await Bun.write(join(dir, REGISTRY_PATH), audit.raw);
     const clock = join(dir, "clock.ts");
     await Bun.write(clock, `const Original=Date; globalThis.Date=class extends Original { constructor(v?:string|number) { super(v??${JSON.stringify(ctx.now)}); } static now() { return Original.parse(${JSON.stringify(ctx.now)}); } } as DateConstructor;`);
     const build = async () => {
-      const r = Bun.spawnSync([process.execPath, "--preload", clock, join(root, "scripts/build-feed.ts")], { cwd: dir });
+      const r = Bun.spawnSync([process.execPath, "--preload", clock, join(root, "scripts/build-feed.ts")], {
+        cwd: dir, env: { ...process.env, SNAPSHOT_DIR: join(dir, "snapshots") },
+      });
       expect(r.exitCode, r.stderr.toString()).toBe(0);
       return await Promise.all(["events.v1.json", "timeline-label-queue.v1.json", "timeline-label-agent-input.v1.json", "review.v1.json"].map(p => Bun.file(join(dir, "public/data", p)).text()));
     };
