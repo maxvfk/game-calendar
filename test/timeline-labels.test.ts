@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { stageSnapshotFixtures } from "./helpers/snapshot-fixtures.ts";
-import { mkdtempSync, mkdirSync, rmSync, symlinkSync } from "node:fs";
+import { cpSync, mkdtempSync, mkdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { GachaEvent, eventId } from "../src/shared/schema.ts";
@@ -11,6 +11,7 @@ import { applyTimelineLabels, buildTimelineQueue, labelDiagnostics, queueBytes, 
   TimelineRegistry, validateTimelineProposals, type TimelineDecision } from "../src/presentation/timeline-labels.ts";
 import { mergeEvents } from "../src/ingest/merge.ts";
 import { TimelineLabelPreferences, bundleTimelineLabelAgentInput } from "../src/presentation/timeline-label-agent-input.ts";
+import { RussianGlossary, loadRussianGlossary } from "../src/presentation/timeline-label-glossary.ts";
 
 const AT = "2026-10-25T00:00:00.000Z";
 const empty = { schemaVersion: 1 as const, decisions: [] };
@@ -29,6 +30,55 @@ const decision = (kind: TimelineDecision["decision"] = "label", event = base): T
     : kind === "needs_research" ? { decision: kind, reason: "Need sourced phase identity" } : { decision: kind }),
 });
 const registry = (...decisions: unknown[]) => ({ schemaVersion: 1, decisions });
+
+test("Russian glossaries validate entries and default to empty for a missing game file", async () => {
+  const entry = { en: "Sample Mode", ru: "Режим А", kind: "mode" } as const;
+  expect(RussianGlossary.parse([entry])).toEqual([entry]);
+  for (const invalid of [{ ...entry, kind: "banner" }, { ...entry, ru: "" }, { ...entry, extra: true }]) {
+    expect(RussianGlossary.safeParse([invalid]).success).toBe(false);
+  }
+  expect(await loadRussianGlossary("zzz", join(import.meta.dir, "missing-glossary-fixtures"))).toEqual([]);
+});
+
+test("CLI defaults to English bytes and uses Russian inputs for queue, validate and accept", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "timeline-label-cli-"));
+  try {
+    const target = { ...base, titleRu: "Название события", timelineTitleRu: "Предыдущая подпись" };
+    const input = feed([target]);
+    const english = registry(decision("keep_original", target));
+    mkdirSync(join(dir, "data/presentation"), { recursive: true });
+    mkdirSync(join(dir, "public/data"), { recursive: true });
+    await Bun.write(join(dir, "public/data/events.v1.json"), JSON.stringify(input));
+    await Bun.write(join(dir, "data/presentation/timeline-labels.v1.json"), JSON.stringify(english));
+    await Bun.write(join(dir, "data/presentation/timeline-labels.ru.v1.json"), JSON.stringify(empty));
+    cpSync("data/presentation/timeline-label-preferences.ru.v1.json", join(dir, "data/presentation/timeline-label-preferences.ru.v1.json"));
+    const cli = (...args: string[]) => Bun.spawnSync(
+      [process.execPath, join(import.meta.dir, "../scripts/timeline-labels.ts"), ...args], { cwd: dir },
+    );
+    const queueArgs = ["queue", "public/data/events.v1.json", AT];
+    const en = cli(...queueArgs);
+    expect(en.exitCode, en.stderr.toString()).toBe(0);
+    expect(en.stdout.toString()).toBe(queueBytes(buildTimelineQueue(input, english, AT)));
+    expect(en.stdout.toString()).toBe(cli("--lang", "en", ...queueArgs).stdout.toString());
+
+    const ru = cli("--lang", "ru", ...queueArgs);
+    expect(ru.exitCode, ru.stderr.toString()).toBe(0);
+    expect(JSON.parse(ru.stdout.toString()).events[0]).toMatchObject({
+      eventId: target.id, titleRu: target.titleRu, currentIdentity: target.titleRu,
+    });
+    const proposal = { ...decision("label", target), timelineTitle: "Antivirus Log: Bangboo Repair" };
+    await Bun.write(join(dir, "proposals.json"), JSON.stringify(registry(proposal)));
+    const refused = cli("--lang", "ru", "validate", "proposals.json");
+    expect(refused.exitCode).toBe(1);
+    expect(refused.stdout.toString()).toContain("Russian label needs an in-game anchor");
+    const anchored = { ...proposal, timelineTitle: target.titleRu };
+    await Bun.write(join(dir, "proposals.json"), JSON.stringify(registry(anchored)));
+    const accepted = cli("--lang", "ru", "accept", "proposals.json", "candidate.json", "report.json");
+    expect(accepted.exitCode, accepted.stderr.toString()).toBe(0);
+    expect(await Bun.file(join(dir, "candidate.json")).json()).toEqual(registry(anchored));
+    expect(await Bun.file(join(dir, "data/presentation/timeline-labels.v1.json")).json()).toEqual(english);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
 
 describe("memory-independent editorial agent bundle", () => {
   test("includes canonical versioned naming preferences without changing the L1 queue", async () => {
@@ -105,7 +155,8 @@ describe("semantic SHA256 contract", () => {
     expect(semanticFingerprint({ ...base, endsAt: "2026-11-01T00:00:00Z", startPrecision: "day",
       updatedAt: "2026-11-02T00:00:00Z", firstSeenAt: "2026-01-01T00:00:00Z", version: 9,
       regionScoped: true, regionEnds: { asia: AT }, sourceId: "another", sourceUrl: "https://example.test/other",
-      provenanceStatus: "estimated", titleRu: "Локальное название", timelineTitle: "new copy" })).toBe(semanticFingerprint(base));
+      provenanceStatus: "estimated", titleRu: "Локальное название", timelineTitle: "new copy",
+      timelineTitleRu: "Новая подпись" })).toBe(semanticFingerprint(base));
   });
   for (const patch of [{ id: "hsr:new-season:2026-11-01" }, { game: "zzz" }, { type: "challenge" },
     { title: "Official · Phase III" }, { summary: "Genuine revised description" },
@@ -176,6 +227,9 @@ describe("final-feed application and repeat suppression", () => {
     expect(timelineIdentity({ ...custom, timelineTitle: "ignored" })).toBe(base.title);
     // DisplayEvent's null source URL cannot cross the public EventFeed boundary.
     expect(GachaEvent.safeParse(custom).success).toBe(false);
+    const sourceMarkedCustom = { ...base, sourceId: "you", timelineTitleRu: "Чужая подпись" };
+    expect(applyTimelineLabels([sourceMarkedCustom], registry(decision("label", sourceMarkedCustom)), "ru")[0])
+      .not.toHaveProperty("timelineTitleRu");
   });
 });
 
@@ -281,7 +335,9 @@ test("actual offline build includes queue, rejects malformed registry, applies s
   try {
     mkdirSync(join(dir, "data/presentation"), { recursive: true });
     mkdirSync(join(dir, "public/data"), { recursive: true });
-    for (const path of ["fixtures", "data/reviewed", "data/presentation/timeline-label-preferences.v1.json"]) symlinkSync(join(root, path), join(dir, path));
+    for (const path of ["fixtures", "data/reviewed", "data/presentation/timeline-label-preferences.v1.json"]) {
+      cpSync(join(root, path), join(dir, path), { recursive: true });
+    }
     stageSnapshotFixtures(join(dir, "snapshots"));
     const path = join(dir, "data/presentation/timeline-labels.v1.json");
     const build = () => Bun.spawnSync([process.execPath, join(root, "scripts/build-feed.ts")], {
@@ -303,14 +359,25 @@ test("actual offline build includes queue, rejects malformed registry, applies s
     // A fixed final feed + registry + time replays to exactly the built bytes.
     for (let n = 0; n < 2; n++) expect(queueBytes(buildTimelineQueue(JSON.parse(JSON.stringify(original)), empty, original.generatedAt))).toBe(generated);
     const target = original.events.find(e => e.provenanceStatus !== "leak")!;
+    const other = original.events.find(e => e.id !== target.id && e.provenanceStatus !== "leak")!;
     const input = registry({ ...decision("label", target), timelineTitle: "Synthetic acceptance label" });
     await Bun.write(path, JSON.stringify(input));
+    const ruPath = join(dir, "data/presentation/timeline-labels.ru.v1.json");
+    await Bun.write(ruPath, JSON.stringify(registry(
+      { ...decision("label", target), timelineTitle: "Проверочная подпись" },
+      { ...decision("label", other), fingerprint: `sha256:${"0".repeat(64)}`, timelineTitle: "Устаревшая подпись" },
+    )));
     run = build(); expect(run.exitCode, run.stderr.toString()).toBe(0);
     const after = EventFeed.parse(await Bun.file(join(dir, "public/data/events.v1.json")).json());
     expect(after.events.map(e => e.id)).toEqual(original.events.map(e => e.id));
     expect(after.events.find(e => e.id === target.id)?.timelineTitle).toBe("Synthetic acceptance label");
+    expect(after.events.find(e => e.id === target.id)?.timelineTitleRu).toBe("Проверочная подпись");
+    expect(after.events.find(e => e.id === other.id)?.timelineTitleRu).toBeUndefined();
     expect(after.events.find(e => e.id === target.id)?.title).toBe(target.title);
+    await Bun.write(ruPath, JSON.stringify({ ...empty, schemaVersion: 2 }));
+    expect(build().exitCode).not.toBe(0);
+    await Bun.write(ruPath, JSON.stringify(empty));
     await Bun.write(path, JSON.stringify({ ...empty, schemaVersion: 2 }));
     expect(build().exitCode).not.toBe(0);
   } finally { rmSync(dir, { recursive: true, force: true }); }
-});
+}, 15_000);

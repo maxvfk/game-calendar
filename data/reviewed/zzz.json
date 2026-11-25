@@ -6,7 +6,8 @@
   "statesNoEvents": false,
   "events": [
     {
-      "title": "All-New Program",
+      "title": "All-New Program",
+      "titleRu": "Новая поставка",
       "type": "login",
       "summary": "Seven-day login event awarding Encrypted Master Tape ×10.",
       "startsAt": "2026-09-09T00:00:00.000Z",
@@ -24,7 +25,8 @@
       "confidence": 1
     },
     {
-      "title": "Angels Support Operation",
+      "title": "Angels Support Operation",
+      "titleRu": "С Ангелами вместе и навсегда",
       "type": "other",
       "summary": "Version event awarding a choice of limited outfits for the Angels of Delusion.",
       "startsAt": "2026-09-09T00:00:00.000Z",
@@ -188,7 +190,8 @@
       "confidence": 1
     },
     {
-      "title": "\"En-Nah\" Into Your Lap",
+      "title": "\"En-Nah\" Into Your Lap",
+      "titleRu": "Эн-ноты прямо в руки",
       "type": "login",
       "summary": "Seven-day login event awarding Boopon ×10.",
       "startsAt": "2026-09-30T00:00:00.000Z",
@@ -224,7 +227,8 @@
       "confidence": 1
     },
     {
-      "title": "Data Bounty: Combat Simulation",
+      "title": "Data Bounty: Combat Simulation",
+      "titleRu": "Зал боевой симуляции: данные в награду",
       "type": "other",
       "summary": "Limited-time double-reward event for Combat Simulation.",
       "startsAt": "2026-10-14T00:00:00.000Z",
@@ -315,7 +319,8 @@
     },
     {
       "reviewedAt": "2026-10-26T22:23:02.863Z",
-      "title": "All-New Program",
+      "title": "All-New Program",
+      "titleRu": "Новая поставка",
       "type": "login",
       "summary": "Log in on seven days during Version 3.3 to earn Encrypted Master Tape ×10.",
       "startsAt": "2026-10-21T00:00:00.000Z",
@@ -334,7 +339,8 @@
     },
     {
       "reviewedAt": "2026-10-26T22:23:02.863Z",
-      "title": "Spooky Funhouse Tales",
+      "title": "Spooky Funhouse Tales",
+      "titleRu": "Байки из Дома ужасов",
       "type": "other",
       "summary": "Limited-time funhouse event with Mission and Challenge stages; rewards include Candlelit Scheme W-Engine and Proxy accessories.",
       "startsAt": "2026-10-22T00:00:00.000Z",
@@ -353,7 +359,8 @@
     },
     {
       "reviewedAt": "2026-10-26T22:23:02.863Z",
-      "title": "Cyber Miracle Healer, on Duty!",
+      "title": "Cyber Miracle Healer, on Duty!",
+      "titleRu": "Будни киберлекаря",
       "type": "other",
       "summary": "Repair virus-infected Bangboo in daily Antivirus Log stages; rewards include Polychromes, Boopons and upgrade materials.",
       "startsAt": "2026-10-28T00:00:00.000Z",
@@ -391,7 +398,8 @@
     },
     {
       "reviewedAt": "2026-10-26T22:23:02.863Z",
-      "title": "\"En-Nah\" Into Your Lap",
+      "title": "\"En-Nah\" Into Your Lap",
+      "titleRu": "Эн-ноты прямо в руки",
       "type": "login",
       "summary": "Log in for seven days to earn Boopon ×10.",
       "startsAt": "2026-11-11T00:00:00.000Z",
@@ -410,7 +418,8 @@
     },
     {
       "reviewedAt": "2026-10-26T22:23:02.863Z",
-      "title": "Trails of the Hobbling Crow",
+      "title": "Trails of the Hobbling Crow",
+      "titleRu": "Приключения «Хромой вороны»",
       "type": "story",
       "summary": "Limited-time mystery event featuring a detective and the Hobbling Crow.",
       "startsAt": "2026-11-11T00:00:00.000Z",
@@ -429,7 +438,8 @@
     },
     {
       "reviewedAt": "2026-10-26T22:23:02.863Z",
-      "title": "Repair! Drifting Art",
+      "title": "Repair! Drifting Art",
+      "titleRu": "Реставратор для передаваторов",
       "type": "other",
       "summary": "Limited-time event to help restore a damaged Bangboo art collection.",
       "startsAt": "2026-11-16T00:00:00.000Z",
@@ -448,7 +458,8 @@
     },
     {
       "reviewedAt": "2026-10-26T22:23:02.863Z",
-      "title": "Data Bounty: Combat Simulation",
+      "title": "Data Bounty: Combat Simulation",
+      "titleRu": "Зал боевой симуляции: данные в награду",
       "type": "other",
       "summary": "Limited-time double rewards for Combat Simulation.",
       "startsAt": "2026-11-25T00:00:00.000Z",
@@ -555,7 +566,8 @@
     },
     {
       "reviewedAt": "2026-10-26T22:23:02.863Z",
-      "title": "The Final Callback - Audition Stage",
+      "title": "The Final Callback - Audition Stage",
+      "titleRu": "Последняя проба",
       "type": "challenge",
       "recognitionSubjects": [
         "Phoenix",
@@ -578,7 +590,8 @@
     },
     {
       "id": "zzz:new-eridu-city-fund-version-3-3:2026-10-21",
-      "title": "New Eridu City Fund — Version 3.3",
+      "title": "New Eridu City Fund — Version 3.3",
+      "titleRu": "Фонд Риду (версия 3.3)",
       "type": "other",
       "summary": "Main reward period: complete tasks and claim City Fund rewards until November 30 at 03:59 server time. Opens after the Version 3.3 update; no maintenance completion time is inferred.",
       "endsAt": "2026-11-29T19:59:00.000Z",
@@ -616,7 +629,8 @@
     },
     {
       "reviewedAt": "2026-11-13T09:56:07.000Z",
-      "title": "Answers in the Wind",
+      "title": "Answers in the Wind",
+      "titleRu": "Ветер даст ответ",
       "type": "banner",
       "recognitionSubjects": [
         "Severian"
@@ -638,7 +652,8 @@
     },
     {
       "reviewedAt": "2026-11-13T09:56:07.000Z",
-      "title": "Incarcerating Grip",
+      "title": "Incarcerating Grip",
+      "titleRu": "Карательный захват",
       "type": "banner",
       "recognitionSubjects": [
         "Incarcerating Grip"
@@ -660,7 +675,8 @@
     },
     {
       "reviewedAt": "2026-11-13T09:56:07.000Z",
-      "title": "Outlier of Prodigies",
+      "title": "Outlier of Prodigies",
+      "titleRu": "Гений по самые уши",
       "type": "banner",
       "recognitionSubjects": [
         "Norma"
@@ -682,7 +698,8 @@
     },
     {
       "reviewedAt": "2026-11-13T09:56:07.000Z",
-      "title": "Chief Sidekick",
+      "title": "Chief Sidekick",
+      "titleRu": "Старший ассистент",
       "type": "banner",
       "recognitionSubjects": [
         "Chief Sidekick"
@@ -704,7 +721,8 @@
     },
     {
       "reviewedAt": "2026-11-13T09:56:07.000Z",
-      "title": "The Final Callback - Audition Stage",
+      "title": "The Final Callback - Audition Stage",
+      "titleRu": "Последняя проба",
       "type": "challenge",
       "recognitionSubjects": [
         "Severian",

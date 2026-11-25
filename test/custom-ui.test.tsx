@@ -906,6 +906,20 @@ describe("the derived-boundary note", () => {
     expect(html).toContain('aria-label="Walpurgisnacht"');
   });
 
+  test("Russian detail keeps both official titles when its heading is the reviewed label", () => {
+    const official = { ...PARSED, titleRu: "Название события" };
+    const labelled = { ...official, timelineTitleRu: "Краткая подпись" };
+    const details = (event: DisplayEvent) => render(<EventDetail {...detailProps} labelLanguage="ru"
+      row={{ event, clock: clockFor(event, detailProps.region, NOW) }} />);
+    const html = details(labelled);
+    expect(html).toMatch(/<h2[^>]*>Краткая подпись<\/h2>/);
+    expect(html).toContain('Russian title: <span lang="ru" class="text-muted">Название события</span>');
+    expect(html).toContain('Original title: <span class="text-muted">Walpurgisnacht</span>');
+    const fallback = details(official);
+    expect(fallback).toMatch(/<h2[^>]*>Название события<\/h2>/);
+    expect(fallback).not.toContain("Russian title");
+  });
+
   test("a reader's own event never takes a Timeline label", () => {
     const own = { ...asDisplayEvent(OWN), timelineTitle: "ignored" };
     const html = render(

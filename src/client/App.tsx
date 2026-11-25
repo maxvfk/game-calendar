@@ -129,7 +129,7 @@ export function App({ storageKeys, accountControl, passSessionCurrent = () => tr
   const [lastIgnored, setLastIgnored] = useState<{ id: string; title: string } | null>(null);
   const now = useNow();
   const online = useOnline();
-  const { prefs, update, toggleGame, restorePrefs } = usePrefs(storageKeys.prefs);
+  const { prefs, update, toggleGame, restorePrefs, labelLanguage, updateLabelLanguage } = usePrefs(storageKeys.prefs);
   // Their answer from the first run, or their last tap on the tabs. Reading it
   // from `prefs` is what stops a reload putting a timeline reader back on the
   // list they did not choose.
@@ -726,6 +726,8 @@ export function App({ storageKeys, accountControl, passSessionCurrent = () => tr
             onZoom={(timelineDayWidth) => update({ timelineDayWidth })}
             group={prefs.timelineGroup}
             onGroup={(timelineGroup) => update({ timelineGroup })}
+            labelLanguage={labelLanguage}
+            onLabelLanguage={updateLabelLanguage}
             // The board holds these back itself rather than being handed a
             // shorter list, so it can say how many are waiting when there is
             // nothing else left to draw. The switch is in settings.
@@ -837,6 +839,7 @@ export function App({ storageKeys, accountControl, passSessionCurrent = () => tr
         <EventDetail
           key={openRow.event.id}
           row={openRow}
+          labelLanguage={labelLanguage}
           completed={isDone(openRow.event.id)}
           ignored={isIgnored(openRow.event.id)}
           status={prog.progress[openRow.event.id]?.status}

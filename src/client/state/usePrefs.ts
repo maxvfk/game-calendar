@@ -3,7 +3,8 @@ import { isCustomGameId, type LaneId } from "../../shared/custom.ts";
 import type { Region } from "../../shared/schema.ts";
 import { guessRegion } from "../../shared/time.ts";
 import type { SortMode } from "./sort.ts";
-import { readJson, subscribeRemote, writeJson } from "./storage.ts";
+import { readJson, subscribeRemote, TIMELINE_LABEL_LANGUAGE_KEY, writeJson } from "./storage.ts";
+import type { TimelineLabelLanguage } from "../../shared/timelineIdentity.ts";
 import type { TimelineGroup } from "./lanes.ts";
 import { DEFAULT_THEME_CHOICE, type ThemeChoice } from "./theme.ts";
 import { DEFAULT_DAY_WIDTH, snapDayWidth } from "./zoom.ts";
@@ -365,6 +366,13 @@ export function restorePrefsValue(incoming: unknown): Prefs {
 }
 
 export function usePrefs(storageKey: string) {
+  const [labelLanguage, setLabelLanguage] = useState<TimelineLabelLanguage>(() =>
+    readJson<unknown>(TIMELINE_LABEL_LANGUAGE_KEY, "en") === "ru" ? "ru" : "en",
+  );
+  const updateLabelLanguage = useCallback((language: TimelineLabelLanguage) => {
+    writeJson(TIMELINE_LABEL_LANGUAGE_KEY, language);
+    setLabelLanguage(language);
+  }, []);
   const [prefs, setPrefs] = useState<Prefs>(() => {
     const stored = adoptRenamed(readJson<Partial<Prefs>>(storageKey, {}));
     return {
@@ -399,5 +407,5 @@ export function usePrefs(storageKey: string) {
     }));
   }, []);
 
-  return { prefs, update, toggleGame, restorePrefs };
+  return { prefs, update, toggleGame, restorePrefs, labelLanguage, updateLabelLanguage };
 }

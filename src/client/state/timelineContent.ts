@@ -2,11 +2,13 @@ import type { DisplayEvent } from "../../shared/custom.ts";
 import { dayOnlyEnd, type EventClock } from "../../shared/time.ts";
 import { categoryBadge } from "./eventCategories.ts";
 import type { TimelineGroup } from "./lanes.ts";
-import { originalTimelineIdentity, timelineIdentity } from "../../shared/timelineIdentity.ts";
+import { originalTimelineIdentity, timelineIdentity, type TimelineLabelLanguage } from "../../shared/timelineIdentity.ts";
 
 /** Approved final-feed copy, then M1 subjects/title. No runtime inference. */
-export function recognitionIdentity(event: Pick<DisplayEvent, "title" | "recognitionSubjects" | "timelineTitle" | "sourceId">): string {
-  return timelineIdentity(event);
+export function recognitionIdentity(
+  event: Parameters<typeof timelineIdentity>[0], language?: TimelineLabelLanguage,
+): string {
+  return timelineIdentity(event, language);
 }
 
 const graphemes = new Intl.Segmenter(undefined, { granularity: "grapheme" });
@@ -53,10 +55,10 @@ export function timelineDeadline(event: DisplayEvent, clock: EventClock, now: nu
 
 export function timelineAccessibleName(
   event: DisplayEvent, clock: EventClock, game: string,
-  deadline: string, disputed: boolean, done: boolean,
+  deadline: string, disputed: boolean, done: boolean, language?: TimelineLabelLanguage,
 ): string {
-  const identity = recognitionIdentity(event);
-  const original = originalTimelineIdentity(event);
+  const identity = recognitionIdentity(event, language);
+  const original = event.sourceId === "you" ? event.title : originalTimelineIdentity(event);
   const type = categoryBadge(event.type);
   return [
     game, `Type: ${type}${type.toLowerCase() !== event.type ? ` (${event.type})` : ""}`,

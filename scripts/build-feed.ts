@@ -9,6 +9,7 @@
  *
  *   bun run build:feed
  */
+import { readFile } from "node:fs/promises";
 import { ADAPTERS } from "../src/ingest/adapters/index.ts";
 import { sourceHealth } from "../src/ingest/health.ts";
 import { mergeEvents, type MergeResult } from "../src/ingest/merge.ts";
@@ -282,10 +283,16 @@ events.sort((a, b) => a.startsAt.localeCompare(b.startsAt) || a.id.localeCompare
 
 // Copy approvals apply only to final winners, never parser/reviewed/recurring IDs.
 const registry = TimelineRegistry.parse(await Bun.file("data/presentation/timeline-labels.v1.json").json());
+const russianRegistry = await readFile("data/presentation/timeline-labels.ru.v1.json", "utf8")
+  .then(text => TimelineRegistry.parse(JSON.parse(text)))
+  .catch((error: NodeJS.ErrnoException) => {
+    if (error.code !== "ENOENT") throw error;
+    return { schemaVersion: 1, decisions: [] };
+  });
 const feed = EventFeed.parse({
   schemaVersion: SCHEMA_VERSION,
   generatedAt: now,
-  events: applyTimelineLabels(events, registry),
+  events: applyTimelineLabels(applyTimelineLabels(events, registry), russianRegistry, "ru"),
   sources,
   dateConflicts: reviewConflicts.map((c) => ({
     eventId: c.kept.id,

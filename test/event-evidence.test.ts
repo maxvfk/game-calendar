@@ -236,12 +236,13 @@ test("offline builder uses same fixture/snapshot, creates only internal sidecar;
     const publicPaths = ["events.v1.json", "timeline-label-queue.v1.json", "timeline-label-agent-input.v1.json"];
     const before = await Promise.all(publicPaths.map(p => Bun.file(join(dir, "public/data", p)).text()));
     // PR #1 parser-context baseline: enriches summary/recognitionSubjects while keeping IDs/dates/E1 isolation identical.
+    // RU pilot: only the ZZZ rows change (recurring Shiyu Defense / Deadly Assault carry titleRu).
     const withoutZzz = JSON.parse(before[0]!);
     withoutZzz.events = withoutZzz.events.filter((e: { game: string }) => e.game !== "zzz");
     withoutZzz.sources = withoutZzz.sources.filter((s: { sourceId: string }) => s.sourceId !== "zzz-steam-events-official" && s.sourceId !== "zzz-zenlessgg-banners");
     expect(new Bun.CryptoHasher("sha256").update(JSON.stringify(withoutZzz, null, 2) + "\n").digest("hex"))
       .toBe("adda751596ea808da076b01a1882f0f61e542af130f3473344d3df08d24cea8c");
-    const baselineHashes = ["0ce7657c88c9419574c812e65ab4641c7faa7209bf35b07db371fd1e6e542fe5", "4f140ef04b80795afcaf1eed4fbc6c52ab8345635389dd7496c9b1d0e6441fbb", "ba2c63074b7d81f72075f3e10daf83d17ce6547f63739e60a5dd789aadc9f8fd"];
+    const baselineHashes = ["9e851e3e81f591bb865e0178d155758001f869a05c7859dbdac4fca2b8d26c28", "4f140ef04b80795afcaf1eed4fbc6c52ab8345635389dd7496c9b1d0e6441fbb", "ba2c63074b7d81f72075f3e10daf83d17ce6547f63739e60a5dd789aadc9f8fd"];
     expect(before.map(bytes => new Bun.CryptoHasher("sha256").update(bytes).digest("hex"))).toEqual(baselineHashes);
     let side = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
     expect(side.notices.map(n => n.noticeId)).toEqual(["5668", "5571"]);

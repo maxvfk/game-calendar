@@ -34,6 +34,8 @@ export const KEYS = {
 } as const;
 
 const V2 = "gacha-tracker:v2";
+/** Device preference, shared across profiles on this browser. */
+export const TIMELINE_LABEL_LANGUAGE_KEY = `${V2}:timelineLabelLanguage`;
 export const PROFILE_KEYS = {
   profiles: `${V2}:profiles`,
   activeProfile: `${V2}:activeProfile`,

@@ -9,6 +9,8 @@ export interface ResetRule {
   game: "zzz" | "wuwa" | "genshin";
   mode: string;
   title: (day: string) => string;
+  /** The mode's official Russian name, the same for every cycle. Never an ID input. */
+  titleRu?: string;
   anchorDay: string;
   cadence: { days: 14 | 28 } | { monthDay: 1 | 16 };
   resetHour: number;
@@ -33,10 +35,10 @@ export const RESET_RULES: ResetRule[] = [
   // Gate and provenance: docs/research/zzz-endgame-reanchoring-2026.md.
   // The 2.5 anchor is official; generate only from the currently verified cycle,
   // without backfilling intervening historical schedule exceptions.
-  { game: "zzz", mode: "shiyu-critical-node", title: d => `Shiyu Defense: Critical Node (${cycleDay(d)})`, anchorDay: "2026-01-09", cadence: { days: 14 }, resetHour: 4, effectiveFrom: "2026-10-16", sourceUrl: "https://zenless.hoyoverse.com/en-us/news/161728", provenanceStatus: "estimated", confidence: 0.9 },
+  { game: "zzz", mode: "shiyu-critical-node", title: d => `Shiyu Defense: Critical Node (${cycleDay(d)})`, titleRu: "Оборона Шиюй: критический узел", anchorDay: "2026-01-09", cadence: { days: 14 }, resetHour: 4, effectiveFrom: "2026-10-16", sourceUrl: "https://zenless.hoyoverse.com/en-us/news/161728", provenanceStatus: "estimated", confidence: 0.9 },
   // Independent dated observations, not an official 2026 phase-change notice.
   // Only the newly verified current cycle onward is enabled for this mode.
-  { game: "zzz", mode: "deadly-assault", title: d => `Deadly Assault (${cycleDay(d)})`, anchorDay: "2026-01-16", cadence: { days: 14 }, resetHour: 4, effectiveFrom: "2026-10-23", sourceUrl: "https://labz55.com/zzzteamforge/en/deadly-assault", provenanceStatus: "estimated", confidence: 0.75 },
+  { game: "zzz", mode: "deadly-assault", title: d => `Deadly Assault (${cycleDay(d)})`, titleRu: "Опасный штурм", anchorDay: "2026-01-16", cadence: { days: 14 }, resetHour: 4, effectiveFrom: "2026-10-23", sourceUrl: "https://labz55.com/zzzteamforge/en/deadly-assault", provenanceStatus: "estimated", confidence: 0.75 },
 ];
 
 function nextDay(day: string, cadence: ResetRule["cadence"]): string {
@@ -71,6 +73,7 @@ export function fixedResetCycles(rule: ResetRule, now: string, rules: readonly R
       const title = rule.title(day);
       out.push(GachaEvent.parse({
         id: eventId(rule.game, title, `${day}T00:00:00.000Z`), game: rule.game, title,
+        ...(rule.titleRu === undefined ? {} : { titleRu: rule.titleRu }),
         type: "challenge", summary: rule.game === "zzz"
           ? "Projected 14-day rotation from a verified reset rule; not an individually announced period."
           : `${rule.mode} reset cycle; source date is the server calendar day.`,

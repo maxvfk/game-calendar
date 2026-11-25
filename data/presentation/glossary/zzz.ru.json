@@ -1,0 +1,18 @@
+[
+  { "en": "Severian", "ru": "Севериан", "kind": "character" },
+  { "en": "Norma", "ru": "Норма", "kind": "character" },
+  { "en": "Phoenix", "ru": "Феникс", "kind": "character" },
+  { "en": "Velina", "ru": "Велина", "kind": "character" },
+  { "en": "Incarcerating Grip", "ru": "Карательный захват", "kind": "w-engine" },
+  { "en": "Chief Sidekick", "ru": "Старший ассистент", "kind": "w-engine" },
+  { "en": "Plume of Rebirth", "ru": "Перо перерождения", "kind": "w-engine" },
+  { "en": "Shiyu Defense", "ru": "Оборона Шиюй", "kind": "mode" },
+  { "en": "Deadly Assault", "ru": "Опасный штурм", "kind": "mode" },
+  { "en": "Combat Simulation", "ru": "Зал боевой симуляции", "kind": "mode" },
+  { "en": "Area Patrol", "ru": "Локальный патруль", "kind": "mode" },
+  { "en": "Bangboo", "ru": "Банбу", "kind": "bangboo" },
+  { "en": "Polychrome", "ru": "Полихромы", "kind": "currency" },
+  { "en": "Encrypted Master Tape", "ru": "Шифрокопия", "kind": "currency" },
+  { "en": "Boopon", "ru": "Банбулеты", "kind": "currency" },
+  { "en": "W-Engine", "ru": "Амплификатор", "kind": "other" }
+]

@@ -6,6 +6,7 @@ import type { RowEvent } from "./EventRow.tsx";
 import { URGENCY_COLOR } from "./Meter.tsx";
 import { TimelineLabel } from "./TimelineLabel.tsx";
 import { recognitionIdentity, timelineAccessibleName, timelineDeadline, visibleBarContent } from "../state/timelineContent.ts";
+import { TimelineLabelLanguage } from "../../shared/timelineIdentity.ts";
 import {
   timelineLanes,
   TIMELINE_GROUPS,
@@ -80,6 +81,8 @@ export function Timeline({
   onZoom,
   group,
   onGroup,
+  labelLanguage = "en",
+  onLabelLanguage,
   showUpcoming,
   splitUpcoming,
   gameOrder,
@@ -95,6 +98,8 @@ export function Timeline({
   /** How the bars are stacked: a lane per game, or one deadline queue. */
   group: TimelineGroup;
   onGroup: (group: TimelineGroup) => void;
+  labelLanguage?: TimelineLabelLanguage;
+  onLabelLanguage?: (language: TimelineLabelLanguage) => void;
   /**
    * Whether events that have not started yet are plotted.
    *
@@ -250,7 +255,24 @@ export function Timeline({
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-hairline px-4 py-2.5">
         <StackControl value={group} onChange={onGroup} />
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          {onLabelLanguage && (
+            <div role="group" aria-label="Timeline label language" className="flex">
+              {TimelineLabelLanguage.options.map(language => (
+                <button
+                  key={language}
+                  type="button"
+                  aria-pressed={labelLanguage === language}
+                  onClick={() => onLabelLanguage(language)}
+                  className={`min-h-8 rounded-full border px-1.5 text-[0.6875rem] font-medium transition-colors ${
+                    labelLanguage === language ? "border-ink/60 text-ink" : "border-transparent text-faint hover:text-muted"
+                  }`}
+                >
+                  {language.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          )}
           <div role="group" aria-label="Scale" className="flex items-center gap-1">
             <ScaleButton
               label="Show a longer stretch of time"
@@ -440,7 +462,7 @@ export function Timeline({
                       const done = isDone(event.id);
                       const deadline = timelineDeadline(event, clock, now);
                       const disputed = !!conflicts?.length;
-                      const accessible = timelineAccessibleName(event, clock, game.name, deadline.accessible, disputed, done);
+                      const accessible = timelineAccessibleName(event, clock, game.name, deadline.accessible, disputed, done, labelLanguage);
                       return (
                         <Fragment key={event.id}>
                         {i === breakAt && <NotStarted />}
@@ -485,7 +507,7 @@ export function Timeline({
                             maskImage: edgeMask(clippedStart, unknownEnd),
                           }} />
                           <TimelineLabel
-                            identity={recognitionIdentity(event)}
+                            identity={recognitionIdentity(event, labelLanguage)}
                             deadline={deadline.text}
                             unknown={deadline.unknown}
                             dayOnly={deadline.dayOnly}
