@@ -110,7 +110,48 @@ event data is not touched.
 
 Each of these is a separate decision:
 
+- **glossary and `titleRu` from paired official notices** (the first step after the pilot; see
+  below);
 - extend the glossary and Russian labels to other games;
 - add the Russian ledger to the daily `timeline-labels.yml` run (it uses DeepSeek by default;
   its cost would roughly double);
 - close #175 as superseded.
+
+### Glossary from paired official notices
+
+Found while preparing the pilot data (2026-11-26): the official ZZZ notices are published in
+English and in Russian as the same document with the same structure. Three sources carry the
+Russian version:
+
+- the Steam news feed the project already reads, with `?l=russian`;
+- the official site's content API, with `sLangKey=ru-ru`;
+- HoYoLAB posts, with the `x-rpc-language: ru-ru` header.
+
+In the Version 3.3 announcement, all 110 bullets paired one to one in order. So the term pairs
+are already in official text; they do not need to be searched for.
+
+Proposed process, once per game version:
+
+1. **Fetch both texts.** A script takes the English and Russian versions of the same official
+   notice from the sources above. No new parser is needed for event data.
+2. **Pair the sections.** It pairs sections and bullets, by section first and then by order
+   within a section, so that one moved bullet does not shift the rest.
+3. **Extract term pairs.** A model (DeepSeek Flash, **no web search**) receives only the
+   paired paragraphs. It lists term pairs (characters, W-Engines and other items, modes,
+   currencies) and the official Russian name of each event.
+4. **Deterministic check.** A pair is kept only if the English term occurs literally in the
+   English paragraph and the Russian term in the paired Russian paragraph. Nothing can be
+   invented.
+5. **Review.** The result arrives as a proposed glossary and `titleRu` change in a PR,
+   reviewed and merged like the labels.
+
+**Web search** (for example DeepSeek with search) is only a fallback, for old terms that no
+recent notice contains. Such pairs are marked unverified and need a manual confirmation:
+search tends to return fan wikis and community translations rather than the client's own text.
+
+**Limits known now:**
+
+- The process is verified only for ZZZ.
+- The Endfield site has a Russian version. Genshin and HSR probably use the same content API as
+  ZZZ.
+- WuWa, CZN and NTE are unchecked.
