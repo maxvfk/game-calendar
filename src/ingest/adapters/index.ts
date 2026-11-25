@@ -119,6 +119,11 @@ const SOURCES: SourceSpec[] = [
     // This initial URL also identifies the independently captured fixture.
     url: "https://endfield.wiki.gg/wiki/Echoes_of_War%3A_Season_of_Illusion",
     parserId: "wikigg-echoes", priority: 10,
+    // Retired 2026-11-25: the wiki season page's header and cycle table disagreed
+    // in almost every season (Phantasia, Fervor, Scattering), so the parser kept
+    // the source stale for weeks at a time. Cycle deadlines are now reviewed rows
+    // in data/reviewed/endfield.json, one pair per season, from the version notes.
+    scheduled: false,
   },
   {
     id: "arknights-akwiki-events",

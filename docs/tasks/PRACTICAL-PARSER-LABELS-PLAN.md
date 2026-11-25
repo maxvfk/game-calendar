@@ -80,6 +80,9 @@ label ledger and November workflow runs. The direction and the freeze stand. Wha
 2. **Resolve `endfield-wikigg-echoes` (micro-PR).**
    - Repair, replace, or cleanly retire `endfield-wikigg-echoes` immediately after step 1 so
      the `>48h` stale-source alert starts at zero red sources.
+   - **Done 2026-11-25: retired** (`scheduled: false`). The wiki season page contradicted itself
+     or the official notes in almost every season; Echoes cycle deadlines are now reviewed rows,
+     one pair per season, from the version notes (see `docs/IMPLEMENTATION-STATUS.md`).
 3. **Label policy decision on the [#175](https://github.com/maxvfk/game-calendar/pull/175)
    case (and close/supersede #175).**
    - Primary candidate: featured subject(s) for banners; for non-banners, either
@@ -96,7 +99,8 @@ label ledger and November workflow runs. The direction and the freeze stand. Wha
      `Stygian Onslaught` + `Disturbance Outbreak`, NTE unquoted `... Limited-Time Event`). Do
      not chase one-off prose notices (`The Grand Defense`, HSR `1451`/`1480`, WuWa `5786`);
      handle those via `data/reviewed/*.json` or optional `C5.1-lite`.
-   - Record a per-version/phase check for ZZZ, CZN and Endfield (what to look at and where it
+   - Record a per-version/phase check for ZZZ, CZN and Endfield (for Endfield, the two Echoes
+     cycle rows per season and every "before the next version update" end; what to look at and where it
      lands in `data/reviewed/*.json`), or a targeted clean source where one exists.
 5. **Optional `C5.1-lite` probe**, unchanged, and use it to measure real missed notices per
    week; the "3–5 per week" figure in finding 4 is an estimate, not a measurement.
