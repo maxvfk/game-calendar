@@ -878,8 +878,8 @@ describe("snapshot bodies keep their bytes through checkout", () => {
     }
     expect(
       matching.sort(),
-      "a verbatim fixture no longer hashes to its metadata; if this clone predates .gitattributes, " +
-        "re-checkout: git ls-files -z snapshots 'test/fixtures/*/snapshots-*/*' | xargs -0 rm -f && git checkout -- .",
+      "a verbatim fixture no longer hashes to its metadata: the checkout converted its line endings " +
+        "(a clone made before .gitattributes keeps the converted files). Verify in a fresh clone.",
     ).toEqual([
       "genshin-kqm-ginews",
       "hsr-kqm-hsrnews",
