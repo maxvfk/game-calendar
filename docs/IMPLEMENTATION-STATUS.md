@@ -1,3 +1,28 @@
+## Endfield Echoes — wiki season source retired; Scattering from official notes (2026-11-25)
+
+`endfield-wikigg-echoes` is off the schedule (`scheduled: false`; its parser, fixtures and
+refresh tests stay for diagnostics). The wiki season page disagreed with itself or with the
+official notes in almost every season, and the parser rightly refused it. From 2026-11-14 the
+Fervor header ended the season at the Nov 25 maintenance while its table ran to Nov 26. The
+Scattering table opens Cycle I on Nov 24, a day before the season. Echoes cycle deadlines are
+now reviewed rows, one pair per season, taken from the version notes. The stale-source issue
+(#192) closes on the next refresh as "no longer monitored".
+
+`data/reviewed/endfield.json`, from the [Meeting You in the World o'Shrooms] notes
+(news 0740) and an in-game timer check on the Americas/Europe server on 2026-11-25:
+
+- **Season of Scattering** ends Dec 16 at 11:59 server time (official). This overrides the
+  wiki Event page's Dec 15 end; the feed keeps the disagreement visible as a date conflict.
+- **Scattering Cycle I and II** end Dec 2 and Dec 9 at 03:59 server time (estimated). The
+  3 cycles are official; the weekly 04:00 boundaries follow earlier seasons, and the timer
+  confirmed Cycle I.
+- **Season of Fervor, The Stars Are With Me and Contingency Contract: Indigo** end at the
+  version maintenance, Nov 24 22:00 UTC. Their end was "before the next version update", and
+  news 0740 dates it. They had shown as running with an unknown end.
+
+Still open: three older weapon banners (Deep Cold Issue, Resplendent Spectrum, Seal of Jade
+Issue) have no end date and still show as running.
+
 ## Liveness step 1 — dead-man ping and stale-source issue (2026-11-24)
 
 `ci.yml` sends a heartbeat to the `DEADMAN_PING_URL` secret after each successful

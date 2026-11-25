@@ -37,10 +37,12 @@ const season = GachaEvent.parse({
   firstSeenAt: "2026-11-05T13:19:40.000Z", updatedAt: "2026-11-08T12:00:40.000Z",
 });
 
-test("the official season row stays as published; cycles are separate rows", () => {
-  // news 9560 row: official, unknown end. Cycle rows add internal deadlines only.
+test("the official season row ends at the version maintenance; cycles are separate rows", () => {
+  // news 9560: the season ends before the next version maintenance; news 0740 dates
+  // that maintenance (Nov 25 06:00 UTC+8 = Nov 24 17:00 UTC−5). Cycle rows add internal deadlines only.
   const official = reviewed.find(e => e.id === "endfield:echoes-of-war-season-of-fervor:2026-11-05")!;
-  expect(official).toMatchObject({ provenanceStatus: "official", endsAt: null, endPrecision: "unknown" });
+  expect(official).toMatchObject({ provenanceStatus: "official", endsAt: "2026-11-24T22:00:00.000Z",
+    endPrecision: "exact", regionScoped: false });
   expect(cycles.every(c => c.id !== official.id)).toBe(true);
 });
 

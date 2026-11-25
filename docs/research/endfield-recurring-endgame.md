@@ -892,3 +892,33 @@ This supersedes the §16 instruction to reject the Phantasia page. Its official
 reviewed rows keep precedence; Fervor's estimated rows merge with the parser's
 rows under the same IDs without conflicts (`test/endfield-echoes.test.ts`,
 `test/phantasia-reviewed-cycles.test.ts`, `test/fervor-reviewed-cycles.test.ts`).
+
+## 19. Scattering and retirement of the wiki season source (2026-11-25)
+
+From 2026-11-14 the parser rejected every fetch, for two different reasons:
+
+- **Fervor (Nov 14–24):** the wiki moved the header end to the version maintenance
+  (Nov 25 06:00 UTC+8, Nov 24 17:00 UTC−5), while the table still ended Cycle III on
+  Nov 26 at 11:59. The §18 rule requires the two to be equal.
+- **Scattering (from Nov 25):** the header and the Event page open the season on Nov 25
+  at 12:00 UTC+8 and end it on Dec 15 (06:00 UTC+8 / 17:00 UTC−5). The table opens Cycle I
+  on Nov 24 at 12:00, when Fervor still ran, and ends Cycle III on Dec 15 at 11:59.
+
+The official notes for [Meeting You in the World o'Shrooms]
+(https://endfield.gryphline.com/en-us/news/0740) give Scattering from the version update to
+Dec 16 at 11:59 server time, with 3 cycles. Season of Wariness follows on Dec 16 at 12:00.
+They do not give the cycle boundaries. So both wiki pages are a day off: the Event page ends
+the season early, and the whole cycle table is shifted a day early, not only its first row.
+
+An in-game check on the Americas/Europe server on 2026-11-25, shortly before 20:00 UTC, read
+6 d 13 h to the next cycle and 20 d 21 h to the season update. Their 14 d 8 h gap matches
+Cycle I ending Dec 2 at 03:59 server time and the official season end. The wiki table's
+Dec 1 would give a 15 d 8 h gap.
+
+**Decision:** retire `endfield-wikigg-echoes` from the schedule. Since September only
+Illusion and one week of Fervor were accepted automatically: Phantasia needed official
+reviewed rows (§17), Fervor needed the §18 exception and then reviewed rows, and Scattering
+contradicts the official notes. Each repair added one more exception for one wiki edit.
+Echoes cycle deadlines are now reviewed rows, one pair per season, with the season end from
+the version notes and Cycle I checked in game when possible. The parser, its fixtures and
+tests stay for diagnostics.

@@ -3,7 +3,8 @@ import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 import { ECHOES_EVENT_SOURCE_ID, ECHOES_SOURCE_ID, echoesSeasonUrl, selectEchoesSeason } from "../src/ingest/echoes-season.ts";
 import { parseWikiGgEventsPage } from "../src/ingest/parsers/wikigg.ts";
 import { parseWikiGgEchoesSeason } from "../src/ingest/parsers/wikigg-echoes.ts";
-import { ADAPTERS } from "../src/ingest/adapters/index.ts";
+// Retired from the schedule on 2026-11-25; the refresh path stays tested for a re-enable.
+import { adapterById } from "../src/ingest/adapters/index.ts";
 import { SnapshotStore } from "../src/ingest/snapshots.ts";
 import { runRefresh } from "../scripts/refresh-sources.ts";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -67,7 +68,7 @@ test("refresh follows the discovered season and does not reuse another season’
     await store.recordCheck(ECHOES_SOURCE_ID, { at: now, status: 200, ok: true });
     const requests: Array<{ url: string; headers: Headers }> = [];
     const summary = await runRefresh({
-      adapters: [ADAPTERS.find(a => a.id === ECHOES_SOURCE_ID)!], store,
+      adapters: [adapterById(ECHOES_SOURCE_ID)!], store,
       robots: { allows: async () => ({ allowed: true, reason: "test" }) },
       fetchImpl: async (request, init) => {
         requests.push({ url: String(request), headers: new Headers(init?.headers) });
@@ -156,7 +157,7 @@ test("contradictory new season retains last-known-good bytes, metadata and broke
     }
     const requests: Array<{ url: string; headers: Headers }> = [];
     const summary = await runRefresh({
-      adapters: [ADAPTERS.find(a => a.id === ECHOES_SOURCE_ID)!], store,
+      adapters: [adapterById(ECHOES_SOURCE_ID)!], store,
       robots: { allows: async () => ({ allowed: true, reason: "test" }) },
       fetchImpl: async (request, init) => {
         requests.push({ url: String(request), headers: new Headers(init?.headers) });
