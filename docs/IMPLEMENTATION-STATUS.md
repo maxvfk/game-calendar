@@ -1,3 +1,30 @@
+## Timeline labels in Russian — EN/RU switch and ZZZ pilot (2026-11-26)
+
+Plan: `docs/tasks/TIMELINE-LABELS-RU-PILOT.md`.
+
+- **Switch.** The Timeline has an EN/RU switch, stored per device and EN by default. EN mode
+  renders as before. RU mode shows the first of: the Russian label, the official Russian name
+  (`titleRu`), the English label, today's identity. Event Detail follows the same choice and
+  also shows the Russian and original titles.
+- **Labels.** Russian labels have their own ledger (`data/presentation/timeline-labels.ru.v1.json`),
+  preferences and a per-game glossary (`data/presentation/glossary/<game>.ru.json`).
+  `scripts/timeline-labels.ts --lang ru` reads and writes them. A Russian label without an
+  in-game anchor (a glossary term or `titleRu`) is rejected. English labels, preferences and
+  the daily workflow are unchanged.
+- **ZZZ data**, from the Russian versions of the same official notices (Steam 3.3
+  announcement with `?l=russian`, site news 166000 / 166926 / 166944 in `ru-ru`, HoYoLAB post
+  47375931 in `ru-ru`):
+  - `titleRu` for 14 event titles (20 rows) in `data/reviewed/zzz.json`, for example "Cyber
+    Miracle Healer, on Duty!" → «Будни киберлекаря» (the #175 case);
+  - the Russian mode name on the recurring Shiyu Defense and Deadly Assault rows;
+  - a 16-term glossary;
+  - five Russian labels: «Севериан», «Норма», «Последняя проба: Севериан и Норма», and two
+    login events with «вход 7 дней».
+
+  Event IDs and fingerprints are unchanged.
+- The infrastructure was written by Codex (`gpt-6.2-sol`, high) and checked here. The data
+  is from the official Russian notices.
+
 ## Endfield Echoes — wiki season source retired; Scattering from official notes (2026-11-25)
 
 `endfield-wikigg-echoes` is off the schedule (`scheduled: false`; its parser, fixtures and
