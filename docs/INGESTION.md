@@ -444,9 +444,15 @@ run turned red. So two further signals read outcomes rather than errors:
   metadata plus the restored state) rather than the published rows: the feed builder folds a
   source's dates into one value, where a future content-change date displaced a real HTTP 304. Here
   a future date is discarded before the newest is chosen, so it neither counts nor hides a real
-  confirmation. Only snapshots the builder could use count: the same `SnapshotStore.read` (metadata
-  and body) from the same directory (`--snapshots`, else `SNAPSHOT_DIR`, else `snapshots`), so fresh
-  metadata beside a missing body, which the build replaced with a fixture, does not ping. The `reviewed-<game>` rows are left out: their date is a manual review, and one
+  confirmation. Only snapshots this build accepted count: a scheduled row in the built feed with
+  non-null `lastSuccessAt`, `lastConfirmedAt` and `parsedCount` (a skipped Echoes cycle or a fixture
+  fallback does not qualify; an accepted page with zero current events does), read from the builder's
+  directory (`--snapshots`, else `SNAPSHOT_DIR`, else `snapshots`). The body on disk must still hash
+  to `meta.contentHash`, and a cached confirmation counts only when its `lastConfirmedContentHash`
+  is that same hash, so a partial write or a cache from an unpushed refresh cannot vouch for other
+  bytes. Because the check is byte-exact, `.gitattributes` turns off line-ending conversion for
+  `snapshots/` and the pinned test copies; a Windows clone made before it needs those files checked
+  out again. The `reviewed-<game>` rows are left out: their date is a manual review, and one
   fresh review must not keep the heartbeat alive while the schedule has stopped. With no scheduled
   source ever succeeding there is no ping. `pages` then pings the URL in the `DEADMAN_PING_URL` secret after a
   successful deploy. An external monitor alerts when pings stop, which covers a stopped refresh, a

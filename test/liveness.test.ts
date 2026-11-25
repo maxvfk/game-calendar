@@ -729,7 +729,9 @@ describe("dead-man heartbeat verdict", () => {
     const mismatchDir = await stageWorkspace("mismatched-cache");
     const zzzFixture = "test/fixtures/zzz/snapshots-418d518/zzz-zenlessgg-banners";
     const zzzMeta = (await Bun.file(join(repoRoot, `${zzzFixture}.meta.json`)).json()) as SnapshotMeta;
-    const zzzBytes = new TextEncoder().encode((await Bun.file(join(repoRoot, `${zzzFixture}.json`)).text()).replaceAll("\r\n", "\n"));
+    // The checked-out bytes as they are: `.gitattributes` keeps them byte-exact, and
+    // this hash check is what fails if checkout converts line endings again.
+    const zzzBytes = await Bun.file(join(repoRoot, `${zzzFixture}.json`)).bytes();
     expect(hashBody(zzzBytes)).toBe(zzzMeta.contentHash);
     await Bun.write(join(mismatchDir, "snapshots/zzz-zenlessgg-banners.json"), zzzBytes);
     await Bun.write(
@@ -787,7 +789,7 @@ describe("dead-man heartbeat verdict", () => {
     // Adding an intact fresh snapshot lets the heartbeat proceed despite the mismatched one.
     const genshinFixture = "test/fixtures/genshin/snapshots-418d518/genshin-kqm-ginews";
     const genshinMeta = (await Bun.file(join(repoRoot, `${genshinFixture}.meta.json`)).json()) as SnapshotMeta;
-    const genshinBytes = new TextEncoder().encode((await Bun.file(join(repoRoot, `${genshinFixture}.md`)).text()).replaceAll("\r\n", "\n"));
+    const genshinBytes = await Bun.file(join(repoRoot, `${genshinFixture}.md`)).bytes();
     expect(hashBody(genshinBytes)).toBe(genshinMeta.contentHash);
     await Bun.write(join(partialDir, "snapshots/genshin-kqm-ginews.md"), genshinBytes);
     await Bun.write(
@@ -840,5 +842,51 @@ describe("the workflows that carry liveness", () => {
     expect(step).toContain("inputs.dry_run != true");
     expect(step).toContain("continue-on-error: true");
     expect(step).toContain("bun scripts/stale-source-issue.ts");
+  });
+});
+
+describe("snapshot bodies keep their bytes through checkout", () => {
+  // `meta.contentHash` is the SHA-256 of the body as served, and the heartbeat refuses a
+  // snapshot whose body no longer hashes to it. With `core.autocrlf` on Windows, checkout
+  // used to rewrite LF to CRLF: 1 of 10 live snapshots still matched, and the heartbeat
+  // reported a current publication as stalled.
+  const repoRoot = join(import.meta.dir, "..");
+  const git = (...args: string[]) => {
+    const result = Bun.spawnSync(["git", ...args], { cwd: repoRoot, stdout: "pipe", stderr: "pipe" });
+    expect(result.exitCode, result.stderr.toString()).toBe(0);
+    return result.stdout.toString();
+  };
+
+  test("line-ending conversion is off for every live snapshot and pinned copy", () => {
+    const paths = git("ls-files", "snapshots", "test/fixtures/*/snapshots-*/*").split("\n").filter(Boolean);
+    expect(paths.length).toBeGreaterThan(20);
+    const attrs = git("check-attr", "text", "--", ...paths).split("\n").filter(Boolean);
+    expect(attrs.filter((line) => !line.endsWith(": text: unset"))).toEqual([]);
+  });
+
+  test("the verbatim pinned bodies, as checked out, hash to their metadata", async () => {
+    // The four block extracts keep the full-body metadata on purpose (see each game's
+    // README), so only the six verbatim copies can match, and all six must.
+    const matching: string[] = [];
+    for await (const metaPath of new Bun.Glob("test/fixtures/*/snapshots-418d518/*.meta.json").scan(repoRoot)) {
+      const meta = (await Bun.file(join(repoRoot, metaPath)).json()) as SnapshotMeta;
+      const base = join(repoRoot, metaPath.replace(/\.meta\.json$/, ""));
+      for (const ext of [".html", ".md", ".json", ".xml"]) {
+        const body = Bun.file(base + ext);
+        if (await body.exists() && hashBody(await body.bytes()) === meta.contentHash) matching.push(meta.sourceId);
+      }
+    }
+    expect(
+      matching.sort(),
+      "a verbatim fixture no longer hashes to its metadata; if this clone predates .gitattributes, " +
+        "re-checkout: git ls-files -z snapshots 'test/fixtures/*/snapshots-*/*' | xargs -0 rm -f && git checkout -- .",
+    ).toEqual([
+      "genshin-kqm-ginews",
+      "hsr-kqm-hsrnews",
+      "nte-steamnews-official",
+      "wuwa-kuro-mirror",
+      "zzz-steam-events-official",
+      "zzz-zenlessgg-banners",
+    ]);
   });
 });
