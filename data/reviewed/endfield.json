@@ -313,6 +313,178 @@
       "reviewedAt": "2026-10-28T12:49:47.925Z"
     },
     {
+      "id": "endfield:the-hearth-fire-beckons-the-starry-flow:2026-11-05",
+      "title": "The Hearth Fire Beckons the Starry Flow",
+      "recognitionSubjects": [
+        "Argent Flow"
+      ],
+      "type": "banner",
+      "summary": "Argent Flow Chartered Headhunting. November 5 at 12:00 server time until before the next version update and maintenance (news 9560), which began Nov 25 at 06:00 UTC+8 (Asia) and Nov 24 at 17:00 UTC−5 (Americas/Europe), the same instant (news 0740). Opening is shown as a calendar day across regions.",
+      "startsAt": "2026-11-05T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-24T22:00:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/9560",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-11-25T22:30:00.000Z",
+      "reviewedAt": "2026-11-25T22:30:00.000Z"
+    },
+    {
+      "id": "endfield:moongleam-issue:2026-11-05",
+      "title": "Moongleam Issue",
+      "recognitionSubjects": [
+        "Lunar Calling"
+      ],
+      "type": "banner",
+      "summary": "Lunar Calling Arsenal Issue. Opens November 5 at 12:00 server time and ends after three Chartered Headhunting banners starting with The Hearth Fire Beckons the Starry Flow (news 9560); the second is Anvil, Backpack, Plus A Pot o'Honey and the third is not announced yet. Opening is shown as a calendar day across regions.",
+      "startsAt": "2026-11-05T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": null,
+      "endPrecision": "unknown",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/9560",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-11-25T22:30:00.000Z",
+      "reviewedAt": "2026-11-25T22:30:00.000Z"
+    },
+    {
+      "id": "endfield:anvil-backpack-plus-a-pot-ohoney:2026-11-25",
+      "title": "Anvil, Backpack, Plus A Pot o'Honey",
+      "recognitionSubjects": [
+        "Kay"
+      ],
+      "type": "banner",
+      "summary": "Kay Chartered Headhunting. Opens after the Meeting You in the World o'Shrooms update and closes December 23 at 11:59 server time (Asia UTC+8; Americas/Europe UTC−5; news 0740). Opening is shown as a calendar day across regions.",
+      "startsAt": "2026-11-25T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-23T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-12-23T03:59:00.000Z",
+        "america": "2026-12-23T16:59:00.000Z",
+        "europe": "2026-12-23T16:59:00.000Z"
+      },
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/0740",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-11-25T22:30:00.000Z",
+      "reviewedAt": "2026-11-25T22:30:00.000Z"
+    },
+    {
+      "id": "endfield:casual-roamer-issue:2026-11-25",
+      "title": "Casual Roamer Issue",
+      "recognitionSubjects": [
+        "Sweet Deal"
+      ],
+      "type": "banner",
+      "summary": "Sweet Deal Arsenal Issue. Opens after the Meeting You in the World o'Shrooms update and ends after three Chartered Headhunting banners starting with Anvil, Backpack, Plus A Pot o'Honey (news 0740); no calendar cutoff is announced. Opening is shown as a calendar day across regions.",
+      "startsAt": "2026-11-25T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": null,
+      "endPrecision": "unknown",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/0740",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-11-25T22:30:00.000Z",
+      "reviewedAt": "2026-11-25T22:30:00.000Z"
+    },
+    {
+      "id": "endfield:to-every-wish-adrift:2026-11-25",
+      "title": "To Every Wish Adrift",
+      "recognitionSubjects": [
+        "Gilberta"
+      ],
+      "type": "banner",
+      "summary": "Gilberta RE-Factor Headhunting #1. Opens after the Meeting You in the World o'Shrooms update and closes December 16 at 11:59 server time (Asia UTC+8; Americas/Europe UTC−5; news 0740). Opening is shown as a calendar day across regions.",
+      "startsAt": "2026-11-25T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-16T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-12-16T03:59:00.000Z",
+        "america": "2026-12-16T16:59:00.000Z",
+        "europe": "2026-12-16T16:59:00.000Z"
+      },
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/0740",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-11-25T22:30:00.000Z",
+      "reviewedAt": "2026-11-25T22:30:00.000Z"
+    },
+    {
+      "id": "endfield:floaty-traveler-issue:2026-11-25",
+      "title": "Floaty Traveler Issue",
+      "recognitionSubjects": [
+        "Delivery Guaranteed"
+      ],
+      "type": "banner",
+      "summary": "Delivery Guaranteed RE-Factor Issue #1. Opens after the Meeting You in the World o'Shrooms update and closes December 16 at 11:59 server time (Asia UTC+8; Americas/Europe UTC−5; news 0740). Opening is shown as a calendar day across regions.",
+      "startsAt": "2026-11-25T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-16T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-12-16T03:59:00.000Z",
+        "america": "2026-12-16T16:59:00.000Z",
+        "europe": "2026-12-16T16:59:00.000Z"
+      },
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/0740",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-11-25T22:30:00.000Z",
+      "reviewedAt": "2026-11-25T22:30:00.000Z"
+    },
+    {
+      "id": "endfield:precious-scarlet:2026-12-16",
+      "title": "Precious Scarlet",
+      "recognitionSubjects": [
+        "Rossi"
+      ],
+      "type": "banner",
+      "summary": "Rossi RE-Factor Headhunting #1. December 16 at 12:00 server time until before the next version update and maintenance (news 0740), which is not dated yet. Opening is shown as a calendar day across regions.",
+      "startsAt": "2026-12-16T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": null,
+      "endPrecision": "unknown",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/0740",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-11-25T22:30:00.000Z",
+      "reviewedAt": "2026-11-25T22:30:00.000Z"
+    },
+    {
+      "id": "endfield:scarlet-claws-issue:2026-12-16",
+      "title": "Scarlet Claws Issue",
+      "recognitionSubjects": [
+        "Lupine Scarlet"
+      ],
+      "type": "banner",
+      "summary": "Lupine Scarlet RE-Factor Issue #1. December 16 at 12:00 server time until before the next version update and maintenance (news 0740), which is not dated yet. Opening is shown as a calendar day across regions.",
+      "startsAt": "2026-12-16T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": null,
+      "endPrecision": "unknown",
+      "regionScoped": false,
+      "regionEnds": null,
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/0740",
+      "provenanceStatus": "official",
+      "confidence": 1,
+      "firstSeenAt": "2026-11-25T22:30:00.000Z",
+      "reviewedAt": "2026-11-25T22:30:00.000Z"
+    },
+    {
       "id": "endfield:contingency-readiness:2026-10-29",
       "title": "Contingency Readiness",
       "type": "other",

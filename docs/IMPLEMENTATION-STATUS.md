@@ -32,9 +32,15 @@ official notes (they had shown as running):
 - **Seal of Jade Issue** ends with Anvil, Backpack, Plus A Pot o'Honey, the third Chartered
   banner from Rejuvenation: Dec 23 at 11:59 server time (0740).
 
-Still open: the current version's banners (Anvil, Backpack, Plus A Pot o'Honey; To Every
-Wish Adrift; Floaty Traveler Issue; Casual Roamer Issue; Moongleam Issue) are not in the
-calendar. The wiki Event page carries no banners; they belong to the Endfield per-version check.
+Then the banners of the current version, which the calendar did not have at all (the wiki
+Event page carries no banners), as official reviewed rows from news 0740 and 9560:
+
+- **Dated:** Anvil, Backpack, Plus A Pot o'Honey (Kay) to Dec 23; To Every Wish Adrift
+  (Gilberta) and Floaty Traveler Issue to Dec 16, all at 11:59 server time.
+- **Ended:** The Hearth Fire Beckons the Starry Flow (Argent Flow), at the Nov 25 maintenance.
+- **End unknown, shown as open:** Moongleam Issue and Casual Roamer Issue (their third
+  Chartered banner is not announced), Precious Scarlet and Scarlet Claws Issue (from Dec 16
+  until a version update that is not dated yet).
 
 ## Liveness step 1 — dead-man ping and stale-source issue (2026-11-24)
 
