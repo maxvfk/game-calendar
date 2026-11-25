@@ -17,7 +17,7 @@ import {
   unknownSources,
   type SourceConfirmation,
 } from "../src/ingest/liveness.ts";
-import { SnapshotStore, type SnapshotMeta } from "../src/ingest/snapshots.ts";
+import { hashBody, SnapshotStore, type SnapshotMeta } from "../src/ingest/snapshots.ts";
 import { STALE_AFTER_MS, type SourceHealth } from "../src/shared/feed.ts";
 import { acceptedSnapshotIds, heartbeatVerdict } from "../scripts/publication-liveness.ts";
 
@@ -439,17 +439,19 @@ describe("dead-man heartbeat verdict", () => {
     sourceId: string,
     contentChangedAt: string,
     lastConfirmedAt: string | null,
-    body = true,
-    contentHash = "x",
+    body: boolean | string = true,
+    contentHash?: string,
   ) => {
+    const html = typeof body === "string" ? body : "<html></html>";
+    const resolvedHash = contentHash ?? hashBody(html);
     await Bun.write(
       join(dir, `${sourceId}.meta.json`),
       JSON.stringify({
-        sourceId, url: "https://example.test/", contentHash, bytes: 1, etag: null,
+        sourceId, url: "https://example.test/", contentHash: resolvedHash, bytes: html.length, etag: null,
         lastModified: null, contentChangedAt, lastConfirmedAt, eventCount: 1,
       }),
     );
-    if (body) await Bun.write(join(dir, `${sourceId}.html`), "<html></html>");
+    if (body !== false) await Bun.write(join(dir, `${sourceId}.html`), html);
   };
 
   test("pings only while an accepted scheduled snapshot was confirmed within 30 hours", async () => {
@@ -532,8 +534,10 @@ describe("dead-man heartbeat verdict", () => {
 
   test("cached state only counts for heartbeat when its contentHash matches the published snapshot", async () => {
     const store = new SnapshotStore(root);
-    // Published snapshot is 96h old with hash "old-bytes".
-    await meta(root, "zzz-zenlessgg-banners", at(96), at(96), true, "old-bytes");
+    const oldBody = "<html>old-bytes</html>";
+    const oldHash = hashBody(oldBody);
+    // Published snapshot is 96h old with intact body matching oldHash.
+    await meta(root, "zzz-zenlessgg-banners", at(96), at(96), oldBody, oldHash);
     // Actions cache carries a 2h-old HTTP 200 confirmation for DIFFERENT bytes (unpushed refresh).
     await Bun.write(join(root, "zzz-zenlessgg-banners.state.json"), JSON.stringify({
       sourceId: "zzz-zenlessgg-banners",
@@ -555,15 +559,36 @@ describe("dead-man heartbeat verdict", () => {
     }));
     expect((await heartbeatVerdict(store, scheduled, NOW, acceptedAll)).current).toBe(false);
     // With fresh published metadata, legacy state still falls back to that metadata.
-    await meta(root, "zzz-zenlessgg-banners", at(96), at(2), true, "old-bytes");
+    await meta(root, "zzz-zenlessgg-banners", at(96), at(2), oldBody, oldHash);
     expect((await heartbeatVerdict(store, scheduled, NOW, acceptedAll)).current).toBe(true);
 
     // Matching hash in cached state (e.g. 304 confirmation, preserved across a later failure) counts.
-    await meta(root, "zzz-zenlessgg-banners", at(96), at(96), true, "old-bytes");
+    await meta(root, "zzz-zenlessgg-banners", at(96), at(96), oldBody, oldHash);
     await store.recordCheck("zzz-zenlessgg-banners", { at: at(2), status: 304, ok: true });
     await store.recordCheck("zzz-zenlessgg-banners", { at: at(1), status: 503, ok: false });
     // Restore old meta so only cached state has the 2h-old confirmation.
-    await meta(root, "zzz-zenlessgg-banners", at(96), at(96), true, "old-bytes");
+    await meta(root, "zzz-zenlessgg-banners", at(96), at(96), oldBody, oldHash);
+    expect((await heartbeatVerdict(store, scheduled, NOW, acceptedAll)).current).toBe(true);
+  });
+
+  test("partially written snapshot whose body bytes disagree with meta.contentHash cannot vouch for freshness", async () => {
+    const store = new SnapshotStore(root);
+    // Simulate a crash between writing body and metadata in SnapshotStore.save:
+    // on-disk body has new bytes, while meta and fresh cached state still reference an older hash.
+    const olderHash = hashBody("<html>older-version</html>");
+    await meta(root, "zzz-zenlessgg-banners", at(96), at(2), "<html>newer-version</html>", olderHash);
+    await Bun.write(join(root, "zzz-zenlessgg-banners.state.json"), JSON.stringify({
+      sourceId: "zzz-zenlessgg-banners",
+      lastCheckedAt: at(2),
+      lastConfirmedAt: at(2),
+      lastConfirmedContentHash: olderHash,
+      lastStatus: 304,
+      consecutiveFailures: 0,
+    }));
+    expect((await heartbeatVerdict(store, scheduled, NOW, acceptedAll)).current).toBe(false);
+
+    // Another intact, freshly confirmed scheduled source still permits the heartbeat.
+    await meta(root, "genshin-kqm-ginews", at(500), at(2), "<html>intact-genshin</html>");
     expect((await heartbeatVerdict(store, scheduled, NOW, acceptedAll)).current).toBe(true);
   });
 
@@ -704,10 +729,9 @@ describe("dead-man heartbeat verdict", () => {
     const mismatchDir = await stageWorkspace("mismatched-cache");
     const zzzFixture = "test/fixtures/zzz/snapshots-418d518/zzz-zenlessgg-banners";
     const zzzMeta = (await Bun.file(join(repoRoot, `${zzzFixture}.meta.json`)).json()) as SnapshotMeta;
-    await Bun.write(
-      join(mismatchDir, "snapshots/zzz-zenlessgg-banners.json"),
-      await Bun.file(join(repoRoot, `${zzzFixture}.json`)).bytes(),
-    );
+    const zzzBytes = new TextEncoder().encode((await Bun.file(join(repoRoot, `${zzzFixture}.json`)).text()).replaceAll("\r\n", "\n"));
+    expect(hashBody(zzzBytes)).toBe(zzzMeta.contentHash);
+    await Bun.write(join(mismatchDir, "snapshots/zzz-zenlessgg-banners.json"), zzzBytes);
     await Bun.write(
       join(mismatchDir, "snapshots/zzz-zenlessgg-banners.meta.json"),
       JSON.stringify({ ...zzzMeta, contentChangedAt: hoursAgo(96), lastConfirmedAt: hoursAgo(96) }),
@@ -734,6 +758,43 @@ describe("dead-man heartbeat verdict", () => {
     await new SnapshotStore(join(mismatchDir, "snapshots"))
       .recordCheck("zzz-zenlessgg-banners", { at: hoursAgo(2), status: 304, ok: true });
     expect((await runPipeline(mismatchDir)).verdict).toBe("current=true");
+
+    // Case 3: Partial write — body bytes belong to a newer version while metadata and fresh
+    // cached state still carry an older contentHash. The builder accepts the body, but
+    // publication-liveness must reject the mismatched source; a second intact fresh source still pings.
+    const partialDir = await stageWorkspace("partial-write");
+    const olderHash = "143f4eb500000000000000000000000000000000000000000000000000000000";
+    await Bun.write(join(partialDir, "snapshots/zzz-zenlessgg-banners.json"), zzzBytes);
+    await Bun.write(
+      join(partialDir, "snapshots/zzz-zenlessgg-banners.meta.json"),
+      JSON.stringify({ ...zzzMeta, contentHash: olderHash, contentChangedAt: hoursAgo(2), lastConfirmedAt: hoursAgo(2) }),
+    );
+    await Bun.write(
+      join(partialDir, "snapshots/zzz-zenlessgg-banners.state.json"),
+      JSON.stringify({
+        sourceId: "zzz-zenlessgg-banners",
+        lastCheckedAt: hoursAgo(2),
+        lastConfirmedAt: hoursAgo(2),
+        lastConfirmedContentHash: olderHash,
+        lastStatus: 304,
+        consecutiveFailures: 0,
+      }),
+    );
+    const partial = await runPipeline(partialDir);
+    expect(partial.feed.sources.find((s) => s.sourceId === "zzz-zenlessgg-banners")?.parsedCount).toBeGreaterThan(0);
+    expect(partial.verdict).toBe("current=false");
+
+    // Adding an intact fresh snapshot lets the heartbeat proceed despite the mismatched one.
+    const genshinFixture = "test/fixtures/genshin/snapshots-418d518/genshin-kqm-ginews";
+    const genshinMeta = (await Bun.file(join(repoRoot, `${genshinFixture}.meta.json`)).json()) as SnapshotMeta;
+    const genshinBytes = new TextEncoder().encode((await Bun.file(join(repoRoot, `${genshinFixture}.md`)).text()).replaceAll("\r\n", "\n"));
+    expect(hashBody(genshinBytes)).toBe(genshinMeta.contentHash);
+    await Bun.write(join(partialDir, "snapshots/genshin-kqm-ginews.md"), genshinBytes);
+    await Bun.write(
+      join(partialDir, "snapshots/genshin-kqm-ginews.meta.json"),
+      JSON.stringify({ ...genshinMeta, contentChangedAt: hoursAgo(2), lastConfirmedAt: hoursAgo(2) }),
+    );
+    expect((await runPipeline(partialDir)).verdict).toBe("current=true");
   });
 });
 

@@ -19,7 +19,9 @@
 // - Raw records with matching fingerprint: the feed builder folds a source's
 //   dates into one "fresh as of" value, where a future `contentChangedAt`
 //   displaces a real HTTP 304 confirmation. Reading the raw records discards
-//   future dates first; requiring `state.lastConfirmedContentHash === meta.contentHash`
+//   future dates first; verifying the on-disk body's actual SHA-256 against
+//   `meta.contentHash` rejects partially written snapshots whose metadata
+//   describes different bytes, and requiring `state.lastConfirmedContentHash === meta.contentHash`
 //   ensures cached state from an unpushed refresh (or a legacy cache without a
 //   hash) cannot vouch for older published bytes.
 // - The same directory as the builder: `--snapshots`, else `SNAPSHOT_DIR`, else
@@ -37,8 +39,8 @@ import { PUBLICATION_STALE_AFTER_MS, type SourceHealth } from "../src/shared/fee
 
 const DEFAULT_FEED = "public/data/events.v1.json";
 
-/** What the heartbeat reads: the confirmation records, and whether the snapshot is on disk. */
-export type HeartbeatStore = ConfirmationStore & Pick<SnapshotStore, "read">;
+/** What the heartbeat reads: the confirmation records, and the on-disk body hash. */
+export type HeartbeatStore = ConfirmationStore & Pick<SnapshotStore, "readBodyHash">;
 
 /**
  * Scheduled snapshot sources accepted by this build.
@@ -70,7 +72,11 @@ export async function heartbeatVerdict(
 ): Promise<{ current: boolean; message: string }> {
   const published: string[] = [];
   for (const id of acceptedSnapshotIds(feedSources, scheduledIds)) {
-    if ((await store.read(id)) !== null) published.push(id);
+    const meta = await store.readMeta(id);
+    if (meta === null || typeof meta.contentHash !== "string" || meta.contentHash.length === 0) continue;
+    const actualHash = await store.readBodyHash(id);
+    if (actualHash === null || actualHash !== meta.contentHash) continue;
+    published.push(id);
   }
   let newest: string | null = null;
   for (const confirmation of await collectConfirmations(store, published, now, { requireMatchingStateHash: true })) {

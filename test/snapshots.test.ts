@@ -476,6 +476,21 @@ describe("the six-hour floor", () => {
       consecutiveFailures: 1,
     });
   });
+
+  test("readBodyHash returns the SHA-256 of on-disk bytes, detects body/meta drift, and returns null when missing", async () => {
+    expect(await store.readBodyHash("genshin-game8-events")).toBeNull();
+    const { meta: saved } = await save("<html>one</html>", T0);
+    expect(await store.readBodyHash("genshin-game8-events")).toBe(saved.contentHash);
+
+    // A partial write that replaced only the body changes readBodyHash without moving meta.contentHash.
+    await Bun.write(store.bodyPath("genshin-game8-events"), "<html>two</html>");
+    const drifted = await store.readBodyHash("genshin-game8-events");
+    expect(drifted).not.toBeNull();
+    expect(drifted).not.toBe(saved.contentHash);
+
+    await rm(store.bodyPath("genshin-game8-events"));
+    expect(await store.readBodyHash("genshin-game8-events")).toBeNull();
+  });
 });
 
 describe("freshnessAt", () => {

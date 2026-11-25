@@ -282,6 +282,17 @@ export class SnapshotStore {
     };
   }
 
+  /** SHA-256 of the stored body bytes, or null when metadata or body is absent. */
+  async readBodyHash(sourceId: string): Promise<string | null> {
+    const meta = await this.readMeta(sourceId);
+    if (meta === null) return null;
+
+    const body = Bun.file(this.bodyPath(sourceId, meta.contentKind));
+    if (!(await body.exists())) return null;
+
+    return hashBody(new Uint8Array(await body.arrayBuffer()));
+  }
+
   /** Sources with a stored snapshot, by id. */
   async list(): Promise<string[]> {
     let names: string[];
@@ -394,16 +405,13 @@ export class SnapshotStore {
   /** Record an attempt: success, 304 or failure. Writes state, and updates lastConfirmedAt in meta if confirmed. */
   async recordCheck(
     sourceId: string,
-    check: { at: string; status: number | null; ok: boolean; contentHash?: string | null },
+    check: { at: string; status: number | null; ok: boolean },
   ): Promise<SnapshotState> {
     const previous = await this.readState(sourceId);
     const meta = check.ok ? await this.readMeta(sourceId) : null;
-    const rawHash = check.ok
-      ? (check.contentHash !== undefined ? check.contentHash : (meta?.contentHash ?? null))
-      : previous.lastConfirmedContentHash;
     const confirmedHash = check.ok
-      ? (typeof rawHash === "string" && rawHash.length > 0 ? rawHash : null)
-      : rawHash;
+      ? (typeof meta?.contentHash === "string" && meta.contentHash.length > 0 ? meta.contentHash : null)
+      : previous.lastConfirmedContentHash;
     const state: SnapshotState = {
       sourceId,
       lastCheckedAt: check.at,
