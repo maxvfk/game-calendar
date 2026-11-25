@@ -20,8 +20,21 @@ now reviewed rows, one pair per season, taken from the version notes. The stale-
   version maintenance, Nov 24 22:00 UTC. Their end was "before the next version update", and
   news 0740 dates it. They had shown as running with an unknown end.
 
-Still open: three older weapon banners (Deep Cold Issue, Resplendent Spectrum, Seal of Jade
-Issue) have no end date and still show as running.
+Follow-up the same day: the three older banners without an end now have one, from the
+official notes (they had shown as running):
+
+- **Deep Cold Issue** ends after three Chartered Headhunting banners from Winter Hunt (4480).
+  The version notes list them as Winter Hunt (5208), Rejuvenation and The Hearth Fire Beckons
+  the Starry Flow (9560), with no other Chartered banner between. The last ran until the
+  Nov 25 maintenance, so the issue ended Nov 24 22:00 UTC. This replaces the earlier rule in
+  `docs/research/coverage-endfield.md` to keep its end unknown: all three banners are now dated.
+- **Resplendent Spectrum** ran until the Oct 15 version maintenance (5208, 9560): Oct 14 22:00 UTC.
+- **Seal of Jade Issue** ends with Anvil, Backpack, Plus A Pot o'Honey, the third Chartered
+  banner from Rejuvenation: Dec 23 at 11:59 server time (0740).
+
+Still open: the current version's banners (Anvil, Backpack, Plus A Pot o'Honey; To Every
+Wish Adrift; Floaty Traveler Issue; Casual Roamer Issue; Moongleam Issue) are not in the
+calendar. The wiki Event page carries no banners; they belong to the Endfield per-version check.
 
 ## Liveness step 1 — dead-man ping and stale-source issue (2026-11-24)
 

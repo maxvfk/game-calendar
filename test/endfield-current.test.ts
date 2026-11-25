@@ -13,19 +13,23 @@ const ids = ["rejuvenation:2026-10-15", "seal-of-jade-issue:2026-10-15",
 const current = reviewed.filter(e => ids.includes(e.id));
 const find = (slug: string) => current.find(e => e.id.startsWith(`endfield:${slug}:`))!;
 
-test("official channels remain distinct, with day openings and no synthetic maintenance or issue expiry", () => {
+test("official channels remain distinct, with day openings and no synthetic maintenance expiry", () => {
   expect(current.map(e => e.id)).toEqual(ids);
   for (const e of current) {
     expect(e).toMatchObject({ startPrecision: "day", sourceId: "reviewed-endfield",
       extractionMethod: "manual", provenanceStatus: "official", confidence: 1 });
-    expect(e.firstSeenAt).toBe(e.updatedAt);
+    expect(e.firstSeenAt <= e.updatedAt).toBe(true);
     expect(e.updatedAt > batch.reviewedAt).toBe(true);
   }
   expect(find("rejuvenation").recognitionSubjects).toEqual(["Si"]);
   expect(find("ancestral-spring-flows-anew").recognitionSubjects).toEqual(["Tangtang"]);
   expect(find("tender-sprig-issue").recognitionSubjects).toEqual(["Brigand's Calling"]);
   const issue = find("seal-of-jade-issue");
-  expect(issue).toMatchObject({ endsAt: null, endPrecision: "unknown", regionEnds: null, regionScoped: false,
+  // "Ends after 3 Chartered Headhunting banners starting with Rejuvenation" (9560): Rejuvenation,
+  // The Hearth Fire Beckons the Starry Flow (9560), then Anvil, Backpack, Plus A Pot o'Honey,
+  // which closes Dec 23 at 11:59 server time (0740).
+  expect(issue).toMatchObject({ endsAt: "2026-12-23T03:59:00.000Z", endPrecision: "exact", regionScoped: true,
+    regionEnds: { asia: "2026-12-23T03:59:00.000Z", europe: "2026-12-23T16:59:00.000Z", america: "2026-12-23T16:59:00.000Z" },
     recognitionSubjects: ["Jade Vessel"] });
   for (const region of Region.options) expect(clockFor(issue, region, Date.parse("2026-11-05T18:00:00Z")).ended).toBe(false);
 });

@@ -26,16 +26,18 @@
     {
       "title": "Deep Cold Issue",
       "type": "banner",
-      "summary": "Umbra of Frigid Eventide weapon rate-up; ends after three Chartered Headhunting banners, with no announced calendar deadline.",
+      "summary": "Umbra of Frigid Eventide weapon rate-up; ends after three Chartered Headhunting banners starting with Winter Hunt (news 4480). The official version notes list them as Winter Hunt (5208), then Rejuvenation and The Hearth Fire Beckons the Starry Flow (9560); the last ran until the Nov 25 version maintenance, which began at 22:00 UTC (0740).",
       "startsAt": "2026-09-02T00:00:00.000Z",
       "startPrecision": "day",
-      "endsAt": null,
-      "endPrecision": "unknown",
+      "endsAt": "2026-11-24T22:00:00.000Z",
+      "endPrecision": "exact",
       "regionScoped": false,
       "regionEnds": null,
       "sourceUrl": "https://endfield.gryphline.com/en-us/news/4480",
       "provenanceStatus": "official",
-      "confidence": 1
+      "confidence": 1,
+      "firstSeenAt": "2026-09-23T00:05:33.000Z",
+      "reviewedAt": "2026-11-25T21:30:00.000Z"
     },
     {
       "reviewedAt": "2026-10-17T21:56:39.000Z",
@@ -60,16 +62,18 @@
     {
       "title": "Resplendent Spectrum",
       "type": "banner",
-      "summary": "Yvonne RE-Factor Headhunting #1; starts September 24 at 12:00 server time, so the cross-region start is shown at day precision.",
+      "summary": "Yvonne RE-Factor Headhunting #1; September 24 at 12:00 server time until before the next version update and maintenance (news 5208). That maintenance began Oct 15 at 06:00 UTC+8 (Asia) and Oct 14 at 17:00 UTC−5 (Americas/Europe), the same instant (news 9560). The cross-region start is shown at day precision.",
       "startsAt": "2026-09-24T00:00:00.000Z",
       "startPrecision": "day",
-      "endsAt": null,
-      "endPrecision": "unknown",
+      "endsAt": "2026-10-14T22:00:00.000Z",
+      "endPrecision": "exact",
       "regionScoped": false,
       "regionEnds": null,
-      "sourceUrl": "https://x.com/AKEndfield/status/2101884123958952272",
+      "sourceUrl": "https://endfield.gryphline.com/en-us/news/5208",
       "provenanceStatus": "official",
-      "confidence": 1
+      "confidence": 1,
+      "firstSeenAt": "2026-09-23T00:05:33.000Z",
+      "reviewedAt": "2026-11-25T21:30:00.000Z"
     },
     {
       "id": "endfield:echoes-of-war-season-of-phantasia-cycle-i:2026-10-15",
@@ -243,18 +247,22 @@
         "Jade Vessel"
       ],
       "type": "banner",
-      "summary": "Jade Vessel Arsenal Issue. Opens after the Sanctuary of Ink update and ends after three Chartered Headhunting banners starting with Rejuvenation; no calendar cutoff is announced.",
+      "summary": "Jade Vessel Arsenal Issue. Opens after the Sanctuary of Ink update and ends after three Chartered Headhunting banners starting with Rejuvenation (news 9560): Rejuvenation, The Hearth Fire Beckons the Starry Flow, and Anvil, Backpack, Plus A Pot o'Honey, which closes Dec 23 at 11:59 server time (Asia UTC+8; Americas/Europe UTC−5; news 0740).",
       "startsAt": "2026-10-15T00:00:00.000Z",
       "startPrecision": "day",
-      "endsAt": null,
-      "endPrecision": "unknown",
-      "regionScoped": false,
-      "regionEnds": null,
+      "endsAt": "2026-12-23T03:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-12-23T03:59:00.000Z",
+        "europe": "2026-12-23T16:59:00.000Z",
+        "america": "2026-12-23T16:59:00.000Z"
+      },
       "sourceUrl": "https://endfield.gryphline.com/en-us/news/9560",
       "provenanceStatus": "official",
       "confidence": 1,
       "firstSeenAt": "2026-10-28T12:49:47.925Z",
-      "reviewedAt": "2026-10-28T12:49:47.925Z"
+      "reviewedAt": "2026-11-25T21:30:00.000Z"
     },
     {
       "id": "endfield:ancestral-spring-flows-anew:2026-10-29",

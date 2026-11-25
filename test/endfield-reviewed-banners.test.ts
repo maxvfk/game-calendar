@@ -6,16 +6,22 @@ import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 import { effectiveEnd } from "../src/shared/time.ts";
 import { categoryFor } from "../src/client/state/eventCategories.ts";
 
-test("official Endfield banners preserve regional ends and unknown boundaries", async () => {
+test("official Endfield banners preserve regional ends and resolve relative ends from later notes", async () => {
   const { events } = materializeReviewedBatch(await Bun.file("data/reviewed/endfield.json").json());
   const winter = events.find(e => e.title === "Winter Hunt")!;
   expect(winter).toMatchObject({ startPrecision: "day", endPrecision: "exact", provenanceStatus: "official" });
   expect(effectiveEnd(winter, "asia")).toBe("2026-09-30T03:59:00.000Z");
   expect(effectiveEnd(winter, "america")).toBe("2026-09-30T16:59:00.000Z");
   expect(effectiveEnd(winter, "europe")).toBe("2026-09-30T16:59:00.000Z");
-  expect(events.find(e => e.title === "Deep Cold Issue")).toMatchObject({ endsAt: null, endPrecision: "unknown" });
+  // Deep Cold: three Chartered banners from Winter Hunt (4480) are Winter Hunt (5208), Rejuvenation and
+  // The Hearth Fire Beckons the Starry Flow (9560); the last ran until the Nov 25 maintenance (0740).
+  expect(events.find(e => e.title === "Deep Cold Issue")).toMatchObject({
+    endsAt: "2026-11-24T22:00:00.000Z", endPrecision: "exact", regionScoped: false,
+  });
+  // Resplendent Spectrum: until the Oct 15 version maintenance (5208, 9560).
   expect(events.find(e => e.title === "Resplendent Spectrum")).toMatchObject({
-    startsAt: "2026-09-24T00:00:00.000Z", startPrecision: "day", endsAt: null,
+    startsAt: "2026-09-24T00:00:00.000Z", startPrecision: "day",
+    endsAt: "2026-10-14T22:00:00.000Z", endPrecision: "exact", regionScoped: false,
   });
 });
 
