@@ -457,8 +457,12 @@ run turned red. So two further signals read outcomes rather than errors:
   source ever succeeding there is no ping. `pages` then pings the URL in the `DEADMAN_PING_URL` secret after a
   successful deploy. An external monitor alerts when pings stop, which covers a stopped refresh, a
   red CI holding back deploys and a failed Pages deploy alike. Without the secret the step is a
-  no-op. Operator setup: a healthchecks.io check with period 12 hours and grace about 18 hours, so it
-  alerts after roughly 30 hours without a ping, the same threshold as `publicationStalled()`.
+  no-op. Monitor: a Cronitor Heartbeat monitor (free plan, live since 2026-11-25), schedule every
+  12 hours and grace period 18 hours, so it alerts after roughly 30 hours without a ping, the
+  same threshold as `publicationStalled()`. Its alerts go to the operator's email. The secret
+  holds the monitor's telemetry URL, and the step sends a plain GET to it. The URL contains the
+  monitor key, so it lives only in the secret, never in the repository; if the key is rotated,
+  update the secret.
 
 **The fact has to reach the feed, because the runner is not the only thing that judges a zero.**
 `scripts/build-feed.ts` parses the same snapshot again and records a `SourceHealth` per source, and

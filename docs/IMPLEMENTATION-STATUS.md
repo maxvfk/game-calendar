@@ -85,8 +85,12 @@ in the refresh state); with no valid date its age is unknown and it does not ope
 the issue. Both are
 advisory. `endfield-wikigg-echoes` is stale since
 2026-11-14, so the issue opens on the first run. Details: `docs/INGESTION.md`.
-Operator step: create the healthchecks.io check (period 12 h, grace about 18 h) and
-add its ping URL as the repository secret `DEADMAN_PING_URL`.
+**Live since 2026-11-25** on Cronitor rather than healthchecks.io, whose sign-up emails never
+arrived. The monitor is a Heartbeat monitor that expects a ping every 12 h, with an 18 h grace
+period, so it alerts after about 30 h without a ping. Alerts go to the operator's email. The
+repository secret `DEADMAN_PING_URL` holds its telemetry URL; the URL itself stays out of the
+repository. No code change was needed: the step sends a plain GET. First pings were confirmed
+the same evening.
 
 ## Liveness step 1 — tests decoupled from live snapshots (2026-11-24)
 
