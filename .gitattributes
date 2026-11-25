@@ -1,0 +1,7 @@
+# Snapshot bodies are stored exactly as served: `meta.contentHash` is the SHA-256
+# of those bytes, and the dead-man heartbeat (scripts/publication-liveness.ts)
+# refuses a snapshot whose body no longer hashes to it. Line-ending conversion
+# on checkout (core.autocrlf on Windows) would change the bytes, so it is off
+# for the live snapshots and for the pinned test copies of them.
+snapshots/** -text
+test/fixtures/*/snapshots-*/** -text

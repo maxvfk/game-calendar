@@ -1,9 +1,9 @@
 name: CI
-# GitHub Actions CI/CD
+# GitHub Actions CI/CD: check, build and deploy to GitHub Pages.
 #
-# GitHub only needs to build and serve (deploying to GitHub Pages), not refresh
-# data sources. Scheduled fetching and snapshot refresh run exclusively on
-# Gitea Actions (.gitea/workflows/refresh.yml).
+# This workflow never fetches sources. Scheduled refresh runs in refresh.yml in
+# this directory, which commits snapshots, saves the bookkeeping cache and then
+# dispatches this workflow. The .gitea/workflows copies are retained, not live.
 
 on:
   push:
@@ -38,8 +38,8 @@ jobs:
       # snapshots/*.state.json, so without this the feed built here has only
       # `contentChangedAt` to go on and every source reads as stale two days
       # after its bytes last moved, which for a wiki page is most of the time.
-      # Restore-only: Gitea's refresh workflow owns writing this cache, and a
-      # miss just returns the pre-existing fallback behaviour.
+      # Restore-only: refresh.yml owns writing this cache, and a miss just
+      # returns the pre-existing fallback behaviour.
       - name: Restore refresh bookkeeping
         uses: actions/cache/restore@v4
         with:
@@ -198,6 +198,8 @@ jobs:
     name: Build site
     runs-on: ubuntu-latest
     needs: [check, czn-postgres17]
+    outputs:
+      publication_current: ${{ steps.liveness.outputs.current }}
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
@@ -221,6 +223,11 @@ jobs:
         env:
           BASE_PATH: ${{ vars.BASE_PATH || format('/{0}/', github.event.repository.name) }}
         run: bun run build
+
+      # Read by the dead-man ping in `pages`, which has no checkout or Bun.
+      - name: Publication liveness
+        id: liveness
+        run: bun scripts/publication-liveness.ts
       - uses: actions/upload-artifact@v4
         with:
           name: site
@@ -258,3 +265,21 @@ jobs:
       - id: deploy_retry
         if: steps.deploy.outcome == 'failure'
         uses: actions/deploy-pages@v4
+
+      # Dead-man heartbeat: one ping per successful deploy whose data is current.
+      # The external monitor alerts when pings stop, which covers a stopped
+      # refresh, a red CI holding back deploys and a failed Pages deploy alike.
+      # Skipped until the DEADMAN_PING_URL secret exists. Advisory: a monitor
+      # outage must not fail the deploy, and a missed ping alerts anyway.
+      - name: Dead-man ping
+        if: needs.build.outputs.publication_current == 'true'
+        continue-on-error: true
+        env:
+          DEADMAN_PING_URL: ${{ secrets.DEADMAN_PING_URL }}
+        run: |
+          if [ -z "$DEADMAN_PING_URL" ]; then
+            echo "DEADMAN_PING_URL is not set; no heartbeat sent."
+            exit 0
+          fi
+          curl -fsS -m 10 --retry 3 -o /dev/null "$DEADMAN_PING_URL"
+          echo "Heartbeat sent."

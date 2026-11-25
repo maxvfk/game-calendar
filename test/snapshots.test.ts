@@ -452,8 +452,8 @@ describe("the six-hour floor", () => {
     expect(after).toBe(before);
   });
 
-  test("successful confirmation updates lastConfirmedAt in metadata", async () => {
-    await save("<html>one</html>", T0);
+  test("successful confirmation updates lastConfirmedAt in metadata and records contentHash in state", async () => {
+    const { meta: saved } = await save("<html>one</html>", T0);
     await store.recordCheck("genshin-game8-events", {
       at: T1,
       status: 304,
@@ -462,6 +462,34 @@ describe("the six-hour floor", () => {
     const meta = await store.readMeta("genshin-game8-events");
     expect(meta?.lastConfirmedAt).toBe(T1);
     expect(meta?.contentChangedAt).toBe(T0);
+    expect((await store.readState("genshin-game8-events")).lastConfirmedContentHash).toBe(saved.contentHash);
+
+    // A later failure preserves both lastConfirmedAt and lastConfirmedContentHash.
+    await store.recordCheck("genshin-game8-events", {
+      at: "2026-08-16T00:00:00.000Z",
+      status: 503,
+      ok: false,
+    });
+    expect(await store.readState("genshin-game8-events")).toMatchObject({
+      lastConfirmedAt: T1,
+      lastConfirmedContentHash: saved.contentHash,
+      consecutiveFailures: 1,
+    });
+  });
+
+  test("readBodyHash returns the SHA-256 of on-disk bytes, detects body/meta drift, and returns null when missing", async () => {
+    expect(await store.readBodyHash("genshin-game8-events")).toBeNull();
+    const { meta: saved } = await save("<html>one</html>", T0);
+    expect(await store.readBodyHash("genshin-game8-events")).toBe(saved.contentHash);
+
+    // A partial write that replaced only the body changes readBodyHash without moving meta.contentHash.
+    await Bun.write(store.bodyPath("genshin-game8-events"), "<html>two</html>");
+    const drifted = await store.readBodyHash("genshin-game8-events");
+    expect(drifted).not.toBeNull();
+    expect(drifted).not.toBe(saved.contentHash);
+
+    await rm(store.bodyPath("genshin-game8-events"));
+    expect(await store.readBodyHash("genshin-game8-events")).toBeNull();
   });
 });
 

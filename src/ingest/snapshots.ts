@@ -57,8 +57,37 @@ export interface SnapshotState {
   lastCheckedAt: string | null;
   /** Last time the server confirmed the body (200 or 304). */
   lastConfirmedAt: string | null;
+  /**
+   * `contentHash` of the snapshot body that `lastConfirmedAt` confirmed.
+   * Optional: state written before this field existed carries no fingerprint,
+   * so the heartbeat falls back to the published snapshot's metadata rather
+   * than trusting a cache entry it cannot match to the published bytes.
+   */
+  lastConfirmedContentHash?: string | null;
   lastStatus: number | null;
   consecutiveFailures: number;
+  /**
+   * First attempt of the current failure streak; null while the source answers.
+   * Lets liveness age a source that has never once been confirmed. Optional:
+   * state written before it existed starts the streak at its next failure.
+   */
+  failingSince?: string | null;
+  /**
+   * First cycle in which the runner had this source on its schedule, whether or
+   * not it was asked (robots can forbid every request). Lets liveness age a source
+   * that has never been confirmed nor even fetched. Kept once set; optional like
+   * `failingSince`.
+   */
+  firstSeenAt?: string | null;
+}
+
+/**
+ * A stored start worth carrying forward into a record made at `at`: a string that
+ * parses and is not later than `at`. Anything else — empty, malformed, or from the
+ * future — restarts the clock, or the age it dates could never begin.
+ */
+function carriedTime(time: unknown, at: string): time is string {
+  return typeof time === "string" && !Number.isNaN(Date.parse(time)) && Date.parse(time) <= Date.parse(at);
 }
 
 export interface Snapshot {
@@ -253,6 +282,17 @@ export class SnapshotStore {
     };
   }
 
+  /** SHA-256 of the stored body bytes, or null when metadata or body is absent. */
+  async readBodyHash(sourceId: string): Promise<string | null> {
+    const meta = await this.readMeta(sourceId);
+    if (meta === null) return null;
+
+    const body = Bun.file(this.bodyPath(sourceId, meta.contentKind));
+    if (!(await body.exists())) return null;
+
+    return hashBody(new Uint8Array(await body.arrayBuffer()));
+  }
+
   /** Sources with a stored snapshot, by id. */
   async list(): Promise<string[]> {
     let names: string[];
@@ -368,26 +408,46 @@ export class SnapshotStore {
     check: { at: string; status: number | null; ok: boolean },
   ): Promise<SnapshotState> {
     const previous = await this.readState(sourceId);
+    const meta = check.ok ? await this.readMeta(sourceId) : null;
+    const confirmedHash = check.ok
+      ? (typeof meta?.contentHash === "string" && meta.contentHash.length > 0 ? meta.contentHash : null)
+      : previous.lastConfirmedContentHash;
     const state: SnapshotState = {
       sourceId,
       lastCheckedAt: check.at,
       lastConfirmedAt: check.ok ? check.at : previous.lastConfirmedAt,
+      ...(confirmedHash !== undefined ? { lastConfirmedContentHash: confirmedHash } : {}),
       lastStatus: check.status,
       consecutiveFailures: check.ok ? 0 : previous.consecutiveFailures + 1,
+      failingSince: check.ok
+        ? null
+        : previous.consecutiveFailures > 0 && carriedTime(previous.failingSince, check.at)
+        ? previous.failingSince
+        : check.at,
+      firstSeenAt: carriedTime(previous.firstSeenAt, check.at) ? previous.firstSeenAt : check.at,
     };
 
     await mkdir(this.root, { recursive: true });
     await writeAtomic(this.statePath(sourceId), `${JSON.stringify(state, null, 2)}\n`);
 
-    if (check.ok) {
-      const meta = await this.readMeta(sourceId);
-      if (meta !== null && meta.lastConfirmedAt !== check.at) {
-        meta.lastConfirmedAt = check.at;
-        await writeAtomic(this.metaPath(sourceId), `${JSON.stringify(meta, null, 2)}\n`);
-      }
+    if (check.ok && meta !== null && meta.lastConfirmedAt !== check.at) {
+      meta.lastConfirmedAt = check.at;
+      await writeAtomic(this.metaPath(sourceId), `${JSON.stringify(meta, null, 2)}\n`);
     }
 
     return state;
+  }
+
+  /**
+   * Note that a scheduled source was due for judgement in this cycle, before any
+   * request. Sets `firstSeenAt` once and touches nothing else, so the interval
+   * floor and the failure streak read exactly what they did.
+   */
+  async recordSeen(sourceId: string, at: string): Promise<void> {
+    const previous = await this.readState(sourceId);
+    if (carriedTime(previous.firstSeenAt, at)) return;
+    await mkdir(this.root, { recursive: true });
+    await writeAtomic(this.statePath(sourceId), `${JSON.stringify({ ...previous, firstSeenAt: at }, null, 2)}\n`);
   }
 
   /** Remove one source's cache entirely. Used by tests and by hand. */

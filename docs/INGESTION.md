@@ -394,8 +394,9 @@ annotated on the run page, listed in the job summary with its status code, and c
 conduct for why that ordering is load-bearing.
 
 **Built: `scripts/refresh-sources.ts`** (`bun run refresh`), scheduled by
-`.gitea/workflows/refresh.yml`. Scheduled fetching and data refresh run exclusively on Gitea
-Actions; GitHub Actions only builds and serves, and never refreshes data sources. The runner
+`.github/workflows/refresh.yml`, which commits the snapshots and then dispatches `ci.yml` to build
+and deploy. `ci.yml` itself never fetches sources. The `.gitea/workflows` copies are retained, not
+live. The runner
 takes its adapters, store, robots gate, fetch and clock by injection, so the whole runner is
 tested offline against a fake fetch. A fetched body is *rejected* — the previous snapshot survives
 — when it fails `canParse`, throws, or yields zero events; storing an empty parse would make the feed
@@ -409,6 +410,55 @@ a lane that is correctly empty, while the snapshot it is holding goes on ageing.
 the page's statement and never a row count, so a redesign still rejects, and the run says which of
 the two it saw: `0 events — the page states it currently lists none`. One source down is a warning and exit 0; every source failing is exit 1, so CI never
 commits a cycle that learned nothing.
+
+**Liveness is judged on outcomes, continuously.** `broken` fires once, on the transition, and only
+for a source that is *failing*. A source can also stop being asked without failing: the Endfield
+Echoes lane went quiet on 2026-11-14 because its season selector found nothing to ask about, and no
+run turned red. So two further signals read outcomes rather than errors:
+
+- **Stale-source issue.** After every refresh, `scripts/stale-source-issue.ts` lists the scheduled
+  sources with no confirmed fetch (200 or 304) for over 48 hours and keeps one GitHub issue in step:
+  opened when the first source goes stale, its body refreshed silently every run, a comment when the
+  set changes, closed when every source recovers. The confirmation time is the newest of the
+  committed `.meta.json` and the cached `.state.json`, so a cache miss cannot make a healthy source
+  stale. A source never once confirmed is aged from the earliest of two state records: the first
+  cycle it was on the schedule (`firstSeenAt`, written before any request, so even a source robots
+  always forbids is dated) and the first attempt of its failure streak (`failingSince`). So a new
+  source that only ever fails, or is never asked, still reaches the issue after 48 hours (a failed
+  write of that record is a warning for its source, never the end of the cycle). With none of
+  these, or only unparseable or future-dated ones, the age is unknown and the issue does not open.
+  A stored start is carried into the next record only if it is not later than that record, so a
+  future date restarts the clock instead of freezing it;
+  a future date is discarded before the newest is chosen, so it cannot outvote a real one. Recovery has
+  its own test: only a valid confirmation within 48 hours takes a listed source off the issue, so a
+  cache miss that restarts a failure streak keeps it listed. A closing
+  comment claims only what was checked, names sources not judged yet, and reports a source taken
+  off the schedule as no longer monitored rather than recovered. The issue is the bot's open
+  issue with the `liveness-stale-sources` label, never matched by title. On an update the comment is
+  sent before the body edit, because the body's hidden marker is what records a change as reported.
+  The step runs after every completed cycle on `main`, including one where every source failed and
+  the runner exited 1; it is advisory and never fails the refresh. Rules: `src/ingest/liveness.ts`.
+- **Dead-man heartbeat.** `ci.yml`'s `build` job runs `scripts/publication-liveness.ts`, which passes
+  only when some *scheduled* source has a confirmed fetch inside [now − 30 hours, now], the
+  threshold of `publicationStalled()`. It reads the same records as the stale-source issue (committed
+  metadata plus the restored state) rather than the published rows: the feed builder folds a
+  source's dates into one value, where a future content-change date displaced a real HTTP 304. Here
+  a future date is discarded before the newest is chosen, so it neither counts nor hides a real
+  confirmation. Only snapshots this build accepted count: a scheduled row in the built feed with
+  non-null `lastSuccessAt`, `lastConfirmedAt` and `parsedCount` (a skipped Echoes cycle or a fixture
+  fallback does not qualify; an accepted page with zero current events does), read from the builder's
+  directory (`--snapshots`, else `SNAPSHOT_DIR`, else `snapshots`). The body on disk must still hash
+  to `meta.contentHash`, and a cached confirmation counts only when its `lastConfirmedContentHash`
+  is that same hash, so a partial write or a cache from an unpushed refresh cannot vouch for other
+  bytes. Because the check is byte-exact, `.gitattributes` turns off line-ending conversion for
+  `snapshots/` and the pinned test copies; a Windows clone made before it needs those files checked
+  out again. The `reviewed-<game>` rows are left out: their date is a manual review, and one
+  fresh review must not keep the heartbeat alive while the schedule has stopped. With no scheduled
+  source ever succeeding there is no ping. `pages` then pings the URL in the `DEADMAN_PING_URL` secret after a
+  successful deploy. An external monitor alerts when pings stop, which covers a stopped refresh, a
+  red CI holding back deploys and a failed Pages deploy alike. Without the secret the step is a
+  no-op. Operator setup: a healthchecks.io check with period 12 hours and grace about 18 hours, so it
+  alerts after roughly 30 hours without a ping, the same threshold as `publicationStalled()`.
 
 **The fact has to reach the feed, because the runner is not the only thing that judges a zero.**
 `scripts/build-feed.ts` parses the same snapshot again and records a `SourceHealth` per source, and

@@ -1,3 +1,22 @@
+## Liveness step 1 — dead-man ping and stale-source issue (2026-11-24)
+
+`ci.yml` sends a heartbeat to the `DEADMAN_PING_URL` secret after each successful
+Pages deploy when a scheduled source has a confirmed fetch within the last 30
+hours and not in the future, the threshold of `publicationStalled()`, read from
+the same snapshot records as the stale-source issue (manual
+`reviewed-*` rows do not count); without the secret the step does nothing.
+`refresh.yml` on `main` keeps one labelled "Stale sources" issue in step with the
+scheduled sources that have had no confirmed fetch for over 48 hours, including
+after a cycle where every source failed, and closes it only on a confirmed fetch
+within 48 hours. A source never confirmed is aged from its first cycle on the
+schedule or the start of its failure streak (new `firstSeenAt` and `failingSince`
+in the refresh state); with no valid date its age is unknown and it does not open
+the issue. Both are
+advisory. `endfield-wikigg-echoes` is stale since
+2026-11-14, so the issue opens on the first run. Details: `docs/INGESTION.md`.
+Operator step: create the healthchecks.io check (period 12 h, grace about 18 h) and
+add its ping URL as the repository secret `DEADMAN_PING_URL`.
+
 ## Liveness step 1 — tests decoupled from live snapshots (2026-11-24)
 
 Offline regressions use pinned inputs under `test/fixtures/`, with source and

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -17,6 +17,7 @@ import {
 import type { Adapter, ParseContext } from "../src/ingest/adapters/types.ts";
 import { ADAPTERS, ALL_ADAPTERS, adapterById } from "../src/ingest/adapters/index.ts";
 import { SnapshotStore } from "../src/ingest/snapshots.ts";
+import { collectConfirmations, livenessReport, planStaleIssue } from "../src/ingest/liveness.ts";
 import type { GachaEvent } from "../src/shared/schema.ts";
 
 const SIX_HOURS_MS = 6 * 60 * 60 * 1000;
@@ -514,6 +515,61 @@ describe("robots", () => {
     expect(calls).toHaveLength(0);
     expect(summary.outcomes[0]?.result).toBe("skipped_robots");
     expect(summary.warnings).toHaveLength(1);
+  });
+
+  test("a source robots always forbids still ages into the stale-source issue", async () => {
+    // Never asked, so never confirmed and never failing: only the schedule itself
+    // can date it. Seven cycles twelve hours apart, not one request among them.
+    const forbid = { allows: async () => ({ allowed: false, reason: "disallowed by robots" }) };
+    const start = NOW.getTime() - 72 * 60 * 60 * 1000;
+    const id = adapter().id;
+    let fetched = 0;
+    for (let i = 0; i <= 6; i++) {
+      const at = start + i * 12 * 60 * 60 * 1000;
+      const { opts, calls } = options({ robots: forbid, now: () => new Date(at) });
+      expect((await runRefresh(opts)).outcomes[0]?.result).toBe("skipped_robots");
+      fetched += calls.length;
+      if (i === 0) {
+        const first = await collectConfirmations(store, [id], at);
+        expect(planStaleIssue(null, livenessReport(first, at), at)).toEqual({ kind: "none" });
+      }
+    }
+    expect(fetched).toBe(0);
+
+    const state = await store.readState(id);
+    expect(state).toMatchObject({
+      firstSeenAt: new Date(start).toISOString(), lastCheckedAt: null, consecutiveFailures: 0,
+    });
+    const confirmations = await collectConfirmations(store, [id], NOW.getTime());
+    const action = planStaleIssue(null, livenessReport(confirmations, NOW.getTime()), NOW.getTime());
+    expect(action.kind).toBe("open");
+    expect((action as { body: string }).body).toContain(
+      `| \`${id}\` | never; on the schedule since ${new Date(start).toISOString()} | 3 d 0 h | ` +
+        "no request on record | no request on record |",
+    );
+    // The table states what the state shows and does not guess at a cause.
+    expect((action as { body: string }).body).not.toContain("| unknown |");
+  });
+
+  test("a bookkeeping write failure stays with its source; the cycle still runs and reports", async () => {
+    // The first source's state path is taken by a directory, so its atomic write
+    // fails. The second source must still get its turn, and the cycle its summary.
+    const first = adapter({ id: "first" });
+    const second = adapter({ id: "second", url: "https://example.test/second" });
+    await mkdir(join(root, "first.state.json"), { recursive: true });
+    const { opts } = options({ adapters: [first, second] });
+
+    const summary = await runRefresh(opts);
+
+    expect(summary.warnings.some((w) => w.startsWith("first: could not record schedule bookkeeping:"))).toBe(true);
+    expect(summary.outcomes.map((o) => o.sourceId)).toEqual(["first", "second"]);
+    expect(summary.outcomes[1]?.result).toBe("fetched");
+    expect((await store.readState("second")).firstSeenAt).toBe(NOW.toISOString());
+  });
+
+  test("a dry run records nothing, not even that a source was on the schedule", async () => {
+    await runRefresh(options({ dryRun: true }).opts);
+    expect((await store.readState(adapter().id)).firstSeenAt).toBeUndefined();
   });
 
   test("fetching on an assumed robots permission is named in the summary", async () => {
