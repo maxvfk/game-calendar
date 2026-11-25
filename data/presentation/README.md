@@ -179,6 +179,21 @@ through registry-only commits on `main`, but only while the repository variable
 `TIMELINE_LABELS_AUTO` is `on`. The read-only probe (`timeline-labels-probe.yml`) never
 writes it. Independent critical audit remains deferred.
 
+## Russian labels
+
+`timeline-labels.ru.v1.json` uses the same decision format and fingerprint
+contract. The builder applies matching Russian labels as `timelineTitleRu`.
+Use `--lang ru` with `queue`, `validate`, or `accept` to select the Russian
+ledger and editorial preferences. For a manual editorial pass, use the
+Russian queue with `timeline-label-preferences.ru.v1.json` and the game
+[glossary](glossary/README.md). Review the candidate registry written to
+the explicit `accept` output path before replacing the Russian ledger.
+
+In Russian validation and acceptance, a label must contain a Russian term
+from the event's game glossary (including translations of featured subjects)
+or its official `titleRu`. The check folds case, punctuation and Unicode
+variants. A missing anchor rejects the label and leaves the event undecided.
+
 ## E2a prepared provenance contract (not live)
 
 `timeline-origin-migration.v1.json` is a versioned **historical audit manifest**,

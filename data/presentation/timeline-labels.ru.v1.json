@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "decisions": [
+    {
+      "eventId": "zzz:all-new-program:2026-10-21",
+      "fingerprint": "sha256:2f581f6aef9f8212094481fef3b012b27f4ccf968793dc9fa9f49827dbfdff9e",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Новая поставка: вход 7 дней",
+      "reason": "Russian label: featured subject or official Russian name plus what it is."
+    },
+    {
+      "eventId": "zzz:en-nah-into-your-lap:2026-11-11",
+      "fingerprint": "sha256:953764bf83c5e580447a64a1a16ceb35242dfe980511a7a109118cca9f27b9f2",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Эн-ноты прямо в руки: вход 7 дней",
+      "reason": "Russian label: featured subject or official Russian name plus what it is."
+    },
+    {
+      "eventId": "zzz:answers-in-the-wind:2026-11-11",
+      "fingerprint": "sha256:fbfe6db411cdfbc16224823f6cad93c59110e180a08a09078664f134a55e3453",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Севериан",
+      "reason": "Russian label: featured subject or official Russian name plus what it is."
+    },
+    {
+      "eventId": "zzz:outlier-of-prodigies:2026-11-11",
+      "fingerprint": "sha256:96a9025f58ab41e5f8752e22f7aa1b335dd417bc1e2695bf6337a2a5d6934174",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Норма",
+      "reason": "Russian label: featured subject or official Russian name plus what it is."
+    },
+    {
+      "eventId": "zzz:the-final-callback-audition-stage:2026-11-11",
+      "fingerprint": "sha256:46364dcfc16c3ea2ab2a8e4f64cba691c43c9d6afc301bc7ea19daa1fad2c8c7",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Последняя проба: Севериан и Норма",
+      "reason": "Russian label: featured subject or official Russian name plus what it is."
+    }
+  ]
+}

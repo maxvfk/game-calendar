@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { EventFeed } from "../shared/feed.ts";
 import type { GachaEvent } from "../shared/schema.ts";
+import type { RussianGlossaries } from "./timeline-label-glossary.ts";
 import {
   RULES_VERSION, TimelineDecision, TimelineRegistry, comparable, endBound, labelDiagnostics, publicEvent,
-  semanticFingerprint,
+  russianLabelAnchorError, semanticFingerprint,
 } from "./timeline-labels.ts";
 
 /** The model's whole response. Each decision is checked on its own below. */
@@ -75,7 +76,7 @@ function guardedDecision(base: { eventId: string; fingerprint: string; rulesVers
  */
 export function acceptTimelineProposals(
   proposalsInput: unknown, feedInput: unknown, registryInput: unknown,
-  vocabulary: readonly string[] = [], asOf?: string,
+  vocabulary: readonly string[] = [], asOf?: string, russianGlossaries?: RussianGlossaries,
 ): AcceptResult {
   const proposals = Proposals.parse(proposalsInput);
   const feed = EventFeed.parse(feedInput);
@@ -110,7 +111,11 @@ export function acceptTimelineProposals(
       incoming.set(d.eventId, d);
       outcomes.push({ eventId: d.eventId, outcome: "accepted", decision: d.decision });
     } else {
-      const why = labelGuard(event, d.timelineTitle, vocabulary);
+      const anchorError = russianGlossaries ? russianLabelAnchorError(event, d.timelineTitle, russianGlossaries) : null;
+      if (anchorError !== null) { reject(anchorError); continue; }
+      const why = russianGlossaries
+        ? (LINK.test(d.timelineTitle) ? "link or domain" : null)
+        : labelGuard(event, d.timelineTitle, vocabulary);
       if (why === null) {
         incoming.set(d.eventId, d);
         outcomes.push({ eventId: d.eventId, outcome: "accepted", decision: "label", timelineTitle: d.timelineTitle });
@@ -129,8 +134,9 @@ export function acceptTimelineProposals(
       ...[...incoming.values()].filter(d => !recorded.has(d.eventId)),
     ],
   });
+  const language = russianGlossaries ? "ru" : "en";
   for (;;) {
-    const errors = labelDiagnostics(feed.events, merge()).errors;
+    const errors = labelDiagnostics(feed.events, merge(), language).errors;
     if (!errors.length) break;
     const colliding = new Set(errors.flatMap(e => e.match(/^ambiguous overlapping labels: (\S+) \/ (\S+)$/)?.slice(1) ?? []));
     const culprit = [...incoming.values()].find(d => d.decision === "label" && colliding.has(d.eventId));
@@ -143,7 +149,7 @@ export function acceptTimelineProposals(
 
   const next = TimelineRegistry.parse(merge());
   const newIds = new Set([...incoming.values()].filter(d => d.decision === "label").map(d => d.eventId));
-  const warnings = labelDiagnostics(feed.events, next).warnings.filter(w => [...newIds].some(id => w.includes(id)));
+  const warnings = labelDiagnostics(feed.events, next, language).warnings.filter(w => [...newIds].some(id => w.includes(id)));
   return { registry: next, changed: incoming.size > 0, outcomes, warnings };
 }
 

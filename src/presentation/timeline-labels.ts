@@ -2,7 +2,8 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import { EventFeed } from "../shared/feed.ts";
 import { Region, type GachaEvent } from "../shared/schema.ts";
-import { TimelineTitle, originalTimelineIdentity } from "../shared/timelineIdentity.ts";
+import { TimelineTitle, originalTimelineIdentity, timelineIdentity, type TimelineLabelLanguage } from "../shared/timelineIdentity.ts";
+import type { RussianGlossaries } from "./timeline-label-glossary.ts";
 
 export const FINGERPRINT_CONTRACT = "timeline-semantic-sha256-v1";
 export const RULES_VERSION = "v1";
@@ -76,27 +77,48 @@ function overlaps(a: GachaEvent, b: GachaEvent): boolean {
 export interface LabelDiagnostics { errors: string[]; warnings: string[] }
 export const comparable = (s: string) => s.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
 
+export function russianLabelAnchorError(event: GachaEvent, label: string, glossaries: RussianGlossaries): string | null {
+  const normalized = comparable(label);
+  const contains = (anchor: string) => {
+    const term = comparable(anchor);
+    return term.length > 0 && normalized.includes(term);
+  };
+  // The Russian translations of recognitionSubjects are also glossary terms.
+  return (event.titleRu !== undefined && contains(event.titleRu)) ||
+    glossaries[event.game]?.some(entry => contains(entry.ru)) ? null : "Russian label needs an in-game anchor";
+}
+
+function fallbackIdentity(event: GachaEvent, language: TimelineLabelLanguage): string {
+  return language === "ru" ? event.titleRu ?? timelineIdentity(event) : originalTimelineIdentity(event);
+}
+
 /** Semantic correctness still needs a human review; these are conservative guards. */
-export function labelDiagnostics(events: readonly GachaEvent[], registry: TimelineRegistry): LabelDiagnostics {
+export function labelDiagnostics(
+  events: readonly GachaEvent[], registry: TimelineRegistry, language: TimelineLabelLanguage = "en",
+): LabelDiagnostics {
   const result: LabelDiagnostics = { errors: [], warnings: [] };
   const decisions = new Map(registry.decisions.map(d => [d.eventId, d]));
   const effective = events.filter(publicEvent).map(event => {
     const d = decisions.get(event.id);
     const label = d?.decision === "label" && d.fingerprint === semanticFingerprint(event) ? d.timelineTitle : null;
     if (label !== null) {
-      const qualifiers = event.title.match(/\b(?:phase|cycle|season)\s+[\p{L}\p{N}]+/giu) ?? [];
-      for (const qualifier of qualifiers) if (!label.toLowerCase().includes(qualifier.toLowerCase())) {
-        result.warnings.push(`${event.id}: check lost qualifier ${qualifier}`);
-      }
-      for (const subject of event.recognitionSubjects ?? []) if (!comparable(label).includes(comparable(subject))) {
-        result.warnings.push(`${event.id}: check missing featured subject ${subject}`);
+      // These compare the label with the English title and subjects, so they only fit
+      // English labels. A Russian label is held to its in-game anchor on acceptance instead.
+      if (language === "en") {
+        const qualifiers = event.title.match(/\b(?:phase|cycle|season)\s+[\p{L}\p{N}]+/giu) ?? [];
+        for (const qualifier of qualifiers) if (!label.toLowerCase().includes(qualifier.toLowerCase())) {
+          result.warnings.push(`${event.id}: check lost qualifier ${qualifier}`);
+        }
+        for (const subject of event.recognitionSubjects ?? []) if (!comparable(label).includes(comparable(subject))) {
+          result.warnings.push(`${event.id}: check missing featured subject ${subject}`);
+        }
       }
       if (label.length > 80) result.warnings.push(`${event.id}: long label (${label.length} chars), check compactness`);
       if (/\b(?:confirmed|official|guaranteed|ends?\s+\d)|\d{1,2}:\d{2}/i.test(label) && !event.title.includes(label)) {
         result.warnings.push(`${event.id}: check added certainty/date claim`);
       }
     }
-    return { event, label, identity: label ?? originalTimelineIdentity(event) };
+    return { event, label, identity: label ?? fallbackIdentity(event, language) };
   });
   for (let i = 0; i < effective.length; i++) for (let j = i + 1; j < effective.length; j++) {
     const a = effective[i]!, b = effective[j]!;
@@ -111,21 +133,27 @@ export function labelDiagnostics(events: readonly GachaEvent[], registry: Timeli
 }
 
 /** Source-supplied/cached presentation is stripped before exact registry lookup. */
-export function applyTimelineLabels(events: readonly GachaEvent[], input: unknown): GachaEvent[] {
+export function applyTimelineLabels(
+  events: readonly GachaEvent[], input: unknown, language: TimelineLabelLanguage = "en",
+): GachaEvent[] {
   const registry = TimelineRegistry.parse(input);
-  const diagnostics = labelDiagnostics(events, registry);
+  const diagnostics = labelDiagnostics(events, registry, language);
   if (diagnostics.errors.length) throw new Error(diagnostics.errors.join("\n"));
   const decisions = new Map(registry.decisions.map(d => [d.eventId, d]));
+  const field = language === "ru" ? "timelineTitleRu" : "timelineTitle";
   return events.map(event => {
-    const { timelineTitle: _untrusted, ...original } = event;
+    const { [field]: _untrusted, ...original } = event;
     const d = decisions.get(event.id);
     return publicEvent(event) && d?.decision === "label" && d.fingerprint === semanticFingerprint(event)
-      ? { ...original, timelineTitle: d.timelineTitle } : original;
+      ? { ...original, [field]: d.timelineTitle } : original;
   });
 }
 
 /** Validated final feed in; explicit clock and cap make output byte-replayable. */
-export function buildTimelineQueue(feedInput: unknown, registryInput: unknown, asOf?: string, limit = DEFAULT_BATCH_SIZE) {
+export function buildTimelineQueue(
+  feedInput: unknown, registryInput: unknown, asOf?: string, limit = DEFAULT_BATCH_SIZE,
+  language: TimelineLabelLanguage = "en",
+) {
   const feed = EventFeed.parse(feedInput);
   const registry = TimelineRegistry.parse(registryInput);
   const at = z.string().datetime().parse(asOf ?? feed.generatedAt);
@@ -168,7 +196,9 @@ export function buildTimelineQueue(feedInput: unknown, registryInput: unknown, a
       unresolvedRemaining: Math.max(0, unresolved.length - limit), stale, orphaned, historical },
     events: eligible.slice(0, limit).map(event => ({
       eventId: event.id, fingerprint: semanticFingerprint(event), game: event.game, type: event.type,
-      title: event.title, currentIdentity: originalTimelineIdentity(event),
+      title: event.title,
+      ...(language === "ru" && event.titleRu !== undefined ? { titleRu: event.titleRu } : {}),
+      currentIdentity: fallbackIdentity(event, language),
       ...(event.recognitionSubjects === undefined ? {} : { recognitionSubjects: event.recognitionSubjects }),
       summary: event.summary?.normalize("NFC").replace(/\s+/gu, " ").trim().slice(0, 300) || null,
       startsAt: event.startsAt, startPrecision: event.startPrecision,
@@ -184,7 +214,7 @@ export const queueBytes = (queue: TimelineQueue): string => `${JSON.stringify(qu
 
 /** Read-only acceptance seam. Only the current capped routine batch is writable. */
 export function validateTimelineProposals(
-  proposals: unknown, feedInput: unknown, registryInput: unknown, asOf?: string,
+  proposals: unknown, feedInput: unknown, registryInput: unknown, asOf?: string, russianGlossaries?: RussianGlossaries,
 ): LabelDiagnostics {
   const result: LabelDiagnostics = { errors: [], warnings: [] };
   const parsed = TimelineRegistry.safeParse(proposals);
@@ -192,14 +222,19 @@ export function validateTimelineProposals(
   const feed = EventFeed.parse(feedInput), registry = TimelineRegistry.parse(registryInput);
   const queue = buildTimelineQueue(feed, registry, asOf);
   const queued = new Map(queue.events.map(e => [e.eventId, e]));
+  const events = new Map(feed.events.map(event => [event.id, event]));
   for (const d of parsed.data.decisions) {
     const event = queued.get(d.eventId);
     if (!event) result.errors.push(`${d.eventId}: not in current review batch`);
     else if (event.fingerprint !== d.fingerprint) result.errors.push(`${d.eventId}: stale/wrong fingerprint`);
+    else if (russianGlossaries && d.decision === "label") {
+      const why = russianLabelAnchorError(events.get(d.eventId)!, d.timelineTitle, russianGlossaries);
+      if (why !== null) result.errors.push(`${d.eventId}: ${why}`);
+    }
   }
   if (result.errors.length) return result;
   const incoming = new Set(parsed.data.decisions.map(d => d.eventId));
   return labelDiagnostics(feed.events, { schemaVersion: 1, decisions: [
     ...registry.decisions.filter(d => !incoming.has(d.eventId)), ...parsed.data.decisions,
-  ] });
+  ] }, russianGlossaries ? "ru" : "en");
 }

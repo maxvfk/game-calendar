@@ -24,10 +24,11 @@ import { dailyOverride } from "../../shared/daily.ts";
 import type { Region } from "../../shared/schema.ts";
 import { Meter, URGENCY_COLOR } from "./Meter.tsx";
 import { TypeBadge } from "./TypeBadge.tsx";
-import { detailTitle } from "../../shared/timelineIdentity.ts";
+import { detailTitle, type TimelineLabelLanguage } from "../../shared/timelineIdentity.ts";
 
 export function EventDetail({
   row,
+  labelLanguage = "en",
   completed,
   ignored,
   status,
@@ -48,6 +49,7 @@ export function EventDetail({
   own,
 }: {
   row: RowEvent;
+  labelLanguage?: TimelineLabelLanguage;
   completed: boolean;
   ignored: boolean;
   status: Status | undefined;
@@ -97,8 +99,9 @@ export function EventDetail({
   const cadence = cadenceLabel(own?.record.repeat ?? null);
   const readerEntered = event.sourceId === "you";
   const dayEnd = dayOnlyEnd(event);
-  const heading = detailTitle(event);
+  const heading = detailTitle(event, labelLanguage);
   const relabelled = heading !== event.title;
+  const russianTitle = labelLanguage === "ru" && !readerEntered && event.titleRu !== heading ? event.titleRu : undefined;
 
   useEffect(() => {
     const invoker = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -147,8 +150,11 @@ export function EventDetail({
         <h2 className="mt-1.5 font-display text-xl font-semibold leading-snug">
           {heading}
         </h2>
-        {/* The approved Timeline label leads, but the source's own title stays
-            one glance away. An edited summary will get the same pair below. */}
+        {russianTitle !== undefined && (
+          <p className="mt-1 text-xs text-faint">
+            Russian title: <span lang="ru" className="text-muted">{russianTitle}</span>
+          </p>
+        )}
         {relabelled && (
           <p className="mt-1 text-xs text-faint">
             Original title: <span className="text-muted">{event.title}</span>

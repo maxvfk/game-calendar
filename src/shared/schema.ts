@@ -81,6 +81,7 @@ export const GachaEvent = z
     recognitionSubjects: RecognitionSubjects.optional(),
     /** Approved post-merge presentation only; never an ID/merge input. */
     timelineTitle: TimelineTitle.optional(),
+    timelineTitleRu: TimelineTitle.optional(),
     type: EventType,
     summary: z.string().max(500).nullable(),
 

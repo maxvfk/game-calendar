@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import { GachaEvent } from "../src/shared/schema.ts";
 import { EventFeed } from "../src/shared/feed.ts";
-import { semanticFingerprint, TimelineRegistry, type TimelineDecision } from "../src/presentation/timeline-labels.ts";
+import { semanticFingerprint, TimelineRegistry, validateTimelineProposals, type TimelineDecision } from "../src/presentation/timeline-labels.ts";
 import { acceptTimelineProposals, labelGuard, registryBytes } from "../src/presentation/timeline-label-accept.ts";
 import { TimelineLabelPreferences } from "../src/presentation/timeline-label-agent-input.ts";
 
@@ -102,6 +102,41 @@ describe("accept on a fresh feed", () => {
   const proposals = (...decisions: unknown[]) => ({ schemaVersion: 1, decisions });
   const empty = { schemaVersion: 1, decisions: [] };
   const label = (e: GachaEvent, timelineTitle: string) => ({ ...fp(e), decision: "label", timelineTitle });
+
+  test("Russian validation and acceptance reject labels without an anchor from the event's game", () => {
+    const zzz = event({ game: "zzz", title: "Antivirus Log", summary: "Bangboo Repair" });
+    const input = proposals(label(zzz, "Antivirus Log: Bangboo Repair"));
+    const feeds = feed(zzz);
+    expect(validateTimelineProposals(input, feeds, empty, AT).errors).toEqual([]);
+    expect(acceptTimelineProposals(input, feeds, empty, vocabulary, AT).outcomes[0]?.outcome).toBe("accepted");
+    expect(validateTimelineProposals(input, feeds, empty, AT, {}).errors).toEqual([
+      `${zzz.id}: Russian label needs an in-game anchor`,
+    ]);
+    const result = acceptTimelineProposals(input, feeds, empty, vocabulary, AT, {});
+    expect(result.outcomes).toEqual([{ eventId: zzz.id, outcome: "rejected", why: "Russian label needs an in-game anchor" }]);
+    expect(result.registry.decisions).toEqual([]);
+    expect(result.changed).toBe(false);
+  });
+
+  test("Russian glossary terms, translated subjects, and official Russian titles pass both checks", () => {
+    const zzz = event({ game: "zzz", title: "Antivirus Log", recognitionSubjects: ["Sample A"] });
+    const glossary = [
+      { en: "Sample A", ru: "Персонаж А", kind: "character" },
+      { en: "Sample Mode", ru: "Режим Б", kind: "mode" },
+    ] as const;
+    const glossaries = { zzz: [...glossary] };
+    for (const [input, title, terms] of [
+      [zzz, "Испытание: РЕЖИМ-Б", glossaries],
+      [zzz, "Персонаж А — испытание", glossaries],
+      [{ ...zzz, titleRu: "Название события" }, "Испытание: НАЗВАНИЕ-СОБЫТИЯ", {}],
+    ] as const) {
+      const response = proposals(label(input, title));
+      expect(validateTimelineProposals(response, feed(input), empty, AT, terms).errors).toEqual([]);
+      expect(acceptTimelineProposals(response, feed(input), empty, [], AT, terms).outcomes[0]?.outcome).toBe("accepted");
+    }
+    const wrongGame = { hsr: [...glossary] };
+    expect(validateTimelineProposals(proposals(label(zzz, "Режим Б")), feed(zzz), empty, AT, wrongGame).errors).toHaveLength(1);
+  });
 
   test("records valid decisions in order and keeps the existing registry first", () => {
     const prior: TimelineDecision = { ...fp(d), decision: "keep_original" };

@@ -5,6 +5,7 @@ import { recognitionIdentity, minimumIdentityText, timelineDeadline, timelineAcc
 import { GachaEvent } from "../src/shared/schema.ts";
 import { clockFor } from "../src/shared/time.ts";
 import { asDisplayEvent, CustomEvent } from "../src/shared/custom.ts";
+import { detailTitle, timelineIdentity } from "../src/shared/timelineIdentity.ts";
 
 const NOW = Date.parse("2026-10-20T12:00:00Z");
 const base = GachaEvent.parse({
@@ -16,6 +17,36 @@ const base = GachaEvent.parse({
 });
 
 describe("Timeline semantic payload", () => {
+  test("Russian labels follow the same fallback in Timeline, its accessible name, and Detail", () => {
+    const subjects = { ...base, recognitionSubjects: ["Subject A", "Subject B"] };
+    const english = { ...subjects, timelineTitle: "English label" };
+    const official = { ...english, titleRu: "Официальное название" };
+    const russian = { ...official, timelineTitleRu: "Краткая подпись" };
+    const custom = { ...russian, sourceId: "you" };
+    for (const [event, ru, enTimeline, enDetail] of [
+      [russian, russian.timelineTitleRu, english.timelineTitle, english.timelineTitle],
+      [official, official.titleRu, english.timelineTitle, english.timelineTitle],
+      [english, english.timelineTitle, english.timelineTitle, english.timelineTitle],
+      [subjects, "Subject A + Subject B", "Subject A + Subject B", base.title],
+      [base, base.title, base.title, base.title],
+      [custom, base.title, base.title, base.title],
+    ] as const) {
+      expect(recognitionIdentity(event, "ru")).toBe(ru);
+      expect(detailTitle(event, "ru")).toBe(ru);
+      expect(timelineIdentity(event, "en")).toBe(enTimeline);
+      expect(detailTitle(event, "en")).toBe(enDetail);
+      const clock = clockFor(event, "europe", NOW);
+      expect(timelineAccessibleName(event, clock, "Genshin Impact", "End unknown", false, false, "ru").split(" — ")[2]).toBe(ru);
+    }
+    const clock = clockFor(russian, "europe", NOW);
+    const html = renderToStaticMarkup(<Timeline rows={[{ event: russian, clock }]} now={NOW} dayWidth={72}
+      onZoom={() => {}} group="game" onGroup={() => {}} labelLanguage="ru" onLabelLanguage={() => {}}
+      showUpcoming splitUpcoming onOpen={() => {}} isDone={() => false} />);
+    expect(html).toContain('aria-label="Timeline label language"');
+    expect(html).toMatch(/aria-pressed="true"[^>]*>RU<\/button>/);
+    expect(html).toContain('aria-label="Genshin Impact — Type: Banner — Краткая подпись');
+  });
+
   test("approved short copy overrides M1 visually while full canonical identity stays accessible", () => {
     const event = { ...base, recognitionSubjects: ["Subject A", "Subject B"], timelineTitle: "Short · Phase II" };
     expect(recognitionIdentity(event)).toBe("Short · Phase II");

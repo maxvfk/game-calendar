@@ -204,13 +204,16 @@ describe("origin manifest and exact migration", () => {
 });
 
 test("existing M4 still queues/accepts v1 only; v2 rollback leaves presentation and queue unchanged", async () => {
-  // C0 adds only internal article evidence to the builder. Keep the historical
-  // inventory immutable and pin this authorized builder revision separately.
-  // article-evidence.test.ts checks four public-data goldens from pre-C0 main.
-  // The rehearsal below compares before/after v2 rollback, not against main.
-  const c0BuilderHash = "e2ffd5da20e4479b738ae0047e354e31523a19541c15d8ef56adee5c2cc886ce";
+  // Preserve the historical inventory and pin the files changed by the RU pilot
+  // separately. Timeline label tests also check the default English CLI and feed.
+  const pilotHashes: Record<string, string> = {
+    "scripts/build-feed.ts": "7f55f6b7d0fe7015b4b5383a1a665c4311da05f656851ced317909875e9fd42e",
+    "scripts/timeline-labels.ts": "9215763393c5edc954e81a5d6b5335edb8c68a2913f1d0d297ffdd1ea47bd3a5",
+    "src/presentation/timeline-labels.ts": "ac23dd10c013b1090fb07168074605c6e6ee71cb418ed7588109892d9a8a98b2",
+    "src/presentation/timeline-label-accept.ts": "80691f09a811bb81f633cb0673c8b0acafb2502c971f34f1b0b4c83fd5f6f248",
+  };
   for (const f of historyFixture.m4Files) {
-    const current = await Bun.file(f.path).text();
+    const current = (await Bun.file(f.path).text()).replaceAll("\r\n", "\n");
     if (f.path === ".github/workflows/timeline-labels.yml") {
       // Provider transport is now intentionally configurable, so its old whole-file
       // SHA is no longer a valid safety oracle. Pin the unchanged M4 write boundary
@@ -224,8 +227,7 @@ test("existing M4 still queues/accepts v1 only; v2 rollback leaves presentation 
       expect(current.split("\n  record:\n")[1]).not.toContain("secrets.");
       continue;
     }
-    expect(sha256(current), f.path)
-      .toBe(f.path === "scripts/build-feed.ts" ? c0BuilderHash : f.sha256);
+    expect(sha256(current), f.path).toBe(pilotHashes[f.path] ?? f.sha256);
   }
   const v2 = migrateToV2(audit.registry, manifest);
   const feed = EventFeed.parse({ schemaVersion: 1, generatedAt: ctx.now, events: extracted.candidates.map(r => r.event), sources: [] });

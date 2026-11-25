@@ -231,8 +231,9 @@ test("offline builder retains baseline-main public bytes with all four article s
     const paths = ["events.v1.json", "review.v1.json", "timeline-label-queue.v1.json", "timeline-label-agent-input.v1.json"];
     const bytes = await Promise.all(paths.map(p => Bun.file(join(dir, "public/data", p)).text()));
     // PR #1 parser-context baseline: retains exact IDs/dates/review outputs while enriching summary/recognitionSubjects.
+    // RU pilot: the recurring ZZZ rows also carry their official Russian mode name (titleRu).
     expect(bytes.map(b => new Bun.CryptoHasher("sha256").update(b).digest("hex"))).toEqual([
-      "f2b17d653ff61f3e448c4ef372d3e03ee8b05f0d3b53956a1ce1cf7d30d60a25", "9d7d588ad5e5e7aba4ea6c4f88dd488047c9da9841db1e056cb66790e2b9fbf7", "f106c2661b5dea7281f1cda2d9f596655fb2167b24d69de0c43b265fb1928dbf", "5e84c84da10e827ccf0f8002fb1b8960277208bab0c3cbcda1c0bf75baa6b247",
+      "5706b302a4318dfa1fc94d2da40ac881072a2640662bb76e5df97a7a9ef236c9", "9d7d588ad5e5e7aba4ea6c4f88dd488047c9da9841db1e056cb66790e2b9fbf7", "f106c2661b5dea7281f1cda2d9f596655fb2167b24d69de0c43b265fb1928dbf", "5e84c84da10e827ccf0f8002fb1b8960277208bab0c3cbcda1c0bf75baa6b247",
     ]);
     const side = EvidenceSidecar.parse(await Bun.file(join(dir, "tmp/editorial/event-evidence.v1.json")).json());
     expect(new Set(side.notices.map(n => n.sourceId)).size).toBe(4);
