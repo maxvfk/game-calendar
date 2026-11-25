@@ -57,6 +57,13 @@ export interface SnapshotState {
   lastCheckedAt: string | null;
   /** Last time the server confirmed the body (200 or 304). */
   lastConfirmedAt: string | null;
+  /**
+   * `contentHash` of the snapshot body that `lastConfirmedAt` confirmed.
+   * Optional: state written before this field existed carries no fingerprint,
+   * so the heartbeat falls back to the published snapshot's metadata rather
+   * than trusting a cache entry it cannot match to the published bytes.
+   */
+  lastConfirmedContentHash?: string | null;
   lastStatus: number | null;
   consecutiveFailures: number;
   /**
@@ -387,13 +394,21 @@ export class SnapshotStore {
   /** Record an attempt: success, 304 or failure. Writes state, and updates lastConfirmedAt in meta if confirmed. */
   async recordCheck(
     sourceId: string,
-    check: { at: string; status: number | null; ok: boolean },
+    check: { at: string; status: number | null; ok: boolean; contentHash?: string | null },
   ): Promise<SnapshotState> {
     const previous = await this.readState(sourceId);
+    const meta = check.ok ? await this.readMeta(sourceId) : null;
+    const rawHash = check.ok
+      ? (check.contentHash !== undefined ? check.contentHash : (meta?.contentHash ?? null))
+      : previous.lastConfirmedContentHash;
+    const confirmedHash = check.ok
+      ? (typeof rawHash === "string" && rawHash.length > 0 ? rawHash : null)
+      : rawHash;
     const state: SnapshotState = {
       sourceId,
       lastCheckedAt: check.at,
       lastConfirmedAt: check.ok ? check.at : previous.lastConfirmedAt,
+      ...(confirmedHash !== undefined ? { lastConfirmedContentHash: confirmedHash } : {}),
       lastStatus: check.status,
       consecutiveFailures: check.ok ? 0 : previous.consecutiveFailures + 1,
       failingSince: check.ok
@@ -407,12 +422,9 @@ export class SnapshotStore {
     await mkdir(this.root, { recursive: true });
     await writeAtomic(this.statePath(sourceId), `${JSON.stringify(state, null, 2)}\n`);
 
-    if (check.ok) {
-      const meta = await this.readMeta(sourceId);
-      if (meta !== null && meta.lastConfirmedAt !== check.at) {
-        meta.lastConfirmedAt = check.at;
-        await writeAtomic(this.metaPath(sourceId), `${JSON.stringify(meta, null, 2)}\n`);
-      }
+    if (check.ok && meta !== null && meta.lastConfirmedAt !== check.at) {
+      meta.lastConfirmedAt = check.at;
+      await writeAtomic(this.metaPath(sourceId), `${JSON.stringify(meta, null, 2)}\n`);
     }
 
     return state;

@@ -87,12 +87,28 @@ function notAfter(time: unknown, now: number): string | null {
   return valid(time) && Date.parse(time) <= now ? time : null;
 }
 
+function validHash(hash: unknown): hash is string {
+  return typeof hash === "string" && hash.length > 0;
+}
+
+export interface CollectConfirmationsOptions {
+  /**
+   * Trust `state.lastConfirmedAt` only when `state.lastConfirmedContentHash`
+   * matches `meta.contentHash`. Used by the publication heartbeat so a cached
+   * state from an unpushed refresh — or a legacy cache without a fingerprint —
+   * cannot vouch for older published bytes.
+   */
+  requireMatchingStateHash?: boolean;
+}
+
 /** Reads every source's records as of `now`; anything dated after `now` is discarded first. */
 export async function collectConfirmations(
   store: ConfirmationStore,
   sourceIds: readonly string[],
   now: number,
+  options?: CollectConfirmationsOptions,
 ): Promise<SourceConfirmation[]> {
+  const requireMatchingStateHash = options?.requireMatchingStateHash === true;
   const confirmations: SourceConfirmation[] = [];
   for (const sourceId of sourceIds) {
     const meta = await store.readMeta(sourceId);
@@ -101,12 +117,15 @@ export async function collectConfirmations(
     // checked says nothing about the failure streak.
     const stateKnown = state.lastCheckedAt !== null;
     const firstSeenAt = notAfter(state.firstSeenAt, now);
+    const stateMatchesPublished =
+      !requireMatchingStateHash ||
+      (validHash(meta?.contentHash) && state.lastConfirmedContentHash === meta.contentHash);
     confirmations.push({
       sourceId,
       lastConfirmedAt: newest(
         notAfter(meta?.lastConfirmedAt, now),
         notAfter(meta?.contentChangedAt, now),
-        notAfter(state.lastConfirmedAt, now),
+        stateMatchesPublished ? notAfter(state.lastConfirmedAt, now) : null,
       ),
       failingSince: notAfter(state.failingSince, now),
       firstSeenAt,

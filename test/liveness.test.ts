@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { mkdtemp, rm } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -17,9 +17,9 @@ import {
   unknownSources,
   type SourceConfirmation,
 } from "../src/ingest/liveness.ts";
-import { SnapshotStore } from "../src/ingest/snapshots.ts";
-import { STALE_AFTER_MS } from "../src/shared/feed.ts";
-import { heartbeatVerdict } from "../scripts/publication-liveness.ts";
+import { SnapshotStore, type SnapshotMeta } from "../src/ingest/snapshots.ts";
+import { STALE_AFTER_MS, type SourceHealth } from "../src/shared/feed.ts";
+import { acceptedSnapshotIds, heartbeatVerdict } from "../scripts/publication-liveness.ts";
 
 const NOW = Date.parse("2026-11-24T18:00:00.000Z");
 const HOUR = 3_600_000;
@@ -409,31 +409,54 @@ describe("the single stale-source issue", () => {
 });
 
 describe("dead-man heartbeat verdict", () => {
-  // Reads the same records as the stale-source issue: committed meta plus cached state.
+  // Combines accepted snapshot rows from the built feed with the raw snapshot
+  // records: committed meta plus cached state whose contentHash matches meta.
   let root: string;
   beforeEach(async () => { root = await mkdtemp(join(tmpdir(), "heartbeat-")); });
   afterEach(async () => { await rm(root, { recursive: true, force: true }); });
 
-  const scheduled = ["genshin-kqm-ginews", "zzz-zenlessgg-banners"];
+  const scheduled = ["genshin-kqm-ginews", "zzz-zenlessgg-banners", "endfield-wikigg-echoes"];
+  const acceptedRow = (
+    sourceId: string,
+    overrides: Partial<SourceHealth> = {},
+  ): SourceHealth => ({
+    sourceId,
+    game: "zzz",
+    url: "https://example.test/",
+    lastSuccessAt: at(2),
+    lastConfirmedAt: at(2),
+    contentChangedAt: at(500),
+    eventCount: 1,
+    parsedCount: 1,
+    statesNoEvents: false,
+    ...overrides,
+  });
+  const acceptedAll = scheduled.map((id) => acceptedRow(id));
+
   /** A stored snapshot: metadata and, unless `body` is false, the body the builder needs. */
   const meta = async (
-    dir: string, sourceId: string, contentChangedAt: string, lastConfirmedAt: string | null, body = true,
+    dir: string,
+    sourceId: string,
+    contentChangedAt: string,
+    lastConfirmedAt: string | null,
+    body = true,
+    contentHash = "x",
   ) => {
     await Bun.write(
       join(dir, `${sourceId}.meta.json`),
       JSON.stringify({
-        sourceId, url: "https://example.test/", contentHash: "x", bytes: 1, etag: null,
+        sourceId, url: "https://example.test/", contentHash, bytes: 1, etag: null,
         lastModified: null, contentChangedAt, lastConfirmedAt, eventCount: 1,
       }),
     );
     if (body) await Bun.write(join(dir, `${sourceId}.html`), "<html></html>");
   };
 
-  test("pings only while a scheduled source was confirmed within 30 hours", async () => {
+  test("pings only while an accepted scheduled snapshot was confirmed within 30 hours", async () => {
     await meta(root, "genshin-kqm-ginews", at(500), at(2));
-    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(true);
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW, acceptedAll)).current).toBe(true);
     await meta(root, "genshin-kqm-ginews", at(500), at(31));
-    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(false);
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW, acceptedAll)).current).toBe(false);
   });
 
   test("a real HTTP 304 survives a content-change date in the future", async () => {
@@ -441,16 +464,16 @@ describe("dead-man heartbeat verdict", () => {
     // the confirmation; the records keep both, and the future one is discarded.
     await meta(root, "zzz-zenlessgg-banners", at(-7 * 24), null);
     await new SnapshotStore(root).recordCheck("zzz-zenlessgg-banners", { at: at(2), status: 304, ok: true });
-    const verdict = await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW);
+    const verdict = await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW, acceptedAll);
     expect(verdict).toMatchObject({ current: true });
     expect(verdict.message).toContain(at(2));
   });
 
   test("a future date alone is not evidence of life; another fresh source still is", async () => {
     await meta(root, "zzz-zenlessgg-banners", at(-7 * 24), at(-7 * 24));
-    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(false);
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW, acceptedAll)).current).toBe(false);
     await meta(root, "genshin-kqm-ginews", at(500), at(2));
-    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(true);
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW, acceptedAll)).current).toBe(true);
   });
 
   test("fresh records beside a missing body published nothing fresh", async () => {
@@ -459,29 +482,112 @@ describe("dead-man heartbeat verdict", () => {
     // metadata and state never reached the feed.
     await meta(root, "genshin-kqm-ginews", at(500), at(2), false);
     await new SnapshotStore(root).recordCheck("genshin-kqm-ginews", { at: at(1), status: 304, ok: true });
-    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(false);
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW, acceptedAll)).current).toBe(false);
     await Bun.write(join(root, "genshin-kqm-ginews.html"), "<html></html>");
-    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(true);
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW, acceptedAll)).current).toBe(true);
   });
 
-  test("only scheduled sources count; no data is not proof of life", async () => {
-    // A fresh record for anything off the schedule (or a reviewed-* row, which has
-    // no snapshot at all) cannot keep the heartbeat going.
+  test("only scheduled sources accepted by this build count; 0-event accepted sources stay eligible", async () => {
+    // A fresh snapshot on disk that the builder skipped (absent from feed) or
+    // rejected (null lastSuccessAt / parsedCount), or a fixture fallback (null
+    // lastConfirmedAt), cannot keep the heartbeat going.
+    await meta(root, "endfield-wikigg-echoes", at(500), at(2));
     await meta(root, "not-scheduled", at(500), at(1));
-    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW)).current).toBe(false);
-    expect((await heartbeatVerdict(new SnapshotStore(root), [], NOW)).current).toBe(false);
+
+    // Absent from feed (e.g. Echoes skipped with no active/upcoming season).
+    expect((await heartbeatVerdict(new SnapshotStore(root), scheduled, NOW, [])).current).toBe(false);
+    // Rejected by builder (e.g. Echoes stale season URL, parse error, or out of window).
+    expect((await heartbeatVerdict(
+      new SnapshotStore(root),
+      scheduled,
+      NOW,
+      [acceptedRow("endfield-wikigg-echoes", { lastSuccessAt: null, lastConfirmedAt: null, parsedCount: null, eventCount: 0 })],
+    )).current).toBe(false);
+    // Fixture fallback (lastConfirmedAt is null).
+    expect((await heartbeatVerdict(
+      new SnapshotStore(root),
+      scheduled,
+      NOW,
+      [acceptedRow("endfield-wikigg-echoes", { lastConfirmedAt: null })],
+    )).current).toBe(false);
+    // Non-scheduled / reviewed row.
+    expect(acceptedSnapshotIds([acceptedRow("not-scheduled"), acceptedRow("reviewed-zzz")], scheduled)).toEqual([]);
+    expect((await heartbeatVerdict(new SnapshotStore(root), [], NOW, acceptedAll)).current).toBe(false);
+
+    // Validly accepted snapshot with zero active events: either statesNoEvents
+    // (parsedCount: 0) or all events ended (parsedCount > 0, eventCount: 0).
+    expect((await heartbeatVerdict(
+      new SnapshotStore(root),
+      scheduled,
+      NOW,
+      [acceptedRow("endfield-wikigg-echoes", { eventCount: 0, parsedCount: 0, statesNoEvents: true })],
+    )).current).toBe(true);
+    expect((await heartbeatVerdict(
+      new SnapshotStore(root),
+      scheduled,
+      NOW,
+      [acceptedRow("endfield-wikigg-echoes", { eventCount: 0, parsedCount: 4, statesNoEvents: false })],
+    )).current).toBe(true);
+  });
+
+  test("cached state only counts for heartbeat when its contentHash matches the published snapshot", async () => {
+    const store = new SnapshotStore(root);
+    // Published snapshot is 96h old with hash "old-bytes".
+    await meta(root, "zzz-zenlessgg-banners", at(96), at(96), true, "old-bytes");
+    // Actions cache carries a 2h-old HTTP 200 confirmation for DIFFERENT bytes (unpushed refresh).
+    await Bun.write(join(root, "zzz-zenlessgg-banners.state.json"), JSON.stringify({
+      sourceId: "zzz-zenlessgg-banners",
+      lastCheckedAt: at(2),
+      lastConfirmedAt: at(2),
+      lastConfirmedContentHash: "new-unpushed-bytes",
+      lastStatus: 200,
+      consecutiveFailures: 0,
+    }));
+    expect((await heartbeatVerdict(store, scheduled, NOW, acceptedAll)).current).toBe(false);
+
+    // Legacy state format (no lastConfirmedContentHash): cannot prove match, falls back to meta.
+    await Bun.write(join(root, "zzz-zenlessgg-banners.state.json"), JSON.stringify({
+      sourceId: "zzz-zenlessgg-banners",
+      lastCheckedAt: at(2),
+      lastConfirmedAt: at(2),
+      lastStatus: 304,
+      consecutiveFailures: 0,
+    }));
+    expect((await heartbeatVerdict(store, scheduled, NOW, acceptedAll)).current).toBe(false);
+    // With fresh published metadata, legacy state still falls back to that metadata.
+    await meta(root, "zzz-zenlessgg-banners", at(96), at(2), true, "old-bytes");
+    expect((await heartbeatVerdict(store, scheduled, NOW, acceptedAll)).current).toBe(true);
+
+    // Matching hash in cached state (e.g. 304 confirmation, preserved across a later failure) counts.
+    await meta(root, "zzz-zenlessgg-banners", at(96), at(96), true, "old-bytes");
+    await store.recordCheck("zzz-zenlessgg-banners", { at: at(2), status: 304, ok: true });
+    await store.recordCheck("zzz-zenlessgg-banners", { at: at(1), status: 503, ok: false });
+    // Restore old meta so only cached state has the 2h-old confirmation.
+    await meta(root, "zzz-zenlessgg-banners", at(96), at(96), true, "old-bytes");
+    expect((await heartbeatVerdict(store, scheduled, NOW, acceptedAll)).current).toBe(true);
   });
 
   test("the real entrypoint writes the verdict the pages job reads", async () => {
     // End to end through the script the build job runs, on the real clock: a 304
     // two hours ago with a future content-change date pings; a future date alone does not.
-    const run = async (dir: string, how: { flag?: string; env?: string } = { flag: join(dir, "snapshots") }) => {
+    const writeFeed = async (dir: string, sources: SourceHealth[]) => {
+      const feedPath = join(dir, "events.v1.json");
+      await Bun.write(feedPath, JSON.stringify({ sources }));
+      return feedPath;
+    };
+    const run = async (dir: string, feedPath: string, how: { flag?: string; env?: string } = { flag: join(dir, "snapshots") }) => {
       const output = join(dir, `github-output-${Math.random().toString(36).slice(2)}`);
       const env: Record<string, string | undefined> = { ...process.env, GITHUB_OUTPUT: output };
       delete env["SNAPSHOT_DIR"];
       if (how.env !== undefined) env["SNAPSHOT_DIR"] = how.env;
       const result = Bun.spawnSync(
-        [process.execPath, "scripts/publication-liveness.ts", ...(how.flag === undefined ? [] : ["--snapshots", how.flag])],
+        [
+          process.execPath,
+          "scripts/publication-liveness.ts",
+          "--feed",
+          feedPath,
+          ...(how.flag === undefined ? [] : ["--snapshots", how.flag]),
+        ],
         { env, stdout: "pipe", stderr: "pipe" },
       );
       expect(result.exitCode).toBe(0);
@@ -493,18 +599,24 @@ describe("dead-man heartbeat verdict", () => {
     await meta(join(fresh, "snapshots"), "zzz-zenlessgg-banners", hoursAgo(-7 * 24), null);
     await new SnapshotStore(join(fresh, "snapshots"))
       .recordCheck("zzz-zenlessgg-banners", { at: hoursAgo(2), status: 304, ok: true });
-    expect(await run(fresh)).toBe("current=true");
+    const freshFeed = await writeFeed(fresh, [acceptedRow("zzz-zenlessgg-banners")]);
+    expect(await run(fresh, freshFeed)).toBe("current=true");
 
     const future = join(root, "future");
     await meta(join(future, "snapshots"), "zzz-zenlessgg-banners", hoursAgo(-7 * 24), hoursAgo(-7 * 24));
-    expect(await run(future)).toBe("current=false");
+    const futureFeed = await writeFeed(future, [acceptedRow("zzz-zenlessgg-banners")]);
+    expect(await run(future, futureFeed)).toBe("current=false");
 
     // Fresh metadata and state, but no body: the builder published a fixture instead.
     const bodiless = join(root, "bodiless");
     await meta(join(bodiless, "snapshots"), "zzz-zenlessgg-banners", hoursAgo(500), hoursAgo(2), false);
     await new SnapshotStore(join(bodiless, "snapshots"))
       .recordCheck("zzz-zenlessgg-banners", { at: hoursAgo(1), status: 304, ok: true });
-    expect(await run(bodiless)).toBe("current=false");
+    const bodilessFeed = await writeFeed(bodiless, [acceptedRow("zzz-zenlessgg-banners", { lastConfirmedAt: null })]);
+    expect(await run(bodiless, bodilessFeed)).toBe("current=false");
+
+    // Missing built feed fails closed to current=false.
+    expect(await run(fresh, join(fresh, "missing-feed.json"))).toBe("current=false");
   });
 
   test("the entrypoint reads the builder's directory: --snapshots, else SNAPSHOT_DIR", async () => {
@@ -513,13 +625,21 @@ describe("dead-man heartbeat verdict", () => {
     const old = join(root, "old");
     await meta(fresh, "zzz-zenlessgg-banners", hoursAgo(500), hoursAgo(2));
     await meta(old, "zzz-zenlessgg-banners", hoursAgo(500), hoursAgo(96));
+    const feedPath = join(root, "events.v1.json");
+    await Bun.write(feedPath, JSON.stringify({ sources: [acceptedRow("zzz-zenlessgg-banners")] }));
     const run = (how: { flag?: string; env?: string }) => {
       const output = join(root, `github-output-${Math.random().toString(36).slice(2)}`);
       const env: Record<string, string | undefined> = { ...process.env, GITHUB_OUTPUT: output };
       delete env["SNAPSHOT_DIR"];
       if (how.env !== undefined) env["SNAPSHOT_DIR"] = how.env;
       const result = Bun.spawnSync(
-        [process.execPath, "scripts/publication-liveness.ts", ...(how.flag === undefined ? [] : ["--snapshots", how.flag])],
+        [
+          process.execPath,
+          "scripts/publication-liveness.ts",
+          "--feed",
+          feedPath,
+          ...(how.flag === undefined ? [] : ["--snapshots", how.flag]),
+        ],
         { env, stdout: "pipe", stderr: "pipe" },
       );
       expect(result.exitCode).toBe(0);
@@ -531,6 +651,89 @@ describe("dead-man heartbeat verdict", () => {
     expect(await run({ env: old })).toBe("current=false");
     // The flag wins over the environment.
     expect(await run({ flag: fresh, env: old })).toBe("current=true");
+  });
+
+  test("build:feed -> publication-liveness ignores skipped Echoes and mismatched cache hashes", async () => {
+    const repoRoot = join(import.meta.dir, "..");
+    const hoursAgo = (h: number) => new Date(Date.now() - h * HOUR).toISOString();
+
+    const stageWorkspace = async (name: string) => {
+      const dir = join(root, name);
+      await mkdir(join(dir, "data"), { recursive: true });
+      await mkdir(join(dir, "snapshots"), { recursive: true });
+      for (const rel of ["fixtures", "data/reviewed", "data/presentation"]) {
+        await cp(join(repoRoot, rel), join(dir, rel), { recursive: true });
+      }
+      return dir;
+    };
+
+    const runPipeline = async (dir: string) => {
+      const output = join(dir, `github-output-${Math.random().toString(36).slice(2)}`);
+      const env = { ...process.env, SNAPSHOT_DIR: join(dir, "snapshots"), GITHUB_OUTPUT: output };
+      const built = Bun.spawnSync([process.execPath, join(repoRoot, "scripts/build-feed.ts")], {
+        cwd: dir, env, stdout: "pipe", stderr: "pipe",
+      });
+      expect(built.exitCode, built.stderr.toString()).toBe(0);
+      const checked = Bun.spawnSync([process.execPath, join(repoRoot, "scripts/publication-liveness.ts")], {
+        cwd: dir, env, stdout: "pipe", stderr: "pipe",
+      });
+      expect(checked.exitCode, checked.stderr.toString()).toBe(0);
+      const feed = (await Bun.file(join(dir, "public/data/events.v1.json")).json()) as { sources: SourceHealth[] };
+      return { verdict: (await Bun.file(output).text()).trim(), feed };
+    };
+
+    // Case 1: Only Endfield Echoes has a fresh snapshot on disk, but the builder skips it
+    // (no active/upcoming season on the Event page) — heartbeat must not ping.
+    const skippedDir = await stageWorkspace("skipped-echoes");
+    const echoesFixture = "test/fixtures/endfield/snapshots-418d518/endfield-wikigg-echoes";
+    const echoesMeta = (await Bun.file(join(repoRoot, `${echoesFixture}.meta.json`)).json()) as SnapshotMeta;
+    await Bun.write(
+      join(skippedDir, "snapshots/endfield-wikigg-echoes.html"),
+      await Bun.file(join(repoRoot, `${echoesFixture}.html`)).bytes(),
+    );
+    await Bun.write(
+      join(skippedDir, "snapshots/endfield-wikigg-echoes.meta.json"),
+      JSON.stringify({ ...echoesMeta, contentChangedAt: hoursAgo(2), lastConfirmedAt: hoursAgo(2) }),
+    );
+    const skipped = await runPipeline(skippedDir);
+    expect(skipped.feed.sources.some((s) => s.sourceId === "endfield-wikigg-echoes")).toBe(false);
+    expect(skipped.verdict).toBe("current=false");
+
+    // Case 2: Published ZZZ snapshot is 96h old, while cached .state.json carries a 2h-old
+    // HTTP 200 confirmation for DIFFERENT bytes (e.g. refresh cache saved before push failed).
+    const mismatchDir = await stageWorkspace("mismatched-cache");
+    const zzzFixture = "test/fixtures/zzz/snapshots-418d518/zzz-zenlessgg-banners";
+    const zzzMeta = (await Bun.file(join(repoRoot, `${zzzFixture}.meta.json`)).json()) as SnapshotMeta;
+    await Bun.write(
+      join(mismatchDir, "snapshots/zzz-zenlessgg-banners.json"),
+      await Bun.file(join(repoRoot, `${zzzFixture}.json`)).bytes(),
+    );
+    await Bun.write(
+      join(mismatchDir, "snapshots/zzz-zenlessgg-banners.meta.json"),
+      JSON.stringify({ ...zzzMeta, contentChangedAt: hoursAgo(96), lastConfirmedAt: hoursAgo(96) }),
+    );
+    await Bun.write(
+      join(mismatchDir, "snapshots/zzz-zenlessgg-banners.state.json"),
+      JSON.stringify({
+        sourceId: "zzz-zenlessgg-banners",
+        lastCheckedAt: hoursAgo(2),
+        lastConfirmedAt: hoursAgo(2),
+        lastConfirmedContentHash: "different-bytes-hash",
+        lastStatus: 200,
+        consecutiveFailures: 0,
+      }),
+    );
+    expect((await runPipeline(mismatchDir)).verdict).toBe("current=false");
+
+    // Once the cached 304 confirmation matches the published contentHash — even with a
+    // future contentChangedAt in metadata — the same pipeline allows the heartbeat.
+    await Bun.write(
+      join(mismatchDir, "snapshots/zzz-zenlessgg-banners.meta.json"),
+      JSON.stringify({ ...zzzMeta, contentChangedAt: hoursAgo(-7 * 24), lastConfirmedAt: null }),
+    );
+    await new SnapshotStore(join(mismatchDir, "snapshots"))
+      .recordCheck("zzz-zenlessgg-banners", { at: hoursAgo(2), status: 304, ok: true });
+    expect((await runPipeline(mismatchDir)).verdict).toBe("current=true");
   });
 });
 
