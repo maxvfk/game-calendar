@@ -1,3 +1,35 @@
+# ["Frames of Fierce Splendor" Event: Photography Challenge](archive/21979.md)
+## Frames of Fierce Splendor
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/11/10/bd067e18ac1d6203eba38a07fc477863_6235007342202945544_transformed.png)
+
+〓Event Rewards〓
+
+![img](https://sdk.hoyoverse.com/upload/ann/2026/09/24/de23a1d44769781e7885c83c851e9ea7_2234088525640460293_transformed.png)
+
+〓Event Duration〓
+
+<t class="t_lc" contenteditable="false">2026/11/27 10:00</t>**–**<t class="t_lc" contenteditable="false">2026/12/07 03:59</t>
+
+〓Eligibility〓
+
+Adventure Rank 20 or above
+
+Complete Archon Quest Prologue: Act III "Song of the Dragon and Freedom"
+
+Complete the "Gunfire in the Silent Lands" quest of the Archon Quest Chapter VII: Act I "Everwinter Without Mercy."
+
+※Complete the World Quests in the Snezhnaya Adventure Journal first to get the best experience from this event.
+
+〓Event Details〓
+
+● Visit the designated photo-taking spots and use the "Power-Framing" Kamera to capture various scenes according to specific requirements.
+
+● After the event begins, 2 new photo-taking spots will be unlocked every day for the first 5 days. Some photo spots can only be unlocked by completing prerequisite tasks.
+
+● During the event, you can claim rewards on the event menu the first time you complete the photo-taking at each photo-taking spot.
+
+-----
+
 # [Event Wish "Harmonious Abundance" - Boosted Drop Rate for "White Horse's Fleeting Spring" Zibai (Geo)!](archive/21980.md)
 ## Event Wish "Harmonious Abundance"
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/11/10/e2c619b94dd87549d0d47868b71b60ef_6572500111887862760_transformed.png)

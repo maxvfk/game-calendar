@@ -2,12 +2,12 @@
   "contentKind": "xml",
   "sourceId": "zzz-steam-events-official",
   "url": "https://steamcommunity.com/games/4162040/rss/",
-  "contentHash": "f4fbe4062efb002cc83345c4f7df85c290ac52519e09479bb73e000ec23efba4",
+  "contentHash": "dac0135d03bf4065fddf4918514bfff088811d04bad4682693ae43bee0391984",
   "bytes": 127790,
   "etag": null,
-  "lastModified": "Wed, 25 Nov 2026 01:28:00 GMT",
-  "contentChangedAt": "2026-11-25T01:28:48.605Z",
-  "lastConfirmedAt": "2026-11-25T01:28:48.605Z",
+  "lastModified": "Wed, 25 Nov 2026 15:48:00 GMT",
+  "contentChangedAt": "2026-11-25T15:48:17.224Z",
+  "lastConfirmedAt": "2026-11-25T15:48:17.224Z",
   "eventCount": 43,
   "charset": "utf-8"
 }
