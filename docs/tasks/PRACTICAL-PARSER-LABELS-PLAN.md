@@ -85,6 +85,11 @@ label ledger and November workflow runs. The direction and the freeze stand. Wha
      one pair per season, from the version notes (see `docs/IMPLEMENTATION-STATUS.md`).
 3. **Label policy decision on the [#175](https://github.com/maxvfk/game-calendar/pull/175)
    case (and close/supersede #175).**
+   - **Replaced 2026-11-26** by [TIMELINE-LABELS-RU-PILOT.md](TIMELINE-LABELS-RU-PILOT.md): keep
+     the English labels as they are; add an EN/RU switch on the Timeline, a separate Russian
+     label ledger with a glossary of in-game Russian terms and an anchor check, and pilot it on
+     ZZZ. Neither candidate below is adopted: both tie labels to the English official name,
+     which a player of the Russian client cannot match to the game.
    - Primary candidate: featured subject(s) for banners; for non-banners, either
      `keep_original` or preserve the official name, usually as a prefix
      (`Official Name: <what it is>`), checked by a deterministic guard/warning in
