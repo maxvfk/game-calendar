@@ -1012,6 +1012,10 @@ The development team will continue to monitor this issue. Should there be any fu
 
 - After the Version 7.2 update, the collision volume of the character "Sandrone" would be abnormal when entering high-speed hover mode after using her Elemental Skill. Additionally, Fagio would clip through the environment when performing a Charged Attack under certain circumstances. These issues will be fixed in a future update.
 
+〓<t class="t_gl" contenteditable="false">2026/11/26 16:10</t> Update Details〓
+
+Fixes an issue whereby, under certain circumstances, the Chronal Nexus product list was not displaying correctly on the "Obtain Nexus" page when accessing the Miliastra Shop via the Miliastra Pass > Purchase Level page.
+
 〓<t class="t_gl" contenteditable="false">2026/11/19 16:20</t> Update Details〓
 
 - Updates resources related to subsequent events.
