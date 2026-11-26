@@ -100,7 +100,7 @@ await click(container.querySelector('[aria-label="Show a shorter stretch of time
 assert.equal(props.dayWidth, 108);
 assert(Math.abs(pane().scrollLeft + paneWidth / 2 - timelineX(inspected, min, 108)) < 0.01);
 assert.equal(jumps, 1);
-await click(Array.from(container.querySelectorAll("button")).find(b => b.textContent === "Jump to today")!);
+await click(Array.from(container.querySelectorAll("button")).find(b => b.getAttribute("aria-label") === "Jump to today")!);
 assert.equal(jumps, 2);
 assert.equal(pane().scrollLeft, scrollToToday(timelineX(props.now, min, 108), paneWidth));
 

@@ -252,10 +252,10 @@ export function Timeline({
       {/* The board's own header. The jump control lives out here rather than
           floating over the chart: pinned inside, it would sit on top of the
           calendar and cover the very dates it sends you back to. */}
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-hairline px-4 py-2.5">
+      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-2 border-b border-hairline px-4 py-2.5 sm:gap-x-3">
         <StackControl value={group} onChange={onGroup} />
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           {onLabelLanguage && (
             <div role="group" aria-label="Timeline label language" className="flex">
               {TimelineLabelLanguage.options.map(language => (
@@ -264,7 +264,7 @@ export function Timeline({
                   type="button"
                   aria-pressed={labelLanguage === language}
                   onClick={() => onLabelLanguage(language)}
-                  className={`min-h-8 rounded-full border px-1.5 text-[0.6875rem] font-medium transition-colors ${
+                  className={`rounded-full border px-1 py-1 text-[0.6875rem] font-medium transition-colors sm:px-1.5 ${
                     labelLanguage === language ? "border-ink/60 text-ink" : "border-transparent text-faint hover:text-muted"
                   }`}
                 >
@@ -293,9 +293,12 @@ export function Timeline({
           <button
             type="button"
             onClick={() => jumpToNow("smooth")}
+            aria-label="Jump to today"
             className="text-[0.6875rem] font-medium text-faint transition-colors duration-150 hover:text-ink"
           >
-            Jump to today
+            {/* On a phone the full phrase pushes the toolbar onto a second row. */}
+            <span className="sm:hidden">Today</span>
+            <span className="hidden sm:inline">Jump to today</span>
           </button>
         </div>
       </div>
@@ -701,7 +704,7 @@ function StackControl({
             onClick={() => onChange(mode.id)}
             aria-pressed={on}
             title={mode.hint}
-            className={`rounded-full border px-2.5 py-1 text-[0.6875rem] font-medium transition-colors ${
+            className={`rounded-full border px-2 py-1 text-[0.6875rem] font-medium transition-colors sm:px-2.5 ${
               on
                 ? "border-ink/60 text-ink"
                 : "border-transparent text-faint hover:text-muted"
