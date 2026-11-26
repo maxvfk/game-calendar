@@ -1,7 +1,12 @@
 # Timeline labels in Russian — EN/RU switch and a ZZZ pilot
 
-**Status:** pilot implemented 2026-11-26 (switch, Russian ledger, glossary format, anchor
-check; ZZZ data), awaiting the operator's acceptance on phone and desktop. Planned the same day. It replaces step 3 of the
+**Status:** pilot **accepted 2026-11-26**. It was implemented the same day in #198: the switch,
+the Russian ledger, the glossary format, the anchor check and the ZZZ data. The operator
+checked it in game on the Europe server: every Russian name matched the game, and the event
+timers matched the calendar to the minute. The check also found two data gaps, fixed in #200:
+Deadly Assault ends before the 3.4 update, and the 3.4 pre-registration check-in was missing.
+Next is the first step after the pilot, the glossary from paired official notices. It was
+planned the same day. It replaces step 3 of the
 [practical plan](PRACTICAL-PARSER-LABELS-PLAN.md#revision-2026-11-24-current-order) (the label
 policy for the [#175](https://github.com/maxvfk/game-calendar/pull/175) case). Work starts only
 on an explicit operator GO, as one PR (or two: switch, then pilot), each merged on its own GO.
