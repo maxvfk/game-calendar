@@ -89,7 +89,8 @@ label ledger and November workflow runs. The direction and the freeze stand. Wha
      the English labels as they are; add an EN/RU switch on the Timeline, a separate Russian
      label ledger with a glossary of in-game Russian terms and an anchor check, and pilot it on
      ZZZ. Neither candidate below is adopted: both tie labels to the English official name,
-     which a player of the Russian client cannot match to the game.
+     which a player of the Russian client cannot match to the game. **The pilot was accepted on
+     2026-11-26** (#198, data fixes #200), and #175 is closed as superseded.
    - Primary candidate: featured subject(s) for banners; for non-banners, either
      `keep_original` or preserve the official name, usually as a prefix
      (`Official Name: <what it is>`), checked by a deterministic guard/warning in
@@ -113,7 +114,9 @@ label ledger and November workflow runs. The direction and the freeze stand. Wha
 **Parallel operator / external-infra actions** (independent workstreams; do not block steps 1–5):
 - **Daily Passes production acceptance** (operator, manual) with
   [`DAILY-PASSES-SMOKE.md`](DAILY-PASSES-SMOKE.md), adapting pre-activation flag-on/off steps
-  to live production — authenticated sync and one real in-game reset boundary.
+  to live production — authenticated sync and one real in-game reset boundary. **Accepted
+  2026-11-26 on daily use:** the operator has used Daily Passes daily since activation and has
+  seen no problems. The checklist steps were not walked through one by one.
 - **Private encrypted-backup workflow success ping** (the narrow monitoring part of deferred
   S6b, living outside this public repo's `ci.yml`), so a stopped backup is noticed without
   coupling step 1's PR to private backup infra.

@@ -1,3 +1,9 @@
+## Daily Passes — production acceptance (2026-11-26)
+
+Accepted on daily use: the operator has used Daily Passes daily since activation (#179) and has
+seen no problems. The `docs/tasks/DAILY-PASSES-SMOKE.md` steps (authenticated sync and one real
+reset boundary) were not walked through one by one.
+
 ## Timeline labels in Russian — EN/RU switch and ZZZ pilot (2026-11-26)
 
 Plan: `docs/tasks/TIMELINE-LABELS-RU-PILOT.md`.
@@ -24,6 +30,9 @@ Plan: `docs/tasks/TIMELINE-LABELS-RU-PILOT.md`.
   Event IDs and fingerprints are unchanged.
 - The infrastructure was written by Codex (`gpt-6.2-sol`, high) and checked here. The data
   is from the official Russian notices.
+- **Accepted 2026-11-26.** The operator checked it in game on the Europe server. The
+  Russian names and the event timers matched. Two data gaps were fixed in #200. #175 is closed
+  as superseded.
 
 ## Endfield Echoes — wiki season source retired; Scattering from official notes (2026-11-25)
 
