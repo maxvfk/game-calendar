@@ -742,6 +742,50 @@
       "sourceUrl": "https://www.hoyolab.com/article/47375931",
       "provenanceStatus": "official",
       "confidence": 1
+    },
+    {
+      "id": "zzz:the-final-battle-before-dawn:2026-11-20",
+      "reviewedAt": "2026-11-26T18:45:00.000Z",
+      "firstSeenAt": "2026-11-26T18:45:00.000Z",
+      "title": "The Final Battle Before Dawn",
+      "titleRu": "Решающая битва перед рассветом",
+      "type": "login",
+      "summary": "Version 3.4 pre-registration check-in: log in on 7 days for Polychrome ×480 (news 167395). The in-game event closes Dec 1 at 03:59 server time, like the other Version 3.3 events; the Europe-server timer on Nov 26 matched it. The web pre-registration closes separately, Dec 2 at 05:59 (UTC+8). Opening is shown as a calendar day.",
+      "startsAt": "2026-11-20T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-11-30T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-11-30T19:59:00.000Z",
+        "europe": "2026-12-01T02:59:00.000Z",
+        "america": "2026-12-01T08:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/167395",
+      "provenanceStatus": "estimated",
+      "confidence": 0.85
+    },
+    {
+      "id": "zzz:deadly-assault-nov-20:2026-11-20",
+      "reviewedAt": "2026-11-26T18:45:00.000Z",
+      "firstSeenAt": "2026-11-26T18:45:00.000Z",
+      "title": "Deadly Assault (Nov 20)",
+      "titleRu": "Опасный штурм",
+      "type": "challenge",
+      "summary": "The in-game timer on the Europe server (Nov 26, read twice) ends this cycle on Dec 1 between 19:12 and 20:08 UTC, before the Version 3.4 maintenance, not on the projected Dec 4. Taken as Dec 2 04:00 UTC+8 minus one minute in every region; the 14-day projection stops until the post-3.4 schedule is verified.",
+      "startsAt": "2026-11-20T00:00:00.000Z",
+      "startPrecision": "day",
+      "endsAt": "2026-12-01T19:59:00.000Z",
+      "endPrecision": "exact",
+      "regionScoped": true,
+      "regionEnds": {
+        "asia": "2026-12-01T19:59:00.000Z",
+        "europe": "2026-12-01T19:59:00.000Z",
+        "america": "2026-12-01T19:59:00.000Z"
+      },
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166963",
+      "provenanceStatus": "estimated",
+      "confidence": 0.75
     }
   ]
 }

@@ -3,7 +3,7 @@ import { materializeReviewedBatch } from "../src/ingest/reviewed.ts";
 
 test("reviewed ZZZ endgame preserves IDs while showing regional reset deadlines", async () => {
   const { events } = materializeReviewedBatch(await Bun.file("data/reviewed/zzz.json").json());
-  expect(events).toHaveLength(37);
+  expect(events).toHaveLength(39);
   expect(events.find(e => e.title === "Shiyu Defense: Critical Node (Sep 18)")).toMatchObject({
     id: "zzz:shiyu-defense-critical-node-sep-18:2026-09-18",
     titleRu: "Оборона Шиюй: критический узел",

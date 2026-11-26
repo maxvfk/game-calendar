@@ -40,6 +40,14 @@
       "decision": "label",
       "timelineTitle": "Последняя проба: Севериан и Норма",
       "reason": "Russian label: featured subject or official Russian name plus what it is."
+    },
+    {
+      "eventId": "zzz:the-final-battle-before-dawn:2026-11-20",
+      "fingerprint": "sha256:70b8bbee849724221310e5dbc0a1ad5ee792543d7e5d5496fda010f35253e58d",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Решающая битва перед рассветом: вход 7 дней",
+      "reason": "Russian label: official Russian name plus what it is."
     }
   ]
 }

@@ -75,14 +75,17 @@ test("14-day steps, bounded 70-day start horizon and year rollover preserve dist
   expect(year.some(e => e.id === "zzz:shiyu-defense-critical-node-jan-8:2027-01-08")).toBe(true);
 });
 
-test("all 37 existing reviewed fields/IDs survive; equal projections never inflate confidence", async () => {
+test("all 39 existing reviewed fields/IDs survive; equal projections never inflate confidence", async () => {
   const reviewed = materializeReviewedBatch(await Bun.file("data/reviewed/zzz.json").json()).events;
-  expect(reviewed).toHaveLength(37);
+  expect(reviewed).toHaveLength(39);
   for (const now of ["2026-09-24T12:00:00.000Z", NOW]) {
     const projections = zzz(now);
     for (const groups of [[reviewed, projections], [projections, reviewed]]) {
       const merged = mergeEvents(groups);
-      expect(merged.conflicts).toEqual([]);
+      // The only disagreement is the in-game correction of the Nov 20 Deadly Assault, which
+      // ends before the Version 3.4 maintenance instead of on the projected Dec 4.
+      const corrected = merged.conflicts.map(c => c.kept.id);
+      expect(corrected.filter(id => id !== "zzz:deadly-assault-nov-20:2026-11-20")).toEqual([]);
       expect(new Set(merged.events.map(e => e.id)).size).toBe(merged.events.length);
       for (const row of reviewed) expect(merged.events.find(e => e.id === row.id)).toEqual(row);
     }
