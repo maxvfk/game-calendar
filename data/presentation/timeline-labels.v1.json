@@ -820,10 +820,9 @@
     },
     {
       "eventId": "endfield:seal-of-jade-issue:2026-10-15",
-      "fingerprint": "sha256:777d3275d24896af73fe977fd6a077e516f9e291f15ee391f974a386215db56b",
+      "fingerprint": "sha256:61504ddfd0b9880359ff6b0a7297b1b313ab7f2b058cd85c9046063ff2f0adbb",
       "rulesVersion": "v1",
-      "decision": "keep_original",
-      "reason": "currentIdentity already presents the featured weapon name."
+      "decision": "keep_original"
     },
     {
       "eventId": "endfield:secret-sanctuary:2026-11-05",
@@ -1302,11 +1301,11 @@
     },
     {
       "eventId": "endfield:season-of-scattering:2026-11-25",
-      "fingerprint": "sha256:ba761250024d48eacb9d00f9abd7fd2db7827bceb017af55586375cea189b19f",
+      "fingerprint": "sha256:03082f34f43574493be121e0a7d3e6cd792f4145cadb32ef7382473f989ff258",
       "rulesVersion": "v1",
       "decision": "label",
       "timelineTitle": "Echoes of War: Season of Scattering",
-      "reason": "Adds the explicit Echoes of War mode prefix while preserving the season name."
+      "reason": "Adds the Echoes of War mode prefix to match the season and cycle naming."
     },
     {
       "eventId": "genshin:imaginarium-theater-february-2027-season:2027-02-01",
@@ -1342,6 +1341,66 @@
       "rulesVersion": "v1",
       "decision": "keep_original",
       "reason": "Distinctive official title; the generic Narrative Event summary provides no clearer truthful label."
+    },
+    {
+      "eventId": "endfield:echoes-of-war-season-of-scattering-cycle-i:2026-11-25",
+      "fingerprint": "sha256:facf91e8a3e359cff904ed95fad9f222247ab9df8ccb1e42ca71249ed90c8318",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "genshin:frames-of-fierce-splendor:2026-11-27",
+      "fingerprint": "sha256:801fb186e0cd6a38d7aefc9c8c62f6055e45f2630c857fb41823ed69c794d5f0",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:floaty-traveler-issue:2026-11-25",
+      "fingerprint": "sha256:06e056da1b1940b68cd7c3d9e67035ca99e32ea6efe4dc7e952efdf2230510d5",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:to-every-wish-adrift:2026-11-25",
+      "fingerprint": "sha256:d29e8c4162d60d01824377a777a2a937495055a8ab3538406c0af93261e49a6c",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:anvil-backpack-plus-a-pot-ohoney:2026-11-25",
+      "fingerprint": "sha256:f874cb788a66c28d33a2ba7452dc1758306e5c1d6faec85a3ac3ffbe1d3d658f",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:casual-roamer-issue:2026-11-25",
+      "fingerprint": "sha256:f4ad75bb8a6849e5c54e906f66fb830e568234c24c4e4c190d672aad6cad4e5b",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:moongleam-issue:2026-11-05",
+      "fingerprint": "sha256:bd562572b5df86c20c02fdba96beac4046fb122495530ef631da6bc8558b9af6",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:echoes-of-war-season-of-scattering-cycle-ii:2026-12-02",
+      "fingerprint": "sha256:464d987bbbf9b3fe80a270add55d914ab06e28bcf5bb2cea7f5272450942a0cf",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:precious-scarlet:2026-12-16",
+      "fingerprint": "sha256:0a9f995dbe9ab17dbf589fccc888e5f5c9e89dcfba6485c0ed387257505d4057",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
+    },
+    {
+      "eventId": "endfield:scarlet-claws-issue:2026-12-16",
+      "fingerprint": "sha256:d4e5d3b3b29e46fb306f22d2dde1bcc2ec174e087b456e6f8806c376eb5f8527",
+      "rulesVersion": "v1",
+      "decision": "keep_original"
     }
   ]
 }
