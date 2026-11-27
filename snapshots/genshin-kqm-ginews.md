@@ -1,3 +1,39 @@
+# [The "Miliastra Wonderland: Moments to Treasure" Web Event Now Live: Take Part and Claim Limited-Time Rewards!](archive/22032.md)
+## "Miliastra Wonderland: Moments to Treasure" — Genshin Impact Web Event Now Available!
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/11/26/09f8bbc31a68840a209ce8d30e838cd0_7082059181795738566_transformed.png)
+
+The "Miliastra Wonderland: Moments to Treasure" web event is now live for a limited time!
+
+[>> Click to Take Part in Event <<](https://act.hoyoverse.com/ys/event/e20261127ugc-hf6f6k/index.html?game_biz=hk4e_global&sign_type=2&auth_appid=e20261127scenery&authkey_ver=1&utm_source=ingame&utm_medium=notice)
+
+〓Event Duration〓
+
+2026/11/27 – <t class="t_gl" contenteditable="false">2026/12/08 03:59</t>
+
+*Rewards cannot be claimed after the event ends. Please claim them in time.
+
+〓Eligibility〓
+
+Travelers who have reached Adventure Rank 1 or above can participate in this event.
+
+〓Event Description〓
+
+During the event, Travelers can complete web tasks to claim rewards such as Geodes of Replication, "Miliastra Wonderland" items, and more. For quest details, please refer to the event page.
+
+※ There may be a delay of 1 to 2 hours in the data collection process. If the mission progress is not updated, please refresh the page or wait patiently.
+
+〓Event Notes〓
+
+1. Please log in to the event using your HoYoverse Account and select your corresponding character in Genshin Impact to take part. This will ensure that your rewards can be sent and claimed correctly.
+
+2. After the event ends, you will no longer be able to take part and claim the rewards, so remember to take part in time.
+
+3. The in-game rewards will be distributed via in-game mail. The mail will expire after 30 days, so don't forget to claim the rewards in time.
+
+4. This web event is provided purely for entertainment. The content of the event does not represent any actual story or settings in the game. It is not indicative of any related gameplay features in Genshin Impact.
+
+-----
+
 # ["Frames of Fierce Splendor" Event: Photography Challenge](archive/21979.md)
 ## Frames of Fierce Splendor
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/11/10/bd067e18ac1d6203eba38a07fc477863_6235007342202945544_transformed.png)
