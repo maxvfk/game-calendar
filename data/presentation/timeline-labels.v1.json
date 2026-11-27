@@ -933,10 +933,10 @@
     },
     {
       "eventId": "zzz:deadly-assault-nov-20:2026-11-20",
-      "fingerprint": "sha256:057557c53e46a494c081d969f82789b887d4adacba14e2f1a1cb1df792c4a934",
+      "fingerprint": "sha256:4897e98573df0d6f93ebf894bae0757e08366b7e99aaa3a683ea258d4b74e86e",
       "rulesVersion": "v1",
       "decision": "keep_original",
-      "reason": "Mode name plus rotation date already distinguishes this Deadly Assault cycle."
+      "reason": "The current title already names the mode and cycle date clearly."
     },
     {
       "eventId": "wuwa:whimpering-wastes-respawning-waters:2026-11-23",
@@ -1401,6 +1401,21 @@
       "fingerprint": "sha256:d4e5d3b3b29e46fb306f22d2dde1bcc2ec174e087b456e6f8806c376eb5f8527",
       "rulesVersion": "v1",
       "decision": "keep_original"
+    },
+    {
+      "eventId": "zzz:the-final-battle-before-dawn:2026-11-20",
+      "fingerprint": "sha256:70b8bbee849724221310e5dbc0a1ad5ee792543d7e5d5496fda010f35253e58d",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Version 3.4 Login: Polychrome ×480",
+      "reason": "The decorative title obscures the version and reward; the summary identifies both."
+    },
+    {
+      "eventId": "zzz:shiyu-defense-critical-node-feb-5:2027-02-05",
+      "fingerprint": "sha256:7695f5e8fca1d80cc5628bf9a5d202e84c6055e1f80a683df29c44e20cb4941b",
+      "rulesVersion": "v1",
+      "decision": "keep_original",
+      "reason": "The current title already names the mode, node and rotation date clearly."
     }
   ]
 }
