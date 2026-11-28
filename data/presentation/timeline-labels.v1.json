@@ -1416,6 +1416,14 @@
       "rulesVersion": "v1",
       "decision": "keep_original",
       "reason": "The current title already names the mode, node and rotation date clearly."
+    },
+    {
+      "eventId": "endfield:roaming-wilderpaw:2026-11-25",
+      "fingerprint": "sha256:ccf707036b692dbe4318e5f8bddbf1f8f135a34e593f18cacd3fc4c34efee86d",
+      "rulesVersion": "v1",
+      "decision": "label",
+      "timelineTitle": "Login: Roaming Wilderpaw",
+      "reason": "Adds the supported sign-in event type while preserving the distinctive event name; no reward is invented."
     }
   ]
 }
