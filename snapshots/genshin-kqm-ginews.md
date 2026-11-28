@@ -1,3 +1,33 @@
+# [Participate in "Starlight Voyage: Spontaneous Composition" to Obtain Prismatic Crystals, the Token for the Colorful Surprise Box](archive/21992.md)
+## Starlight Voyage: Spontaneous Composition
+![Banner](https://sdk.hoyoverse.com/upload/ann/2026/10/26/9d1cd8acd4db7535f308d8009ef8d9b4_6283565022499899306_transformed.jpg)
+
+〓Event Duration〓
+
+Event Duration:<t class="t_lc" contenteditable="false">2026/11/30 10:00</t> – <t class="t_lc" contenteditable="false">2026/12/14 03:59</t>
+
+Quest Completion Period:<t class="t_lc" contenteditable="false">2026/11/30 10:00</t> – <t class="t_lc" contenteditable="false">2026/12/10 04:00</t>
+
+〓Event Rewards〓
+
+Prismatic Crystals
+
+〓Eligibility〓
+
+After awakening your Miliastra Wonderland Manekin
+
+〓Event Details〓
+
+● During the quest completion period, Travelers can obtain "Sightseeing Experiences" by completing Starlight Voyage event stages.
+
+● After the event begins, the available stages in Starlight Voyage and the maximum obtainable Sightseeing Experiences will gradually increase over time. On Day 1, the cap is 800, and it will increase by 400 every two days thereafter, up to a maximum of 1,600.
+
+● During the event, Travelers can obtain the corresponding event reward, "Prismatic Crystals," by completing quests and accumulating Sightseeing Experiences.
+
+※ Prismatic Crystals obtained from event rewards can only be used for a limited time. Don't forget to spend them before they expire.
+
+-----
+
 # [The "Miliastra Wonderland: Moments to Treasure" Web Event Now Live: Take Part and Claim Limited-Time Rewards!](archive/22032.md)
 ## "Miliastra Wonderland: Moments to Treasure" — Genshin Impact Web Event Now Available!
 ![Banner](https://sdk.hoyoverse.com/upload/ann/2026/11/26/09f8bbc31a68840a209ce8d30e838cd0_7082059181795738566_transformed.png)
